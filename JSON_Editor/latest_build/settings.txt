@@ -1,0 +1,1 @@
+{"checkboxes":{"checkBox1":false},"numeric_updown":{"numericUpDown1":20.0}}
