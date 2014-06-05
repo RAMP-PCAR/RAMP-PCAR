@@ -1,0 +1,91 @@
+/* 
+ * 
+ * This template is not proper JSON as it allows for comments (like this one) and multi-line values.
+ * 
+ * 
+ * JavaScript-Templates templating engine
+ * https://github.com/blueimp/JavaScript-Templates
+ * 
+ */
+
+{
+	// generates a list of all the properties and their corresponding values of a given object "o"
+	"CESI2012_freshwater_quality":	"<div class='point-details-list'>
+										<ul class='wet-boew-zebra alterwg'>
+											
+											{% include('simpleListItem', {key: 'A template', value: 'that iterates over all object properties'}); %}
+
+											{% for (var prop in o ) { 
+												if (o.hasOwnProperty(prop)) { 
+												    include('simpleListItem', {key: prop, value: o[prop]}); 
+												}
+											} %}
+
+										</ul>
+									</div>",
+
+	// generates a list with an image, several simple key-value pairs, and a link
+	"Test_coarse_proj":	"<div class='point-details-list'>
+							<ul class='wet-boew-zebra alterwg' style='list-style: none; margin: 0;'>
+								{% include('simpleListItem', {key: 'A template', value: 'with an image'}); %}
+								{% include('imageListItem', {url: 'http://lorempixel.com/100/100/nature/' + o.NAME, text: 'A random image from the internet or a logo'}); %}
+
+								{% include('simpleListItem', {key: 'Country', value: o.COUNTRY_C}); %}
+								{% include('simpleListItem', {key: 'Kind', value: o.KIND}); %}
+								{% include('simpleListItem', {key: 'Latitude', value: o.LAT_DD}); %}
+								{% include('simpleListItem', {key: 'Longitude', value: o.LON_DD}); %}
+
+								{% include('simpleLinkItem', {text: 'Raw data link', url: 'http://bhah/' + o.NAME}); %}								
+							</ul>
+						</div>",
+
+	"bbs_routes_canada": 	"<p>Just a Data dump template</p>
+								<p>
+									<span>{</span><br>
+									{% for (var prop in o ) { 
+										if (o.hasOwnProperty(prop)) { %}
+
+										   <span style='margin-left: 20px;'>'{%=prop%}' : '{%=o[prop]%}',</span><br>
+
+										{% }
+									} %}
+									<span>}</span><br>
+								</p>",
+
+	// generates a list of all items in a "features" array of a given object "o"
+	"default_feature_details":	"<div class='point-details-list'>
+							<ul class='wet-boew-zebra alterwg'>
+								
+								{% for (var prop in o.data.attributes ) { 
+									if (o.data.attributes.hasOwnProperty(prop)) { 
+										include('simpleListItem', {key: prop, value: o.data.attributes[prop]}); 
+									}
+								} %}
+								
+							</ul>
+						</div>",
+
+	// a simple item template for a key-value pairs
+	"simpleListItem":	"<li>
+						    <div class='width-30 float-left pair-key font-small font-bold'>
+						        <p>{%=o.key%}</p>
+						    </div>
+						    <div class='width-70 float-left pair-value'>
+						        <p class='shorten-candidate'>{%=o.value%}</p>
+						    </div>
+						    <div class='clear'>
+						    </div>
+						</li>",
+
+	// a simple item template for a key-value pairs
+	"simpleLinkItem":	"<li>
+							<a href='{%=o.url%}'>{%=o.text%}</a>
+						</li>",
+
+	// a simple template to display an image with some text beside it
+	"imageListItem": 	"<li>
+							<img src='{%=o.url%}' style='width: 100px; height: 100px; float:left; margin: 0 10px 0 0; '><span>{%=o.text%}</span>
+							<div class='clear'></div>
+						</li>"
+}
+

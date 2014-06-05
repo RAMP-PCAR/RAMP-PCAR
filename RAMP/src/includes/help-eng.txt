@@ -1,0 +1,217 @@
+﻿<section>
+    <h2 class="margin-top-small">
+        Help Sections</h2>
+    <button class="button-none button-close">
+        <span class="wb-invisible">Close</span></button>
+    <!-- navControls BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Navigation Controls</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Navigation controls is used for changing the viewing extent of the map; the datagrid
+                    updates accordingly to what's viewable in the current extent.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_navigation_toolbar.png" width="300" height="250"
+                        class="image-actual" alt="Map navigation controls" /></p>
+                <ul>
+                    <li>Click Pan North/South/East/West to move the map in that particular direction.</li>
+                    <li>Click Canada View to view map at its full extent.</li>
+                    <li>Click Zoom In/Out to change the map extent.</li>
+                </ul>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- navControls ENDS -->
+    <!-- basemaps BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Basemaps</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    The Basemap selector is used to modify the underlying basemap to provide a variety
+                    of geographical contexts.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_basemaps.png" width="300" height="100" class="image-actual"
+                        alt="Basemap selector widget" /></p>
+                <p>
+                    From the dropdown, select the basemap of your choice and the map display will update.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- basemaps ENDS -->
+    <!-- Add Layer BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Add Layer from Web</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_addlayer.png" width="300" height="100" class="image-actual"
+                        alt="Add layer widget" /></p>
+                <p>
+                    From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- Add Layer ENDS -->
+    <!-- getLink BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Get Link</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Get Link is used to generate a shareable URL of the current map state with selected
+                    datasets.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_getlink.png" width="300" height="95" class="image-actual"
+                        alt="Get Link widget" /></p>
+                <ul>
+                    <li><span class="bold-text">Short link:</span> Select this link to use Google's URL
+                        shortening service to generate a concise and easily shareable link to the current
+                        state of the RAMP map viewer. </li>
+                    <li><span class="bold-text">Email:</span> Select this link to open a new email in your
+                        default mail client, with the URL contained in the body for convenient sharing.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- getLink ENDS -->
+    <!-- fullScreen BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Full Screen</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Full Screen is used to collapse the departmental headers and footers to provide
+                    larger screen space for mapping.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    Click the Full Screen button in the toolbar to hide departmental header and footer
+                    information. Select the Show Headers link to restore to default view.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- fullScreen ENDS -->
+    <!-- datasets BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Data Sets</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    The Datasets tab lists the selected layers to display in the map and data grid.
+                    The Datasets tab also serves as a map legend.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_datasets.png" width="300" height="147" class="image-actual"
+                        alt="Data Sets" /></p>
+                <p>
+                    Select the "eye" icon next to a dataset name to toggle the layer on or off. Use
+                    the "cross hatch" icon to the right of the eye icon to display the bounding box
+                    of the dataset. Click and drag the 6 dots to the left of the dataset up or down
+                    to re-order the layers on the map interface. Select the metadata link to display
+                    relevant metadata for that source in a collapsible Info Panel.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- datasets ENDS -->
+    <!-- dataGrid BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Data Grid</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    The Data Grid allows you to the data that is visible in the current map extent.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_datagrid.png" width="300" height="178" class="image-actual"
+                        alt="The Data Grid" /></p>
+                <ul>
+                    <li><span class="bold-text">Sorting:</span> Select the Sort link at the top of the data
+                        grid to sort by field name, descending. Select the Sort link again to switch the
+                        sort to ascending mode.</li>
+                    <li><span class="bold-text">Details:</span> Select the Details link next to each data
+                        row to display its information in an Info Panel. This function replicates clicking
+                        directly on a map feature. </li>
+                    <li><span class="bold-text">Zoom To:</span> Every row on the data grid has an option
+                        to quickly zoom the map view to that data point. If the "Zoom To" link is clicked,
+                        the map and the data grid will dynamically zoom to that specific point. </li>
+                    <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
+                        jump to the first or last page, respectively, of the information in the data grid.
+                        Use the inner left and right buttons to move back or forward one page at a time.
+                        Selecting the Page link will permit you to quickly jump to any page in the data
+                        grid listing. </li>
+                </ul>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- dataGrid ENDS -->
+    <!-- infoPanel BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Info Panel</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    The Info Panel displays data associated with a selected feature.</p>
+                <p>
+                    <b>Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_infopanel.png" width="300" height="171" class="image-actual"
+                        alt="The Info Panel" /></p>
+                <p>
+                    Select a feature on the map interface, or select the Details link in the Data Grid.
+                    The Info Panel will display information related to the selected feature. Clicking
+                    away from the feature or clicking the arrow in the top left corner of the panel
+                    will hide the display.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- infoPanel ENDS -->
+    <!-- misc BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Load Times / Unanticipated Behaviour</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Load times may vary based on network location and bandwidth availability, and unanticipated
+                    behaviour may occur if any map interactions occur before data is fully loaded. Please
+                    allow the webpage to load completely before triggering any map functions. <b>Note:</b>
+                    If the "Loading..." text appears in the lower right corner of map or the data grid
+                    displays a loading message, please allow the loading indicator to disappear before
+                    triggering any function on the map.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- misc ENDS -->
+</section>

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+wet-boew.github.io/wet-boew/License-eng.html / wet-boew.github.io/wet-boew/Licence-fra.html -->
+<!-- DataAjaxFragmentStart -->
+<li><div><a href="http://ec.geocat.net/geonetwork/home">Home</a></div></li>
+<li><section><h3><a href="section2/index-eng.html">Search</a></h3><div class="mb-sm">
+<div class="span-2">
+<ul>
+<li><a href="http://ec.geocat.net/geonetwork/search/eng">Basic Search</a></li>
+<li><a href="http://ec.geocat.net/geonetwork/advanced/eng">Advanced Search</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+</div></section></li>
+<li><div><a href="http://ec.geocat.net/geonetwork/browse/eng">Browse</a></div></li>
+<!--li><div><a href="http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ECDMP_Viewer/pages/cont-eng.html">Map</a></div></li-->
+<li><div><a href="http://ec.geocat.net/geonetwork/accountrequest/eng">Register</a></div></li>
+<li><div><a href="http://ec.geocat.net/geonetwork/login/eng">Sign In</a></div></li>
+<li><div><a href="http://ecollab.ncr.int.ec.gc.ca/theme/ipgi-impi/cfgddmtc/data%20management%20training%20centre.aspx?pflg=1033&">Help</a></div></li>
+<!-- DataAjaxFragmentEnd -->
+</html>

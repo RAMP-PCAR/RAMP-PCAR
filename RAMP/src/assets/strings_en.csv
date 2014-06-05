@@ -1,0 +1,81 @@
+key,value
+langMain,en
+langMainLong,eng
+langMainFull,English
+langAlt,fr
+langAltLong,fra
+langAltFull,Français
+,
+metaDescription,English description
+metaCreator,English name of the content author
+metaTitle,English title
+metaIssued,Date published (YYYY-MM-DD)
+metaModified,Date modified (YYYY-MM-DD)
+metaSubject,English subject terms
+metaLanguge,eng
+,
+title,RAMP Demo Viewer
+skipToMain,Skip to main content
+skipToFooter,Skip to footer
+,
+navigationBar,NavigationBar
+,
+rampAltLangLink,carte.html
+,
+goc,Government of Canada
+sgoc,Symbol of the Government of Canada
+,
+titleLink,Environment Canada Data Catalogue
+titleSubLink,"Describe, Publish, Discover"
+,
+siteMenu,Site menu
+,
+link1Url,http://ec.geocat.net/geonetwork/home
+link2Url,section2/index-eng.html
+link3Url,http://ec.geocat.net/geonetwork/browse/eng
+link4Url,http://ec.geocat.net/geonetwork/accountrequest/eng
+link5Url,http://ec.geocat.net/geonetwork/login/eng
+link6Url,http://ecollab.ncr.int.ec.gc.ca/theme/ipgi-impi/cfgddmtc/data%20management%20training%20centre.aspx?pflg=1033&
+,
+link1Title,Home
+link2Title,Search
+link3Title,Browse
+link4Title,Register
+link5Title,Sign In
+link6Title,Help
+,
+closeTitle,Close
+,
+getLinkTitle,Get Link
+getLinkDescription,Link to Map Viewer
+getLinkShortLink,short link
+getLinkEmail,Email
+,
+fullScreenTitle,Full Screen
+,
+helpTitle,Help
+,
+addLayerTitle,Add Layer from Web
+addLayerSelectTypeText,What type of data are you referencing?
+addLayerType1,An ArcGIS Server Web Service
+addLayerType2,A WMS OGC Web Service
+addLayerType3,A WMTS OGC Web Service
+addLayerType4,A Tile Layer
+addLayerType5,A KML File
+addLayerType6,A GeoRSS File
+addLayerType7,A CSV File
+addLayerPlaceholder, http://<MyServerName>/ArcGIS/rest/services/<MyServiceName>
+addLayerAddButton, Add Layer
+addLayer-URL-label, URL:
+addLayer-Opacity-label, Opacity:
+addLayer-opacity-alt, Range: 0 to 10 in steps of 1
+addLayer-opacity-display-start, (Current Value:
+addLayer-opacity-display-end,%)
+,
+loadingTitle,Loading
+,
+datasetsTabTitle,Datasets
+dataTabTitle,Data
+,
+footer,Footer
+siteFooter,Site footer

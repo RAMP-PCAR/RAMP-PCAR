@@ -1,0 +1,82 @@
+key,value
+langMain,fr
+langMainLong,fra
+langMainFull,Français
+langAlt,en
+langAltLong,eng
+langAltFull,English
+
+metaDescription,[Fr] English description
+metaCreator,[Fr] English name of the content author
+metaTitle,[Fr] English title
+metaIssued,[Fr] Date published (YYYY-MM-DD)
+metaModified,[Fr] Date modified (YYYY-MM-DD)
+metaSubject,[Fr] English subject terms
+metaLanguge,[Fr] eng
+
+title,[Fr] RAMP Template demo
+skipToMain,[Fr] Skip to main content
+skipToFooter,[Fr] Skip to footer
+
+navigationBar,[Fr] NavigationBar
+
+rampAltLangLink,map.html
+
+goc,[Fr] Government of Canada
+sgoc,[Fr] Symbol of the Government of Canada
+
+titleLink,[Fr] Environment Canada Data Catalogue
+titleSubLink,"[Fr] Describe, Publish, Discover"
+
+siteMenu,[Fr] Site menu
+
+link1Url,[Fr] http://ec.geocat.net/geonetwork/home
+link2Url,[Fr] section2/index-eng.html
+link3Url,[Fr] http://ec.geocat.net/geonetwork/browse/eng
+link4Url,[Fr] http://ec.geocat.net/geonetwork/accountrequest/eng
+link5Url,[Fr] http://ec.geocat.net/geonetwork/login/eng
+link6Url,[Fr] http://ecollab.ncr.int.ec.gc.ca/theme/ipgi-impi/cfgddmtc/data%20management%20training%20centre.aspx?pflg=1033&
+
+link1Title,[Fr] Home
+link2Title,[Fr] Search
+link3Title,[Fr] Browse
+link4Title,[Fr] Register
+link5Title,[Fr] Sign In
+link6Title,[Fr] Help
+
+closeTitle,[Fr] Close
+
+getLinkTitle,[Fr] Get Link
+getLinkDescription,[Fr] Link to Map Viewer
+getLinkShortLink,[Fr] short link
+getLinkEmail,[Fr] Email
+
+fullScreenTitle,[Fr] Full Screen
+
+helpTitle,[Fr] Help
+
+addLayerTitle, [Fr] Add Layer from Web
+addLayerSelectTypeText, [Fr] What type of data are you referencing?
+addLayerType1, [Fr] An ArcGIS Server Web Service
+addLayerType2, [Fr] A WMS OGC Web Service
+addLayerType3, [Fr] A WMTS OGC Web Service
+addLayerType4, [Fr] A Tile Layer
+addLayerType5, [Fr] A KML File
+addLayerType6, [Fr] A GeoRSS File
+addLayerType7, [Fr] A CSV File
+addLayerPlaceholder, [Fr] http://<MyServerName>/ArcGIS/rest/services/<MyServiceName>
+addLayerAddButton, [Fr] Add Layer
+addLayer-URL-label, URL :
+addLayer-Opacity-label, [fr]Opacity :
+addLayer-opacity-alt, [fr]Range: 0 to 10 in steps of 1
+addLayer-opacity-display-start, ([fr]Current Value:
+addLayer-opacity-display-end,% )
+
+
+loadingTitle, [Fr] Loading
+
+datasetsTabTitle,[Fr] Datasets
+dataTabTitle,[Fr] Data
+
+footer,[Fr] Footer
+siteFooter,[Fr] Site footer

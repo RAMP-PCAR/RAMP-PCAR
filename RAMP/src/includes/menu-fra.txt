@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+wet-boew.github.io/wet-boew/License-eng.html / wet-boew.github.io/wet-boew/Licence-fra.html -->
+<!-- DataAjaxFragmentStart -->
+<li><div><a href="http://wet-boew.github.io/wet-boew/index-eng.html">[fr] Home</a></div></li>
+<li><section><h3><a href="section2/index-eng.html">[fr] Search</a></h3><div class="mb-sm">
+<div class="span-2">
+<ul>
+<li><a href="#">[fr] Basic Search</a></li>
+<li><a href="#">[fr] Advanced Search</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+</div></section></li>
+<li><div><a href="#">[fr] Browse</a></div></li>
+<li><div><a href="section4/index-eng.html">[fr] Map</a></div></li>
+<li><div><a href="#">[fr] Register</a></div></li>
+<li><div><a href="#">[fr] Sign In</a></div></li>
+<li><div><a href="#">[fr] Help</a></div></li>
+<!-- DataAjaxFragmentEnd -->
+</html>

@@ -1,0 +1,11 @@
+{
+	"default_basemap":	"<a href='javascript:void(0);'>
+                            <div class='esriBasemapGalleryLabelContainer'>
+                                <span alt='{%= o.data.name %} ({%= o.data.type %})' title='{%= o.data.name %} ({%= o.data.type %})'>{%= o.data.name %} ({%= o.data.type %})</span>
+                                <span class='font-xsmall extra'>{%= o.data.description %}</span>
+                            </div>
+                            <img class='esriBasemapGalleryThumbnail' src='{%= o.data.thumbnail %}' alt='{%= o.data.altText %}'>
+                            <div class='clear'></div>
+                        </a>"
+}
+

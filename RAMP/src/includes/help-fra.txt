@@ -1,0 +1,116 @@
+﻿<section>
+	<h2 class="margin-top-small">
+		[fr] Help Sections</h2>
+	<button class="button-none button-close">
+		<span class="wb-invisible">[fr] Close</span></button>
+	<details class="margin-bottom-medium">
+		<summary class="">[fr] Navigation Controls</summary>
+		<div>
+			<p>
+				[fr] Navigation controls is used for changing the viewing extent of the map; the
+				datagrid updates accordingly to what's viewable in the current extent.</p>
+			<p>
+				<b>[fr] Usage:</b></p>
+			<p>
+				<img src="./App_Themes/images/help/en/help_navigation_toolbar.png" width="300" height="250"
+					class="image-actual" alt="Map navigation controls." /></p>
+			<ul>
+				<li>[fr] Click Pan North/South/East/West to move the map in that particular direction.</li>
+				<li>[fr] Click Canada View to view map at its full extent.</li>
+				<li>[fr] Click Zoom In/Out to change the map extent.</li>
+			</ul>
+		</div>
+	</details>
+	<div class="clear">
+	</div>
+	 <!-- Add Layer BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">[fr]Add Layer from Web</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    [fr]Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.</p>
+                <p>
+                    <b>[fr]Usage:</b></p>
+                <p>
+                    <img src="./assets/images/help/fr/help_addlayer.png" width="300" height="100" class="image-actual"
+                        alt="[fr]Add layer widget" /></p>
+                <p>
+                    [fr]From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- Add Layer ENDS -->
+	<details class="margin-bottom-medium">
+		<summary class="">[fr] Data Grid</summary>
+		<div>
+			<p>
+				[fr] Search Map allows you to select what data is visible on the map. The map and
+				datagrid update according to your current selection.</p>
+			<p>
+				<b>[fr] Usage:</b></p>
+			<p>
+				<img src="./App_Themes/images/help/en/OilSands/searchMap1.png" width="762" height="153"
+					class="image-actual" alt="Search map pane showing the filters for each category." /></p>
+			<ul>
+				<li>[fr] Check/Uncheck boxes to view/hide layers.</li>
+				<li>[fr] The results from search map will be dynamically updated on the map and data
+					grid.</li>
+			</ul>
+		</div>
+	</details>
+	<div class="clear">
+	</div>
+	<details class="margin-bottom-medium">
+		<summary class="">[fr] Search Map</summary>
+		<div>
+			<p>
+				[fr] The Data Grid allows you to view a subset of the data that is visible in the
+				current map extent.</p>
+			<p>
+				<b>[fr] Usage:</b></p>
+			<p>
+				<img src="./App_Themes/images/help/en/OilSands/datagrid1.png" class="image-actual"
+					alt="The datagrid columns." /></p>
+			<ul>
+				<li><span class="bold-text">[fr] Tab Once (Header):</span> You can tab into the first
+					row of headers of the grid and use the arrow keys to traverse right or left. By
+					pressing spacebar or clicking on a header will sort the data grid by that select
+					header in ascending or descending order. </li>
+				<li><span class="bold-text">[fr] Tab Twice (Cells):</span> You can traverse through
+					the cells of the data grid. </li>
+				<li><span class="bold-text">[fr] Tab Thrice (Pagination):</span> You have the option
+					of navigating through the pages of the data grid by using the next and previous
+					buttons; jumping to the first and last page of the data grid is also possible with
+					the buttons. You can also jump to specific page by entering a page number in the
+					textbox provided and then pressing enter. </li>
+				<li><span class="bold-text">[fr] Zoom To:</span> Every column on the data grid has a
+					zoom to option. If the magnifying glass is clicked, the map and the data grid will
+					dynamically zoom to that specific point.
+					<p>
+						<img src="./App_Themes/images/help/en/datagrid2.png" class="image-actual" alt="A cutout of the datagrid with the Zoom button highlighted." /></p>
+				</li>
+				<li><span class="bold-text">[fr] More Info:</span> The info button on the data grid
+					will populate the 'More Info' panel with extended information and metadata.
+					<p>
+						<img src="./App_Themes/images/help/en/datagrid3.png" class="image-actual" alt="A cutout of the datagrid with a highlight of where to download the data." /></p>
+				</li>
+			</ul>
+		</div>
+	</details>
+	<div class="clear">
+	</div>
+	<details class="margin-bottom-medium">
+		<summary class="">[fr] Load Times / Unanticipated Behaviour</summary>
+		<div>
+			<p>
+				[fr] Load times vary and unanticipated behaviour may occur if any map interactions
+				occur before data is fully loaded. Please allow the webpage to load completely before
+				triggering any map functions. <b>[fr] Note:</b> If a spinning icon appears on helpNav
+				of map or the data grid displays a loading message, please allow the loading indicator
+				to disappear before triggering any function on the map.</p>
+		</div>
+	</details>
+	</section>

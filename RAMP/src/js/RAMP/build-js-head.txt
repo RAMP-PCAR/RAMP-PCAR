@@ -1,0 +1,9 @@
+/*
+ *
+ * Reusable Accessible Mapping Package (RAMP) adapted for ECDMP GIS Viewer
+ *
+ * Version: @ramp-osm-build.version@
+ * Build time: @ramp-osm-build.starttime@
+ *
+ */
+
