@@ -6,6 +6,7 @@ var fs = require('fs'),
 module.exports = function(grunt) {
     var tempJsLibToClear = [],
         tempCssLibToClear = [],
+
         localeStrings = {
             en: {},
             fr: {}
