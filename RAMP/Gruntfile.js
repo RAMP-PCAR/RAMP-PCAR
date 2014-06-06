@@ -11,7 +11,7 @@ module.exports = function(grunt) {
             en: {},
             fr: {}
         };
-
+    
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
