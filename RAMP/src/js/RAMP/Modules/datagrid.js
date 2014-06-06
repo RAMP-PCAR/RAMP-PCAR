@@ -387,11 +387,17 @@ define([
                     }
 
                     jqgrid = sectionNode.find("table");
-                    oTable = jqgrid.DataTable(tableOptions).on("page", function () {
-                        topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
+                    oTable = jqgrid.DataTable(tableOptions)
+                        .on("page", function () {
+                            topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
-                        console.log("subPanleDock");
-                    });
+                            console.log("subPanleDock");
+                        })
+                        .on("order", function() {
+                            topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
+
+                            console.log("subPanleDock");
+                        });
 
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
                     jqgridTableWrapper = sectionNode.find(".jqgrid_table_wrapper");
@@ -867,11 +873,19 @@ define([
                     * @method capturePanel
                     */
                     capturePanel: function () {
+                        var origin = "datagrid",
+                            target = highlightRow.getNode().find(".record-controls");
+
+                        if (datagridMode === GRID_MODE_FULL) {
+                            origin = "ex-datagrid";
+                            target = highlightRow.getNode().find(".button.details");
+                        }
+
                         if (highlightRow.isActive()) {
                             topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
-                                target: highlightRow.getNode().find(".record-controls"),
-                                consumeOrigin: "datagrid",
-                                origin: "datagrid"
+                                target: target,
+                                consumeOrigin: origin,
+                                origin: origin
                             });
                         }
                     }
