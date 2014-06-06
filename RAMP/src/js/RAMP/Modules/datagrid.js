@@ -1137,7 +1137,7 @@ define([
             topic.subscribe(EventManager.Datagrid.APPLY_EXTENT_FILTER, function () {
                 if (!ui.isReady()) {
                     ui.init();
-                } else {
+                } else if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
                 }
             });
