@@ -104,8 +104,6 @@ require([
                 FilterManager.init();
             });
 
-            /* Data Grid and Events End*/
-
             /* End - RAMP Events */
         }
         /* End - Bootstrapper functions */
