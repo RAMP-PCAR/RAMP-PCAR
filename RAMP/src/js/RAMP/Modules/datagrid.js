@@ -152,8 +152,10 @@ define([
                             if (index !== -1) {
                                 // Figure out which page the entry is in and navigate to that page
                                 var page = Math.floor(index / gridConfig.rowsPerPage);
-                                // False tells draw not to navigate to the first page
-                                jqgrid.DataTable().page(page).draw(false);
+                                if (oTable.page() != page) {
+                                    // False tells draw not to navigate to the first page
+                                    jqgrid.DataTable().page(page).draw(false);
+                                }                                
 
                                 jqgridTableWrapper.scrollTo(this.getNode(), 300, {
                                     axis: "y",
@@ -347,10 +349,7 @@ define([
                             destroy: true,
                             searching: false, // disable filtering, otherwise there will be a performance hit
                             pageLength: gridConfig.rowsPerPage,
-                            language: config.gridstrings,
-                            drawCallback: function () {
-                                topic.publish(EventManager.Datagrid.DRAW_COMPLETE);
-                            }
+                            language: config.gridstrings
                         };
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
@@ -388,16 +387,27 @@ define([
 
                     jqgrid = sectionNode.find("table");
                     oTable = jqgrid.DataTable(tableOptions)
-                        .on("page", function () {
+                        .on("page.dt", function () {
                             topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
                             console.log("subPanleDock");
                         })
-                        .on("order", function () {
+                        .on("order.dt", function () {
                             topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
                             console.log("subPanleDock");
-                        });
+                        })
+                    .on("draw.dt", function () {
+                        cacheSortedData();
+
+                        // Draw complete fires after fnAddData is complete and the datagrid UI
+                        // finishes updating
+                        ui.activateRows();
+
+                        ui.adjustPanelWidth();
+
+                        topic.publish(EventManager.Datagrid.DRAW_COMPLETE);                    
+                    });
 
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
                     jqgridTableWrapper = sectionNode.find(".jqgrid_table_wrapper");
@@ -514,19 +524,7 @@ define([
                             buttonNode.removeClass("state-expanded");
                             currentSortingMode = "asc";
                         }
-
-                        utilMisc.subscribeOnce(EventManager.Datagrid.DRAW_COMPLETE, function () {
-                            cacheSortedData();
-
-                            // Draw complete fires after fnAddData is complete and the datagrid UI
-                            // finishes updating
-                            activateRows();
-
-                            adjustPanelWidth();
-
-                            topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
-                        });
-
+                        
                         jqgrid.DataTable().order([0, currentSortingMode]).draw();
                     });
 
@@ -1121,17 +1119,9 @@ define([
                 }));
             });
 
-            utilMisc.subscribeOnce(EventManager.Datagrid.DRAW_COMPLETE, function () {
-                cacheSortedData();
-
-                // Draw complete fires after fnAddData is complete and the datagrid UI
-                // finishes updating
-                ui.activateRows();
-
-                ui.adjustPanelWidth();
-
+            oTable.one("draw.dt", function () {
                 topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
-            });
+            });                
 
             //add the data to the grid
             jqgrid.dataTable().fnAddData(data);
