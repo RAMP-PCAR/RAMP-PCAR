@@ -762,7 +762,7 @@ define([
                 .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
                 .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: 0, left: 35 }, { left: 35, right: 430, ease: "easeOutCirc" });
+            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: "430px", ease: "easeOutCirc" });
 
             /*function _toggleFullScreenMode_(fullscreen) {
             megaMenu.css({
@@ -873,12 +873,6 @@ define([
             function _toggleFullDataMode(fullData) {
                 _isFullData = util.isUndefined(fullData) ? !_isFullData : _isFullData;
 
-                utilDict.forEachEntry(subPanels, function (key) {
-                    hideSubPanel({
-                        origin: key
-                    });
-                });
-
                 if (_isFullData) {
                     TweenLite.fromTo(panelDiv, transitionDuration,
                         { width: 430, right: 0, left: "auto" },
@@ -892,6 +886,12 @@ define([
 
                     fullDataTimeLine.reverse();
                 }
+
+                utilDict.forEachEntry(subPanels, function (key) {
+                    hideSubPanel({
+                        origin: key
+                    });
+                });
             }
 
             return {
@@ -957,16 +957,16 @@ define([
                 * @param {Boolean} visible indicates whether the panel is visible or not
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
-                * @param {Boolean} isComplete indicates if transtion has completed or just started
+                * @param {Boolean} isComplete indicates if subPanel transtion has completed or just started
                 */
                 subPanelChange: function (visible, origin, container, isComplete) {
-                    if (_isFullData && !isComplete) {
+                    // check if the fullData transition is already underway
+                    if (!fullDataTimeLine.isActive() && _isFullData && !isComplete) {
+                        // adjust the sidePanel position
                         if (visible) {
                             fullDataSubpanelChangeTimeLine.play(0);
-                            //TweenLite.fromTo(panelDiv, transitionDuration, { right: 0, left: 35 }, { left: 35, right: 430, ease: "easeOutCirc" });
                         } else if (!visible) {
                             fullDataSubpanelChangeTimeLine.reverse();
-                            //TweenLite.fromTo(panelDiv, transitionDuration, { right: 430 }, { left: 35, right: 0, ease: "easeInCirc" });
                         }
                     }
 

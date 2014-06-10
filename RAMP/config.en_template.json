@@ -1343,7 +1343,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -1435,7 +1435,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "25px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -1453,7 +1453,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -1563,7 +1563,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -1618,7 +1618,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -1673,7 +1673,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -1930,7 +1930,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "70px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -1985,7 +1985,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "60px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2040,7 +2040,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "50px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2058,7 +2058,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {
@@ -2150,7 +2150,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "120px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2180,7 +2180,7 @@
                                                 {
                                                     "name": "columnTemplate",
                                                     "type": "String",
-                                                    "value": "unformatted_grid_value",
+                                                    "value": "title_span",
                                                     "description": "Template to apply to values in this column"
                                                 }
                                             ]
@@ -2590,7 +2590,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "60px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2700,7 +2700,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "100px",
+                                                    "value": "60px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2718,7 +2718,7 @@
                                                 {
                                                     "name": "alignment",
                                                     "type": "Integer",
-                                                    "value": 1,
+                                                    "value": 0,
                                                     "description": ""
                                                 },
                                                 {

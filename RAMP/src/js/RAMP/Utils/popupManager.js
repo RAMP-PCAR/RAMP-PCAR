@@ -29,6 +29,16 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
         */
         var popupBaseAttrTemplate = {
             /**
+             * The name of the event or events separated by a comma to trigger the closing of the popup.
+             *
+             * @property reverseEvent
+             * @type {String}
+             * @default null
+             * @for PopupBaseSettings
+             */
+            reverseEvent: null,
+
+            /**
             * The initially supplied handle to the PopupManager; a {{#crossLink "jQuery"}}{{/crossLink}} to listen to events on.
             *
             * @property handle
@@ -37,6 +47,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @for PopupBaseSettings
             */
             handle: null,
+
             /**
             * The initially supplied handle selector to be used in conjunction with handle when listening to events. Useful if the real handle doesn't exist yet.
             *
@@ -54,6 +65,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @default null
             */
             target: null,
+
             /**
             * The initially supplied target selector to be used in conjunction with target. Useful when the target of the popup doesn't exist yet.
             *
@@ -71,6 +83,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @default null
             */
             openHandler: null,
+
             /**
             * The function to execute when the popup closes. If the function is not supplied, `openHandler` is used instead.
             *
@@ -94,9 +107,10 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             *
             * @property activeClass
             * @type {String}
-            * @default null
+            * @default random guid
             */
             activeClass: null,
+
             /**
             * Indicates whether activeClass should be applied before openHandler function completes or after.
             *
@@ -105,6 +119,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @default null
             */
             setClassBefore: false,
+
             /**
             * Indicates whether to apply aria-* attributes to DOM nodes.
             *
@@ -172,22 +187,25 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                             if (this._attr.target) {
                                 actualTarget = this._attr.targetSelector ? this._attr.target.find(this._attr.targetSelector) : this._attr.target;
                             } else {
+                                // if the target cannot be found, a handle its returned
                                 actualTarget = this._attr.targetSelector ? ah.find(this._attr.targetSelector) : ah;
                             }
 
-                            popups.push(
-                                lang.mixin(Object.create(popupTempate), {
-                                    openHandler: this._attr.openHandler,
-                                    closeHandler: this._attr.closeHandler || this._attr.openHandler,
+                            if (actualTarget.length > 0) {
+                                popups.push(
+                                    lang.mixin(Object.create(popupTempate), {
+                                        openHandler: this._attr.openHandler,
+                                        closeHandler: this._attr.closeHandler || this._attr.openHandler,
 
-                                    activeClass: this._attr.activeClass,
-                                    setClassBefore: this._attr.setClassBefore,
-                                    useAria: this._attr.useAria,
+                                        activeClass: this._attr.activeClass,
+                                        setClassBefore: this._attr.setClassBefore,
+                                        useAria: this._attr.useAria,
 
-                                    handle: actualHandle,
-                                    target: actualTarget
-                                })
-                            );
+                                        handle: actualHandle,
+                                        target: actualTarget
+                                    })
+                                );
+                            }
                         }));
 
                     return popups;
@@ -286,6 +304,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @default null
                 */
                 openHandler: null,
+
                 /**
                 * The function to execute when the popup closes.
                 *
@@ -303,6 +322,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @default null
                 */
                 activeClass: null,
+
                 /**
                 * Indicates whether activeClass should be applied before openHandler function completes or after.
                 *
@@ -311,6 +331,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @default null
                 */
                 setClassBefore: null,
+
                 /**
                 * Indicates whether to apply aria-* attributes to DOM nodes.
                 *
@@ -328,6 +349,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @default null
                 */
                 handle: null,
+
                 /**
                 * An actual {{#crossLink "jQuery"}}{{/crossLink}} of the targets's DOM node.
                 *
@@ -540,10 +562,16 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 });
 
                 // mixing default and user-provided settings
-                popupAttr = lang.mixin(Object.create(popupBaseAttrTemplate), settings, {
-                    handle: handle,
-                    openHandler: openHandler
-                });
+                popupAttr = lang.mixin(Object.create(popupBaseAttrTemplate),
+                    {
+                        activeClass: UtilMisc.guid()
+                    },
+                    settings,
+                    {
+                        handle: handle,
+                        openHandler: openHandler
+                    }
+                );
 
                 popup = newPopup(popupAttr);
 
@@ -605,9 +633,19 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                             break;
 
                         default:
-                            handle.on(e, popup._attr.handleSelector, function () {
-                                popup.toggle(event.currentTarget);
-                            });
+                            if (popup._attr.reverseEvent) {
+                                handle
+                                    .on(e, popup._attr.handleSelector, function (event) {
+                                        popup.open(event.currentTarget);
+                                    })
+                                    .on(popup._attr.reverseEvent, popup._attr.handleSelector, function (event) {
+                                        popup.close(event.currentTarget);
+                                    });
+                            } else {
+                                handle.on(e, popup._attr.handleSelector, function (event) {
+                                    popup.toggle(event.currentTarget);
+                                });
+                            }
 
                             break;
                     }

@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window */
 /*jslint white: true */
 
 /**
@@ -393,7 +393,7 @@ define([
 
                             console.log("subPanleDock");
                         })
-                        .on("order", function() {
+                        .on("order", function () {
                             topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
                             console.log("subPanleDock");
@@ -575,6 +575,45 @@ define([
                             },
 
                             activeClass: "background-light",
+                            useAria: false
+                        }
+                    );
+
+                    popupManager.registerPopup(sectionNode, "hover, focus",
+                        function (d) { d.resolve(); },
+                        {
+                            handleSelector: ".full-table tr",
+                            activeClass: "background-light",
+                            useAria: false
+                        }
+                    );
+
+                    popupManager.registerPopup(sectionNode, "dblclick",
+                        function (d) {
+                            var //oldHandles = jqgrid.find(".expand-cell"),
+                                extraPadding = (this.handle.outerHeight() - this.target.height()) / 2;
+
+                            TweenLite.set(".expand-cell", { clearProps: "padding", className: "-=expand-cell" });
+                            //TweenLite.set(".expand-cell", { className: "-=expand-cell" });
+                            TweenLite.set(this.handle, { padding: extraPadding });
+
+                            window.getSelection().removeAllRanges();
+
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: "td",
+
+                            targetSelector: ".title-span",
+
+                            closeHandler: function (d) {
+                                TweenLite.set(this.handle, { clearProps: "padding" });
+                                TweenLite.set(this.handle, { className: "-=expand-cell" });
+
+                                d.resolve();
+                            },
+
+                            activeClass: "expand-cell",
                             useAria: false
                         }
                     );
@@ -908,7 +947,7 @@ define([
                     */
                     capturePanel: capturePanel
                 };
-            } ());
+            }());
 
         /**
         * Caches the sorted data from datatables for feature click events to consume.  Builds featureToPage as a
