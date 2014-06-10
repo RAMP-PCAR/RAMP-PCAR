@@ -19,12 +19,11 @@
 .full-data-mode {
 
 	.sub-panel-container {
-		right: 0px;
+		right: 0;
 		top: 44px;		
 
-		
-		.sub-panel {
-			margin-left: 0px !important;
+        .sub-panel {
+			margin-left: 0 !important;
 
 			h3 {
 				height: 22px;
@@ -33,6 +32,7 @@
 			}
 
 			.sub-panel-content {
+                text-align: left;
 				top: 33px;
 			}
 		}
@@ -99,6 +99,7 @@
 			#jqgrid {
 
 				margin-bottom: 0px !important;
+				position: relative;
 				
 				&.dataTable.table-simplify {
 					
@@ -124,6 +125,22 @@
 								
 								width: auto;
 								height: auto;
+							}
+						}
+
+						&.expand-cell {
+							background-color: @info-color !important;
+							//border: 1px solid @light-grey-color;
+							outline: 1px solid @midnight-blue-color;
+							color: #fff;
+							display: block;
+							position: absolute;
+							max-width: 250px;
+							font-weight: bold;
+
+							.title-span {
+								white-space: normal !important;
+								text-overflow: inherit !important;
 							}
 						}
 
