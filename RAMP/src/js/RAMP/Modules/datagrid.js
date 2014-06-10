@@ -515,6 +515,18 @@ define([
                             currentSortingMode = "asc";
                         }
 
+                        utilMisc.subscribeOnce(EventManager.Datagrid.DRAW_COMPLETE, function () {
+                            cacheSortedData();
+
+                            // Draw complete fires after fnAddData is complete and the datagrid UI
+                            // finishes updating
+                            activateRows();
+
+                            adjustPanelWidth();
+
+                            topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
+                        });
+
                         jqgrid.DataTable().order([0, currentSortingMode]).draw();
                     });
 
@@ -785,6 +797,50 @@ define([
                     tl.play();
                 }
 
+                function activateRows() {
+                    // If there was previously a selected point,
+                    // navigate to the correct page and highlight it in the datagrid
+                    highlightRow.refresh();
+                    zoomlightRow.refresh();
+
+                    // Scroll to the highlighted row first, if it fails,
+                    // scroll to the zoomed row
+                    if (!highlightRow.navigateToRow()) {
+                        zoomlightRow.navigateToRow();
+                    }
+
+                    // set the focus on the first button in the datagrid
+                    // is not a really good idea to just move focus around
+                    //jqgrid.dataTable().find("button:first").focus();
+
+                    zoomlightRow.activate();
+                    highlightRow.activate();
+
+                    capturePanel();
+                }
+
+                function capturePanel () {
+                    var origin = "datagrid",
+                        target = highlightRow.getNode().find(".record-controls");
+
+                    if (datagridMode === GRID_MODE_FULL) {
+                        origin = "ex-datagrid";
+                        target = highlightRow.getNode().find(".button.details");
+                    }
+
+                    if (highlightRow.isActive()) {
+                        topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
+                            target: target,
+                            consumeOrigin: origin,
+                            origin: origin
+                        });
+                    }
+                }
+
+                function adjustPanelWidth() {
+                    utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine]);
+                }
+
                 return {
                     /**
                     * The constructor method for the data grid. Adds the grid's panel to the UI, adds the data rows, and creates all event triggers
@@ -842,53 +898,15 @@ define([
                     *
                     * @method adjustPanelWidth
                     */
-                    adjustPanelWidth: function () {
-                        utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine]);
-                    },
+                    adjustPanelWidth: adjustPanelWidth,
 
-                    activateRows: function () {
-                        // If there was previously a selected point,
-                        // navigate to the correct page and highlight it in the datagrid
-                        highlightRow.refresh();
-                        zoomlightRow.refresh();
-
-                        // Scroll to the highlighted row first, if it fails,
-                        // scroll to the zoomed row
-                        if (!highlightRow.navigateToRow()) {
-                            zoomlightRow.navigateToRow();
-                        }
-
-                        // set the focus on the first button in the datagrid
-                        // is not a really good idea to just move focus around
-                        //jqgrid.dataTable().find("button:first").focus();
-
-                        zoomlightRow.activate();
-                        highlightRow.activate();
-
-                        this.capturePanel();
-                    },
+                    activateRows: activateRows,
 
                     /**
                     * publishes the subPanel_Capture event to the GUI class
                     * @method capturePanel
                     */
-                    capturePanel: function () {
-                        var origin = "datagrid",
-                            target = highlightRow.getNode().find(".record-controls");
-
-                        if (datagridMode === GRID_MODE_FULL) {
-                            origin = "ex-datagrid";
-                            target = highlightRow.getNode().find(".button.details");
-                        }
-
-                        if (highlightRow.isActive()) {
-                            topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
-                                target: target,
-                                consumeOrigin: origin,
-                                origin: origin
-                            });
-                        }
-                    }
+                    capturePanel: capturePanel
                 };
             } ());
 
