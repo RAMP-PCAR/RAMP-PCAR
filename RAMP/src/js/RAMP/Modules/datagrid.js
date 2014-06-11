@@ -386,28 +386,39 @@ define([
                     }
 
                     jqgrid = sectionNode.find("table");
+
+                    // True if a page change just occurred
+                    // False otherwise
+                    var pageChange = false;
+
                     oTable = jqgrid.DataTable(tableOptions)
                         .on("page.dt", function () {
                             topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
                             console.log("subPanleDock");
+
+                            pageChange = true;
                         })
                         .on("order.dt", function () {
                             topic.publish(EventManager.GUI.SUBPANEL_DOCK, { origin: "datagrid,ex-datagrid" });
 
                             console.log("subPanleDock");
                         })
-                    .on("draw.dt", function () {
-                        cacheSortedData();
+                        .on("draw.dt", function () {
+                            cacheSortedData();
 
-                        // Draw complete fires after fnAddData is complete and the datagrid UI
-                        // finishes updating
-                        ui.activateRows();
+                            // Do not activateRows if we're doing a page change
+                            if (pageChange) {
+                                pageChange = false;
+                            } else {
+                                ui.activateRows();
 
-                        ui.adjustPanelWidth();
+                            }
 
-                        topic.publish(EventManager.Datagrid.DRAW_COMPLETE);                    
-                    });
+                            ui.adjustPanelWidth();
+
+                            topic.publish(EventManager.Datagrid.DRAW_COMPLETE);                    
+                        });
 
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
                     jqgridTableWrapper = sectionNode.find(".jqgrid_table_wrapper");
