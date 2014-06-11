@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "0.0.19-0",
+    "version": "0.0.20-0",
     "description": "RAMP GIS viewer",
     "main": "index.js",
     "url" : "http://sncr01wbintfs1:8080/tfs/DC/_git/RAMP",
