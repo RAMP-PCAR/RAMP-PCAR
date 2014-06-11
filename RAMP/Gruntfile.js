@@ -5,7 +5,7 @@ var fs = require('fs'),
     extend = require('util')._extend,
     csvToJson = require("csvtojson").core.Converter;
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     var tempJsLibToClear = [],
         tempCssLibToClear = [],
 
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
             en: {},
             fr: {}
         };
-    
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -96,22 +96,15 @@ module.exports = function(grunt) {
 
             rampJsBefore: [
                 'build/js/'
-                //'<%= pkg.ramp.jsFolder %>/build/',
-                //'<%= pkg.ramp.jsFolder %>/lib/'
             ],
 
             rampJsAfter: [
                 'build/js/lib/_temp/',
                 tempJsLibToClear
-
-                //'<%= pkg.ramp.jsFolder %>/lib/_temp/',
-                //tempJsLibToClear
             ],
 
             rampCssBefore: [
                 'build/css/'
-                // '<%= pkg.ramp.cssFolder %>/build/',
-                // '<%= pkg.ramp.cssFolder %>/lib/'
             ],
 
             rampCssAfter: [
@@ -125,14 +118,6 @@ module.exports = function(grunt) {
                 '!src/css/lib/**/*.*',
 
                 tempCssLibToClear
-
-                //'<%= pkg.ramp.cssFolder %>/build/_temp/',
-                //'<%= pkg.ramp.cssFolder %>/lib/_temp/',
-                //tempCssLibToClear,
-                //'<%= pkg.ramp.cssFolder %>/src/**/*.pref.css',
-                //'<%= pkg.ramp.cssFolder %>/src/**/*.less.css',
-                //'<%= pkg.ramp.cssFolder %>/src/**/*.min.css',
-                //'!**/*.less.pref.css'
             ],
 
             pageBefore: [
@@ -140,11 +125,6 @@ module.exports = function(grunt) {
                 'src/pages/*-map.html',
                 'src/pages/*-carte.html',
                 '!*-src.html'
-
-                //'<%= pkg.ramp.pageFolder %>/<%= pkg.ramp.pageToBuildEn %>',
-                //'<%= pkg.ramp.pageFolder %>/<%= pkg.ramp.pageToBuildFr %>',
-                //'<%= pkg.ramp.pageFolder %>/*-build.html',
-                //'!<%= pkg.ramp.pageFolder %>/*-src.html'
             ],
 
             pageAfter: [
@@ -180,9 +160,6 @@ module.exports = function(grunt) {
                 files: [{
                     src: ['build/js/lib/_temp/**/*.js'],
                     dest: 'build/js/lib/lib.min.js'
-
-                    //src: ['<%= pkg.ramp.jsFolder %>/lib/_temp/**/*.js'],
-                    //dest: '<%= pkg.ramp.jsFolder %>/lib/lib.min.js'
                 }]
             },
 
@@ -200,9 +177,6 @@ module.exports = function(grunt) {
                 files: [{
                     src: ['build/css/lib/_temp/**/*.css'],
                     dest: 'build/css/lib/lib.min.css'
-
-                    //src: ['<%= pkg.ramp.cssFolder %>/lib/_temp/**/*.css'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/lib/lib.min.css'
                 }]
             }
         },
@@ -211,8 +185,7 @@ module.exports = function(grunt) {
             rampJsCore: {
                 options: {
                     compress: {
-                        //drop_console: true
-                        drop_console: false
+                        drop_console: true // strip all console statements from generated code
                     },
                     report: 'min',
                     sourceMap: false,
@@ -221,16 +194,13 @@ module.exports = function(grunt) {
                     // the banner is inserted at the top of the output
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
                 },
+
                 files: [{
                     expand: true,
 
                     cwd: 'src/js/RAMP/',
                     src: '**/*.js',
                     dest: 'build/js/RAMP/'
-
-                    //cwd: '<%= pkg.ramp.jsFolder %>/src/',
-                    //src: '**/*.js',
-                    //dest: '<%= pkg.ramp.jsFolder %>/build/'
                 }]
             },
 
@@ -244,10 +214,7 @@ module.exports = function(grunt) {
                     src: '<%= pkg.ramp.jsLibToUglify %>',
                     dest: 'src/js/lib/',
 
-                    //cwd: '<%= pkg.ramp.jsFolder %>/lib src/',
-                    //src: '<%= pkg.ramp.jsLibToUglify %>',
-                    //dest: '<%= pkg.ramp.jsFolder %>/lib src/',
-                    rename: function(dest, src) {
+                    rename: function (dest, src) {
                         var nd = dest + src.replace(".js", ".min.js");
                         tempJsLibToClear.push(nd);
                         return nd;
@@ -275,9 +242,6 @@ module.exports = function(grunt) {
                 files: [{
                     src: 'build/js/RAMP/RAMP-starter.js',
                     dest: 'build/js/RAMP/RAMP-starter.js'
-
-                    //src: '<%= pkg.ramp.jsFolder %>/build/RAMP/RAMP-starter.js',
-                    //dest: '<%= pkg.ramp.jsFolder %>/build/RAMP/RAMP-starter.js'
                 }]
             },
 
@@ -441,21 +405,13 @@ module.exports = function(grunt) {
                     spawn: false
                 },
                 files: ['src/js/RAMP/**/*.js'],
-                tasks: ['js']
+                tasks: ['js', 'build:bump-only-build']
                 //tasks: ['hint', 'jsstyle']
             },
 
-            //wjse: {
-            //options: {
-            //  spawn: false
-            //},
-            //files: ['src/js/RAMP/**/*.js'],
-            //tasks: ['js']
-            //},
-
             wcss: {
                 files: ['src/css/**/*.less'],
-                tasks: ['css']
+                tasks: ['css', 'build:bump-only-build']
             },
 
             wpage: {
@@ -463,12 +419,12 @@ module.exports = function(grunt) {
                     'src/ramp-src.html',
                     'src/pages/**/*.html'
                 ],
-                tasks: ['page']
+                tasks: ['page', 'build:bump-only-build']
             },
 
             wtemplate: {
                 files: ['src/js/RAMP/Modules/templates/*.json'],
-                tasks: ['copy:templates']
+                tasks: ['copy:templates', 'build:bump-only-build']
             }
         },
 
@@ -483,10 +439,6 @@ module.exports = function(grunt) {
                     cwd: 'src/js/RAMP/Modules/templates',
                     src: '**',
                     dest: 'build/js/RAMP/Modules/templates'
-
-                    //cwd: '<%= pkg.ramp.jsFolder %>/src/RAMP/Modules/templates',
-                    //src: '**',
-                    //dest: '<%= pkg.ramp.jsFolder %>/build/RAMP/Modules/templates'
                 }]
             },
 
@@ -496,10 +448,6 @@ module.exports = function(grunt) {
                     cwd: 'src/js/lib/',
                     src: ['<%= pkg.ramp.jsLibToConcat %>'],
                     dest: 'build/js/lib/_temp/'
-
-                    //cwd: '<%= pkg.ramp.jsFolder %>/lib src/',
-                    //src: ['<%= pkg.ramp.jsLibToConcat %>'],
-                    //dest: '<%= pkg.ramp.jsFolder %>/lib/_temp/'
                 }]
             },
 
@@ -528,10 +476,6 @@ module.exports = function(grunt) {
                     cwd: 'src/css/',
                     src: ['**/theme.less.min.css', '!lib/**/*.*'],
                     dest: 'build/css/'
-
-                    //cwd: '<%= pkg.ramp.cssFolder %>/src/',
-                    //src: '**/*.min.css',
-                    //dest: '<%= pkg.ramp.cssFolder %>/build/'
                 }]
             },
 
@@ -541,10 +485,6 @@ module.exports = function(grunt) {
                     cwd: 'src/css/lib/',
                     src: ['<%= pkg.ramp.cssLibToConcat %>'],
                     dest: 'build/css/lib/_temp/'
-
-                    //cwd: '<%= pkg.ramp.cssFolder %>/lib src/',
-                    //src: ['<%= pkg.ramp.cssLibToConcat %>'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/lib/_temp/'
                 }]
             },
 
@@ -554,10 +494,6 @@ module.exports = function(grunt) {
                     cwd: 'src/css/lib/',
                     src: ['<%= pkg.ramp.cssLibResourcesToCopy %>'],
                     dest: 'build/css/lib/'
-
-                    //cwd: '<%= pkg.ramp.cssFolder %>/lib src/',
-                    //src: ['<%= pkg.ramp.cssLibResourcesToCopy %>'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/lib/'
                 }]
             },
 
@@ -588,11 +524,7 @@ module.exports = function(grunt) {
                     src: ['**/*.pref.css', '!lib/**/*.*'],
                     dest: 'src/css/',
 
-                    //cwd: '<%= pkg.ramp.cssFolder %>/src/',
-                    //src: ['**/*.pref.css'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/src/',
-
-                    rename: function(dest, src) {
+                    rename: function (dest, src) {
                         return dest + src.replace(".pref.css", ".min.css");
                     }
                 }]
@@ -606,10 +538,7 @@ module.exports = function(grunt) {
                     src: '<%= pkg.ramp.cssLibToMinify %>',
                     dest: 'src/css/lib/',
 
-                    //cwd: '<%= pkg.ramp.cssFolder %>/lib src/',
-                    //src: '<%= pkg.ramp.cssLibToMinify %>',
-                    //dest: '<%= pkg.ramp.cssFolder %>/lib src/',
-                    rename: function(dest, src) {
+                    rename: function (dest, src) {
                         var nd = dest + src.replace(".css", ".min.css");
                         tempCssLibToClear.push(nd);
                         return nd;
@@ -631,10 +560,7 @@ module.exports = function(grunt) {
                     src: ['**/*.css', '!**/*.pref.css', '!**/*.min.css', '!lib/**/*.*'],
                     dest: 'src/css/',
 
-                    //cwd: '<%= pkg.ramp.cssFolder %>/src/',
-                    //src: ['**/*.css', '!**/*.pref.css', '!**/*.min.css'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/src/',
-                    rename: function(dest, src) {
+                    rename: function (dest, src) {
                         return dest + src.replace(".css", ".pref.css");
                     }
                 }]
@@ -663,10 +589,7 @@ module.exports = function(grunt) {
                     src: '**/theme.less',
                     dest: 'src/css/',
 
-                    //cwd: '<%= pkg.ramp.cssFolder %>/src/',
-                    //src: ['<%= pkg.ramp.lessFileToCss %>'],
-                    //dest: '<%= pkg.ramp.cssFolder %>/src/',
-                    rename: function(dest, src) {
+                    rename: function (dest, src) {
                         return dest + src.replace(".less", ".less.css");
                     }
                 }]
@@ -692,15 +615,17 @@ module.exports = function(grunt) {
             options: {
                 files: ['package.json', 'yuidoc.json'],
                 updateConfigs: ['pkg', 'yuidocconfig'],
-                commit: false,
-                //commitMessage: 'Release v%VERSION%',
-                //commitFiles: ['package.json'], // '-a' for all files
+                commit: true,
+                commitMessage: 'Release v%VERSION%',
+                commitFiles: ['.'], //['package.json', 'yuidoc.json'], // '-a' for all files
                 createTag: false,
                 //tagName: 'v%VERSION%',
                 //tagMessage: 'Version %VERSION%',
-                push: false //,
-                //pushTo: 'upstream',
-                //gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
+                push: false, //, false
+                //pushTo: 'http://sncr01wbintfs1:8080/tfs/DC/_git/RAMP' //'upstream',
+                //pushTo: 'http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP', //'upstream',
+                pushTo: 'origin', //'upstream',
+                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d' // options to use with '$ git describe'
             }
         },
 
@@ -888,7 +813,7 @@ module.exports = function(grunt) {
                 src: [
                         'src/pages/<%= pkg.ramp.theme %>-map.html',
                         'src/pages/<%= pkg.ramp.theme %>-carte.html'
-                    ],
+                ],
                 dest: 'build/',
                 options: {
                     beautify: false,
@@ -964,7 +889,7 @@ module.exports = function(grunt) {
     grunt.registerTask('cleanAll', ['clean', 'notify:clean', 'hint:cleanUp']);
 
     // HINT
-    grunt.registerTask('hint:cleanUp', function() {
+    grunt.registerTask('hint:cleanUp', function () {
         var done = this.async();
         grunt.file.delete('.stylishcolors', {
             force: true
@@ -988,16 +913,16 @@ module.exports = function(grunt) {
 
     // STRINGS
     // load and parse locale strings from an csv file
-    grunt.registerTask('csvStrings', function(suffix) {
+    grunt.registerTask('csvStrings', function (suffix) {
         var done = this.async(),
             fileName = 'src/assets/strings_' + suffix + '.csv',
             csvToJsonConverter = new csvToJson();
 
-        csvToJsonConverter.on("end_parsed", function(jsonObj) {
+        csvToJsonConverter.on("end_parsed", function (jsonObj) {
             if (jsonObj.csvRows.length === 0) {
                 console.log('File', fileName, "is empty or doesn't exit");
             } else {
-                jsonObj.csvRows.map(function(elm) {
+                jsonObj.csvRows.map(function (elm) {
                     localeStrings[suffix][elm.key] = elm.value;
                 });
             }
@@ -1010,7 +935,7 @@ module.exports = function(grunt) {
     });
 
     // load and parse locale strings from the config file either local or returned by the service
-    grunt.registerTask('configStrings', function(suffix) {
+    grunt.registerTask('configStrings', function (suffix) {
         var done = this.async(),
             fileName = grunt.config('pkg.ramp.configFileLocation');
 
@@ -1027,10 +952,10 @@ module.exports = function(grunt) {
 
         console.log("Loading", fileName);
 
-        fs.readFile(fileName, function(err, data) {
+        fs.readFile(fileName, function (err, data) {
             if (err) {
                 request(fileName,
-                    function(error, response, body) {
+                    function (error, response, body) {
                         if (!error && response.statusCode == 200) {
                             parseStrings(JSON.parse(JSON.parse(body).json));
                             done();
@@ -1047,7 +972,7 @@ module.exports = function(grunt) {
         });
     });
 
-    grunt.registerTask('cake', function() {
+    grunt.registerTask('cake', function () {
         var done = this.async();
 
         console.log("The cake is a lie\nThe cake is a lie\nThe cake is a lie\nThe cake is a lie...");
@@ -1056,14 +981,14 @@ module.exports = function(grunt) {
 
     // OTHER
     //
-    grunt.registerTask('thanks', function() {
+    grunt.registerTask('thanks', function () {
         var done = this.async(),
             fileName = './node_modules/grunt/lib/grunt/fail.js';
 
         fs.readFile(fileName, {
-                encoding: "utf8"
-            },
-            function(err, data) {
+            encoding: "utf8"
+        },
+            function (err, data) {
                 if (err) {
                     console.log("Error loading file", fileName, err);
                     done();
@@ -1073,6 +998,15 @@ module.exports = function(grunt) {
                     done();
                 }
             });
+    });
+
+    // BUILD
+    grunt.registerTask('build:bump-only-build', function (a, b) {
+        //console.log(a, b);
+
+        grunt.task.run('bump-only:build');
+        grunt.config('notify.bump.options.message', 'Version bumpted to <%= pkg.version %>');
+        grunt.task.run('notify:bump');
     });
 
     // ASSETS
@@ -1100,18 +1034,18 @@ module.exports = function(grunt) {
     grunt.registerTask('pageStrings', ['csvStrings:en', 'csvStrings:fr', 'configStrings:en', 'configStrings:fr']);
     grunt.registerTask('pageReplace', ['replace:stringsEn', 'replace:stringsFr']);
 
-    grunt.registerTask('updateConfig', function(key, value) {
+    grunt.registerTask('updateConfig', function (key, value) {
         console.log(key, value);
         grunt.config(key, value);
     });
 
-    grunt.registerTask('pageBuild', function() {
+    grunt.registerTask('pageBuild', function () {
         var done = this.async(),
             themes = grunt.config('pkg.ramp.themes'),
             tasks = [],
             filesToMinify = {};
 
-        themes.map(function(elm) {
+        themes.map(function (elm) {
             var themeFiles,
                 fileNameFr = elm + '-' + grunt.config('pkg.ramp.pageToBuildEn') + '.html',
                 fileNameEn = elm + '-' + grunt.config('pkg.ramp.pageToBuildFr') + '.html';
@@ -1154,7 +1088,7 @@ module.exports = function(grunt) {
     grunt.registerTask('page', ['pageStrings', 'clean:pageBefore', 'pageBuild']);
 
     // API - Docs
-    grunt.registerTask('api:enhance', function() {
+    grunt.registerTask('api:enhance', function () {
         var done = this.async(),
             themeFileName = './node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/layouts/main.handlebars',
             optionsFileName = './node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/partials/options.handlebars',
@@ -1193,7 +1127,7 @@ module.exports = function(grunt) {
     grunt.registerTask('api', ['clean:yuidoc', 'api:enhance', 'yuidoc', 'replace:api_dojo', 'replace:api_esri', 'clean:docco', 'docco', 'notify:api']);
 
     grunt.registerTask('force', 'turns the --force option ON',
-        function(value) {
+        function (value) {
             if (value === 'true') {
                 grunt.option('force', true);
             } else {
@@ -1202,11 +1136,11 @@ module.exports = function(grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'build:bump-only-build', 'notify:build']);
     grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'notify:build']);
 
     // DEPLOY
-    grunt.registerTask('clean:deploy', function() {
+    grunt.registerTask('clean:deploy', function () {
         var done = this.async();
 
         grunt.config('clean.deploy_', grunt.config('pkg.ramp.deployFolder'));
@@ -1259,7 +1193,7 @@ module.exports = function(grunt) {
     }
 
     // on watch events configure jshint:all to only run on changed file
-    grunt.event.on('watch', function(action, filepath) {
+    grunt.event.on('watch', function (action, filepath) {
         grunt.config('jshint.files', filepath);
         grunt.config('jscs.main.files.src', filepath);
 

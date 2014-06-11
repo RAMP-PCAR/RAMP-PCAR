@@ -1,6 +1,6 @@
 {
     "name": "RAMP GIS Viewer",
-    "version": "0.0.23-0",
+    "version": "1.0.37-14",
     "description": "RAMP GIS viewer",
     "linkNatives": "true",
     "options": {
@@ -44,5 +44,5 @@
             }
         }
     },
-    "logo": "../../assets/images/arctic_fox_logo_200x100.png"
+    "logo": "../../src/assets/images/arctic_fox_logo_200x100.png"
 }

@@ -129,7 +129,7 @@ define([
                         focusedButton: null,
 
                         isActive: function () {
-                            return graphic != null;
+                            return graphic !== null;
                         },
 
                         isEqual: function (url, oid) {
@@ -152,10 +152,10 @@ define([
                             if (index !== -1) {
                                 // Figure out which page the entry is in and navigate to that page
                                 var page = Math.floor(index / gridConfig.rowsPerPage);
-                                if (oTable.page() != page) {
+                                if (oTable.page() !== page) {
                                     // False tells draw not to navigate to the first page
                                     jqgrid.DataTable().page(page).draw(false);
-                                }                                
+                                }
 
                                 jqgridTableWrapper.scrollTo(this.getNode(), 300, {
                                     axis: "y",
@@ -277,7 +277,9 @@ define([
                     // eg. there were value of "" assigned to the toggle button template, in the code
                     // provided. A temporary property name "attribute" is used. Not sure if this will be
                     // used by ECDMP, therefore, leave the empty value in the template
-                    var toggleButtonData = { "buttonLabel": "Sort", "classAddition": "font-medium global-button", "someAttribute": "" };
+                    var toggleButtonData = {
+                        "buttonLabel": "Sort", "classAddition": "font-medium global-button", "someAttribute": ""
+                    };
 
                     return toggleButtonData;
                 }
@@ -294,7 +296,8 @@ define([
                         if (utilMisc.isUndefined(obj[datagridMode])) {
                             var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
 
-                            tmpl.cache = {};
+                            tmpl.cache = {
+                            };
 
                             tmpl.templates = data_grid_template_json;
 
@@ -313,7 +316,8 @@ define([
                             // retrieve extendedGrid config object
                             var extendedGrid = getGridConfig(obj.featureUrl).gridColumns;
 
-                            tmpl.cache = {};
+                            tmpl.cache = {
+                            };
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
@@ -412,12 +416,11 @@ define([
                                 pageChange = false;
                             } else {
                                 ui.activateRows();
-
                             }
 
                             ui.adjustPanelWidth();
 
-                            topic.publish(EventManager.Datagrid.DRAW_COMPLETE);                    
+                            topic.publish(EventManager.Datagrid.DRAW_COMPLETE);
                         });
 
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
@@ -535,7 +538,7 @@ define([
                             buttonNode.removeClass("state-expanded");
                             currentSortingMode = "asc";
                         }
-                        
+
                         jqgrid.DataTable().order([0, currentSortingMode]).draw();
                     });
 
@@ -589,7 +592,9 @@ define([
                     );
 
                     popupManager.registerPopup(sectionNode, "hover, focus",
-                        function (d) { d.resolve(); },
+                        function (d) {
+                            d.resolve();
+                        },
                         {
                             handleSelector: ".full-table tr",
                             activeClass: "background-light",
@@ -743,7 +748,8 @@ define([
                         newWrapper,
                         deffered = new Deferred();
 
-                    tmpl.cache = {};
+                    tmpl.cache = {
+                    };
                     tmpl.templates = data_grid_template_json;
                     newWrapper = tmpl(
                         "datagrid_manager_table_Template",
@@ -796,7 +802,8 @@ define([
                         tl = new TimelineLite({ paused: true }),
                         deffered = new Deferred();
 
-                    tmpl.cache = {};
+                    tmpl.cache = {
+                    };
                     tmpl.templates = data_grid_template_json;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
@@ -867,7 +874,7 @@ define([
                     capturePanel();
                 }
 
-                function capturePanel () {
+                function capturePanel() {
                     var origin = "datagrid",
                         target = highlightRow.getNode().find(".record-controls");
 
@@ -909,12 +916,12 @@ define([
                                     initScrollListeners();
                                     initUIListeners();
                                 }
-                            );
+                                );
 
                             sectionNode = $("#" + GlobalStorage.config.divNames.datagrid);
                             refreshPanel(d);
                         }
-                    ),
+                ),
 
                     getDatagridMode: function () {
                         return datagridMode;
@@ -967,12 +974,14 @@ define([
         */
         function cacheSortedData() {
             var elements = oTable.rows().data();
-            featureToPage = {};
+            featureToPage = {
+            };
             $.each(elements, function (idx, val) {
                 var layer = val.last().featureUrl;
                 var fid = GraphicExtension.getOid(val.last().feature);
                 if (!(layer in featureToPage)) {
-                    featureToPage[layer] = {};
+                    featureToPage[layer] = {
+                    };
                 }
                 featureToPage[layer][fid] = idx;
             });
@@ -1132,7 +1141,7 @@ define([
 
             oTable.one("draw.dt", function () {
                 topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
-            });                
+            });
 
             //add the data to the grid
             jqgrid.dataTable().fnAddData(data);

@@ -190,6 +190,8 @@ node_modules
 
 #### RAMP-specific
 theme.less.pref.css
-RAMP/src/css/ramp-gcwu-intranet/theme.less.pref.css
-RAMP/src/css/ramp-gcwu-fegc/theme.less.pref.css
-RAMP/src/css/ramp-base/theme.less.pref.css
+/RAMP/src/css/ramp-gcwu-intranet/theme.less.pref.css
+/RAMP/src/css/ramp-gcwu-fegc/theme.less.pref.css
+/RAMP/src/css/ramp-base/theme.less.pref.css
+/RAMP/.stylishcolors
+/RAMP/docs

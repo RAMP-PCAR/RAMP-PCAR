@@ -1,9 +1,9 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "0.0.23-0",
+    "version": "1.0.37-14",
     "description": "RAMP GIS viewer",
     "main": "index.js",
-    "url" : "http://sncr01wbintfs1:8080/tfs/DC/_git/RAMP",
+    "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -47,7 +47,7 @@
         "grunt-chmod": "~1.0.3"
     },
 
-	"hintColors" : {
+    "hintColors" : {
         "meta": "gray",
         "reason": "cyan",
         "verbose": "white",
@@ -131,12 +131,13 @@
         "pageToBuildFr": "carte",
 
         "assetsToCopy": [
+            "config.en.json",
             "assets/**/*.*",
             "!assets/*.csv",
             "includes/**/*.*"
         ],
 
-        "deployFolder": "c:/deeep",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
 
         "docco": {
             "path": "./src/js/RAMP",

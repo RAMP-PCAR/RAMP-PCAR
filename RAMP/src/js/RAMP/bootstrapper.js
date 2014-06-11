@@ -131,7 +131,7 @@ require([
 
         //loading config object from JSON file
 
-        var configFile = (lang === "fr") ? "../config.fr.json" : "../config.en.json";
+        var configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
 
         // Request the JSON config file
         var defJson = xhr(configFile, {
