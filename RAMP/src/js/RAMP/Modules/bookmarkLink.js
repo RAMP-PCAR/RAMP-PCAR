@@ -418,7 +418,7 @@ define([
             * @private
             */
             subscribeAndUpdate: function () {
-                RampMap.getMap().on(EventManager.Map.EXTENT_CHANGE, function (event) {
+                topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
                     // Event fields: extent, delta, levelChange, lod;
                     addParameter(EVENT_EXTENT_CHANGE, {
                         xmin: event.extent.xmin,
