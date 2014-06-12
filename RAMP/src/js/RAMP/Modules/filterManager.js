@@ -226,7 +226,11 @@ define([
                         // turned on, the rest gets turned off
                         eyeCheckboxes.setState(function (checkbox) {
                             var layerId = $(checkbox).findInputLabel().data("layer-id");
-                            return evt.layerIds.contains(layerId);
+                            if (evt.layerIds.contains(layerId)) {
+                                return evt.checked;
+                            } else {
+                                return !evt.checked;
+                            }
                         });
 
                         dojoArray.forEach(eyeCheckboxes.getNodes(), function (checkbox) {
@@ -241,7 +245,11 @@ define([
                         // turned on, the rest gets turned off
                         boxCheckboxes.setState(function (checkbox) {
                             var layerId = $(checkbox).findInputLabel().data("layer-id");
-                            return evt.layerIds.contains(layerId);
+                            if (evt.layerIds.contains(layerId)) {
+                                return evt.checked;
+                            } else {
+                                return !evt.checked;
+                            }
                         });
 
                         dojoArray.forEach(boxCheckboxes.getNodes(), function (checkbox) {
