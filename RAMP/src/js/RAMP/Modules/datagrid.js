@@ -437,9 +437,14 @@ define([
                         // explicity force-set width of the jqgrid so it woulnd't compress when a sub-panel is opened
                         // also check if the width is no greater than that of the container, hide the horizontal scrollbar
                         forcedWidth = jqgrid.outerWidth();
-                        if (forcedWidth === jqgridWrapper.outerWidth()) {
+
+                        ui.adjustPanelWidth();
+
+                        /*if (forcedWidth === jqgridWrapper.outerWidth()) {
                             dataTablesScrollBody.addClass("overflow-x-hidden");
-                        }
+                        } else {
+                            dataTablesScrollBody.removeClass("overflow-x-hidden");
+                        }*/
 
                         jqgrid.forceStyle({ width: forcedWidth + "px" });
                     }
@@ -893,7 +898,15 @@ define([
                 }
 
                 function adjustPanelWidth() {
-                    utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine]);
+                    if (datagridMode === GRID_MODE_SUMMARY) {
+                        utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine]);
+                    } else {
+                        if (jqgrid.outerWidth() === jqgridWrapper.outerWidth()) {
+                            dataTablesScrollBody.addClass("overflow-x-hidden");
+                        } else {
+                            dataTablesScrollBody.removeClass("overflow-x-hidden");
+                        }
+                    }
                 }
 
                 return {
@@ -1220,6 +1233,13 @@ define([
                     ui.init();
                 } else if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
+                }
+            });
+
+            topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
+                if (evt.origin === "ex-datagrid" &&
+                    evt.isComplete) {
+                    ui.adjustPanelWidth();
                 }
             });
         }

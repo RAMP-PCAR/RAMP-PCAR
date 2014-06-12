@@ -17,10 +17,13 @@
 	"title_span": "<span class='title-span' title='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}</span>",
 	
 	// sample icon template
-	"graphic_icon":"<div class='point-image-box'>									
+	"graphic_icon":"<div class='point-image-box'>		
 						<img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image background-white'>
 					</div>",
 					
 	// Details button
-	"details_button":"<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=o.str.txtGrid_details%}</button>"	
+	"details_button":"<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=o.str.txtGrid_details%}</button>",
+
+    // Url
+    "url": "<a src='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=o.str.txtGrid_details%}</a>"
 }
