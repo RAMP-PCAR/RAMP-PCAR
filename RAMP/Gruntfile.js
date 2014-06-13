@@ -1,5 +1,3 @@
-// hello
-
 var fs = require('fs'),
     request = require('request'),
     extend = require('util')._extend,
