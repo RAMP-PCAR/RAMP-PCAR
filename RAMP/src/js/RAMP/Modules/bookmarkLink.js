@@ -144,10 +144,10 @@ define([
         * A dictionary mapping layer id (String) to layer objects (FeatureLayer) that are currently visible on the map.
         *
         * @private
-        * @property visibleLayers
+        * @property hiddenLayers
         * @type {Object}
         */
-            visibleLayers = {},
+            hiddenLayers = {},
 
         /**
         * A set containing the names of all the layers that currently have their bounding boxes
@@ -491,25 +491,22 @@ define([
                     var layerName = $(event.node).findInputLabel().data("layer-id");
 
                     if (event.checked) {
-                        visibleLayers[layerName] = true;
+                        delete hiddenLayers[layerName];
                     } else {
-                        delete visibleLayers[layerName];
+                        hiddenLayers[layerName] = true;
                     }
 
-                    if (UtilDict.isEmpty(visibleLayers)) {
-                        // If we have no visible layers, remove the visible layers parameter
-                        // and set global layer to false
+                    if (UtilDict.isEmpty(hiddenLayers)) {
+                        // If we have no hidden layers, remove both parameters (since it's status quo)
                         addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
+                        addParameter(EVENT_FILTER_GLOBAL_LAYER, null);
 
-                        addParameter(EVENT_FILTER_GLOBAL_LAYER, {
-                            globalLayer: false
-                        });
                     } else {
-                        // Otherwise add the visible layers parameter and remove the global layer
+                        // Otherwise add the hidden layers parameter and remove the global layer
                         // parameter
                         addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
                             // Convert an array of string into a "+" delimited string
-                            visibleLayers: Object.keys(visibleLayers).join("+")
+                            hiddenLayers: Object.keys(hiddenLayers).join("+")
                         });
 
                         addParameter(EVENT_FILTER_GLOBAL_LAYER, null);
@@ -680,28 +677,25 @@ define([
                     addParameter(EVENT_FILTER_GLOBAL_LAYER, {
                         globalLayer: queryObject.globalLayer
                     });
-                } else if (queryObject.visibleLayers) {
+                } else if (queryObject.hiddenLayers) {
                     // Doing "else if" here instead of "if" because these two options are exclusive
 
-                    // Turn all layers off
-                    topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, {
-                        visible: false
-                    });
+                    layerIds = queryObject.hiddenLayers.split("+");
 
-                    layerIds = queryObject.visibleLayers.split("+");
-
-                    // Then selective turn on the ones that were selected
+                    // Selectively turn off the ones that were in the query (the rest will be 
+                    // turned on)
                     topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
-                        layerIds: layerIds
+                        layerIds: layerIds,
+                        checked: false
                     });
 
                     addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
-                        visibleLayers: queryObject.visibleLayers
+                        hiddenLayers: queryObject.hiddenLayers
                     });
                 }
 
                 if (queryObject.globalBox) {
-                    topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, {
+                    topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY, {
                         visible: UtilMisc.parseBool(queryObject.globalBox)
                     });
 
