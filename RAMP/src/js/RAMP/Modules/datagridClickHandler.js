@@ -121,9 +121,11 @@ define([
                                 "scroll": true
                             });
                         },
+
                         doOnHide: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
                         },
+
                         doOnDestroy: function () {
                             selectedGraphic = null;
 
