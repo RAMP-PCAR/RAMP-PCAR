@@ -183,7 +183,7 @@ module.exports = function (grunt) {
             rampJsCore: {
                 options: {
                     compress: {
-                        //drop_console: true // strip all console statements from generated code
+                        drop_console: true // strip all console statements from generated code
                     },
                     report: 'min',
                     sourceMap: false,
