@@ -51,6 +51,7 @@ require([
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
+    "themes/theme",
 
 /* Utils */
     "utils/util",
@@ -65,7 +66,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    ramp, globalStorage, gui, EventManager,
+    ramp, globalStorage, gui, EventManager, theme,
 
     /* Utils */
     utilMisc) {
@@ -102,6 +103,8 @@ require([
 
                 //initialze the filter
                 FilterManager.init();
+
+                theme.tooltipster();
             });
 
             /* End - RAMP Events */

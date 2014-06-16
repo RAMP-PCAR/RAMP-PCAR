@@ -28,7 +28,9 @@
         "txtTimePeriod": "Time Period",
         "txtSupplementalData": "Supplemental Data",
         "txtEmailUrlSubject": "ECDMP GIS Viewer",
-        "txtEmailUrlBody": "Here's a cool map:"
+        "txtEmailUrlBody": "Here's a cool map:",
+        "txtClose": "Close",
+        "txtOpen": "Open"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
@@ -368,7 +370,7 @@
                     {
                         "id": "waterbodyCol",
                         "fieldName": "WATRBODY_C",
-                        "width": "60px",
+                        "width": "90px",
                         "isSortable": false,
                         "sortType": "string",
                         "alignment": 1,
@@ -378,7 +380,7 @@
                     {
                         "id": "countryCol",
                         "fieldName": "COUNTRY_C",
-                        "width": "50px",
+                        "width": "80px",
                         "isSortable": false,
                         "sortType": "string",
                         "alignment": 0,

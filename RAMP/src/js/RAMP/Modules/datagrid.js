@@ -52,7 +52,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager",
+        "ramp/eventManager", "themes/theme",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -70,7 +70,7 @@ define([
         FeatureLayer, EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager,
+        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
 
     // Util
         utilMisc, utilArray, utilDict, popupManager, tmplHelper) {
@@ -428,6 +428,8 @@ define([
                     dataTablesScroll = sectionNode.find(".dataTables_scroll");
                     dataTablesScrollBody = dataTablesScroll.find(".dataTables_scrollBody");
                     dataTablesScrollHead = dataTablesScroll.find(".dataTables_scrollHead");
+
+                    Theme.tooltipster(jqgridWrapper);
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {

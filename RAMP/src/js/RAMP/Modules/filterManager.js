@@ -55,7 +55,7 @@ define([
         "esri/tasks/query", "esri/layers/FeatureLayer",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager",
+        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager"],
@@ -71,7 +71,7 @@ define([
         EsriQuery, FeatureLayer,
 
     /* Ramp */
-        Ramp, GlobalStorage, RampMap, EventManager,
+        Ramp, GlobalStorage, RampMap, EventManager, Theme,
 
     /* Util */
         TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager) {
@@ -282,6 +282,9 @@ define([
                 * @private
                 */
                 function initTooltips() {
+                    Theme.tooltipster(filterGlobalToggles);
+                    Theme.tooltipster(layerList);
+
                     PopupManager.registerPopup(layerList, "hoverIntent",
                         function () {
                             if (this.target.attr("title")) {
@@ -503,7 +506,7 @@ define([
                         );
                     }
                 };
-            } ());
+            }());
 
         /**
         * Initiates a listener to handle tab deselected event

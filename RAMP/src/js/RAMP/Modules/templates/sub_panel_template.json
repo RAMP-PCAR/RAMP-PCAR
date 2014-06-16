@@ -8,59 +8,61 @@
  * 
  */
 {
-	"summary_sub_panel_container":
+    "summary_sub_panel_container":
 
-		"<div class='sub-panel-container summary-data-details'>
-			<div class='sub-panel background-white'>
-				
-				{% include('summary_sub_panel_content', o); %}
+        "<div class='sub-panel-container summary-data-details'>
+            <div class='sub-panel background-white'>
+                
+                {% include('summary_sub_panel_content', o); %}
 
-				<button class='sub-panel-toggle button-none state-expanded'>
-				</button>
-				<div class='guide'>
-				</div>
-			</div>
-			<div class='shadow'>
-			</div>
-		</div>",
+                <button class='sub-panel-toggle button-none state-expanded tooltip' title='{%=o.closeTitle%}'>
+                    <span class='wb-invisible'>{%=o.closeTitle%}</span>                        
+                </button>
+                <div class='guide'>
+                </div>
+            </div>
+            <div class='shadow'>
+            </div>
+        </div>",
 
-	"summary_sub_panel_content":
-	
-		"<h3 class='margin-top-none background-accent panel-name'>
-			{%=o.panelName%}</h3>
-		<div class='sub-panel-content'>
-			<h4 class='margin-top-small panel-title'>
-				{%=o.title%}</h4>
-			<div class='margin-left-medium margin-right-medium panel-content-div'>
-			</div>
-		</div>",
-	
-	"full_sub_panel_container":
+    "summary_sub_panel_content":
+    
+        "<h3 class='margin-top-none background-accent panel-name'>
+            {%=o.panelName%}</h3>
+        <div class='sub-panel-content'>
+            <h4 class='margin-top-small panel-title'>
+                {%=o.title%}</h4>
+            <div class='margin-left-medium margin-right-medium panel-content-div'>
+            </div>
+        </div>",
+    
+    "full_sub_panel_container":
 
-		"<div class='sub-panel-container full-data-details'>
-			<div class='sub-panel background-white'>
-				
-				{% include('full_sub_panel_content', o); %}
+        "<div class='sub-panel-container full-data-details'>
+            <div class='sub-panel background-white'>
+                
+                {% include('full_sub_panel_content', o); %}
 
-				<button class='sub-panel-toggle button-none state-expanded'>
-				</button>
-				<div class='guide'>
-				</div>
-			</div>
-			<div class='shadow'>
-			</div>
-		</div>",
+                <button class='sub-panel-toggle button-none state-expanded tooltip' title='{%=o.closeTitle%}'>
+                    <span class='wb-invisible'>{%=o.closeTitle%}/span>
+                </button>
+                <div class='guide'>
+                </div>
+            </div>
+            <div class='shadow'>
+            </div>
+        </div>",
 
-	"full_sub_panel_content":
-		
-		"<div class='background-white panel-name-div'>
-			<h3 class='panel-name font-large'>
-				{%=o.panelName%}</h3>
-		</div>
-		<div class='sub-panel-content'>
-			<h4 class='margin-top-small panel-title'>
-				{%=o.title%}</h4>
-			<div class='margin-left-medium margin-right-medium panel-content-div'>
-			</div>
-		</div>"
+    "full_sub_panel_content":
+        
+        "<div class='background-white panel-name-div'>
+            <h3 class='panel-name font-large'>
+                {%=o.panelName%}</h3>
+        </div>
+        <div class='sub-panel-content'>
+            <h4 class='margin-top-small panel-title'>
+                {%=o.title%}</h4>
+            <div class='margin-left-medium margin-right-medium panel-content-div'>
+            </div>
+        </div>"
 }

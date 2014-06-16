@@ -81,6 +81,22 @@ define(["utils/util", ],
                 _toggleFullScreenMode(fullscreen);
 
                 return this;
+            },
+
+            tooltipster: function (target, type) {
+                target = target || $("body");
+
+                switch (type) {
+                    case "map":
+                        break;
+
+                    default:
+                        target.find('.tooltip, ._tooltip').tooltipster({
+                            theme: 'tooltipster-shadow',
+                            delay: 500
+                        });
+                        break;
+                }
             }
         };
     });

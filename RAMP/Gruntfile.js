@@ -183,7 +183,7 @@ module.exports = function (grunt) {
             rampJsCore: {
                 options: {
                     compress: {
-                        drop_console: true // strip all console statements from generated code
+                        //drop_console: true // strip all console statements from generated code
                     },
                     report: 'min',
                     sourceMap: false,
@@ -415,9 +415,10 @@ module.exports = function (grunt) {
             wpage: {
                 files: [
                     'src/ramp-src.html',
-                    'src/pages/**/*.html'
+                    'src/pages/**/*.html',
+                    'src/includes/**/*.txt'
                 ],
-                tasks: ['page', 'build:bump-only-build']
+                tasks: ['page', 'assets', 'build:bump-only-build']
             },
 
             wtemplate: {

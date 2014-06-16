@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--[if IE 7]><html lang="@@langMain" class="no-js ie7 @@rampTheme"><![endif]-->
 <!--[if IE 8]><html lang="@@langMain" class="no-js ie8 @@rampTheme"><![endif]-->
 <!--[if gt IE 8]><!-->
@@ -53,9 +53,9 @@
     <!-- /build -->
     <!-- EsriCSSStart -->
     <link media="screen" href="//serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/esri/css/esri.css"
-        type="text/css" rel="stylesheet">
+          type="text/css" rel="stylesheet">
     <link media="screen" href="//serverapi.arcgisonline.com/jsapi/arcgis/3.5/js/dojo/dijit/themes/tundra/tundra.css"
-        type="text/css" rel="stylesheet">
+          type="text/css" rel="stylesheet">
     <!-- EsriCSSEnd -->
     <!-- CustomCSSStart -->
     <!-- CustomCSSEnd -->
@@ -78,27 +78,33 @@
                                         <ul class="mb-menu" data-ajax-replace="includes/menu-@@langMainLong.txt">
                                             <li>
                                                 <div>
-                                                    <a href="@@link1Url">@@link1Title</a></div>
+                                                    <a href="@@link1Url">@@link1Title</a>
+                                                </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link2Url">@@link2Title</a></div>
+                                                    <a href="@@link2Url">@@link2Title</a>
+                                                </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link3Url">@@link3Title</a></div>
+                                                    <a href="@@link3Url">@@link3Title</a>
+                                                </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link4Url">@@link4Title</a></div>
+                                                    <a href="@@link4Url">@@link4Title</a>
+                                                </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link5Url">@@link5Title</a></div>
+                                                    <a href="@@link5Url">@@link5Title</a>
+                                                </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link6Url">@@link6Title</a></div>
+                                                    <a href="@@link6Url">@@link6Title</a>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -117,34 +123,37 @@
                     <div id="wb-main-in" class="width-100 height-100 viewport ">
                         <!-- MainContentStart -->
                         <h1 id="wb-cont" class="wb-invisible">
-                            @@titleLink</h1>
+                            @@titleLink
+                        </h1>
                         <section id="map-div" class="height-100 background-light margin-bottom-none">
                             <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium align-right">-->
                             <ul id="map-toolbar" class="align-right">
                                 <li id="basemapControls" class="float-left map-toolbar-item" style="display: inline;">
                                     <button class="button map-toolbar-item-button button-none" aria-haspopup="true" id="baseMapToggle">
-                                        <span>Topographic</span><span class="separator"></span></button>
+                                        <span>Topographic</span><span class="separator"></span>
+                                    </button>
                                     <div id="basemapGallery" aria-hidden="true" aria-expanded="false">
                                     </div>
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="addLayer-toggle" aria-haspopup="true"
-                                        onclick="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start 100 @@addLayer-opacity-display-end'">
+                                            onclick="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start 100 @@addLayer-opacity-display-end'">
                                         <i class="fa fa-plus"></i><span class="on-right">@@addLayerTitle</span>
                                     </button>
                                     <div id="addLayer-section-container" class="map-toolbar-item-container" aria-hidden="true"
-                                        aria-expanded="false">
+                                         aria-expanded="false">
                                         <div id="addLayer-section" class="map-toolbar-item-section align-left background-white box-shadow-section">
                                             <section>
                                                 <h2 class="margin-top-none">
                                                     @@addLayerTitle
                                                 </h2>
-                                                <button class="button-none button-close">
+                                                <button class="button-none button-close tooltip" title="@@closeTitle">
                                                     <span class="wb-invisible">@@closeTitle</span>
                                                 </button>
                                                 <p class="margin-bottom-small margin-top-none">
                                                     <label class="argin-bottom-small margin-top-small" for="addLayer-select-type">
-                                                        @@addLayerSelectTypeText</label>
+                                                        @@addLayerSelectTypeText
+                                                    </label>
                                                     <select id="addLayer-select-type">
                                                         <option value="dynamic">@@addLayerType1</option>
                                                         <option value="wms">@@addLayerType2</option>
@@ -157,7 +166,8 @@
                                                 </p>
                                                 <p class="margin-bottom-small margin-top-none">
                                                     <label for="addLayer-URL-input">
-                                                        @@addLayer-URL-label</label>
+                                                        @@addLayer-URL-label
+                                                    </label>
                                                     <input id="addLayer-URL-input" type="text" placeholder="@@addLayerPlaceholder" />
                                                 </p>
                                                 <p class="margin-bottom-small margin-top-none">
@@ -165,11 +175,12 @@
                                                         @@addLayer-Opacity-label <span id="addLayer-Opacity-out"></span>
                                                     </label>
                                                     <input name="addLayer-Opacity" id="addLayer-Opacity" type="range" min="10" max="100"
-                                                        step="10" title="@@addLayer-opacity-alt" value="100" onchange="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start ' + this.value + '@@addLayer-opacity-display-end'" />
+                                                           step="10" title="@@addLayer-opacity-alt" value="100" onchange="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start ' + this.value + '@@addLayer-opacity-display-end'" />
                                                 </p>
                                                 <p class="margin-top-medium margin-bottom-small">
                                                     <button class="button button-info float-right" id="addLayer-add">
-                                                        @@addLayerAddButton</button><span class="clear"></span>
+                                                        @@addLayerAddButton
+                                                    </button><span class="clear"></span>
                                                 </p>
                                                 <div class="clear">
                                                 </div>
@@ -179,21 +190,26 @@
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="getlink-toggle">
-                                        <i class="fa fa-link"></i><span class="on-right">@@getLinkTitle</span></button>
+                                        <i class="fa fa-link"></i><span class="on-right">@@getLinkTitle</span>
+                                    </button>
                                     <div id="getlink-section-container" class="map-toolbar-item-container">
                                         <div id="getlink-section" class="map-toolbar-item-section align-left background-white box-shadow-section">
                                             <section>
                                                 <h2 class="margin-top-none ">
-                                                    @@getLinkTitle</h2>
-                                                <button class="button-none button-close">
-                                                    <span class="wb-invisible">@@closeTitle</span></button>
+                                                    @@getLinkTitle
+                                                </h2>
+                                                <button class="button-none button-close tooltip" title="@@closeTitle">
+                                                    <span class="wb-invisible">@@closeTitle</span>
+                                                </button>
                                                 <label class="argin-bottom-small margin-top-small wb-invisible" for="getlink-input">
-                                                    @@getLinkDescription</label>
+                                                    @@getLinkDescription
+                                                </label>
                                                 <p class="margin-bottom-small margin-top-none getlink-input-holder">
                                                     <button class="button button-none button-small getlink-shorten-button">
                                                         @@getLinkShortLink
                                                     </button>
-                                                    <input type="text" data-role="none" id="getlink-input" class="margin-bottom-none width-100"></p>
+                                                    <input type="text" data-role="none" id="getlink-input" class="margin-bottom-none width-100">
+                                                </p>
                                                 <div class="get-link-loading-div">
                                                     <ul class="loadingAnimation" style="display: none;">
                                                         <li></li>
@@ -206,7 +222,8 @@
                                                 </div>
                                                 <p class="margin-top-medium margin-bottom-small">
                                                     <a href="mailto:?subject={0}&body={1}" class="button button-info float-right getlink-email-button">
-                                                        <span class="wb-icon-mail"></span>@@getLinkEmail</a> <span class="clear"></span>
+                                                        <span class="wb-icon-mail"></span>@@getLinkEmail
+                                                    </a> <span class="clear"></span>
                                                 </p>
                                                 <div class="clear">
                                                 </div>
@@ -216,15 +233,28 @@
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="fullScreenToggle">
-                                        <i class="fa fa-arrows-alt"></i><span class="on-right">@@fullScreenTitle</span></button>
+                                        <i class="fa fa-arrows-alt"></i><span class="on-right">@@fullScreenTitle</span>
+                                    </button>
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" aria-haspopup="true" id="helpToggle">
-                                        <i class="fa fa-question"></i><span class="on-right">@@helpTitle</span></button>
+                                        <i class="fa fa-question"></i><span class="on-right">@@helpTitle</span>
+                                    </button>
                                     <div id="help-section-container" class="map-toolbar-item-container" aria-hidden="true"
-                                        aria-expanded="false">
+                                         aria-expanded="false">
                                         <div id="help-section-shadow" class="background-white">
-                                            <div id="help-section" class="align-left" data-ajax-replace="includes/help-eng.txt">
+                                            <div id="help-section" class="align-left">
+
+                                                <section>
+                                                    <h2 class="margin-top-small">
+                                                        Help Sections
+                                                    </h2>
+                                                    <button class="button-none button-close tooltip" title="@@closeTitle">
+                                                        <span class="wb-invisible">Close</span>
+                                                    </button>
+
+                                                    <div data-ajax-replace="includes/help-eng.txt"></div>
+                                                </section>
                                             </div>
                                             <!--<div id="help-section" class="align-left" data-ajax-replace="includes/help-@@langMainLong.txt">
                                             </div>-->
@@ -247,15 +277,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="panel-toggle" class="button-none side-toggle state-expanded">
-                            </button>
+                            <button id="panel-toggle" class="button-none side-toggle state-expanded tooltip" title="@@closeTitle"><span class="wb-invisible">Close</span></button>
                         </section>
                         <section id="panel-div" class="height-100 background-white tundra">
                             <div class="width-100 height-100">
                                 <div class="wet-boew-tabbedinterface">
                                     <ul id="tabs" class="tabs background-white">
-                                        <li class="background-light"><a href="#tabs1_1" data-panel-name="filterManager">@@datasetsTabTitle</a></li><li
-                                            class="background-light"><a href="#tabs1_2" data-panel-name="datagrid">@@dataTabTitle</a></li>
+                                        <li class="background-light"><a href="#tabs1_1" data-panel-name="filterManager">@@datasetsTabTitle</a></li>
+                                        <li class="background-light"><a href="#tabs1_2" data-panel-name="datagrid">@@dataTabTitle</a></li>
                                     </ul>
                                     <div class="tabs-panel width-100">
                                         <div id="tabs1_1">
@@ -309,12 +338,14 @@
             <div id="wb-foot-in">
                 <footer>
                     <h2 id="wb-nav">
-                        @@footer</h2>
+                        @@footer
+                    </h2>
                     <!-- FooterStart -->
                     <nav role="navigation">
                         <div id="gcwu-sft">
                             <h3>
-                                @@siteFooter</h3>
+                                @@siteFooter
+                            </h3>
                             <div id="gcwu-sft-in">
                                 <div id="gcwu-tctr">
                                     <!--ul>

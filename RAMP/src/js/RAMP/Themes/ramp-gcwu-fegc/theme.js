@@ -13,8 +13,8 @@
 * @class GlobalStorage
 */
 
-define(["utils/util", ],
-    function (util) {
+define(["utils/util", "dojo/_base/lang", "defaultTheme/theme"],
+    function (util, dojoLang, defaultTheme) {
         "use strict";
 
         var body = $("body"),
@@ -73,28 +73,30 @@ define(["utils/util", ],
             extraTweeen.play();
         }
 
-        return {
-            fullScreenCallback: function (event, func) {
-                fullScreenTimeLine.eventCallback(event, func);
+        return dojoLang.mixin(defaultTheme,
+            {
+                fullScreenCallback: function (event, func) {
+                    fullScreenTimeLine.eventCallback(event, func);
 
-                return this;
-            },
+                    return this;
+                },
 
-            isFullScreen: function () {
-                return isFullScreen;
-            },
+                isFullScreen: function () {
+                    return isFullScreen;
+                },
 
-            /**
-            * Toggles the FullScreen mode of the application
-            *
-            * @method toggleFullScreenMode
-            * @private
-            * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
-            */
-            toggleFullScreenMode: function (fullscreen) {
-                _toggleFullScreenMode(fullscreen);
+                /**
+                * Toggles the FullScreen mode of the application
+                *
+                * @method toggleFullScreenMode
+                * @private
+                * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+                */
+                toggleFullScreenMode: function (fullscreen) {
+                    _toggleFullScreenMode(fullscreen);
 
-                return this;
+                    return this;
+                }
             }
-        };
+        );
     });

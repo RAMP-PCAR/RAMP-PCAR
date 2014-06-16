@@ -181,6 +181,18 @@
                     "type": "String",
                     "value": "Here's a cool map:",
                     "description": ""
+                },
+                {
+                    "name": "txtClose",
+                    "type": "String",
+                    "value": "Close",
+                    "description": ""
+                },
+                {
+                    "name": "txtOpen",
+                    "type": "String",
+                    "value": "Open",
+                    "description": ""
                 }
             ]
         },
@@ -1985,7 +1997,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "60px",
+                                                    "value": "90px",
                                                     "description": "grid width"
                                                 },
                                                 {
@@ -2040,7 +2052,7 @@
                                                 {
                                                     "name": "width",
                                                     "type": "String",
-                                                    "value": "50px",
+                                                    "value": "80px",
                                                     "description": "grid width"
                                                 },
                                                 {

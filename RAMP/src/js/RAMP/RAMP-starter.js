@@ -25,11 +25,10 @@ var sPath = window.location.href,
     themeName = ($("html")
                     .attr("class")
                     .split(" ")
-                    .filter(function(one)
-                        {
-                            "use strict";
-                            return one.indexOf("ramp-") === 0;
-                        }
+                    .filter(function (one) {
+                        "use strict";
+                        return one.indexOf("ramp-") === 0;
+                    }
                     )[0] || "ramp-base"),
     dojoConfig;
 
@@ -37,25 +36,31 @@ dojoConfig = {
     parseOnLoad: false,
     locale: sPage.indexOf('lang=fr') > -1 ? "fr" : "en",
     async: true,
-    packages:[{
-            "name" : "ramp",
-            "location" : pathname + jsFolderPath + "RAMP/Modules"
+    packages: [
+        {
+            "name": "ramp",
+            "location": pathname + jsFolderPath + "RAMP/Modules"
         },
         {
-            "name" : "utils",
-            "location" : pathname + jsFolderPath + "RAMP/Utils"
+            "name": "utils",
+            "location": pathname + jsFolderPath + "RAMP/Utils"
         },
         {
-            "name" : "themes",
-            "location" : pathname + jsFolderPath + "RAMP/Themes/" + themeName
-        }],
+            "name": "defaultTheme",
+            "location": pathname + jsFolderPath + "RAMP/Themes/ramp-base"
+        },
+        {
+            "name": "themes",
+            "location": pathname + jsFolderPath + "RAMP/Themes/" + themeName
+        }
+    ],
     jsFolderPath: jsFolderPath,
     cssFolderPath: cssFolderPath,
     extensionPrefix: state === "build/" ? ".min" : "",
     buildState: state
 };
 
-$(document).ready(function(){
+$(document).ready(function () {
     "use strict";
     // when loadin js file that way, it will NOT show up in the debug panel in Firebug
     /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",

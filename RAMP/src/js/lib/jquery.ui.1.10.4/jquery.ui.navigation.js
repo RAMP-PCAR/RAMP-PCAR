@@ -13,7 +13,7 @@ if (!String.prototype.format) {
             return typeof args[number] != "undefined"
         ? args[number]
         : match
-      ;
+            ;
         });
     };
 }
@@ -32,17 +32,20 @@ if (!String.prototype.format) {
             debug: 1, /* flag to set for console messages */
             cssPath: "css/", /* path of CSS files for ui.navigation */
             /* various strings for the widget: hover tips, aria tags, etc. */
-            strings: { "en": { panUp_link_title: "Pan North",
-                panRight_link_title: "Pan East",
-                panDown_link_title: "Pan South",
-                panLeft_link_title: "Pan West",
-                fullExtent_link_title: "Canada View",
-                zoomIn_link_title: "Zoom In",
-                zoomOut_link_title: "Zoom Out",
-                zoom_level_x_out_of_y: "Zoom level {0} out of {1}"
-            },
+            strings: {
+                "en": {
+                    panUp_link_title: "Pan North",
+                    panRight_link_title: "Pan East",
+                    panDown_link_title: "Pan South",
+                    panLeft_link_title: "Pan West",
+                    fullExtent_link_title: "Canada View",
+                    zoomIn_link_title: "Zoom In",
+                    zoomOut_link_title: "Zoom Out",
+                    zoom_level_x_out_of_y: "Zoom level {0} out of {1}"
+                },
 
-                "fr": { panUp_link_title: "Vers l'est",
+                "fr": {
+                    panUp_link_title: "Vers l'est",
                     panRight_link_title: "Vers le nord",
                     panDown_link_title: "Vers le sud",
                     panLeft_link_title: "Vers l'ouest",
@@ -57,7 +60,7 @@ if (!String.prototype.format) {
         _init: function () {
             if (this.options.debug) console.log("fn: _init");
             var o = this.options,
-                fake_evt = { "data": { "options": o} };
+                fake_evt = { "data": { "options": o } };
 
             //this._addUICSS(o.skin);
             this._validateOptions();
@@ -120,7 +123,7 @@ if (!String.prototype.format) {
             if (!_isSmallScreen.call())
                 $("." + _getClassName("map", "slider")).slider("value", newVal);
             else
-                _toggleZoomButtons({ "data": { "options": o} });
+                _toggleZoomButtons({ "data": { "options": o } });
         },
 
         /* Toggle the transition flag */
@@ -156,7 +159,8 @@ if (!String.prototype.format) {
                 valText = o.strings[o.locale]["zoom_level_x_out_of_y"]
                            .format(o.sliderVal, o.sliderMaxVal);
 
-            $(".ui-slider-handle").attr({ "role": "slider",
+            $(".ui-slider-handle").attr({
+                "role": "slider",
                 "aria-orientation": "vertical",
                 "aria-valuemax": o.sliderMaxVal,
                 "aria-valuemin": o.sliderMinVal,
@@ -346,23 +350,26 @@ if (!String.prototype.format) {
 
             /* Zoom slider begins */
                         .append($("<ul>", { "class": this._getClassName("zoom") })
-                            .append($("<li>", { "title": this._getString(this._getLinkTitle("zoomIn")),
-                                "class": this._getClassName("zoomIn")
+                            .append($("<li>", {
+                                "title": this._getString(this._getLinkTitle("zoomIn")),
+                                "class": this._getClassName("zoomIn") + " _tooltip"
                             })
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomIn"))))))
 
             /* Slider rail */
                             .append($("<li>", { "class": this._getClassName("map", "slider") })
-                                .append($("<div>", { "class": this._getClassName("slider", "rail") })).slider({ "orientation": "vertical",
+                                .append($("<div>", { "class": this._getClassName("slider", "rail") })).slider({
+                                    "orientation": "vertical",
                                     "max": o.sliderMaxVal,
                                     "min": o.sliderMinVal,
                                     "animate": o.animate
                                 })
                                 )
             /* Slider rail ends */
-                            .append($("<li>", { "title": this._getString(this._getLinkTitle("zoomOut")),
-                                "class": this._getClassName("zoomOut")
+                            .append($("<li>", {
+                                "title": this._getString(this._getLinkTitle("zoomOut")),
+                                "class": this._getClassName("zoomOut") + " _tooltip"
                             })
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomOut"))))))
@@ -376,8 +383,9 @@ if (!String.prototype.format) {
 
             for (var i = 0; i < len; i++) {
                 var ctrl = ctrls[i];
-                pan.append($("<li>", { "title": this._getString(this._getLinkTitle(ctrl)),
-                    "class": this._getClassName(ctrl)
+                pan.append($("<li>", {
+                    "title": this._getString(this._getLinkTitle(ctrl)),
+                    "class": this._getClassName(ctrl) + " _tooltip"
                 })
                                     .append($("<a>", { "role": "button", "href": "" })
                                     .append($("<span>").text(this._getString(this._getLinkTitle(ctrl))))));
