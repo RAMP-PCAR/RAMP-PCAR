@@ -91,8 +91,8 @@
 													</li>
 
 													<li class='align-right'>
-														<button class='button button-none button-small font-medium expand'>
-															<i class='fa fa-angle-right'></i><span class='on-right'>Sumary Data</span>
+														<button class='button button-none button-small font-medium full-data-toggle expand'>
+															<i class='fa fa-th-list'></i><span class='on-right'>Sumary Data</span>
 														</button>
 													</li>
 												</ul>
@@ -109,8 +109,8 @@
 												<ul class='button-grou margin-top-none'>
 													{% include('filter_button_Template', o); %}
 													<li class='align-right'>
-														<button class='button button-none button-small font-medium expand'>
-															<i class='fa fa-angle-left'></i><span class='on-right'>Full Data</span>
+														<button class='button button-none button-small font-medium full-data-toggle expand'>
+															<i class='fa fa-th'></i><span class='on-right'>Full Data</span>
 														</button>
 													</li>	
 												</ul>
