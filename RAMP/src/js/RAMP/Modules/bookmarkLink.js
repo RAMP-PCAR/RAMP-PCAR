@@ -54,11 +54,12 @@
 * @uses dijit/TitlePane
 * @uses esri/geometry/Extent
 * @uses GlobalStorage
+* @uses Map
+* @uses EventManager
 * @uses Url
 * @uses Util
 * @uses Dictionary
 * @uses PopupManager
-* @uses EventManager
 */
 
 define([
@@ -71,7 +72,7 @@ define([
         "ramp/globalStorage", "ramp/map", "ramp/eventManager",
 // Util
         "utils/url", "utils/util", "utils/dictionary", "utils/popupManager"
-    ],
+],
 
     function (
     // Dojo
@@ -344,7 +345,7 @@ define([
         * Toggle the short/long link mode and change the label accordingly
         *
         * @method toggleShortLinkMode
-        * @param value {Object}
+        * @param {Object} value true - shortLinkMode; false - !shortlinkMore; undefined - toggle;
         * @private
         */
         function toggleShortLinkMode(value) {
@@ -363,7 +364,7 @@ define([
             * change).
             *
             * @method init
-            * @param homePage {String} a string denoting the name of the homePage
+            * @param {String} homePage a string denoting the name of the homePage
             * (e.g. usually "Default.aspx" or "index.html")
             */
             init: function (homePage) {
@@ -500,7 +501,6 @@ define([
                         // If we have no hidden layers, remove both parameters (since it's status quo)
                         addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
                         addParameter(EVENT_FILTER_GLOBAL_LAYER, null);
-
                     } else {
                         // Otherwise add the hidden layers parameter and remove the global layer
                         // parameter
@@ -642,7 +642,7 @@ define([
 
                     if (waitList.isEmpty()) {
                         topic.publish(EventManager.Map.SET_EXTENT, {
-                            "extent": new Extent(event)
+                            extent: new Extent(event)
                         });
                     } else {
                         // Wait for things such as fullscreen or panel collapse
@@ -659,7 +659,7 @@ define([
 
                         UtilMisc.subscribeAll(eventNames, function () {
                             topic.publish(EventManager.Map.SET_EXTENT, {
-                                "extent": new Extent(event)
+                                extent: new Extent(event)
                             });
                         });
 
@@ -682,7 +682,7 @@ define([
 
                     layerIds = queryObject.hiddenLayers.split("+");
 
-                    // Selectively turn off the ones that were in the query (the rest will be 
+                    // Selectively turn off the ones that were in the query (the rest will be
                     // turned on)
                     topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
                         layerIds: layerIds,

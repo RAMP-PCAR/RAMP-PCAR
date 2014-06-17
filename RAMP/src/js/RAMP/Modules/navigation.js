@@ -29,7 +29,7 @@ define([
     "dojo/_base/declare", "dojo/topic",
 
 //RAMP
-    "ramp/globalStorage", "ramp/eventManager",
+    "ramp/globalStorage", "ramp/eventManager"
 ],
 
 function (
@@ -97,7 +97,7 @@ function (
         * Initialize navigaion widget for pan and zooming using global configuration object
         *
         * @method init
-        * @param currentLevel
+        * @param {Number} currentLevel
         */
         init: function (currentLevel) {
             // Note: JKW added currentlevel

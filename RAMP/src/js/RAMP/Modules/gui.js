@@ -20,11 +20,16 @@
 * @uses dojo/Deferred
 * @uses dojo/domReady!
 * @uses GlobalStorage
+* @uses EventManager
+* @uses Theme
+* @uses templates/sub_panel_Template.html
+* @uses templates/sub_panel_template.json
+* @uses templates/sub_panel_content_Template.html
 * @uses Util
 * @uses Dictionary
 * @uses PopupManager
-* @uses templates/sub_panel_Template.html
-* @uses templates/sub_panel_content_Template.html
+* @uses TmplHelper
+* @uses dojo/domReady!
 */
 define([
 // Dojo

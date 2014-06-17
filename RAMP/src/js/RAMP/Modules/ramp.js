@@ -75,7 +75,7 @@ define([
             /**
             * Returns the feature layer config for the given url
             *
-            * @param url {String}
+            * @param {String} url
             * @method getLayerConfig
             */
             getLayerConfig: function (url) {
@@ -118,7 +118,7 @@ define([
             * attributes field) return the object containing the image URL and legend text for that
             * feature/graphic object.
             *
-            * @param feature {}
+            * @param {Object} feature
             * @return {icon} The default icon used to represent the feature layer
             * @method getSymbolForFeature
             */
@@ -134,7 +134,7 @@ define([
              * @param {String} rampService The base URL for a web service that provide's valid map JSON configuration data
              * @param {Number} mapID a unique identifier for a group of map configuration
              * @param {String} language culture code either 'en' or 'fr'
-             * 
+             *
              */
             getServiceURL: function (rampService, mapID, language) {
                 var serviceURL = rampService + "configservice/map?mapid=" + mapID + "&lang=" + language;

@@ -3,19 +3,20 @@
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
 /**
-*
+* This submodule contains theme-specific classes with animation sequences such as Full Screen transition or tooltip setter helper method.
 *
 * @module RAMP
+* @submodule Theme
 *
 */
 
 /**
-* GlobalStorage class is used to store variables and exchange them between different modules. Each module has the ability to add variables to the global storage and retrieve them as needed.
+* Base theme for RAMP.
 *
-* @class GlobalStorage
+* @class Theme
 */
 
-define(["utils/util", ],
+define(["utils/util"],
     function (util) {
         "use strict";
 
@@ -45,6 +46,12 @@ define(["utils/util", ],
 
                 .set(body, { className: "+=full-screen" });
 
+        /**
+         * Toggles full screen mode
+         *
+         * @method _toggleFullScreenMode
+         * @param  {Boolean} fullscreen true - full screen on; false - full screen off; undefined - toggle;
+         */
         function _toggleFullScreenMode(fullscreen) {
             isFullScreen = util.isUndefined(fullscreen) ? !isFullScreen : fullscreen;
 
@@ -60,12 +67,27 @@ define(["utils/util", ],
         }
 
         return {
+            /**
+             * Allows to set callbacks to the full screen transition.
+             *
+             * @method fullScreenCallback
+             * @param  {String} event Event name to set a callback on
+             * @param  {Function} func  A callback function
+             * @return {Object}     This
+             * @chainable
+             */
             fullScreenCallback: function (event, func) {
                 fullScreenTimeLine.eventCallback(event, func);
 
                 return this;
             },
 
+            /**
+             * Returns a boolean indication whether the full screen mode is on.
+             *
+             * @method isFullScreen
+             * @return {Boolean} true / false
+             */
             isFullScreen: function () {
                 return isFullScreen;
             },
@@ -74,8 +96,9 @@ define(["utils/util", ],
             * Toggles the FullScreen mode of the application
             *
             * @method toggleFullScreenMode
-            * @private
-            * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+            * @param  {Boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+            * @return {Object} This
+            * @chainable
             */
             toggleFullScreenMode: function (fullscreen) {
                 _toggleFullScreenMode(fullscreen);
@@ -83,6 +106,15 @@ define(["utils/util", ],
                 return this;
             },
 
+            /**
+             * Tooltip setter helper method.
+             *
+             * @method tooltipster
+             * @param  {Jquery} target A node to looked for tooltiped children on
+             * @param  {String} type   Type of the tooltips to set
+             * @return {Object}        This
+             * @chainable
+             */
             tooltipster: function (target, type) {
                 target = target || $("body");
 
@@ -97,6 +129,8 @@ define(["utils/util", ],
                         });
                         break;
                 }
+
+                return this;
             }
         };
     });

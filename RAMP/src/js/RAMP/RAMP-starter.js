@@ -38,20 +38,20 @@ dojoConfig = {
     async: true,
     packages: [
         {
-            "name": "ramp",
-            "location": pathname + jsFolderPath + "RAMP/Modules"
+            name: "ramp",
+            location: pathname + jsFolderPath + "RAMP/Modules"
         },
         {
-            "name": "utils",
-            "location": pathname + jsFolderPath + "RAMP/Utils"
+            name: "utils",
+            location: pathname + jsFolderPath + "RAMP/Utils"
         },
         {
-            "name": "defaultTheme",
-            "location": pathname + jsFolderPath + "RAMP/Themes/ramp-base"
+            name: "defaultTheme",
+            location: pathname + jsFolderPath + "RAMP/Themes/ramp-base"
         },
         {
-            "name": "themes",
-            "location": pathname + jsFolderPath + "RAMP/Themes/" + themeName
+            name: "themes",
+            location: pathname + jsFolderPath + "RAMP/Themes/" + themeName
         }
     ],
     jsFolderPath: jsFolderPath,

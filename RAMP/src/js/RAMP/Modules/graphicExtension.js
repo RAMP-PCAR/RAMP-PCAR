@@ -48,9 +48,9 @@ define([
             /**
             * Given a graphic object, returns the config object associated with the graphic's layer.
             *
-            * @param graphic a graphic object or a feature object
-            * @return {esri/Graphic}
             * @method getLayerConfig
+            * @param {esri/Graphic} graphic a graphic object or a feature object
+            * @return {esri/Graphic}
             */
             getLayerConfig: function (graphic) {
                 return Ramp.getLayerConfig(graphic.getLayer().url);
@@ -59,7 +59,7 @@ define([
             /**
             * Returns the oid of the given graphic object
             *
-            * @param graphic
+            * @param {esri/Graphic} graphic
             * @method getOid
             */
             getOid: function (graphic) {
@@ -85,8 +85,8 @@ define([
                     tmpl.templates = JSON.parse(
                         TmplHelper.stringifyTemplate(feature_details_template));
 
-                    var datawrapper = TmplHelper.dataBuilder(graphic, graphic.getLayer().url);
-                    var result = tmpl(templateName, datawrapper);
+                    var datawrapper = TmplHelper.dataBuilder(graphic, graphic.getLayer().url),
+                        result = tmpl(templateName, datawrapper);
 
                     return result;
                 }
@@ -96,16 +96,14 @@ define([
             },
 
             /**
+            * Returns the content of the name field of the provided graphic object
             *
-            *
-            * @param graphic a graphic object or a feature object
-            * @return {}
             * @method getGraphicTitle
+            * @param {esri/Graphic} graphic a graphic object or a feature object
+            * @return {}
             */
             getGraphicTitle: function (graphic) {
-                
                 return graphic.attributes[this.getLayerConfig(graphic).nameField];
-                
             }
         };
     });

@@ -16,7 +16,6 @@
 *
 * @class FeatureClickHandler
 * @static
-* @uses RAMP
 * @uses GraphicExtension
 * @uses EventManager
 * @uses dojo/topic
@@ -68,20 +67,20 @@ define([
                     showChars: 70,
                     doOnOpen: function () {
                         //topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                        //    "graphic": selectedGraphic
+                        //    graphic: selectedGraphic
                         //});
 
                         UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
                             var scroll = evt.scroll;
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                "graphic": selectedGraphic,
-                                "scroll": scroll
+                                graphic: selectedGraphic,
+                                scroll: scroll
                             });
                         });
 
                         // Note: the following will in turn trigger maptip/showInteractive
                         topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                            "graphic": selectedGraphic
+                            graphic: selectedGraphic
                         });
                     },
                     doOnHide: function () {
