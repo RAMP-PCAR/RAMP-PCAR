@@ -118,7 +118,8 @@ define([
                                              }
                                          })
                     // remove hard breaks and tabs
-                    .replace(/[\n\r\t]/g, "");
+                    .replace(/[\n\r\t]/g, "")
+                    .replace(/>\s*?</g, "><");
             }
         };
     });

@@ -17,7 +17,7 @@
     "title_span": "<span class='title-span' title='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}</span>",
     
     // sample icon template
-    "graphic_icon":"<div class='point-image-box'>		
+    "graphic_icon":"<div class='point-image-box'>
                         <img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image background-white'>
                     </div>",
                     
