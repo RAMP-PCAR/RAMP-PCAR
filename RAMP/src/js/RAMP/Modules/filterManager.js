@@ -35,10 +35,8 @@
 * @uses esri/layers/FeatureLayer
 * @uses RAMP
 * @uses GlobalStorage
-* @uses Map
-* @uses EventManager
-* @uese Theme
-* @uese TmplHelper
+* @uses GUI
+* @uses Legend
 * @uses Util
 * @uses Array
 * @uses Dictionary
@@ -57,7 +55,7 @@ define([
         "esri/tasks/query", "esri/layers/FeatureLayer",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
+        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager"],
@@ -73,7 +71,7 @@ define([
         EsriQuery, FeatureLayer,
 
     /* Ramp */
-        Ramp, GlobalStorage, RampMap, EventManager, Theme,
+        Ramp, GlobalStorage, RampMap, EventManager,
 
     /* Util */
         TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager) {
@@ -106,10 +104,7 @@ define([
                     globalEyeCheckboxes = UtilMisc.styleCheckboxes(
                         filterGlobalToggles.find(".checkbox-custom .eye + input"),
                         "checked", "focused",
-                        {
-                            checked: localString.txtHideAllFeatures,
-                            unchecked: localString.txtShowAllFeatures
-                        }
+                        { "checked": localString.txtHideAllFeatures, "unchecked": localString.txtShowAllFeatures }
                     );
 
                     // Turn off the bounding boxes by default
@@ -117,19 +112,13 @@ define([
                         .styleCheckboxes(
                             filterGlobalToggles.find(".checkbox-custom .box + input"),
                             "checked", "focused",
-                            {
-                                checked: localString.txtHideAllBounds,
-                                unchecked: localString.txtShowAllBounds
-                            })
+                            { "checked": localString.txtHideAllBounds, "unchecked": localString.txtShowAllBounds })
                         .setAll(false);
 
                     eyeCheckboxes = UtilMisc.styleCheckboxes(
                         layerList.find(".checkbox-custom .eye + input"),
                         "checked", "focused",
-                        {
-                            checked: localString.txtHideFeatures,
-                            unchecked: localString.txtShowFeatures
-                        }
+                        { "checked": localString.txtHideFeatures, "unchecked": localString.txtShowFeatures }
                     );
 
                     // Turn off the bounding boxes by default
@@ -137,10 +126,7 @@ define([
                         .styleCheckboxes(
                             layerList.find(".checkbox-custom .box + input"),
                             "checked", "focused",
-                            {
-                                checked: localString.txtHideBounds,
-                                unchecked: localString.txtShowBounds
-                            })
+                            { "checked": localString.txtHideBounds, "unchecked": localString.txtShowBounds })
                         .setAll(false);
                     /**
                     * Toggles each layers visibility when the global visibility button is clicked
@@ -296,9 +282,6 @@ define([
                 * @private
                 */
                 function initTooltips() {
-                    Theme.tooltipster(filterGlobalToggles);
-                    Theme.tooltipster(layerList);
-
                     PopupManager.registerPopup(layerList, "hoverIntent",
                         function () {
                             if (this.target.attr("title")) {
@@ -461,8 +444,9 @@ define([
                         });
 
                         // put layer in datawrapper to be used in template
-                        var data = TmplHelper.dataBuilder(lLayers),
-                            sectionNode = $("#" + GlobalStorage.config.divNames.filter),
+                        var data = TmplHelper.dataBuilder(lLayers);
+
+                        var sectionNode = $("#" + GlobalStorage.config.divNames.filter),
                             section;
 
                         // TODO: generate section using one template, need to refactoring the following fixed string
@@ -519,7 +503,7 @@ define([
                         );
                     }
                 };
-            }());
+            } ());
 
         /**
         * Initiates a listener to handle tab deselected event
@@ -580,7 +564,7 @@ define([
             * Grabs all distinct values of the given field from a featureLayer.
             * @method _getField
             * @param {Object} fl A feature layer to query
-            * @param {String} field The field (or column) to query in the feature layer
+            * @param {String} The field (or column) to query in the feature layer
             * @return {Object} deferred A deferred object which will resolve to an array of unique values
             */
             _getField: function (fl, field) {

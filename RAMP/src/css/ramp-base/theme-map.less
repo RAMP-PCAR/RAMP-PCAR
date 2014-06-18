@@ -81,6 +81,10 @@
 				height: 32px;
 				min-width: 32px;
 
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+
 				span {
 					display: inline-block;
 				}
@@ -392,14 +396,6 @@
 /*------------------------------------------------------------
     BASEMAP SELECTOR Begin
 ------------------------------------------------------------*/
-
-#basemapControls {
-	.map-toolbar-item-button > span {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: nowrap;
-	}
-}
 
 #basemapGallery{
     position: absolute;

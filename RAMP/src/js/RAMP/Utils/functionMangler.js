@@ -24,7 +24,7 @@ define([
 
 /* Utils */
         "utils/util"
-],
+    ],
 
     function (
     /* Dojo */

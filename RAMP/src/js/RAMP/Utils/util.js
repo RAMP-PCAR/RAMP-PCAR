@@ -38,17 +38,17 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @static
             */
             checkConsole: function () {
-                var noop = function () { },
-                    methods = [
-                        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-                        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-                        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-                        'timeStamp', 'trace', 'warn'
-                    ],
-                    length = methods.length,
-                    console = (window.console = window.console || {}),
-                    method;
+                var noop = function () { };
+                var methods = [
+                    'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+                    'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+                    'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+                    'timeStamp', 'trace', 'warn'
+                ];
+                var length = methods.length;
+                var console = (window.console = window.console || {});
 
+                var method;
                 while (length--) {
                     method = methods[length];
 
@@ -572,7 +572,6 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             *
             * @method executeOnLoad
             * @static
-            * @param {Object} target an object on which to wait for function to appear
             * @param {function} func A function whose availability in question
             * @param {function} callback The callback function to be executed after func is available
             */
@@ -704,9 +703,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             *
             */
             pointToExtent: function (map, point, toleranceInPixel) {
-                var pixelWidth = map.extent.getWidth() / map.width,
-                    toleraceInMapCoords = toleranceInPixel * pixelWidth;
-
+                var pixelWidth = map.extent.getWidth() / map.width;
+                var toleraceInMapCoords = toleranceInPixel * pixelWidth;
                 return new Extent(point.x - toleraceInMapCoords,
                               point.y - toleraceInMapCoords,
                               point.x + toleraceInMapCoords,

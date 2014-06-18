@@ -7,7 +7,7 @@
 */
 
 /**
-* Populates the BasemapGallery widget located in the maps toolbar with items found in the application configuration.
+* Populates the BasemapGallery widget located in the maps toolbar with items found in the application configuration. 
 * This module also handles all the event  needed to change the map basemap and update the UI
 *
 *
@@ -19,12 +19,9 @@
 * @uses dojo/query
 * @uses dojo/topic
 * @uses templates/basemap_selector_template.json
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
+* @uses ramp/globalStorage
 * @uses esri/dijit/BasemapGallery
-* @uses utils/popupManager
-* @uses utils/thmplHelper
+* @uses PopupManager
 */
 
 define([
@@ -40,16 +37,16 @@ define([
     "utils/popupManager", "utils/tmplHelper"],
 
 function (
-        // Dojo
-        dojoArray, dojoLang, domAttr, query, topic,
-        // Templates
-        basemapselectorTemplate,
-        // Ramp
-        GlobalStorage, RampMap, EventManager,
-        // Esri
-        BasemapGallery,
-        // Util
-        PopupManager, TmplHelper) {
+// Dojo
+dojoArray, dojoLang, domAttr, query, topic,
+// Templates
+          basemapselectorTemplate,
+// Ramp
+          GlobalStorage, RampMap, EventManager,
+// Esri
+          BasemapGallery,
+// Util
+          PopupManager, TmplHelper) {
     "use strict";
 
     var basemapGallery,
@@ -71,7 +68,7 @@ function (
             * @method init
             * @private
             * @return {object} itself
-            *
+            * 
             */
             init: function () {
                 baseMapControls = $("#basemapControls");
@@ -112,7 +109,7 @@ function (
              * Changes the text shown on the toolbar to match the currently selected basemap's title
              * @method updateToggleLabel
              * @private
-             *
+             * 
              */
             updateToggleLabel: function () {
                 baseMapToggle.find("span:first").text(basemapGallery.getSelected().title);
@@ -154,10 +151,10 @@ function (
 
     return {
         /*
-         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then calls function to initializes event handling
+         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then calls function to initializes event handling 
          * @method init
          * @constructor
-         *
+         * 
          */
         init: function () {
             config = GlobalStorage.config;
@@ -179,18 +176,18 @@ function (
 
             //Create and start the selector
             basemapGallery = new BasemapGallery({
-                showArcGISBasemaps: false,
-                basemaps: basemaps,
-                map: RampMap.getMap()
+                "showArcGISBasemaps": false,
+                "basemaps": basemaps,
+                "map": RampMap.getMap()
             }, placementAnchorId);
             basemapGallery.startup();
             basemapGallery.select(basemaps[0].id);
 
             //take over the click
             $(".esriBasemapGalleryNode").on("mousedown", function (evt) {
-                var curr_id = basemapGallery.getSelected().id,
-                    selected_node = evt.currentTarget.id,
-                    selected_id = selected_node.slice(selected_node.indexOf("_") + 1);
+                var curr_id = basemapGallery.getSelected().id;
+                var selected_node = evt.currentTarget.id;
+                var selected_id = selected_node.slice(selected_node.indexOf("_") + 1);
 
                 if (curr_id === selected_id) {
                     return false; //prevent the basemap from changing

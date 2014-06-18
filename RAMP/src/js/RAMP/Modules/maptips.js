@@ -17,11 +17,11 @@
 * @class Maptips
 * @static
 * @uses dojo/topic
+* @uses GlobalStorage
 * @uses RAMP
+* @uses GUI
 * @uses EventManager
 * @uses TmplHelper
-* @uses templates/feature_hovertip_template.json
-* @uses templates/feature_anchortip_template.json
 */
 
 define([
@@ -38,7 +38,7 @@ define([
         "dojo/text!./templates/feature_hovertip_template.json",
 /* json archor template file*/
         "dojo/text!./templates/feature_anchortip_template.json"
-],
+    ],
 
     function (
     /* Dojo */
@@ -114,11 +114,11 @@ define([
                 });
 
                 topic.publish(EventManager.Maptips.EXTENT_CHANGE, {
-                    scroll: false
+                    "scroll": false
                 });
             } else {
                 topic.publish(EventManager.Maptips.EXTENT_CHANGE, {
-                    scroll: true
+                    "scroll": true
                 });
             }
         }
@@ -132,23 +132,22 @@ define([
         * @param  {String} interactive indicates whether the maptip should have a close button
         */
         function getMaptipContent(graphic, interactive) {
-            var layerUrl = graphic.getLayer().url,
-                templateKey = "",
-                datawrapper,
-                maptipContent;
+            var layerUrl = graphic.getLayer().url;
 
+            var templateKey = "";
             tmpl.cache = {};
 
             if (interactive === true) {
                 templateKey = Ramp.getLayerConfig(layerUrl).mapTipSettings.anchorTemplate;
                 tmpl.templates = anchortips_template_json;
-            } else {
+            }
+            else {
                 templateKey = Ramp.getLayerConfig(layerUrl).mapTipSettings.hoverTemplate;
                 tmpl.templates = hovertips_template_json;
             }
 
-            datawrapper = TmplHelper.dataBuilder(graphic, layerUrl);
-            maptipContent = tmpl(templateKey, datawrapper);
+            var datawrapper = TmplHelper.dataBuilder(graphic, layerUrl);
+            var maptipContent = tmpl(templateKey, datawrapper);
 
             return maptipContent;
         }

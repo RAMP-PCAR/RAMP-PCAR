@@ -23,10 +23,10 @@
 * @uses dojo/_base/declare
 * @uses dojo/topic
 * @uses GlobalStorage
-* @uses Map
-* @uses EventManager
+* @uses Maptips
 * @uses Util
 * @uses Dictionary
+* @uses EventManager
 */
 
 define([
@@ -38,7 +38,7 @@ define([
 
 /* Util */
         "utils/util", "utils/dictionary"
-],
+    ],
 
     function (
     /* Dojo */
@@ -77,8 +77,8 @@ define([
             // shape or symbol object (which ever one exists)
 
             var clone = new esri.Graphic({
-                geometry: graphic.geometry,
-                attributes: {}
+                "geometry": graphic.geometry,
+                "attributes": {}
             });
 
             clone.symbol = graphic.getLayer().renderer.getSymbol(graphic);
@@ -114,7 +114,7 @@ define([
                 graphicGroup.before(hoverl);
                 graphicGroup.before(zooml);
                 graphicGroup.attr({
-                    class: "graphics"
+                    "class": "graphics"
                 });
             }
         }

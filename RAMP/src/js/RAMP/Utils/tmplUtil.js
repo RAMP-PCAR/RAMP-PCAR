@@ -26,7 +26,7 @@ define([],
             * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getGraphicIcon
-            * @param {Graphic} graphic
+            * @param {Graphic} feature
             * @param {Object} layerConfig
             * @return {String} imageUrl Url to the features symbology image
             */
@@ -53,7 +53,7 @@ define([],
             * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getFeatureName
-            * @param {Graphic} graphic
+            * @param {Graphic} feature
             * @param {Object} layerConfig
             * @return {String} imageUrl Url to the features symbology image
             */
@@ -68,7 +68,7 @@ define([],
             * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getObjectId
-            * @param {Graphic} graphic
+            * @param {Graphic} feature
             * @return {Integer} objectId
             */
             getObjectId: function (graphic) {
@@ -85,22 +85,23 @@ define([],
                 return graphic.attributes[fieldName];
             },
 
+
             /* Helper function used by filterManager.*/
             /*
             * generate visibility legend object
             * @param o
             */
             generateVisibilityLegend: function (o) {
-                var attr = "",
-                    visibilityLegendLabel = {
-                        for: "filterGroup_" + o.data[o.idx].id,
-                        attr: attr,
-                        value: o.data[o.idx].id,
-                        checked: "checked",
-                        label: o.data[o.idx].layerConfig.displayName,
-                        class: "eye checked",
-                        featureId: o.data[o.idx].layerConfig.id
-                    };
+                var attr = "";
+                var visibilityLegendLabel = {
+                    "for": "filterGroup_" + o.data[o.idx].id,
+                    "attr": attr,
+                    "value": o.data[o.idx].id,
+                    "checked": "checked",
+                    "label": o.data[o.idx].layerConfig.displayName,
+                    "class": "eye checked",
+                    "featureId": o.data[o.idx].layerConfig.id
+                };
                 return visibilityLegendLabel;
             },
             /*
@@ -108,16 +109,17 @@ define([],
             * @param o
             */
             generateBoundingBoxLegend: function (o) {
-                var attr = "",
-                    boundingLegendLabel = {
-                        for: "filterGroup_" + o.data[o.idx].id + "1",
-                        attr: attr + "1",
-                        value: o.data[o.idx].id,
-                        checked: "checked",
-                        label: o.data[o.idx].layerConfig.displayName,
-                        class: "box checked",
-                        featureId: o.data[o.idx].layerConfig.id
-                    };
+                var attr = "";
+
+                var boundingLegendLabel = {
+                    "for": "filterGroup_" + o.data[o.idx].id + "1",
+                    "attr": attr + "1",
+                    "value": o.data[o.idx].id,
+                    "checked": "checked",
+                    "label": o.data[o.idx].layerConfig.displayName,
+                    "class": "box checked",
+                    "featureId": o.data[o.idx].layerConfig.id
+                };
 
                 return boundingLegendLabel;
             },

@@ -39,11 +39,12 @@
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
-* @uses Navigation
-* @uses EventManager
 * @uses Util
 * @uses Array
 * @uses Dictionary
+* @uses GUI
+* @uses Navigation
+* @uses EventManager
 */
 
 define([
@@ -116,6 +117,7 @@ define([
         *
         * @private
         * @method _showLoadingImg
+        * @param event {Object}
         */
         function _showLoadingImg() {
             $("#map-load-indicator").removeClass("hidden");
@@ -125,7 +127,8 @@ define([
         * Hides the loading image.
         *
         * @private
-        * @method _hideLoadingImg
+        * @method  _hideLoadingImg
+        * @param event {Object}
         */
         function _hideLoadingImg() {
             $("#map-load-indicator").addClass("hidden");
@@ -136,13 +139,12 @@ define([
         *
         * @private
         * @method _updateScale
-        * @param {Object} event
+        * @param event {Object}
         */
         function _updateScale(event) {
             if (event.levelChange) {
-                var currentScale = number.format(event.lod.scale),
-                    scaleLabelText = "1 : " + currentScale;
-
+                var currentScale = number.format(event.lod.scale);
+                var scaleLabelText = "1 : " + currentScale;
                 domConstruct.empty('scaleLabel');
                 $("#scaleLabel").text(scaleLabelText);
             }
@@ -152,22 +154,18 @@ define([
         * Initialize Map Scale
         *
         * @private
-        * @method _initScale
-        * @param {Object} event
+        * @method  _initScale
+        * @param event {Object}
         */
         function _initScale(event) {
-            var map = event.map,
-                scaleDiv = domConstruct.create("div", {
-                    id: "scaleDiv",
-                    class: "esriScalebarLabel"
-                }),
-                currentScale,
-                scaleLabelText;
-
+            var map = event.map;
+            var scaleDiv = domConstruct.create("div", {
+                id: "scaleDiv",
+                "class": "esriScalebarLabel"
+            });
             $(scaleDiv).html("<span>Scale</span><br><span id='scaleLabel'><span/>");
-            currentScale = number.format(map.getScale());
-            scaleLabelText = "1 : " + currentScale;
-
+            var currentScale = number.format(map.getScale());
+            var scaleLabelText = "1 : " + currentScale;
             domConstruct.place(scaleDiv, query(".esriScalebarRuler")[0], "before");
             domConstruct.empty('scaleLabel');
             $("#scaleLabel").text(scaleLabelText);
@@ -215,7 +213,7 @@ define([
         * and react accordingly
         *
         * @method _initListeners
-        * @param {Object} map map object
+        * @param map {Object} map object
         * @private
         */
         function _initListeners(map) {
@@ -279,12 +277,12 @@ define([
             /* START BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                var setTo = evt.node.checked,
-                    layerId = evt.node.value,
-                    // either take url (would need mapping to layer on map),
-                    // map id in config, graphic layer id
-                    layer = map.getLayer(layerId);
+                var setTo = evt.node.checked;
+                var layerId = evt.node.value;
 
+                // either take url (would need mapping to layer on map),
+                // map id in config, graphic layer id
+                var layer = map.getLayer(layerId);
                 layer.setVisibility(setTo);
                 //loops through any static layers that are mapped to the feature layer being toggled
                 try {
@@ -338,10 +336,9 @@ define([
 
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {
-                var type = dom.byId("addLayer-select-type").value,
-                    URL = dom.byId("addLayer-URL-input").value,
-                    opacity = dom.byId("addLayer-Opacity").value;
-
+                var type = dom.byId("addLayer-select-type").value;
+                var URL = dom.byId("addLayer-URL-input").value;
+                var opacity = dom.byId("addLayer-Opacity").value;
                 console.log(type + " | " + URL + " | " + opacity);
                 addStaticLayer(type, URL, opacity);
             });
@@ -406,8 +403,8 @@ define([
         *
         * @private
         * @method createExtent
-        * @param {Object} extentConfig the JSON config object
-        * @param {Esri/SpatialReference} sr the {{#crossLink "Esri/SpatialReference"}}{{/crossLink}}
+        * @param extentConfig {Object} the JSON config object
+        * @param sr {Esri/SpatialReference} the {{#crossLink "Esri/SpatialReference"}}{{/crossLink}}
         * @return {esri/geometry/Extent} An ESRI extent object based on the config data
         */
         function createExtent(extentConfig, sr) {
@@ -498,7 +495,7 @@ define([
             *
             * @method getFeatureLayer
             * @private
-            * @param {String} featureUrl the url of the feature layer
+            * @param featureUrl {String} the url of the feature layer
             * @return {Esri/layer/FeatureLayer} feature layer
             */
             getFeatureLayer: function (featureUrl) {
@@ -514,9 +511,9 @@ define([
             *
             * NOTE: this method is currently unused!
             *
-            * @param {esri/geometry/Extent} e the extent Object
-            * @param {esri/geometry/Extent} maxExtent the maximum extent
-            * @return {esri/geometry/Extent} An adjusted extent, if the target extent is outside the boundary
+            * @param e {esri/geometry/Extent} the extent Object
+            * @param maxExtent {esri/geometry/Extent} the maximum extent
+            * @return {esri/geometry/Extent}An adjusted extent, if the target extent is outside the boundary
             * @method checkBoundary
             */
             checkBoundary: function (e, maxExtent) {
@@ -669,11 +666,11 @@ define([
 
                 /**
                 * A list GraphicsLayer that represent the extent bounding box of the feature layers.
-                * {[esr/layer/featurelayers]} featureLayers A list of feature layers found in the application config
-                * {[esri/layer/graphiclayer]}  An array of graphic layers to add to the map
                 *
                 * @property boundingBoxLayers
                 * @type {array of esri/layer/GraphicsLayer}
+                * @param  {[esr/layer/featurelayers]} featureLayers A list of feature layers found in the application config
+                * @return {[esri/layer/graphiclayer]}  An array of graphic layers to add to the map
                 */
                 var boundingBoxLayers = dojoArray.map(featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
@@ -701,9 +698,9 @@ define([
 
                 /*  START - Add static layers   */
 
-                var staticLayers = [],
-                    perLayerStaticMaps = [],
-                    staticLayerMap = [];
+                var staticLayers = [];
+                var perLayerStaticMaps = [];
+                var staticLayerMap = [];
 
                 dojoArray.map(config.featureLayers, function (layer) {
                     perLayerStaticMaps = [];
@@ -771,17 +768,17 @@ define([
                         boundingBoxExtent.ymax = Math.min(boundingBoxExtent.ymax, maxExtent.ymax);
 
                         var extentGraphic = new esri.Graphic({
-                            geometry: boundingBoxExtent,
-                            symbol: {
-                                color: [255, 0, 0, 64],
-                                outline: {
-                                    color: [240, 128, 128, 255],
-                                    width: 1,
-                                    type: "esriSLS",
-                                    style: "esriSLSSolid"
+                            "geometry": boundingBoxExtent,
+                            "symbol": {
+                                "color": [255, 0, 0, 64],
+                                "outline": {
+                                    "color": [240, 128, 128, 255],
+                                    "width": 1,
+                                    "type": "esriSLS",
+                                    "style": "esriSLSSolid"
                                 },
-                                type: "esriSFS",
-                                style: "esriSFSSolid"
+                                "type": "esriSFS",
+                                "style": "esriSFSSolid"
                             }
                         });
                         boundingBoxLayers[i].add(extentGraphic);

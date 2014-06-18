@@ -51,7 +51,6 @@ require([
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
-    "themes/theme",
 
 /* Utils */
     "utils/util",
@@ -66,7 +65,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    ramp, globalStorage, gui, EventManager, theme,
+    ramp, globalStorage, gui, EventManager,
 
     /* Utils */
     utilMisc) {
@@ -103,8 +102,6 @@ require([
 
                 //initialze the filter
                 FilterManager.init();
-
-                theme.tooltipster();
             });
 
             /* End - RAMP Events */
@@ -126,19 +123,18 @@ require([
         //To hold values from RAMP service
 
         var   //siteURL = new Url(require.toUrl(document.location)),
-            lang = $("html").attr("lang"), // window.location.href.split("/").last().substring(5, 7); // siteURL.queryObject.lang || window.navigator.userLanguage || window.navigator.language || "en";
-            configFile,
-            defJson;
+            lang = $("html").attr("lang"); // window.location.href.split("/").last().substring(5, 7); // siteURL.queryObject.lang || window.navigator.userLanguage || window.navigator.language || "en";
 
         if (lang !== "en" && lang !== "fr") {
             lang = "en";
         }
 
         //loading config object from JSON file
-        configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
+
+        var configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
 
         // Request the JSON config file
-        defJson = xhr(configFile, {
+        var defJson = xhr(configFile, {
             handleAs: "json"
         });
 

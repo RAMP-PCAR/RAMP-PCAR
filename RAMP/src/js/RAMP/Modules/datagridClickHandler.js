@@ -12,12 +12,13 @@
 *
 * @class DatagridClickHandler
 * @static
-* @uses RAMP
-* @uses GraphicExtension
-* @uses EventManager
 * @uses dojo/topic
 * @uses dojo/dom-construct
+* @uses RAMP
+* @uses GraphicExtension
 * @uses Util
+* @uses GUI
+* @uses EventManager
 */
 
 define([
@@ -64,8 +65,10 @@ define([
             * @param {Object} selectedGraphic {esri/Graphic} the graphic object associated with the entry in the datagrid
             */
             onDetailSelect: function (buttonNode, selectedGraphic, mode) {
-                var guid = buttonNode.data("guid") || buttonNode.data("guid", UtilMisc.guid()).data("guid"),
-                    content = GraphicExtension.getTextContent(selectedGraphic),
+                var guid = buttonNode.data("guid") || buttonNode.data("guid", UtilMisc.guid()).data("guid");
+
+                // temp hack to get the point data
+                var content = GraphicExtension.getTextContent(selectedGraphic),
                     title = GraphicExtension.getGraphicTitle(selectedGraphic),
                     node = buttonNode.parents(".record-row").parent();
 
@@ -82,13 +85,13 @@ define([
                             UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
                                 var scroll = evt.scroll;
                                 topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                    graphic: selectedGraphic,
-                                    scroll: scroll
+                                    "graphic": selectedGraphic,
+                                    "scroll": scroll
                                 });
                             });
 
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                                graphic: selectedGraphic
+                                "graphic": selectedGraphic
                             });
                         },
                         doOnHide: function () {
@@ -114,8 +117,8 @@ define([
                         //doOnOpen: function () {
                         doAfterUpdate: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                graphic: selectedGraphic,
-                                scroll: true
+                                "graphic": selectedGraphic,
+                                "scroll": true
                             });
                         },
 
@@ -155,8 +158,8 @@ define([
             * This function is called whenever the user clicks on the "Zoom To" button.
             *
             * @method onZoomTo
-            * @param {esri/geometry/Extent} currentExtent the current extent of the map
-            * @param {Object} zoomToGraphic graphic object of the feature to zoom to
+            * @param currentExtent {esri/geometry/Extent} the current extent of the map
+            * @param zoomToGraphic {Object}
             */
             onZoomTo: function (currentExtent, zoomToGraphic) {
                 zoomBackExtent = currentExtent;
@@ -172,24 +175,23 @@ define([
                 switch (zoomToGraphic.geometry.type) {
                     case "point":
                         topic.publish(EventManager.Map.CENTER_AND_ZOOM, {
-                            graphic: zoomToGraphic,
-                            level: 9,
-                            callback: callback
+                            "graphic": zoomToGraphic, "level": 9,
+                            "callback": callback
                         });
                         break;
 
                     case "polygon":
 
                         topic.publish(EventManager.Map.SET_EXTENT, {
-                            extent: zoomToGraphic._extent.expand(1.5),
-                            callback: callback
+                            "extent": zoomToGraphic._extent.expand(1.5),
+                            "callback": callback
                         });
                         break;
 
                     default:
                         topic.publish(EventManager.Map.SET_EXTENT, {
-                            extent: zoomToGraphic._extent.expand(1.5),
-                            callback: callback
+                            "extent": zoomToGraphic._extent.expand(1.5),
+                            "callback": callback
                         });
                         break;
                 }
@@ -206,7 +208,7 @@ define([
             */
             onZoomBack: function () {
                 topic.publish(EventManager.Map.SET_EXTENT, {
-                    extent: zoomBackExtent
+                    "extent": zoomBackExtent
                 });
 
                 topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_HIDE);

@@ -6,7 +6,7 @@
 *
 *
 * @module RAMP
-*
+* 
 */
 
 /**
@@ -20,7 +20,7 @@ define([],
         "use strict";
         return {
             /**
-             * Returns a URL that points to the application configuration (JSON format) if it's hosted on a web service.
+             * Returns a URL that points to the application configuration (JSON format) if it's hosted on a web service. 
              * This is not required if the application has a JSON config file in the website's folder
              * @attribute getConfigUrl
              * @readOnly

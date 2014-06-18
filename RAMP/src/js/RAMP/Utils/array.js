@@ -95,10 +95,10 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             * @return {Number} the index of the element that causes the given function to return 0, returns -1 if no such element exists
             */
             binaryIndexOf: function (arr, compareFcn) {
-                var minIndex = 0,
-                    maxIndex = arr.length - 1,
-                    currentIndex,
-                    currentElement;
+                var minIndex = 0;
+                var maxIndex = arr.length - 1;
+                var currentIndex;
+                var currentElement;
 
                 while (minIndex <= maxIndex) {
                     currentIndex = (minIndex + maxIndex) / 2 | 0;

@@ -11,7 +11,7 @@
 */
 
 /**
-* The QuickZoom class handles zooming in the map based on province, city, or postal code.
+* The QuickZoom class handles zooming in the map based on province, city, or postal code. 
 * These zoom in services rely on web services which return extent values based the user-entered province, city, or postal code
 *
 * @class QuickZoom
@@ -28,7 +28,6 @@
 * @uses esri/tasks/QueryTask
 * @uses esri/tasks/query
 * @uses GlobalStorage
-* @uses Map
 * @uses Util
 */
 
@@ -57,7 +56,7 @@ define([
              * Defines the UI controls for the province, city, and postal code selections
              * @method constructor
              * @constructor
-             *
+             * 
              */
             constructor: function () {
                 this.config = GlobalStorage.config;
@@ -70,36 +69,36 @@ define([
 
                 this.provinceSelect = new Select({
                     id: "quickZoomProvince",
-                    class: className,
+                    "class": className,
                     options: []
                 });
 
                 this.citySelect = new Select({
                     id: "quickZoomCity",
-                    class: className,
+                    "class": className,
                     options: []
                 });
 
                 this.postalCodeTextbox = new TextBox({
                     id: "quickZoomPostalCode",
-                    class: className,
+                    "class": className,
                     style: "width : 30%"
                 });
 
                 this.button = new Button({
                     label: "Find",
                     id: "quickZoomButton",
-                    class: className
+                    "class": className
                 });
 
-                var that = this; // for local access to "this"
+                var instance = this; // for local access to "this"
                 function _addNode(domNode) {
-                    that.form.domNode.appendChild(domNode);
+                    instance.form.domNode.appendChild(domNode);
                 }
 
                 function _addLabel(text) {
                     var node = domConstruct.create("label", {
-                        class: className,
+                        "class": className,
                         innerHTML: text
                     });
                     _addNode(node);
@@ -125,16 +124,16 @@ define([
             },
             /*
              * This adds the search tools to the UI and populates the UI controls: Province dropdown, city drop down, postal code text box
-             *
              * @method init
              * @param {Object} where A DOM object where the dropdowns will be placed
              * @constructor
+             * 
              */
             init: function (where) {
                 var provinceSelect = this.provinceSelect,
                     citySelect = this.citySelect,
                     config = this.config,
-                    that = this; // for local access to "this"
+                    instance = this; // for local access to "this"
 
                 /**
                 * Change the extent of the map based on the extent data
@@ -142,8 +141,8 @@ define([
                 *
                 * @method changeExtent
                 * @private
-                * @param {String} url
-                * @param {Object} query
+                * @param url {String}
+                * @param query {Object}
                 */
                 function changeExtent(url, query) {
                     query.returnGeometry = true;
@@ -152,15 +151,15 @@ define([
                     queryTask.execute(query,
                         function (featureSet) {
                             if (featureSet.features.isEmpty()) {
-                                that._setError("invalid query");
+                                instance._setError("invalid query");
                                 return;
                             }
                             var extent = featureSet.features[0].geometry.getExtent();
                             if (RampMap.getMaxExtent().contains(extent)) {
                                 RampMap.getMap().setExtent(extent);
-                                that._setError("");
+                                instance._setError("");
                             } else {
-                                that._setError("beyond max extent");
+                                instance._setError("beyond max extent");
                             }
                         },
                         function (error) {
@@ -173,9 +172,9 @@ define([
                 * Populate the given dropdown with data from the given url.
                 *
                 * @method populateDropDown
-                * @param {String} url the url to the service containing the data to populate the dropdown
+                * @param {String} url the url to the service containing the data to populate
+                *        the dropdown
                 * @param {DObject} select the dojo Select object to populate
-                * @param {Object} query to execute
                 * @param {Function} mapFunc the function to convert each element in the retrieved data to a label that can be added to the dropdown menu
                 */
                 function populateDropDown(url, select, query, mapFunc) {
@@ -198,9 +197,8 @@ define([
                 // Populate the province dropdown from a list retrieved
                 // from service
                 provinceSelect.loadDropDown(function () {
-                    var provinceConfig = config.quickzoom.province,
-                        query = new Query();
-
+                    var provinceConfig = config.quickzoom.province;
+                    var query = new Query();
                     query.where = "OBJECTID>0";
                     query.outFields = [provinceConfig.shortName, provinceConfig.name];
 
@@ -221,12 +219,11 @@ define([
                 *
                 * @method populateCityDropDown
                 * @private
-                * @param {String} prov
+                * @param prov {String}
                 */
                 function populateCityDropDown(prov) {
-                    var cityConfig = config.quickzoom.city,
-                        query = new Query();
-
+                    var cityConfig = config.quickzoom.city;
+                    var query = new Query();
                     query.where = UtilMisc.getWhereClause(cityConfig.province, prov);
                     query.outFields = [cityConfig.name, cityConfig.id];
                     populateDropDown(cityConfig.url, citySelect, query,
@@ -269,7 +266,7 @@ define([
                 *
                 * @method validatePostalCode
                 * @private
-                * @param {String} fsa fsa
+                * @param fsa {String} fsa
                 */
                 function validatePostalCode(fsa) {
                     //Perform case insensitive matching
@@ -295,7 +292,7 @@ define([
                         changeExtent(postalConfig.url, query);
                     } else {
                         console.log("invalid postal code!");
-                        that._setError("invalid postal code");
+                        instance._setError("invalid postal code");
                     }
                 }));
 

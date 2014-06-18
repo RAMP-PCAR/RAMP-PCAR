@@ -490,6 +490,7 @@ define([],
                 * @for RampMap
                 */
                 ADD_LAYER_READY: "map/add-layer-ready"
+
             },
 
             BasemapSelector: {

@@ -4,14 +4,13 @@
 * Utility module containint useful static classes.
 *
 * @module Utils
-* @uses dojo/_base/declare
-* @uses dojo/io-query
 */
 
 define(["dojo/_base/declare", "dojo/io-query"],
     function (declare, dojoQuery) {
         "use strict";
         return declare(null, {
+
             /**
             * A simple class that replaces the `dojo._Url` functionality that became deprecated
             * Construct a Url object from a url string, then the uri and query
@@ -30,7 +29,7 @@ define(["dojo/_base/declare", "dojo/io-query"],
             *
             * @class Url
             * @constructor
-            * @param {String} fullUrl a string denoting the full url of a webpage
+            * @param fullUrl a string denoting the full url of a webpage
             * @uses dojo/_base/declare
             * @uses dojo/io-query
             */
