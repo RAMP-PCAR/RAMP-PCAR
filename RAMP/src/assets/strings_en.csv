@@ -14,7 +14,7 @@ metaModified,Date modified (YYYY-MM-DD)
 metaSubject,English subject terms
 metaLanguge,eng
 ,
-title,RAMP Demo Viewer
+title,Reusable Accessible Mapping Platform (RAMP)
 skipToMain,Skip to main content
 skipToFooter,Skip to footer
 ,
@@ -25,8 +25,8 @@ rampAltLangLink,carte.html
 goc,Government of Canada
 sgoc,Symbol of the Government of Canada
 ,
-titleLink,Environment Canada Data Catalogue
-titleSubLink,"Describe, Publish, Discover"
+titleLink,Reusable Accessible Mapping Platform (RAMP)
+titleSubLink,EC's Enterprise Geospatial Viewer
 ,
 siteMenu,Site menu
 ,
@@ -80,7 +80,7 @@ dataTabTitle,Data
 footer,Footer
 siteFooter,Site footer
 transparency,Transparency
-transparencyLink,google.com
+transparencyLink,http://www.ec.gc.ca/default.asp?lang=En&n=390AF41B-1
 termsConditions,Terms and conditions
-termsConditionsLink,google.com
+termsConditionsLink,http://www.ec.gc.ca/default.asp?lang=En&xml=5830C36B-1773-4E3E-AF8C-B21F54633E0A
 dateModified,Date Modified
