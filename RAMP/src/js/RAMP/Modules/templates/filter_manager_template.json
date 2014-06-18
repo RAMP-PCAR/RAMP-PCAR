@@ -45,7 +45,7 @@
 		// filter row legend template 
 		// used by level 2 to generate visibility and bounding box legend checkbox
 		"filter_legend_template":"<div class='checkbox-custom'>
-										<label for='{%=o.for%}' class='form-checkbox {%=o.class%}' data-layer-id='{%=o.featureId%}' title='{%=o.label%}'>
+										<label for='{%=o.for%}' class='form-checkbox {%=o.class%}' data-layer-id='{%=o.featureId%}' data-label-name='{%=o.label%}'>
 											<span class='wb-invisible'>{%=o.label%}</span>
 										</label>
 										<input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.value%}' checked='{%=o.checked%}' class='layerList_legend'
