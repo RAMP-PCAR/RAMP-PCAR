@@ -215,7 +215,7 @@ if (!String.prototype.format) {
             var o = e.data.options;
             if (o.debug) console.log("fn: _onPanClick");
 
-            var dir = e.currentTarget.className.split("-").reverse()[0];
+            var dir = $(e.currentTarget).data("direction"); // e.currentTarget.className.split("-").reverse()[0];
 
             /* trigger an event so listeners are aware along with which direction
             was clicked: panUp, panRight, panDown, panLeft */
@@ -252,7 +252,7 @@ if (!String.prototype.format) {
             on the slider: */
             if (e.currentTarget.className.indexOf("-disabled") == -1 &&
                 !o._inTransition) {
-                var in_out = e.currentTarget.className.split("-").reverse()[0],
+                var in_out = $(e.currentTarget).data("direction"), //e.currentTarget.className.split("-").reverse()[0],
                     _getClassName = $.ui.navigation.prototype._getClassName;
 
                 // raise event only when needed.
@@ -354,6 +354,7 @@ if (!String.prototype.format) {
                                 "title": this._getString(this._getLinkTitle("zoomIn")),
                                 "class": this._getClassName("zoomIn") + " _tooltip"
                             })
+                            .data("direction", "zoomIn")
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomIn"))))))
 
@@ -371,6 +372,7 @@ if (!String.prototype.format) {
                                 "title": this._getString(this._getLinkTitle("zoomOut")),
                                 "class": this._getClassName("zoomOut") + " _tooltip"
                             })
+                            .data("direction", "zoomOut")
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomOut"))))))
                             )
@@ -383,12 +385,14 @@ if (!String.prototype.format) {
 
             for (var i = 0; i < len; i++) {
                 var ctrl = ctrls[i];
-                pan.append($("<li>", {
-                    "title": this._getString(this._getLinkTitle(ctrl)),
-                    "class": this._getClassName(ctrl) + " _tooltip"
-                })
-                                    .append($("<a>", { "role": "button", "href": "" })
-                                    .append($("<span>").text(this._getString(this._getLinkTitle(ctrl))))));
+                pan
+                    .append($("<li>", {
+                        title: this._getString(this._getLinkTitle(ctrl)),
+                        class: this._getClassName(ctrl) + " _tooltip"
+                    })
+                    .data("direction", ctrl)
+                    .append($("<a>", { "role": "button", "href": "" })
+                    .append($("<span>").text(this._getString(this._getLinkTitle(ctrl))))));
             }
 
             nav.appendTo(el);
