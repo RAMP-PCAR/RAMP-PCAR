@@ -193,6 +193,18 @@
                     "type": "String",
                     "value": "Open",
                     "description": ""
+                },
+                {
+                    "name": "txtFullData",
+                    "type": "String",
+                    "value": "Full Data",
+                    "description": ""
+                },
+                {
+                    "name": "txtDataSummary",
+                    "type": "String",
+                    "value": "Data Summary",
+                    "description": ""
                 }
             ]
         },

@@ -30,7 +30,9 @@
         "txtEmailUrlSubject": "ECDMP GIS Viewer",
         "txtEmailUrlBody": "Here's a cool map:",
         "txtClose": "Close",
-        "txtOpen": "Open"
+        "txtOpen": "Open",
+        "txtFullData": "Full Data",
+        "txtDataSummary": "Data Summary"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

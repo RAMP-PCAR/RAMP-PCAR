@@ -92,7 +92,7 @@
 
 													<li class='align-right'>
 														<button class='button button-none button-small font-medium full-data-toggle expand'>
-															<i class='fa fa-th-list'></i><span class='on-right'>Sumary Data</span>
+															<i class='fa fa-th-list'></i><span class='on-right'>{%=o.toggleTitle%}</span>
 														</button>
 													</li>
 												</ul>
@@ -110,7 +110,7 @@
 													{% include('filter_button_Template', o); %}
 													<li class='align-right'>
 														<button class='button button-none button-small font-medium full-data-toggle expand'>
-															<i class='fa fa-th'></i><span class='on-right'>Full Data</span>
+															<i class='fa fa-th'></i><span class='on-right'>{%=o.toggleTitle%}</span>
 														</button>
 													</li>	
 												</ul>

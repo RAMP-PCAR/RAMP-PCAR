@@ -319,8 +319,7 @@ define([
                             // retrieve extendedGrid config object
                             var extendedGrid = getGridConfig(obj.featureUrl).gridColumns;
 
-                            tmpl.cache = {
-                            };
+                            tmpl.cache = {};
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
@@ -758,8 +757,7 @@ define([
                         newWrapper,
                         deffered = new Deferred();
 
-                    tmpl.cache = {
-                    };
+                    tmpl.cache = {};
                     tmpl.templates = data_grid_template_json;
                     newWrapper = tmpl(
                         "datagrid_manager_table_Template",
@@ -818,9 +816,16 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         templateKey = "datagrid_manager_Template";
+                        templateData.buttons.toggleTitle = GlobalStorage.config.stringResources.txtFullData;
                     } else {
                         templateKey = "datagrid_full_manager_Template";
-                        templateData.buttons.datasets = GlobalStorage.config.featureLayers;
+
+                        templateData.buttons = lang.mixin(templateData.buttons,
+                            {
+                                datasets: GlobalStorage.config.featureLayers,
+                                toggleTitle: GlobalStorage.config.stringResources.txtDataSummary
+                            }
+                        );
                     }
 
                     // generate the content using rowData and given template
