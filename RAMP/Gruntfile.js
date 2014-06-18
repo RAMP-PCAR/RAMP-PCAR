@@ -246,6 +246,9 @@ module.exports = function (grunt) {
             stringsEn: {
                 options: {
                     patterns: [{
+                        match: 'dateModifiedDate',
+                        replacement: '<%= grunt.template.today("yyyy-mm-dd") %>'
+                    }, {
                         json: localeStrings.en
                     }]
                 },

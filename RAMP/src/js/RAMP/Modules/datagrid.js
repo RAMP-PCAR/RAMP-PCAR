@@ -810,8 +810,7 @@ define([
                         tl = new TimelineLite({ paused: true }),
                         deffered = new Deferred();
 
-                    tmpl.cache = {
-                    };
+                    tmpl.cache = {};
                     tmpl.templates = data_grid_template_json;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {

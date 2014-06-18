@@ -18,7 +18,7 @@ title,RAMP Demo Viewer
 skipToMain,Skip to main content
 skipToFooter,Skip to footer
 ,
-navigationBar,NavigationBar
+navigationBar,Navigation Bar
 ,
 rampAltLangLink,carte.html
 ,
@@ -79,3 +79,8 @@ dataTabTitle,Data
 ,
 footer,Footer
 siteFooter,Site footer
+transparency,Transparency
+transparencyLink,google.com
+termsConditions,Terms and conditions
+termsConditionsLink,google.com
+dateModified,Date Modified

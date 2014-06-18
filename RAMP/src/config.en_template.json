@@ -173,7 +173,7 @@
                 {
                     "name": "txtEmailUrlSubject",
                     "type": "String",
-                    "value": "ECDMP GIS Viewer",
+                    "value": "RAMP GIS Viewer",
                     "description": ""
                 },
                 {
