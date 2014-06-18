@@ -1,0 +1,109 @@
+﻿/* 
+ * 
+ * This template is not proper JSON as it allows for comments (like this one) and multi-line values.
+ * 
+ * 
+ * JavaScript-Templates templating engine
+ * https://github.com/blueimp/JavaScript-Templates
+ * 
+ */
+{				
+		// Generates legend for each interactive layer on the map (non-basemap layers).
+		"filter_section_template":"{% 	
+										include('filter_set_template',o);									
+									%}",
+		// layer level, layer is passed in as o.data. Level 1
+		// Filter overall structure, contains 1 to many filter row for the available layers.
+		"filter_set_template":"<li id='{%=o.data[o.idx].id%}' class='layerList1'>
+										<fieldset>
+											<legend>{% include('filter_row_template', o);%}</legend>																						
+										</fieldset>
+									</li>",
+		// Level 2
+		// Filter row overall layout for a given layer
+		"filter_row_template":"<div class='filter-row'>
+									<span class='sort-handle'></span>
+									<div class='layer-details'>
+										<div class='layer-image-box'>									
+											<img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image background-white'>
+										</div>
+										<div class='layer-controls'>
+											<div class='layer-name'>
+												<span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
+											<ul class='button-group margin-top-none'>												
+												{% include('filter_button_template', o);%}
+											</ul>
+										</div>
+									</div>
+									<div class='layer-checkboxes'>										
+										{% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
+										{% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+									</div>
+									<div class='clear'>
+									</div>
+								</div>",
+
+		// filter row legend template 
+		// used by level 2 to generate visibility and bounding box legend checkbox
+		"filter_legend_template":"<div class='checkbox-custom'>
+										<label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.featureId%}' data-label-name='{%=o.label%}'>
+											<span class='wb-invisible'>{%=o.label%}</span>
+										</label>
+										<input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.value%}' checked='{%=o.checked%}' class='layerList_legend'
+											type='checkbox'></input>
+									</div>",
+		// filter row button template
+		"filter_button_template":"<li>
+										<button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+									</li>",
+		// Generates a data grid row with a checkbox.
+		// o is the globalFilter setting in config.json
+		// level 1: filter panel global section
+		"filter_global_row_template":	"<div>
+									<div class='global-details'>
+										<div class='global-controls'>
+											<ul class='button-group margin-top-none'>
+												{%=o.txtAllData%}
+											</ul>
+										</div>
+									</div>
+									<div class='global-checkboxes'>
+										{% o.toggleLabels.forEach(function(item){
+												include('filter_global_label_template',item); 
+											});											
+										%}										
+									</div>
+									<div class='clear'>
+									</div>
+								</div>",
+		// level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
+		//			This template is used to generate 'eye' and 'bondingbox' for All Data
+		"filter_global_label_template":	"<div class='checkbox-custom'>
+											<label for='{%=o.id%}' class='form-checkbox  tooltip {%=o.classAddition%}' title='{%=o.title%}'>
+												<span class='wb-invisible'>{%=o.title%}</span>
+											</label>
+											<input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.value%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>
+										</div>",
+		// Entry point
+		// Template to create filter content for RAMP	
+		// o is the datawrapper object contains layers stored in o.data
+		"filter_manager_template":"<div id='categories'>
+										<div id='filterGlobalToggles' class='global-toggles'>
+											{% include('filter_global_row_template', o.config.globalFilter);%}
+										</div>
+										<!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
+										<ul id='layerList'>
+											{% 				
+												var i=0;																														  
+											   o.data.forEach(function(layer){													
+													o.idx = i;
+													include('filter_section_template',o);																									
+													i++;
+											   });
+											%}
+										</ul>
+										<div class='clearBoth'>
+										</div>
+									</div>"
+							
+}
