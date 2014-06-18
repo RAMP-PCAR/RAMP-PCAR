@@ -46,7 +46,7 @@ $.fn.dataTableExt.oPagination.ramp = {
         //console.log("redo pagination");
 
         $(nPaging).append(
-			'<div class="pagination-controls">' +
+            '<div class="pagination-controls">' +
                 '<span class="pagination-record-number font-small"></span>' +
                 '<div class="button-toolbar margin-top-medium">' +
                     '<div class="pagination-page-selector">' +
@@ -54,22 +54,22 @@ $.fn.dataTableExt.oPagination.ramp = {
 
                         '<div class="pagination-goto-page animated"><ul></ul></div>' +
         //            '<span class="pagination-page-selector">Go to</span>' +
-			        '</div>' +
+                    '</div>' +
 
                     '<ul class="button-group margin-right-small font-small pagination-arrow-controls">' +
-			            '<li><button  class="' + oClasses.sPageButton + " " + "first" + ' button button-none" title="' + oLang.sFirst + '"><div><span class="wb-invisible">' + oLang.sFirst + '</span></div></button></li>' +
-			            '<li><button  class="' + oClasses.sPageButton + " " + "previous" + ' button button-none" title="' + oLang.sPrevious + '"><div><span class="wb-invisible">' + oLang.sPrevious + '</span></div></button></li>' +
-			            '<li><button  class="' + oClasses.sPageButton + " " + "next" + ' button button-none" title="' + oLang.sNext + '"><div><span class="wb-invisible">' + oLang.sNext + '</span></div></button></li>' +
-			            '<li><button  class="' + oClasses.sPageButton + " " + "last" + ' button button-none" title="' + oLang.sLast + '"><div><span class="wb-invisible">' + oLang.sLast + '</span></div></button></li>' +
-			        '</ul>' +
-			    '</div>' +
+                        '<li><button  class="' + oClasses.sPageButton + " " + "first" + ' tooltip button button-none" title="' + oLang.sFirst + '"><div><span class="wb-invisible">' + oLang.sFirst + '</span></div></button></li>' +
+                        '<li><button  class="' + oClasses.sPageButton + " " + "previous" + ' tooltip button button-none" title="' + oLang.sPrevious + '"><div><span class="wb-invisible">' + oLang.sPrevious + '</span></div></button></li>' +
+                        '<li><button  class="' + oClasses.sPageButton + " " + "next" + ' tooltip button button-none" title="' + oLang.sNext + '"><div><span class="wb-invisible">' + oLang.sNext + '</span></div></button></li>' +
+                        '<li><button  class="' + oClasses.sPageButton + " " + "last" + ' tooltip button button-none" title="' + oLang.sLast + '"><div><span class="wb-invisible">' + oLang.sLast + '</span></div></button></li>' +
+                    '</ul>' +
+                '</div>' +
             '</div>'
-		);
+        );
         var els = $('button', nPaging);
         var nFirst = els[1],
-			nPrev = els[2],
-			nNext = els[3],
-			nLast = els[4];
+            nPrev = els[2],
+            nNext = els[3],
+            nLast = els[4];
 
         $(nFirst).click(function () { fnClickHandler("first") });
         $(nPrev).click(function () { fnClickHandler("previous") });
@@ -241,7 +241,7 @@ $.fn.dataTableExt.oPagination.ramp = {
         for (i = iStartButton; i <= iEndButton; i++) {
             sList += (iCurrentPage !== i) ?
             '<li><button class="' + oClasses.sPageButton + ' button button-none "><span class="wb-invisible">' + oLang.sPage + '</span>' + oSettings.fnFormatNumber(i) + '</button></li>' :
-			'<li><button class="' + oClasses.sPageButtonActive + (iPageCountMiddle === i ? " middle-page " : "") + ' button button-none button-disabled"><span class="wb-invisible">' + oLang.sPage + '</span>' + oSettings.fnFormatNumber(i) + '</button></li>';
+            '<li><button class="' + oClasses.sPageButtonActive + (iPageCountMiddle === i ? " middle-page " : "") + ' button button-none button-disabled"><span class="wb-invisible">' + oLang.sPage + '</span>' + oSettings.fnFormatNumber(i) + '</button></li>';
 
             //'<li><a tabindex="' + oSettings.iTabIndex + '" class="' + oClasses.sPageButton + ' button">' + oSettings.fnFormatNumber(i) + '</a></li>' :
             //'<li><a tabindex="' + oSettings.iTabIndex + '" class="' + oClasses.sPageButtonActive + ' button button-accent button-disabled">' + oSettings.fnFormatNumber(i) + '</a></li>';
@@ -287,21 +287,21 @@ $.fn.dataTableExt.oPagination.ramp = {
             }
 
             anStatic = [
-				anButtons[0], anButtons[1],
-				anButtons[anButtons.length - 2], anButtons[anButtons.length - 1]
-			];
+                anButtons[0], anButtons[1],
+                anButtons[anButtons.length - 2], anButtons[anButtons.length - 1]
+            ];
 
             $(anStatic).removeClass(oClasses.sPageButton + " " + oClasses.sPageButtonActive + " " + oClasses.sPageButtonDisabled + " button-disabled");
             $([anStatic[0], anStatic[1]]).addClass(
-				(iCurrentPage == 1) ?
-					oClasses.sPageButtonDisabled + " button-disabled" :
-					oClasses.sPageButton
-			);
+                (iCurrentPage == 1) ?
+                    oClasses.sPageButtonDisabled + " button-disabled" :
+                    oClasses.sPageButton
+            );
             $([anStatic[2], anStatic[3]]).addClass(
-				(iPages === 0 || iCurrentPage === iPages || oSettings._iDisplayLength === -1) ?
-					oClasses.sPageButtonDisabled + " button-disabled" :
-					oClasses.sPageButton
-			);
+                (iPages === 0 || iCurrentPage === iPages || oSettings._iDisplayLength === -1) ?
+                    oClasses.sPageButtonDisabled + " button-disabled" :
+                    oClasses.sPageButton
+            );
         }
     }
 }

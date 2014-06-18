@@ -20,11 +20,16 @@
 * @uses dojo/Deferred
 * @uses dojo/domReady!
 * @uses GlobalStorage
+* @uses EventManager
+* @uses Theme
+* @uses templates/sub_panel_Template.html
+* @uses templates/sub_panel_template.json
+* @uses templates/sub_panel_content_Template.html
 * @uses Util
 * @uses Dictionary
 * @uses PopupManager
-* @uses templates/sub_panel_Template.html
-* @uses templates/sub_panel_content_Template.html
+* @uses TmplHelper
+* @uses dojo/domReady!
 */
 define([
 // Dojo
@@ -45,7 +50,7 @@ define([
 
 // Dom Ready
         "dojo/domReady!"
-    ],
+],
 
     function (
     // Dojo
@@ -54,7 +59,7 @@ define([
     // Ramp
         GlobalStorage, EventManager,
 
-        theme,
+        Theme,
 
     // Text
         subPanelTemplate2,
@@ -495,7 +500,14 @@ define([
                     tmpl.cache = {};
                     tmpl.templates = subPanelTemplate;
 
-                    subPanelString = tmpl(this._attr.templateKey, this._attr);
+                    subPanelString = tmpl(this._attr.templateKey,
+                        lang.mixin(
+                            this._attr,
+                            {
+                                closeTitle: GlobalStorage.config.stringResources.txtClose
+                            }
+                        )
+                    );
 
                     //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
                     //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
@@ -511,22 +523,25 @@ define([
                     parsedContent = this.parseContent(this._attr.content);
                     this._panelContentDiv.empty().append(parsedContent);
 
-                    this.timeLine = new TimelineLite({
-                        paused: true,
-                        onComplete: function () {
-                            if (this._attr.doAfterOpen) {
-                                this._attr.doAfterOpen();
-                            }
+                    this.timeLine = new TimelineLite(
+                        {
+                            paused: true,
+                            onComplete: function () {
+                                if (this._attr.doAfterOpen) {
+                                    this._attr.doAfterOpen();
+                                }
 
-                            layoutController.subPanelChange(true, this._attr.origin, this.container, true);
-                        },
-                        onCompleteScope: this
-                    })
+                                layoutController.subPanelChange(true, this._attr.origin, this.container, true);
+                            },
+                            onCompleteScope: this
+                        })
                         .to(this.panel, this._animatePanelDuration / 1000,
                             {
                                 left: 0,
                                 ease: "easeOutCirc"
                             });
+
+                    Theme.tooltipster(this.container);
 
                     this.update(this._attr);
                 },
@@ -841,6 +856,10 @@ define([
                             layoutChange();
                             panelChange(true);
 
+                            panelToggle
+                                .tooltipster("content", GlobalStorage.config.stringResources.txtClose)
+                                .find("span.wb-invisible").text(GlobalStorage.config.stringResources.txtClose);
+
                             d.resolve();
                         }, [], this);
 
@@ -863,6 +882,10 @@ define([
                                 panelChange(false);
                             });
                             layoutChange();
+
+                            panelToggle
+                                .tooltipster("content", GlobalStorage.config.stringResources.txtOpen)
+                                .find("span.wb-invisible").text(GlobalStorage.config.stringResources.txtOpen);
 
                             d.resolve();
                         }, [], this);
@@ -911,18 +934,18 @@ define([
                         panelPopup.toggle();
                     });
 
-                    theme
+                    Theme
                         .fullScreenCallback("onComplete", layoutChange)
                         .fullScreenCallback("onReverseComplete", layoutChange);
 
                     // if the vertical space is too small, trigger the full-screen
                     if (mapContent.height() < jWindow.height() * 0.6) {
-                        theme.toggleFullScreenMode(true);
+                        Theme.toggleFullScreenMode(true);
                     }
 
                     // set listener to the full-screentoggle
                     fullScreenToggle.click(function () {
-                        theme.toggleFullScreenMode();
+                        Theme.toggleFullScreenMode();
                     });
                 },
 
@@ -938,7 +961,7 @@ define([
                 * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
                 */
                 toggleFullScreenMode: function (fullscreen) {
-                    theme.toggleFullScreenMode(fullscreen);
+                    Theme.toggleFullScreenMode(fullscreen);
                 },
 
                 isFullData: function () {
@@ -999,7 +1022,7 @@ define([
                     return panelDiv.filter(":visible").width();
                 }
             };
-        } ());
+        }());
 
         /**
         * Create a new SubPanel with the settings provided.

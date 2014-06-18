@@ -1,5 +1,3 @@
-// hello
-
 var fs = require('fs'),
     request = require('request'),
     extend = require('util')._extend,
@@ -420,9 +418,10 @@ module.exports = function (grunt) {
             wpage: {
                 files: [
                     'src/ramp-src.html',
-                    'src/pages/**/*.html'
+                    'src/pages/**/*.html',
+                    'src/includes/**/*.txt'
                 ],
-                tasks: ['page', 'build:bump-only-build']
+                tasks: ['page', 'assets', 'build:bump-only-build']
             },
 
             wtemplate: {
@@ -802,7 +801,8 @@ module.exports = function (grunt) {
                         checkParamNames: true,
                         checkRedundantParams: true,
                         requireParamTypes: true
-                    }
+                    }//,
+                    //reporterOutput: 'jscs.txt'
                     //config: '.jscs-secondary.json'
                 },
                 files: {
@@ -1022,7 +1022,7 @@ module.exports = function (grunt) {
     grunt.registerTask('jsConcat', ['concat:rampJsLib']);
     grunt.registerTask('jsReplace', ['replace:rampJsCore']);
 
-    grunt.registerTask('js', ['hint', 'clean:rampJsBefore', 'uglify', 'jsCopy', 'jsConcat', 'jsReplace', 'clean:rampJsAfter', 'notify:js']);
+    grunt.registerTask('js', ['hint', 'jsstyle', 'clean:rampJsBefore', 'uglify', 'jsCopy', 'jsConcat', 'jsReplace', 'clean:rampJsAfter', 'notify:js']);
 
     // CSS
     grunt.registerTask('lessCss', ['less:rampLessCore']);

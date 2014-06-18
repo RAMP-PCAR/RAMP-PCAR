@@ -31,6 +31,9 @@
 * @uses GlobalStorage
 * @uses Gui
 * @uses DatagridClickHandler
+* @uses Map
+* @uses EventManager
+* @uses Theme
 * @uses Util
 * @uses Array
 * @uses Dictionary
@@ -52,7 +55,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager",
+        "ramp/eventManager", "themes/theme",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -70,7 +73,7 @@ define([
         FeatureLayer, EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager,
+        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
 
     // Util
         utilMisc, utilArray, utilDict, popupManager, tmplHelper) {
@@ -118,7 +121,7 @@ define([
                 *
                 * @method createRowPrototype
                 * @private
-                * @param cssClass {String} the style that highlights the row.
+                * @param {String} cssClass the style that highlights the row.
                 * @return {Object} an object containing features of a datagrid row
                 */
                 function createRowPrototype(cssClass) {
@@ -179,11 +182,9 @@ define([
                         /**
                         * Finds a row node corresponding to the given graphic object.
                         *
-                        * @method update
-                        * @param graphic Graphic object.
+                        * @method refresh
                         * @private
                         * @return {{node: jObject, page: number}} A row node that displays graphic information. If none found, returns an object with empty jNode.
-                        * @method update
                         */
                         refresh: function () {
                             if (graphic) {
@@ -278,7 +279,9 @@ define([
                     // provided. A temporary property name "attribute" is used. Not sure if this will be
                     // used by ECDMP, therefore, leave the empty value in the template
                     var toggleButtonData = {
-                        "buttonLabel": "Sort", "classAddition": "font-medium global-button", "someAttribute": ""
+                        buttonLabel: "Sort",
+                        classAddition: "font-medium global-button",
+                        someAttribute: ""
                     };
 
                     return toggleButtonData;
@@ -427,6 +430,8 @@ define([
                     dataTablesScroll = sectionNode.find(".dataTables_scroll");
                     dataTablesScrollBody = dataTablesScroll.find(".dataTables_scrollBody");
                     dataTablesScrollHead = dataTablesScroll.find(".dataTables_scrollHead");
+
+                    Theme.tooltipster(jqgridWrapper);
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {
@@ -994,8 +999,9 @@ define([
             featureToPage = {
             };
             $.each(elements, function (idx, val) {
-                var layer = val.last().featureUrl;
-                var fid = GraphicExtension.getOid(val.last().feature);
+                var layer = val.last().featureUrl,
+                    fid = GraphicExtension.getOid(val.last().feature);
+
                 if (!(layer in featureToPage)) {
                     featureToPage[layer] = {
                     };
@@ -1023,7 +1029,7 @@ define([
         * @method handleGridEvent
         * @private
         * @param {Event} e the event object
-        * @param {Function} fcn the callback function
+        * @param {Function} callback fcn the callback function
         */
         function handleGridEvent(e, callback) {
             if ((e.type === "keypress" && e.keyCode === 13) || e.type === "click") {
@@ -1119,9 +1125,9 @@ define([
             // Includes fields that are useful which are not derived from the config.featureSources
             // this should not draw, as there will be no column defined for it
             innerArray.push({
-                "featureUrl": url,
-                "layerName": Ramp.getLayerConfig(url).displayName,
-                "feature": feature
+                featureUrl: url,
+                layerName: Ramp.getLayerConfig(url).displayName,
+                feature: feature
             });
 
             return innerArray;

@@ -17,8 +17,7 @@
 * @uses Util
 */
 define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
-    function (Deferred, lang,
-        UtilMisc) {
+    function (Deferred, lang, UtilMisc) {
         "use strict";
 
         /**

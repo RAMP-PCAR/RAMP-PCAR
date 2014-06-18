@@ -19,7 +19,7 @@
 define([
         "dojo/_base/array", "dojo/_base/lang",
         "utils/util"
-    ],
+],
 
     function (
         dojoArray, dojoLang,
@@ -27,8 +27,7 @@ define([
         "use strict";
 
         return {
-
-            /** 
+            /**
             * Iterates over the key-value pair in the given dictionary (in arbitrary order) and
             * calls the given function on each key-value pair.
             *
@@ -66,7 +65,7 @@ define([
                 });
             },
 
-            /** 
+            /**
             * Iterates over the key-value pair in the given dictionary and
             * returns the index of the first element to cause the given fcn to return
             * true.
@@ -108,7 +107,7 @@ define([
             * Returns the number of keys in the given dictionary.
             *
             * @method length
-            * @param dict {Object} a dictionary
+            * @param {Object} dict a dictionary
             * @return {Integer} the number of keys in the dictionary
             * @static
             */
@@ -121,21 +120,21 @@ define([
             *
             * @method isEmpty
             * @static
-            * @param  dict {Object} a dictionary
+            * @param {Object} dict a dictionary
             * @return {Boolean} true if the dictionary is empty, false otherwise
             */
             isEmpty: function (dict) {
                 return this.length(dict) === 0;
             },
 
-             /**
-            * Returns a shallow copy of the given dictionary.
-            * 
-            * @static
-            * @method clone
-            * @param dict {Object} a dictionary
-            * @return {Object} a shallow copy of the given dictionary
-            */
+            /**
+           * Returns a shallow copy of the given dictionary.
+           *
+           * @static
+           * @method clone
+           * @param {Object} dict a dictionary
+           * @return {Object} a shallow copy of the given dictionary
+           */
             clone: function (dict) {
                 var copy = {};
                 this.forEachEntry(dict, function (key, value) {
@@ -143,6 +142,5 @@ define([
                 });
                 return copy;
             }
-
         };
     });

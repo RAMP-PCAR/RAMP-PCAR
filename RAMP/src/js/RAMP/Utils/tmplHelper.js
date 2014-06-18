@@ -12,11 +12,12 @@
 * A set of functions used to support and standardize the use of templating
 *
 *
-* @class TmplUtil
+* @class TmplHelper
 * @static
 * @uses dojo/_base/lang
-* @uses TmplUtil
 * @uses GlobalStorage
+* @uses RAMP
+* @uses TmplUtil
 */
 
 define([
@@ -28,7 +29,7 @@ define([
         "ramp/ramp",
         "utils/tmplUtil"
 
-    ],
+],
     function (dojoLang, GlobalStorage, Ramp, TmplUtil) {
         "use strict";
 
@@ -44,31 +45,29 @@ define([
              *      .str = <global config object . stringResources>
              *      .lyr = <global config object . featurelayers [parameter index] >
              *      .fn = object with helper functions assigned to it.
-             * 
+             *
              */
-              dataBuilder: function (data, layerUrl) {
-             
-             var dataWrapperPrototype = {
-                 data: null,
-                 config: null,
-                 str: null,
-                 lyr:null,
-                 fn:null
-                 };
-              var dataWrapper = Object.create(dataWrapperPrototype);
+            dataBuilder: function (data, layerUrl) {
+                var dataWrapperPrototype = {
+                    data: null,
+                    config: null,
+                    str: null,
+                    lyr: null,
+                    fn: null
+                },
+                    dataWrapper = Object.create(dataWrapperPrototype);
 
-              dataWrapper.data=data;
-              dataWrapper.config = GlobalStorage.config;
-              dataWrapper.str = GlobalStorage.config.stringResources;
+                dataWrapper.data = data;
+                dataWrapper.config = GlobalStorage.config;
+                dataWrapper.str = GlobalStorage.config.stringResources;
 
-              if (layerUrl !=null)
-              {
-                 //get configturation from the layer with layerIndex
-                 dataWrapper.lyr= Ramp.getLayerConfig(layerUrl);
-              }
+                if (layerUrl != null) {
+                    //get configturation from the layer with layerIndex
+                    dataWrapper.lyr = Ramp.getLayerConfig(layerUrl);
+                }
 
-              dataWrapper.fn=TmplUtil;
-              return dataWrapper;
+                dataWrapper.fn = TmplUtil;
+                return dataWrapper;
             },
             /*
              * Create a data wrapper with properties: data, config, str, fn
@@ -81,24 +80,23 @@ define([
              *      .str = <global config object . stringResources>
              *      .lyr = <global config object . featurelayers [parameter index] >
              *      .fn = object with helper functions assigned to it.
-             * 
+             *
              */
-              genericDataBuilder: function (data) {
-             
-             var dataWrapperPrototype = {
-                 data: null,
-                 config: null,
-                 str: null,
-                 fn:null
-                 };
-              var dataWrapper = Object.create(dataWrapperPrototype);
+            genericDataBuilder: function (data) {
+                var dataWrapperPrototype = {
+                    data: null,
+                    config: null,
+                    str: null,
+                    fn: null
+                },
+                    dataWrapper = Object.create(dataWrapperPrototype);
 
-              dataWrapper.data=data;
-              dataWrapper.config = GlobalStorage.config;
-              dataWrapper.str = GlobalStorage.config.stringResources;
-              
-              dataWrapper.fn=TmplUtil;
-              return dataWrapper;
+                dataWrapper.data = data;
+                dataWrapper.config = GlobalStorage.config;
+                dataWrapper.str = GlobalStorage.config.stringResources;
+
+                dataWrapper.fn = TmplUtil;
+                return dataWrapper;
             },
 
             /*
@@ -106,19 +104,19 @@ define([
              * @method stringifyTemplate
              * @param {String} template A template in JSON format
              * @returns {String} A JSON template without comments
-             * 
+             *
              */
             stringifyTemplate: function (template) {
                 return template
                     // strip comments from the template
                     .replace(/`(?:\\.|[^`])*`|'(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\/\*[^]*?\*\/|\/\/.*\n?/g,
-							             function(s) {
-			            if (s.charAt(0) === '/') {
-				            return '';
-                        } else {
-				            return s;
-                        }
-		        })
+                                         function (s) {
+                                             if (s.charAt(0) === '/') {
+                                                 return '';
+                                             } else {
+                                                 return s;
+                                             }
+                                         })
                     // remove hard breaks and tabs
                     .replace(/[\n\r\t]/g, "")
                     .replace(/>\s*?</g, "><");

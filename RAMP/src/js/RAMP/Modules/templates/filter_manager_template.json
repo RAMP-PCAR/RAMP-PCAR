@@ -42,10 +42,11 @@
 									<div class='clear'>
 									</div>
 								</div>",
+
 		// filter row legend template 
 		// used by level 2 to generate visibility and bounding box legend checkbox
 		"filter_legend_template":"<div class='checkbox-custom'>
-										<label for='{%=o.for%}' class='form-checkbox {%=o.class%}' data-layer-id='{%=o.featureId%}' data-label-name='{%=o.label%}'>
+										<label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.featureId%}' title='{%=o.label%}'>
 											<span class='wb-invisible'>{%=o.label%}</span>
 										</label>
 										<input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.value%}' checked='{%=o.checked%}' class='layerList_legend'
@@ -78,7 +79,7 @@
 		// level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
 		//			This template is used to generate 'eye' and 'bondingbox' for All Data
 		"filter_global_label_template":	"<div class='checkbox-custom'>
-											<label for='{%=o.id%}' class='form-checkbox {%=o.classAddition%}' title='{%=o.title%}'>
+											<label for='{%=o.id%}' class='form-checkbox  tooltip {%=o.classAddition%}' title='{%=o.title%}'>
 												<span class='wb-invisible'>{%=o.title%}</span>
 											</label>
 											<input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.value%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>

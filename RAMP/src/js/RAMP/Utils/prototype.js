@@ -15,7 +15,7 @@
 define([
 /* ESRI */
         "esri/geometry/Extent"
-    ],
+],
 
     function (
     /* ESRI */
@@ -113,8 +113,9 @@ define([
 
             // Array Flatten object extention: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
             addStaticFcn(Array, "flatten", function flatten(arr) {
-                var flat = [];
-                var i, l, type;
+                var flat = [],
+                    i, l, type;
+
                 for (i = 0, l = arr.length; i < l; i++) {
                     type = Object.prototype.toString.call(arr[i]).split(' ').pop().split(']').shift().toLowerCase();
                     if (type) {
@@ -294,9 +295,9 @@ define([
             /**
             * Defines useful prototypes for basic types in javascript (e.g. String, Array)
             *
-            * @param id
-            * @param require
-            * @param load
+            * @param {Number} id
+            * @param {String} require
+            * @param {Function} load
             * @method load
             */
             load: function (id, require, load) {

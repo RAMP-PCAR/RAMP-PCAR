@@ -4,17 +4,21 @@
 *
 *
 * @module RAMP
+* @submodule Theme
 *
 */
 
 /**
-* GlobalStorage class is used to store variables and exchange them between different modules. Each module has the ability to add variables to the global storage and retrieve them as needed.
 *
-* @class GlobalStorage
+*
+* @class FEGC-Theme
+* @uses Util
+* @uses dojo/_base/lang
+* @uses Theme
 */
 
-define(["utils/util", ],
-    function (util) {
+define(["utils/util", "dojo/_base/lang", "defaultTheme/theme"],
+    function (util, dojoLang, defaultTheme) {
         "use strict";
 
         var body = $("body"),
@@ -47,6 +51,12 @@ define(["utils/util", ],
 
             .set(body, { className: "+=full-screen" });
 
+        /**
+         * Toggles full screen mode
+         *
+         * @method _toggleFullScreenMode
+         * @param  {Boolean} fullscreen true - full screen on; false - full screen off; undefined - toggle;
+         */
         function _toggleFullScreenMode(fullscreen) {
             var extraTweeen = new TimelineLite({ paused: true });
 
@@ -73,28 +83,45 @@ define(["utils/util", ],
             extraTweeen.play();
         }
 
-        return {
-            fullScreenCallback: function (event, func) {
-                fullScreenTimeLine.eventCallback(event, func);
+        return dojoLang.mixin(defaultTheme,
+            {
+                /**
+                 * Allows to set callbacks to the full screen transition.
+                 *
+                 * @method fullScreenCallback
+                 * @param  {String} event Event name to set a callback on
+                 * @param  {Function} func  A callback function
+                 * @return {Object}     This
+                 * @chainable
+                 */
+                fullScreenCallback: function (event, func) {
+                    fullScreenTimeLine.eventCallback(event, func);
 
-                return this;
-            },
+                    return this;
+                },
 
-            isFullScreen: function () {
-                return isFullScreen;
-            },
+                /**
+                 * Returns a boolean indication whether the full screen mode is on.
+                 *
+                 * @method isFullScreen
+                 * @return {Boolean} true / false
+                 */
+                isFullScreen: function () {
+                    return isFullScreen;
+                },
 
-            /**
-            * Toggles the FullScreen mode of the application
-            *
-            * @method toggleFullScreenMode
-            * @private
-            * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
-            */
-            toggleFullScreenMode: function (fullscreen) {
-                _toggleFullScreenMode(fullscreen);
+                /**
+                * Toggles the FullScreen mode of the application
+                *
+                * @method toggleFullScreenMode
+                * @private
+                * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+                */
+                toggleFullScreenMode: function (fullscreen) {
+                    _toggleFullScreenMode(fullscreen);
 
-                return this;
+                    return this;
+                }
             }
-        };
+        );
     });
