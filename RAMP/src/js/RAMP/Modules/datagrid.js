@@ -1044,21 +1044,13 @@ define([
         function applyExtentFilter(d) {
             var visibleFeatures = {},
                 visibleGridLayers = RampMap.getVisibleFeatureLayers(),
+                dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
 
-            if (ui.getDatagridMode() !== "summary") {
+            if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                     return layer.url === ui.getSelectedDatasetUrl();
-
-                    /*return dojoArray.some($("#dataset_selector option:selected"), function (elm) {
-                    return layer.url === elm.value;
-                    });*/
                 });
-                /*
-                visibleGridLayers = [];
-                $("#dataset_selector option:selected").each(function () {
-                visibleGridLayers.push($(this).attr("value"));
-                });*/
             }
 
             q.geometry = RampMap.getMap().extent;
@@ -1070,7 +1062,7 @@ define([
                         var layer = features.features[0].getLayer(),
                             layerUrl = layer.url;
 
-                        if (!layer.visible) {
+                        if (!layer.visible && dataGridMode === GRID_MODE_SUMMARY) {
                             visibleFeatures[layerUrl] = [];
                         } else {
                             visibleFeatures[layerUrl] = features.features;
