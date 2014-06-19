@@ -1,6 +1,6 @@
 {
     "name": "RAMP GIS Viewer",
-    "version": "1.0.39-10",
+    "version": "1.0.39-15",
     "description": "RAMP GIS viewer",
     "linkNatives": "true",
     "options": {

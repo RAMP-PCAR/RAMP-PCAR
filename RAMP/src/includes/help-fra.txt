@@ -1,24 +1,166 @@
 ﻿<details class="margin-bottom-medium">
-	<summary class="">[fr] Navigation Controls</summary>
-	<div>
-		<p>
-			[fr] Navigation controls is used for changing the viewing extent of the map; the
-			datagrid updates accordingly to what's viewable in the current extent.</p>
-		<p>
-			<b>[fr] Usage:</b></p>
-		<p>
-			<img src="./App_Themes/images/help/en/help_navigation_toolbar.png" width="300" height="250"
-				class="image-actual" alt="Map navigation controls." /></p>
-		<ul>
-			<li>[fr] Click Pan North/South/East/West to move the map in that particular direction.</li>
-			<li>[fr] Click Canada View to view map at its full extent.</li>
-			<li>[fr] Click Zoom In/Out to change the map extent.</li>
-		</ul>
-	</div>
+    <summary class="">Contrôles de Navigation</summary>
+    <div>
+        <p>
+            Les contrôles de navigation est utilisé pour changer la mesure de visualiser la carte, les mises à jour tableau des données en conséquence pour ce qui est visible dans l'étendue actuelle.</p>
+        <p>
+            <b>Utilisation :</b></p>
+        <p>
+            <img src="./assets/images/help/en/help_navigation_toolbar.png" width="300" height="250"
+                class="image-actual" alt="Contrôles de Navigation" /></p>
+        <ul>
+            <li>Cliquez Pan Nord / Sud / Est / Ouest pour déplacer la carte dans cette direction particulière.</li>
+            <li>Cliquez sur le Canada pour voir la carte Voir à sa pleine mesure.</li>
+            <li>Cliquez sur Zoom In / Out pour changer le étendue de la carte.</li>
+            <li>Cliquez et faites glisser le curseur de zoom pour zoomer ou dézoomer.</li>
+        </ul>
+    </div>
 </details>
 <div class="clear">
 </div>
-	<!-- Add Layer BEGINS -->
+<!-- basemaps BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Cartes de base</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Le sélecteur de carte de base est utilisé pour modifier la carte de base sous­tendante afin d'offrir une variété de contextes géographiques.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_basemaps.png" width="300" height="100" class="image-actual"
+                        alt="Le sélecteur de carte de base" /></p>
+                <p>
+                    Du menu déroulant, choisir la carte de base de votre choix et l'affichage de la carte s'actualisera.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- basemaps ENDS -->	
+<!-- getLink BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Obtenir le lien</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    L'option « Obtenir le lien » est utilisée pour générer un URL partageable de l'état actuel de la carte avec des ensembles de données sélectionnés.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_getlink.png" width="300" height="95" class="image-actual"
+                        alt="Obtenir le lien" /></p>
+                <ul>
+                    <li><span class="bold-text">Lien raccourci :</span> Choisir ce lien pour utiliser le service de raccourci URL de Google pour générer un lien concis et aisément partageable vers l'état actuel du visualiseur de cartes par bretelle d'accès.</li>
+                    <li><span class="bold-text">Courriel :</span> Choisir ce lien pour ouvrir un nouveau courriel dans votre courriel de clients par défaut, en utilisant l'URL contenu dans le corps pour un partage pratique.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- getLink ENDS -->
+<!-- fullScreen BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Plein écran</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Le plein écran est utilisé pour réduire les hauts de page et les bas de page ministériels afin de prévoir plus d'espace à l'écran pour la cartographie.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    Cliquer sur le bouton du Plein écran de la barre d'outil afin de cacher l'information du haut de page et du bas de page ministériels. Choisir le lien « Afficher haut de page » pour rétablir à la vue par défaut.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- fullScreen ENDS -->
+<!-- datasets BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Ensembles de données</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    L'onglet Ensembles de données énumère les couches choisies pour afficher dans la carte et la grille de données.
+                    L'onglet Ensembles de données sert également de légende de carte.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_datasets.png" width="300" height="147" class="image-actual"
+                        alt="Ensembles de données" /></p>
+                <p>
+                    Choisir l'icone en forme d'œil près du nom de l'ensemble de données afin de basculer la couche entre les positions arrêt et marche. Utiliser l'icone « hachurer » à la droite de l'icone en forme d'œil pour afficher le cadre de délimitation  de l'ensemble de données. Cliquer et faire glisser les 6 points à la gauche de l'ensemble de données, par le haut ou par le bas, afin de réordonner les couches sur l'interface de la carte. Choisir le lien des métadonnées afin d'afficher les métadonnées pertinentes pour la source en question en un panneau d'information réduisible.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- datasets ENDS -->
+<!-- dataGrid BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Grille de données</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    La grille de données vous permet d'accéder aux données visibles dans l'étendue actuelle de la carte.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_datagrid.png" width="300" height="178" class="image-actual"
+                        alt="Grille de données" /></p>
+                <ul>
+                    <li><span class="bold-text">Trie :</span>Choisir le lien Trier au­dessus de la grille de données afin de trier selon le nom du champ, en ordre décroissant. Choisir le lien Trier encore afin de faire passer la fonction Trie au mode Croissant. </li>
+                    <li><span class="bold-text">Détails :</span>Choisir le lien Détails situé à côté de chacune des rangées de données afin d'afficher ses informations en un Panneau d'information. Cette fonction équivaut au fait de cliquer directement sur une caractéristique de la carte.
+</li>
+                    <li><span class="bold-text">Zoom vers :</span>Chacune des rangées de la grille de données possède une option permettant de zoomer rapidement la vue de la carte sur le point de données en question. Si vous cliquez sur le lien « Zoomer vers »,  la carte et la grille de données zoomeront automatiquement sur ce point bien précis.</li>
+                    <li><span class="bold-text">Pagination :</span>Utiliser les flèches de l'extrême droite et de l'extrême gauche pour passer de la première à la dernière page, respectivement, de l'information dans la grille de données. Utiliser les boutons de l'extrémité droite et de l'extrémité gauche intérieurs pour reculer ou avancer d'une page, une page à la fois. Choisir le lien Page vous permettra de passer rapidement à toute page figurant dans la liste de la grille de données.</li>
+                </ul>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- dataGrid ENDS -->
+<!-- infoPanel BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Panneau d'information</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Le Panneau d'information affiche les données associées à la caractéristique choisie.</p>
+                <p>
+                    <b>Utilisation :</b></p>
+                <p>
+                    <img src="./assets/images/help/en/help_infopanel.png" width="300" height="171" class="image-actual"
+                        alt="Panneau d'information" /></p>
+                <p>
+                    Choisir une caractéristique sur l'interface de la carte, ou choisir le lien Détails dans la Grille de données. Le Panneau d'information affichera l'information reliée à la caractéristique choisie. Cliquer sur la caractéristique ou sur la flèche apparaissant au coin supérieur gauche du panneau permettra de cacher l'affichage.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+    <!-- infoPanel ENDS -->
+    <!-- misc BEGINS -->
+    <details class="margin-bottom-medium">
+        <summary class="">Temps de chargement / Comportement non prévu</summary>
+        <div>
+            <div class="helpSectionBody">
+                <p>
+                    Les temps de chargement peuvent varier en fonction de l'emplacement du réseau et de la disponibilité de la largeur de bande, et un comportement non prévu peut se produire si des interactions surviennent avant que les données ne soient pleinement chargées. Veuillez attendre que la page Web effectue le chargement complet avant d'amorcer toute fonction de la carte.<b>Nota:</b>
+                    Si le texte « Charger….» apparaît dans le coin droit inférieur de la carte ou si la grille de données affiche un message en voie de chargement, veuillez attendre que l'indicateur de chargement disparaisse avant d'amorcer toute nouvelle fonction sur la carte.</p>
+            </div>
+        </div>
+    </details>
+    <div class="clear">
+    </div>
+<!-- misc ENDS -->
+
+
+<!-- Add Layer BEGINS -->
 <details class="margin-bottom-medium">
     <summary class="">[fr]Add Layer from Web</summary>
     <div>
@@ -38,73 +180,3 @@
 <div class="clear">
 </div>
 <!-- Add Layer ENDS -->
-<details class="margin-bottom-medium">
-	<summary class="">[fr] Data Grid</summary>
-	<div>
-		<p>
-			[fr] Search Map allows you to select what data is visible on the map. The map and
-			datagrid update according to your current selection.</p>
-		<p>
-			<b>[fr] Usage:</b></p>
-		<p>
-			<img src="./App_Themes/images/help/en/OilSands/searchMap1.png" width="762" height="153"
-				class="image-actual" alt="Search map pane showing the filters for each category." /></p>
-		<ul>
-			<li>[fr] Check/Uncheck boxes to view/hide layers.</li>
-			<li>[fr] The results from search map will be dynamically updated on the map and data
-				grid.</li>
-		</ul>
-	</div>
-</details>
-<div class="clear">
-</div>
-<details class="margin-bottom-medium">
-	<summary class="">[fr] Search Map</summary>
-	<div>
-		<p>
-			[fr] The Data Grid allows you to view a subset of the data that is visible in the
-			current map extent.</p>
-		<p>
-			<b>[fr] Usage:</b></p>
-		<p>
-			<img src="./App_Themes/images/help/en/OilSands/datagrid1.png" class="image-actual"
-				alt="The datagrid columns." /></p>
-		<ul>
-			<li><span class="bold-text">[fr] Tab Once (Header):</span> You can tab into the first
-				row of headers of the grid and use the arrow keys to traverse right or left. By
-				pressing spacebar or clicking on a header will sort the data grid by that select
-				header in ascending or descending order. </li>
-			<li><span class="bold-text">[fr] Tab Twice (Cells):</span> You can traverse through
-				the cells of the data grid. </li>
-			<li><span class="bold-text">[fr] Tab Thrice (Pagination):</span> You have the option
-				of navigating through the pages of the data grid by using the next and previous
-				buttons; jumping to the first and last page of the data grid is also possible with
-				the buttons. You can also jump to specific page by entering a page number in the
-				textbox provided and then pressing enter. </li>
-			<li><span class="bold-text">[fr] Zoom To:</span> Every column on the data grid has a
-				zoom to option. If the magnifying glass is clicked, the map and the data grid will
-				dynamically zoom to that specific point.
-				<p>
-					<img src="./App_Themes/images/help/en/datagrid2.png" class="image-actual" alt="A cutout of the datagrid with the Zoom button highlighted." /></p>
-			</li>
-			<li><span class="bold-text">[fr] More Info:</span> The info button on the data grid
-				will populate the 'More Info' panel with extended information and metadata.
-				<p>
-					<img src="./App_Themes/images/help/en/datagrid3.png" class="image-actual" alt="A cutout of the datagrid with a highlight of where to download the data." /></p>
-			</li>
-		</ul>
-	</div>
-</details>
-<div class="clear">
-</div>
-<details class="margin-bottom-medium">
-	<summary class="">[fr] Load Times / Unanticipated Behaviour</summary>
-	<div>
-		<p>
-			[fr] Load times vary and unanticipated behaviour may occur if any map interactions
-			occur before data is fully loaded. Please allow the webpage to load completely before
-			triggering any map functions. <b>[fr] Note:</b> If a spinning icon appears on helpNav
-			of map or the data grid displays a loading message, please allow the loading indicator
-			to disappear before triggering any function on the map.</p>
-	</div>
-</details>
