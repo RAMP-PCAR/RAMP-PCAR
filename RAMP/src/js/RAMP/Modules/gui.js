@@ -667,6 +667,7 @@ define([
 
             helpToggle = $("#helpToggle"),
             helpSectionContainer = $("#help-section-container"),
+            helpSection = $("#help-section"),
 
             addLayerToggle = $("#addLayer-toggle"),
             addLayerSectionContainer = $("#addLayer-section-container"),
@@ -733,6 +734,17 @@ define([
                     topic.publish(EventManager.GUI.LAYOUT_CHANGE);
                 }
             };
+
+            function adjustHeight() {
+                helpSection.css({
+                    "max-height": mapContent.height() - 56 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
+                });
+            }
+
+            function onFullScreenComplete() {
+                adjustHeight();
+                layoutChange();
+            }
 
             /**
             * Return the default width of the SidePanel.
@@ -935,8 +947,8 @@ define([
                     });
 
                     Theme
-                        .fullScreenCallback("onComplete", layoutChange)
-                        .fullScreenCallback("onReverseComplete", layoutChange);
+                        .fullScreenCallback("onComplete", onFullScreenComplete)
+                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
 
                     // if the vertical space is too small, trigger the full-screen
                     if (mapContent.height() < jWindow.height() * 0.6) {
@@ -947,6 +959,8 @@ define([
                     fullScreenToggle.click(function () {
                         Theme.toggleFullScreenMode();
                     });
+
+                    adjustHeight();
                 },
 
                 isFullScreen: function () {
