@@ -431,14 +431,6 @@ define([
                     updateURL();
                 });
 
-                topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (event) {
-                    // selectedCheckboxes is an array, so we need to serialize it first
-                    event.selectedCheckboxes = topic.arrayToQuery(event.selectedCheckboxes);
-
-                    addParameter("filter", event);
-                    updateURL();
-                });
-
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, event);
                     updateURL();
