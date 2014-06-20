@@ -709,10 +709,13 @@ define([
                 fullDataTimeLine = new TimelineLite({
                     paused: true,
                     onComplete: function () {
+                        adjustHeight();
+                        layoutChange();
                         console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     },
                     onReverseComplete: function () {
+                        adjustHeight();
                         layoutChange();
                         console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
@@ -737,7 +740,7 @@ define([
 
             function adjustHeight() {
                 helpSection.css({
-                    "max-height": mapContent.height() - 56 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
+                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
                 });
             }
 

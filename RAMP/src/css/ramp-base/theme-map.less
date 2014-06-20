@@ -24,14 +24,19 @@
 					padding: 0 !important;
 				}
 			}
+
+			#help-section-container,
+			#getlink-section-container,
+			#addLayer-section-container {
+				top: 20%;
+			}
 		}
 	}
 }
 
 /* MAP Start */
 
-#map-div
-{
+#map-div {
 	&:after {
 		border-right: 3px solid @accent-color;
 		content: "";
@@ -98,6 +103,7 @@
 				left: 25%;
 				position: fixed;
 				max-width: 900px;
+				min-width: 700px;
 				display: none;
 				z-index: 510;
 

@@ -1,6 +1,10 @@
 {
     "name": "ramp-gis-viewer",
+<<<<<<< Updated upstream
     "version": "1.0.39-15",
+=======
+    "version": "1.0.39-28",
+>>>>>>> Stashed changes
     "description": "RAMP GIS viewer",
     "main": "index.js",
     "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
