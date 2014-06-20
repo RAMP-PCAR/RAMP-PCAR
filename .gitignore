@@ -200,3 +200,8 @@ theme.less.pref.css
 /RAMP/.stylishcolors
 /RAMP/docs
 jscs.txt
+
+### VIM temp files
+
+*.swo
+*.swp
