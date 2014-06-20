@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "1.0.39-10",
+    "version": "1.0.39-29",
     "description": "RAMP GIS viewer",
     "main": "index.js",
     "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
@@ -132,6 +132,7 @@
 
         "assetsToCopy": [
             "config.en.json",
+            "config.fr.json",
             "assets/**/*.*",
             "!assets/*.csv",
             "includes/**/*.*"

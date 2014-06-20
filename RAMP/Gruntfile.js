@@ -1140,7 +1140,7 @@ module.exports = function (grunt) {
 
     // BUILD
     grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'build:bump-only-build', 'notify:build']);
-    grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'notify:build']);
+    grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
 
     // DEPLOY
     grunt.registerTask('clean:deploy', function () {
@@ -1150,6 +1150,19 @@ module.exports = function (grunt) {
         grunt.task.run('clean:deploy_');
 
         done();
+    });
+
+    grunt.registerTask('version', function () {
+        var fileName = grunt.config('pkg.ramp.deployFolder') + "/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";
+
+        if (grunt.file.exists(fileName)) {
+            grunt.file.delete(fileName, {
+                force: true
+            });
+        }
+        grunt.file.write(fileName, {
+            force: true
+        });
     });
 
     grunt.registerTask('deploy', ['build:deploy', 'clean:deploy', 'copy:deploy', 'notify:deploy']);

@@ -190,8 +190,18 @@ node_modules
 
 #### RAMP-specific
 theme.less.pref.css
-/RAMP/src/css/ramp-gcwu-intranet/theme.less.pref.css
-/RAMP/src/css/ramp-gcwu-fegc/theme.less.pref.css
-/RAMP/src/css/ramp-base/theme.less.pref.css
+/RAMP/src/css/ramp-gcwu-intranet/*.css
+/RAMP/src/css/ramp-gcwu-intranet/*.map
+/RAMP/src/css/ramp-gcwu-fegc/*.css
+/RAMP/src/css/ramp-gcwu-fegc/*.map
+/RAMP/src/css/ramp-base/*.css
+/RAMP/src/css/ramp-base/*.map
+
 /RAMP/.stylishcolors
 /RAMP/docs
+jscs.txt
+
+### VIM temp files
+
+*.swo
+*.swp
