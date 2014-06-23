@@ -63,7 +63,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
             /**
             * Returns an String that has it's angle brackets ('<' and '>') escaped (replaced by '&lt;' and '&gt;').
-            * This will effectively cause the String to be displayed in plain text when embedded in an html page.
+            * This will effectively cause the String to be displayed in plain text when embedded in an HTML page.
             *
             * @method escapeHtml
             * @static
