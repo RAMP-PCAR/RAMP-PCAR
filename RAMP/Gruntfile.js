@@ -1,3 +1,5 @@
+/*global require, module */
+
 var fs = require('fs'),
     request = require('request'),
     extend = require('util')._extend,
@@ -712,48 +714,11 @@ module.exports = function (grunt) {
                     disallowSpaceAfterObjectKeys: true,
                     requireCommaBeforeLineBreak: true,
                     //requireOperatorBeforeLineBreak: ?
-                    disallowLeftStickedOperators: [
-                        '?',
-                        '+',
-                        '-',
-                        '/',
-                        '*',
-                        '=',
-                        '==',
-                        '===',
-                        '!=',
-                        '!==',
-                        '>',
-                        '>=',
-                        '<',
-                        '<='
-                    ],
-                    requireRightStickedOperators: ['!'],
-                    disallowRightStickedOperators: [
-                        '?',
-                        '+',
-                        '/',
-                        '*',
-                        ':',
-                        '=',
-                        '==',
-                        '===',
-                        '!=',
-                        '!==',
-                        '>',
-                        '>=',
-                        '<',
-                        '<='
-                    ],
-                    requireLeftStickedOperators: [','],
-                    disallowSpaceAfterPrefixUnaryOperators: [
-                        '++',
-                        '--',
-                        '+',
-                        '-',
-                        '~',
-                        '!'
-                    ],
+
+                    requireSpaceAfterPrefixUnaryOperators: ["++", /*"--",*/ "+", /*"-",*/ "~"/*, "!"*/],
+                    disallowSpaceAfterPrefixUnaryOperators: [/*"++",*/ "--", /*"+", */"-", /*"~",*/ "!"],
+
+                    //requireSpaceBeforePostfixUnaryOperators: ["++", "--"],
                     disallowSpaceBeforePostfixUnaryOperators: [
                         '++',
                         '--'
@@ -780,12 +745,52 @@ module.exports = function (grunt) {
                         '!=',
                         '!=='
                     ],
+                    disallowSpaceBeforeBinaryOperators: [
+                        //"=",
+                        ","//,
+                        /*"+",
+                        "-",
+                        "/",
+                        "*",
+                        "==",
+                        "===",
+                        "!=",
+                        "!=="*/
+                        // etc
+                    ],
+                    /*disallowSpaceAfterBinaryOperators: [
+                        "=",
+                        ",",
+                        "+",
+                        "-",
+                        "/",
+                        "*",
+                        "==",
+                        "===",
+                        "!=",
+                        "!=="
+                        // etc
+                    ],*/
                     disallowImplicitTypeConversion: [
                         'numeric',
                         'boolean',
                         'binary',
                         'string'
                     ],
+
+                    requireSpacesInConditionalExpression: {
+                        "afterTest": true,
+                        "beforeConsequent": true,
+                        "afterConsequent": true,
+                        "beforeAlternate": true
+                    },
+                    /*disallowSpacesInConditionalExpression: {
+                        "afterTest": true,
+                        "beforeConsequent": true,
+                        "afterConsequent": true,
+                        "beforeAlternate": true
+                    },*/
+
                     //requireCamelCaseOrUpperCaseIdentifiers: true,
                     disallowTrailingComma: true,
                     disallowKeywords: ['with'],
@@ -959,7 +964,7 @@ module.exports = function (grunt) {
             if (err) {
                 request(fileName,
                     function (error, response, body) {
-                        if (!error && response.statusCode == 200) {
+                        if (!error && response.statusCode === 200) {
                             parseStrings(JSON.parse(JSON.parse(body).json));
                             done();
                         } else {
@@ -1004,7 +1009,7 @@ module.exports = function (grunt) {
     });
 
     // BUILD
-    grunt.registerTask('build:bump-only-build', function (a, b) {
+    grunt.registerTask('build:bump-only-build', function () {
         //console.log(a, b);
 
         grunt.task.run('bump-only:build');
