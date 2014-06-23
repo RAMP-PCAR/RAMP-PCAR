@@ -205,6 +205,12 @@
                     "type": "String",
                     "value": "Data Summary",
                     "description": ""
+                },
+                {
+                    "name": "txtMetadataNotFound",
+                    "type": "String",
+                    "value": "No metadata found for this layer.",
+                    "description": ""
                 }
             ]
         },

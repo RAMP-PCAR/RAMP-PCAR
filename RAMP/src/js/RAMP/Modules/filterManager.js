@@ -409,13 +409,22 @@ define([
                             metadataUrl = "assets/metadata/" + guid + ".xml";
 
                             UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
-                                function (data) {
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: $(data),
-                                        origin: "filterManager",
-                                        update: true,
-                                        guid: guid
-                                    });
+                                function (error, data) {
+                                    if (error) {
+                                        topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                            content: "<p>" + localString.txtMetadataNotFound + "</p>",
+                                            origin: "filterManager",
+                                            update: true,
+                                            guid: guid
+                                        });
+                                    } else {
+                                        topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                            content: $(data),
+                                            origin: "filterManager",
+                                            update: true,
+                                            guid: guid
+                                        });
+                                    }
                                 });
                         } else {
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });

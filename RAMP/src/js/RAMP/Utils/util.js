@@ -730,7 +730,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     xml, xsl,
                     dlist = [xmld, xsld],
                     result,
-                    xsltProcessor;
+                    xsltProcessor,
+                    error;
 
                 function loadXMLFileIE(filename) {
                     var xhttp;
@@ -749,19 +750,21 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 }
 
                 this.afterAll(dlist, function () {
-                    xsltProcessor = new XSLTProcessor();
-                    xsltProcessor.importStylesheet(xsl);
-                    result = xsltProcessor.transformToFragment(xml, document);
+                    if (!error) {
+                        xsltProcessor = new XSLTProcessor();
+                        xsltProcessor.importStylesheet(xsl);
+                        result = xsltProcessor.transformToFragment(xml, document);
 
-                    // turne a document fragment into a proper jQuery object
-                    if (!returnFragment) {
-                        result = ($('body')
-                            .append(result)
-                            .children().last())
-                            .detach();
+                        // turn a document fragment into a proper jQuery object
+                        if (!returnFragment) {
+                            result = ($('body')
+                                .append(result)
+                                .children().last())
+                                .detach();
+                        }
                     }
 
-                    callback(result);
+                    callback(error, result);
                 });
 
                 if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) {
@@ -781,7 +784,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     xslProc.input = xmlDoc;
                     xslProc.transform();
 
-                    callback(xslProc.output);
+                    callback(error, xslProc.output);
                 } else {
                     $.ajax({
                         type: "GET",
@@ -790,6 +793,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         cache: false,
                         success: function (data) {
                             xml = data;
+                            xmld.resolve();
+                        },
+                        error: function () {
+                            error = true;
                             xmld.resolve();
                         }
                     });
@@ -801,6 +808,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         cache: false,
                         success: function (data) {
                             xsl = data;
+                            xsld.resolve();
+                        },
+                        error: function () {
+                            error = true;
                             xsld.resolve();
                         }
                     });
