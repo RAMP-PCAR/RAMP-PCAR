@@ -429,7 +429,7 @@ define([
                         sr: event.extent.spatialReference.wkid
                     });
                     updateURL();
-                });
+                }); 
 
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, event);
