@@ -257,6 +257,7 @@ define([
                     dataTablesScroll,
                     dataTablesScrollBody,
                     dataTablesScrollHead,
+                    datasetSelector,
 
                     datagridMode = GRID_MODE_SUMMARY, // GRID_MODE_FULL
 
@@ -567,7 +568,7 @@ define([
                         topic.publish("gui/grid/expand");
                     });
 
-                    sectionNode.on("change", "#dataset_selector", function () {
+                    sectionNode.on("change", datasetSelector, function () {
                         var controlNode = $(this),
                             optionSelected = controlNode.find("option:selected");
 
@@ -846,6 +847,7 @@ define([
 
                         datagridGlobalToggles = sectionNode.find('#datagridGlobalToggles');
                         datagridStatusLine = sectionNode.find('.status-line');
+                        datasetSelector = $("#datasetSelector");
 
                         d.resolve();
 
@@ -951,11 +953,13 @@ define([
 
                     getSelectedDatasetUrl: function () {
                         if (!selectedDatasetUrl) {
-                            if ($("#dataset_selector option:selected").length > 0) {
-                                selectedDatasetUrl = $("#dataset_selector option:selected")[0].value;
+                            if (datasetSelector.find("option:selected").length > 0) {
+                                selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
                                 selectedDatasetUrl = GlobalStorage.config.featureLayers[0].url;
                             }
+                        } else {
+                            datasetSelector.find("option[value='" + selectedDatasetUrl + "']").prop('selected', true);
                         }
 
                         return selectedDatasetUrl;

@@ -73,9 +73,9 @@
 												<ul class='button-grou margin-top-none'>
 													<li class='form-inline'>
 															
-															<label for='dataset_selector' class='margin-left-medium'>Dataset:</label>
+															<label for='datasetSelector' class='margin-left-medium'>Dataset:</label>
 														{% if (o.datasets.length > 1) { %}
-															<select name='select' id='dataset_selector' class='span-2 margin-bottom-none' data-role='none'>
+															<select name='select' id='datasetSelector' class='span-2 margin-bottom-none' data-role='none'>
 															
 																{% for (var i = 0; i < o.datasets.length; i++) { %}
 																		<option value='{%=o.datasets[i].url%}'>{%=o.datasets[i].displayName%}</option>
@@ -85,7 +85,7 @@
 															</select>
 														
 														{% } else { %}																
-															<input readonly='true' id='dataset_selector' class='span-2 margin-bottom-none' data-role='none' value='{%=o.datasets[0].displayName%}'/>
+															<input readonly='true' id='datasetSelector' class='span-2 margin-bottom-none' data-role='none' value='{%=o.datasets[0].displayName%}'/>
 														{% } %}
 														
 													</li>
