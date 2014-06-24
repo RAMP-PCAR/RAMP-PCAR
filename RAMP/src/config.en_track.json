@@ -33,7 +33,8 @@
         "txtOpen": "Open",
         "txtFullData": "Full Data",
         "txtDataSummary": "Data Summary",
-        "txtMetadataNotFound": "No metadata found for this layer."
+        "txtMetadataNotFound": "No metadata was found for this layer.",
+        "txtMetadataNotPublished": "No metadata was published for this layer."
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

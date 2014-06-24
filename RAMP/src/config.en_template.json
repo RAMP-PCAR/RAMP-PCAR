@@ -209,7 +209,13 @@
                 {
                     "name": "txtMetadataNotFound",
                     "type": "String",
-                    "value": "No metadata found for this layer.",
+                    "value": "No metadata was found for this layer.",
+                    "description": ""
+                },
+                {
+                    "name": "txtMetadataNotPublished",
+                    "type": "String",
+                    "value": "No metadata was published for this layer.",
                     "description": ""
                 }
             ]
