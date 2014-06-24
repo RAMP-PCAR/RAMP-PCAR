@@ -144,6 +144,10 @@ module.exports = function (grunt) {
                 'build/'
             ],
 
+            version: [
+                'build/*.version'
+            ],
+
             yuidoc: ['<%= yuidocconfig.options.outdir %>'],
 
             docco: ['<%= pkg.ramp.docco.outdir %>']
@@ -192,7 +196,7 @@ module.exports = function (grunt) {
                     sourceMapIncludeSources: false,
                     preserveComments: false,
                     // the banner is inserted at the top of the output
-                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> : v. <%= pkg.version %> \n\n * <%= pkg.description %> \n **/\n'
                 },
 
                 files: [{
@@ -1144,7 +1148,7 @@ module.exports = function (grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'build:bump-only-build', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'build:bump-only-build', 'notify:build']);
     grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
 
     // DEPLOY
@@ -1158,7 +1162,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('version', function () {
-        var fileName = grunt.config('pkg.ramp.deployFolder') + "/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";
+        //var fileName = grunt.config('pkg.ramp.deployFolder') + "/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";
+        var fileName = "build/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";
 
         if (grunt.file.exists(fileName)) {
             grunt.file.delete(fileName, {
