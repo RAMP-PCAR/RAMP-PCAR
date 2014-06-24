@@ -329,7 +329,13 @@ define([
                             dojoArray.forEach(extendedGrid, function (col, i) {
                                 // add columnIdx property, and set initial value
                                 tmplData.columnIdx = i;
-                                obj[datagridMode].push(tmpl(col.columnTemplate, tmplData));
+                                var result = tmpl(col.columnTemplate, tmplData);
+                                // Need to check if it's a number, since the template converts
+                                // everything into strings
+                                if (col.sortType === "numeric") {
+                                    result = Number(result);                                    
+                                }
+                                obj[datagridMode].push(result);
                             });
                         }
 
