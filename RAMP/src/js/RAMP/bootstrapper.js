@@ -47,7 +47,7 @@ require([
     "dojo/request/xhr",
 
 /* RAMP */
-    "ramp/map", "ramp/basemapselector", "ramp/maptips", "ramp/datagrid",
+    "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
