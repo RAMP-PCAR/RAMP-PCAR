@@ -87,13 +87,13 @@ define([
         var featureLayers,
 
         /**
-        * Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box.
+        * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
         * A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
         *
         * @private
-        * @property attributeLayers {Object}
+        * @property boundingBoxMapping {Object}
         */
-            attributeLayers,
+            boundingBoxMapping,
 
         /**
         * The map not only contains feature layers, but also other layers such as the
@@ -298,8 +298,7 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
-                var boundingBox = attributeLayers[evt.node.value];
-                boundingBox.setVisibility(evt.checked);
+                setBoundingBoxVisibility(evt.node.value, evt.checked);
             });
 
             topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {
@@ -318,8 +317,8 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (evt) {
-                UtilDict.forEachEntry(attributeLayers, function (key, layer) {
-                    layer.setVisibility(evt.checked);
+                UtilDict.forEachEntry(boundingBoxMapping, function (id) {
+                    setBoundingBoxVisibility(id, evt.checked);
                 });
             });
 
@@ -352,6 +351,8 @@ define([
         }
         /**
         * Creates event handlers for the map control: click, mouse-over, load, extent change, and update events.
+        *
+        * @private
         * @method _initEventHandlers
         * @param {Object} map A ESRI map object
         */
@@ -417,6 +418,8 @@ define([
 
         /**
         * Add a static, non-interactive Llyer to the map
+        *
+        * @private
         * @method AddStaticLayer
         * @param {String} layer_type A value which controls how the layer is going to be added to the map
         * @param {String} layer_url A URL pointing to a valid map service endpoint
@@ -454,6 +457,51 @@ define([
             topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, {
                 visible: false
             });
+        }
+
+        /**
+        * Sets the visibility of the bounding box that belongs to the layer with the given layerId.
+        * Note: the layerId needs to be the ID of the featurelayer, not the ID of the actual bounding
+        * box layer.
+        *  
+        * @private
+        * @method setBoundingBoxVisibility
+        * @param {String} layerId the id of the layer whose bounding box visibility should be set
+        */
+        function setBoundingBoxVisibility(layerId, visibility) {
+            var boxLayer = boundingBoxMapping[layerId];
+
+            if (boxLayer.graphics.isEmpty()) {
+                // Generate the bounding box if this is the first time we're viewing it
+                var featureLayer = map.getLayer(layerId),
+                boundingBoxExtent = esriGraphicUtils.graphicsExtent(featureLayer.graphics);
+
+                // Make sure the boundingBoxExtent is within the max extent
+                // you want max for xmin, ymin and min for xmax, ymax because
+                // you want to make sure the extent is smaller than the maximum extent
+                boundingBoxExtent.xmin = Math.max(boundingBoxExtent.xmin, maxExtent.xmin);
+                boundingBoxExtent.ymin = Math.max(boundingBoxExtent.ymin, maxExtent.ymin);
+                boundingBoxExtent.xmax = Math.min(boundingBoxExtent.xmax, maxExtent.xmax);
+                boundingBoxExtent.ymax = Math.min(boundingBoxExtent.ymax, maxExtent.ymax);
+
+                var extentGraphic = new esri.Graphic({
+                    geometry: boundingBoxExtent,
+                    symbol: {
+                        color: [255, 0, 0, 64],
+                        outline: {
+                            color: [240, 128, 128, 255],
+                            width: 1,
+                            type: "esriSLS",
+                            style: "esriSLSSolid"
+                        },
+                        type: "esriSFS",
+                        style: "esriSFSSolid"
+                    }
+                });
+                boxLayer.add(extentGraphic);
+            }
+            
+            boxLayer.setVisibility(visibility);
         }
 
         return {
@@ -675,15 +723,19 @@ define([
                 * @property boundingBoxLayers
                 * @type {array of esri/layer/GraphicsLayer}
                 */
+                // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
+                boundingBoxMapping = {};
+                
                 var boundingBoxLayers = dojoArray.map(featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
-                    // the extent bounding box of the feature layer (the bounding boxes are initialized
-                    // separately, after the feature layers have finished loading (see attributeLayerAdder function
-                    // below)
+                    // the extent bounding box of the feature layer. Note each bounding box layer
+                    // at this point are empty, the actual graphic that represent the bounding box
+                    // will be generated the first time the user toggles it on.
                     var attrLayer = new esri.layers.GraphicsLayer({
                         id: String.format("boundingBoxLayer_{0}", Ramp.getLayerConfig(layer.url).displayName),
                         visible: false // bounding boxes are not visible by default
                     });
+                    boundingBoxMapping[layer.id] = attrLayer;
                     return attrLayer;
                 });
 
@@ -695,10 +747,7 @@ define([
                     maxZoom: config.levelOfDetails.maxLevel,
                     slider: false
                 });
-
-                // Add the basemap layers
-                map.addLayers([baseLayer]);
-
+                
                 /*  START - Add static layers   */
 
                 var staticLayers = [],
@@ -747,52 +796,13 @@ define([
                     //adds the static layer id array as a value to an array indexed by feature layer names
                     staticLayerMap[String.format("featureLayer_{0}", Ramp.getLayerConfig(layer.url).displayName)] = perLayerStaticMaps;
                 });
-                //adds the static layers to the map and copies the static layer/feature layer mapping to the Global Config
-                map.addLayers(staticLayers);
+
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
-
-                // Combine the two layer arrays then add them all at once (for efficiency)
-                map.addLayers(boundingBoxLayers.concat(featureLayers));
-
-                // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
-                attributeLayers = {};
-
-                var attributeLayerAdder = function () {
-                    dojoArray.forEach(featureLayers, function (layer, i) {
-                        var boundingBoxExtent = esriGraphicUtils.graphicsExtent(layer.graphics);
-
-                        // Make sure the boundingBoxExtent is within the max extent
-                        // you want max for xmin, ymin and min for xmax, ymax because
-                        // you want to make sure the extent is smaller than the maximum extent
-                        boundingBoxExtent.xmin = Math.max(boundingBoxExtent.xmin, maxExtent.xmin);
-                        boundingBoxExtent.ymin = Math.max(boundingBoxExtent.ymin, maxExtent.ymin);
-                        boundingBoxExtent.xmax = Math.min(boundingBoxExtent.xmax, maxExtent.xmax);
-                        boundingBoxExtent.ymax = Math.min(boundingBoxExtent.ymax, maxExtent.ymax);
-
-                        var extentGraphic = new esri.Graphic({
-                            geometry: boundingBoxExtent,
-                            symbol: {
-                                color: [255, 0, 0, 64],
-                                outline: {
-                                    color: [240, 128, 128, 255],
-                                    width: 1,
-                                    type: "esriSLS",
-                                    style: "esriSLSSolid"
-                                },
-                                type: "esriSFS",
-                                style: "esriSFSSolid"
-                            }
-                        });
-                        boundingBoxLayers[i].add(extentGraphic);
-                        attributeLayers[layer.id] = boundingBoxLayers[i];
-                    });
-                };
-
-                // Add the attribute layers after the map finishes adding the feature layers
-                // makes sure this listener only fires once
-                dojoOn.once(map, "update-end", attributeLayerAdder);
-
+                
+                // Combine all layer arrays then add them all at once (for efficiency)
+                map.addLayers([baseLayer].concat(staticLayers, boundingBoxLayers, featureLayers));
+                
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
                     map: map,
