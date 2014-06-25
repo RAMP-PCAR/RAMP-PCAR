@@ -266,7 +266,10 @@ define([],
                 * @param evt {Object} the event Object
                 * @param visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
                 */
-                ADD_LAYER_PANEL_CHANGE: "gui/add-layer-panel-change"
+                ADD_LAYER_PANEL_CHANGE: "gui/add-layer-panel-change",
+
+                TOOLBAR_SECTION_OPEN: "gui/toolbar-section-open",
+                TOOLBAR_SECTION_CLOSE: "gui/toolbar-section-close"
             },
 
             FeatureHighlighter: {

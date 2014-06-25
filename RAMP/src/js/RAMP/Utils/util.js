@@ -202,7 +202,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * Subscrives to a set of events, executes the callback when any of the events fire, then removes the handle.
+            * Subscribes to a set of events, executes the callback when any of the events fire, then removes the handle.
             *
             * @method subscribeOnceAny
             * @static

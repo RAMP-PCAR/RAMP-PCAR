@@ -30,7 +30,7 @@
 *
 *   __IMPORTANT__: the object must be serializable since it will be added to the URL and
 *   should serialize to a reasonable length String. If the fields contain
-*   non-primatives, e.g. array, object, one must manually serialize the field first.
+*   non-primitives, e.g. array, object, one must manually serialize the field first.
 *   Also only use anonymous objects with custom fields, do not use class objects
 *   (e.g. use an anonymous { } object to store map extent instead of ESRI's map
 *   {{#crossLink "Esri/geometry/Extent"}}{{/crossLink}} object, since it will contain other fields and methods that will also
@@ -200,10 +200,18 @@ define([
 
                     getlinkPopup = PopupManager.registerPopup(getlinkToggle, "click",
                         function (d) {
-                            topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, {
-                                visible: true
-                            });
+                            topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "get-link-section" });
                             console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", true);
+
+                            // close this panel if any other panel is opened
+                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                                function () {
+                                    if (this.isOpen()) {
+                                        this.close();
+                                    }
+                                })
+                            );
 
                             getlinkSectionContainer.slideDown("fast", function () {
                                 d.resolve();
@@ -213,9 +221,8 @@ define([
                             activeClass: cssButtonPressedClass,
                             target: getlinkSectionContainer,
                             closeHandler: function (d) {
-                                topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, {
-                                    visible: false
-                                });
+                                topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: false });
+                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "get-link-section" });
                                 console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", false);
 
                                 getlinkSectionContainer.slideUp("fast", function () {
@@ -226,11 +233,11 @@ define([
                         }
                     );
 
-                    topic.subscribe(EventManager.GUI.HELP_PANEL_CHANGE, function (attr) {
+                    /*topic.subscribe(EventManager.GUI.HELP_PANEL_CHANGE, function (attr) {
                         if (getlinkPopup.isOpen() && attr.visible) {
                             getlinkPopup.close();
                         }
-                    });
+                    });*/
                 }
             };
         /*
@@ -253,7 +260,7 @@ define([
         * Update the parameter dictionary with the new values for the parameter. If paramObj is set to null,
         * essentially removes the given paramKey from the URL.
         *
-        * @method addparameter
+        * @method addParameter
         * @private
         * @param {String} paramKey  the parameter (e.g. extent) that was changed
         * @param {Object} paramObj an object representing data that can be serialized into the query parameter
@@ -277,7 +284,7 @@ define([
             anchors[anchorName] = anchorObj;
         }
         /*
-        * Appends information to the current map's URL to create a mailto link. Set the email buttons target URL.
+        * Appends information to the current map's URL to create a mail-to link. Set the email buttons target URL.
         * @method setNewUrl
         * @param {String} url the base URL that defines the current state of the map
         */
@@ -429,7 +436,7 @@ define([
                         sr: event.extent.spatialReference.wkid
                     });
                     updateURL();
-                }); 
+                });
 
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, event);
@@ -463,7 +470,7 @@ define([
                         globalLayer: event.checked
                     });
 
-                    // Remove the active layers query, since these two are mutally exclusive
+                    // Remove the active layers query, since these two are mutually exclusive
                     addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
 
                     updateURL();
@@ -474,7 +481,7 @@ define([
                         globalBox: event.checked
                     });
 
-                    // Remove the active boxes query, since these two are mutally exclusive
+                    // Remove the active boxes query, since these two are mutually exclusive
                     addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
 
                     updateURL();
@@ -538,7 +545,7 @@ define([
                     updateURL();
                 });
 
-                // This call is neccessary to fill in the URL in the bookmark link
+                // This call is necessary to fill in the URL in the bookmark link
                 // if this call is removed, there will be no URL in the bookmark link
                 // until one of the above events fires
                 updateURL();

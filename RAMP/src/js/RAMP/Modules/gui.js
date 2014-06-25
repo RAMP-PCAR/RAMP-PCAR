@@ -54,7 +54,7 @@ define([
 
     function (
     // Dojo
-        dojoArray, topic, lang, Deferred,
+        dojoArray, topic, dojoLang, Deferred,
 
     // Ramp
         GlobalStorage, EventManager,
@@ -67,7 +67,7 @@ define([
         subPanelContentTemplate,
 
     // Util
-        util, utilDict, popupManager, tmplHelper) {
+        UtilMisc, utilDict, popupManager, tmplHelper) {
         "use strict";
 
         var jWindow = $(window),
@@ -96,6 +96,7 @@ define([
                 * @type {String}
                 * @default ""
                 */
+
                 panelName: "",
                 /**
                 * Title of the content to be displayed on the SubPanel (e.g. "CESI Water Quality Indicators")
@@ -104,6 +105,7 @@ define([
                 * @type {String}
                 * @default ""
                 */
+
                 title: "",
                 /**
                 * The text inside the subpanel. Can be String or a jQuery object. All nodes sporting CSS class
@@ -113,6 +115,7 @@ define([
                 * @type {String | jObject}
                 * @default null
                 */
+
                 content: null,
 
                 templateKey: "summary_sub_panel_container",
@@ -123,6 +126,7 @@ define([
                 * @type {jObject}
                 * @default null
                 */
+
                 target: null,
                 /**
                 * The name of the module that requested to open the SubPanel (e.g. "filterManager"). Used for identification of the panel's loyalty.
@@ -131,6 +135,7 @@ define([
                 * @type {String}
                 * @default ""
                 */
+
                 origin: "",
                 /**
                 * A unique id of the SubPanel. If none provided, a random one is generated. It is used to determine the animation and update function
@@ -140,6 +145,7 @@ define([
                 * @type {String}
                 * @default ""
                 */
+
                 guid: "",
                 /**
                 * Indicates that the open SubPanel request is a content update to the already opened SubPanel.
@@ -155,6 +161,7 @@ define([
                 * @type {Boolean}
                 * @default false
                 */
+
                 update: false,
                 /**
                 * The callback function when the panel starts the opening animation; also triggered by updating panel content; can be triggered many times.
@@ -163,6 +170,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doOnOpen: null,
                 /**
                 * The callback function when the panel finishes the opening animation; also triggered by updating panel content; can be triggered many times.
@@ -171,6 +179,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doAfterOpen: null,
                 /**
                 * The callback function when the panel starts the closing animation; also triggered by updating panel content; can be triggered many times.
@@ -179,6 +188,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doOnHide: null,
                 /**
                 * The callback function when the panel becomes hidden; also triggered by updating panel content; can be triggered many times.
@@ -187,6 +197,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doAfterHide: null,
                 /**
                 * The callback function when the panel is completely closed, its nodes destroyed; can be triggered only once in a lifespan of the panel.
@@ -195,6 +206,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doOnDestroy: null,
                 /**
                 * The callback function executed after the SubPanel content is updated.
@@ -204,6 +216,7 @@ define([
                 * @type {Function}
                 * @default null
                 */
+
                 doAfterUpdate: null,
                 /**
                 * The target number of chars after which a content text node will be shortened.
@@ -212,6 +225,7 @@ define([
                 * @type {Number}
                 * @default 170
                 */
+
                 showChars: 170
             },
 
@@ -234,15 +248,17 @@ define([
                 * @type {Boolean}
                 * @default false
                 */
+
                 _closing: false,
                 /**
-                * Holds a deferred that would destory the panel after the closing animation completes. May be interrupted.
+                * Holds a deferred that would destroy the panel after the closing animation completes. May be interrupted.
                 *
                 * @property _destroyDeferred
                 * @type {Deferred}
                 * @private
                 * @default null
                 */
+
                 _destroyDeferred: null,
                 /**
                 * SubPanel attributes
@@ -252,6 +268,7 @@ define([
                 * @default null
                 * @type {SubPanelSettings}
                 */
+
                 _attr: null,
                 /**
                 * Indicates if the SubPanel is visible at the moment. Doesn't make the panel visible or invisible, just prevents animations on the content
@@ -262,6 +279,7 @@ define([
                 * @default false
                 * @type {Boolean}
                 */
+
                 _visible: false,
                 /**
                 * The outermost `div` of the SubPanel.
@@ -270,6 +288,7 @@ define([
                 * @default null
                 * @type {jObject}
                 */
+
                 container: null,
                 /**
                 * The inner `div` of the SubPanel. Closing and opening animations are run on this `div`.
@@ -278,6 +297,7 @@ define([
                 * @default null
                 * @type {jQobject}
                 */
+
                 panel: null,
                 /**
                 * `div` housing the content of the SubPanel, including its title.
@@ -287,6 +307,7 @@ define([
                 * @default null
                 * @type {jObject}
                 */
+
                 _subPanelContentDiv: null,
                 /**
                 * Heading of the content in the SubPanel.
@@ -296,6 +317,7 @@ define([
                 * @default null
                 * @type {jObject}
                 */
+
                 _panelTitle: null,
                 /**
                 * `div` housing the content of the SubPanel, excluding its title.
@@ -305,6 +327,7 @@ define([
                 * @default null
                 * @type {jObject}
                 */
+
                 _panelContentDiv: null,
                 /**
                 * Default duration of the SubPanel animation in milliseconds.
@@ -314,6 +337,7 @@ define([
                 * @default 400
                 * @type {Number}
                 */
+
                 _animatePanelDuration: 500, //400,
 
                 timeLine: null,
@@ -352,7 +376,7 @@ define([
                     return this.container;
                 },
                 /**
-                * Retursn the inner `div` of the SubPanel
+                * Returns the inner `div` of the SubPanel
                 *
                 * @method getPanel
                 * @return {jObject} The inner `div` of the SubPanel
@@ -383,7 +407,7 @@ define([
                 *
                 * @method destroy
                 * @param  {Number} speed    The duration of the animation in milliseconds
-                * @param  {Deferred} deferred The deffered to be resolved after the SubPanel is destroyed
+                * @param  {Deferred} deferred The deferred to be resolved after the SubPanel is destroyed
                 */
                 destroy: function (speed, deferred) {
                     if (this._attr.doOnHide) {
@@ -493,15 +517,15 @@ define([
 
                     console.log("create panel, ", a.origin);
 
-                    a.guid = a.guid || util.guid();
+                    a.guid = a.guid || UtilMisc.guid();
 
-                    lang.mixin(this._attr, a);
+                    dojoLang.mixin(this._attr, a);
 
                     tmpl.cache = {};
                     tmpl.templates = subPanelTemplate;
 
                     subPanelString = tmpl(this._attr.templateKey,
-                        lang.mixin(
+                        dojoLang.mixin(
                             this._attr,
                             {
                                 closeTitle: GlobalStorage.config.stringResources.txtClose
@@ -562,7 +586,7 @@ define([
                         animateContent = function (node, newData, d) {
                             if (newData) {
                                 node.addClass('animated fadeOutDown');
-                                window.setTimeout(lang.hitch(this,
+                                window.setTimeout(dojoLang.hitch(this,
                                         function () {
                                             node
                                             //.html(newData)
@@ -581,7 +605,7 @@ define([
                             if (newData) {
                                 if (newData !== oldData) {
                                     if (visible) {
-                                        //ideally, need to wait until the animation completes before proceedding?
+                                        //ideally, need to wait until the animation completes before proceeding?
                                         animateContent(node, parsedData, d);
                                     } else {
                                         node.empty().append(parsedData);
@@ -595,7 +619,7 @@ define([
                             }
                         },
 
-                        updateContent = lang.hitch(this,
+                        updateContent = dojoLang.hitch(this,
                             function (a) {
                                 this._subPanelContentDiv.animate({
                                     scrollTop: 0
@@ -604,12 +628,12 @@ define([
                                 setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
                                 setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);
 
-                                lang.mixin(this._attr, a);
+                                dojoLang.mixin(this._attr, a);
                             }
                         );
 
                     // doAfterUpdate should be called AFTER update (animation) completes...
-                    util.afterAll(updateDefered, function () {
+                    UtilMisc.afterAll(updateDefered, function () {
                         if (a.doAfterUpdate) {
                             a.doAfterUpdate();
                         }
@@ -813,7 +837,7 @@ define([
             height: titleBanner.height() - titleBannerHalfHeight
             }, "slow");
 
-            if (util.isUndefined(fullscreen)) {
+            if (UtilMisc.isUndefined(fullscreen)) {
             // If expand is undefined, we toggle
             titleBannerHalfHeight *= -1;
             fullScreenDelta2 *= -1;
@@ -892,7 +916,7 @@ define([
                 /*jshint validthis: true */
                 panelToggleTimeLine.eventCallback("onComplete",
                         function () {
-                            util.subscribeOnce("map/update-end", function () {
+                            UtilMisc.subscribeOnce("map/update-end", function () {
                                 console.log("GUI <-- map/update-end from gui");
                                 panelChange(false);
                             });
@@ -909,7 +933,7 @@ define([
             }
 
             function _toggleFullDataMode(fullData) {
-                _isFullData = util.isUndefined(fullData) ? !_isFullData : _isFullData;
+                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : _isFullData;
 
                 if (_isFullData) {
                     TweenLite.fromTo(panelDiv, transitionDuration,
@@ -958,7 +982,7 @@ define([
                         Theme.toggleFullScreenMode(true);
                     }
 
-                    // set listener to the full-screentoggle
+                    // set listener to the full-screen toggle
                     fullScreenToggle.click(function () {
                         Theme.toggleFullScreenMode();
                     });
@@ -997,7 +1021,7 @@ define([
                 * @param {Boolean} visible indicates whether the panel is visible or not
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
-                * @param {Boolean} isComplete indicates if subPanel transtion has completed or just started
+                * @param {Boolean} isComplete indicates if subPanel transition has completed or just started
                 */
                 subPanelChange: function (visible, origin, container, isComplete) {
                     // check if the fullData transition is already underway
@@ -1020,10 +1044,10 @@ define([
                 },
 
                 /**
-                * Retunrs the outter most `div` of this SidePanel.
+                * Returns the outer most `div` of this SidePanel.
                 *
                 * @method getContainer
-                * @return {jObject} The outter most `div` of this SidePanel
+                * @return {jObject} The outer most `div` of this SidePanel
                 */
                 getPanelContainer: function () {
                     return panelDiv;
@@ -1098,7 +1122,7 @@ define([
         if (subPanel) {
         adjust(subPanel);
         } else {
-        util.executeOnDone(subPanels, adjust);
+        UtilMisc.executeOnDone(subPanels, adjust);
         }
         }*/
 
@@ -1120,7 +1144,7 @@ define([
 
                 subPanel.open();
                 subPanel.getPanel().find(".sub-panel-toggle")
-                    .on("click", lang.hitch(this, function () {
+                    .on("click", dojoLang.hitch(this, function () {
                         hideSubPanel(attr);
                     }));
 
@@ -1148,7 +1172,7 @@ define([
                 subPanels[attr.origin] = subPanel;
 
                 // close all other panels; and open the newly created one after all others are closed
-                util.executeOnDone(subPanels,
+                UtilMisc.executeOnDone(subPanels,
                     function (p, d) {
                         if (p && p.getOrigin() !== attr.origin) {
                             hideSubPanel({
@@ -1179,7 +1203,7 @@ define([
             });
 
             deferred.then(function () {
-                // remove the panel from from the object after it closes
+                // remove the panel from the object after it closes
                 delete subPanels[attr.origin]; // more on delete: http://perfectionkills.com/understanding-delete/
                 if (d) {
                     d.resolve(true);
@@ -1253,13 +1277,21 @@ define([
 
                 layoutController.init();
 
-                // registring help popup
+                // registering help popup
                 helpPanelPopup = popupManager.registerPopup(helpToggle, "click",
                     function (d) {
-                        topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, {
-                            visible: true
-                        });
+                        topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, { visible: true });
+                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "help-section" });
                         console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", true);
+
+                        // close this panel if any other panel is opened
+                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                            function () {
+                                if (this.isOpen()) {
+                                    this.close();
+                                }
+                            })
+                        );
 
                         helpSectionContainer.slideToggle("fast", function () {
                             d.resolve();
@@ -1268,9 +1300,8 @@ define([
                         activeClass: cssButtonPressedClass,
                         target: helpSectionContainer,
                         closeHandler: function (d) {
-                            topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, {
-                                visible: false
-                            });
+                            topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, { visible: false });
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "help-section" });
                             console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", false);
 
                             helpSectionContainer.slideToggle("fast", function () {
@@ -1280,19 +1311,21 @@ define([
                     }
                 );
 
-                topic.subscribe(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, function (attr) {
-                    if (helpPanelPopup.isOpen() && attr.visible) {
-                        helpPanelPopup.close();
-                    }
-                });
-
                 //Start AddLayer popup controller
                 addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",
                     function (d) {
-                        topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, {
-                            visible: true
-                        });
+                        topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: true });
+                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "add-layer-section" });
                         console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", true);
+
+                        // close this panel if any other panel is opened
+                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                            function () {
+                                if (this.isOpen()) {
+                                    this.close();
+                                }
+                            })
+                        );
 
                         addLayerSectionContainer.slideToggle("fast", function () {
                             d.resolve();
@@ -1301,9 +1334,8 @@ define([
                         activeClass: cssButtonPressedClass,
                         target: addLayerSectionContainer,
                         closeHandler: function (d) {
-                            topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, {
-                                visible: false
-                            });
+                            topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: false });
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "add-layer-section" });
                             console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", false);
 
                             addLayerSectionContainer.slideToggle("fast", function () {
@@ -1312,12 +1344,6 @@ define([
                         }
                     }
                 );
-
-                topic.subscribe(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, function (attr) {
-                    if (addLayerPanelPopup.isOpen() && attr.visible) {
-                        addLayerPanelPopup.close();
-                    }
-                });
 
                 $("#addLayer-add").on("click", function () {
                     topic.publish(EventManager.Map.ADD_LAYER, null);

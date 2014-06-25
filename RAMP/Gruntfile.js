@@ -1148,7 +1148,7 @@ module.exports = function (grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'build:bump-only-build', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'build:bump-only-build', 'version', 'notify:build']);
     grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
 
     // DEPLOY

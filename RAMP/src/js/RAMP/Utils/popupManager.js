@@ -215,7 +215,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 *
                 * @method isOpen
                 * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
-                * @return result True if any of the descripte popups are open; false otherwise
+                * @return result True if any of the described popup are open; false otherwise
                 */
                 isOpen: function (selector) {
                     var result = true;
@@ -314,7 +314,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 closeHandler: null,
 
                 /**
-                * The CSS class to be applied to the hadnle of the popup when the popup opens.
+                * The CSS class to be applied to the handle of the popup when the popup opens.
                 *
                 * @property activeClass
                 * @type {String}
