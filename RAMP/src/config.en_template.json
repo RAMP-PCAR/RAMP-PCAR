@@ -217,6 +217,18 @@
                     "type": "String",
                     "value": "No metadata was published for this layer.",
                     "description": ""
+                },
+                {
+                    "name": "txtDatasetSelectorButtonLoad",
+                    "type": "String",
+                    "value": "Load",
+                    "description": ""
+                },
+                {
+                    "name": "txtDatasetSelectorButtonLoaded",
+                    "type": "String",
+                    "value": "Loaded",
+                    "description": ""
                 }
             ]
         },

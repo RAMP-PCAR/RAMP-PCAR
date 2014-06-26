@@ -34,7 +34,9 @@
         "txtFullData": "Full Data",
         "txtDataSummary": "Data Summary",
         "txtMetadataNotFound": "No metadata was found for this layer.",
-        "txtMetadataNotPublished": "No metadata was published for this layer."
+        "txtMetadataNotPublished": "No metadata was published for this layer.",
+        "txtDatasetSelectorButtonLoad": "Load",
+        "txtDatasetSelectorButtonLoaded": "Loaded"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

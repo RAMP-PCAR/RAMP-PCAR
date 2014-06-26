@@ -11,7 +11,7 @@
 
 /**
 * The Datagrid class represents the side bar table shown next to the map. The data grid displays all map objects in a text format and allows the user to see more
-* details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid conatiner.
+* details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
 * @class Datagrid
 * @static
@@ -147,7 +147,7 @@ define([
                         * if the row exists in the datagrid, false otherwise.
                         *
                         * @method navigateToRow
-                        * @return {Boolean} A value indicating is the navigation is sucessful
+                        * @return {Boolean} A value indicating is the navigation is successful
                         * @private
                         * @method navigateToRow
                         */
@@ -212,7 +212,7 @@ define([
                         },
 
                         /**
-                        * Highlights the the given graphic object using the specified cssClass.
+                        * Highlights the given graphic object using the specified cssClass.
                         *
                         * @method activate
                         * @private
@@ -246,6 +246,8 @@ define([
                 var highlightRow = createRowPrototype("selected-row"),
                     zoomlightRow = createRowPrototype("highlighted-row"),
 
+                    extendedTabTitle,
+
                     sectionNode,
 
                     selectedDatasetUrl,
@@ -258,6 +260,7 @@ define([
                     dataTablesScrollBody,
                     dataTablesScrollHead,
                     datasetSelector,
+                    datasetSelectorSubmitButton,
 
                     datagridMode = GRID_MODE_SUMMARY, // GRID_MODE_FULL
 
@@ -275,8 +278,8 @@ define([
                     // create object for template
                     // TODO: JKW
                     // Note, the following object is for passing to the template, properties
-                    // were guessed. Need to add more detail later on. Empty values were provided
-                    // eg. there were value of "" assigned to the toggle button template, in the code
+                    // were guessed. Need to add more detail later on. Empty values were provided,
+                    // for example, there were value of "" assigned to the toggle button template, in the code
                     // provided. A temporary property name "attribute" is used. Not sure if this will be
                     // used by ECDMP, therefore, leave the empty value in the template
                     var toggleButtonData = {
@@ -333,7 +336,7 @@ define([
                                 // Need to check if it's a number, since the template converts
                                 // everything into strings
                                 if (col.sortType === "numeric") {
-                                    result = Number(result);                                    
+                                    result = Number(result);
                                 }
                                 obj[datagridMode].push(result);
                             });
@@ -445,7 +448,7 @@ define([
                         // explicitly set height of the scrollbody so the horizontal scrollbar is visible
                         dataTablesScrollBody.height(jqgridTableWrapper.height() - dataTablesScrollHead.height());
 
-                        // explicity force-set width of the jqgrid so it woulnd't compress when a sub-panel is opened
+                        // explicitly force-set width of the jqgrid so it wouldn't compress when a sub-panel is opened
                         // also check if the width is no greater than that of the container, hide the horizontal scrollbar
                         forcedWidth = jqgrid.outerWidth();
 
@@ -574,9 +577,16 @@ define([
                         topic.publish("gui/grid/expand");
                     });
 
-                    sectionNode.on("change", datasetSelector, function () {
+                    sectionNode.on("change", "#datasetSelector", function () {
                         var controlNode = $(this),
-                            optionSelected = controlNode.find("option:selected");
+                            optionSelected = controlNode.find("option:selected"),
+                            state = (optionSelected[0].value === selectedDatasetUrl);
+
+                        updateDatasetSelectorState(state);
+                    });
+
+                    sectionNode.on("click", "#datasetSelectorSubmitButton", function () {
+                        var optionSelected = datasetSelector.find("option:selected");
 
                         if (optionSelected.length > 0) {
                             selectedDatasetUrl = optionSelected[0].value;
@@ -731,7 +741,7 @@ define([
                 }
 
                 /**
-                * De-activiates the row stored in zoomlightRow
+                * De-activates the row stored in zoomlightRow
                 *
                 * @method zoomlightrowHide
                 * @private
@@ -756,6 +766,25 @@ define([
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, zoomlightrowShow);
 
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_HIDE, zoomlightrowHide);
+                }
+
+                function updateDatasetSelectorState(state) {
+                    var layer;
+
+                    datasetSelectorSubmitButton
+                        .attr("disabled", state)
+                        .text(state ?
+                            GlobalStorage.config.stringResources.txtDatasetSelectorButtonLoaded
+                            : GlobalStorage.config.stringResources.txtDatasetSelectorButtonLoad);
+
+                    layer = dojoArray.filter(GlobalStorage.config.featureLayers,
+                        function (layer) {
+                            return layer.url === selectedDatasetUrl;
+                        });
+
+                    if (extendedTabTitle && layer.length > 0) {
+                        extendedTabTitle.text(": " + layer[0].displayName);
+                    }
                 }
 
                 function refreshTable() {
@@ -787,6 +816,8 @@ define([
 
                         jqgridWrapper.replaceWith(newWrapper);
                         createDatatable();
+
+                        updateDatasetSelectorState(true);
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
@@ -823,6 +854,10 @@ define([
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         templateKey = "datagrid_manager_Template";
                         templateData.buttons.toggleTitle = GlobalStorage.config.stringResources.txtFullData;
+
+                        if (extendedTabTitle) {
+                            extendedTabTitle.remove();
+                        }
                     } else {
                         templateKey = "datagrid_full_manager_Template";
 
@@ -832,6 +867,8 @@ define([
                                 toggleTitle: GlobalStorage.config.stringResources.txtDataSummary
                             }
                         );
+
+                        extendedTabTitle = $("#tabs1_2-link").append("<span>").find("span");
                     }
 
                     // generate the content using rowData and given template
@@ -854,6 +891,8 @@ define([
                         datagridGlobalToggles = sectionNode.find('#datagridGlobalToggles');
                         datagridStatusLine = sectionNode.find('.status-line');
                         datasetSelector = $("#datasetSelector");
+                        datasetSelectorSubmitButton = $("#datasetSelectorSubmitButton");
+                        updateDatasetSelectorState(true);
 
                         d.resolve();
 
@@ -981,7 +1020,7 @@ define([
                     },
 
                     /**
-                    * Adjusts the width of the datagrid panel to accomodate the scrollbar.
+                    * Adjusts the width of the datagrid panel to accommodate the scrollbar.
                     *
                     * @method adjustPanelWidth
                     */
@@ -1122,7 +1161,7 @@ define([
             }
 
             //TODO may want to move the generation of this custom object to a separate area, as this data will be useful in
-            //     both the summary and full grid state.  Will need some thinkin'
+            //     both the summary and full grid state.  Will need some thinking.
 
             // Includes fields that are useful which are not derived from the config.featureSources
             // this should not draw, as there will be no column defined for it

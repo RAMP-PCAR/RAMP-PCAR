@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "1.0.40-16",
+    "version": "1.0.40-65",
     "description": "RAMP GIS viewer - ArcticFox; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {

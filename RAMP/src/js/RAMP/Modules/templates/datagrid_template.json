@@ -83,7 +83,8 @@
 																{% } %}
 															
 															</select>
-														
+														    <button id='datasetSelectorSubmitButton' class='button button-default button-info'></button>
+
 														{% } else { %}																
 															<input readonly='true' id='datasetSelector' class='span-2 margin-bottom-none' data-role='none' value='{%=o.datasets[0].displayName%}'/>
 														{% } %}
