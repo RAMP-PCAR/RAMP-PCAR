@@ -178,7 +178,7 @@ define([],
                 * @event gui.events.HELP_PANEL_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
-                * @param visible {boolean} true if the help panel is opened, false if the help panel is closed
+                * @param evt.visible {boolean} true if the help panel is opened, false if the help panel is closed
                 */
                 HELP_PANEL_CHANGE: "gui/help-panel-change",
 
@@ -264,25 +264,42 @@ define([],
                 * @event gui/add-layer-panel-change
                 * @for GUI
                 * @param evt {Object} the event Object
-                * @param visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
+                * @param evt.visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
                 */
                 ADD_LAYER_PANEL_CHANGE: "gui/add-layer-panel-change",
 
+                /**
+                 * Published each time a toolbar section / widget is opened. Used to close other toolbar sections / widgets.
+                 *
+                 * @event gui/toolbar-section-open
+                 * @for GUI
+                 * @param evt {Object} the event Object
+                 * @param evt.id {String} id of the source section / widget
+                 */
                 TOOLBAR_SECTION_OPEN: "gui/toolbar-section-open",
+
+                /**
+                 * Published each time a toolbar section / widget is closed.
+                 *
+                 * @event gui/toolbar-section-close
+                 * @for GUI
+                 * @param evt {Object} the event Object
+                 * @param evt.id {String} id of the source section / widget
+                 */
                 TOOLBAR_SECTION_CLOSE: "gui/toolbar-section-close"
             },
 
             FeatureHighlighter: {
                 /**
                 * Permanently highlights a given feature on the map; display an interactive tooltip for this feature; reduces opacity of the `graphicGroup` layers.
-                * Even when the user moves the cursor away, the feature stays highlihgted; tooltip stays put.
+                * Even when the user moves the cursor away, the feature stays highlighted; tooltip stays put.
                 * Only one feature can be highlighted like this at a time.
                 *
                 * @event featureHighlighter.events.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
-                HIGHLIGHT_SHOW: "highlighter/hightlight-show",
+                HIGHLIGHT_SHOW: "highlighter/highlight-show",
 
                 /**
                 * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the layers;
@@ -291,7 +308,7 @@ define([],
                 * @event featureHighlighter.events.HIGHLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
-                HIGHLIGHT_HIDE: "highlighter/hightlight-hide",
+                HIGHLIGHT_HIDE: "highlighter/highlight-hide",
 
                 /**
                 * Temporarilly highlights (hoverlights) a given feature on the map. Intended to be dehighlighted when the user moves the cursor away; to do that, publish HOVERLIGHT_HIDE event.
@@ -364,7 +381,7 @@ define([],
                 * and the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row.
                 *
                 * @event maptips.events.EXTENT_CHANGE [subscribed]
-                * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currenlty highlighted row
+                * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row
                 */
                 EXTENT_CHANGE: "maptip/extent-change",
 

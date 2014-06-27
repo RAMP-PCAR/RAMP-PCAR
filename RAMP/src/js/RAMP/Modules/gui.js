@@ -1015,7 +1015,7 @@ define([
                 },
 
                 /**
-                * Fires an even when the subpanel closes or opens.
+                * Fires an event when the subpanel closes or opens.
                 *
                 * @method subPanelChange
                 * @private
@@ -1027,11 +1027,20 @@ define([
                 subPanelChange: function (visible, origin, container, isComplete) {
                     // check if the fullData transition is already underway
                     if (!fullDataTimeLine.isActive() && _isFullData && !isComplete) {
-                        // adjust the sidePanel position
+                        // adjust the sidePanel position shifting the right edge to the left, making space for the subpanel to open at
                         if (visible) {
                             fullDataSubpanelChangeTimeLine.play(0);
                         } else if (!visible) {
                             fullDataSubpanelChangeTimeLine.reverse();
+                        }
+                    }
+
+                    // hide the sidepanel toggle when a subpanel is opened to prevent the user from closing sidepanel with subpanel still opened
+                    if (!isComplete) {
+                        if (visible) {
+                            panelToggle.hide();
+                        } else {
+                            panelToggle.show();
                         }
                     }
 
