@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "1.0.40-89",
+    "version": "1.0.40-90",
     "description": "RAMP GIS viewer - ArcticFox; Sample of an implementation of RAMP",
     "main": "index.js",
     "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",

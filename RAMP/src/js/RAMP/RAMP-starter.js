@@ -1,4 +1,4 @@
-﻿/*global window, location */
+﻿/*global location */
 
 /**
 *
@@ -16,13 +16,14 @@
 */
 
 //required to get draw bar to show in french
-var sPath = window.location.href,
-    sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
+var //sPath = window.location.href,
+    //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
     jsFolderPath = "js/",
     cssFolderPath = "css/",
     state = "src/", // replace with "build" upon release,
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
-    themeName = ($("html")
+    htmlNode = $("html"),
+    themeName = (htmlNode
                     .attr("class")
                     .split(" ")
                     .filter(function (one) {
@@ -34,7 +35,8 @@ var sPath = window.location.href,
 
 dojoConfig = {
     parseOnLoad: false,
-    locale: sPage.indexOf('lang=fr') > -1 ? "fr" : "en",
+    //locale: sPage.indexOf('lang=fr') > -1 ? "fr" : "en",
+    locale: htmlNode.attr("lang") === "fr" ? "fr" : "en",
     async: true,
     packages: [
         {
