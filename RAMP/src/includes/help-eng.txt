@@ -140,7 +140,7 @@
     <div>
         <div class="helpSectionBody">
             <p>
-                The Data Grid allows you to the data that is visible in the current map extent.</p>
+                The Data Grid lists basic information for all the features that is visible in the current map extent.</p>
             <p>
                 <b>Usage:</b></p>
             <p>
@@ -149,13 +149,20 @@
             <ul>
                 <li><span class="bold-text">Sorting:</span> Select the Sort link at the top of the data
                     grid to sort by field name, descending. Select the Sort link again to switch the
-                    sort to ascending mode.</li>
+                    sort to ascending mode.
+					<p><img src="./assets/images/help/en/datagrid_sort_button.png" width="291" height="140" class="image-actual"
+                    alt="The Sort Button" /></p></li>
                 <li><span class="bold-text">Details:</span> Select the Details link next to each data
                     row to display its information in an Info Panel. This function replicates clicking
                     directly on a map feature. </li>
                 <li><span class="bold-text">Zoom To:</span> Every row on the data grid has an option
                     to quickly zoom the map view to that data point. If the "Zoom To" link is clicked,
                     the map and the data grid will dynamically zoom to that specific point. </li>
+				<li><span class="bold-text">Zoom Back:</span>After the "Zoom To" link is clicked, the link
+					will be replaced by a "Zoom Back" link. Clicking on the "Zoom Back" link will bring 
+					the user back to the extent of the map before the "Zoom To" link was clicked.
+					<p><img src="./assets/images/help/en/datagrid_zoomback_button.png" width="423" height="141" class="image-actual"
+                    alt="The Zoom Back Button" /></p></li>
                 <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
                     jump to the first or last page, respectively, of the information in the data grid.
                     Use the inner left and right buttons to move back or forward one page at a time.
@@ -168,6 +175,49 @@
 <div class="clear">
 </div>
 <!-- dataGrid ENDS -->
+<!-- extendedGrid BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Extended Data Grid</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Extended Grid lists detailed information about all the features that in the current map extent.</p>
+            <p>
+                <b>Usage:</b></p>
+            <p>
+                <img src="./assets/images/help/en/extended_grid_screenshot_1.png" width="591" "height="283" class="image-actual"
+                    alt="The Extended Grid" /></p>
+            <ul>
+
+                <li><span class="bold-text">Full Data Button:</span> Select the "Full Data" button 
+					at the top right corner of the data grid to show the extended data grid. 
+					<p>
+                <img src="./assets/images/help/en/extended_grid_button.png" width="402" "height="120" class="image-actual"
+                    alt="The Extended Grid Button" /></p>
+				</li>
+				<li><span class="bold-text">Data Summary Button:</span> Select the "Data Summary" button 
+					at the top right corner of the extended grid to go back to the data grid view. 
+					<p>
+                <img src="./assets/images/help/en/data_summary_button.png" width="291" "height="169" class="image-actual"
+                    alt="The Data Summary Button" /></p>
+				</li>
+				<li><span class="bold-text">Sorting:</span> For any column, selecting the upward arrow will sort the 
+					extended grid in ascending order by that column, selecting the downward arrow will sort the grid 
+					in descending order by that column.</li>                
+                <li><span class="bold-text">Details:</span> Select the Details link next to each data
+                    row to display its information in an Info Panel. </li>
+                <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
+                    jump to the first or last page, respectively, of the information in the data grid.
+                    Use the inner left and right buttons to move back or forward one page at a time.
+                    Selecting the Page link will permit you to quickly jump to any page in the data
+                    grid listing. </li>
+            </ul>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- extended grid ENDS -->
 <!-- infoPanel BEGINS -->
 <details class="margin-bottom-medium">
     <summary class="">Info Panel</summary>
