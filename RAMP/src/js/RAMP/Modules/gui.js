@@ -814,6 +814,7 @@ define([
             // panelToggleTransition
             panelToggleTimeLine
                 .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
+                .set(panelDiv, { display: "none" }, transitionDuration)
                 .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
             fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: "430px", ease: "easeOutCirc" });
