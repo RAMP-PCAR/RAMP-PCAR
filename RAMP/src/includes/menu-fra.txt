@@ -3,20 +3,62 @@
 <!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
 wet-boew.github.io/wet-boew/License-eng.html / wet-boew.github.io/wet-boew/Licence-fra.html -->
 <!-- DataAjaxFragmentStart -->
-<li><div><a href="http://wet-boew.github.io/wet-boew/index-eng.html">[fr] Home</a></div></li>
-<li><section><h3><a href="section2/index-eng.html">[fr] Search</a></h3><div class="mb-sm">
-<div class="span-2">
-<ul>
-<li><a href="#">[fr] Basic Search</a></li>
-<li><a href="#">[fr] Advanced Search</a></li>
-</ul>
-</div>
-<div class="clear"></div>
-</div></section></li>
-<li><div><a href="#">[fr] Browse</a></div></li>
-<li><div><a href="section4/index-eng.html">[fr] Map</a></div></li>
-<li><div><a href="#">[fr] Register</a></div></li>
-<li><div><a href="#">[fr] Sign In</a></div></li>
-<li><div><a href="#">[fr] Help</a></div></li>
+
+    <li>
+        <section>
+              <h3><a href="#project" class="item">Projet de PCAR</a></h3><div class="mb-sm">
+            <div class="span-2">
+                <ul role="menu">
+                    <li><a href="http://ramp-racp.github.io/index-fr.html">À propos de la PCAR</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/benefits-fr.html">Avantages</a>
+                    </li>                    
+                    <li><a href="https://github.com/Environment-Canada/RAMP-AF">Code source</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/license-fr.html">Avis</a>
+                    </li>                    
+                </ul>
+            </div>
+            <div class="clear"></div>
+            </div>
+        </section>
+    </li>
+    <li>
+        <section>
+            <h3><a href="#implement" class="item">Utilisation de la PCAR</a></h3><div class="mb-sm">
+            <div>
+                <ul role="menu">
+                    <li><a href="http://ramp-racp.github.io/docs/started-fr.html">Pour commencer</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/docs/versions/downloads-fr.html">Téléchargez la PCAR</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/demos/index-fr.html">Exemples concrets</a>
+                    </li>                    
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>  
+        </section>
+    </li>
+    <li>
+        <section>
+            <h3><a href="#api" class="item">Documentation de la PCAR</a></h3><div class="mb-sm">
+            <div>
+                <ul role="menu">
+                <li><a href="http://ramp-racp.github.io/docs/index-fr.html">Table des matières</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/api/yuidoc/index.html">Références d'API</a>
+                    </li>
+                    <li><a href="http://ramp-racp.github.io/docs/versions/roadmap-fr.html">Feuille de route</a>
+                    </li>                    
+                    <li><a href="http://www.tbs-sct.gc.ca/ws-nw/index-eng.asp">À propos des normes Web</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+        </section>
+    </li>
+
 <!-- DataAjaxFragmentEnd -->
 </html>

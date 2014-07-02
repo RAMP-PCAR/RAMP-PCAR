@@ -125,7 +125,7 @@
                 {
                     "name": "txtShowBounds",
                     "type": "String",
-                    "value": "Show Bounds",
+                    "value": "Show Bounds {0}",
                     "description": ""
                 },
                 {
@@ -228,6 +228,54 @@
                     "name": "txtDatasetSelectorButtonLoaded",
                     "type": "String",
                     "value": "Loaded",
+                    "description": ""
+                },
+                {
+                    "name": "txtShowFeatures",
+                    "type": "String",
+                    "value": "Show {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideFeatures",
+                    "type": "String",
+                    "value": "Hide {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtShowAllFeatures",
+                    "type": "String",
+                    "value": "Show All",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideAllFeatures",
+                    "type": "String",
+                    "value": "Hide All",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideBounds",
+                    "type": "String",
+                    "value": "Hide Bounds of {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideAllBounds",
+                    "type": "String",
+                    "value": "Hide All Bounds",
+                    "description": ""
+                },
+                {
+                    "name": "txtSort",
+                    "type": "String",
+                    "value": "Sort",
+                    "description": ""
+                },
+                {
+                    "name": "txtDataset",
+                    "type": "String",
+                    "value": "Dataset",
                     "description": ""
                 }
             ]

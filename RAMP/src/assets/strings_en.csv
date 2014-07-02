@@ -22,6 +22,8 @@ navigationBar,Navigation Bar
 ,
 rampAltLangLink,carte.html
 ,
+servicesTitle,Services
+departmentsTitle,Departments
 goc,Government of Canada
 sgoc,Symbol of the Government of Canada
 ,
@@ -30,19 +32,13 @@ titleSubLink,EC's Enterprise Geospatial Viewer
 ,
 siteMenu,Site menu
 ,
-link1Url,http://ec.geocat.net/geonetwork/home
-link2Url,section2/index-eng.html
-link3Url,http://ec.geocat.net/geonetwork/browse/eng
-link4Url,http://ec.geocat.net/geonetwork/accountrequest/eng
-link5Url,http://ec.geocat.net/geonetwork/login/eng
-link6Url,http://ecollab.ncr.int.ec.gc.ca/theme/ipgi-impi/cfgddmtc/data%20management%20training%20centre.aspx?pflg=1033&
+link1Url,http://ramp-racp.github.io/index-en.html
+link2Url,http://ramp-racp.github.io/docs/started-en.html
+link3Url,http://ramp-racp.github.io/docs/index-en.html
 ,
-link1Title,Home
-link2Title,Search
-link3Title,Browse
-link4Title,Register
-link5Title,Sign In
-link6Title,Help
+link1Title,RAMP Project
+link2Title,Using RAMP
+link3Title,RAMP Documentation
 ,
 closeTitle,Close
 ,
@@ -83,4 +79,4 @@ transparency,Transparency
 transparencyLink,http://www.ec.gc.ca/default.asp?lang=En&n=390AF41B-1
 termsConditions,Terms and conditions
 termsConditionsLink,http://www.ec.gc.ca/default.asp?lang=En&xml=5830C36B-1773-4E3E-AF8C-B21F54633E0A
-dateModified,Date Modified
+dateModifiedTitle,Date Modified

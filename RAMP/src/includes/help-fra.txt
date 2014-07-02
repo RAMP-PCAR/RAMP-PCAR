@@ -162,18 +162,18 @@
 
 <!-- Add Layer BEGINS -->
 <details class="margin-bottom-medium">
-    <summary class="">[fr]Add Layer from Web</summary>
+    <summary class="">Ajouter une couche provenant du Web</summary>
     <div>
         <div class="helpSectionBody">
             <p>
-                [fr]Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.</p>
+                Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d'autres couches disponibles dans l'application de cartographie.</p>
             <p>
-                <b>[fr]Usage:</b></p>
+                <b>Utilisation :</b></p>
             <p>
                 <img src="./assets/images/help/fr/help_addlayer.png" width="300" height="100" class="image-actual"
-                    alt="[fr]Add layer widget" /></p>
+                    alt="Ajouter une couche provenant du Web" /></p>
             <p>
-                [fr]From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add.</p>
+                À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis entrez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d'opacité pour la couche que vous ajouterez.</p>
         </div>
     </div>
 </details>

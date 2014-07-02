@@ -555,16 +555,6 @@ define([
                 config = GlobalStorage.config;
                 localString = GlobalStorage.config.stringResources;
 
-                localString.txtShowFeatures = "Show {0}";
-                localString.txtHideFeatures = "Hide {0}";
-                localString.txtShowAllFeatures = "Show All";
-                localString.txtHideAllFeatures = "Hide All";
-
-                localString.txtShowBounds = "Show Bounds of {0}";
-                localString.txtHideBounds = "Hide Bounds of {0}";
-                localString.txtShowAllBounds = "Show All Bounds";
-                localString.txtHideAllBounds = "Hide All Bounds";
-
                 initListeners();
 
                 ui.init();

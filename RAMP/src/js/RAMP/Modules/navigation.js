@@ -107,7 +107,7 @@ function (
             // update cssPath of the widget so it points to the proper folder: build or src
             GlobalStorage.config.navWidget.cssPath = dojoConfig.cssFolderPath + dojoConfig.buildState + cssPath;
             GlobalStorage.config.navWidget.skin += dojoConfig.extensionPrefix;
-            GlobalStorage.config.navWidget.locale = dojoConfig.locale;
+            //GlobalStorage.config.navWidget.locale = dojoConfig.locale;
 
             nav = $("#" + GlobalStorage.config.divNames.navigation).navigation(GlobalStorage.config.navWidget);
             // NOTE: JKW Document the change. Refactor,

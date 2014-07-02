@@ -12,12 +12,13 @@
 *
 * The featureClickHandler uses Dojo/Topic to publish centralized global mouse event messages
 * related to feature selection. Any function subscribes to the topic will be able handle the
-* specifice event.
+* specific event.
 *
 * @class FeatureClickHandler
 * @static
 * @uses GraphicExtension
 * @uses EventManager
+* @uses GlobalStorage
 * @uses dojo/topic
 * @uses dojo/dom-construct
 * @uses Util
@@ -25,7 +26,7 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager",
+    "ramp/graphicExtension", "ramp/eventManager", "ramp/globalStorage",
 
 /* Dojo */
     "dojo/topic", "dojo/dom-construct",
@@ -35,7 +36,7 @@ define([
 
     function (
     /* RAMP */
-    GraphicExtension, EventManager,
+    GraphicExtension, EventManager, GlobalStorage,
 
     /* Dojo */
     topic, domConstruct,
@@ -57,7 +58,7 @@ define([
                 var selectedGraphic = evt.graphic;
 
                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                    panelName: "Details",
+                    panelName: GlobalStorage.config.stringResources.txtGrid_details,
                     title: GraphicExtension.getGraphicTitle(selectedGraphic),
                     content: GraphicExtension.getTextContent(selectedGraphic),
                     target: $("#map-div"),

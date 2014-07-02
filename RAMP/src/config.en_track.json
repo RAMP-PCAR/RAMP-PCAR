@@ -19,7 +19,7 @@
         "txtAllData": "All Data",
         "txtShow": "Show",
         "txtMetadata": "Metadata",
-        "txtShowBounds": "Show Bounds",
+        "txtShowBounds": "Show Bounds {0}",
         "txtShowAllBounds": "Show All Bounds",
         "txtExpandAll": "Expand All",
         "txtAbstract": "Abstract",
@@ -36,7 +36,15 @@
         "txtMetadataNotFound": "No metadata was found for this layer.",
         "txtMetadataNotPublished": "No metadata was published for this layer.",
         "txtDatasetSelectorButtonLoad": "Load",
-        "txtDatasetSelectorButtonLoaded": "Loaded"
+        "txtDatasetSelectorButtonLoaded": "Loaded",
+        "txtShowFeatures": "Show {0}",
+        "txtHideFeatures": "Hide {0}",
+        "txtShowAllFeatures": "Show All",
+        "txtHideAllFeatures": "Hide All",
+        "txtHideBounds": "Hide Bounds of {0}",
+        "txtHideAllBounds": "Hide All Bounds",
+        "txtSort": "Sort",
+        "txtDataset": "Dataset"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

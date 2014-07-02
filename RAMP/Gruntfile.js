@@ -270,6 +270,9 @@ module.exports = function (grunt) {
             stringsFr: {
                 options: {
                     patterns: [{
+                        match: 'dateModifiedDate',
+                        replacement: '<%= grunt.template.today("yyyy-mm-dd") %>'
+                    }, {
                         json: localeStrings.fr
                     }]
                 },

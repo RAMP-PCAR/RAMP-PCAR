@@ -77,7 +77,7 @@
 									</div>
 								</div>",
 		// level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
-		//			This template is used to generate 'eye' and 'bondingbox' for All Data
+		//			This template is used to generate 'eye' and 'boundingbox' for All Data
 		"filter_global_label_template":	"<div class='checkbox-custom'>
 											<label for='{%=o.id%}' class='form-checkbox  tooltip {%=o.classAddition%}' title='{%=o.title%}'>
 												<span class='wb-invisible'>{%=o.title%}</span>

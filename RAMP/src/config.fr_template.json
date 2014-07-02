@@ -11,19 +11,19 @@
                 {
                     "name": "txtPageTitle",
                     "type": "String",
-                    "value": "ECDMP",
+                    "value": "Plateforme de cartographie accessible et réutilisable (PCAR)",
                     "description": ""
                 },
                 {
                     "name": "txtPageSubTitle",
                     "type": "String",
-                    "value": "View Your Data",
+                    "value": "",
                     "description": ""
                 },
                 {
                     "name": "txtMapTitle",
                     "type": "String",
-                    "value": "Accessible Map",
+                    "value": "Carte accessible",
                     "description": ""
                 },
                 {
@@ -35,7 +35,7 @@
                 {
                     "name": "txtHelp",
                     "type": "String",
-                    "value": "Help",
+                    "value": "Aide",
                     "description": ""
                 },
                 {
@@ -47,163 +47,235 @@
                 {
                     "name": "txtUndoGridZoom",
                     "type": "String",
-                    "value": "Undo Grid Zoom",
+                    "value": "",
                     "description": ""
                 },
                 {
                     "name": "txtPrevPage",
                     "type": "String",
-                    "value": "Prev Page",
+                    "value": "Page précédente",
                     "description": ""
                 },
                 {
                     "name": "txtNextPage",
                     "type": "String",
-                    "value": "Next Page",
+                    "value": "Page suivante",
                     "description": ""
                 },
                 {
                     "name": "txtRecords",
                     "type": "String",
-                    "value": "Records",
+                    "value": "Fichiers",
                     "description": ""
                 },
                 {
                     "name": "txtGrid_zoomTo",
                     "type": "String",
-                    "value": "Zoom To",
+                    "value": "Zoom vers",
                     "description": ""
                 },
                 {
                     "name": "txtGrid_zoomBack",
                     "type": "String",
-                    "value": "Zoom Back",
+                    "value": "Zoom arrière",
                     "description": ""
                 },
                 {
                     "name": "txtGrid_details",
                     "type": "String",
-                    "value": "Details",
+                    "value": "Détails",
                     "description": ""
                 },
                 {
                     "name": "altMaptip_image",
                     "type": "String",
-                    "value": "Feature icon",
+                    "value": "Icône vedette",
                     "description": ""
                 },
                 {
                     "name": "txtFullScreen",
                     "type": "String",
-                    "value": "Full Screen",
+                    "value": "Plein écran",
                     "description": ""
                 },
                 {
                     "name": "txtShowHeaders",
                     "type": "String",
-                    "value": "Show Headers",
+                    "value": "Afficher haut de page",
                     "description": ""
                 },
                 {
                     "name": "txtAllData",
                     "type": "String",
-                    "value": "All Data",
+                    "value": "Toutes les données",
                     "description": ""
                 },
                 {
                     "name": "txtShow",
                     "type": "String",
-                    "value": "Show",
+                    "value": "Afficher",
                     "description": ""
                 },
                 {
                     "name": "txtMetadata",
                     "type": "String",
-                    "value": "Metadata",
+                    "value": "Métadonnées",
                     "description": ""
                 },
                 {
                     "name": "txtShowBounds",
                     "type": "String",
-                    "value": "Show Bounds",
+                    "value": "Afficher les limites de {0}",
                     "description": ""
                 },
                 {
                     "name": "txtShowAllBounds",
                     "type": "String",
-                    "value": "Show All Bounds",
+                    "value": "Afficher toutes les limites",
                     "description": ""
                 },
                 {
                     "name": "txtExpandAll",
                     "type": "String",
-                    "value": "Expand All",
+                    "value": "Développer tout",
                     "description": ""
                 },
                 {
                     "name": "txtAbstract",
                     "type": "String",
-                    "value": "Abstract",
+                    "value": "Sommaire ",
                     "description": ""
                 },
                 {
                     "name": "txtExtent",
                     "type": "String",
-                    "value": "Extent",
+                    "value": "Couverture",
                     "description": ""
                 },
                 {
                     "name": "txtScope",
                     "type": "String",
-                    "value": "Scope",
+                    "value": "Portée",
                     "description": ""
                 },
                 {
                     "name": "txtTimePeriod",
                     "type": "String",
-                    "value": "Time Period",
+                    "value": "Période",
                     "description": ""
                 },
                 {
                     "name": "txtSupplementalData",
                     "type": "String",
-                    "value": "Supplemental Data",
+                    "value": "Données supplémentaires",
                     "description": ""
                 },
                 {
                     "name": "txtEmailUrlSubject",
                     "type": "String",
-                    "value": "RAMP GIS Viewer",
+                    "value": "Visionneuse de PCAR des SIG",
                     "description": ""
                 },
                 {
                     "name": "txtEmailUrlBody",
                     "type": "String",
-                    "value": "Here's a cool map:",
+                    "value": "",
                     "description": ""
                 },
                 {
                     "name": "txtClose",
                     "type": "String",
-                    "value": "Close",
+                    "value": "Fermer",
                     "description": ""
                 },
                 {
                     "name": "txtOpen",
                     "type": "String",
-                    "value": "Open",
+                    "value": "Ouvrir",
                     "description": ""
                 },
                 {
                     "name": "txtFullData",
                     "type": "String",
-                    "value": "Full Data",
+                    "value": "Données complètes",
                     "description": ""
                 },
                 {
                     "name": "txtDataSummary",
                     "type": "String",
-                    "value": "Data Summary",
+                    "value": "Résumé des données",
+                    "description": ""
+                },
+                {
+                    "name": "txtShowFeatures",
+                    "type": "String",
+                    "value": "Afficher {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideFeatures",
+                    "type": "String",
+                    "value": "Masquer {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtShowAllFeatures",
+                    "type": "String",
+                    "value": "Afficher tout",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideAllFeatures",
+                    "type": "String",
+                    "value": "Masquer tout",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideBounds",
+                    "type": "String",
+                    "value": "Cachez limites de {0}",
+                    "description": ""
+                },
+                {
+                    "name": "txtHideAllBounds",
+                    "type": "String",
+                    "value": "Masquer toutes les bornes",
+                    "description": ""
+                },
+                {
+                    "name": "txtSort",
+                    "type": "String",
+                    "value": "Sorte",
+                    "description": ""
+                },
+                {
+                    "name": "txtDataset",
+                    "type": "String",
+                    "value": "Ensemble de données",
+                    "description": ""
+                },
+                {
+                    "name": "txtMetadataNotFound",
+                    "type": "String",
+                    "value": "Pas de métadonnées a été trouvé pour cette couche.",
+                    "description": ""
+                },
+                {
+                    "name": "txtMetadataNotPublished",
+                    "type": "String",
+                    "value": "Pas de métadonnées a été publié pour cette couche.",
+                    "description": ""
+                },
+                {
+                    "name": "txtDatasetSelectorButtonLoad",
+                    "type": "String",
+                    "value": " Charger",
+                    "description": ""
+                },
+                {
+                    "name": "txtDatasetSelectorButtonLoaded",
+                    "type": "String",
+                    "value": " Chargé",
                     "description": ""
                 }
             ]
@@ -213,30 +285,6 @@
             "type": "Object",
             "description": "",
             "fields": [
-                {
-                    "name": "sEmptyTable",
-                    "type": "String",
-                    "value": "No data available in table",
-                    "description": ""
-                },
-                {
-                    "name": "sInfo",
-                    "type": "String",
-                    "value": "Showing _START_ to _END_ of _TOTAL_ entries",
-                    "description": ""
-                },
-                {
-                    "name": "sInfoEmpty",
-                    "type": "String",
-                    "value": "Showing 0 to 0 of 0 entries",
-                    "description": ""
-                },
-                {
-                    "name": "sInfoFiltered",
-                    "type": "String",
-                    "value": "(filtered from _MAX_ total entries)",
-                    "description": ""
-                },
                 {
                     "name": "sInfoPostFix",
                     "type": "String",
@@ -250,77 +298,58 @@
                     "description": ""
                 },
                 {
+                    "name": "sEmptyTable",
+                    "type": "String",
+                    "value": "Aucune donnée disponible dans le tableau",
+                    "description": ""
+                },
+                {
+                    "name": "sInfo",
+                    "type": "String",
+                    "value": "Afficher_START_à_la_END_du_TOTAL_d'entrées_",
+                    "description": ""
+                },
+                {
+                    "name": "sInfoEmpty",
+                    "type": "String",
+                    "value": "Afficher de 0 à 0 de 0 d'entrées",
+                    "description": ""
+                },
+                {
+                    "name": "sInfoFiltered",
+                    "type": "String",
+                    "value": "(filtré à partir de_MAX_d'entrées totales)",
+                    "description": ""
+                },
+                {
                     "name": "sLengthMenu",
                     "type": "String",
-                    "value": "Show _MENU_ entries",
+                    "value": "Afficher_MENU_entrées",
                     "description": ""
                 },
                 {
                     "name": "sLoadingRecords",
                     "type": "String",
-                    "value": "Loading...",
+                    "value": "Chargement",
                     "description": ""
                 },
                 {
                     "name": "sProcessing",
                     "type": "String",
-                    "value": "Processing...",
+                    "value": "Traitement en cours...",
                     "description": ""
                 },
                 {
                     "name": "sSearch",
                     "type": "String",
-                    "value": "Search:",
+                    "value": "Recherche",
                     "description": ""
                 },
                 {
                     "name": "sZeroRecords",
                     "type": "String",
-                    "value": "No matching records found",
+                    "value": "Aucun enregistrement correspondant trouvé",
                     "description": ""
-                },
-                {
-                    "name": "oPaginate",
-                    "type": "Object",
-                    "description": "",
-                    "fields": [
-                        {
-                            "name": "sFirst",
-                            "type": "String",
-                            "value": "First",
-                            "description": ""
-                        },
-                        {
-                            "name": "sLast",
-                            "type": "String",
-                            "value": "Last",
-                            "description": ""
-                        },
-                        {
-                            "name": "sNext",
-                            "type": "String",
-                            "value": "Next",
-                            "description": ""
-                        },
-                        {
-                            "name": "sPrevious",
-                            "type": "String",
-                            "value": "Previous",
-                            "description": ""
-                        },
-                        {
-                            "name": "sRecords",
-                            "type": "String",
-                            "value": "Records",
-                            "description": ""
-                        },
-                        {
-                            "name": "sPage",
-                            "type": "String",
-                            "value": "Page",
-                            "description": ""
-                        }
-                    ]
                 },
                 {
                     "name": "oAria",
@@ -330,13 +359,56 @@
                         {
                             "name": "sSortAscending",
                             "type": "String",
-                            "value": ": activate to sort column ascending",
+                            "value": ": Activer pour trier la colonne dans l'ordre décroissant",
                             "description": ""
                         },
                         {
                             "name": "sSortDescending",
                             "type": "String",
-                            "value": ": activate to sort column descending",
+                            "value": ": Activer pour trier la colonne dans l'ordre croissant",
+                            "description": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "oPaginate",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "Premier",
+                            "type": "String",
+                            "value": "First",
+                            "description": ""
+                        },
+                        {
+                            "name": "sLast",
+                            "type": "String",
+                            "value": "Dernier",
+                            "description": ""
+                        },
+                        {
+                            "name": "sNext",
+                            "type": "String",
+                            "value": "Suivant",
+                            "description": ""
+                        },
+                        {
+                            "name": "sPrevious",
+                            "type": "String",
+                            "value": "Précédente",
+                            "description": ""
+                        },
+                        {
+                            "name": "sRecords",
+                            "type": "String",
+                            "value": "Fichiers",
+                            "description": ""
+                        },
+                        {
+                            "name": "sPage",
+                            "type": "String",
+                            "value": "Page",
                             "description": ""
                         }
                     ]
@@ -346,7 +418,7 @@
         {
             "name": "lang",
             "type": "String",
-            "value": "en",
+            "value": "fr",
             "description": ""
         },
         {
@@ -505,7 +577,7 @@
                 {
                     "name": "locale",
                     "type": "String",
-                    "value": "en",
+                    "value": "fr",
                     "description": ""
                 },
                 {
@@ -5313,7 +5385,7 @@
                 {
                     "name": "txtAllData",
                     "type": "String",
-                    "value": "All Data",
+                    "value": "Toutes les données",
                     "description": ""
                 },
                 {

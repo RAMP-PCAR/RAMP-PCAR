@@ -283,7 +283,7 @@ define([
                     // provided. A temporary property name "attribute" is used. Not sure if this will be
                     // used by ECDMP, therefore, leave the empty value in the template
                     var toggleButtonData = {
-                        buttonLabel: "Sort",
+                        buttonLabel: config.stringResources.txtSort,
                         classAddition: "font-medium global-button",
                         someAttribute: ""
                     };
@@ -864,7 +864,8 @@ define([
                         templateData.buttons = lang.mixin(templateData.buttons,
                             {
                                 datasets: GlobalStorage.config.featureLayers,
-                                toggleTitle: GlobalStorage.config.stringResources.txtDataSummary
+                                toggleTitle: GlobalStorage.config.stringResources.txtDataSummary,
+                                txtDataset: GlobalStorage.config.stringResources.txtDataset
                             }
                         );
 
