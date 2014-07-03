@@ -410,9 +410,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {String} checkedClass Name of the CSS class to be used when checked
             * @param {String} focusedClass Name of the CSS class to be used when focused
             * @param {object} labels An object containing labels' text { checked: "label when checked", unchecked: "label when unchecked" }
+            * @param {Function} [fnc] Function to run on the label node when it's toggled
             * @return {CheckboxWrapper} A control objects allowing to toggle checkboxes supplying a state, and retrieve original checkbox nodes
             */
-            styleCheckboxes: function (nodes, checkedClass, focusedClass, labels) {
+            styleCheckboxes: function (nodes, checkedClass, focusedClass, labels, fnc) {
                 /**
                 * A wrapper class for styled checkboxes that allows to set their states individually and en masse.
                 *
@@ -490,6 +491,9 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 .removeClass(checkedClass)
                                 .prop('title', newText)
                                 .find("> span").text(newText);
+                        }
+                        if (fnc) {
+                            fnc.call(this, label.parent(), null, "update");
                         }
                     });
                 }

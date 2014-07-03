@@ -110,12 +110,15 @@ define(["utils/util"],
              * Tooltip setter helper method.
              *
              * @method tooltipster
-             * @param  {Jquery} target A node to looked for tooltiped children on
-             * @param  {String} type   Type of the tooltips to set
-             * @return {Object}        This
+             * @param  {Jquery} target  A node to looked for tooltiped children on
+             * @param  {String} type    Type of the tooltips to set
+             * @param  {String} [action] Action name: "update" will update all the tooltips on target with their respective title attributes;
+             * null will create new tooltips
+             * @return {Object}         This
              * @chainable
              */
-            tooltipster: function (target, type) {
+            tooltipster: function (target, type, action) {
+                var attr;
                 target = target || $("body");
 
                 switch (type) {
@@ -123,10 +126,32 @@ define(["utils/util"],
                         break;
 
                     default:
-                        target.find('.tooltip, ._tooltip').tooltipster({
+                        attr = {
                             theme: 'tooltipster-shadow',
                             delay: 500
-                        });
+                        };
+                        break;
+                }
+
+                switch (action) {
+                    case "update":
+
+                        target
+                            .find(".tooltipstered")
+                            .each(function (i, obj) {
+                                var node = $(obj);
+                                node
+                                    .tooltipster("content", node.attr("title"))
+                                    .removeAttr("title");
+                            });
+                        break;
+
+                    default:
+                        target.find('.tooltip, ._tooltip')
+                            .tooltipster({
+                                theme: 'tooltipster-shadow',
+                                delay: 500
+                            });
                         break;
                 }
 

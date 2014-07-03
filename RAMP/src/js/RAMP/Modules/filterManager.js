@@ -109,7 +109,8 @@ define([
                         {
                             checked: localString.txtHideAllFeatures,
                             unchecked: localString.txtShowAllFeatures
-                        }
+                        },
+                        Theme.tooltipster
                     );
 
                     // Turn off the bounding boxes by default
@@ -120,7 +121,8 @@ define([
                             {
                                 checked: localString.txtHideAllBounds,
                                 unchecked: localString.txtShowAllBounds
-                            })
+                            },
+                            Theme.tooltipster)
                         .setAll(false);
 
                     eyeCheckboxes = UtilMisc.styleCheckboxes(
@@ -129,7 +131,8 @@ define([
                         {
                             checked: localString.txtHideFeatures,
                             unchecked: localString.txtShowFeatures
-                        }
+                        },
+                        Theme.tooltipster
                     );
 
                     // Turn off the bounding boxes by default
@@ -140,7 +143,8 @@ define([
                             {
                                 checked: localString.txtHideBounds,
                                 unchecked: localString.txtShowBounds
-                            })
+                            },
+                            Theme.tooltipster)
                         .setAll(false);
                     /**
                     * Toggles each layers visibility when the global visibility button is clicked
