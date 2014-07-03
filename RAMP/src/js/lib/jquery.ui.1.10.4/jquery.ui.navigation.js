@@ -45,8 +45,8 @@ if (!String.prototype.format) {
                 },
 
                 "fr": {
-                    panUp_link_title: "Vers l'est",
-                    panRight_link_title: "Vers le nord",
+                    panUp_link_title: "Vers le nord",
+                    panRight_link_title: "Vers l'est",
                     panDown_link_title: "Vers le sud",
                     panLeft_link_title: "Vers l'ouest",
                     fullExtent_link_title: "Voir Canada",
