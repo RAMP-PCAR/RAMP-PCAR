@@ -400,6 +400,10 @@ define([],
 
             Map: {
                 /**
+                 * Indicates that all the map layers are loaded.
+                 *
+                 * @event RampMap.events.ALL_LAYERS_LOADED
+                 * @for RampMap
                  *
                  */
                 ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
