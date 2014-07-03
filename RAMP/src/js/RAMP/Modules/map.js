@@ -357,6 +357,8 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
+            var handle;
+
             dojoArray.forEach(featureLayers, function (fl) {
                 //TODO: set timer for maptips onMouseOver event
 
@@ -380,9 +382,9 @@ define([
             map.on("extent-change", function (event) {
                 _updateScale(event);
 
-                console.log("map - >> extent-change");
+                console.log("map - >> extent-change", event);
                 dojoOn.once(map, "update-end", function () {
-                    console.log("map - >> update-end CAUGHT!!");
+                    console.log("map - >> update-end - >> Apply extent Filter");
                     topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                 });
             });
@@ -400,6 +402,26 @@ define([
             // Show/Hide spinner for map loading
             map.on("update-start", _showLoadingImg);
             map.on("update-end", _hideLoadingImg);
+
+            handle = map.on("update-end", function () {
+                var isAllLoaded = dojoArray.every(
+                        map.graphicsLayerIds.concat(map.layerIds),
+                        function (layerId) {
+                            var layer = map.getLayer(layerId);
+
+                            console.log(layer.loaded, layer);
+                            return layer.loaded;
+                        }
+                    );
+
+                console.log("map -> is all layers loaded: ", isAllLoaded);
+
+                if (isAllLoaded) {
+                    handle.remove();
+                    console.log("map ->", EventManager.Map.ALL_LAYERS_LOADED);
+                    topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
+                }
+            });
         }
 
         /**
@@ -463,7 +485,7 @@ define([
         * Sets the visibility of the bounding box that belongs to the layer with the given layerId.
         * Note: the layerId needs to be the ID of the featurelayer, not the ID of the actual bounding
         * box layer.
-        *  
+        *
         * @private
         * @method setBoundingBoxVisibility
         * @param {String} layerId the id of the layer whose bounding box visibility should be set
@@ -500,7 +522,7 @@ define([
                 });
                 boxLayer.add(extentGraphic);
             }
-            
+
             boxLayer.setVisibility(visibility);
         }
 
@@ -725,7 +747,7 @@ define([
                 */
                 // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
                 boundingBoxMapping = {};
-                
+
                 var boundingBoxLayers = dojoArray.map(featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
@@ -747,7 +769,7 @@ define([
                     maxZoom: config.levelOfDetails.maxLevel,
                     slider: false
                 });
-                
+
                 /*  START - Add static layers   */
 
                 var staticLayers = [],
@@ -799,10 +821,11 @@ define([
 
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
-                
+
                 // Combine all layer arrays then add them all at once (for efficiency)
+
                 map.addLayers([baseLayer].concat(staticLayers, boundingBoxLayers, featureLayers));
-                
+
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
                     map: map,

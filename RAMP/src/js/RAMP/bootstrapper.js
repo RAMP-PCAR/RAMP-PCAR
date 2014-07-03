@@ -17,6 +17,7 @@
 *
 * @uses dojo/parser
 * @uses dojo/on
+* @uses dojo/topic
 * @uses dojo/request/script
 * @uses dojo/request/xhr
 *
@@ -42,7 +43,7 @@
 
 require([
 /* Dojo */
-    "dojo/parser", "dojo/on",
+    "dojo/parser", "dojo/on", "dojo/topic",
     "dojo/request/script",
     "dojo/request/xhr",
 
@@ -61,7 +62,7 @@ require([
 
     function (
     /* Dojo */
-    parser, dojoOn, requestScript, xhr,
+    parser, dojoOn, topic, requestScript, xhr,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
@@ -73,14 +74,12 @@ require([
         "use strict";
 
         function initializeMap() {
-            RampMap.init();
-
-            //init only creates the grid, does not populate it with data
-            Datagrid.init();
-
             /* Start - RAMP Events, after map is loaded */
 
-            dojoOn.once(RampMap.getMap(), "update-end", function () {
+            //dojoOn.once(RampMap.getMap(), "update-end", function () {
+            topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
+                console.log("map - >> first update-end; init the rest");
+
                 // Only initialize the bookmark link after all the UI events of all other modules have
                 // finished loading
                 // IMPORTANT: for now, only basemapselector and filtermanager have a UI complete event
@@ -90,7 +89,7 @@ require([
                 utilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
                     BookmarkLink.init(window.location.pathname.split("/").last());
                 });
-                // Added current leve so slider will know how to adjust the position
+                // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
                 NavWidget.init(currentLevel);
@@ -101,11 +100,15 @@ require([
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
 
-                //initialze the filter
+                //initialize the filter
                 FilterManager.init();
 
                 theme.tooltipster();
             });
+            RampMap.init();
+
+            Datagrid.init();
+            //init only creates the grid, does not populate it with data
 
             /* End - RAMP Events */
         }

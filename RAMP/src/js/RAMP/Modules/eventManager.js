@@ -400,6 +400,11 @@ define([],
 
             Map: {
                 /**
+                 *
+                 */
+                ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
+
+                /**
                 * Centers the map at the given point.
                 *
                 * @event RampMap.events.CENTER_AT [subscribed]
