@@ -50,6 +50,7 @@ getLinkEmail,Courriel
 fullScreenTitle,Plein écran
 ,
 helpTitle,Aide
+helpSectionsTitle,Sections d'aide
 ,
 addLayerTitle,Ajouter une couche provenant du Web
 addLayerSelectTypeText,À quel type de données faites-vous référence?
