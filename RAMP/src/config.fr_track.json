@@ -203,9 +203,9 @@
             "thumbnail": "assets/images/basemap/baseToponrcan.jpg",
             "showOnInit": true,
             "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "Canada Atlas",
-            "altText": "Topographic Map",
+            "type": "Topographique",
+            "name": "Atlas du Canada",
+            "altText": "Carte de topographique",
             "description": "NrCan CBCT3978"
         },
         {
@@ -214,10 +214,10 @@
             "thumbnail": "assets/images/basemap/baseSimple.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "Water Bodies",
-            "altText": "Topographic Map",
-            "description": "NrCan Simple"
+            "type": "Topographique",
+            "name": "Plans d'eau",
+            "altText": "Carte de topographique",
+            "description": "Carte de base simple à contraste élevé"
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
@@ -225,10 +225,10 @@
             "thumbnail": "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "Elevation",
-            "altText": "Topographic Map",
-            "description": "NrCan CBME_CBCE_HS_RO_3978"
+            "type": "Topographique",
+            "name": "Élévation",
+            "altText": "Carte de topographique",
+            "description": "Indique l'altitude"
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
@@ -236,10 +236,10 @@
             "thumbnail": "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "Road Networks",
-            "altText": "Topographic Map",
-            "description": "NrCan CBMT_CBCT_GEOM"
+            "type": "Topographique",
+            "name": "Réseaux routiers",
+            "altText": "Carte de topographique",
+            "description": "Carte routière normalisée"
         },
         {
             "id": "baseE2M",
@@ -247,10 +247,10 @@
             "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "Canada Topographic",
-            "altText": "Topographic Map",
-            "description": "Earth 2 Map"
+            "type": "Topographique",
+            "name": "Canada topographique",
+            "altText": "Carte de topographique",
+            "description": "E2M"
         }
     ],
     "featureLayers": [
