@@ -196,7 +196,7 @@ module.exports = function (grunt) {
                     sourceMapIncludeSources: false,
                     preserveComments: false,
                     // the banner is inserted at the top of the output
-                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> : v. <%= pkg.version %> \n\n * <%= pkg.description %> \n **/\n'
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
                 },
 
                 files: [{
