@@ -50,6 +50,7 @@ getLinkEmail,Email
 fullScreenTitle,Full Screen
 ,
 helpTitle,Help
+helpSectionsTitle,Help Sections
 ,
 addLayerTitle,Add Layer from Web
 addLayerSelectTypeText,What type of data are you referencing?
