@@ -1088,19 +1088,19 @@
                         {
                             "name": "type",
                             "type": "String",
-                            "value": "Topographic",
+                            "value": "Topographique",
                             "description": ""
                         },
                         {
                             "name": "name",
                             "type": "String",
-                            "value": "Canada Atlas",
+                            "value": "Atlas du Canada",
                             "description": ""
                         },
                         {
                             "name": "altText",
                             "type": "String",
-                            "value": "Topographic Map",
+                            "value": "Carte de topographique",
                             "description": ""
                         },
                         {
@@ -1149,25 +1149,25 @@
                         {
                             "name": "type",
                             "type": "String",
-                            "value": "Topographic",
+                            "value": "Topographique",
                             "description": ""
                         },
                         {
                             "name": "name",
                             "type": "String",
-                            "value": "Water Bodies",
+                            "value": "Plans d'eau",
                             "description": ""
                         },
                         {
                             "name": "altText",
                             "type": "String",
-                            "value": "Topographic Map",
+                            "value": "Carte de topographique",
                             "description": ""
                         },
                         {
                             "name": "description",
                             "type": "String",
-                            "value": "NrCan Simple",
+                            "value": "Carte de base simple à contraste élevé",
                             "description": ""
                         }
                     ]
@@ -1210,25 +1210,25 @@
                         {
                             "name": "type",
                             "type": "String",
-                            "value": "Topographic",
+                            "value": "Topographique",
                             "description": ""
                         },
                         {
                             "name": "name",
                             "type": "String",
-                            "value": "Elevation",
+                            "value": "Élévation",
                             "description": ""
                         },
                         {
                             "name": "altText",
                             "type": "String",
-                            "value": "Topographic Map",
+                            "value": "Carte de topographique",
                             "description": ""
                         },
                         {
                             "name": "description",
                             "type": "String",
-                            "value": "NrCan CBME_CBCE_HS_RO_3978",
+                            "value": "Indique l'altitude",
                             "description": ""
                         }
                     ]
@@ -1271,25 +1271,25 @@
                         {
                             "name": "type",
                             "type": "String",
-                            "value": "Topographic",
+                            "value": "Topographique",
                             "description": ""
                         },
                         {
                             "name": "name",
                             "type": "String",
-                            "value": "Road Networks",
+                            "value": "Réseaux routiers",
                             "description": ""
                         },
                         {
                             "name": "altText",
                             "type": "String",
-                            "value": "Topographic Map",
+                            "value": "Carte de topographique",
                             "description": ""
                         },
                         {
                             "name": "description",
                             "type": "String",
-                            "value": "NrCan CBMT_CBCT_GEOM",
+                            "value": "Carte routière normalisée",
                             "description": ""
                         }
                     ]
@@ -1332,25 +1332,25 @@
                         {
                             "name": "type",
                             "type": "String",
-                            "value": "Topographic",
+                            "value": "Topographique",
                             "description": ""
                         },
                         {
                             "name": "name",
                             "type": "String",
-                            "value": "Canada Topographic",
+                            "value": "Canada topographique",
                             "description": ""
                         },
                         {
                             "name": "altText",
                             "type": "String",
-                            "value": "Topographic Map",
+                            "value": "Carte de topographique",
                             "description": ""
                         },
                         {
                             "name": "description",
                             "type": "String",
-                            "value": "Earth 2 Map",
+                            "value": "E2M",
                             "description": ""
                         }
                     ]

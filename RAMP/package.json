@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "2.0.0-1",
+    "version": "2.0.0-2",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
     "main": "index.js",
     "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
