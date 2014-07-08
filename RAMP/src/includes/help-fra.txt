@@ -6,9 +6,8 @@
         <p>
             <b>Utilisation :</b></p>
         <p>
-            <img src="./assets/images/help/fr/help_navigation_toolbar.png" width="282" height="270"
-                class="image-actual" alt="Contrôles de Navigation" /></p>
-        <ul>
+			<img src="./assets/images/help/fr/help_navigation_toolbar.png" style="max-width:100%"
+				class="image-actual" alt="Contrôles de Navigation" /></p>
             <li>Cliquez Pan Nord / Sud / Est / Ouest pour déplacer la carte dans cette direction particulière.</li>
             <li>Cliquez sur le Canada pour voir la carte Voir à sa pleine mesure.</li>
             <li>Cliquez sur Zoom In / Out pour changer le étendue de la carte.</li>
@@ -28,7 +27,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_basemaps.png" width="300" height="100" class="image-actual"
+                    <img src="./assets/images/help/fr/help_basemaps.png" style="max-width:100%" class="image-actual"
                         alt="Le sélecteur de carte de base" /></p>
                 <p>
                     Du menu déroulant, choisir la carte de base de votre choix et l'affichage de la carte s'actualisera.</p>
@@ -48,7 +47,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_getlink.png" width="907" height="210" class="image-actual"
+                    <img src="./assets/images/help/fr/help_getlink.png" style="max-width:100%" class="image-actual"
                         alt="Obtenir le lien" /></p>
                 <ul>
                     <li><span class="bold-text">Lien raccourci :</span> Choisir ce lien pour utiliser le service de raccourci URL de Google pour générer un lien concis et aisément partageable vers l'état actuel du visualiseur de cartes par bretelle d'accès.</li>
@@ -89,7 +88,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_datasets.png" width="423" height="222" class="image-actual"
+                    <img src="./assets/images/help/fr/help_datasets.png" style="max-width:100%" class="image-actual"
                         alt="Ensembles de données" /></p>
                 <p>
                     Choisir l'icone en forme d'œil près du nom de l'ensemble de données afin de basculer la couche entre les positions arrêt et marche. Utiliser l'icone « hachurer » à la droite de l'icone en forme d'œil pour afficher le cadre de délimitation  de l'ensemble de données. Cliquer et faire glisser les 6 points à la gauche de l'ensemble de données, par le haut ou par le bas, afin de réordonner les couches sur l'interface de la carte. Choisir le lien des métadonnées afin d'afficher les métadonnées pertinentes pour la source en question en un panneau d'information réduisible.</p>
@@ -109,7 +108,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_datagrid.png" width="409" height="133" class="image-actual"
+                    <img src="./assets/images/help/fr/help_datagrid.png" style="max-width:100%" class="image-actual"
                         alt="Grille de données" /></p>
                 <ul>
                     <li><span class="bold-text">Trie :</span>Choisir le lien Trier au­dessus de la grille de données afin de trier selon le nom du champ, en ordre décroissant. Choisir le lien Trier encore afin de faire passer la fonction Trie au mode Croissant. </li>
@@ -134,7 +133,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_infopanel.png" width="770" height="660" class="image-actual"
+                    <img src="./assets/images/help/fr/help_infopanel.png" style="max-width:100%" class="image-actual"
                         alt="Panneau d'information" /></p>
                 <p>
                     Choisir une caractéristique sur l'interface de la carte, ou choisir le lien Détails dans la Grille de données. Le Panneau d'information affichera l'information reliée à la caractéristique choisie. Cliquer sur la caractéristique ou sur la flèche apparaissant au coin supérieur gauche du panneau permettra de cacher l'affichage.</p>
@@ -170,7 +169,7 @@
             <p>
                 <b>Utilisation :</b></p>
             <p>
-                <img src="./assets/images/help/fr/help_addlayer.png" width="906" height="405" class="image-actual"
+                <img src="./assets/images/help/fr/help_addlayer.png" style="max-width:100%" class="image-actual"
                     alt="Ajouter une couche provenant du Web" /></p>
             <p>
                 À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis entrez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d'opacité pour la couche que vous ajouterez.</p>
