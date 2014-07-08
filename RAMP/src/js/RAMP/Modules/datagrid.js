@@ -574,7 +574,7 @@ define([
 
                         refreshPanel(d);
 
-                        topic.publish("gui/grid/expand");
+                        topic.publish(EventManager.GUI.DATAGRID_EXPAND);
                     });
 
                     sectionNode.on("change", "#datasetSelector", function () {
@@ -1079,7 +1079,7 @@ define([
         * @method handleGridEvent
         * @private
         * @param {Event} e the event object
-        * @param {Function} callback fcn the callback function
+        * @param {Function} callback the callback function
         */
         function handleGridEvent(e, callback) {
             if ((e.type === "keypress" && e.keyCode === 13) || e.type === "click") {
@@ -1089,7 +1089,10 @@ define([
         }
         /**
         * Gets all layer data in the current map extent that are visible, and put the data into the data grid.
+        *
         * @method applyExtentFilter
+        * @param {A Deferred object} d 
+        * 
         */
         function applyExtentFilter(d) {
             var visibleFeatures = {},
@@ -1101,9 +1104,17 @@ define([
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                     return layer.url === ui.getSelectedDatasetUrl();
                 });
+
+                if (config.datagrid.extendedExtentFilterEnabled) {
+                    q.geometry = RampMap.getMap().extent;
+                } else {
+                    // Grab everything!
+                    q.where = "1 = 1"; 
+                }
+            } else { // Summary Mode
+                q.geometry = RampMap.getMap().extent;
             }
 
-            q.geometry = RampMap.getMap().extent;
             q.outFields = ["*"];
 
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {

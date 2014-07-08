@@ -24,7 +24,7 @@ define([],
                 /**
                 * Published whenever the global "eye" button is clicked
                 *
-                * @event FilterManager.events.GLOBAL_LAYER_VISIBILITY_TOGGLED
+                * @event FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.checked {boolean} true if the "eye" button is checked, false otherwise
@@ -34,7 +34,7 @@ define([],
                 /**
                 * Published whenever the "eye" button for a layer is clicked
                 *
-                * @event FilterManager.events.LAYER_VISIBILITY_TOGGLED
+                * @event FilterManager.LAYER_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.checked {boolean} true if the "eye" button is checked, false otherwise
@@ -45,7 +45,7 @@ define([],
                 /**
                 * Published whenever the "box" button for a layer is clicked
                 *
-                * @event FilterManager.events.BOX_VISIBILITY_TOGGLED
+                * @event FilterManager.BOX_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.checked {Boolean} true if the "box" button is checked, false otherwise
@@ -56,7 +56,7 @@ define([],
                 /**
                 * Published whenever the global "box" button is clicked
                 *
-                * @event FilterManager.events.GLOBAL_BOX_VISIBILITY_TOGGLED
+                * @event FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.checked {boolean} true if the "box" button is checked, false otherwise
@@ -66,7 +66,7 @@ define([],
                 /**
                 * Published whenever the layer list is rearranged
                 *
-                * @event FilterManager.events.SELECTION_CHANGED
+                * @event FilterManager.SELECTION_CHANGED
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.id {String} the layer Id
@@ -78,7 +78,7 @@ define([],
                 /**
                 * Published after the ui for the filter manager finishes initializing.
                 *
-                * @event FilterManager.events.UI_COMPLETE
+                * @event FilterManager.UI_COMPLETE
                 * @for FilterManager
                 */
                 UI_COMPLETE: "filterManager/UIComplete",
@@ -87,7 +87,7 @@ define([],
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.events.TOGGLE_LAYER_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_LAYER_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.layerName {String} the name of the layer to toggle
@@ -98,7 +98,7 @@ define([],
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.events.TOGGLE_BOX_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_BOX_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.layerName {String} the name of the layer to toggle
@@ -109,7 +109,7 @@ define([],
                 /**
                 * Tells the filter manager to toggle all layers on or off
                 *
-                * @event FilterManager.events.TOGGLE_GLOBAL_LAYER_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.visible {boolean} true if all the layers should be visible, false otherwise
@@ -119,7 +119,7 @@ define([],
                 /**
                 * Tells the filter manager to toggle all bounding boxes on or off
                 *
-                * @event FilterManager.events.TOGGLE_GLOBAL_BOX_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.visible {boolean} true if all the bounding boxes should be visible, false otherwise
@@ -129,9 +129,17 @@ define([],
 
             GUI: {
                 /**
+                * Fires whenever the extended grid button is clicked
+                *
+                * @event GUI.DATAGRID_EXPAND
+                * @for GUI
+                */
+                DATAGRID_EXPAND: "gui/datagrid-expand",
+
+                /**
                 * Fires whenever a tab has been deselected in the main panel
                 *
-                * @event gui.events.TAB_DESELECTED
+                * @event gui.TAB_DESELECTED
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {String} evt.id  the id of the deselected tab
@@ -142,7 +150,7 @@ define([],
                 /**
                 * Fires whenever a tab has been selected in the main panel
                 *
-                * @event gui.events.TAB_SELECTED
+                * @event gui.TAB_SELECTED
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {String} evt.id the id of the selected tab
@@ -153,7 +161,7 @@ define([],
                 /**
                 * Published each time the subpanel opens/closes
                 *
-                * @event gui.events.SUBPANEL_CHANGE
+                * @event gui.SUBPANEL_CHANGE
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.visible true if the subpanel is opened, false otherwise
@@ -165,7 +173,7 @@ define([],
                 /**
                 * Published each time the panel opens/closes
                 *
-                * @event gui.events.PANEL_CHANGE
+                * @event gui.PANEL_CHANGE
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.visible true if the panel is opened, false otherwise
@@ -175,7 +183,7 @@ define([],
                 /**
                 * Published each time the help panel opens or closes.
                 *
-                * @event gui.events.HELP_PANEL_CHANGE
+                * @event gui.HELP_PANEL_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
                 * @param evt.visible {boolean} true if the help panel is opened, false if the help panel is closed
@@ -185,7 +193,7 @@ define([],
                 /**
                 * Published each time fullscreen is toggled
                 *
-                * @event gui.events.FULLSCREEN_CHANGE
+                * @event gui.FULLSCREEN_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
                 * @param evt.fullscreen {boolean} true if fullscreen is on, false if fullscreen is off.
@@ -195,7 +203,7 @@ define([],
                 /**
                 * Published each time the layout changes.
                 *
-                * @event gui.events.LAYOUT_CHANGE
+                * @event gui.LAYOUT_CHANGE
                 * @for GUI
                 */
                 LAYOUT_CHANGE: "gui/layout-change",
@@ -204,7 +212,7 @@ define([],
                 /**
                 * Toggles the main panel (i.e. collapses it if was expanded, and expands it if it was collapsed)
                 *
-                * @event gui.events.PANEL_TOGGLE [subscribed]
+                * @event gui.PANEL_TOGGLE [subscribed]
                 * @for GUI
                 */
                 PANEL_TOGGLE: "gui/panel-toggle",
@@ -212,7 +220,7 @@ define([],
                 /**
                 * Opens the subpanel
                 *
-                * @event gui.events.SUBPANEL_OPEN [subscribed]
+                * @event gui.SUBPANEL_OPEN [subscribed]
                 * @for GUI
                 * @param {SubPanelSettings} attr Settings for the SubPanel
                 */
@@ -221,7 +229,7 @@ define([],
                 /**
                 * Closes the sub panel
                 *
-                * @event gui.events.SUBPANEL_CLOSE [subscribed]
+                * @event gui.SUBPANEL_CLOSE [subscribed]
                 * @for GUI
                 * @param origin {String} the name of the module that requested to close the subPanel (e.g. "filterManager")
                 */
@@ -230,7 +238,7 @@ define([],
                 /**
                 * Moves the panel up DOM hierarchy next to the sidePanel, or to other target
                 *
-                * @event gui.events.SUBPANEL_DOCK [subscribed]
+                * @event gui.SUBPANEL_DOCK [subscribed]
                 * @for GUI
                 * @param origin {String} the name of the module that requested to dock the subPanel (e.g. "filterManager")
                 * @param target {jNode} where to move the subPanel; if not supplied; sidePanel is used
@@ -240,7 +248,7 @@ define([],
                 /**
                 * Attaches subPanel node to the module that calls it in the DOM hierarchy
                 *
-                * @event gui.events.SUBPANEL_CAPTURE [subscribed]
+                * @event gui.SUBPANEL_CAPTURE [subscribed]
                 * @for GUI
                 * @param consumeOrigin {}
                 */
@@ -249,7 +257,7 @@ define([],
                 /**
                 * Toggles the fullscreen
                 *
-                * @event gui.events.TOGGLE_FULLSCREEN [subscribed]
+                * @event gui.TOGGLE_FULLSCREEN [subscribed]
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.expand true if we should go into fullscreen mode, false if we wish to
@@ -295,7 +303,7 @@ define([],
                 * Even when the user moves the cursor away, the feature stays highlighted; tooltip stays put.
                 * Only one feature can be highlighted like this at a time.
                 *
-                * @event featureHighlighter.events.HIGHLIGHT_SHOW [subscribed]
+                * @event featureHighlighter.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -305,7 +313,7 @@ define([],
                 * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the layers;
                 * hides the interactive tooltip.
                 *
-                * @event featureHighlighter.events.HIGHLIGHT_HIDE [subscribed]
+                * @event featureHighlighter.HIGHLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 HIGHLIGHT_HIDE: "highlighter/highlight-hide",
@@ -315,7 +323,7 @@ define([],
                 * Effect is only visible when another feature is already permanently highlighted.
                 * Only one feature can be highlighted like this at a time.
                 *
-                * @event featureHighlighter.events.HOVERLIGHT_SHOW [subscribed]
+                * @event featureHighlighter.HOVERLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -324,7 +332,7 @@ define([],
                 /**
                 * Dehighlights a currently highlighted (hoverlighted) feature on the map without restoring opacity of the rest of the layers;
                 *
-                * @event featureHighlighter.events.HOVERLIGHT_HIDE [subscribed]
+                * @event featureHighlighter.HOVERLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 HOVERLIGHT_HIDE: "highlighter/hoverlight-hide",
@@ -335,7 +343,7 @@ define([],
                 * Displays a temporary tooltip for this feature;
                 * Only one feature can be highlighted (zoomlighted) like this at a time.
                 *
-                * @event featureHighlighter.events.ZOOMLIGHT_SHOW [subscribed]
+                * @event featureHighlighter.ZOOMLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -346,7 +354,7 @@ define([],
                 * Removes the tooltip.
                 * Restores the opacity of the graphicGroup layers if no feature is highlighted at present.
                 *
-                * @event featureHighlighter.events.ZOOMLIGHT_HIDE [subscribed]
+                * @event featureHighlighter.ZOOMLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 ZOOMLIGHT_HIDE: "highlighter/zoomlight-hide"
@@ -357,7 +365,7 @@ define([],
                 * Displays a simple, temporary maptip, positioning it over the `target` jObject; the content of the maptip is build from the
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 *
-                * @event maptips.events.SHOW [subscribed]
+                * @event maptips.SHOW [subscribed]
                 * @for Maptips
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
@@ -369,7 +377,7 @@ define([],
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 * The maptip will not be shown if it's covered by the open {{#crossLink "SubPanel"}}{{/crossLink}}.
                 *
-                * @event maptips.events.SHOW_INTERACTIVE [subscribed]
+                * @event maptips.SHOW_INTERACTIVE [subscribed]
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
                 */
@@ -380,7 +388,7 @@ define([],
                 * {{#crossLink "SubPanel"}}{{/crossLink}} and extent change is needed. Sets the `scroll` payload attribute to true if the extent change is not needed
                 * and the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row.
                 *
-                * @event maptips.events.EXTENT_CHANGE [subscribed]
+                * @event maptips.EXTENT_CHANGE [subscribed]
                 * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row
                 */
                 EXTENT_CHANGE: "maptip/extent-change",
@@ -390,7 +398,7 @@ define([],
                 * adjusted. If the tooltip is hidden from the view by the {{#crossLink "SubPanel"}}{{/crossLink}} or the edge of the map container,
                 * it is hidden from the page.
                 *
-                * @event maptips.events.REPOSITION_INTERACTIVE [subscribed]
+                * @event maptips.REPOSITION_INTERACTIVE [subscribed]
                 * @for Maptips
                 * @param {Number} offset New tooltip offset relative to the shape it's attached too; when zooming, the shape changes its size and the
                 * offset needs to be recalculated to keep the tooltip in relative center
@@ -402,7 +410,7 @@ define([],
                 /**
                  * Indicates that all the map layers are loaded.
                  *
-                 * @event RampMap.events.ALL_LAYERS_LOADED
+                 * @event RampMap.ALL_LAYERS_LOADED
                  * @for RampMap
                  *
                  */
@@ -411,7 +419,7 @@ define([],
                 /**
                 * Centers the map at the given point.
                 *
-                * @event RampMap.events.CENTER_AT [subscribed]
+                * @event RampMap.CENTER_AT [subscribed]
                 * @for RampMap
                 * @param event {Object}
                 * @param event.x {number}
@@ -425,7 +433,7 @@ define([],
                 * Center and zoom the map to the given point.
                 *
                 * @type {String}
-                * @event RampMap.events.CENTER_AND_ZOOM [subscribed]
+                * @event RampMap.CENTER_AND_ZOOM [subscribed]
                 * @for RampMap
                 * @param event {Object}
                 * @param event.graphic {esri/graphic} the graphic object to center the map on
@@ -437,7 +445,7 @@ define([],
                 /**
                 * Changes the current extent of the map.
                 *
-                * @event RampMap.events.SET_EXTENT [subscribed]
+                * @event RampMap.SET_EXTENT [subscribed]
                 * @for RampMap
                 * @param event {Object}
                 * @param event.extent.xmin {number}
@@ -451,7 +459,7 @@ define([],
                 /**
                 * Fires when the reorder of the layers in the layer managers has completed finished.
                 *
-                * @event RampMap.events.REORDER_END
+                * @event RampMap.REORDER_END
                 * @for RampMap
                 */
                 REORDER_END: "map/reorder-end",
@@ -459,7 +467,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `update-end`.
                 *
-                * @event RampMap.events.UPDATE_END
+                * @event RampMap.UPDATE_END
                 * @for RampMap
                 */
                 UPDATE_END: "map/update-end",
@@ -467,7 +475,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `extent-change`.
                 *
-                * @event RampMap.events.EXTENT_CHANGE
+                * @event RampMap.EXTENT_CHANGE
                 * @for RampMap
                 */
                 EXTENT_CHANGE: "map/extent-change",
@@ -475,7 +483,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `zoom-start`.
                 *
-                * @event RampMap.events.ZOOM_START
+                * @event RampMap.ZOOM_START
                 * @for RampMap
                 */
                 ZOOM_START: "map/zoom-start",
@@ -483,7 +491,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `zoom-end`.
                 *
-                * @event RampMap.events.ZOOM_END
+                * @event RampMap.ZOOM_END
                 * @for RampMap
                 */
                 ZOOM_END: "map/zoom-end",
@@ -491,7 +499,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `pan-start`.
                 *
-                * @event RampMap.events.PAN_START
+                * @event RampMap.PAN_START
                 * @for RampMap
                 */
                 PAN_START: "map/pan-start",
@@ -499,7 +507,7 @@ define([],
                 /**
                 * Republishes a standard ESRI map compnent event `pan-end`.
                 *
-                * @event RampMap.events.PAN_END
+                * @event RampMap.PAN_END
                 * @for RampMap
                 */
                 PAN_END: "map/pan-end",
@@ -507,7 +515,7 @@ define([],
                 /**
                 * Fires when a layer is added by a user
                 *
-                * @event RampMap.events.ADD_LAYER
+                * @event RampMap.ADD_LAYER
                 * @for RampMap
                 */
                 ADD_LAYER: "map/add-layer",
@@ -515,7 +523,7 @@ define([],
                 /**
                 * Fires when a layer added by a user is ready to view
                 *
-                * @event RampMap.events.ADD_LAYER_READY
+                * @event RampMap.ADD_LAYER_READY
                 * @for RampMap
                 */
                 ADD_LAYER_READY: "map/add-layer-ready"
@@ -561,7 +569,7 @@ define([],
                 * Applies a spatial filter to the datagrid (i.e. only visible points in the current
                 * extent will be displayed in the datagrid)
                 *
-                * @event datagrid.events.APPLY_EXTENT_FILTER [subscribed]
+                * @event datagrid.APPLY_EXTENT_FILTER [subscribed]
                 * @for Datagrid
                 */
                 APPLY_EXTENT_FILTER: "datagrid/applyExtentFilter",
@@ -569,21 +577,21 @@ define([],
                 /**
                 * Fires when the table has finished drawing
                 *
-                * @event datagrid.events.DRAW_COMPLETE
+                * @event datagrid.DRAW_COMPLETE
                 */
                 DRAW_COMPLETE: "datagrid/draw-complete",
 
                 /**
                 * Fires when the extent-filter has finished updating
                 *
-                * @event datagrid.events.EXTENT_FILTER_END
+                * @event datagrid.EXTENT_FILTER_END
                 */
                 EXTENT_FILTER_END: "datagrid/extent-filter-end",
 
                 /**
                 * Highlights the row corresponding to the given `graphic` object of the selected feature.
                 *
-                * @event datagrid.events.HIGHLIGHTROW_SHOW
+                * @event datagrid.HIGHLIGHTROW_SHOW
                 * @param event {Object}
                 * @param event.graphic {Object} ESRI graphic object corresponding to the selected feature
                 */
@@ -592,13 +600,13 @@ define([],
                 /**
                 * Dehighlights the currently highlighted row.
                 *
-                * @event datagrid.events.HIGHLIGHTROW_HIDE
+                * @event datagrid.HIGHLIGHTROW_HIDE
                 */
                 HIGHLIGHTROW_HIDE: "datagrid/highlightrow-hide",
                 /**
                 * Zoomlights the row corresponding to the given `graphic` object of the zoomed to feature.
                 *
-                * @event datagrid.events.ZOOMLIGHTROW_SHOW
+                * @event datagrid.ZOOMLIGHTROW_SHOW
                 * @param event {Object}
                 * @param event.graphic {Object} ESRI graphic object corresponding to the zoomed to feature
                 */
@@ -607,7 +615,7 @@ define([],
                 /**
                 * Dehighlights the currently zoomlighted row.
                 *
-                * @event datagrid.events.ZOOMLIGHTROW_HIDE
+                * @event datagrid.ZOOMLIGHTROW_HIDE
                 *
                 * @for Datagrid
                 */
@@ -618,21 +626,21 @@ define([],
                 /**
                 * Published whenever the user clicks on the pan buttons.
                 *
-                * @event Navigation.events.PAN
+                * @event Navigation.PAN
                 */
                 PAN: "navigation/pan",
 
                 /**
                 * Published whenever the user tries to zoom using the arrow buttons.
                 *
-                * @event Navigation.events.ZOOM_STEP
+                * @event Navigation.ZOOM_STEP
                 */
                 ZOOM_STEP: "navigation/zoom-step",
 
                 /**
                 * Published whenever the user tries to zoom using the slider.
                 *
-                * @event Navigation.events.ZOOM
+                * @event Navigation.ZOOM
                 */
                 ZOOM: "navigation/zoom",
 
@@ -640,7 +648,7 @@ define([],
                 * Published whenever the user clicks on the full extent button in the
                 * navigation widget.
                 *
-                * @event Navigation.events.FULL_EXTENT
+                * @event Navigation.FULL_EXTENT
                 */
                 FULL_EXTENT: "navigation/full-extent"
             },
@@ -650,7 +658,7 @@ define([],
                * Published whenever the user clicks on the get link button in the
                * map toolbar.
                *
-               * @event bookmark.events.GETLINK_PANEL_CHANGED
+               * @event bookmark.GETLINK_PANEL_CHANGED
                */
                 GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
             }

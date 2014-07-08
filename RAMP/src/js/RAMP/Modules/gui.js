@@ -1363,7 +1363,7 @@ define([
                 //End Add Layer
 
                 //start extended grid
-                topic.subscribe("gui/grid/expand", function () {
+                topic.subscribe(EventManager.GUI.DATAGRID_EXPAND, function () {
                     layoutController.toggleFullDataMode();
                 });
                 //end extended grid

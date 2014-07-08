@@ -996,7 +996,8 @@
             "column2",
             "column3",
             "column4"
-        ]
+        ],
+        "extendedExtentFilterEnabled": false
     },
     "siteTemplate": {
         "basemapTemplate": "default_basemap",
