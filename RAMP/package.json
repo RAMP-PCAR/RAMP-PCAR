@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "2.0.0-7",
+    "version": "2.0.0-8",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
     "main": "index.js",
     "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
@@ -101,17 +101,17 @@
 
         "cssLibToMinify": [
             "tooltipster.3.0.1/css/tooltipster.css",
-            "font-awesome-4.0.3/font-awesome-ramp.css"
+            "font-awesome-4.1.0/font-awesome-ramp.css"
         ],
 
         "cssLibToConcat": [
             "animate.3.0.0/animate.min.css",
             "tooltipster.3.0.1/css/tooltipster.min.css",
-            "font-awesome-4.0.3/font-awesome-ramp.min.css"
+            "font-awesome-4.1.0/font-awesome-ramp.min.css"
         ],
 
         "cssLibResourcesToCopy": [
-            "font-awesome-4.0.3/fonts/**/*.*"
+            "font-awesome-4.1.0/fonts/**/*.*"
         ],
 
         "themes": [
