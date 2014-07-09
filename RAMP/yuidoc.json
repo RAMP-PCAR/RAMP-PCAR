@@ -1,6 +1,6 @@
 {
     "name": "ramp-gis-viewer",
-    "version": "2.0.0-53",
+    "version": "2.0.0-54",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {

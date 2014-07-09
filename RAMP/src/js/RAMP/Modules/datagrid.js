@@ -1221,7 +1221,7 @@ define([
         }
 
         function updateRecordsCount(visibleRecords) {
-            $(".pagination-record-number").text(String.format("{0}/{1} Records", visibleRecords, totalRecords));
+            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, config.gridstrings.oPaginate.sRecords));
         }
 
         /**
