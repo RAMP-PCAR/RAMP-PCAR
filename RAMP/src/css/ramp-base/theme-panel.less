@@ -482,6 +482,23 @@
         top: 50%;
     }
 
+    .toggle-button-icon {
+    	padding: 1px 2px !important;
+		margin: 0 !important;
+		border: none;
+		color: @light-grey-color;
+
+		&.button-pressed {
+			color: @attention-color;
+		}
+
+		.fa {
+			font-size: 19px;
+			
+			cursor: pointer;
+		}
+    }
+
     .checkbox-custom {
         float: left;
         margin: 0 5px;
@@ -601,6 +618,7 @@
 
             .global-checkboxes {
                 .right-align-checkboxes;
+                margin-right: 40px !important;
             }
         }
 
@@ -681,6 +699,14 @@
                     }
                 }
             }
+
+			.filter-row-settings {
+				display: none;
+				box-shadow: @upper-shadow, @lower-shadow;
+				background-color: @medium-grey-color;
+				color: white;
+				padding: 10px;
+			}
 
             .layerList-container {
                 display: none;

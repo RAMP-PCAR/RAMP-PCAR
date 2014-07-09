@@ -389,6 +389,21 @@ define([
                             });
                         });
 
+                    PopupManager.registerPopup(layerList, "click",
+                        function (d) {
+                            console.log("works");
+                            this.target.slideToggle("fast", function () {
+                                d.resolve();
+                            });
+                        },
+                        {
+                            handleSelector: ".toggle-button-icon.settings",
+                            targetContainerSelector: "li.layerList1",
+                            targetSelector: ".filter-row-settings",
+                            activeClass: "button-pressed"
+                        }
+                    );
+
                     // metadata buttons
                     // to be changed...
                     layerList.find("legend button.metadata-button").on("click", function () {

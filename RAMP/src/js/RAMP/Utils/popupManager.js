@@ -74,6 +74,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             */
             targetSelector: null,
 
+            targetContainerSelector: null,
+
             /**
             * The function to execute when the popup opens.
             *
@@ -102,7 +104,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             timeout: 0,
 
             /**
-            * The CSS class to be applied to the hadnle of the popup when the popup opens.
+            * The CSS class to be applied to the handle of the popup when the popup opens.
             *
             * @property activeClass
             * @type {String}
@@ -130,7 +132,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
         },
 
         /**
-        * An abstract representation of the popup definition that potentially references many Popup instances. Handl and target properties might use selectors.
+        * An abstract representation of the popup definition that potentially references many Popup instances. Handle and target properties might use selectors.
         *
         * @class PopupBase
         * @for PopupManager
@@ -185,6 +187,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
                             if (this._attr.target) {
                                 actualTarget = this._attr.targetSelector ? this._attr.target.find(this._attr.targetSelector) : this._attr.target;
+                            } else if (this._attr.targetContainerSelector && this._attr.targetSelector) {
+                                actualTarget = ah.parents(this._attr.targetContainerSelector).find(this._attr.targetSelector);
                             } else {
                                 // if the target cannot be found, a handle its returned
                                 actualTarget = this._attr.targetSelector ? ah.find(this._attr.targetSelector) : ah;
