@@ -81,13 +81,37 @@ define([
 
         var GRID_MODE_SUMMARY = "summary",
             GRID_MODE_FULL = "full",
+
+            /**
+            * Name of the attribute used to store the oid
+            * in the details and zoomTo buttons
+            * 
+            * @private
+            * @property featureOidField
+            */
+            featureOidField = "feature-oid",
+
+            /**
+            * Name of the attribute used to store the feature url
+            * in the details and zoomTo buttons
+            * 
+            * @private
+            * @property featureUrlField
+            */
+            featureUrlField = "feature-url",
+
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
             config,
             layerConfig,
             gridConfig,
 
-        // The jquery table
+            /**
+            * The jquery table
+            * 
+            * @private
+            * @property oTable
+            */
             oTable,
 
         // The JQuery Object representing the grid
@@ -98,19 +122,19 @@ define([
 
         // A boolean used to keep track of whether or not the grid should apply an
         // extent filter when the datagrid gets selected
-        extentFilterExpired = true,
+            extentFilterExpired = true,
 
             zoomToGraphic,
 
             lastExtent,
-
-        // Name of the attribute used to store the oid
-        // in the details and zoomTo buttons
-            featureOidField = "feature-oid",
-
-        // Name of the attribute used to store the feature url
-        // in the details and zoomTo buttons
-            featureUrlField = "feature-url",
+                        
+            /**
+            * Total number of features in all the visible layers on the map
+            *
+            * @private
+            * @property totalRecords
+            */
+            totalRecords = 0,
 
             ui = (function () {
                 /**
@@ -363,9 +387,11 @@ define([
                             pagingType: "ramp", //"full_numbers",
                             scrollX: true,
                             destroy: true,
-                            searching: false, // disable filtering, otherwise there will be a performance hit
                             pageLength: gridConfig.rowsPerPage,
-                            language: config.gridstrings
+                            language: config.gridstrings,
+                            getTotalRecords: function () {
+                                return totalRecords;
+                            }
                         };
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
@@ -379,7 +405,8 @@ define([
                                     render: rowRenderer,
                                     orderable: true
                                 }],
-                                dom: '<"jqgrid_table_wrapper summary-table"t><"status-line"p>'
+                                dom: '<"jqgrid_table_wrapper summary-table"t><"status-line"p>',
+                                searching: true
                             }
                         );
                     } else {
@@ -396,7 +423,8 @@ define([
                                     };
                                 }),
                                 dom: '<"jqgrid_table_wrapper full-table"t><"status-line"p>',
-                                scrollY: "500px" // just a placeholder; it will be dynamically updated later
+                                scrollY: "500px", // just a placeholder; it will be dynamically updated later
+                                searching: config.datagrid.extendedExtentFilterEnabled
                             }
                         );
                     }
@@ -434,7 +462,7 @@ define([
 
                             topic.publish(EventManager.Datagrid.DRAW_COMPLETE);
                         });
-
+                    
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
                     jqgridTableWrapper = sectionNode.find(".jqgrid_table_wrapper");
                     dataTablesScroll = sectionNode.find(".dataTables_scroll");
@@ -1109,13 +1137,19 @@ define([
                     q.geometry = RampMap.getMap().extent;
                 } else {
                     // Grab everything!
-                    q.where = "1 = 1"; 
+                    q.where = "1 = 1";
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
             }
 
             q.outFields = ["*"];
+
+            // Update total records
+            totalRecords = 0;
+            dojoArray.forEach(visibleGridLayers, function (layer) {
+                totalRecords += layer.graphics.length;
+            });
 
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
@@ -1186,6 +1220,10 @@ define([
             return innerArray;
         }
 
+        function updateRecordsCount(visibleRecords) {
+            $(".pagination-record-number").text(String.format("{0}/{1} Records", visibleRecords, totalRecords));
+        }
+
         /**
         * Populate the datagrid with data in visibleFeatures
         *
@@ -1198,10 +1236,11 @@ define([
             jqgrid.DataTable().clear(); // Do NOT redraw the datatable at this point
 
             if (Object.keys(visibleFeatures).isEmpty()) {
+                updateRecordsCount(0);
                 jqgrid.DataTable().draw();
                 return;
             }
-
+            
             var data = [];
 
             //for each feature layer
@@ -1214,6 +1253,8 @@ define([
                     return feature[ui.getDatagridMode()] ? feature[ui.getDatagridMode()] : feature[ui.getDatagridMode()] = getDataObject(feature);
                 }));
             });
+
+            updateRecordsCount(data.length);
 
             oTable.one("draw.dt", function () {
                 topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
@@ -1308,14 +1349,22 @@ define([
         }
 
         return {
+            /**
+            * Initialize the datagrid. must be called before any properties can be accessed.
+            * 
+            * @method init
+            */
             init: function () {
-                /// <summary>
-                /// initialize the datagrid. must be called before any properties can be accessed.
-                /// </summary>
                 config = GlobalStorage.config;
                 layerConfig = config.featureLayers;
                 gridConfig = layerConfig[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
-
+                /*
+                $.fn.dataTable.ext.search.push(
+                    function (settings, data, dataIndex) {
+                        return data[0].indexOf("Water Regions") > -1;
+                    }
+                );*/
+                
                 initListeners();
             } //InitDataGrid
         };

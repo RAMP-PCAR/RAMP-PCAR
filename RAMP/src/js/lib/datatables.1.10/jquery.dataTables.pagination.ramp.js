@@ -257,9 +257,7 @@ $.fn.dataTableExt.oPagination.ramp = {
             pageSelectorDiv = $(".pagination-page-selector", nNode);
             pageNumberButton = $(".pagination-page-number", pageSelectorDiv).text(oLang.sPage + ' ' + iCurrentPage);
             gotoPagesDiv = $(".pagination-goto-page", pageSelectorDiv);
-
-            recordNumberLabel = $(".pagination-record-number", nNode).text(oSettings.fnRecordsDisplay() + ' ' + oLang.sRecords);
-
+            
             /* Build up the dynamic list first - html and listeners */
             $("ul", gotoPagesDiv).html(sList).find("button").each(fnBind);
 

@@ -559,7 +559,7 @@ define([
                 // Return only the feature layers
                 //TODO do we need to consider static layers here?
                 return dojoArray.filter(map.getLayersVisibleAtScale(), function (layer) {
-                    return layer.type && (layer.type === "Feature Layer");
+                    return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
             },
 
