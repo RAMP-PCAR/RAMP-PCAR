@@ -126,7 +126,16 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @type {Boolean}
             * @default true
             */
-            useAria: true
+            useAria: true,
+
+            /**
+            * Indicates whether focus should be reset to the handle of the popup when the popup closes.
+            *
+            * @property resetFocusOnClose
+            * @type {Boolean}
+            * @default false
+            */
+            resetFocusOnClose: false
         },
 
         /**
@@ -199,6 +208,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                         activeClass: this._attr.activeClass,
                                         setClassBefore: this._attr.setClassBefore,
                                         useAria: this._attr.useAria,
+                                        resetFocusOnClose: this._attr.resetFocusOnClose,
 
                                         handle: actualHandle,
                                         target: actualTarget
@@ -402,6 +412,10 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
                         function () {
                             this.setTargetAttr(false);
+
+                            if (this.resetFocusOnClose) {
+                                this.handle.focus();
+                            }
                         }
                     );
                 },
