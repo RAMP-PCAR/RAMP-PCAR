@@ -135,6 +135,7 @@
             "config.fr.json",
             "assets/**/*.*",
             "!assets/*.csv",
+            "!assets/*.xlsx",
             "includes/**/*.*"
         ],
 
