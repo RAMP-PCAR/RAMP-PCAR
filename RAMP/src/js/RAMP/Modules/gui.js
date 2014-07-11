@@ -1319,6 +1319,9 @@ define([
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "help-section" });
                             console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", false);
 
+                            // Set focus back to Help link before closing popup
+                            this.handle[0].focus();
+
                             helpSectionContainer.slideToggle("fast", function () {
                                 d.resolve();
                             });
@@ -1352,6 +1355,9 @@ define([
                             topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: false });
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "add-layer-section" });
                             console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", false);
+
+                            // Set focus back to Add Layer link before closing popup
+                            this.handle[0].focus();
 
                             addLayerSectionContainer.slideToggle("fast", function () {
                                 d.resolve();

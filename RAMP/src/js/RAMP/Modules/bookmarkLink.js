@@ -225,6 +225,9 @@ define([
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "get-link-section" });
                                 console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", false);
 
+                                // Set focus back to Get Link link before closing popup
+                                this.handle[0].focus();
+
                                 getlinkSectionContainer.slideUp("fast", function () {
                                     toggleShortLinkMode(false);
                                     d.resolve();
