@@ -108,7 +108,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_datagrid.png" style="max-width:100%" class="image-actual"
+                    <img src="./assets/images/help/fr/help_datagrid.jpg" style="max-width:100%" class="image-actual"
                         alt="Grille de données" /></p>
                 <ul>
                     <li><span class="bold-text">Trie :</span>Choisir le lien Trier au­dessus de la grille de données afin de trier selon le nom du champ, en ordre décroissant. Choisir le lien Trier encore afin de faire passer la fonction Trie au mode Croissant. </li>

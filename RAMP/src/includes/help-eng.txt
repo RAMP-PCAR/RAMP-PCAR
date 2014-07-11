@@ -9,7 +9,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_navigation_toolbar.png" width="300" height="250"
+                <img src="./assets/images/help/en/help_navigation_toolbar.png" style="max-width:100%"
                     class="image-actual" alt="Map navigation controls" /></p>
             <ul>
                 <li>Click Pan North/South/East/West to move the map in that particular direction.</li>
@@ -33,7 +33,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_basemaps.png" width="300" height="100" class="image-actual"
+                <img src="./assets/images/help/en/help_basemaps.png" style="max-width:100%" class="image-actual"
                     alt="Basemap selector widget" /></p>
             <p>
                 From the dropdown, select the basemap of your choice and the map display will update.</p>
@@ -53,7 +53,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_addlayer.png" width="300" height="100" class="image-actual"
+                <img src="./assets/images/help/en/help_addlayer.png" style="max-width:100%" class="image-actual"
                     alt="Add layer widget" /></p>
             <p>
                 From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add.</p>
@@ -74,7 +74,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_getlink.png" width="300" height="95" class="image-actual"
+                <img src="./assets/images/help/en/help_getlink.png" style="max-width:100%" class="image-actual"
                     alt="Get Link widget" /></p>
             <ul>
                 <li><span class="bold-text">Short link:</span> Select this link to use Google's URL
@@ -120,7 +120,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_datasets.png" width="300" height="147" class="image-actual"
+                <img src="./assets/images/help/en/help_datasets.png" style="max-width:100%" class="image-actual"
                     alt="Data Sets" /></p>
             <p>
                 Select the "eye" icon next to a dataset name to toggle the layer on or off. Use
@@ -134,50 +134,58 @@
 <div class="clear">
 </div>
 <!-- datasets ENDS -->
-<!-- dataGrid BEGINS -->
+<!-- summary grid BEGINS -->
 <details class="margin-bottom-medium">
-    <summary class="">Data Grid</summary>
+    <summary class="">Summary Grid</summary>
     <div>
         <div class="helpSectionBody">
             <p>
-                The Data Grid lists basic information for all the features that is visible in the current map extent.</p>
+                The Summary Grid lists basic information for all the features that is visible in the current map extent.</p>
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_datagrid.png" width="300" height="178" class="image-actual"
-                    alt="The Data Grid" /></p>
+                <img src="./assets/images/help/en/summary_grid/screenshot.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Summary Grid" /></p>
             <ul>
                 <li><span class="bold-text">Sorting:</span> Select the Sort link at the top of the data
                     grid to sort by field name, descending. Select the Sort link again to switch the
                     sort to ascending mode.
-					<p><img src="./assets/images/help/en/datagrid_sort_button.png" width="291" height="140" class="image-actual"
+					<p><img src="./assets/images/help/en/summary_grid/sort_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Sort Button" /></p></li>
                 <li><span class="bold-text">Details:</span> Select the Details link next to each data
                     row to display its information in an Info Panel. This function replicates clicking
-                    directly on a map feature. </li>
+                    directly on a map feature. 
+					<p><img src="./assets/images/help/en/summary_grid/details_button.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Details Button" /></p></li></li>
                 <li><span class="bold-text">Zoom To:</span> Every row on the data grid has an option
                     to quickly zoom the map view to that data point. If the "Zoom To" link is clicked,
-                    the map and the data grid will dynamically zoom to that specific point. </li>
+                    the map and the data grid will dynamically zoom to that specific point. 
+					<p><img src="./assets/images/help/en/summary_grid/zoomto_button.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Zoom To Button" /></p></li></li>
 				<li><span class="bold-text">Zoom Back:</span>After the "Zoom To" link is clicked, the link
 					will be replaced by a "Zoom Back" link. Clicking on the "Zoom Back" link will bring 
 					the user back to the extent of the map before the "Zoom To" link was clicked.
-					<p><img src="./assets/images/help/en/datagrid_zoomback_button.png" width="423" height="141" class="image-actual"
+					<p><img src="./assets/images/help/en/summary_grid/zoomback_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Zoom Back Button" /></p></li>
                 <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
                     jump to the first or last page, respectively, of the information in the data grid.
                     Use the inner left and right buttons to move back or forward one page at a time.
                     Selecting the Page link will permit you to quickly jump to any page in the data
-                    grid listing. </li>
+                    grid listing. There is also a record count next to the pagination buttons, which indicates
+					the number of features currently in the map extent versus the total number of features 
+					in the map.
+					<p><img src="./assets/images/help/en/summary_grid/pagination.jpg" class="image-actual"
+                    alt="The Pagination Control" style="max-width:100%" /></p></li>
             </ul>
         </div>
     </div>
 </details>
 <div class="clear">
 </div>
-<!-- dataGrid ENDS -->
+<!-- sunnary grid ENDS -->
 <!-- extendedGrid BEGINS -->
 <details class="margin-bottom-medium">
-    <summary class="">Extended Data Grid</summary>
+    <summary class="">Extended Grid</summary>
     <div>
         <div class="helpSectionBody">
             <p>
@@ -185,32 +193,40 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/extended_grid_screenshot_1.png" width="591" "height="283" class="image-actual"
+                <img src="./assets/images/help/en/extended_grid/screenshot_1.png" style="max-width:100%" class="image-actual"
                     alt="The Extended Grid" /></p>
             <ul>
 
                 <li><span class="bold-text">Full Data Button:</span> Select the "Full Data" button 
-					at the top right corner of the data grid to show the extended data grid. 
+					at the top right corner of the Summary Grid to show the Extended Grid. 
 					<p>
-                <img src="./assets/images/help/en/extended_grid_button.png" width="402" "height="120" class="image-actual"
+                <img src="./assets/images/help/en/extended_grid_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Extended Grid Button" /></p>
 				</li>
 				<li><span class="bold-text">Data Summary Button:</span> Select the "Data Summary" button 
-					at the top right corner of the extended grid to go back to the data grid view. 
+					at the top right corner of the Extended Grid to go back to the Summary Grid view. 
 					<p>
-                <img src="./assets/images/help/en/data_summary_button.png" width="291" "height="169" class="image-actual"
+                <img src="./assets/images/help/en/data_summary_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Data Summary Button" /></p>
 				</li>
 				<li><span class="bold-text">Sorting:</span> For any column, selecting the upward arrow will sort the 
 					extended grid in ascending order by that column, selecting the downward arrow will sort the grid 
-					in descending order by that column.</li>                
+					in descending order by that column.</li> 
+					<img src="./assets/images/help/en/extended_grid/sorting.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Sorting Button" /></p></li>               
                 <li><span class="bold-text">Details:</span> Select the Details link next to each data
-                    row to display its information in an Info Panel. </li>
+                    row to display its information in an Info Panel. 
+					<img src="./assets/images/help/en/extended_grid/details_button.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Details Button" /></p></li>
                 <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
                     jump to the first or last page, respectively, of the information in the data grid.
                     Use the inner left and right buttons to move back or forward one page at a time.
                     Selecting the Page link will permit you to quickly jump to any page in the data
-                    grid listing. </li>
+                    grid listing. There is also a record count next to the pagination buttons, which indicates
+					the number of features currently in the map extent versus the total number of features 
+					in the map.
+					<img src="./assets/images/help/en/extended_grid/pagination.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Pagination Controls" /></p></li>
             </ul>
         </div>
     </div>
@@ -228,7 +244,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/help_infopanel.png" width="300" height="171" class="image-actual"
+                <img src="./assets/images/help/en/help_infopanel.png" style="max-width:100%" class="image-actual"
                     alt="The Info Panel" /></p>
             <p>
                 Select a feature on the map interface, or select the Details link in the Data Grid.
