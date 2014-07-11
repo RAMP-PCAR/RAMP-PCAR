@@ -1213,6 +1213,11 @@ define([
             });
 
             deferred.then(function () {
+                // Reset focus back to link where the subpanel was created from
+                if (attr.target.selector !== "#map-div") {
+                    $(attr.target).find(":tabbable").first().focus();
+                }
+
                 // remove the panel from the object after it closes
                 delete subPanels[attr.origin]; // more on delete: http://perfectionkills.com/understanding-delete/
                 if (d) {
