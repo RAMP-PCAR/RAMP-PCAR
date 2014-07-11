@@ -431,13 +431,13 @@ module.exports = function (grunt) {
                     spawn: false
                 },
                 files: ['src/js/RAMP/**/*.js'],
-                tasks: ['js', 'build:bump-only-build']
+                tasks: ['js'] //, 'build:bump-only-build']
                 //tasks: ['hint', 'jsstyle']
             },
 
             wcss: {
                 files: ['src/css/**/*.less'],
-                tasks: ['css', 'build:bump-only-build']
+                tasks: ['css'] //, 'build:bump-only-build']
             },
 
             wpage: {
@@ -446,12 +446,12 @@ module.exports = function (grunt) {
                     'src/pages/**/*.html',
                     'src/includes/**/*.txt'
                 ],
-                tasks: ['page', 'assets', 'build:bump-only-build']
+                tasks: ['page', 'assets'] //, 'build:bump-only-build']
             },
 
             wtemplate: {
                 files: ['src/js/RAMP/Modules/templates/*.json'],
-                tasks: ['copy:templates', 'build:bump-only-build']
+                tasks: ['copy:templates'] //, 'build:bump-only-build']
             }
         },
 
@@ -1087,7 +1087,7 @@ module.exports = function (grunt) {
         //console.log(a, b);
 
         grunt.task.run('bump-only:build');
-        grunt.config('notify.bump.options.message', 'Version bumpted to <%= pkg.version %>');
+        grunt.config('notify.bump.options.message', 'Version bumped to <%= pkg.version %>');
         grunt.task.run('notify:bump');
     });
 
@@ -1218,7 +1218,7 @@ module.exports = function (grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'tarball', 'build:bump-only-build', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'tarball', 'notify:build']);
     grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
 
     // DEPLOY
