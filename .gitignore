@@ -201,6 +201,8 @@ theme.less.pref.css
 /RAMP/docs
 jscs.txt
 
+dist
+
 ### VIM temp files
 
 *.swo

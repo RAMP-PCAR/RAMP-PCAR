@@ -44,7 +44,8 @@
         "grunt-contrib-htmlmin": "~0.3.0",
         "grunt-jscs-checker": "~0.4.3",
         "grunt-html-build": "~0.3.2",
-        "grunt-chmod": "~1.0.3"
+        "grunt-chmod": "~1.0.3",
+        "grunt-contrib-compress": "~0.9.1"
     },
 
     "hintColors" : {
