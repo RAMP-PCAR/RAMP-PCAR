@@ -1,6 +1,7 @@
 /*global require, module */
 
 var fs = require('fs'),
+    path = require('path'),
     request = require('request'),
     extend = require('util')._extend,
     csvToJson = require("csvtojson").core.Converter;
@@ -13,6 +14,11 @@ module.exports = function (grunt) {
             en: {},
             fr: {}
         };
+
+    function getExtension(filename) {
+        var ext = path.extname(filename || '').split('.');
+        return ext[ext.length - 1];
+    }
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -86,6 +92,12 @@ module.exports = function (grunt) {
                 options: {
                     message: ''
                 }
+            },
+
+            tarball: {
+                options: {
+                    message: 'Tarball is created!'
+                }
             }
         },
 
@@ -146,6 +158,10 @@ module.exports = function (grunt) {
 
             version: [
                 'build/*.version'
+            ],
+
+            tarball: [
+                'dist/'
             ],
 
             yuidoc: ['<%= yuidocconfig.options.outdir %>'],
@@ -868,6 +884,56 @@ module.exports = function (grunt) {
                     }
                 }
             }
+        },
+
+        compress: {
+            tar: {
+                options: {
+                    mode: 'tar',
+                    //archive: 'dist/<%= pkg.name %> <%= pkg.version %>.tar',
+                    archive: function () {
+                        var buildVersion
+                            = fs.existsSync('build/') ?
+                            fs.readdirSync('build/')
+                            .filter(function (name) {
+                                return getExtension(name) === 'version';
+                            }) : [];
+                        buildVersion = buildVersion[0] ? buildVersion[0].replace('.version', '') : null;
+                        return 'dist/' + (buildVersion || grunt.config('pkg.name') + ' ' + grunt.config('pkg.version')) + '.tar';
+                    }
+                },
+                files: [
+                   {
+                       expand: 'true',
+                       cwd: 'build/',
+                       src: ['**/*']
+                   }
+                ]
+            },
+
+            zip: {
+                options: {
+                    mode: 'zip',
+                    archive: function () {
+                        var buildVersion
+                            = fs.existsSync('build/') ?
+                            fs.readdirSync('build/')
+                            .filter(function (name) {
+                                return getExtension(name) === 'version';
+                            }) : [];
+                        buildVersion = buildVersion[0] ? buildVersion[0].replace('.version', '') : null;
+                        return 'dist/' + (buildVersion || grunt.config('pkg.name') + ' ' + grunt.config('pkg.version')) + '.zip';
+                    },
+                    level: 9
+                },
+                files: [
+                   {
+                       expand: 'true',
+                       cwd: 'build/',
+                       src: ['**/*']
+                   }
+                ]
+            }
         }
     });
 
@@ -895,6 +961,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-jscs-checker");
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-chmod');
+    grunt.loadNpmTasks('grunt-contrib-compress');
 
     //# !Load Tasks
 
@@ -1151,7 +1218,7 @@ module.exports = function (grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'build:bump-only-build', 'version', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'tarball', 'build:bump-only-build', 'notify:build']);
     grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
 
     // DEPLOY
@@ -1163,6 +1230,8 @@ module.exports = function (grunt) {
 
         done();
     });
+
+    grunt.registerTask('tarball', ['clean:tarball', 'compress', 'notify:tarball'])
 
     grunt.registerTask('version', function () {
         //var fileName = grunt.config('pkg.ramp.deployFolder') + "/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";
