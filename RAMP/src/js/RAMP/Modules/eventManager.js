@@ -42,6 +42,8 @@ define([],
                 */
                 LAYER_VISIBILITY_TOGGLED: "filterManager/layer-visibility-toggled",
 
+                LAYER_TRANSPARENCY_CHANGED: "filterManager/layer-transparency-changed",
+
                 /**
                 * Published whenever the "box" button for a layer is clicked
                 *

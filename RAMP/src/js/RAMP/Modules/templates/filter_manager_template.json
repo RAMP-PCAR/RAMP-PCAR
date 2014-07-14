@@ -18,7 +18,7 @@
                                         <fieldset>
                                             <legend>{% include('filter_row_template', o);%}</legend>																						
                                         </fieldset>
-                                        {% include('filter_row_settings_template', o);%}
+                                        {% include('filter_row_settings_template', o.fn.generateSettingsToggle(o));%}
                                     </li>",
         // Level 2
         // Filter row overall layout for a given layer
@@ -47,8 +47,18 @@
         
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_settings_template":"<div class='filter-row-settings'>
-                                            <span> Settings go here </span>                
+        "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
+                                            <h4 class='margin-top-none margin-bottom-none'>Layer Settings</h4>
+                                            <span>Transparency</span>                
+
+                                            <div class='nstSlider' data-aria_enabled='true'
+                                                data-range_min='0' data-range_max='100' 
+                                                data-cur_min='50'
+    
+                                                data-layer-id='{%=o.featureId%}' data-layer-value='{%=o.value%}' >                                                      
+                                                <div class='leftGrip'></div>              
+                                            </div>
+
                                         </div>",
 
         // filter row legend template 

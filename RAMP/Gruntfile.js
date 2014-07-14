@@ -1231,7 +1231,7 @@ module.exports = function (grunt) {
         done();
     });
 
-    grunt.registerTask('tarball', ['clean:tarball', 'compress', 'notify:tarball'])
+    grunt.registerTask('tarball', ['clean:tarball', 'compress', 'notify:tarball']);
 
     grunt.registerTask('version', function () {
         //var fileName = grunt.config('pkg.ramp.deployFolder') + "/" + grunt.config('pkg.name') + " " + grunt.config('pkg.version') + ".version";

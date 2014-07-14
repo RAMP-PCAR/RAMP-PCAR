@@ -23,7 +23,7 @@ define([],
             * Given a feature object or a graphic object (or any object that has a getLayer method and an
             * attributes field) return the image URL for that feature/graphic object.
             *
-            * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getGraphicIcon
             * @param {Graphic} graphic
@@ -48,9 +48,9 @@ define([],
 
             /**
             * Given a feature object or a graphic object (or any object that has a getLayer method and an
-            * attributes field) return the attribute value for its designaed "name" field
+            * attributes field) return the attribute value for its designed "name" field
             *
-            * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getFeatureName
             * @param {Graphic} graphic
@@ -65,7 +65,7 @@ define([],
             * Given a feature object return the objectid for that item.
             * This will likely fail on a non-feature object (e.g. a plain graphic)
             *
-            * NOTE: all dependent functions should be wroten as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
             *
             * @method getObjectId
             * @param {Graphic} graphic
@@ -121,6 +121,28 @@ define([],
 
                 return boundingLegendLabel;
             },
+
+            /*
+            * Generate settings toggle object.
+            *
+            * @method generateSettingsToggle
+            * @param o
+            */
+            generateSettingsToggle: function (o) {
+                var //attr = "",
+                    boundingLegendLabel = {
+                        //for: "filterGroup_" + o.data[o.idx].id + "1",
+                        //attr: attr + "1",
+                        value: o.data[o.idx].id,
+                        //checked: "checked",
+                        //label: o.data[o.idx].layerConfig.displayName,
+                        //class: "box checked",
+                        featureId: o.data[o.idx].layerConfig.id
+                    };
+
+                return boundingLegendLabel;
+            },
+
             /*
             * generate DataLayerUUID by removing layer_ from layer id
             * @param layerId

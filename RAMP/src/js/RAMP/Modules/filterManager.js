@@ -83,8 +83,37 @@ define([
             localString,
 
             ui = (function () {
-                var layerList,
-                    filterGlobalToggles;
+                var sectionNode,
+                    layerList,
+                    filterGlobalToggles,
+                    layerSettings;
+
+                layerSettings = (function () {
+                    function initTransparencySliders() {
+                        layerList.find(".nstSlider").nstSlider({
+                            left_grip_selector: ".leftGrip",
+                            value_changed_callback: function (cause, leftValue, rightValue) {
+                                //cause = leftValue = rightValue;
+                                //$('.leftLabel').text(leftValue);
+                                //$('.rightLabel').text(rightValue);
+
+                                topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
+                                    layerId: $(this).data("layer-value"),
+                                    value: leftValue / 100
+                                });
+
+                                console.log(cause, leftValue, rightValue, $(this).data("layer-id"));
+                            }
+                        });
+                        //layerList.find(".nstSlider").nstSlider("set_step_histogram", [4, 6, 10, 107]);
+                    }
+
+                    return {
+                        init: function () {
+                            initTransparencySliders();
+                        }
+                    };
+                }());
 
                 /**
                 * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
@@ -391,10 +420,10 @@ define([
 
                     PopupManager.registerPopup(layerList, "click",
                         function (d) {
-                            console.log("works");
                             this.target.slideToggle("fast", function () {
                                 d.resolve();
                             });
+                            this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
                             handleSelector: ".toggle-button-icon.settings",
@@ -490,9 +519,9 @@ define([
 
                         // put layer in datawrapper to be used in template
                         var data = TmplHelper.dataBuilder(lLayers),
-                            sectionNode = $("#" + GlobalStorage.config.divNames.filter),
                             section;
 
+                        sectionNode = $("#" + GlobalStorage.config.divNames.filter);
                         // TODO: generate section using one template, need to refactoring the following fixed string
                         section = tmpl('filter_manager_template', data);
 
@@ -539,7 +568,9 @@ define([
 
                                 initScrollListeners();
 
-                                // ui initialization complets
+                                layerSettings.init();
+
+                                // ui initialization completes
                                 console.log(EventManager.FilterManager.UI_COMPLETE);
                                 topic.publish(EventManager.FilterManager.UI_COMPLETE);
                             },
