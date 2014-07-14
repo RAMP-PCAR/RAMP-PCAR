@@ -92,17 +92,23 @@ define([
                     function initTransparencySliders() {
                         layerList.find(".nstSlider").nstSlider({
                             left_grip_selector: ".leftGrip",
-                            value_changed_callback: function (cause, leftValue, rightValue) {
+                            highlight: {
+                                grip_class: "gripHighlighted",
+                                panel_selector: ".highlightPanel"
+                            },
+                            value_changed_callback: function (cause, leftValue) {//, rightValue) {
                                 //cause = leftValue = rightValue;
-                                //$('.leftLabel').text(leftValue);
+                                $('.leftLabel').text(leftValue + "%");
                                 //$('.rightLabel').text(rightValue);
+
+                                $(this).nstSlider('highlight_range', 0, leftValue);
 
                                 topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
                                     layerId: $(this).data("layer-value"),
                                     value: leftValue / 100
                                 });
 
-                                console.log(cause, leftValue, rightValue, $(this).data("layer-id"));
+                                //console.log(cause, leftValue, rightValue, $(this).data("layer-id"));
                             }
                         });
                         //layerList.find(".nstSlider").nstSlider("set_step_histogram", [4, 6, 10, 107]);

@@ -48,15 +48,21 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
-                                            <h4 class='margin-top-none margin-bottom-none'>Layer Settings</h4>
-                                            <span>Transparency</span>                
-
-                                            <div class='nstSlider' data-aria_enabled='true'
-                                                data-range_min='0' data-range_max='100' 
-                                                data-cur_min='50'
+                                            <h4 class='margin-top-none margin-bottom-medium'>Layer Settings</h4>
+                                            
+                                            <div class='transparency-setting'>
+                                                <span class='float-left'>Transparency</span>                
+                                                
+                                                <div class='nstSlider' data-aria_enabled='true'
+                                                    data-range_min='0' data-range_max='100' 
+                                                    data-cur_min='50'
     
-                                                data-layer-id='{%=o.featureId%}' data-layer-value='{%=o.value%}' >                                                      
-                                                <div class='leftGrip'></div>              
+                                                    data-layer-id='{%=o.featureId%}' data-layer-value='{%=o.value%}' >                                                      
+                                                
+                                                    <div class='highlightPanel'></div>
+                                                    <div class='leftGrip'></div>              
+                                                </div>
+                                                <span class='leftLabel'>Transparency</span>                
                                             </div>
 
                                         </div>",

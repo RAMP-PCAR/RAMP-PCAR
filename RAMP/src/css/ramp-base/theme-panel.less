@@ -702,11 +702,13 @@
 
 			.filter-row-settings {
 				display: none;
-				box-shadow: @upper-shadow, @lower-shadow;
-				background-color: @medium-grey-color;
+				//box-shadow: @upper-shadow, @lower-shadow;
+				box-shadow: 0 7px 8px -5px #000000 inset, 0 -7px 8px -5px #000000 inset;
+				//background-color: @medium-grey-color;
+				background-image: @denim;
 				font-family: Arial,Verdana,Helvetica,sans-serif;
 				color: #fff;
-				padding: 10px;
+				padding: 10px 15px 15px 20px;
 
 				h4 {
 					text-align: center;
@@ -715,6 +717,20 @@
 					padding-top: 0 !important;
 					color: #fff;
 					font-weight: bold;
+				}
+
+				.transparency-setting {
+					text-align: right;
+
+					.nstSlider {
+						display: inline-block;
+					}
+
+					.leftLabel {
+						display: inline-block;
+						margin-left: 5px;
+						width: 33px;
+					}
 				}
 			}
 
@@ -1248,19 +1264,20 @@
         }
     }
 
-    .is_clickable {
+.is_clickable {
   cursor: hand;
   cursor: pointer;
 }
 .nstSlider {
   cursor: hand;
   cursor: pointer;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
+  //-webkit-border-radius: 10px;
+  //-moz-border-radius: 10px;
+  //border-radius: 10px;
   position: relative;
   //width: 300px;
-  height: 20px;
+  width: 250px;
+  height: 8px;
   background: #113344;
 }
 .nstSlider .leftGrip.gripHighlighted {
@@ -1272,35 +1289,50 @@
 .nstSlider .rightGrip,
 .nstSlider .leftGrip {
   position: absolute;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
-  width: 20px;
+  //-webkit-border-radius: 10px;
+  //-moz-border-radius: 10px;
+  //border-radius: 10px;
+  width: 5px; //30px;
+  top: -6px;
   height: 20px;
-  background: #ffffff;
+  background: #ffffff !important;
+	
+  	  	&:hover,
+	  	&:active,
+	  	&:focus {
+	  		&:after {
+		  		content: "";
+		  		position: absolute;
+				left: -2px;
+				width: 9px; //30px;
+			  	height: 20px;
+			  	background: #ffffff !important;
+	  	}	
+  	}
 }
+
 .nstSlider .bar {
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border-radius: 10px;
+  //-webkit-border-radius: 10px;
+  //-moz-border-radius: 10px;
+  //border-radius: 10px;
   position: absolute;
   background: #ffffff;
   height: 8px;
   top: 6px;
 }
 .nstSlider .highlightPanel {
-  -webkit-transition: all 500ms ease-in-out;
+  /*-webkit-transition: all 500ms ease-in-out;
   -moz-transition: all 500ms ease-in-out;
   -ms-transition: all 500ms ease-in-out;
   -o-transition: all 500ms ease-in-out;
   transition: all 500ms ease-in-out;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  border-radius: 10px;
+  border-radius: 10px;*/
   position: absolute;
-  background: #e87722;
-  height: 20px;
-  top: 0;
+  background: @accent-color;
+  height: 7px;
+  top: 1px;
 }
 
 }
