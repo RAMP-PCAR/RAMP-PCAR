@@ -48,10 +48,10 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
-                                            <h4 class='margin-top-none margin-bottom-medium'>Layer Settings</h4>
+                                            <h4 class='margin-top-none margin-bottom-medium'>{%=o.str.txtSettingsLayerSettings%}</h4>
                                             
                                             <div class='transparency-setting'>
-                                                <span class='float-left'>Opacity</span>                
+                                                <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
                                                 
                                                 <div class='nstSlider' data-aria_enabled='true'
                                                     data-range_min='0' data-range_max='1' 

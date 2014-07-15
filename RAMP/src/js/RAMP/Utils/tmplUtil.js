@@ -131,12 +131,7 @@ define([],
             generateSettingsToggle: function (o) {
                 var //attr = "",
                     boundingLegendLabel = {
-                        //for: "filterGroup_" + o.data[o.idx].id + "1",
-                        //attr: attr + "1",
-                        value: o.data[o.idx].id,
-                        //checked: "checked",
-                        //label: o.data[o.idx].layerConfig.displayName,
-                        //class: "box checked",
+                        str: o.str,
                         layerId: o.data[o.idx].id,
                         opacity: o.data[o.idx].layerConfig.opacity
                     };
