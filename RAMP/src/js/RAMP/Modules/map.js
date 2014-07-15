@@ -744,7 +744,7 @@ define([
 
                 featureLayers = dojoArray.map(config.featureLayers, function (layer) {
                     var fl = new FeatureLayer(layer.url, {
-                        id: String.format("featureLayer_{0}", Ramp.getLayerConfig(layer.url).displayName),
+                        id: layer.id,
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         outFields: [layer.layerAttributes]
                     });
@@ -830,8 +830,8 @@ define([
                         //creates an array of all static layers defined for the current, single feature layer
                         perLayerStaticMaps[i] = "static_" + staticLayer.id;
                     });
-                    //adds the static layer id array as a value to an array indexed by feature layer names
-                    staticLayerMap[String.format("featureLayer_{0}", Ramp.getLayerConfig(layer.url).displayName)] = perLayerStaticMaps;
+                    //adds the static layer id array as a value to an array indexed by feature layer id
+                    staticLayerMap[layer.id] = perLayerStaticMaps;
                 });
 
                 GlobalStorage.LayerMap = staticLayerMap;
