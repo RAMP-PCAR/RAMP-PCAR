@@ -137,7 +137,8 @@ define([],
                         //checked: "checked",
                         //label: o.data[o.idx].layerConfig.displayName,
                         //class: "box checked",
-                        featureId: o.data[o.idx].layerConfig.id
+                        featureId: o.data[o.idx].layerConfig.id,
+                        opacity: 1 - o.data[o.idx].layerConfig.opacity
                     };
 
                 return boundingLegendLabel;

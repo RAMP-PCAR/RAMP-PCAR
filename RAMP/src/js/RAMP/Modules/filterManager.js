@@ -90,28 +90,30 @@ define([
 
                 layerSettings = (function () {
                     function initTransparencySliders() {
-                        layerList.find(".nstSlider").nstSlider({
-                            left_grip_selector: ".leftGrip",
-                            highlight: {
-                                grip_class: "gripHighlighted",
-                                panel_selector: ".highlightPanel"
-                            },
-                            value_changed_callback: function (cause, leftValue) {//, rightValue) {
-                                //cause = leftValue = rightValue;
-                                $('.leftLabel').text(leftValue + "%");
-                                //$('.rightLabel').text(rightValue);
+                        var transparencySliders;
 
-                                $(this).nstSlider('highlight_range', 0, leftValue);
+                        transparencySliders = layerList.find(".nstSlider")
+                            .nstSlider({
+                                left_grip_selector: ".leftGrip",
+                                rounding: 0.01,
+                                highlight: {
+                                    grip_class: "gripHighlighted",
+                                    panel_selector: ".highlightPanel"
+                                },
+                                value_changed_callback: function (cause, leftValue, rightValue, prevMin, prevMax) {
+                                    var slider = $(this);
+                                    slider.parent().find('.leftLabel').text(Math.round(leftValue * 100) + "%");
+                                    slider.nstSlider('highlight_range', 0, leftValue);
 
-                                topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                                    layerId: $(this).data("layer-value"),
-                                    value: leftValue / 100
-                                });
+                                    topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
+                                        layerId: slider.data("layer-value"),
+                                        value: 1 - leftValue
+                                    });
 
-                                //console.log(cause, leftValue, rightValue, $(this).data("layer-id"));
-                            }
-                        });
-                        //layerList.find(".nstSlider").nstSlider("set_step_histogram", [4, 6, 10, 107]);
+                                    console.log(cause, leftValue, rightValue, prevMin, prevMax);
+                                }
+                            });
+                        //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
                     }
 
                     return {

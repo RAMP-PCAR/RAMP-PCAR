@@ -54,8 +54,8 @@
                                                 <span class='float-left'>Transparency</span>                
                                                 
                                                 <div class='nstSlider' data-aria_enabled='true'
-                                                    data-range_min='0' data-range_max='100' 
-                                                    data-cur_min='50'
+                                                    data-range_min='0' data-range_max='1' 
+                                                    data-cur_min='{%=o.opacity%}'
     
                                                     data-layer-id='{%=o.featureId%}' data-layer-value='{%=o.value%}' >                                                      
                                                 
