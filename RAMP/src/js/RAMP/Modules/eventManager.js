@@ -89,24 +89,24 @@ define([],
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.TOGGLE_LAYER_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_LAYERS_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.layerName {String} the name of the layer to toggle
                 * @param event.visible {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_LAYER_VISIBILITY: "filterManager/toggle-layer-visibility",
+                TOGGLE_LAYERS_VISIBILITY: "filterManager/toggle-layers-visibility",
 
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.TOGGLE_BOX_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_BOXES_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
                 * @param event.layerName {String} the name of the layer to toggle
                 * @param event.visible {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_BOX_VISIBILITY: "filterManager/toggle-box-visibility",
+                TOGGLE_BOXES_VISIBILITY: "filterManager/toggle-boxes-visibility",
 
                 /**
                 * Tells the filter manager to toggle all layers on or off

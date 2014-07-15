@@ -683,7 +683,7 @@ define([
 
                     // Selectively turn off the ones that were in the query (the rest will be
                     // turned on)
-                    topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
+                    topic.publish(EventManager.FilterManager.TOGGLE_LAYERS_VISIBILITY, {
                         layerIds: layerIds,
                         checked: false
                     });
@@ -709,7 +709,7 @@ define([
 
                     layerIds = queryObject.visibleBoxes.split("+");
 
-                    topic.publish(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, {
+                    topic.publish(EventManager.FilterManager.TOGGLE_BOXES_VISIBILITY, {
                         layerIds: layerIds,
                         checked: true
                     });

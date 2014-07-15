@@ -276,7 +276,7 @@ define([
                         });
                     }
 
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYERS_VISIBILITY, function (evt) {
                         // Set the checkboxes visually, checkboxes with an id in evt.layerIds gets
                         // turned on, the rest gets turned off
                         eyeCheckboxes.setState(function (checkbox) {
@@ -295,7 +295,7 @@ define([
                         });
                     });
 
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOXES_VISIBILITY, function (evt) {
                         // Set the checkboxes visually, checkboxes with an id in evt.layerIds gets
                         // turned on, the rest gets turned off
                         boxCheckboxes.setState(function (checkbox) {
