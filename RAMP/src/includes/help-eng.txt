@@ -193,7 +193,7 @@
             <p>
                 <b>Usage:</b></p>
             <p>
-                <img src="./assets/images/help/en/extended_grid/screenshot_1.png" style="max-width:100%" class="image-actual"
+                <img src="./assets/images/help/en/extended_grid/screenshot_1.jpg" style="max-width:100%" class="image-actual"
                     alt="The Extended Grid" /></p>
             <ul>
 
