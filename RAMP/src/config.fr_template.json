@@ -46,7 +46,7 @@
                 {
                     "name": "txtScale",
                     "type": "String",
-                    "value": "Scale",
+                    "value": "Échelle",
                     "description": "",
                     "visibleText": false
                 },
