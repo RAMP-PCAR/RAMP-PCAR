@@ -129,7 +129,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             useAria: true,
 
             /**
-            * Indicates whether focus should be reset to the handle of the popup when the popup is closes by the internal close button if present.
+            * Indicates whether focus should be reset to the handle of the popup when the popup is closed by the internal close button if present.
             *
             * @property resetFocusOnClose
             * @type {Boolean}
