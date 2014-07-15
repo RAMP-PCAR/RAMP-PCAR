@@ -44,7 +44,8 @@
         "txtMetadataNotFound": "Pas de métadonnées a été trouvé pour cette couche.",
         "txtMetadataNotPublished": "Pas de métadonnées a été publié pour cette couche.",
         "txtDatasetSelectorButtonLoad": " Charger",
-        "txtDatasetSelectorButtonLoaded": " Chargé"
+        "txtDatasetSelectorButtonLoaded": " Chargé",
+        "txtLayerHandle": "Descripteur de couche"
     },
     "gridstrings": {
         "sInfoPostFix": "",

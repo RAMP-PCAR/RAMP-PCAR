@@ -44,7 +44,8 @@
         "txtHideBounds": "Hide Bounds of {0}",
         "txtHideAllBounds": "Hide All Bounds",
         "txtSort": "Sort",
-        "txtDataset": "Dataset"
+        "txtDataset": "Dataset",
+        "txtLayerHandle": "Layer Handle"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
