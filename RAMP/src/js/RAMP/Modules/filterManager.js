@@ -450,6 +450,144 @@ define([
                         }
                     });
                 }
+                /**
+                * Sets all the events to handle layer reordering with both mouse and keyboard.
+                * @method setLayerReorderingEvents
+                * @private
+                */
+                function setLayerReorderingEvents() {
+                    // Drag and drop layer reordering using jQuery UI Sortable widget
+                    layerList = $("#layerList");
+                    if (layerList.find("> li").length > 1) {
+                        layerList.sortable({
+                            axis: "y",
+                            handle: ".sort-handle",
+                            placeholder: "sortable-placeholder",
+                            update: function (event, ui) {
+                                var layerId = ui.item[0].id,
+                                    index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId);
+
+                                reorderPublishEvents(layerId, index);
+                            }
+                        });
+                    }
+
+                    // Styling to match Data tab look on hover
+                    $("#layerList > li")
+                        .hover(function () {
+                            $(this).find("legend").addClass("background-light");
+                        }, function () {
+                            $(this).find("legend").removeClass("background-light");
+                        })
+                        // Styling to match Data tab look on focus (tab)
+                        .find(".layer-controls, .layer-checkboxes")
+                            .focusin(function () {
+                                $(this).closest("legend").addClass("background-light");
+                            })
+                            .focusout(function () {
+                                $(this).closest("legend").removeClass("background-light");
+                            })
+                            // Up/down arrow navigation for layers
+                            .on("keyup", function (e) {
+                                if (e.which === 38) {
+                                    $(this).closest("li.layerList1").prev().find(":tabbable").first().focus();
+                                } else if (e.which === 40) {
+                                    $(this).closest("li.layerList1").next().find(":tabbable").first().focus();
+                                }
+                            });
+
+                    // Make layer reordering keyboard accessible (up/down)
+                    // Up/down will move between layer items
+                    // Enter/space bar on layer handle toggles "grabbed" state
+                    // While grabbed, up/down moves the selected layer up/down one level
+                    var sortHandle = $("#layerList > li .sort-handle"),
+                        grabbed = false;
+
+                    sortHandle
+                        .focus(function () {
+                            $(this).closest("legend").addClass("background-light");
+                            $(this).closest("li").attr("aria-selected", "true");
+                        })
+                        .focusout(function () {
+                            $(this).closest("legend").removeClass("background-light highlighted-row");
+                            $(this).closest("li.layerList1").attr({ "aria-selected": false, "aria-grabbed": false });
+                            $("#layerList > li").removeAttr("aria-dropeffect");
+                            grabbed = false;
+                        })
+                        .on("keyup", function (e) {
+                            var layer = $(this).closest("li.layerList1"),
+                                allLayers = $("#layerList > li.layerList1:not(.not-sortable)"),
+                                layerLegend = $(this).closest("legend"),
+                                layerId = layer[0].id,
+                                index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId),
+                                lastIndex = dojoArray.indexOf($("#layerList").sortable("toArray"), allLayers.last()[0].id);
+
+                            // Toggle grabbed state and aria attributes (13 = enter, 32 = space bar)
+                            if (e.which === 13 || e.which === 32) {
+                                if (grabbed) {
+                                    allLayers.removeAttr("aria-dropeffect");
+                                    layer.attr("aria-grabbed", "false");
+                                    grabbed = false;
+                                } else {
+                                    allLayers.attr("aria-dropeffect", "move");
+                                    layer.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
+                                    grabbed = true;
+                                }
+                                layerLegend.toggleClass("highlighted-row");
+                            }
+
+                            // Keyboard up (38) and down (40)
+                            if (e.which === 38) {
+                                if (grabbed) {
+                                    // Don't move up if first layer in list
+                                    if (index > 0) {
+                                        layer.prev().before(layer);
+                                        reorderReset($(this), allLayers, layer, layerLegend);
+                                        grabbed = true;
+                                        index -= 1;
+                                        reorderPublishEvents(layerId, index);
+                                    }
+                                } else {
+                                    layer.prev().find(":tabbable").first().focus();
+                                }
+                            } else if (e.which === 40) {
+                                if (grabbed) {
+                                    // Don't move down if last layer in list
+                                    if (index < lastIndex) {
+                                        layer.next().after(layer);
+                                        reorderReset($(this), allLayers, layer, layerLegend);
+                                        grabbed = true;
+                                        index += 1;
+                                        reorderPublishEvents(layerId, index);
+                                    }
+                                } else {
+                                    layer.next().find(":tabbable").first().focus();
+                                }
+                            }
+                        });
+
+                    // Helper functions for layer reordering
+
+                    // Reset focus, set aria attributes, and styling
+                    function reorderReset(handle, allLayers, layer, layerLegend) {
+                        handle.focus();
+                        allLayers.attr("aria-dropeffect", "move");
+                        layer.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
+                        layerLegend.addClass("highlighted-row");
+                    }
+
+                    // Events to publish on layer reorder
+                    function reorderPublishEvents(layerId, index) {
+                        topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
+                            origin: "rampPopup,datagrid"
+                        });
+
+                        topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
+                            id: layerId,
+                            index: index
+                        });
+                    }
+                }
 
                 return {
                     init: function () {
@@ -493,28 +631,9 @@ define([
                                 // remove the animating css class
                                 window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
-                                layerList = $("#layerList");
-                                if (layerList.find("> li").length > 1) {
-                                    layerList.sortable(
-                                        {
-                                            axis: "y",
-                                            handle: ".sort-handle",
-                                            placeholder: "sortable-placeholder",
-                                            update: function (event, ui) {
-                                                var layerId = ui.item[0].id,
-                                                    index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId);
-
-                                                topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "rampPopup,datagrid" });
-
-                                                topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
-                                                    id: layerId,
-                                                    index: index
-                                                });
-                                            }
-                                        }
-                                    );
-                                }
                                 filterGlobalToggles = $('#filterGlobalToggles');
+
+                                setLayerReorderingEvents();
 
                                 setCheckboxEvents();
 
