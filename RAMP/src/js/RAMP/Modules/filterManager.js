@@ -104,7 +104,7 @@ define([
                                 $(this).nstSlider('highlight_range', 0, leftValue);
 
                                 topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                                    layerId: $(this).data("layer-value"),
+                                    layerId: $(this).data("layer-id"),
                                     value: leftValue / 100
                                 });
 

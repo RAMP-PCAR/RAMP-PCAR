@@ -99,7 +99,7 @@ define([],
                         checked: "checked",
                         label: o.data[o.idx].layerConfig.displayName,
                         class: "eye checked",
-                        featureId: o.data[o.idx].layerConfig.id
+                        layerId: o.data[o.idx].id
                     };
                 return visibilityLegendLabel;
             },
@@ -116,7 +116,7 @@ define([],
                         checked: "checked",
                         label: o.data[o.idx].layerConfig.displayName,
                         class: "box checked",
-                        featureId: o.data[o.idx].layerConfig.id
+                        layerId: o.data[o.idx].id
                     };
 
                 return boundingLegendLabel;
@@ -137,7 +137,7 @@ define([],
                         //checked: "checked",
                         //label: o.data[o.idx].layerConfig.displayName,
                         //class: "box checked",
-                        featureId: o.data[o.idx].layerConfig.id
+                        layerId: o.data[o.idx].id
                     };
 
                 return boundingLegendLabel;
