@@ -51,7 +51,7 @@
                                             <h4 class='margin-top-none margin-bottom-medium'>Layer Settings</h4>
                                             
                                             <div class='transparency-setting'>
-                                                <span class='float-left'>Transparency</span>                
+                                                <span class='float-left'>Opacity</span>                
                                                 
                                                 <div class='nstSlider' data-aria_enabled='true'
                                                     data-range_min='0' data-range_max='1' 
@@ -62,7 +62,7 @@
                                                     <div class='highlightPanel'></div>
                                                     <div class='leftGrip'></div>              
                                                 </div>
-                                                <span class='leftLabel'>Transparency</span>                
+                                                <span class='leftLabel'></span>                
                                             </div>
 
                                         </div>",

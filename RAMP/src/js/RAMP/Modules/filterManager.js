@@ -107,7 +107,7 @@ define([
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
                                         layerId: slider.data("layer-value"),
-                                        value: 1 - leftValue
+                                        value: leftValue
                                     });
 
                                     console.log(cause, leftValue, rightValue, prevMin, prevMax);
