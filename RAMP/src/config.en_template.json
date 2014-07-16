@@ -144,7 +144,7 @@
                 {
                     "name": "txtShowBounds",
                     "type": "String",
-                    "value": "Show Bounds {0}",
+                    "value": "Show Bounds of {0}",
                     "description": "",
                     "visibleText": false
                 },
