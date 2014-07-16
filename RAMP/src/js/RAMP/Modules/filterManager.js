@@ -522,7 +522,13 @@ define([
                             }
 
                             // modify layer object
-                            layer.layerConfig = Ramp.getLayerConfig(layer.url);
+
+                            var wmsLayerName = null;
+                            if (layer.id.indexOf("wmsLayer") == 0) {
+                                wmsLayerName = layer.layerInfos[0].name;
+                            }
+
+                            layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
                             lLayers.push(layer);
                         });
 
