@@ -34,10 +34,14 @@
                                             <ul class='button-group margin-top-none'>												
                                                 <li>
                                                     <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                    
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
                                                     <span class='separator' role='presentation'></span>
                                                 </li>
                                                 <li>
                                                     <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                {% } %}
+                                                    
                                                 </li>
                                             </ul>
                                         </div>
@@ -53,14 +57,17 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
+                                            
                                             <h4 class='margin-top-none margin-bottom-medium'>{%=o.str.txtSettingsLayerSettings%}</h4>
+    
+                                            {% if (o.opacity.enabled) { %}
                                             
                                             <div class='transparency-setting'>
                                                 <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
                                                 
                                                 <div class='nstSlider' data-aria_enabled='true'
                                                     data-range_min='0' data-range_max='1' 
-                                                    data-cur_min='{%=o.opacity%}'
+                                                    data-cur_min='{%=o.opacity.default%}'
     
                                                     data-layer-id='{%=o.layerId%}' >                                                      
                                                 
@@ -70,6 +77,7 @@
                                                 <span class='leftLabel'></span>                
                                             </div>
 
+                                            {% } %}
                                         </div>",
 
         // filter row legend template 

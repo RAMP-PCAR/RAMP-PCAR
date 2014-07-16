@@ -133,7 +133,7 @@ define([],
                     boundingLegendLabel = {
                         str: o.str,
                         layerId: o.data[o.idx].id,
-                        opacity: o.data[o.idx].layerConfig.opacity
+                        opacity: o.data[o.idx].layerConfig.settings.opacity
                     };
 
                 return boundingLegendLabel;
