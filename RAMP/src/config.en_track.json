@@ -563,7 +563,13 @@
             "uuid": "708985e5-6408-4f7d-8363-bbe9c277bec2",
             "detailTemplate": "default_feature_details",
             "nameField": "NAME",
-            "opacity": 0.5
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.5
+                }
+            }
         },
         {
             "id": "layer_dd1m3",
@@ -931,7 +937,13 @@
             "uuid": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
             "detailTemplate": "default_feature_details",
             "nameField": "ROUTE_NAME",
-            "opacity": 0.7
+            "settings": {
+                "enabled": false,
+                "opacity": {
+                    "enabled": false,
+                    "default": 0.1
+                }
+            }
         },
         {
             "id": "layer_w9v8u",
@@ -989,7 +1001,13 @@
             "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
             "detailTemplate": "default_feature_details",
             "nameField": "NAME",
-            "opacity": 0.3
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            }
         }
     ],
     "datagrid": {
