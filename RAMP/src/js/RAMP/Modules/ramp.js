@@ -76,40 +76,48 @@ define([
             * Returns the feature layer config for the given url
             *
             * @param {String} url
+            * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
             * @method getLayerConfig
             */
-            getLayerConfig: function (url) {
+            getLayerConfig: function (url, wmsName) {
                 if (!GlobalStorage.urlCfg) {
                     GlobalStorage.urlCfg = {};
                 }
 
-                if (GlobalStorage.urlCfg[url] === undefined) {
-                    var res = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                
+                var res = UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers), function (layerConfig) {
+                    if (wmsName == null)
                         return layerConfig.url === url;
-                    });
+                    else
+                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerInfo.name === wmsName);
+                });
 
-                    GlobalStorage.urlCfg[url] = res;
-                }
+                GlobalStorage.urlCfg[url] = res;
+                
 
                 return GlobalStorage.urlCfg[url];
             },
+
             /**
              * Gets the defined symbology from a layer's web service
              * @method _getSymbolConfig
              * @param {String} layerUrl A URL to the feature layer service
+             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
              * @returns {esri/layer/symbology} The defined symbology from the layer definition
              */
-            _getSymbolConfig: function (layerUrl) {
-                return this.getLayerConfig(layerUrl).symbology;
+            _getSymbolConfig: function (layerUrl, wmsName) {
+                return this.getLayerConfig(layerUrl, wmsName).symbology;
             },
+
             /**
              * Gets the default symbology icon from a layer's web service
-             * @method _getSymbolConfig
+             * @method getSymbolForLayer
              * @param {Object} layer A feature layer
+             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
              * @returns {icon} The default icon from the layer's symbology
              */
-            getSymbolForLayer: function (layer) {
-                var symbolConfig = this._getSymbolConfig(layer.url);
+            getSymbolForLayer: function (layer, wmsName) {
+                var symbolConfig = this._getSymbolConfig(layer.url, wmsName);
                 return symbolConfig.icons["default"];
             },
 
