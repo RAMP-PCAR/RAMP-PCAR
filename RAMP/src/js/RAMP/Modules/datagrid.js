@@ -1233,6 +1233,11 @@ define([
         * @private
         */
         function fetchRecords(visibleFeatures) {
+            if (jqgrid === undefined) {
+                // fetchRecords call made prior ty jqgrid creation
+                // TODO: consider adding a log.warning('fetchRecords called prior to grid initialization')
+                return;
+            }
             jqgrid.DataTable().clear(); // Do NOT redraw the datatable at this point
 
             if (Object.keys(visibleFeatures).isEmpty()) {
