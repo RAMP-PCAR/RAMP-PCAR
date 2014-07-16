@@ -1155,14 +1155,8 @@ define([
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
                     if (features.features.length > 0) {
-                        var layer = features.features[0].getLayer(),
-                            layerUrl = layer.url;
-
-                        if (!layer.visible && dataGridMode === GRID_MODE_SUMMARY) {
-                            delete visibleFeatures[layerUrl];
-                        } else {
-                            visibleFeatures[layerUrl] = features.features;
-                        }
+                        var layer = features.features[0].getLayer();
+                        visibleFeatures[layer.url] = features.features;
                     }
                 });
             });
