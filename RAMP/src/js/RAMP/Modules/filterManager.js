@@ -182,19 +182,42 @@ define([
                     });
 
                     /* START GLOBAL "EYE" AND BOUNDING BOX BUTTON EVENTS */
-                    globalEyeCheckboxes.getNodes().on("change", function () {
-                        // True if the checkbox got selected, false otherwise
-                        var checked = $(this).is(':checked');
+                    globalEyeCheckboxes.getNodes()
+                        .on("change", function () {
+                            // True if the checkbox got selected, false otherwise
+                            var checked = $(this).is(':checked');
 
-                        toggleGlobalEye(checked);
-                    });
+                            toggleGlobalEye(checked);
+                        })
+                        // Allow enter key to work too
+                        .on("keyup", function (e) {
+                            if (e.which === 13) {
+                                var node = $(this);
+                                node[0].checked = !node[0].checked;
+                                node.findInputLabel().toggleClass("checked");
+                                var checked = node.is(':checked');
+                                toggleGlobalEye(checked, node);
+                            }
+                        });
 
-                    globalBoxCheckboxes.getNodes().on("change", function () {
-                        // True if the checkbox got selected, false otherwise
-                        var checked = $(this).is(':checked');
+                    globalBoxCheckboxes.getNodes()
+                        .on("change", function () {
+                            // True if the checkbox got selected, false otherwise
+                            var checked = $(this).is(':checked');
 
-                        toggleGlobalBox(checked);
-                    });
+                            toggleGlobalBox(checked);
+                        })
+                        // Allow enter key to work too
+                        .on("keyup", function (e) {
+                            if (e.which === 13) {
+                                var node = $(this);
+                                node[0].checked = !node[0].checked;
+                                node.findInputLabel().toggleClass("checked");
+                                var checked = node.is(':checked');
+                                toggleGlobalBox(checked, node);
+                            }
+                        });
+
 
                     /* END GLOBAL "EYE" AND BOUNDING BOX BUTTONS */
 
@@ -278,20 +301,42 @@ define([
                     });
 
                     // Event handling for individual "eye" and "box" toggle
-                    eyeCheckboxes.getNodes().on("change", function () {
-                        var node = $(this),
-                            checked = node.is(':checked');
+                    eyeCheckboxes.getNodes()
+                        .on("change", function () {
+                            var node = $(this),
+                                checked = node.is(':checked');
 
-                        toggleEye(checked, node);
-                    });
+                            toggleEye(checked, node);
+                        })
+                        // Allow enter key to work too.
+                        .on("keyup", function (e) {
+                            if (e.which === 13) {
+                                var node = $(this);
+                                node[0].checked = !node[0].checked;
+                                node.findInputLabel().toggleClass("checked");
+                                var checked = node.is(':checked');
+                                toggleEye(checked, node);
+                            }
+                        });
 
-                    boxCheckboxes.getNodes().on("change", function () {
-                        var node = $(this),
-                        // True if the checkbox got selected, false otherwise
-                            checked = node.is(':checked');
+                    boxCheckboxes.getNodes()
+                        .on("change", function () {
+                            var node = $(this),
+                            // True if the checkbox got selected, false otherwise
+                                checked = node.is(':checked');
 
-                        toggleBox(checked, node);
-                    });
+                            toggleBox(checked, node);
+                        })
+                        // Allow enter key to work too.
+                        .on("keyup", function (e) {
+                            if (e.which === 13) {
+                                var node = $(this);
+                                node[0].checked = !node[0].checked;
+                                node.findInputLabel().toggleClass("checked");
+                                var checked = node.is(':checked');
+                                toggleBox(checked, node);
+                            }
+                        });
                     /* END INDIVIDUAL "EYE" AND BOUNDING BUTTON EVENTS */
                 }
                 /**
