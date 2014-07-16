@@ -58,7 +58,7 @@
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
                                             
-                                            <h4 class='margin-top-none margin-bottom-medium'>{%=o.str.txtSettingsLayerSettings%}</h4>
+                                            <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
     
                                             {% if (o.opacity.enabled) { %}
                                             
