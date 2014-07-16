@@ -85,7 +85,7 @@ define([
             /**
             * Name of the attribute used to store the oid
             * in the details and zoomTo buttons
-            * 
+            *
             * @private
             * @property featureOidField
             */
@@ -94,7 +94,7 @@ define([
             /**
             * Name of the attribute used to store the feature url
             * in the details and zoomTo buttons
-            * 
+            *
             * @private
             * @property featureUrlField
             */
@@ -108,7 +108,7 @@ define([
 
             /**
             * The jquery table
-            * 
+            *
             * @private
             * @property oTable
             */
@@ -127,7 +127,7 @@ define([
             zoomToGraphic,
 
             lastExtent,
-                        
+
             /**
             * Total number of features in all the visible layers on the map
             *
@@ -462,7 +462,7 @@ define([
 
                             topic.publish(EventManager.Datagrid.DRAW_COMPLETE);
                         });
-                    
+
                     jqgridWrapper = sectionNode.find("#jqgrid_wrapper");
                     jqgridTableWrapper = sectionNode.find(".jqgrid_table_wrapper");
                     dataTablesScroll = sectionNode.find(".dataTables_scroll");
@@ -637,6 +637,7 @@ define([
 
                             closeHandler: function (d) {
                                 this.target.addClass("wb-invisible");
+
                                 d.resolve();
                             },
 
@@ -1119,8 +1120,8 @@ define([
         * Gets all layer data in the current map extent that are visible, and put the data into the data grid.
         *
         * @method applyExtentFilter
-        * @param {A Deferred object} d 
-        * 
+        * @param {A Deferred object} d
+        *
         */
         function applyExtentFilter(d) {
             var visibleFeatures = {},
@@ -1245,7 +1246,7 @@ define([
                 jqgrid.DataTable().draw();
                 return;
             }
-            
+
             var data = [];
 
             //for each feature layer
@@ -1355,7 +1356,7 @@ define([
         return {
             /**
             * Initialize the datagrid. must be called before any properties can be accessed.
-            * 
+            *
             * @method init
             */
             init: function () {
@@ -1368,7 +1369,7 @@ define([
                         return data[0].indexOf("Water Regions") > -1;
                     }
                 );*/
-                
+
                 initListeners();
 
                 ui.init();

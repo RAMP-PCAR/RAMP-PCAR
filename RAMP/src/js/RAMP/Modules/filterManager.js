@@ -444,11 +444,12 @@ define([
                     // metadata buttons
                     // to be changed...
                     layerList.find("legend button.metadata-button").on("click", function () {
-                        var node = $(this).parents("legend");
+                        var button = $(this),
+                            node = button.parents("legend");
 
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
-                            var guid = $(this).data("layer-uuid"),
+                            var guid = button.data("layer-uuid"),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
