@@ -103,11 +103,12 @@ require([
                 //initialize the filter
                 FilterManager.init();
 
+                Datagrid.init();
+
                 theme.tooltipster();
             });
             RampMap.init();
 
-            Datagrid.init();
             //init only creates the grid, does not populate it with data
 
             /* End - RAMP Events */
