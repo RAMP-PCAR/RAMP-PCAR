@@ -1289,19 +1289,18 @@ define([
             });
 
             topic.subscribe(EventManager.Datagrid.APPLY_EXTENT_FILTER, function () {
-                if (!ui.isReady()) {
-                    ui.init();
-                } else if (ui.getDatagridMode() !== GRID_MODE_FULL) {
+                if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
                 }
             });
+            
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });
+            });            
         }
 
         return {
@@ -1314,6 +1313,8 @@ define([
                 gridConfig = layerConfig[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
 
                 initListeners();
+
+                ui.init();
             } //InitDataGrid
         };
     });
