@@ -45,7 +45,9 @@
         "txtHideAllBounds": "Hide All Bounds",
         "txtSort": "Sort",
         "txtDataset": "Dataset",
-        "txtLayerHandle": "Layer Handle"
+        "txtLayerHandle": "Layer Handle",
+        "txtLayerHandleLabel": "Layer handle for",
+        "txtLayerListLabel": "Sortable layer list"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

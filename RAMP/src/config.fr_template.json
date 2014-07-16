@@ -329,6 +329,20 @@
                     "value": "Descripteur de couche",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtLayerHandleLabel",
+                    "type": "String",
+                    "value": "Descripteur de couche pour",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "txtLayerListLabel",
+                    "type": "String",
+                    "value": "Liste des couches sortable",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         },

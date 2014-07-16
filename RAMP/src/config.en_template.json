@@ -329,6 +329,20 @@
                     "value": "Layer Handle",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtLayerHandleLabel",
+                    "type": "String",
+                    "value": "Layer handle for",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "txtLayerListLabel",
+                    "type": "String",
+                    "value": "Sortable layer list",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         },
