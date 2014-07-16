@@ -315,6 +315,13 @@
 			font-weight: bold !important;
 		}
 	}
+
+    /* stop WET from pushing WMS overlay images in by 10px */
+    #mainMap_layers img[id^="mainMap_"] {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
 }
 
 /* MAP ENDS */
