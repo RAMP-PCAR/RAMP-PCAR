@@ -434,7 +434,7 @@ define([
                             this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
-                            handleSelector: ".toggle-button-icon.settings",
+                            handleSelector: ".settings-button",
                             targetContainerSelector: "li.layerList1",
                             targetSelector: ".filter-row-settings",
                             activeClass: "button-pressed"

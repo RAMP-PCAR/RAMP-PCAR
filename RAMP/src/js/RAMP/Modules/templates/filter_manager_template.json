@@ -32,14 +32,19 @@
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
                                             <ul class='button-group margin-top-none'>												
-                                                {% include('filter_button_template', o);%}
+                                                <li>
+                                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                    <span class='separator' role='presentation'></span>
+                                                </li>
+                                                <li>
+                                                    <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class='layer-checkboxes'>										
                                         {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
                                         {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
-                                        {% include('filter_toggle_template', o);%}
                                     </div>
                                     <div class='clear'>
                                     </div>
@@ -77,13 +82,6 @@
                                             type='checkbox'></input>
                                     </div>",
         
-        "filter_toggle_template":"<div class='checkbox-custom'>                                        
-                                        <button class='toggle-button-icon settings button-none tooltip' title='{%=o.str.txtSettings%}'>
-                                            <i class='fa fa-sliders'></i>
-                                            <span class='wb-invisible'>{%=o.str.txtSettings%}</span>            
-                                        </button>
-                                    </div>",
-
         // filter row button template
         "filter_button_template":"<li>
                                         <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>

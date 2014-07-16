@@ -488,13 +488,22 @@
 		border: none;
 		color: @light-grey-color;
 
+		&.disabled {
+			color: @very-light-grey-color !important;
+
+			&:hover,
+			&:focus,
+			&:active {
+				color: @very-light-grey-color !important;
+			}
+		}
+
 		&.button-pressed {
 			color: @attention-color;
 		}
 
 		.fa {
-			font-size: 19px;
-			
+			font-size: 19px;			
 			cursor: pointer;
 		}
     }
@@ -618,7 +627,6 @@
 
             .global-checkboxes {
                 .right-align-checkboxes;
-                margin-right: 40px !important;
             }
         }
 
@@ -815,8 +823,28 @@
                     }
                 }
 
-                ul button.metadata-button {
-                    padding: 0 0 0 4px !important;
+                ul button {
+            		margin-left: 0 !important;
+        			margin-right: 0 !important;
+
+        			&.button-pressed {
+						color: @attention-color;
+					}
+
+                	&.metadata-button {
+                    	padding: 0 6px 0 3px !important;
+                	}
+
+                	&.settings-button {
+                		padding: 0px 6px !important;
+                	}
+                }
+
+                .separator {
+                    border-right: 1px solid black;
+                    height: 70%;
+                    position: absolute;
+                    top: 15%;
                 }
             }
 
