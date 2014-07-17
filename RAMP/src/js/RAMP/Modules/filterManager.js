@@ -60,7 +60,7 @@ define([
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager"],
+        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox"],
 
     function (
     /* Dojo */
@@ -76,7 +76,7 @@ define([
         Ramp, GlobalStorage, RampMap, EventManager, Theme,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager) {
+        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkboxes) {
         "use strict";
 
         var config,
@@ -135,12 +135,12 @@ define([
                 * @private
                 */
                 function setCheckboxEvents() {
-                    var globalEyeCheckboxes,
-                        globalBoxCheckboxes,
+                    var globalEyeCheckbox,
+                        globalBoxCheckbox,
                         eyeCheckboxes,
                         boxCheckboxes;
 
-                    globalEyeCheckboxes = UtilMisc.styleCheckboxes(
+                    globalEyeCheckbox = new Checkboxes(
                         filterGlobalToggles.find(".checkbox-custom .eye + input"),
                         "checked", "focused",
                         {
@@ -151,8 +151,7 @@ define([
                     );
 
                     // Turn off the bounding boxes by default
-                    globalBoxCheckboxes = UtilMisc
-                        .styleCheckboxes(
+                    globalBoxCheckbox = new Checkboxes(
                             filterGlobalToggles.find(".checkbox-custom .box + input"),
                             "checked", "focused",
                             {
@@ -162,7 +161,7 @@ define([
                             Theme.tooltipster)
                         .setAll(false);
 
-                    eyeCheckboxes = UtilMisc.styleCheckboxes(
+                    eyeCheckboxes = new Checkboxes(
                         layerList.find(".checkbox-custom .eye + input"),
                         "checked", "focused",
                         {
@@ -173,8 +172,7 @@ define([
                     );
 
                     // Turn off the bounding boxes by default
-                    boxCheckboxes = UtilMisc
-                        .styleCheckboxes(
+                    boxCheckboxes = new Checkboxes(
                             layerList.find(".checkbox-custom .box + input"),
                             "checked", "focused",
                             {
@@ -183,6 +181,7 @@ define([
                             },
                             Theme.tooltipster)
                         .setAll(false);
+
                     /**
                     * Toggles each layers visibility when the global visibility button is clicked
                     * @method toggleGlobalEye
@@ -209,17 +208,17 @@ define([
                     }
 
                     topic.subscribe(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, function (evt) {
-                        globalEyeCheckboxes.setAll(evt.visible);
+                        globalEyeCheckbox.setAll(evt.visible);
                         toggleGlobalEye(evt.visible);
                     });
 
                     topic.subscribe(EventManager.FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY, function (evt) {
-                        globalBoxCheckboxes.setAll(evt.visible);
+                        globalBoxCheckbox.setAll(evt.visible);
                         toggleGlobalBox(evt.visible);
                     });
 
                     /* START GLOBAL "EYE" AND BOUNDING BOX BUTTON EVENTS */
-                    globalEyeCheckboxes.getNodes()
+                    globalEyeCheckbox.getNodes()
                         .on("change", function () {
                             // True if the checkbox got selected, false otherwise
                             var checked = $(this).is(':checked');
@@ -237,7 +236,7 @@ define([
                             }
                         });
 
-                    globalBoxCheckboxes.getNodes()
+                    globalBoxCheckbox.getNodes()
                         .on("change", function () {
                             // True if the checkbox got selected, false otherwise
                             var checked = $(this).is(':checked');
@@ -270,7 +269,7 @@ define([
                             return $(checkbox).is(':checked');
                         });
 
-                        globalEyeCheckboxes.setAll(allChecked);
+                        globalEyeCheckbox.setAll(allChecked);
 
                         // True if the checkbox got selected, false otherwise
                         topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
@@ -290,7 +289,7 @@ define([
                             return $(checkbox).is(':checked');
                         });
 
-                        globalBoxCheckboxes.setAll(allChecked);
+                        globalBoxCheckbox.setAll(allChecked);
 
                         topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
                             checked: checked,
