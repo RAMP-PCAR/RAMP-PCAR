@@ -6099,6 +6099,234 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 }
             ]
+        },
+        {
+            "name": "wmsLayers",
+            "type": "Collection",
+            "description": "",
+            "fields": [
+                {
+                    "name": "0 Air Temperature",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "displayName",
+                            "type": "String",
+                            "value": "[fr] Air Temperature",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "error",
+                            "type": "String",
+                            "value": "",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "extent",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "spatialReference",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "wkid",
+                                            "type": "Integer",
+                                            "value": 3978,
+                                            "description": ""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "xmax",
+                                    "type": "Integer",
+                                    "value": 20037510,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "xmin",
+                                    "type": "Integer",
+                                    "value": -20037510,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "ymax",
+                                    "type": "Integer",
+                                    "value": 103653300,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "ymin",
+                                    "type": "Integer",
+                                    "value": -103653300,
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "format",
+                            "type": "String",
+                            "value": "png",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "id",
+                            "type": "String",
+                            "value": "layer_wms1",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "layerInfo",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "allExtents",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "legendURL",
+                                    "type": "String",
+                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "RDPS.ETA_TT",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "spatialReferences",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "subLayers",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "title",
+                                    "type": "String",
+                                    "value": "[fr] RDPS.ETA - Air Temperature (c)",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "opacity",
+                            "type": "Numeric",
+                            "value": 0.5,
+                            "description": ""
+                        },
+                        {
+                            "name": "symbology",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "icons",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "default",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "imageUrl",
+                                                    "type": "String",
+                                                    "value": "assets/images/wms.png",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "legendText",
+                                                    "type": "String",
+                                                    "value": "Air Temperature",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "renderer",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "key1",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key2",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key3",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "type",
+                                            "type": "String",
+                                            "value": "simple",
+                                            "description": "",
+                                            "visibleText": false
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "url",
+                            "type": "String",
+                            "value": "http://geo.weather.gc.ca/geomet/?lang=E\\u0026service=WMS",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "uuid",
+                            "type": "String",
+                            "value": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
+                            "description": "",
+                            "visibleText": false
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

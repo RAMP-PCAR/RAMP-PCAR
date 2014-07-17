@@ -1037,5 +1037,53 @@ Developers of the Almighty JSON Config Editor
         "navigation": "map-navigation",
         "filter": "searchMapSectionBody",
         "datagrid": "gridpane"
-    }
+    },
+    "wmsLayers": [
+        {
+            "displayName": "[fr] Air Temperature",
+            "error": "",
+            "extent": {
+                "spatialReference": {
+                    "wkid": 3978
+                },
+                "xmax": 20037510,
+                "xmin": -20037510,
+                "ymax": 103653300,
+                "ymin": -103653300
+            },
+            "format": "png",
+            "id": "layer_wms1",
+            "layerInfo": {
+                "allExtents": [
+                    
+                ],
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
+                "name": "RDPS.ETA_TT",
+                "spatialReferences": [
+                    
+                ],
+                "subLayers": [
+                    
+                ],
+                "title": "[fr] RDPS.ETA - Air Temperature (c)"
+            },
+            "opacity": 0.5,
+            "symbology": {
+                "icons": {
+                    "default": {
+                        "imageUrl": "assets/images/wms.png",
+                        "legendText": "Air Temperature"
+                    }
+                },
+                "renderer": {
+                    "key1": "",
+                    "key2": "",
+                    "key3": "",
+                    "type": "simple"
+                }
+            },
+            "url": "http://geo.weather.gc.ca/geomet/?lang=E\\u0026service=WMS",
+            "uuid": "d221ca08-00c9-4011-aca6-b0a014fc90dc"
+        }
+    ]
 }
