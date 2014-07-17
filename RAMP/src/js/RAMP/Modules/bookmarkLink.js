@@ -229,7 +229,8 @@ define([
                                     toggleShortLinkMode(false);
                                     d.resolve();
                                 });
-                            }
+                            },
+                            resetFocusOnClose: true
                         }
                     );
 

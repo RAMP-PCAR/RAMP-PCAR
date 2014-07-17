@@ -40,6 +40,7 @@ if (!String.prototype.format) {
                     panLeft_link_title: "Pan West",
                     fullExtent_link_title: "Canada View",
                     zoomIn_link_title: "Zoom In",
+                    zoomSlider_link_title: "Zoom Slider",
                     zoomOut_link_title: "Zoom Out",
                     zoom_level_x_out_of_y: "Zoom level {0} out of {1}"
                 },
@@ -51,6 +52,7 @@ if (!String.prototype.format) {
                     panLeft_link_title: "Vers l'ouest",
                     fullExtent_link_title: "Voir Canada",
                     zoomIn_link_title: "Zoom avant",
+                    zoomSlider_link_title: "Curseur de zoom",
                     zoomOut_link_title: "Zoom arrière",
                     zoom_level_x_out_of_y: "Zoome levele {0} outeve ofe {1}"
                 }
@@ -370,7 +372,7 @@ if (!String.prototype.format) {
             /* Slider rail ends */
                             .append($("<li>", {
                                 "title": this._getString(this._getLinkTitle("zoomOut")),
-                                "class": this._getClassName("zoomOut") + " _tooltip"
+                                "class": this._getClassName("zoomOut") + "-disabled _tooltip"
                             })
                             .data("direction", "zoomOut")
                                 .append($("<a>", { "role": "button", "href": "" })
@@ -396,6 +398,11 @@ if (!String.prototype.format) {
             }
 
             nav.appendTo(el);
+
+            /* Set Zoom Slider button title */
+            $(".ui-slider-handle")
+                .attr({"title": this._getString(this._getLinkTitle("zoomSlider"))})
+                .addClass("_tooltip");
 
             /* Hide the zoom slider when necessary */
             if (this._isSmallScreen())

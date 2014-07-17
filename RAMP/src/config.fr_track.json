@@ -5,7 +5,7 @@
         "txtMapTitle": "Carte accessible",
         "txtMapSubTitle": "",
         "txtHelp": "Aide",
-        "txtScale": "Scale",
+        "txtScale": "Échelle",
         "txtUndoGridZoom": "",
         "txtPrevPage": "Page précédente",
         "txtNextPage": "Page suivante",
@@ -44,7 +44,10 @@
         "txtMetadataNotFound": "Pas de métadonnées a été trouvé pour cette couche.",
         "txtMetadataNotPublished": "Pas de métadonnées a été publié pour cette couche.",
         "txtDatasetSelectorButtonLoad": " Charger",
-        "txtDatasetSelectorButtonLoaded": " Chargé"
+        "txtDatasetSelectorButtonLoaded": " Chargé",
+        "txtLayerHandle": "Descripteur de couche",
+        "txtLayerHandleLabel": "Descripteur de couche pour",
+        "txtLayerListLabel": "Liste des couches sortable"
     },
     "gridstrings": {
         "sInfoPostFix": "",

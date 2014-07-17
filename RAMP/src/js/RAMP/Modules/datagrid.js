@@ -572,6 +572,14 @@ define([
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack(zoomToGraphic);
                             zoomNode.text(config.stringResources.txtGrid_zoomTo);
+
+                            // Reset focus back to "Zoom To" link after map extent change
+                            utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                                var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
+                                        featureOidField, GraphicExtension.getOid(zoomToGraphic),
+                                        featureUrlField, zoomToGraphic.getLayer().url));
+                                newNode.focus();
+                            });
                         }
                     });
 

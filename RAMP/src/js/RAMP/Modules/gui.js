@@ -1156,6 +1156,11 @@ define([
                 subPanel.getPanel().find(".sub-panel-toggle")
                     .on("click", dojoLang.hitch(this, function () {
                         hideSubPanel(attr);
+
+                        // reset focus back to link where the subpanel was created from
+                        if (attr.target.selector !== "#map-div") {
+                            $(attr.target).find(":tabbable").first().focus();
+                        }
                     }));
 
                 loadIndicator.animate({
@@ -1317,7 +1322,8 @@ define([
                             helpSectionContainer.slideToggle("fast", function () {
                                 d.resolve();
                             });
-                        }
+                        },
+                        resetFocusOnClose: true
                     }
                 );
 
@@ -1351,7 +1357,8 @@ define([
                             addLayerSectionContainer.slideToggle("fast", function () {
                                 d.resolve();
                             });
-                        }
+                        },
+                        resetFocusOnClose: true
                     }
                 );
 

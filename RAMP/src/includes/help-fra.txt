@@ -1,4 +1,5 @@
-﻿<details class="margin-bottom-medium">
+﻿<!-- navControls BEGINS -->
+<details class="margin-bottom-medium">
     <summary class="">Contrôles de Navigation</summary>
     <div>
         <p>
@@ -6,8 +7,8 @@
         <p>
             <b>Utilisation :</b></p>
         <p>
-			<img src="./assets/images/help/fr/help_navigation_toolbar.png" style="max-width:100%"
-				class="image-actual" alt="Contrôles de Navigation" /></p>
+            <img src="./assets/images/help/fr/help_navigation_toolbar.png" width="282" height="270"
+                class="image-actual" alt="Contrôles de Navigation" /></p>
             <li>Cliquez Pan Nord / Sud / Est / Ouest pour déplacer la carte dans cette direction particulière.</li>
             <li>Cliquez sur le Canada pour voir la carte Voir à sa pleine mesure.</li>
             <li>Cliquez sur Zoom In / Out pour changer le étendue de la carte.</li>
@@ -17,6 +18,7 @@
 </details>
 <div class="clear">
 </div>
+<!-- navControls ENDS -->
 <!-- basemaps BEGINS -->
     <details class="margin-bottom-medium">
         <summary class="">Cartes de base</summary>
@@ -27,7 +29,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_basemaps.png" style="max-width:100%" class="image-actual"
+                    <img src="./assets/images/help/fr/help_basemaps.png" width="300" height="100" class="image-actual"
                         alt="Le sélecteur de carte de base" /></p>
                 <p>
                     Du menu déroulant, choisir la carte de base de votre choix et l'affichage de la carte s'actualisera.</p>
@@ -37,6 +39,26 @@
     <div class="clear">
     </div>
 <!-- basemaps ENDS -->	
+<!-- Add Layer BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Ajouter une couche provenant du Web</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d'autres couches disponibles dans l'application de cartographie.</p>
+            <p>
+                <b>Utilisation:</b></p>
+            <p>
+                <img src="./assets/images/help/fr/help_addlayer.png" style="max-width:100%" class="image-actual"
+                    alt="Ajouter une couche provenant du Web" /></p>
+            <p>
+                À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis entrez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d'opacité pour la couche que vous ajouterez.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- Add Layer ENDS -->
 <!-- getLink BEGINS -->
     <details class="margin-bottom-medium">
         <summary class="">Obtenir le lien</summary>
@@ -47,7 +69,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_getlink.png" style="max-width:100%" class="image-actual"
+                    <img src="./assets/images/help/fr/help_getlink.png" width="907" height="210" class="image-actual"
                         alt="Obtenir le lien" /></p>
                 <ul>
                     <li><span class="bold-text">Lien raccourci :</span> Choisir ce lien pour utiliser le service de raccourci URL de Google pour générer un lien concis et aisément partageable vers l'état actuel du visualiseur de cartes par bretelle d'accès.</li>
@@ -88,7 +110,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_datasets.png" style="max-width:100%" class="image-actual"
+                    <img src="./assets/images/help/fr/help_datasets.png" width="423" height="222" class="image-actual"
                         alt="Ensembles de données" /></p>
                 <p>
                     Choisir l'icone en forme d'œil près du nom de l'ensemble de données afin de basculer la couche entre les positions arrêt et marche. Utiliser l'icone « hachurer » à la droite de l'icone en forme d'œil pour afficher le cadre de délimitation  de l'ensemble de données. Cliquer et faire glisser les 6 points à la gauche de l'ensemble de données, par le haut ou par le bas, afin de réordonner les couches sur l'interface de la carte. Choisir le lien des métadonnées afin d'afficher les métadonnées pertinentes pour la source en question en un panneau d'information réduisible.</p>
@@ -133,7 +155,7 @@
                 <p>
                     <b>Utilisation :</b></p>
                 <p>
-                    <img src="./assets/images/help/fr/help_infopanel.png" style="max-width:100%" class="image-actual"
+                    <img src="./assets/images/help/fr/help_infopanel.png" width="770" height="660" class="image-actual"
                         alt="Panneau d'information" /></p>
                 <p>
                     Choisir une caractéristique sur l'interface de la carte, ou choisir le lien Détails dans la Grille de données. Le Panneau d'information affichera l'information reliée à la caractéristique choisie. Cliquer sur la caractéristique ou sur la flèche apparaissant au coin supérieur gauche du panneau permettra de cacher l'affichage.</p>
@@ -143,39 +165,37 @@
     <div class="clear">
     </div>
     <!-- infoPanel ENDS -->
-    <!-- misc BEGINS -->
+<!-- accessibility BEGINS -->
     <details class="margin-bottom-medium">
-        <summary class="">Temps de chargement / Comportement non prévu</summary>
+    <summary class="">Accessibility</summary>
         <div>
             <div class="helpSectionBody">
-                <p>
-                    Les temps de chargement peuvent varier en fonction de l'emplacement du réseau et de la disponibilité de la largeur de bande, et un comportement non prévu peut se produire si des interactions surviennent avant que les données ne soient pleinement chargées. Veuillez attendre que la page Web effectue le chargement complet avant d'amorcer toute fonction de la carte.<b>Nota:</b>
-                    Si le texte « Charger….» apparaît dans le coin droit inférieur de la carte ou si la grille de données affiche un message en voie de chargement, veuillez attendre que l'indicateur de chargement disparaisse avant d'amorcer toute nouvelle fonction sur la carte.</p>
+            <p>Cette page est conforme WCAG 2.0 AA.</p>
+			<p><b>Accessibilité au clavier:</b></p>
+			<p>La fonctionnalité du clavier est offerte en tant que solution de rechange pour les usagers qui sont incapables d'utiliser une souris. Utilisez la touche Tab pour naviguer vers les liens et les contrôles sur la page. Appuyez sur Shift+Tab pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d'espace pour activer les liens et les contrôles.</p>
+			<p><b>Contrôles de navigation:</b></p>
+			<p>Curseur de zoom: Avec le curseur de zoom surligné, utilisez la touche de la flèche orientée vers le haut pour effectuer un zoom avant et la touche de la flèche orientée vers le bas pour effectuer un zoom arrière.</p>
+			<p><b>Ensembles de données/Onglet de données:</b></p>
+			<p>Avec les ensembles de données ou l'onglet de données surligné, utilisez les touches des flèches gauche et droite pour basculer entre eux.</p>
+			<p><b>Onglet d'ensembles de données:</b></p>
+			<p>Dans l'onglet d'ensembles de données, utilisez les touches des flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec le descripteur de couches (icône à 6 points) surligné, utilisez la touche Entrée ou la barre d'espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu. Avec la couche saisie, utilisez les touches des flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l'interface de cartographie. Appuyez sur Entrée ou la barre d'espace pour libérer la couche.</p>
             </div>
         </div>
     </details>
     <div class="clear">
     </div>
-<!-- misc ENDS -->
-
-
-<!-- Add Layer BEGINS -->
+<!-- accessibility ENDS -->
+<!-- misc BEGINS -->
 <details class="margin-bottom-medium">
-    <summary class="">Ajouter une couche provenant du Web</summary>
+    <summary class="">Temps de chargement / Comportement non prévu</summary>
     <div>
         <div class="helpSectionBody">
             <p>
-                Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d'autres couches disponibles dans l'application de cartographie.</p>
-            <p>
-                <b>Utilisation :</b></p>
-            <p>
-                <img src="./assets/images/help/fr/help_addlayer.png" style="max-width:100%" class="image-actual"
-                    alt="Ajouter une couche provenant du Web" /></p>
-            <p>
-                À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis entrez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d'opacité pour la couche que vous ajouterez.</p>
+                Les temps de chargement peuvent varier en fonction de l'emplacement du réseau et de la disponibilité de la largeur de bande, et un comportement non prévu peut se produire si des interactions surviennent avant que les données ne soient pleinement chargées. Veuillez attendre que la page Web effectue le chargement complet avant d'amorcer toute fonction de la carte. <b>Nota:</b>
+                Si le texte « Charger….» apparaît dans le coin droit inférieur de la carte ou si la grille de données affiche un message en voie de chargement, veuillez attendre que l'indicateur de chargement disparaisse avant d'amorcer toute nouvelle fonction sur la carte.</p>
         </div>
     </div>
 </details>
 <div class="clear">
 </div>
-<!-- Add Layer ENDS -->
+<!-- misc ENDS -->
