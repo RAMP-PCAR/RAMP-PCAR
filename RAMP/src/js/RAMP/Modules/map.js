@@ -29,6 +29,8 @@
 * @uses esri/layers/FeatureLayer
 * @uses esri/layers/ArcGISTiledMapServiceLayer
 * @uses esri/layers/ArcGISDynamicMapServiceLayer
+* @uses esri/layers/WMSLayer
+* @uses esri/layers/WMSLayerInfo
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/ProjectParameters
 * @uses esri/geometry/Polygon
@@ -54,7 +56,7 @@ define([
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
 "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference",
-"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils",
+"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -69,7 +71,7 @@ define([
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
     GeometryService, ProjectParameters, Polygon, SpatialReference,
-    EsriScalebar, EsriExtent, esriGraphicUtils,
+    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
@@ -85,6 +87,14 @@ define([
         * @property featureLayers {Array}
         */
         var featureLayers,
+
+        /**
+        * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
+        *
+        * @private
+        * @property wmsLayers {Array}
+        */
+            wmsLayers = [],
 
         /**
         * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
@@ -316,7 +326,7 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {
-                dojoArray.forEach(featureLayers, function (layer) {
+                dojoArray.forEach(featureLayers.concat(wmsLayers), function (layer) {
                     layer.setVisibility(evt.checked);
                     //loops through the all static layers added to the map. Uses the array that maps static layers to feature layers
                     try {
@@ -337,6 +347,7 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (evt) {
+                //this is handling the user trying to re-order the layers
                 if (!featureLayerStartIndex) {
                     // Find the index of the first feature layer
                     featureLayerStartIndex = UtilArray.indexOf(map.graphicsLayerIds, function (layerId) {
@@ -741,6 +752,25 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
+                //generate WMS layers array
+                wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
+                    var wmsl = new WMSLayer(layer.url, {
+                        id: String.format("wmsLayer_{0}", layer.layerInfo.title),
+                        format: layer.format,
+                        opacity: layer.opacity,
+                        resourceInfo: {
+                            extent: new EsriExtent(layer.extent),
+                            layerInfos: [new WMSLayerInfo(layer.layerInfo)]
+                        }
+                    });
+
+                    wmsl.setVisibleLayers(layer.layerInfo.name);
+                    wmsl.setVisibility(true);
+
+                    return wmsl;
+                });
+
+                //generate feature layers array
                 featureLayers = dojoArray.map(config.featureLayers, function (layer) {
                     var fl = new FeatureLayer(layer.url, {
                         id: layer.id,
@@ -762,13 +792,15 @@ define([
                 // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
                 boundingBoxMapping = {};
 
-                var boundingBoxLayers = dojoArray.map(featureLayers, function (layer) {
+                var boundingBoxLayers = dojoArray.map(featureLayers.concat(wmsLayers), function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
                     var attrLayer = new esri.layers.GraphicsLayer({
-                        id: String.format("boundingBoxLayer_{0}", Ramp.getLayerConfig(layer.url).displayName),
+                        //change to support WMS layers
+                        //id: String.format("boundingBoxLayer_{0}", Ramp.getLayerConfig(layer.url).displayName),
+                        id: String.format("boundingBoxLayer_{0}", layer.id.substring(layer.id.indexOf("_") + 1, layer.id.length - layer.id.indexOf("_") + 1)),
                         visible: false // bounding boxes are not visible by default
                     });
                     boundingBoxMapping[layer.id] = attrLayer;
@@ -838,7 +870,7 @@ define([
 
                 // Combine all layer arrays then add them all at once (for efficiency)
 
-                map.addLayers([baseLayer].concat(staticLayers, boundingBoxLayers, featureLayers));
+                map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({

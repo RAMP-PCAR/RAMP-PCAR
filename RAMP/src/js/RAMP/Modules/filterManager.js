@@ -255,7 +255,6 @@ define([
                             }
                         });
 
-
                     /* END GLOBAL "EYE" AND BOUNDING BOX BUTTONS */
 
                     /* START INDIVIDUAL "EYE" AND BOUNDING BUTTON EVENTS */
@@ -700,19 +699,19 @@ define([
 
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
-                            if (!layer.type || layer.type === "basemap") {
-                                return;
+                            //WMS does not have layer type property.  must use layer id to deterime if we want to show layer in filter
+
+                            if (layer.type === "Feature Layer" || layer.id.indexOf("wmsLayer") === 0) {
+                                // modify layer object
+
+                                var wmsLayerName = null;
+                                if (layer.id.indexOf("wmsLayer") === 0) {
+                                    wmsLayerName = layer.layerInfos[0].name;
+                                }
+
+                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+                                lLayers.push(layer);
                             }
-
-                            // modify layer object
-
-                            var wmsLayerName = null;
-                            if (layer.id.indexOf("wmsLayer") === 0) {
-                                wmsLayerName = layer.layerInfos[0].name;
-                            }
-
-                            layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-                            lLayers.push(layer);
                         });
 
                         // put layer in datawrapper to be used in template
