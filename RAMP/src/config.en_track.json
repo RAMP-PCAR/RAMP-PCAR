@@ -19,7 +19,7 @@
         "txtAllData": "All Data",
         "txtShow": "Show",
         "txtMetadata": "Metadata",
-        "txtShowBounds": "Show Bounds {0}",
+        "txtShowBounds": "Show Bounds of {0}",
         "txtShowAllBounds": "Show All Bounds",
         "txtExpandAll": "Expand All",
         "txtAbstract": "Abstract",
@@ -44,7 +44,10 @@
         "txtHideBounds": "Hide Bounds of {0}",
         "txtHideAllBounds": "Hide All Bounds",
         "txtSort": "Sort",
-        "txtDataset": "Dataset"
+        "txtDataset": "Dataset",
+        "txtLayerHandle": "Layer Handle",
+        "txtLayerHandleLabel": "Layer handle for",
+        "txtLayerListLabel": "Sortable layer list"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

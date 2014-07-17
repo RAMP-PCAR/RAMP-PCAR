@@ -102,7 +102,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             timeout: 0,
 
             /**
-            * The CSS class to be applied to the hadnle of the popup when the popup opens.
+            * The CSS class to be applied to the handle of the popup when the popup opens.
             *
             * @property activeClass
             * @type {String}
@@ -126,11 +126,20 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @type {Boolean}
             * @default true
             */
-            useAria: true
+            useAria: true,
+
+            /**
+            * Indicates whether focus should be reset to the handle of the popup when the popup is closed by the internal close button if present.
+            *
+            * @property resetFocusOnClose
+            * @type {Boolean}
+            * @default false
+            */
+            resetFocusOnClose: false
         },
 
         /**
-        * An abstract representation of the popup definition that potentially references many Popup instances. Handl and target properties might use selectors.
+        * An abstract representation of the popup definition that potentially references many Popup instances. Handle and target properties might use selectors.
         *
         * @class PopupBase
         * @for PopupManager
@@ -199,6 +208,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                         activeClass: this._attr.activeClass,
                                         setClassBefore: this._attr.setClassBefore,
                                         useAria: this._attr.useAria,
+                                        resetFocusOnClose: this._attr.resetFocusOnClose,
 
                                         handle: actualHandle,
                                         target: actualTarget
@@ -498,6 +508,11 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 p.target.find(".button-close").on("click",
                     function () {
                         p.close();
+
+                        // reset the focus to the popup's handle when the popup's internal close button is clicked
+                        if (p.resetFocusOnClose) {
+                            p.handle.focus();
+                        }
                     });
             });
 
@@ -506,7 +521,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
         return {
             /**
-            * Register a PopupBase defintion. By a popup here we mean a section of the page that reacts to the user's action on this or different section of the page.
+            * Register a PopupBase definition. By a popup here we mean a section of the page that reacts to the user's action on this or different section of the page.
             * Can be used to register popups with already existing page nodes, or, using handle and target selectors with the nodes that will be created later.
             *
             * ####Example
@@ -540,7 +555,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             * @method registerPopup
             * @static
             * @param {jQuery} handle A {{#crossLink "jQuery"}}{{/crossLink}} handle to listen to events on
-            * @param {String} event The name of the event or events separated by a comma to trigger the popup. There are several predifined event names to register hover popups:
+            * @param {String} event The name of the event or events separated by a comma to trigger the popup. There are several predefined event names to register hover popups:
             * - `hoverIntent` uses the hoverIntent jQuery plugin to determine when the user intends to hover over something
             * - `hover` is a combination of two events - `mouseleave` and `mouseenter` and unlike `hoverIntent` it is triggered immediatelly
             * - `focus` is a combination of two events - `focusin` and `focusout`

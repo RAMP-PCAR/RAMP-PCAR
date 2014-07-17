@@ -14,7 +14,7 @@
 									%}",
 		// layer level, layer is passed in as o.data. Level 1
 		// Filter overall structure, contains 1 to many filter row for the available layers.
-		"filter_set_template":"<li id='{%=o.data[o.idx].id%}' class='layerList1'>
+		"filter_set_template":"<li id='{%=o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
 										<fieldset>
 											<legend>{% include('filter_row_template', o);%}</legend>																						
 										</fieldset>
@@ -22,7 +22,7 @@
 		// Level 2
 		// Filter row overall layout for a given layer
 		"filter_row_template":"<div class='filter-row'>
-									<span class='sort-handle'></span>
+									<a class='sort-handle tooltip' href='javascript:void(0)' title='{%=o.str.txtLayerHandle%}' aria-label='{%=o.str.txtLayerHandleLabel%} {%=o.data[o.idx].layerConfig.displayName%}'></a>
 									<div class='layer-details'>
 										<div class='layer-image-box'>									
 											<img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image background-white'>
@@ -92,7 +92,7 @@
 											{% include('filter_global_row_template', o.config.globalFilter);%}
 										</div>
 										<!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
-										<ul id='layerList'>
+										<ul id='layerList' role='listbox' aria-label='{%=o.str.txtLayerListLabel%}'>
 											{% 				
 												var i=0;																														  
 											   o.data.forEach(function(layer){													

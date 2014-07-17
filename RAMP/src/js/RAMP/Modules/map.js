@@ -163,8 +163,7 @@ define([
                 }),
                 currentScale,
                 scaleLabelText;
-
-            $(scaleDiv).html("<span>Scale</span><br><span id='scaleLabel'><span/>");
+            $(scaleDiv).html("<span>" + GlobalStorage.config.stringResources.txtScale + "</span><br><span id='scaleLabel'><span/>");
             currentScale = number.format(map.getScale());
             scaleLabelText = "1 : " + currentScale;
 
