@@ -218,7 +218,6 @@ define([
                             }
                         });
 
-
                     /* END GLOBAL "EYE" AND BOUNDING BOX BUTTONS */
 
                     /* START INDIVIDUAL "EYE" AND BOUNDING BUTTON EVENTS */
