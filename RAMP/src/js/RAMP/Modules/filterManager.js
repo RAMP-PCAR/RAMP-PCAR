@@ -524,7 +524,7 @@ define([
                             // modify layer object
 
                             var wmsLayerName = null;
-                            if (layer.id.indexOf("wmsLayer") == 0) {
+                            if (layer.id.indexOf("wmsLayer") === 0) {
                                 wmsLayerName = layer.layerInfos[0].name;
                             }
 
