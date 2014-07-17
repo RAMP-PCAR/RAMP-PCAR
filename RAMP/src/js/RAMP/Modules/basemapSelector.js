@@ -187,15 +187,17 @@ function (
             basemapGallery.select(basemaps[0].id);
 
             //take over the click
-            $(".esriBasemapGalleryNode").on("mousedown", function (evt) {
-                var curr_id = basemapGallery.getSelected().id,
-                    selected_node = evt.currentTarget.id,
-                    selected_id = selected_node.slice(selected_node.indexOf("_") + 1);
+            $(".esriBasemapGalleryNode").on("mousedown keyup", function (evt) {
+                if (evt.which === 1 || evt.which === 13 || evt.which === 32) {
+                    var curr_id = basemapGallery.getSelected().id,
+                        selected_node = evt.currentTarget.id,
+                        selected_id = selected_node.slice(selected_node.indexOf("_") + 1);
 
-                if (curr_id === selected_id) {
-                    return false; //prevent the basemap from changing
-                } else { //didnt select the same basemap
-                    basemapGallery.select(selected_id);
+                    if (curr_id === selected_id) {
+                        return false; //prevent the basemap from changing
+                    } else { //didnt select the same basemap
+                        basemapGallery.select(selected_id);
+                    }
                 }
             });
 
