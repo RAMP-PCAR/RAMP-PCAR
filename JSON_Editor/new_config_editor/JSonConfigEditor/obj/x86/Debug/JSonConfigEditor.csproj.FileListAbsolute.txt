@@ -20,3 +20,6 @@ D:\Code\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonCo
 D:\Code\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonConfigEditor.gui.contextMenu.TreeViewContextMenu.resources
 D:\Code\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonConfigEditor.gui.label.StateLabel.resources
 D:\Code\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonConfigEditor.gui.popup.SearchWindow.resources
+C:\Users\WuShimu\Source\Repos\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\bin\Debug\JSonConfigEditor.exe.config
+C:\Users\WuShimu\Source\Repos\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonConfigEditor.exe
+C:\Users\WuShimu\Source\Repos\RAMP\JSON_Editor\new_config_editor\JSonConfigEditor\obj\x86\Debug\JSonConfigEditor.pdb
