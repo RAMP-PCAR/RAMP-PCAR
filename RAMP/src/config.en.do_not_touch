@@ -1,3 +1,8 @@
+WHAT ARE YOU DOING?!!! YOU SHOULD NOT BE READING THIS FILE. IT IS STRICTLY FORBIDDEN. THERE SHOULD BE NO REASON WHY YOU'RE READING THIS FILE, ABSOLUTELY NONE. ANY CHANGES SHOULD BE DONE VIA THE CONFIG EDITOR. IF YOU FORCIFULLY EDIT THIS FILE, ALL HELL WILL BREAK LOSE.
+
+Thank you for your cooperation,
+Developers of the Almighty JSON Config Editor
+
 {
     "name": "(root)",
     "type": "Object",
@@ -144,7 +149,7 @@
                 {
                     "name": "txtShowBounds",
                     "type": "String",
-                    "value": "Show Bounds of {0}",
+                    "value": "Show Bounds {0}",
                     "description": "",
                     "visibleText": false
                 },
@@ -343,27 +348,6 @@
                     "value": "Opacity",
                     "description": "",
                     "visibleText": false
-                },
-                {
-                    "name": "txtLayerHandle",
-                    "type": "String",
-                    "value": "Layer Handle",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtLayerHandleLabel",
-                    "type": "String",
-                    "value": "Layer handle for",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtLayerListLabel",
-                    "type": "String",
-                    "value": "Sortable layer list",
-                    "description": "",
-                    "visibleText": false
                 }
             ]
         },
@@ -524,7 +508,7 @@
         {
             "name": "lang",
             "type": "String",
-            "value": "en",
+            "value": "enba",
             "description": "",
             "visibleText": false
         },
