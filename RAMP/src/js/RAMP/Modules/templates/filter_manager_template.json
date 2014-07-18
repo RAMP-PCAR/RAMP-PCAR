@@ -32,14 +32,23 @@
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
                                             <ul class='button-group margin-top-none'>												
-                                                {% include('filter_button_template', o);%}
+                                                <li>
+                                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                    
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
+                                                    <span class='separator' role='presentation'></span>
+                                                </li>
+                                                <li>
+                                                    <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                {% } %}
+                                                    
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
                                     <div class='layer-checkboxes'>										
                                         {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
                                         {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
-                                        {% include('filter_toggle_template', o);%}
                                     </div>
                                     <div class='clear'>
                                     </div>
@@ -48,14 +57,17 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
-                                            <h4 class='margin-top-none margin-bottom-medium'>{%=o.str.txtSettingsLayerSettings%}</h4>
+                                            
+                                            <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
+    
+                                            {% if (o.opacity.enabled) { %}
                                             
                                             <div class='transparency-setting'>
                                                 <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
                                                 
                                                 <div class='nstSlider' data-aria_enabled='true'
                                                     data-range_min='0' data-range_max='1' 
-                                                    data-cur_min='{%=o.opacity%}'
+                                                    data-cur_min='{%=o.opacity.default%}'
     
                                                     data-layer-id='{%=o.layerId%}' >                                                      
                                                 
@@ -65,7 +77,8 @@
                                                 <span class='leftLabel'></span>                
                                             </div>
 
-                                </div>",
+                                            {% } %}
+                                        </div>",
 
         // filter row legend template 
         // used by level 2 to generate visibility and bounding box legend checkbox
@@ -77,13 +90,6 @@
                                             type='checkbox'></input>
                                     </div>",
         
-        "filter_toggle_template":"<div class='checkbox-custom'>                                        
-                                        <button class='toggle-button-icon settings button-none tooltip' title='{%=o.str.txtSettings%}'>
-                                            <i class='fa fa-sliders'></i>
-                                            <span class='wb-invisible'>{%=o.str.txtSettings%}</span>            
-                                        </button>
-                                    </div>",
-
         // filter row button template
         "filter_button_template":"<li>
                                         <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>

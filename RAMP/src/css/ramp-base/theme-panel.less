@@ -488,13 +488,22 @@
 		border: none;
 		color: @light-grey-color;
 
+		&.disabled {
+			color: @very-light-grey-color !important;
+
+			&:hover,
+			&:focus,
+			&:active {
+				color: @very-light-grey-color !important;
+			}
+		}
+
 		&.button-pressed {
 			color: @attention-color;
 		}
 
 		.fa {
-			font-size: 19px;
-			
+			font-size: 19px;			
 			cursor: pointer;
 		}
     }
@@ -618,7 +627,6 @@
 
             .global-checkboxes {
                 .right-align-checkboxes;
-                margin-right: 40px !important;
             }
         }
 
@@ -702,25 +710,27 @@
 
 			.filter-row-settings {
 				display: none;
-				//box-shadow: @upper-shadow, @lower-shadow;
-				box-shadow: 0 7px 8px -5px #000000 inset, 0 -7px 8px -5px #000000 inset;
-				//background-color: @medium-grey-color;
+				box-shadow: @upper-large-shadow, @lower-large-shadow;
 				background-image: @denim;
 				font-family: Arial,Verdana,Helvetica,sans-serif;
 				color: #fff;
-				padding: 10px 15px 15px 20px;
+				padding: 0px 0px 15px 0px;
+
+				border-style: none solid none solid;
+				border-color: @dark-grey-color;
+				border-width: 1px;
 
 				h4 {
 					text-align: center;
-					text-shadow: 0 1px 1px #222;
-					font-size: 100%;
-					padding-top: 0 !important;
-					color: #fff;
-					font-weight: bold;
+					margin: 0 0 15px 0 !important;
+					padding: 6px 2px 3px !important;
+					border-bottom: 1px inset black;
+					box-shadow:  @upper-large-shadow;
 				}
 
 				.transparency-setting {
 					text-align: right;
+					padding: 0 20px;
 
 					.nstSlider {
 						display: inline-block;
@@ -815,8 +825,28 @@
                     }
                 }
 
-                ul button.metadata-button {
-                    padding: 0 0 0 4px !important;
+                ul button {
+            		margin-left: 0 !important;
+        			margin-right: 0 !important;
+
+        			&.button-pressed {
+						color: @attention-color !important;
+					}
+
+                	&.metadata-button {
+                    	padding: 0 6px 0 3px !important;
+                	}
+
+                	&.settings-button {
+                		padding: 0px 6px !important;
+                	}
+                }
+
+                .separator {
+                    border-right: 1px solid black;
+                    height: 70%;
+                    position: absolute;
+                    top: 15%;
                 }
             }
 

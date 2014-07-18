@@ -508,7 +508,7 @@ Developers of the Almighty JSON Config Editor
         {
             "name": "lang",
             "type": "String",
-            "value": "enba",
+            "value": "en",
             "description": "",
             "visibleText": false
         },
@@ -3335,10 +3335,36 @@ Developers of the Almighty JSON Config Editor
                             "visibleText": false
                         },
                         {
-                            "name": "opacity",
-                            "type": "Numeric",
-                            "value": 0.5,
-                            "description": ""
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.5,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -5543,10 +5569,36 @@ Developers of the Almighty JSON Config Editor
                             "visibleText": false
                         },
                         {
-                            "name": "opacity",
-                            "type": "Numeric",
-                            "value": 0.7,
-                            "description": "https://developers.arcgis.com/javascript/jsapi/layer.html#opacity"
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": false,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": false,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.1,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -5860,10 +5912,36 @@ Developers of the Almighty JSON Config Editor
                             "visibleText": false
                         },
                         {
-                            "name": "opacity",
-                            "type": "Numeric",
-                            "value": 0.3,
-                            "description": ""
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.3,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -6259,12 +6337,6 @@ Developers of the Almighty JSON Config Editor
                             ]
                         },
                         {
-                            "name": "opacity",
-                            "type": "Numeric",
-                            "value": 0.5,
-                            "description": ""
-                        },
-                        {
                             "name": "symbology",
                             "type": "Object",
                             "description": "",
@@ -6347,6 +6419,38 @@ Developers of the Almighty JSON Config Editor
                             "value": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
                             "description": "",
                             "visibleText": false
+                        },
+                        {
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.5,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

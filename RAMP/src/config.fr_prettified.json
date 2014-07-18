@@ -52,7 +52,10 @@ Developers of the Almighty JSON Config Editor
         "txtDatasetSelectorButtonLoaded": " Chargé",
         "txtLayerHandle": "Descripteur de couche",
         "txtLayerHandleLabel": "Descripteur de couche pour",
-        "txtLayerListLabel": "Liste des couches sortable"
+        "txtLayerListLabel": "Liste des couches sortable",
+        "txtSettings": "[fr] Settings",
+        "txtSettingsLayerSettings": "[fr] Layer Settings",
+        "txtSettingsOpacity": "[fr] Opacity"
     },
     "gridstrings": {
         "sInfoPostFix": "",
@@ -567,7 +570,14 @@ Developers of the Almighty JSON Config Editor
             },
             "uuid": "708985e5-6408-4f7d-8363-bbe9c277bec2",
             "detailTemplate": "default_feature_details",
-            "nameField": "NAME"
+            "nameField": "NAME",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.5
+                }
+            }
         },
         {
             "id": "layer_dd1m3",
@@ -934,7 +944,14 @@ Developers of the Almighty JSON Config Editor
             },
             "uuid": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
             "detailTemplate": "default_feature_details",
-            "nameField": "ROUTE_NAME"
+            "nameField": "ROUTE_NAME",
+            "settings": {
+                "enabled": false,
+                "opacity": {
+                    "enabled": false,
+                    "default": 0.1
+                }
+            }
         },
         {
             "id": "layer_w9v8u",
@@ -991,7 +1008,14 @@ Developers of the Almighty JSON Config Editor
             },
             "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
             "detailTemplate": "default_feature_details",
-            "nameField": "NAME"
+            "nameField": "NAME",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            }
         }
     ],
     "datagrid": {
@@ -1067,7 +1091,6 @@ Developers of the Almighty JSON Config Editor
                 ],
                 "title": "[fr] RDPS.ETA - Air Temperature (c)"
             },
-            "opacity": 0.5,
             "symbology": {
                 "icons": {
                     "default": {
@@ -1083,7 +1106,14 @@ Developers of the Almighty JSON Config Editor
                 }
             },
             "url": "http://geo.weather.gc.ca/geomet/?lang=E\\u0026service=WMS",
-            "uuid": "d221ca08-00c9-4011-aca6-b0a014fc90dc"
+            "uuid": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.5
+                }
+            }
         }
     ]
 }
