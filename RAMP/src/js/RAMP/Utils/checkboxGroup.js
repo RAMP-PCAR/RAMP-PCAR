@@ -10,13 +10,14 @@
 * @class CheckboxGroup
 * @uses dojo/_base/declare
 * @ueses dojo/_base/lang
+* @ueses dojo/on
 * @uses Checkbox
 */
 
-define(["dojo/_base/declare", "dojo/_base/lang",
+define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
 
         "utils/checkbox"],
-    function (declare, lang,
+    function (declare, lang, on,
             Checkbox) {
         "use strict";
 
@@ -83,6 +84,8 @@ define(["dojo/_base/declare", "dojo/_base/lang",
         return declare(null, {
             nodes: [],
 
+            nodeIdAttr: "id",
+
             checkboxes: [],
 
             cssClass: {
@@ -95,6 +98,8 @@ define(["dojo/_base/declare", "dojo/_base/lang",
                 check: "checked",
                 uncheck: "unchecked"
             },
+
+            onChange: null,
 
             master: {
                 node: null,
@@ -109,10 +114,10 @@ define(["dojo/_base/declare", "dojo/_base/lang",
                 label: {
                     check: "checked",
                     uncheck: "unchecked"
-                }
-            },
+                },
 
-            onChange: null,
+                onChange: null
+            },
 
             /**
             * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
@@ -129,13 +134,19 @@ define(["dojo/_base/declare", "dojo/_base/lang",
             * @return {CheckboxWrapper} A control objects allowing to toggle checkboxes supplying a state, and retrieve original checkbox nodes
             */
             constructor: function (nodes, options) {
+                var that = this,
+                    checkbox;
+
                 lang.mixin(this, options);
                 this.nodes = nodes;
 
                 nodes.each(function (index, node) {
-                    this.checkboxes.push(
-                        new Checkbox(node, cssClass, label, onChange)
-                    );
+                    checkbox = new Checkbox(node, cssClass, label, onChange);
+                    this.checkboxes.push(checkbox);
+
+                    on(checkbox, "toggle", function (evt) {
+                        that._checkMaster();
+                    });
                 });
 
                 if (this.master.node) {
@@ -143,7 +154,64 @@ define(["dojo/_base/declare", "dojo/_base/lang",
                         this.master.node,
                         this.master.cssClass,
                         this.master.label);
-                };
+
+                    on(this.master.checkbox, "toggle", function (evt) {
+                        that.setState(evt.state);
+                    });
+                } else {
+                    this.master = null;
+                }
+            },
+
+            _checkMaster: function () {
+                var allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
+                    return checkbox.isChecked();
+                });
+
+                if (this.master) {
+                    this.master.checkbox.setState(allChecked);
+                }
+            },
+
+            /**
+             *
+             * @param {Boolean} [checkboxId]
+             */
+            setState: function (state, checkboxId) {
+                var checkbox;
+
+                if (!checkboxId) {
+                    if (this.master) {
+                        this.master.checkbox.setState(state);
+
+                        this.checkboxes.forEach(function (checkbox) {
+                            checkbox.setState(state);
+                        });
+                    }
+                } else {
+                    for (var i = 0; i < this.checkboxes.length; i++) {
+                        checkbox = this.checkboxes[i];
+                        if (checkbox.id === checkboxId) {
+                            break;
+                        }
+                    }
+
+                    checkbox.setState(state);
+
+                    this._checkMaster();
+                }
+            },
+
+            setState123: function (checkboxId, state) {
+                var checkbox;
+                for (var i = 0; i < this.checkboxes.length; i++) {
+                    checkbox = this.checkboxes[i];
+                    if (checkbox.id === checkboxId) {
+                        break;
+                    }
+                }
+
+                checkbox.setState(state);
             },
 
             _constructor: function (nodes, checkedClass, focusedClass, labels, fnc) {
@@ -193,7 +261,7 @@ define(["dojo/_base/declare", "dojo/_base/lang",
             * @return {object} Control object for chaining
             * @chainable
             */
-            setState: function (fcn) {
+            _setState_: function (fcn) {
                 _toggleState(this, this.nodes, fcn);
 
                 return this;
