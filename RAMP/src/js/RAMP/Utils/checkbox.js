@@ -1,4 +1,17 @@
-﻿define(["dojo/_base/declare"],
+﻿/* global define */
+
+/**
+* @module Utils
+*/
+
+/**
+* [Description]
+*
+* @class Checkbox
+* @uses dojo/_base/declare
+*/
+
+define(["dojo/_base/declare"],
     function (declare) {
         "use strict";
 
@@ -10,7 +23,7 @@
         * @private
         * @param {Object} objs An array of checkboxes to toggle
         */
-        function _toggleLabels(instance, objs) {
+        function _toggleLabels(that, objs) {
             var label;
 
             objs.each(function (i, obj) {
@@ -18,22 +31,22 @@
                     newText;
                 label = node.findInputLabel();
                 if (node.is(':checked')) {
-                    newText = String.format(instance.labels.checked,
+                    newText = String.format(that.labels.checked,
                         label.data("label-name"));
                     label
-                        .addClass(instance.checkedClass)
+                        .addClass(that.checkedClass)
                         .prop('title', newText)
                         .find("> span").text(newText);
                 } else {
-                    newText = String.format(instance.labels.unchecked,
+                    newText = String.format(that.labels.unchecked,
                         label.data("label-name"));
                     label
-                        .removeClass(instance.checkedClass)
+                        .removeClass(that.checkedClass)
                         .prop('title', newText)
                         .find("> span").text(newText);
                 }
-                if (instance.fnc) {
-                    instance.fnc.call(this, label.parent(), null, "update");
+                if (that.fnc) {
+                    that.fnc.call(this, label.parent(), null, "update");
                 }
             });
         }
@@ -49,23 +62,23 @@
         * true if the checkbox should be checked, and false if the checkbox should be unchecked.
         *
         */
-        function _toggleState(instance, nodes, fcn) {
+        function _toggleState(that, nodes, fcn) {
             nodes.each(function () {
                 $(this).prop('checked', fcn($(this)));
             });
 
-            _toggleLabels(instance, nodes);
+            _toggleLabels(that, nodes);
         }
 
         return declare(null, {
             /**
             * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
-            * its functionality. Handles synchronisation of the checkbox's state with its new rendering.
+            * its functionality. Handles synchronization of the checkbox's state with its new rendering.
             * Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
             *
             * @method styleCheckboxes
             * @static
-            * @param {jObject} node a jQuery object representing the checkbox
+            * @param {jObject} nodes a jQuery object representing the checkbox
             * @param {String} checkedClass Name of the CSS class to be used when checked
             * @param {String} focusedClass Name of the CSS class to be used when focused
             * @param {object} labels An object containing labels' text { checked: "label when checked", unchecked: "label when unchecked" }
@@ -78,20 +91,20 @@
                 this.labels = labels;
                 this.fnc = fnc;
 
-                var instance = this;
+                var that = this;
 
                 nodes
-                .on("change", function () {
-                    _toggleLabels(instance, $(this));
-                })
-                .on("focus", function () {
-                    $(this).findInputLabel().addClass(focusedClass);
-                })
-                .on("focusout", function () {
-                    $(this).findInputLabel().removeClass(focusedClass);
-                });
+                    .on("change", function () {
+                        _toggleLabels(that, $(this));
+                    })
+                    .on("focus", function () {
+                        $(this).findInputLabel().addClass(focusedClass);
+                    })
+                    .on("focusout", function () {
+                        $(this).findInputLabel().removeClass(focusedClass);
+                    });
 
-                _toggleLabels(instance, nodes);
+                _toggleLabels(that, nodes);
             },
 
             /**
