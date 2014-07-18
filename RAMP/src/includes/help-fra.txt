@@ -168,18 +168,18 @@
     <!-- infoPanel ENDS -->
 <!-- accessibility BEGINS -->
     <details class="margin-bottom-medium">
-    <summary class="">Accessibility</summary>
+    <summary class="">Accessibilité</summary>
         <div>
             <div class="helpSectionBody">
             <p>Cette page est conforme WCAG 2.0 AA.</p>
-			<p><b>Accessibilité au clavier:</b></p>
-			<p>La fonctionnalité du clavier est offerte en tant que solution de rechange pour les usagers qui sont incapables d'utiliser une souris. Utilisez la touche Tab pour naviguer vers les liens et les contrôles sur la page. Appuyez sur Shift+Tab pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d'espace pour activer les liens et les contrôles.</p>
-			<p><b>Contrôles de navigation:</b></p>
-			<p>Curseur de zoom: Avec le curseur de zoom surligné, utilisez la touche de la flèche orientée vers le haut pour effectuer un zoom avant et la touche de la flèche orientée vers le bas pour effectuer un zoom arrière.</p>
-			<p><b>Ensembles de données/Onglet de données:</b></p>
-			<p>Avec les ensembles de données ou l'onglet de données surligné, utilisez les touches des flèches gauche et droite pour basculer entre eux.</p>
-			<p><b>Onglet d'ensembles de données:</b></p>
-			<p>Dans l'onglet d'ensembles de données, utilisez les touches des flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec le descripteur de couches (icône à 6 points) surligné, utilisez la touche Entrée ou la barre d'espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu. Avec la couche saisie, utilisez les touches des flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l'interface de cartographie. Appuyez sur Entrée ou la barre d'espace pour libérer la couche.</p>
+            <p><b>Accessibilité au clavier:</b></p>
+            <p>La fonctionnalité du clavier est offerte en tant que solution de rechange pour les usagers qui sont incapables d'utiliser une souris. Utilisez la touche Tab pour naviguer vers les liens et les contrôles sur la page. Appuyez sur Shift+Tab pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d'espace pour activer les liens et les contrôles.</p>
+            <p><b>Contrôles de navigation:</b></p>
+            <p>Curseur de zoom: Avec le curseur de zoom surligné, utilisez la touche de la flèche orientée vers le haut pour effectuer un zoom avant et la touche de la flèche orientée vers le bas pour effectuer un zoom arrière.</p>
+            <p><b>Ensembles de données/Onglet de données:</b></p>
+            <p>Avec les ensembles de données ou l'onglet de données surligné, utilisez les touches des flèches gauche et droite pour basculer entre eux.</p>
+            <p><b>Onglet d'ensembles de données:</b></p>
+            <p>Dans l'onglet d'ensembles de données, utilisez les touches des flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec le descripteur de couches (icône à 6 points) surligné, utilisez la touche Entrée ou la barre d'espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu. Avec la couche saisie, utilisez les touches des flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l'interface de cartographie. Appuyez sur Entrée ou la barre d'espace pour libérer la couche.</p>
             </div>
         </div>
     </details>
