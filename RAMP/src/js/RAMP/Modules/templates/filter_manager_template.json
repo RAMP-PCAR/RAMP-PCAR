@@ -122,6 +122,19 @@
                                             </label>
                                             <input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>
                                         </div>",
+        
+        "balh": "<ul>
+                    {%
+                        var i=0;																														  
+                        o.data.forEach(function(layer) {													
+                            o.idx = i;
+                            include('filter_section_template',o);																									
+                            i++;
+                        });
+                    %}
+                </ul>",
+    
+    
         // Entry point
         // Template to create filter content for RAMP	
         // o is the datawrapper object contains layers stored in o.data
@@ -131,14 +144,15 @@
                                         </div>
                                         <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
                                         <ul id='layerList' role='listbox' aria-label='{%=o.str.txtLayerListLabel%}'>
-                                            {% 				
-                                                var i=0;																														  
-                                               o.data.forEach(function(layer){													
-                                                    o.idx = i;
-                                                    include('filter_section_template',o);																									
-                                                    i++;
-                                               });
-                                            %}
+                                            
+                                            {%
+                                                for (var prop in o.layerGroups ) { 
+                                                    if (o.layerGroups.hasOwnProperty(prop)) {
+                                                        include('balh', o.layerGroups[prop]);                                                        
+                                                    }
+                                                }
+                                            %}  
+
                                         </ul>
                                         <div class='clearBoth'>
                                         </div>

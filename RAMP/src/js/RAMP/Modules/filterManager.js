@@ -553,7 +553,7 @@ define([
                 */
                 function setLayerReorderingEvents() {
                     // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList");
+                    layerList = $("#layerList ul:first");
                     if (layerList.find("> li").length > 1) {
                         layerList.sortable({
                             axis: "y",
@@ -567,6 +567,8 @@ define([
                             }
                         });
                     }
+
+                    return;
 
                     // Styling to match Data tab look on hover
                     $("#layerList > li")
@@ -694,11 +696,21 @@ define([
 
                         // get visible layers
                         var layers = RampMap.getMap().getLayersVisibleAtScale(),
+                            layerGroups = {
+                                feature: [
+
+                                ],
+
+                                wms: [
+
+                                ]
+                            },
+
                             lLayers = [];
 
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
-                            //WMS does not have layer type property.  must use layer id to deterime if we want to show layer in filter
+                            //WMS does not have layer type property.  must use layer id to determine if we want to show layer in filter
 
                             if (layer.type === "Feature Layer" || layer.id.indexOf("wmsLayer") === 0) {
                                 // modify layer object
@@ -706,16 +718,31 @@ define([
                                 var wmsLayerName = null;
                                 if (layer.id.indexOf("wmsLayer") === 0) {
                                     wmsLayerName = layer.layerInfos[0].name;
+
+                                    layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+                                    layerGroups.wms.push(layer);
+                                } else {
+                                    layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+
+                                    layerGroups.feature.push(layer);
                                 }
 
-                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-                                lLayers.push(layer);
+                                //lLayers.push(layer);
                             }
                         });
 
                         // put layer in datawrapper to be used in template
                         var data = TmplHelper.dataBuilder(lLayers),
                             section;
+
+                        data = {
+                            config: GlobalStorage.config,
+                            str: GlobalStorage.config.stringResources,
+                            layerGroups: {
+                                feature: TmplHelper.dataBuilder(layerGroups.feature),
+                                wms: TmplHelper.dataBuilder(layerGroups.wms)
+                            }
+                        };
 
                         sectionNode = $("#" + GlobalStorage.config.divNames.filter);
                         // TODO: generate section using one template, need to refactoring the following fixed string
