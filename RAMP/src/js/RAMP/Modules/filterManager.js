@@ -43,6 +43,8 @@
 * @uses Array
 * @uses Dictionary
 * @uses PopupManager
+* @uses Checkbox
+* @uses CheckboxGroup
 */
 
 define([
