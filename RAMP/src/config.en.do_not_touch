@@ -6675,7 +6675,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "enabled",
                                     "type": "Boolean",
-                                    "value": false,
+                                    "value": true,
                                     "description": ""
                                 },
                                 {

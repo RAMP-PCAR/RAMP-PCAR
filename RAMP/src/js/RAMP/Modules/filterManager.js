@@ -553,7 +553,7 @@ define([
                 */
                 function setLayerReorderingEvents() {
                     // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList ul:first");
+                    layerList = $("#layerList > ul");
                     if (layerList.find("> li").length > 1) {
                         layerList.sortable({
                             axis: "y",

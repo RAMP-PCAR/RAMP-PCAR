@@ -1158,7 +1158,7 @@ Developers of the Almighty JSON Config Editor
             "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
             "uuid": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
             "settings": {
-                "enabled": false,
+                "enabled": true,
                 "opacity": {
                     "enabled": true,
                     "default": 0.5
