@@ -6554,7 +6554,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "name",
                                     "type": "String",
-                                    "value": "RDPS.ETA - Winds (noeuds)",
+                                    "value": "RDPS.ETA_UU",
                                     "description": "",
                                     "visibleText": false
                                 },
