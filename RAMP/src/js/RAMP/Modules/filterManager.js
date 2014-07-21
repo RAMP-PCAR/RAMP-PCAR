@@ -554,6 +554,8 @@ define([
                 function setLayerReorderingEvents() {
                     // Drag and drop layer reordering using jQuery UI Sortable widget
                     layerList = $("#layerList > ul");
+                    var layerGroupSeparator = layerList.parent().find(".layer-group-separator");
+
                     if (layerList.find("> li").length > 1) {
                         layerList.sortable({
                             axis: "y",
@@ -561,9 +563,34 @@ define([
                             placeholder: "sortable-placeholder",
                             update: function (event, ui) {
                                 var layerId = ui.item[0].id,
-                                    index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId);
+                                    idArray = layerList.find(">li").map(function(i, elm) { return elm.id; }),
+                                    index = dojoArray.indexOf(idArray, layerId);
 
                                 reorderPublishEvents(layerId, index);
+
+                                console.log(layerId, "->", index);
+
+                                layerList
+                                    .removeClass("sort-active")
+                                    .removeClass("sort-disabled");
+
+                                layerGroupSeparator.removeClass("active");
+                            },
+
+                            stop: function(event, ui) {
+                                layerList
+                                    .removeClass("sort-active")
+                                    .removeClass("sort-disabled");
+
+                                layerGroupSeparator.removeClass("active");
+                            },
+
+                            start: function( event, ui ) {
+                                layerList
+                                    .has(ui.item).addClass("sort-active")
+                                    .end().filter(":not(.sort-active)").addClass("sort-disabled");
+
+                                layerGroupSeparator.addClass("active");
                             }
                         });
                     }

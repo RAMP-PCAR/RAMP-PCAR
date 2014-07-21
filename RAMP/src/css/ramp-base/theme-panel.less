@@ -640,17 +640,54 @@
             top: 0;
             margin: 0 !important;
 
-            > ul {
-                margin: 0;
+            .layer-group-separator {
+                height: 1px;
+
+                &.active {
+                    background-color: @light-grey-color;
+                }
+
+                &:last-child {
+                    display: none;
+                }
             }
 
-            li {
-                list-style: none;
+            > ul {
+                margin: 0;
+                position: relative;
 
-                &.sortable-placeholder {
-                    background-image: @dark-denim;
-                    background-color: @medium-grey-color;
-                    height: 48px;
+                &.sort-disabled:before {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    background-color: black;
+                    opacity: 0.2;
+                    z-index: 1;
+                }
+
+                &.sort-active > li > fieldset:before {
+                    content: "";
+                    position: absolute;
+                    background-color: @accent-color;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 3px;
+                    z-index: 1;
+                }
+
+                > li {
+                    list-style: none;
+                    background-color: white;
+
+                    &.sortable-placeholder {
+                        background-image: @dark-denim;
+                        background-color: @medium-grey-color;
+                        height: 48px;
+                    }
                 }
             }
 
@@ -683,15 +720,22 @@
                 padding: 0px 0 0 0;
             }
 
-            &.ui-sortable-helper legend {
-                .box-shadow (@separator-drag-shadow);
+            &.ui-sortable-helper
+            {
+                /*.filter-row-settings {
+                    display: none !important;
+                }*/
+
+                legend {
+                    .box-shadow (@separator-drag-shadow);
+                }
             }
 
             legend {
                 padding: 8px 0 8px;
                 position: relative;
                 font-size: 100% !important;
-                background-color: white;
+                //background-color: white;
                 .box-shadow (@separator-shadow);
                 .transition(400ms, ease);
 

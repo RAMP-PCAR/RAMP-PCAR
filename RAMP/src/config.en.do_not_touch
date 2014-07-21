@@ -340,14 +340,28 @@ Developers of the Almighty JSON Config Editor
                     "type": "String",
                     "value": "Layer Settings",
                     "description": "",
-                    "visibleText": false
+                    "visibleText": true
                 },
                 {
                     "name": "txtSettingsOpacity",
                     "type": "String",
                     "value": "Opacity",
                     "description": "",
-                    "visibleText": false
+                    "visibleText": true
+                },
+                {
+                    "name": "txtLayerHandle",
+                    "type": "String",
+                    "value": "Layer Handle",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtLayerHandleLabel",
+                    "type": "String",
+                    "value": "Layer handle for",
+                    "description": "",
+                    "visibleText": true
                 }
             ]
         },
