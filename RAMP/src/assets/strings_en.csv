@@ -44,7 +44,7 @@ closeTitle,Close
 ,
 getLinkTitle,Get Link
 getLinkDescription,Link to Map Viewer
-getLinkShortLink,short link
+getLinkShortLink,Short link
 getLinkEmail,Email
 ,
 fullScreenTitle,Full Screen

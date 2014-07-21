@@ -348,6 +348,20 @@ Developers of the Almighty JSON Config Editor
                     "value": "Opacity",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtGetLinkShort",
+                    "type": "String",
+                    "value": "Short link",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "txtGetLinkLong",
+                    "type": "String",
+                    "value": "Long link",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         },

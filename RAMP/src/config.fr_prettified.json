@@ -55,7 +55,9 @@ Developers of the Almighty JSON Config Editor
         "txtLayerListLabel": "Liste des couches sortable",
         "txtSettings": "[fr] Settings",
         "txtSettingsLayerSettings": "[fr] Layer Settings",
-        "txtSettingsOpacity": "[fr] Opacity"
+        "txtSettingsOpacity": "[fr] Opacity",
+        "txtGetLinkLong": "Lien à long",
+        "txtGetLinkShort": "Lien raccourci"
     },
     "gridstrings": {
         "sInfoPostFix": "",

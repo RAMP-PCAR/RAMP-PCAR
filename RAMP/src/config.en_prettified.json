@@ -52,7 +52,9 @@ Developers of the Almighty JSON Config Editor
         "txtDataset": "Dataset",
         "txtSettings": "Settings",
         "txtSettingsLayerSettings": "Layer Settings",
-        "txtSettingsOpacity": "Opacity"
+        "txtSettingsOpacity": "Opacity",
+        "txtGetLinkShort": "Short link",
+        "txtGetLinkLong": "Long link"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

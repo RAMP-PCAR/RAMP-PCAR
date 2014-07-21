@@ -357,10 +357,11 @@ define([
         * @private
         */
         function toggleShortLinkMode(value) {
-            var label;
+            var label,
+                localStrings = GlobalStorage.config.stringResources;
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
-            label = isShortLinkMode ? "long link" : "short link";
+            label = isShortLinkMode ? localStrings.txtGetLinkLong : localStrings.txtGetLinkShort;
             getlinkShortenButton.text(label);
             updateURL();
         }
