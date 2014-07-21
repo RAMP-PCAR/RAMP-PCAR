@@ -692,6 +692,103 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         }
                     });
                 }
+            },
+
+            /**
+            * [settings.linkLists]: false 
+            */
+            keyboardSortable: function (ulNodes, settings) {
+
+                ulNodes.each(function (index, ulNode) {
+                    var ulNode = $(ulNode),
+                        liNodes = ulNode.find("> li"),
+                        sortHandleNodes = liNodes.find(".sort-handle"),
+                        grabbed;
+
+                    // Reset focus, set aria attributes, and styling
+                    function reorderReset(handle, liNodes, liNode) {//, layerLegend) {
+                        handle.focus();
+                        liNodes.attr("aria-dropeffect", "move");
+                        liNode.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
+                        //layerLegend.addClass("highlighted-row");
+                    }
+
+                    sortHandleNodes
+                        .focusout(function () {
+                            //$(this).closest("legend").removeClass("background-light highlighted-row");
+                            //$(this).closest("li.layerList1").attr({ "aria-selected": false, "aria-grabbed": false });
+                            //$("#layerList > li").removeAttr("aria-dropeffect");
+                            grabbed = false;
+                        })
+                        .on("keyup", function (e) {
+                            var liNode = $(this).closest("li"),
+                                liId = liNode[0].id,
+                                //liIdArray = liNodes.map(function (i, elm) { return elm.id; }),
+                                liIdArray = ulNode.sortable("toArray"),
+                                liIndex = dojoArray.indexOf(liIdArray, liId);
+
+                                /*allLayers = $("#layerList > li.layerList1:not(.not-sortable)"),
+                                layerLegend = $(this).closest("legend"),
+                                layerId = layer[0].id,
+                                index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId),
+                                lastIndex = dojoArray.indexOf($("#layerList").sortable("toArray"), allLayers.last()[0].id);*/
+
+                            // Toggle grabbed state and aria attributes (13 = enter, 32 = space bar)
+                            if (e.which === 13 || e.which === 32) {
+                                if (grabbed) {
+                                    liNodes.removeAttr("aria-dropeffect");
+                                    liNode.attr("aria-grabbed", "false");
+                                    grabbed = false;
+                                } else {
+                                    liNodes.attr("aria-dropeffect", "move");
+                                    liNode
+                                        .attr("aria-grabbed", "true")
+                                        .removeAttr("aria-dropeffect");
+                                    grabbed = true;
+                                }
+
+                                //layerLegend.toggleClass("highlighted-row");
+                            // Keyboard up (38) and down (40)
+                            } else if (e.which === 38) {
+                                if (grabbed) {
+                                    // Don't move up if first layer in list
+                                    if (liIndex > 0) {
+                                        liNode.prev().before(liNode);
+
+                                        reorderReset($(this), liNodes, liNode);//, layerLegend);
+
+                                        grabbed = true;
+                                        liIndex -= 1;
+
+                                        settings.callback.call(null, liNode);
+                                        //reorderPublishEvents(layerId, index);
+                                    }
+                                } else {
+                                    liNode.prev().find(":tabbable:first").focus();
+                                }
+
+                            } else if (e.which === 40) {
+                                if (grabbed) {
+                                    // Don't move down if last layer in list
+                                    if (liIndex < liNodes.length) {
+                                        liNode.next().after(liNode);
+
+                                        reorderReset($(this), liNodes, liNode);//, layerLegend);
+
+                                        grabbed = true;
+                                        liIndex += 1;
+
+                                        settings.callback.call(null, liNode);
+                                        //reorderPublishEvents(layerId, index);
+                                    }
+                                } else {
+                                    liNode.next().find(":tabbable:first").focus();
+                                }
+                            }
+
+                            console.log("grabbed", grabbed);
+                        });
+                });
             }
         };
     });
