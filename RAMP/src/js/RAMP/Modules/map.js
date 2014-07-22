@@ -551,6 +551,42 @@ define([
             boxLayer.setVisibility(visibility);
         }
 
+        function generateStaticLayer(staticLayer) {
+            var tempLayer;
+            //determine layer type and process
+            switch (staticLayer.layerType) {
+                case "feature":
+                    tempLayer = new FeatureLayer(staticLayer.url, {
+                        opacity: staticLayer.opacity,
+                        mode: FeatureLayer.MODE_SNAPSHOT,
+                        id: "static_" + staticLayer.id
+                    });
+                    break;
+
+                case "tile":
+                    tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
+                        opacity: staticLayer.opacity,
+                        id: "static_" + staticLayer.id
+                    });
+                    console.log("tile layer added. " + "static_" + staticLayer.id);
+                    break;
+
+                case "dynamic":
+                    tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
+                        opacity: staticLayer.opacity,
+                        id: "static_" + staticLayer.id
+                    });
+                    console.log("dynamic layer added. " + "static_" + staticLayer.id);
+                    break;
+
+                default:
+                    //TODO add in other types of maps... wms?  non-esri tile?
+                    break;
+            }
+            return tempLayer;
+
+        }
+
         return {
             /**
             * The maximum extent of the map control is allowed to go to
@@ -772,11 +808,20 @@ define([
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(config.featureLayers, function (layer) {
-                    var fl = new FeatureLayer(layer.url, {
-                        id: layer.id,
-                        mode: FeatureLayer.MODE_SNAPSHOT,
-                        outFields: [layer.layerAttributes]
-                    });
+
+                    var fl;
+
+                    if (layer.isStatic) {
+                        fl = generateStaticLayer(layer);
+                    } else {
+                        fl = new FeatureLayer(layer.url, {
+                            id: layer.id,
+                            mode: FeatureLayer.MODE_SNAPSHOT,
+                            outFields: [layer.layerAttributes]
+                        });
+                    }
+
+                    
 
                     return fl;
                 });
@@ -825,37 +870,39 @@ define([
                 dojoArray.map(config.featureLayers, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
-                        var tempLayer;
+                        //var tempLayer;
                         //determine layer type and process
-                        switch (staticLayer.layerType) {
-                            case "feature":
-                                tempLayer = new FeatureLayer(staticLayer.url, {
-                                    opacity: staticLayer.opacity,
-                                    mode: FeatureLayer.MODE_SNAPSHOT,
-                                    id: "static_" + staticLayer.id
-                                });
-                                break;
+                        //switch (staticLayer.layerType) {
+                        //    case "feature":
+                        //        tempLayer = new FeatureLayer(staticLayer.url, {
+                        //            opacity: staticLayer.opacity,
+                        //            mode: FeatureLayer.MODE_SNAPSHOT,
+                        //            id: "static_" + staticLayer.id
+                        //        });
+                        //        break;
 
-                            case "tile":
-                                tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                                    opacity: staticLayer.opacity,
-                                    id: "static_" + staticLayer.id
-                                });
-                                console.log("tile layer added. " + "static_" + staticLayer.id);
-                                break;
+                        //    case "tile":
+                        //        tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
+                        //            opacity: staticLayer.opacity,
+                        //            id: "static_" + staticLayer.id
+                        //        });
+                        //        console.log("tile layer added. " + "static_" + staticLayer.id);
+                        //        break;
 
-                            case "dynamic":
-                                tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                                    opacity: staticLayer.opacity,
-                                    id: "static_" + staticLayer.id
-                                });
-                                console.log("dynamic layer added. " + "static_" + staticLayer.id);
-                                break;
+                        //    case "dynamic":
+                        //        tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
+                        //            opacity: staticLayer.opacity,
+                        //            id: "static_" + staticLayer.id
+                        //        });
+                        //        console.log("dynamic layer added. " + "static_" + staticLayer.id);
+                        //        break;
 
-                            default:
-                                //TODO add in other types of maps... wms?  non-esri tile?
-                                break;
-                        }
+                        //    default:
+                        //        //TODO add in other types of maps... wms?  non-esri tile?
+                        //        break;
+                        //}
+
+                        var tempLayer = map.generateStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
                         //creates an array of all static layers defined for the current, single feature layer
@@ -887,5 +934,8 @@ define([
                 _initListeners(map);
                 _initEventHandlers(map, featureLayers);
             }
+
+
+            
         };
     });
