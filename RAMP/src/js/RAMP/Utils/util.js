@@ -695,98 +695,140 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * [settings.linkLists]: false 
+            * [settings.linkLists]: false
             */
             keyboardSortable: function (ulNodes, settings) {
+                settings = dojoLang.mixin({
+                    linkLists: false,
 
-                ulNodes.each(function (index, ulNode) {
-                    var ulNode = $(ulNode),
+                    onStart: function () { },
+                    onUpdate: function () { },
+                    onStop: function () { }
+                }, settings);
+
+                ulNodes.each(function (index, _ulNode) {
+                    var ulNode = $(_ulNode),
                         liNodes = ulNode.find("> li"),
                         sortHandleNodes = liNodes.find(".sort-handle"),
+                        isReordering = false,
                         grabbed;
 
                     // Reset focus, set aria attributes, and styling
-                    function reorderReset(handle, liNodes, liNode) {//, layerLegend) {
+                    function reorderReset(handle, liNodes, liNode) {
                         handle.focus();
                         liNodes.attr("aria-dropeffect", "move");
                         liNode.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
-                        //layerLegend.addClass("highlighted-row");
                     }
 
                     sortHandleNodes
-                        .focusout(function () {
-                            //$(this).closest("legend").removeClass("background-light highlighted-row");
-                            //$(this).closest("li.layerList1").attr({ "aria-selected": false, "aria-grabbed": false });
-                            //$("#layerList > li").removeAttr("aria-dropeffect");
-                            grabbed = false;
+                        .focusout(function (event) {
+                            var node = $(this).closest("li");
+
+                            // if the list is not being reordered right now, release list item
+                            if (node.hasClass("list-item-grabbed") && !isReordering) {
+                                liNodes.removeAttr("aria-dropeffect");
+                                node
+                                    .removeClass("list-item-grabbed")
+                                    .attr({ "aria-selected": false, "aria-grabbed": false });
+
+                                grabbed = false;
+
+                                console.log("Keyboard Sortable: OnStop -> ", event);
+                                settings.onStop.call(null, event, { item: null });
+                            }
                         })
-                        .on("keyup", function (e) {
+                        .on("keyup", function (event) {
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
-                                //liIdArray = liNodes.map(function (i, elm) { return elm.id; }),
                                 liIdArray = ulNode.sortable("toArray"),
                                 liIndex = dojoArray.indexOf(liIdArray, liId);
 
-                                /*allLayers = $("#layerList > li.layerList1:not(.not-sortable)"),
-                                layerLegend = $(this).closest("legend"),
-                                layerId = layer[0].id,
-                                index = dojoArray.indexOf($("#layerList").sortable("toArray"), layerId),
-                                lastIndex = dojoArray.indexOf($("#layerList").sortable("toArray"), allLayers.last()[0].id);*/
-
                             // Toggle grabbed state and aria attributes (13 = enter, 32 = space bar)
-                            if (e.which === 13 || e.which === 32) {
+                            if (event.which === 13 || event.which === 32) {
                                 if (grabbed) {
                                     liNodes.removeAttr("aria-dropeffect");
-                                    liNode.attr("aria-grabbed", "false");
+                                    liNode
+                                        .attr("aria-grabbed", "false")
+                                        .removeClass("list-item-grabbed");
+
+                                    console.log("Keyboard Sortable: OnStop -> ", liNode);
+                                    settings.onStop.call(null, event, { item: liNode });
+
                                     grabbed = false;
                                 } else {
                                     liNodes.attr("aria-dropeffect", "move");
                                     liNode
                                         .attr("aria-grabbed", "true")
-                                        .removeAttr("aria-dropeffect");
+                                        .removeAttr("aria-dropeffect")
+                                        .addClass("list-item-grabbed");
+
+                                    console.log("Keyboard Sortable: OnStart -> ", liNode);
+                                    settings.onStart.call(null, event, { item: liNode });
+
                                     grabbed = true;
                                 }
-
-                                //layerLegend.toggleClass("highlighted-row");
-                            // Keyboard up (38) and down (40)
-                            } else if (e.which === 38) {
+                                // Keyboard up (38) and down (40)
+                            } else if (event.which === 38) {
                                 if (grabbed) {
                                     // Don't move up if first layer in list
                                     if (liIndex > 0) {
+                                        isReordering = true;
+
                                         liNode.prev().before(liNode);
 
-                                        reorderReset($(this), liNodes, liNode);//, layerLegend);
+                                        reorderReset($(this), liNodes, liNode);
 
                                         grabbed = true;
                                         liIndex -= 1;
 
-                                        settings.callback.call(null, liNode);
-                                        //reorderPublishEvents(layerId, index);
+                                        console.log("Keyboard Sortable: OnUpdate -> ", liNode);
+                                        settings.onUpdate.call(null, event, { item: liNode });
+
+                                        isReordering = false;
                                     }
                                 } else {
-                                    liNode.prev().find(":tabbable:first").focus();
-                                }
+                                    // if lists are linked, jump to the last item of the previous list, if any
+                                    if (settings.linkLists &&
+                                        liIndex === 0 &&
+                                        index !== 0) {
+                                        liNode = $(ulNodes[index - 1]).find("> li:last");
+                                    } else {
+                                        liNode = liNode.prev();
+                                    }
 
-                            } else if (e.which === 40) {
+                                    liNode.find(":tabbable:first").focus();
+                                }
+                            } else if (event.which === 40) {
                                 if (grabbed) {
                                     // Don't move down if last layer in list
-                                    if (liIndex < liNodes.length) {
+                                    if (liIndex < liNodes.length - 1) {
+                                        isReordering = true;
+
                                         liNode.next().after(liNode);
 
-                                        reorderReset($(this), liNodes, liNode);//, layerLegend);
+                                        reorderReset($(this), liNodes, liNode);
 
                                         grabbed = true;
                                         liIndex += 1;
 
-                                        settings.callback.call(null, liNode);
-                                        //reorderPublishEvents(layerId, index);
+                                        console.log("Keyboard Sortable: OnUpdate -> ", liNode);
+                                        settings.onUpdate.call(null, event, { item: liNode });
+
+                                        isReordering = false;
                                     }
                                 } else {
-                                    liNode.next().find(":tabbable:first").focus();
+                                    // if lists are linked, jump to the first item of the next list, if any
+                                    if (settings.linkLists &&
+                                        liIndex === liNodes.length - 1 &&
+                                        index < ulNodes.length - 1) {
+                                        liNode = $(ulNodes[index + 1]).find("> li:first");
+                                    } else {
+                                        liNode = liNode.next();
+                                    }
+
+                                    liNode.find(":tabbable:first").focus();
                                 }
                             }
-
-                            console.log("grabbed", grabbed);
                         });
                 });
             }
