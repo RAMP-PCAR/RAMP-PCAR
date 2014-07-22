@@ -469,6 +469,18 @@ define([
                             });
                         });
 
+                    PopupManager.registerPopup(layerList, "hover, focus",
+                        function (d) {
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: "li.layerList1:not(.list-item-grabbed):not(.ui-sortable-helper)",
+                            targetSelector: ":tabbable",
+                            activeClass: "background-light",
+                            useAria: false
+                        }
+                    );
+
                     PopupManager.registerPopup(layerList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
@@ -587,6 +599,7 @@ define([
                             layerList
                                 .has(ui.item).addClass("sort-active")
                                 .end().filter(":not(.sort-active)").addClass("sort-disabled");
+                            ui.item.removeClass("background-light");
 
                             layerGroupSeparator.addClass("active");
 

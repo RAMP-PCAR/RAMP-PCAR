@@ -656,16 +656,20 @@
                 margin: 0;
                 position: relative;
 
-                &.sort-disabled:before {
-                    content: "";
-                    position: absolute;
-                    left: 0;
-                    right: 0;
-                    top: 0;
-                    bottom: 0;
-                    background-color: black;
-                    opacity: 0.2;
-                    z-index: 1;
+                &.sort-disabled {
+            		opacity: 0.5;
+
+                	&:before {
+	                    content: "";
+	                    position: absolute;
+	                    left: 0;
+	                    right: 0;
+	                    top: 0;
+	                    bottom: 0;
+	                    background-color: black;
+	                    opacity: 0.2;
+	                    z-index: 1;
+	                }
                 }
 
                 &.sort-active > li > fieldset:before {
@@ -683,10 +687,13 @@
                     list-style: none;
                     background-color: white;
 
-                    .transition(400ms, ease, background-color);
-
                     &.list-item-grabbed {
-                    	.highlighted-row;
+                    	//.highlighted-row;
+                    	
+                    	legend {
+	                    	.box-shadow (@separator-drag-shadow);
+	                    	z-index: 1;
+	                    }
                     }
 
                     &.sortable-placeholder {
@@ -728,10 +735,13 @@
 
             &.ui-sortable-helper
             {
+            	// should settings panle be hidden on drag?
                 /*.filter-row-settings {
                     display: none !important;
                 }*/
 
+				//.highlighted-row;
+				
                 legend {
                     .box-shadow (@separator-drag-shadow);
                 }
@@ -743,7 +753,7 @@
                 font-size: 100% !important;
                 //background-color: white;
                 .box-shadow (@separator-shadow);
-                .transition(400ms, ease);
+                .transition(400ms, ease, background-color);
 
                 & > div {
                     padding-left: 15px;
