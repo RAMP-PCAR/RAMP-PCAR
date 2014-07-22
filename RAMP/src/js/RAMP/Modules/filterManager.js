@@ -557,6 +557,7 @@ define([
                     layerList = $("#layerList > ul");
 
                     var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
+                        reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
                         onUpdate = function (event, ui) {
                             var layerId = ui.item[0].id,
                                 idArray = layerList.find("> li").map(function (i, elm) { return elm.id; }),
@@ -592,18 +593,16 @@ define([
                             console.log("Layer Reordering starts.");
                         };
 
-                    if (layerList.find("> li").length > 1) {
-                        layerList.sortable({
-                            axis: "y",
-                            handle: ".sort-handle",
-                            placeholder: "sortable-placeholder",
-                            update: onUpdate,
-                            stop: onStop,
-                            start: onStart
-                        });
-                    }
+                    reorderLists.sortable({
+                        axis: "y",
+                        handle: ".sort-handle",
+                        placeholder: "sortable-placeholder",
+                        update: onUpdate,
+                        stop: onStop,
+                        start: onStart
+                    });
 
-                    UtilMisc.keyboardSortable(layerList, {
+                    UtilMisc.keyboardSortable(reorderLists, {
                         linkLists: true,
                         onUpdate: onUpdate,
                         onStart: onStart,
