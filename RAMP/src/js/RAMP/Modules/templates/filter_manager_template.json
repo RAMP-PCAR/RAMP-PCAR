@@ -23,7 +23,7 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_template":"<div class='filter-row'>
-                                    <a class='sort-handle' href='javascript:void(0)' aria-label='{%=o.str.txtLayerHandleLabel%} {%=o.data[o.idx].layerConfig.displayName%}'></a>
+                                    <div class='sort-handle' tabindex='0' aria-label='{%=o.str.txtLayerHandleLabel%} {%=o.data[o.idx].layerConfig.displayName%}'></div>
                                     <div class='layer-details'>
                                         <div class='layer-image-box'>
                                             <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image background-white'>
