@@ -24,7 +24,7 @@ Developers of the Almighty JSON Config Editor
         "txtAllData": "All Data",
         "txtShow": "Show",
         "txtMetadata": "Metadata",
-        "txtShowBounds": "Show Bounds {0}",
+        "txtShowBounds": "Show Bounds of {0}",
         "txtShowAllBounds": "Show All Bounds",
         "txtExpandAll": "Expand All",
         "txtAbstract": "Abstract",
@@ -54,7 +54,10 @@ Developers of the Almighty JSON Config Editor
         "txtSettingsLayerSettings": "Layer Settings",
         "txtSettingsOpacity": "Opacity",
         "txtGetLinkShort": "Short link",
-        "txtGetLinkLong": "Long link"
+        "txtGetLinkLong": "Long link",
+        "txtLayerHandle": "Layer Handle",
+        "txtLayerHandleLabel": "Layer handle for",
+        "txtLayerListLabel": "Sortable layer list"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
