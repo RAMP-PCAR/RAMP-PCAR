@@ -232,6 +232,43 @@
                                     </div>
                                 </li>
                                 <li class="map-toolbar-item">
+                                    <button class="button map-toolbar-item-button button-none" id="advanced-toggle" aria-haspopup="true">
+                                        <i class="fa fa-cog"></i><span class="on-right">@@advancedTitle</span>
+                                    </button>
+                                    <div id="advanced-section-container">
+                                        <div id="advanced-section" class="align-left background-white span-4 box-shadow-section">
+                                            <section>
+                                                <h2 class="margin-top-none ">@@advancedTitle</h2>
+                                                <button class="button-none button-close tooltip" title="@@closeTitle">
+                                                    <span class="wb-invisible">@@closeTitle</span>
+                                                </button>
+                                                <div id="population-tool">
+                                                    <div>
+                                                        <img alt="@@populationToolThumbnail" src="assets/images/advancedToolbar/World.png" />
+                                                        <br />
+                                                        <span>@@populationTitle</span>
+                                                    </div>
+                                                </div>
+                                                <div id="measure-tool">
+                                                    <div>
+                                                        <img alt="@@measureToolThumbnail" src="assets/images/advancedToolbar/Measure.png" />
+                                                        <br />
+                                                        <span>@@measureTitle</span>
+                                                    </div>
+                                                </div>
+                                                <div id="buffer-tool">
+                                                    <div>
+                                                        <img alt="@@bufferToolThumbnail" src="assets/images/advancedToolbar/Buffer.png" />
+                                                        <br />
+                                                        <span>@@bufferTitle</span>
+                                                    </div>
+                                                </div>
+                                                <div class="clear"></div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="fullScreenToggle">
                                         <i class="fa fa-arrows-alt"></i><span class="on-right">@@fullScreenTitle</span>
                                     </button>
@@ -274,6 +311,25 @@
                                             <li></li>
                                             <li></li>
                                         </ul>
+                                    </div>
+                                    <div id="advanced-info-box">
+                                        <div id="population-info">
+                                            <b>@@totalPopulation:</b>
+                                            <br />
+                                            <span id="population-output"></span>
+                                        </div>
+                                        <div id="measurement-info">
+                                            <b>@@area:</b>
+                                            <span id="area-output"></span>
+                                            <br />
+                                            <b>@@length:</b>
+                                            <span id="length-output"></span>
+                                        </div>
+                                        <div id="buffer-info">
+                                            <b>@@distance:</b><br />
+                                            <input type="text" id="distance-input" size="5" value="40"> km
+                                        </div>
+                                        <button id="clear-map-button" class="button button-info">@@clearMap</button>
                                     </div>
                                 </div>
                             </div>

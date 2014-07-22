@@ -52,6 +52,19 @@ fullScreenTitle,Full Screen
 helpTitle,Help
 helpSectionsTitle,Help Sections
 ,
+advancedTitle,Advanced
+populationToolThumbnail,Population Tool
+measureToolThumbnail,Measure Tool
+bufferToolThumbnail,Buffer Tool
+populationTitle,Population
+totalPopulation,Total Population
+measureTitle,Measure
+area,Area
+length,Length
+distance,Distance
+bufferTitle,Buffer
+clearMap,Clear Map
+,
 addLayerTitle,Add Layer from Web
 addLayerSelectTypeText,What type of data are you referencing?
 addLayerType1,An ArcGIS Server Web Service

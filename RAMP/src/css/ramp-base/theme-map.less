@@ -185,6 +185,51 @@
             }
 		}	
 
+        #advanced-toggle {
+            display: none;
+        }
+
+        #advanced-section-container {
+            position: absolute;
+            display: none;
+            left: 17%;
+            right: 13%;
+            z-index: 110;
+
+            #advanced-section {
+                position: relative;
+                float: none;
+                margin: 12px auto 0;
+                max-width: 1400px;
+                padding: 12px;
+                .box-shadow-section;
+
+                section {
+                    position: relative;
+                }
+
+                #population-tool, #measure-tool, #buffer-tool {
+                    display: none;
+                    text-align: center;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 7px;
+                }
+
+                #population-tool:hover, #measure-tool:hover, #buffer-tool:hover {
+                    background-color: #EEE;
+                    cursor: pointer;
+                }
+
+                img {
+                    height: 48px;
+                    width: 48px;
+                    margin-bottom: 5px;
+                }
+            }
+        }
+
+
 		#getlink-section-container {
 			
 			#getlink-section {
@@ -220,6 +265,33 @@
 
 	/* MAP TOOLBAR END */
 	
+    #advanced-info-box {
+        z-index: 9999999;
+        position: absolute;
+        bottom: 25px;
+        right: 28px;
+        padding: 25px;
+        background-color: white;
+        border: 1px solid gray;
+        border-radius: 5px;
+        display: none;
+
+        #clear-map-button {
+            display: block;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        #population-info, #measurement-info, #buffer-info {
+            display: none;
+        }
+
+        #buffer-info input {
+            margin: 0;
+            margin-top: 5px;
+        }
+    }
+
 	#map-load-indicator {
 		bottom: 0;
 		font-weight: bold;
