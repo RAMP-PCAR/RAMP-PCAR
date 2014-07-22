@@ -683,6 +683,12 @@
                     list-style: none;
                     background-color: white;
 
+                    .transition(400ms, ease, background-color);
+
+                    &.list-item-grabbed {
+                    	.highlighted-row;
+                    }
+
                     &.sortable-placeholder {
                         background-image: @dark-denim;
                         background-color: @medium-grey-color;
