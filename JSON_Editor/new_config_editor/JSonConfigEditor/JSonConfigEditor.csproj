@@ -88,6 +88,7 @@
     <Compile Include="module\dataModel\tree\INodeData.cs" />
     <Compile Include="module\extensions\EnumeratorExtensions.cs" />
     <Compile Include="module\extensions\ImageExtension.cs" />
+    <Compile Include="module\extensions\StringExtension.cs" />
     <Compile Include="module\extensions\TreeNodeAdvExtension.cs" />
     <Compile Include="module\extensions\DictionaryExtension.cs" />
     <Compile Include="module\extensions\GenericNodeExtension.cs" />

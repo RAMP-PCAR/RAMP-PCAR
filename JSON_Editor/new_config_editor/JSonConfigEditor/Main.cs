@@ -1,6 +1,7 @@
 ﻿using Aga.Controls.Tree;
 using JSonConfigEditor.dataModel;
 using JSonConfigEditor.dataModel.configElement;
+using JSonConfigEditor.extensions;
 using JSonConfigEditor.gui;
 using JSonConfigEditor.gui.contextMenu;
 using JSonConfigEditor.gui.editor;
@@ -19,6 +20,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace JSonConfigEditor.main
@@ -61,6 +63,12 @@ namespace JSonConfigEditor.main
         private readonly CollectionEditor collectionEditor;
 
         private readonly TreeViewContextMenu TREE_CONTEXT_MENU;
+
+        private readonly FileSystemWatcher watcher = new FileSystemWatcher();
+
+        private readonly BackgroundWorker loadBackgroundWorker = new BackgroundWorker();
+
+        private readonly BackgroundWorker stateChangedBackgroundWorker = new BackgroundWorker();
 
         #endregion Private Members
 
@@ -161,6 +169,55 @@ namespace JSonConfigEditor.main
 
             this.SETTINGS_WINDOW = new SettingsWindow(this);
             //initSampleTree();
+
+            /* Watch for changes in LastAccess and LastWrite times, and
+            the renaming of files or directories. */
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+               | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            watcher.Filter = "*.*";
+
+            // Add event handlers.
+            watcher.Changed += watcher_Changed;
+            watcher.Deleted += watcher_Changed;
+
+            loadBackgroundWorker.DoWork += loadBackgroundWorker_DoWork;
+        }
+
+        private void loadBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            Console.WriteLine("Background Worker: " + Thread.CurrentThread.GetHashCode());
+            load(false);
+        }
+
+        private void watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            if (!e.FullPath.Equals(FileName) && !e.FullPath.Equals(TemplateFileName))
+            {
+                return;
+            }
+            switch (e.ChangeType)
+            {
+                case WatcherChangeTypes.Changed:
+                    watcher.EnableRaisingEvents = false;
+                    if (MessageBox.Show(String.Format("{0} has been changed externally. Would you like to reload the file? NOTE: your current changes will be discarded.", e.FullPath),
+                        "File Changed Externally", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        Console.WriteLine("Watcher: " + Thread.CurrentThread.GetHashCode());
+                        this.Invoke((MethodInvoker)delegate
+                        {
+                            load(false);
+                        });
+                    }
+                    watcher.EnableRaisingEvents = true;
+                    break;
+
+                case WatcherChangeTypes.Deleted:
+                    watcher.EnableRaisingEvents = false;
+                    MessageBox.Show(String.Format("{0} has been deleted externally. If you save, this program will regenerate the file for you.", e.FullPath),
+                        "File Deleted Externally", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    watcher.EnableRaisingEvents = true;
+                    break;
+            }
         }
 
         /// <summary>
@@ -339,15 +396,24 @@ namespace JSonConfigEditor.main
 
         private Boolean load()
         {
-            OpenFileDialog loadFileDialog = new OpenFileDialog();
-            loadFileDialog.Title = "Open a Json Config File";
-            loadFileDialog.ShowDialog();
+            return load(true);
+        }
 
-            if (String.IsNullOrEmpty(loadFileDialog.FileName))
+        private Boolean load(Boolean showDialog)
+        {
+            Console.WriteLine("Load: " + Thread.CurrentThread.GetHashCode());
+            if (showDialog)
             {
-                return false;
+                OpenFileDialog loadFileDialog = new OpenFileDialog();
+                loadFileDialog.Title = "Open a Json Config File";
+                loadFileDialog.ShowDialog();
+
+                if (String.IsNullOrEmpty(loadFileDialog.FileName))
+                {
+                    return false;
+                }
+                this.FileName = loadFileDialog.FileName;
             }
-            this.FileName = loadFileDialog.FileName;
 
             if (System.IO.File.Exists(this.TemplateFileName))
             {
@@ -383,10 +449,13 @@ namespace JSonConfigEditor.main
                 return false;
             }
 
+            // Make the FileSystemWatcher "watch" a different file
+            watcher.Path = Path.GetDirectoryName(FileName);
+            watcher.EnableRaisingEvents = true;
             initTreeView();
 
             // Change the String displayed on top of the program to include the name of the file being edited.
-            this.state.BaseText = PROGRAM_NAME + ": " + Path.GetFileName(this.FileName);
+            this.state.BaseText = PROGRAM_NAME + ": " + Path.GetFullPath(this.FileName).TruncateFromFront(40, true);
             genericTree.State = TreeState.Saved;
             return true;
         }
