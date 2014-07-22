@@ -476,16 +476,16 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "sSortAscending",
                             "type": "String",
-                            "value": ": Activer pour trier la colonne dans l'ordre décroissant",
+                            "value": ": Activer pour trier la colonne dans l'ordre croissant",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sSortDescending",
                             "type": "String",
-                            "value": ": Activer pour trier la colonne dans l'ordre croissant",
+                            "value": ": Activer pour trier la colonne dans l'ordre décroissant",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         }
                     ]
                 },
@@ -495,46 +495,46 @@ Developers of the Almighty JSON Config Editor
                     "description": "",
                     "fields": [
                         {
-                            "name": "Premier",
+                            "name": "sFirst",
                             "type": "String",
-                            "value": "First",
+                            "value": "Premier",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sLast",
                             "type": "String",
                             "value": "Dernier",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sNext",
                             "type": "String",
                             "value": "Suivant",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sPrevious",
                             "type": "String",
                             "value": "Précédente",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sRecords",
                             "type": "String",
                             "value": "Fichiers",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         },
                         {
                             "name": "sPage",
                             "type": "String",
                             "value": "Page",
                             "description": "",
-                            "visibleText": false
+                            "visibleText": true
                         }
                     ]
                 }

@@ -72,11 +72,11 @@ Developers of the Almighty JSON Config Editor
         "sSearch": "Recherche",
         "sZeroRecords": "Aucun enregistrement correspondant trouvé",
         "oAria": {
-            "sSortAscending": ": Activer pour trier la colonne dans l'ordre décroissant",
-            "sSortDescending": ": Activer pour trier la colonne dans l'ordre croissant"
+            "sSortAscending": ": Activer pour trier la colonne dans l'ordre croissant",
+            "sSortDescending": ": Activer pour trier la colonne dans l'ordre décroissant"
         },
         "oPaginate": {
-            "Premier": "First",
+            "sFirst": "Premier",
             "sLast": "Dernier",
             "sNext": "Suivant",
             "sPrevious": "Précédente",
