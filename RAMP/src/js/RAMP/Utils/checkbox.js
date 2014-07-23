@@ -11,102 +11,19 @@
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/lang
-* @ueses dojo/on
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
-    function (Evented, declare, lang, on) {
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
+    function (Evented, declare, lang) {
         "use strict";
 
-        /*
-        * Goes through an array of checkboxes and if any are selected, add the "checked" css class to
-        * the label so it displays visually matches the changed state
-        *
-        * @method _toggleLabels
-        * @private
-        * @param {Object} objs An array of checkboxes to toggle
-        */
-        /*function _toggleLabels(that, objs) {
-            var label;
-
-            objs.each(function (i, obj) {
-                var node = $(obj),
-                    newText;
-                label = node.findInputLabel();
-                if (node.is(':checked')) {
-                    newText = String.format(that.labels.checked,
-                        label.data("label-name"));
-                    label
-                        .addClass(that.checkedClass)
-                        .prop('title', newText)
-                        .find("> span").text(newText);
-                } else {
-                    newText = String.format(that.labels.unchecked,
-                        label.data("label-name"));
-                    label
-                        .removeClass(that.checkedClass)
-                        .prop('title', newText)
-                        .find("> span").text(newText);
-                }
-                if (that.fnc) {
-                    that.fnc.call(this, label.parent(), null, "update");
-                }
-            });
-        }*/
-
-        /*
-        * Goes through an array of checkboxes and toggles their checked state value based
-        * on the return value of the given function
-        *
-        * @private
-        * @method _toggleState
-        * @param {Object} nodes An Array of checkboxes
-        * @param {Function} fcn A function that takes a checkbox node as input and returns
-        * true if the checkbox should be checked, and false if the checkbox should be unchecked.
-        *
-        */
-        function _toggleState(that, nodes, fcn) {
-            nodes.each(function () {
-                $(this).prop('checked', fcn($(this)));
-            });
-
-            _toggleLabels(that, nodes);
-        }
-
         return declare([Evented], {
-            node: null,
-
-            labelNode: null,
-
-            nodeIdAttr: "id",
-
-            cssClass: {
-                active: "active",
-                focus: "focused",
-                check: "checked"
-            },
-
-            label: {
-                check: "checked",
-                uncheck: "unchecked"
-            },
-
-            onChange: function () { },
-
-            state: null,
-            id: null,
-
-            agency: {
-                USER: "USER",
-                CODE: "CODE"
-            },
-
             /**
             * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
             * its functionality. Handles synchronization of the checkbox's state with its new rendering.
             * Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
             *
-            * @method styleCheckboxes
+            * @method constructor
             * @static
             * @param {jObject} nodes a jQuery object representing the checkbox
             * @param {String} checkedClass Name of the CSS class to be used when checked
@@ -116,21 +33,43 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
             * @return {CheckboxWrapper} A control objects allowing to toggle checkboxes supplying a state, and retrieve original checkbox nodes
             */
             constructor: function (node, options) {
-                var that = this,
-                    checkbox;
+                var that = this;
 
-                lang.mixin(this, options,
+                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                lang.mixin(this,
+                    {
+                        node: null,
+
+                        labelNode: null,
+
+                        nodeIdAttr: "id",
+
+                        cssClass: {
+                            active: "active",
+                            focus: "focused",
+                            check: "checked"
+                        },
+
+                        label: {
+                            check: "checked",
+                            uncheck: "unchecked"
+                        },
+
+                        onChange: function () { },
+
+                        state: null,
+                        id: null,
+
+                        agency: {
+                            USER: "USER",
+                            CODE: "CODE"
+                        }
+                    },
+                    options,
                     {
                         node: node
                     }
                 );
-
-                /*this.checkedClass = checkedClass;
-                this.nodes = nodes;
-                this.labels = labels;
-                this.fnc = fnc;
-
-                var that = this;*/
 
                 this.node
                     .on("change", function () {
@@ -145,12 +84,19 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
                         that.node.findInputLabel().removeClass(that.cssClass.focus);
                     });
 
-                this.id = this.node.attr(this.nodeIdAttr);
+                this.id = this.node.data(this.nodeIdAttr);
                 this.labelNode = this.node.findInputLabel();
 
                 this._toggleLabel();
             },
 
+            /*
+            * Adds the "checked", "focused" or "active" CSS class to the label so it displays visually matches the changed state.
+            * Updates the title attribute and text inside an invisible span housed inside the label.
+            *
+            * @method _toggleLabel
+            * @private
+            */
             _toggleLabel: function () {
                 var newText;
 
@@ -174,8 +120,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
                         .find("> span").text(newText);
                 }
 
-                // onChange function now is used only for updating the tooptip; need to abstract it even more
-                //this.onChange.call(this, label.parent(), null, "update");
                 this.onChange.call(this);
             },
 
@@ -220,6 +164,15 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
                 return this;
             },*/
 
+            /**
+            * Toggle the state of Checkbox.
+            *
+            * @method setState
+            * @param {boolean} state Specifies the state of the checkbox: true, false
+            * @return {object} Control object for chaining
+            * @chainable
+            * @for Checkbox
+            */
             setState: function (state) {
                 // change state only if it's different from the current one
                 if (this.state !== state) {
@@ -230,16 +183,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
                 }
 
                 return this;
-            },
-
-            /**
-            * Returns original checkbox nodes.
-            *
-            * @method getNodes
-            * @return {jObject} original checkbox nodes
-            */
-            getNodes: function () {
-                return this.nodes;
             }
         });
     });

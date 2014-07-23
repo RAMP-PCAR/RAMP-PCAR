@@ -11,15 +11,14 @@
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/_base/lang
-* @uses dojo/on
 * @uses dojo/_base/array
 * @uses Checkbox
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "dojo/_base/array",
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
 
         "utils/checkbox"],
-    function (Evented, declare, lang, on, dojoArray,
+    function (Evented, declare, lang, dojoArray,
             Checkbox) {
         "use strict";
 
@@ -79,43 +78,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "doj
         }*/
 
         return declare([Evented], {
-            nodes: [],
-
-            nodeIdAttr: "id",
-
-            checkboxes: [],
-
-            cssClass: {
-                active: "active",
-                focus: "focused",
-                check: "checked"
-            },
-
-            label: {
-                check: "checked",
-                uncheck: "unchecked"
-            },
-
-            onChange: function () { },
-
-            master: {
-                node: null,
-                checkbox: null,
-
-                cssClass: {
-                    active: "active",
-                    focus: "focused",
-                    check: "checked"
-                },
-
-                label: {
-                    check: "checked",
-                    uncheck: "unchecked"
-                },
-
-                onChange: function () { }
-            },
-
             /**
             * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
             * its functionality. Handles synchronization of the checkbox's state with its new rendering.
@@ -135,7 +97,47 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "doj
                     checkbox,
                     checkboxOptions;
 
-                lang.mixin(this, options,
+                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                lang.mixin(this,
+                    {
+                        nodes: [],
+
+                        nodeIdAttr: "id",
+
+                        checkboxes: [],
+
+                        cssClass: {
+                            active: "active",
+                            focus: "focused",
+                            check: "checked"
+                        },
+
+                        label: {
+                            check: "checked",
+                            uncheck: "unchecked"
+                        },
+
+                        onChange: function () { },
+
+                        master: {
+                            node: null,
+                            checkbox: null,
+
+                            cssClass: {
+                                active: "active",
+                                focus: "focused",
+                                check: "checked"
+                            },
+
+                            label: {
+                                check: "checked",
+                                uncheck: "unchecked"
+                            },
+
+                            onChange: function () { }
+                        }
+                    },
+                    options,
                     {
                         nodes: nodes
                     }
@@ -198,7 +200,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "doj
 
             /**
              *
-             * @param {Boolean} [checkboxId]
+             * @param {Boolean} state
+             * @param {String} [checkboxId]
              */
             setState: function (state, checkboxId) {
                 var checkbox,
@@ -222,6 +225,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "doj
 
                     this._checkMaster();
                 }
+
+                return this;
             }//,
 
             /*setState123: function (checkboxId, state) {
