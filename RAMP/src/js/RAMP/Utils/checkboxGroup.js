@@ -8,16 +8,18 @@
 * [Description]
 *
 * @class CheckboxGroup
+* @uses dojo/Evented
 * @uses dojo/_base/declare
-* @ueses dojo/_base/lang
-* @ueses dojo/on
+* @uses dojo/_base/lang
+* @uses dojo/on
+* @uses dojo/_base/array
 * @uses Checkbox
 */
 
-define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on", "dojo/_base/array",
 
         "utils/checkbox"],
-    function (declare, lang, on,
+    function (Evented, declare, lang, on, dojoArray,
             Checkbox) {
         "use strict";
 
@@ -29,7 +31,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
         * @private
         * @param {Object} objs An array of checkboxes to toggle
         */
-        function _toggleLabels(that, objs) {
+        /*function _toggleLabels(that, objs) {
             var label;
 
             objs.each(function (i, obj) {
@@ -55,7 +57,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
                     that.fnc.call(this, label.parent(), null, "update");
                 }
             });
-        }
+        }*/
 
         /*
         * Goes through an array of checkboxes and toggles their checked state value based
@@ -68,20 +70,15 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
         * true if the checkbox should be checked, and false if the checkbox should be unchecked.
         *
         */
-        function _toggleState(that, nodes, fcn) {
+        /*function _toggleState(that, nodes, fcn) {
             nodes.each(function () {
                 $(this).prop('checked', fcn($(this)));
             });
 
             _toggleLabels(that, nodes);
-        }
+        }*/
 
-        var checkboxGroupAttrTemplate = {
-            masterCheckbox: null,
-            onChange: null
-        };
-
-        return declare(null, {
+        return declare([Evented], {
             nodes: [],
 
             nodeIdAttr: "id",
@@ -99,7 +96,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
                 uncheck: "unchecked"
             },
 
-            onChange: null,
+            onChange: function () { },
 
             master: {
                 node: null,
@@ -116,7 +113,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
                     uncheck: "unchecked"
                 },
 
-                onChange: null
+                onChange: function () { }
             },
 
             /**
@@ -135,28 +132,53 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
             */
             constructor: function (nodes, options) {
                 var that = this,
-                    checkbox;
+                    checkbox,
+                    checkboxOptions;
 
-                lang.mixin(this, options);
-                this.nodes = nodes;
+                lang.mixin(this, options,
+                    {
+                        nodes: nodes
+                    }
+                );
 
-                nodes.each(function (index, node) {
-                    checkbox = new Checkbox(node, cssClass, label, onChange);
-                    this.checkboxes.push(checkbox);
+                checkboxOptions = {
+                    nodeIdAttr: this.nodeIdAttr,
+                    cssClass: this.cssClass,
+                    label: this.label,
+                    onChange: this.onChange
+                };
 
-                    on(checkbox, "toggle", function (evt) {
-                        that._checkMaster();
+                this.nodes.each(function (index, node) {
+                    node = $(node);
+                    checkbox = new Checkbox(node, checkboxOptions);
+                    that.checkboxes.push(checkbox);
+
+                    checkbox.on("toggle", function (evt) {
+                        // re-emit individual checkbox's toggle event as groups;
+                        //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                        that.emit("memberToggle", evt);
+
+                        if (evt.agency === evt.checkbox.agency.USER) {
+                            that._checkMaster();
+                        }
                     });
                 });
 
                 if (this.master.node) {
                     this.master.checkbox = new Checkbox(
                         this.master.node,
-                        this.master.cssClass,
-                        this.master.label);
+                        lang.mixin(checkboxOptions, this.master)
+                    );
 
-                    on(this.master.checkbox, "toggle", function (evt) {
-                        that.setState(evt.state);
+                    this.master.checkbox.on("toggle", function (evt) {
+                        // re-emit individual checkbox's toggle event as groups;
+                        //console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        that.emit("masterToggle", evt);
+
+                        if (evt.agency === evt.checkbox.agency.USER) {
+                            that.setState(evt.checkbox.state);
+                        }
                     });
                 } else {
                     this.master = null;
@@ -165,7 +187,8 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
 
             _checkMaster: function () {
                 var allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
-                    return checkbox.isChecked();
+                    //return checkbox.isChecked();
+                    return checkbox.state;
                 });
 
                 if (this.master) {
@@ -178,16 +201,15 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
              * @param {Boolean} [checkboxId]
              */
             setState: function (state, checkboxId) {
-                var checkbox;
+                var checkbox,
+                    masterCheckboxId = this.master.checkbox ? this.master.checkbox.id : undefined;
 
-                if (!checkboxId) {
-                    if (this.master) {
-                        this.master.checkbox.setState(state);
+                if (!checkboxId || masterCheckboxId === checkboxId) {
+                    this.master.checkbox.setState(state);
 
-                        this.checkboxes.forEach(function (checkbox) {
-                            checkbox.setState(state);
-                        });
-                    }
+                    this.checkboxes.forEach(function (checkbox) {
+                        checkbox.setState(state);
+                    });
                 } else {
                     for (var i = 0; i < this.checkboxes.length; i++) {
                         checkbox = this.checkboxes[i];
@@ -200,9 +222,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
 
                     this._checkMaster();
                 }
-            },
+            }//,
 
-            setState123: function (checkboxId, state) {
+            /*setState123: function (checkboxId, state) {
                 var checkbox;
                 for (var i = 0; i < this.checkboxes.length; i++) {
                     checkbox = this.checkboxes[i];
@@ -212,9 +234,9 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
                 }
 
                 checkbox.setState(state);
-            },
+            },*/
 
-            _constructor: function (nodes, checkedClass, focusedClass, labels, fnc) {
+            /*_constructor: function (nodes, checkedClass, focusedClass, labels, fnc) {
                 this.checkedClass = checkedClass;
                 this.nodes = nodes;
                 this.labels = labels;
@@ -234,7 +256,7 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
                     });
 
                 _toggleLabels(that, nodes);
-            },
+            },*/
 
             /**
             * Toggle the state of checkboxes.
@@ -245,13 +267,13 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
             * @chainable
             * @for CheckboxWrapper
             */
-            setAll: function (state) {
+            /*setAll: function (state) {
                 _toggleState(this, this.nodes, function () {
                     return state;
                 }, this.checkedClass);
 
                 return this;
-            },
+            },*/
 
             /**
             * Toggles the checkboxes based on the return value of the given fcn.
@@ -261,11 +283,11 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
             * @return {object} Control object for chaining
             * @chainable
             */
-            _setState_: function (fcn) {
+            /*_setState_: function (fcn) {
                 _toggleState(this, this.nodes, fcn);
 
                 return this;
-            },
+            },*/
 
             /**
             * Returns original checkbox nodes.
@@ -273,8 +295,8 @@ define(["dojo/_base/declare", "dojo/_base/lang", "dojo/on",
             * @method getNodes
             * @return {jObject} original checkbox nodes
             */
-            getNodes: function () {
+            /*getNodes: function () {
                 return this.nodes;
-            }
+            }*/
         });
     });

@@ -22,6 +22,7 @@
 * @uses dojo/query
 * @uses dojo/_base/array
 * @uses dojo/dom
+* @uses dojo/on
 * @uses dojo/dom-class
 * @uses dojo/dom-style
 * @uses dojo/dom-construct
@@ -49,7 +50,7 @@
 
 define([
 /* Dojo */
-        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/dom", "dojo/dom-class",
+        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/on", "dojo/dom", "dojo/dom-class",
         "dojo/dom-style", "dojo/dom-construct", "dojo/_base/connect", "dojo/Deferred", "dojo/topic",
         "dojo/aspect", "dojo/promise/all",
 /* Text */
@@ -62,11 +63,11 @@ define([
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox"],
+        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
 
     function (
     /* Dojo */
-        declare, lang, query, dojoArray, dom, domClass, domStyle, domConstruct,
+        declare, lang, query, dojoArray, on, dom, domClass, domStyle, domConstruct,
         connect, Deferred, topic, aspect, all,
     /* Text */
         filter_manager_template_json,
@@ -78,7 +79,7 @@ define([
         Ramp, GlobalStorage, RampMap, EventManager, Theme,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkboxes) {
+        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
         "use strict";
 
         var config,
@@ -137,6 +138,54 @@ define([
                 * @private
                 */
                 function setCheckboxEvents() {
+                    var boxCheckboxGroup = new CheckboxGroup(
+                        layerList.find(".checkbox-custom .box + input"),
+                        {
+                            nodeIdAttr: "id",
+
+                            cssClass: {
+                                active: "active",
+                                focus: "focused",
+                                check: "checked"
+                            },
+
+                            label: {
+                                check: "checked",
+                                uncheck: "unchecked"
+                            },
+
+                            onChange: function () {
+                                Theme.tooltipster(this.labelNode.parent(), null, "update");
+                            },
+
+                            master: {
+                                node: filterGlobalToggles.find(".checkbox-custom .box + input")/*,
+
+                                cssClass: {
+                                    active: "active",
+                                    focus: "focused",
+                                    check: "checked"
+                                },
+
+                                label: {
+                                    check: "checked!",
+                                    uncheck: "unchecked!"
+                                },
+
+                                onChange: Theme.tooltipster*/
+                            }
+                        }
+                    );
+
+                    boxCheckboxGroup.on("memberToggle", function (evt) {
+                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agent, "to", evt.checkbox.state);
+                    });
+                    boxCheckboxGroup.on("masterToggle", function (evt) {
+                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agent, "to", evt.checkbox.state);
+                    });
+
+                    return;
+
                     var globalEyeCheckbox,
                         globalBoxCheckbox,
                         eyeCheckboxes,

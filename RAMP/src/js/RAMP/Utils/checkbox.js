@@ -8,11 +8,14 @@
 * [Description]
 *
 * @class Checkbox
+* @uses dojo/Evented
 * @uses dojo/_base/declare
+* @uses dojo/lang
+* @ueses dojo/on
 */
 
-define(["dojo/_base/declare"],
-    function (declare) {
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/on"],
+    function (Evented, declare, lang, on) {
         "use strict";
 
         /*
@@ -23,7 +26,7 @@ define(["dojo/_base/declare"],
         * @private
         * @param {Object} objs An array of checkboxes to toggle
         */
-        function _toggleLabels(that, objs) {
+        /*function _toggleLabels(that, objs) {
             var label;
 
             objs.each(function (i, obj) {
@@ -49,7 +52,7 @@ define(["dojo/_base/declare"],
                     that.fnc.call(this, label.parent(), null, "update");
                 }
             });
-        }
+        }*/
 
         /*
         * Goes through an array of checkboxes and toggles their checked state value based
@@ -70,7 +73,34 @@ define(["dojo/_base/declare"],
             _toggleLabels(that, nodes);
         }
 
-        return declare(null, {
+        return declare([Evented], {
+            node: null,
+
+            labelNode: null,
+
+            nodeIdAttr: "id",
+
+            cssClass: {
+                active: "active",
+                focus: "focused",
+                check: "checked"
+            },
+
+            label: {
+                check: "checked",
+                uncheck: "unchecked"
+            },
+
+            onChange: function () { },
+
+            state: null,
+            id: null,
+
+            agency: {
+                USER: "USER",
+                CODE: "CODE"
+            },
+
             /**
             * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
             * its functionality. Handles synchronization of the checkbox's state with its new rendering.
@@ -85,26 +115,78 @@ define(["dojo/_base/declare"],
             * @param {Function} [fnc] Function to run on the label node when it's toggled
             * @return {CheckboxWrapper} A control objects allowing to toggle checkboxes supplying a state, and retrieve original checkbox nodes
             */
-            constructor: function (nodes, checkedClass, focusedClass, labels, fnc) {
-                this.checkedClass = checkedClass;
+            constructor: function (node, options) {
+                var that = this,
+                    checkbox;
+
+                lang.mixin(this, options,
+                    {
+                        node: node
+                    }
+                );
+
+                /*this.checkedClass = checkedClass;
                 this.nodes = nodes;
                 this.labels = labels;
                 this.fnc = fnc;
 
-                var that = this;
+                var that = this;*/
 
-                nodes
+                this.node
                     .on("change", function () {
-                        _toggleLabels(that, $(this));
+                        that._toggleLabel();
+
+                        that._emit(that.agency.USER);
                     })
                     .on("focus", function () {
-                        $(this).findInputLabel().addClass(focusedClass);
+                        that.node.findInputLabel().addClass(that.cssClass.focus);
                     })
                     .on("focusout", function () {
-                        $(this).findInputLabel().removeClass(focusedClass);
+                        that.node.findInputLabel().removeClass(that.cssClass.focus);
                     });
 
-                _toggleLabels(that, nodes);
+                this.id = this.node.attr(this.nodeIdAttr);
+                this.labelNode = this.node.findInputLabel();
+
+                this._toggleLabel();
+            },
+
+            _toggleLabel: function () {
+                var newText;
+
+                this.state = this.node.is(':checked');
+
+                if (this.state) {
+                    newText = String.format(this.label.check,
+                        this.labelNode.data("label-name"));
+
+                    this.labelNode
+                        .addClass(this.cssClass.check)
+                        .prop('title', newText)
+                        .find("> span").text(newText);
+                } else {
+                    newText = String.format(this.label.uncheck,
+                        this.labelNode.data("label-name"));
+
+                    this.labelNode
+                        .removeClass(this.cssClass.check)
+                        .prop('title', newText)
+                        .find("> span").text(newText);
+                }
+
+                // onChange function now is used only for updating the tooptip; need to abstract it even more
+                //this.onChange.call(this, label.parent(), null, "update");
+                this.onChange.call(this);
+            },
+
+            _emit: function (agency) {
+                //console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
+
+                this.emit("toggle", {
+                    agency: agency,
+                    checkbox: this,
+                    id: "???"
+                });
             },
 
             /**
@@ -116,13 +198,13 @@ define(["dojo/_base/declare"],
             * @chainable
             * @for CheckboxWrapper
             */
-            setAll: function (state) {
+            /*setAll: function (state) {
                 _toggleState(this, this.nodes, function () {
                     return state;
                 }, this.checkedClass);
 
                 return this;
-            },
+            },*/
 
             /**
             * Toggles the checkboxes based on the return value of the given fcn.
@@ -132,8 +214,20 @@ define(["dojo/_base/declare"],
             * @return {object} Control object for chaining
             * @chainable
             */
-            setState: function (fcn) {
+            /*setState: function (fcn) {
                 _toggleState(this, this.nodes, fcn);
+
+                return this;
+            },*/
+
+            setState: function (state) {
+                // change state only if it's different from the current one
+                if (this.state !== state) {
+                    this.node.prop('checked', state);
+                    this._toggleLabel();
+
+                    this._emit(this.agency.CODE);
+                }
 
                 return this;
             },
