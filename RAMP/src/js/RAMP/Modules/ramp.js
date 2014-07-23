@@ -97,6 +97,13 @@ define([
                 return GlobalStorage.urlCfg[url];
             },
 
+            getLayerConfigwithGuid: function (uuid) {
+                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
+                    function (layerConfig) {
+                        return layerConfig.uuid === uuid;
+                    });
+            },
+
             /**
              * Gets the defined symbology from a layer's web service
              * @method _getSymbolConfig

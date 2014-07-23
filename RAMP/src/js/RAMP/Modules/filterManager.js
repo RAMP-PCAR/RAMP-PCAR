@@ -52,6 +52,7 @@ define([
         "dojo/aspect", "dojo/promise/all",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
+        "dojo/text!./templates/filter_wms_meta_Template.html",
 
 /* Esri */
         "esri/tasks/query", "esri/layers/FeatureLayer",
@@ -68,6 +69,7 @@ define([
         connect, Deferred, topic, aspect, all,
     /* Text */
         filter_manager_template_json,
+        filter_wms_meta_Template,
 
     /* Esri */
         EsriQuery, FeatureLayer,
@@ -434,6 +436,14 @@ define([
                         }
                     }
 
+                    function generateWmsMeataData(legendUrl, capabilityUrl) {
+                        var wmsmeta = "<b>Legend</b><br>";
+                        wmsmeta += "<img src='" + legendUrl + "' alt='Legend' height='100px' width='30px'><br>";
+                        wmsmeta += "<b>Link to WMS capabilities</b><br>";
+                        wmsmeta += "<a href='" + capabilityUrl + "'>" + capabilityUrl + "</a>";
+                        return wmsmeta;
+                    }
+
                     expandButtons.map(function () {
                         var handle = $(this),
                             target = handle.parents("fieldset").find("> .layerList-container");
@@ -506,26 +516,51 @@ define([
                                 doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
                             });
 
-                            metadataUrl = "assets/metadata/" + guid + ".xml";
+                            var layerConfig = Ramp.getLayerConfigwithGuid(guid);
 
-                            UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
-                                function (error, data) {
-                                    if (error) {
-                                        topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                            content: "<p>" + localString.txtMetadataNotFound + "</p>",
-                                            origin: "filterManager",
-                                            update: true,
-                                            guid: guid
-                                        });
-                                    } else {
-                                        topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                            content: $(data),
-                                            origin: "filterManager",
-                                            update: true,
-                                            guid: guid
-                                        });
-                                    }
+                            if (layerConfig.layerInfo != null) {
+                                //only wms layer has this value
+                                metadataUrl = layerConfig.layerInfo.legendURL;
+
+                                //var wmsmeta = generateWmsMeataData(metadataUrl, layerConfig.url + "&request=GetCapabilities");
+
+                                var wmsmeta = String.format(filter_wms_meta_Template,
+                                    localString.txtLegend,
+                                    metadataUrl,
+                                    localString.txtLinktoCap,
+                                    layerConfig.url + "&request=GetCapabilities");
+
+                                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                    content: $(wmsmeta),
+                                    origin: "filterManager",
+                                    update: true,
+                                    guid: guid
                                 });
+                            } else {
+                                //for feature layer
+                                // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
+
+                                metadataUrl = "assets/metadata/" + guid + ".xml";
+
+                                UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
+                                    function (error, data) {
+                                        if (error) {
+                                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                                content: "<p>" + localString.txtMetadataNotFound + "</p>",
+                                                origin: "filterManager",
+                                                update: true,
+                                                guid: guid
+                                            });
+                                        } else {
+                                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                                content: $(data),
+                                                origin: "filterManager",
+                                                update: true,
+                                                guid: guid
+                                            });
+                                        }
+                                    });
+                            }
                         } else {
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                         }

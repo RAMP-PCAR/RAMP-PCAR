@@ -33,13 +33,13 @@
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
                                             <ul class='button-group margin-top-none'>												
                                                 <li>
-                                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
                                                     
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
                                                     <span class='separator' role='presentation'></span>
                                                 </li>
                                                 <li>
-                                                    <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                    <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtSettings%}</button>
                                                 {% } %}
                                                     
                                                 </li>
@@ -92,7 +92,7 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
                                     </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json

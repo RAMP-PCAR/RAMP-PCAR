@@ -57,7 +57,9 @@ Developers of the Almighty JSON Config Editor
         "txtGetLinkLong": "Long link",
         "txtLayerHandle": "Layer Handle",
         "txtLayerHandleLabel": "Layer handle for",
-        "txtLayerListLabel": "Sortable layer list"
+        "txtLayerListLabel": "Sortable layer list",
+        "txtLegend": "Legend",
+        "txtLinkToCap": ""
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

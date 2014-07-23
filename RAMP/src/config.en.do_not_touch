@@ -383,6 +383,20 @@ Developers of the Almighty JSON Config Editor
                     "value": "Sortable layer list",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtLegend",
+                    "type": "String",
+                    "value": "Legend",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "txtLinkToCap",
+                    "type": "String",
+                    "value": "",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         },

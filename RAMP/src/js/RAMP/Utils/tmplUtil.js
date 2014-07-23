@@ -137,14 +137,6 @@ define([],
                     };
 
                 return boundingLegendLabel;
-            },
-
-            /*
-            * generate DataLayerUUID by removing layer_ from layer id
-            * @param layerId
-            */
-            getDataLayerUUID: function (layerId) {
-                return layerId.replace("layer_", "");
             }
         };
     });
