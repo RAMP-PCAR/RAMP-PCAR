@@ -58,10 +58,28 @@ define([
                 */
                 init: function () {
                     advancedToggle = $("#advanced-toggle");
-                    advancedSectionContainer = $("#advanced-section-container");
+                    advancedSectionContainer = $("#advanced-toolbar"); //$("#advanced-section-container");
+                    var advancedToolbarList = $("#advanced-toolbar-list"),
+                        panelToggle = $("#panel-toggle");
+
                     advancedSection = $("#advanced-section");
 
                     toggleAdvancedToolbar();
+
+                    var transitionDuration = 0.4;
+
+                    var advancedToolbarTimeLine = new TimelineLite({
+                        paused: true,
+                        onComplete: function () {
+                        },
+                        onReverseComplete: function () {
+                        }
+                    });
+
+                    advancedToolbarTimeLine
+                        .set(advancedSectionContainer, { display: "block" }, 0)
+                        .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0 }, 0)
+                        .to(panelToggle, transitionDuration, { top: "+=32" }, 0);
 
                     advancedPopup = popupManager.registerPopup(advancedToggle, "click",
                         function (d) {
@@ -79,9 +97,14 @@ define([
                                 })
                             );
 
-                            advancedSectionContainer.slideDown("fast", function () {
+                            advancedToolbarTimeLine.eventCallback("onComplete", d.resolve, [], this);
+                            advancedToolbarTimeLine.play();
+
+                            //d.resolve();
+
+                            /*advancedSectionContainer.slideDown("fast", function () {
                                 d.resolve();
-                            });
+                            });*/
                         },
                         {
                             activeClass: cssButtonPressedClass,
@@ -92,11 +115,15 @@ define([
                                 });
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "help-section" });
 
-                                advancedSectionContainer.slideUp("fast", function () {
+                                advancedToolbarTimeLine.eventCallback("onReverseComplete", d.resolve, [], this);
+                                advancedToolbarTimeLine.reverse();
+
+                                //d.resolve();
+
+                                /*advancedSectionContainer.slideUp("fast", function () {
                                     d.resolve();
-                                });
-                            },
-                            resetFocusOnClose: true
+                                });*/
+                            }
                         }
                     );
 
@@ -112,10 +139,10 @@ define([
         */
         function toggleAdvancedToolbar() {
             // Set whether each item should be visible.
-            var advancedToolbarIsEnabled = globalStorage.config.advancedToolbar.advancedToolbarIsEnabled;
-            var populationToolIsEnabled = globalStorage.config.advancedToolbar.populationToolIsEnabled;
-            var measureToolIsEnabled = globalStorage.config.advancedToolbar.measureToolIsEnabled;
-            var bufferToolIsEnabled = globalStorage.config.advancedToolbar.bufferToolIsEnabled;
+            var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled;
+            var populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled;
+            var measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled;
+            var bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
 
             // Show each item as indicated by variables.
             if (advancedToolbarIsEnabled) {

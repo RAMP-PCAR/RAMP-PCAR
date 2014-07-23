@@ -186,7 +186,29 @@
 		}	
 
         #advanced-toggle {
-            display: none;
+            //display: none;
+        }
+
+        #advanced-toolbar {
+        	display: none;
+			position: absolute;
+			top: 32px;
+			left: 0;
+			right: 0;
+			height: 32px;
+			z-index: 1;
+			margin: 0 3px 0 0;			
+			overflow: hidden;
+
+			#advanced-toolbar-list {
+				position: relative;
+				margin: 0;
+				text-align: left;
+				height: 31px;
+				border-bottom: 1px #BFBFBF solid;
+				background-color: @very-light-grey-color;			
+			}
+
         }
 
         #advanced-section-container {
@@ -209,7 +231,8 @@
                 }
 
                 #population-tool, #measure-tool, #buffer-tool {
-                    display: none;
+                    //display: none;
+                    display: inline-block;
                     text-align: center;
                     padding: 10px;
                     border: none;
