@@ -191,6 +191,10 @@ namespace JSonConfigEditor.main
 
         private void watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            if (!watcher.EnableRaisingEvents)
+            {
+                return;
+            }
             if (!e.FullPath.Equals(FileName) && !e.FullPath.Equals(TemplateFileName))
             {
                 return;
@@ -333,10 +337,13 @@ namespace JSonConfigEditor.main
                 this.FileName = saveFileDialog.FileName;
             }
 
+            watcher.EnableRaisingEvents = false;
+
             setReadOnly(this.FileName, false);
             String value = JsonConvert.SerializeObject(this.genericTree.getSerializableValueObject());
             if (!saveString(this.FileName, value))
             {
+                watcher.EnableRaisingEvents = true;
                 return false;
             }
             setReadOnly(this.FileName, true);
@@ -344,6 +351,7 @@ namespace JSonConfigEditor.main
             setReadOnly(this.TrackFileName, false);
             if (!saveString(this.TrackFileName, TRACK_FILE_WARNING_MSG + JsonUtil.FormatJson(value)))
             {
+                watcher.EnableRaisingEvents = true;
                 return false;
             }
             setReadOnly(this.TrackFileName, true);
@@ -352,6 +360,7 @@ namespace JSonConfigEditor.main
             setReadOnly(this.TemplateFileName, false);
             if (!saveString(this.TemplateFileName, META_FILE_WARNING_MSG + JsonUtil.FormatJson(template)))
             {
+                watcher.EnableRaisingEvents = true;
                 return false;
             }
             setReadOnly(this.TemplateFileName, true);
@@ -360,6 +369,7 @@ namespace JSonConfigEditor.main
             {
                 AfterSave(this, new SaveEventArgs());
             }
+            watcher.EnableRaisingEvents = true;
             return true;
         }
 
