@@ -288,8 +288,8 @@ define([
             /* START BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                var setTo = evt.node.checked,
-                    layerId = evt.node.value,
+                var setTo = evt.state,
+                    layerId = evt.id,
                     // either take url (would need mapping to layer on map),
                     // map id in config, graphic layer id
                     layer = map.getLayer(layerId);
@@ -322,7 +322,7 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
-                setBoundingBoxVisibility(evt.node.value, evt.checked);
+                setBoundingBoxVisibility(evt.id, evt.state);
             });
 
             topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {

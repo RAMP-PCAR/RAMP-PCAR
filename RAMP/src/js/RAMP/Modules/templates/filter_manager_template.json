@@ -73,7 +73,7 @@
                                         <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
                                             <span class='wb-invisible'>{%=o.label%}</span>
                                         </label>
-                                        <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
+                                        <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' data-layer-id='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
                                             type='checkbox'></input>
                                     </div>",
         

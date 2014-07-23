@@ -141,7 +141,7 @@ define([
                     var boxCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .box + input"),
                         {
-                            nodeIdAttr: "id",
+                            nodeIdAttr: "layer-id",
 
                             cssClass: {
                                 active: "active",
@@ -150,8 +150,8 @@ define([
                             },
 
                             label: {
-                                check: "checked",
-                                uncheck: "unchecked"
+                                check: localString.txtHideBounds,
+                                uncheck: localString.txtShowBounds
                             },
 
                             onChange: function () {
@@ -159,29 +159,86 @@ define([
                             },
 
                             master: {
-                                node: filterGlobalToggles.find(".checkbox-custom .box + input")/*,
+                                node: filterGlobalToggles.find(".checkbox-custom .box + input"),/*
 
                                 cssClass: {
                                     active: "active",
                                     focus: "focused",
                                     check: "checked"
-                                },
+                                },*/
 
                                 label: {
-                                    check: "checked!",
-                                    uncheck: "unchecked!"
-                                },
+                                    check: localString.txtHideAllBounds,
+                                    uncheck: localString.txtShowAllBounds
+                                }/*,
 
                                 onChange: Theme.tooltipster*/
                             }
-                        }
-                    );
+                        })
+                        .setState(false);
 
                     boxCheckboxGroup.on("memberToggle", function (evt) {
-                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agent, "to", evt.checkbox.state);
+                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                        if (evt.checkbox.id.indexOf("wms") === -1) {
+                            topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
+                                id: evt.checkbox.id,
+                                state: evt.checkbox.state
+                            });
+                        }
                     });
                     boxCheckboxGroup.on("masterToggle", function (evt) {
-                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agent, "to", evt.checkbox.state);
+                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                    });
+
+                    var eyeCheckboxGroup = new CheckboxGroup(
+                        layerList.find(".checkbox-custom .eye + input"),
+                        {
+                            nodeIdAttr: "layer-id",
+
+                            cssClass: {
+                                active: "active",
+                                focus: "focused",
+                                check: "checked"
+                            },
+
+                            label: {
+                                check: localString.txtHideFeatures,
+                                uncheck: localString.txtShowFeatures
+                            },
+
+                            onChange: function () {
+                                Theme.tooltipster(this.labelNode.parent(), null, "update");
+                            },
+
+                            master: {
+                                node: filterGlobalToggles.find(".checkbox-custom .eye + input"),/*
+
+                                cssClass: {
+                                    active: "active",
+                                    focus: "focused",
+                                    check: "checked"
+                                }*/
+
+                                label: {
+                                    check: localString.txtHideAllFeatures,
+                                    uncheck: localString.txtShowAllFeatures
+                                }/*,
+
+                                onChange: Theme.tooltipster*/
+                            }
+                        });
+
+                    eyeCheckboxGroup.on("memberToggle", function (evt) {
+                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                        topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
+                            id: evt.checkbox.id,
+                            state: evt.checkbox.state
+                        });
+                    });
+                    eyeCheckboxGroup.on("masterToggle", function (evt) {
+                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
                     return;
