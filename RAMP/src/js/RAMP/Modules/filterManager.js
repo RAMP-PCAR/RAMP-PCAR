@@ -138,7 +138,10 @@ define([
                 * @private
                 */
                 function setCheckboxEvents() {
-                    var boxCheckboxGroup = new CheckboxGroup(
+                    var boxCheckboxGroup,
+                        eyeCheckboxGroup;
+
+                    boxCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .box + input"),
                         {
                             nodeIdAttr: "layer-id",
@@ -177,6 +180,7 @@ define([
                                 onChange: Theme.tooltipster*/
                             }
                         })
+                        // Turn off the bounding boxes by default
                         .setState(false);
 
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -189,11 +193,16 @@ define([
                             });
                         }
                     });
+
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
-                    var eyeCheckboxGroup = new CheckboxGroup(
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
+                        boxCheckboxGroup.setState(evt.state, evt.layerId);
+                    });
+
+                    eyeCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .eye + input"),
                         {
                             nodeIdAttr: "layer-id",
@@ -243,6 +252,10 @@ define([
                     });
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                    });
+
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
+                        eyeCheckboxGroup.setState(evt.state, evt.layerId);
                     });
 
                     return;

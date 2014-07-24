@@ -1313,9 +1313,9 @@ define([
                 extentFilterExpired = true;
             });
 
-            topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function () {
+            /*topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function () {
                 extentFilterExpired = true;
-            });
+            });*/
 
             /* UI EVENTS */
             topic.subscribe(EventManager.GUI.TAB_SELECTED, function (arg) {
@@ -1345,14 +1345,13 @@ define([
                     applyExtentFilter();
                 }
             });
-            
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });            
+            });
         }
 
         return {

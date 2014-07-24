@@ -94,8 +94,8 @@ define([
             EVENT_PANEL_CHANGE = "panelChange",
             EVENT_TAB_CHANGE = "selectedTab",
             EVENT_BASEMAP_CHANGED = "basemapChange",
-            EVENT_FILTER_GLOBAL_LAYER = "globalLayer",
-            EVENT_FILTER_GLOBAL_BOX = "globalBox",
+            //EVENT_FILTER_GLOBAL_LAYER = "globalLayer",
+            //EVENT_FILTER_GLOBAL_BOX = "globalBox",
             EVENT_FILTER_VISIBLE_LAYERS = "activeLayers",
             EVENT_FILTER_VISIBLE_BOXES = "activeBoxes",
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
@@ -466,7 +466,7 @@ define([
                     updateURL();
                 });
 
-                topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (event) {
+                /*topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (event) {
                     addParameter(EVENT_FILTER_GLOBAL_LAYER, {
                         globalLayer: event.checked
                     });
@@ -475,9 +475,9 @@ define([
                     addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
 
                     updateURL();
-                });
+                });*/
 
-                topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (event) {
+                /*topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (event) {
                     addParameter(EVENT_FILTER_GLOBAL_BOX, {
                         globalBox: event.checked
                     });
@@ -486,12 +486,12 @@ define([
                     addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
 
                     updateURL();
-                });
+                });*/
 
                 topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = $(event.node).findInputLabel().data("layer-id");
+                    var layerName = event.id;
 
-                    if (event.checked) {
+                    if (event.state) {
                         delete hiddenLayers[layerName];
                     } else {
                         hiddenLayers[layerName] = true;
@@ -500,7 +500,7 @@ define([
                     if (UtilDict.isEmpty(hiddenLayers)) {
                         // If we have no hidden layers, remove both parameters (since it's status quo)
                         addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
-                        addParameter(EVENT_FILTER_GLOBAL_LAYER, null);
+                        /*addParameter(EVENT_FILTER_GLOBAL_LAYER, null);*/
                     } else {
                         // Otherwise add the hidden layers parameter and remove the global layer
                         // parameter
@@ -509,16 +509,16 @@ define([
                             hiddenLayers: Object.keys(hiddenLayers).join("+")
                         });
 
-                        addParameter(EVENT_FILTER_GLOBAL_LAYER, null);
+                        /*addParameter(EVENT_FILTER_GLOBAL_LAYER, null);*/
                     }
 
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = $(event.node).findInputLabel().data("layer-id");
+                    var layerName = event.id;
 
-                    if (event.checked) {
+                    if (event.state) {
                         visibleBoxes[layerName] = true;
                     } else {
                         delete visibleBoxes[layerName];
@@ -529,9 +529,9 @@ define([
                         // and set global box to false
                         addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
 
-                        addParameter(EVENT_FILTER_GLOBAL_BOX, {
+                        /*addParameter(EVENT_FILTER_GLOBAL_BOX, {
                             globalBox: false
-                        });
+                        });*/
                     } else {
                         // Otherwise add the visible boxes parameter and remove the global box
                         // parameter
@@ -540,7 +540,7 @@ define([
                             visibleBoxes: Object.keys(visibleBoxes).join("+")
                         });
 
-                        addParameter(EVENT_FILTER_GLOBAL_BOX, null);
+                        /*addParameter(EVENT_FILTER_GLOBAL_BOX, null);*/
                     }
 
                     updateURL();
@@ -669,7 +669,7 @@ define([
                     }
                 }
 
-                if (queryObject.globalLayer) {
+                /*if (queryObject.globalLayer) {
                     topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, {
                         visible: UtilMisc.parseBool(queryObject.globalLayer)
                     });
@@ -677,16 +677,18 @@ define([
                     addParameter(EVENT_FILTER_GLOBAL_LAYER, {
                         globalLayer: queryObject.globalLayer
                     });
-                } else if (queryObject.hiddenLayers) {
+                } else*/ if (queryObject.hiddenLayers) {
                     // Doing "else if" here instead of "if" because these two options are exclusive
 
                     layerIds = queryObject.hiddenLayers.split("+");
 
                     // Selectively turn off the ones that were in the query (the rest will be
                     // turned on)
-                    topic.publish(EventManager.FilterManager.TOGGLE_LAYERS_VISIBILITY, {
-                        layerIds: layerIds,
-                        checked: false
+                    layerIds.forEach(function (layerId) {
+                        topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
+                            layerId: layerId,
+                            state: false
+                        });
                     });
 
                     addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
@@ -694,7 +696,7 @@ define([
                     });
                 }
 
-                if (queryObject.globalBox) {
+                /*if (queryObject.globalBox) {
                     topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY, {
                         visible: UtilMisc.parseBool(queryObject.globalBox)
                     });
@@ -702,7 +704,7 @@ define([
                     addParameter(EVENT_FILTER_GLOBAL_BOX, {
                         globalBox: queryObject.globalBox
                     });
-                } else if (queryObject.visibleBoxes) {
+                } else */ if (queryObject.visibleBoxes) {
                     // Doing "else if" here instead of "if" because these two options are exclusive
 
                     // Selective turn on the bounding boxes, no need to turn off all bounding boxes
@@ -710,9 +712,11 @@ define([
 
                     layerIds = queryObject.visibleBoxes.split("+");
 
-                    topic.publish(EventManager.FilterManager.TOGGLE_BOXES_VISIBILITY, {
-                        layerIds: layerIds,
-                        checked: true
+                    layerIds.forEach(function (layerId) {
+                        topic.publish(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, {
+                            layerId: layerId,
+                            state: true
+                        });
                     });
 
                     addParameter(EVENT_FILTER_VISIBLE_BOXES, {

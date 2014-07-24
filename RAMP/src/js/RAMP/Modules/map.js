@@ -45,7 +45,6 @@
 * @uses EventManager
 * @uses Util
 * @uses Array
-* @uses Dictionary
 */
 
 define([
@@ -62,7 +61,7 @@ define([
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
-"utils/util", "utils/array", "utils/dictionary"],
+"utils/util", "utils/array"],
 
     function (
     /* Dojo */
@@ -77,7 +76,7 @@ define([
     GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
 
     /* Util */
-    UtilMisc, UtilArray, UtilDict) {
+    UtilMisc, UtilArray) {
         "use strict";
 
         /**
@@ -325,7 +324,7 @@ define([
                 setBoundingBoxVisibility(evt.id, evt.state);
             });
 
-            topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {
+            /*topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {
                 dojoArray.forEach(featureLayers.concat(wmsLayers), function (layer) {
                     layer.setVisibility(evt.checked);
                     //loops through the all static layers added to the map. Uses the array that maps static layers to feature layers
@@ -338,13 +337,13 @@ define([
                     catch (err) {
                     }
                 });
-            });
+            });*/
 
-            topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (evt) {
+            /*topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (evt) {
                 UtilDict.forEachEntry(boundingBoxMapping, function (id) {
                     setBoundingBoxVisibility(id, evt.checked);
                 });
-            });
+            });*/
 
             topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (evt) {
                 //this is handling the user trying to re-order the layers
