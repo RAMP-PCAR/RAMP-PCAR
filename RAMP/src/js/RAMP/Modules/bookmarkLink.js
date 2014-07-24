@@ -648,6 +648,8 @@ define([
                             layerId: layerId,
                             state: false
                         });
+
+                        hiddenLayers[layerId] = false;
                     });
 
                     addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
@@ -668,6 +670,8 @@ define([
                             layerId: layerId,
                             state: true
                         });
+
+                        visibleBoxes[layerId] = true;
                     });
 
                     addParameter(EVENT_FILTER_VISIBLE_BOXES, {
