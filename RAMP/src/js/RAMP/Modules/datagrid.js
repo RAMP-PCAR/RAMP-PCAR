@@ -1302,7 +1302,6 @@ define([
         /**
         * Binding event handling for events:
         * filterManager/layer-visibility-toggled
-        * filterManager/global-layer-visibility-toggled
         * datagrid/applyExtentFilter
         *
         * @method initListeners
@@ -1312,10 +1311,6 @@ define([
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function () {
                 extentFilterExpired = true;
             });
-
-            /*topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function () {
-                extentFilterExpired = true;
-            });*/
 
             /* UI EVENTS */
             topic.subscribe(EventManager.GUI.TAB_SELECTED, function (arg) {

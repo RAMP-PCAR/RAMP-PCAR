@@ -94,8 +94,6 @@ define([
             EVENT_PANEL_CHANGE = "panelChange",
             EVENT_TAB_CHANGE = "selectedTab",
             EVENT_BASEMAP_CHANGED = "basemapChange",
-            //EVENT_FILTER_GLOBAL_LAYER = "globalLayer",
-            //EVENT_FILTER_GLOBAL_BOX = "globalBox",
             EVENT_FILTER_VISIBLE_LAYERS = "activeLayers",
             EVENT_FILTER_VISIBLE_BOXES = "activeBoxes",
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
@@ -466,28 +464,6 @@ define([
                     updateURL();
                 });
 
-                /*topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (event) {
-                    addParameter(EVENT_FILTER_GLOBAL_LAYER, {
-                        globalLayer: event.checked
-                    });
-
-                    // Remove the active layers query, since these two are mutually exclusive
-                    addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
-
-                    updateURL();
-                });*/
-
-                /*topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (event) {
-                    addParameter(EVENT_FILTER_GLOBAL_BOX, {
-                        globalBox: event.checked
-                    });
-
-                    // Remove the active boxes query, since these two are mutually exclusive
-                    addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
-
-                    updateURL();
-                });*/
-
                 topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
                     var layerName = event.id;
 
@@ -500,7 +476,6 @@ define([
                     if (UtilDict.isEmpty(hiddenLayers)) {
                         // If we have no hidden layers, remove both parameters (since it's status quo)
                         addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
-                        /*addParameter(EVENT_FILTER_GLOBAL_LAYER, null);*/
                     } else {
                         // Otherwise add the hidden layers parameter and remove the global layer
                         // parameter
@@ -508,8 +483,6 @@ define([
                             // Convert an array of string into a "+" delimited string
                             hiddenLayers: Object.keys(hiddenLayers).join("+")
                         });
-
-                        /*addParameter(EVENT_FILTER_GLOBAL_LAYER, null);*/
                     }
 
                     updateURL();
@@ -528,10 +501,6 @@ define([
                         // If we have no visible boxes, remove the visible boxes parameter
                         // and set global box to false
                         addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
-
-                        /*addParameter(EVENT_FILTER_GLOBAL_BOX, {
-                            globalBox: false
-                        });*/
                     } else {
                         // Otherwise add the visible boxes parameter and remove the global box
                         // parameter
@@ -539,8 +508,6 @@ define([
                             // Convert an array of string into a "+" delimited string
                             visibleBoxes: Object.keys(visibleBoxes).join("+")
                         });
-
-                        /*addParameter(EVENT_FILTER_GLOBAL_BOX, null);*/
                     }
 
                     updateURL();
@@ -669,15 +636,7 @@ define([
                     }
                 }
 
-                /*if (queryObject.globalLayer) {
-                    topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, {
-                        visible: UtilMisc.parseBool(queryObject.globalLayer)
-                    });
-
-                    addParameter(EVENT_FILTER_GLOBAL_LAYER, {
-                        globalLayer: queryObject.globalLayer
-                    });
-                } else*/ if (queryObject.hiddenLayers) {
+                if (queryObject.hiddenLayers) {
                     // Doing "else if" here instead of "if" because these two options are exclusive
 
                     layerIds = queryObject.hiddenLayers.split("+");
@@ -696,15 +655,7 @@ define([
                     });
                 }
 
-                /*if (queryObject.globalBox) {
-                    topic.publish(EventManager.FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY, {
-                        visible: UtilMisc.parseBool(queryObject.globalBox)
-                    });
-
-                    addParameter(EVENT_FILTER_GLOBAL_BOX, {
-                        globalBox: queryObject.globalBox
-                    });
-                } else */ if (queryObject.visibleBoxes) {
+                if (queryObject.visibleBoxes) {
                     // Doing "else if" here instead of "if" because these two options are exclusive
 
                     // Selective turn on the bounding boxes, no need to turn off all bounding boxes
