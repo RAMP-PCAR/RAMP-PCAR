@@ -22,16 +22,6 @@ define([],
         return {
             FilterManager: {
                 /**
-                * Published whenever the global "eye" button is clicked
-                *
-                * @event FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED
-                * @for FilterManager
-                * @param event {Object}
-                * @param event.checked {boolean} true if the "eye" button is checked, false otherwise
-                */
-                GLOBAL_LAYER_VISIBILITY_TOGGLED: "filterManager/global-layer-visibility-toggled",
-
-                /**
                 * Published whenever the "eye" button for a layer is clicked
                 *
                 * @event FilterManager.LAYER_VISIBILITY_TOGGLED
@@ -42,6 +32,7 @@ define([],
                 */
                 LAYER_VISIBILITY_TOGGLED: "filterManager/layer-visibility-toggled",
 
+                // ???
                 LAYER_TRANSPARENCY_CHANGED: "filterManager/layer-transparency-changed",
 
                 /**
@@ -54,16 +45,6 @@ define([],
                 * @param event.node {Object} the input dom node that represents the checkbox
                 */
                 BOX_VISIBILITY_TOGGLED: "filterManager/box-visibility-toggled",
-
-                /**
-                * Published whenever the global "box" button is clicked
-                *
-                * @event FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED
-                * @for FilterManager
-                * @param event {Object}
-                * @param event.checked {boolean} true if the "box" button is checked, false otherwise
-                */
-                GLOBAL_BOX_VISIBILITY_TOGGLED: "filterManager/global-box-visibility-toggled",
 
                 /**
                 * Published whenever the layer list is rearranged
@@ -89,44 +70,24 @@ define([],
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.TOGGLE_LAYERS_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_LAYER_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
-                * @param event.layerName {String} the name of the layer to toggle
-                * @param event.visible {boolean} true if the layer should be visible, false otherwise
+                * @param event.layerId {String} the name of the layer to toggle
+                * @param event.state {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_LAYERS_VISIBILITY: "filterManager/toggle-layers-visibility",
+                TOGGLE_LAYER_VISIBILITY: "filterManager/toggle-layer-visibility",
 
                 /**
                 * Tells the filter manager to toggle a layer on or off
                 *
-                * @event FilterManager.TOGGLE_BOXES_VISIBILITY [subscribed]
+                * @event FilterManager.TOGGLE_BOX_VISIBILITY [subscribed]
                 * @for FilterManager
                 * @param event {Object}
-                * @param event.layerName {String} the name of the layer to toggle
-                * @param event.visible {boolean} true if the layer should be visible, false otherwise
+                * @param event.layerId {String} the name of the layer to toggle
+                * @param event.state {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_BOXES_VISIBILITY: "filterManager/toggle-boxes-visibility",
-
-                /**
-                * Tells the filter manager to toggle all layers on or off
-                *
-                * @event FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY [subscribed]
-                * @for FilterManager
-                * @param event {Object}
-                * @param event.visible {boolean} true if all the layers should be visible, false otherwise
-                */
-                TOGGLE_GLOBAL_LAYER_VISIBILITY: "filterManager/toggle-global-layer-visibility",
-
-                /**
-                * Tells the filter manager to toggle all bounding boxes on or off
-                *
-                * @event FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY [subscribed]
-                * @for FilterManager
-                * @param event {Object}
-                * @param event.visible {boolean} true if all the bounding boxes should be visible, false otherwise
-                */
-                TOGGLE_GLOBAL_BOX_VISIBILITY: "filterManager/toggle-global-box-visiblity"
+                TOGGLE_BOX_VISIBILITY: "filterManager/toggle-box-visibility"
             },
 
             GUI: {

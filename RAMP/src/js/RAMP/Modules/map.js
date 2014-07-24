@@ -45,7 +45,6 @@
 * @uses EventManager
 * @uses Util
 * @uses Array
-* @uses Dictionary
 */
 
 define([
@@ -62,7 +61,7 @@ define([
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
-"utils/util", "utils/array", "utils/dictionary"],
+"utils/util", "utils/array"],
 
     function (
     /* Dojo */
@@ -77,7 +76,7 @@ define([
     GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
 
     /* Util */
-    UtilMisc, UtilArray, UtilDict) {
+    UtilMisc, UtilArray) {
         "use strict";
 
         /**
@@ -288,8 +287,8 @@ define([
             /* START BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                var setTo = evt.node.checked,
-                    layerId = evt.node.value,
+                var setTo = evt.state,
+                    layerId = evt.id,
                     // either take url (would need mapping to layer on map),
                     // map id in config, graphic layer id
                     layer = map.getLayer(layerId);
@@ -322,28 +321,7 @@ define([
             });
 
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
-                setBoundingBoxVisibility(evt.node.value, evt.checked);
-            });
-
-            topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function (evt) {
-                dojoArray.forEach(featureLayers.concat(wmsLayers), function (layer) {
-                    layer.setVisibility(evt.checked);
-                    //loops through the all static layers added to the map. Uses the array that maps static layers to feature layers
-                    try {
-                        dojoArray.forEach(GlobalStorage.LayerMap[layer.id], function (staticLayer) {
-                            var layer = map.getLayer(staticLayer);
-                            layer.setVisibility(evt.checked);
-                        });
-                    }
-                    catch (err) {
-                    }
-                });
-            });
-
-            topic.subscribe(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, function (evt) {
-                UtilDict.forEachEntry(boundingBoxMapping, function (id) {
-                    setBoundingBoxVisibility(id, evt.checked);
-                });
+                setBoundingBoxVisibility(evt.id, evt.state);
             });
 
             topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (evt) {

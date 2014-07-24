@@ -22,6 +22,7 @@
 * @uses dojo/query
 * @uses dojo/_base/array
 * @uses dojo/dom
+* @uses dojo/on
 * @uses dojo/dom-class
 * @uses dojo/dom-style
 * @uses dojo/dom-construct
@@ -43,11 +44,13 @@
 * @uses Array
 * @uses Dictionary
 * @uses PopupManager
+* @uses Checkbox
+* @uses CheckboxGroup
 */
 
 define([
 /* Dojo */
-        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/dom", "dojo/dom-class",
+        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/on", "dojo/dom", "dojo/dom-class",
         "dojo/dom-style", "dojo/dom-construct", "dojo/_base/connect", "dojo/Deferred", "dojo/topic",
         "dojo/aspect", "dojo/promise/all",
 /* Text */
@@ -61,11 +64,11 @@ define([
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox"],
+        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
 
     function (
     /* Dojo */
-        declare, lang, query, dojoArray, dom, domClass, domStyle, domConstruct,
+        declare, lang, query, dojoArray, on, dom, domClass, domStyle, domConstruct,
         connect, Deferred, topic, aspect, all,
     /* Text */
         filter_manager_template_json,
@@ -78,7 +81,7 @@ define([
         Ramp, GlobalStorage, RampMap, EventManager, Theme,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkboxes) {
+        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
         "use strict";
 
         var config,
@@ -137,244 +140,125 @@ define([
                 * @private
                 */
                 function setCheckboxEvents() {
-                    var globalEyeCheckbox,
-                        globalBoxCheckbox,
-                        eyeCheckboxes,
-                        boxCheckboxes;
+                    var boxCheckboxGroup,
+                        eyeCheckboxGroup;
 
-                    globalEyeCheckbox = new Checkboxes(
-                        filterGlobalToggles.find(".checkbox-custom .eye + input"),
-                        "checked", "focused",
+                    boxCheckboxGroup = new CheckboxGroup(
+                        layerList.find(".checkbox-custom .box + input"),
                         {
-                            checked: localString.txtHideAllFeatures,
-                            unchecked: localString.txtShowAllFeatures
-                        },
-                        Theme.tooltipster
-                    );
+                            nodeIdAttr: "layer-id",
 
-                    // Turn off the bounding boxes by default
-                    globalBoxCheckbox = new Checkboxes(
-                            filterGlobalToggles.find(".checkbox-custom .box + input"),
-                            "checked", "focused",
-                            {
-                                checked: localString.txtHideAllBounds,
-                                unchecked: localString.txtShowAllBounds
+                            cssClass: {
+                                active: "active",
+                                focus: "focused",
+                                check: "checked"
                             },
-                            Theme.tooltipster)
-                        .setAll(false);
 
-                    eyeCheckboxes = new Checkboxes(
+                            label: {
+                                check: localString.txtHideBounds,
+                                uncheck: localString.txtShowBounds
+                            },
+
+                            onChange: function () {
+                                Theme.tooltipster(this.labelNode.parent(), null, "update");
+                            },
+
+                            master: {
+                                node: filterGlobalToggles.find(".checkbox-custom .box + input"),
+
+                                nodeIdAttr: "id",/*
+
+                                cssClass: {
+                                    active: "active",
+                                    focus: "focused",
+                                    check: "checked"
+                                },*/
+
+                                label: {
+                                    check: localString.txtHideAllBounds,
+                                    uncheck: localString.txtShowAllBounds
+                                }/*,
+
+                                onChange: Theme.tooltipster*/
+                            }
+                        })
+                        // Turn off the bounding boxes by default
+                        .setState(false);
+
+                    boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                        if (evt.checkbox.id.indexOf("wms") === -1) {
+                            topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
+                                id: evt.checkbox.id,
+                                state: evt.checkbox.state
+                            });
+                        }
+                    });
+
+                    boxCheckboxGroup.on(boxCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                    });
+
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
+                        boxCheckboxGroup.setState(evt.state, evt.layerId);
+                    });
+
+                    eyeCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .eye + input"),
-                        "checked", "focused",
                         {
-                            checked: localString.txtHideFeatures,
-                            unchecked: localString.txtShowFeatures
-                        },
-                        Theme.tooltipster
-                    );
+                            nodeIdAttr: "layer-id",
 
-                    // Turn off the bounding boxes by default
-                    boxCheckboxes = new Checkboxes(
-                            layerList.find(".checkbox-custom .box + input"),
-                            "checked", "focused",
-                            {
-                                checked: localString.txtHideBounds,
-                                unchecked: localString.txtShowBounds
+                            cssClass: {
+                                active: "active",
+                                focus: "focused",
+                                check: "checked"
                             },
-                            Theme.tooltipster)
-                        .setAll(false);
 
-                    /**
-                    * Toggles each layers visibility when the global visibility button is clicked
-                    * @method toggleGlobalEye
-                    * @param {Boolean} checked The value of the global visibility button's check status (on or off)
-                    */
-                    function toggleGlobalEye(checked) {
-                        eyeCheckboxes.setAll(checked);
+                            label: {
+                                check: localString.txtHideFeatures,
+                                uncheck: localString.txtShowFeatures
+                            },
 
-                        topic.publish(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, {
-                            checked: checked
-                        });
-                    }
-                    /**
-                    * Toggles each layers boundary box display check box when the global boundary box button is clicked
-                    * @method toggleGlobalBox
-                    * @param {Boolean} checked The value of the global boundary box button's check status (on or off)
-                    */
-                    function toggleGlobalBox(checked) {
-                        boxCheckboxes.setAll(checked);
+                            onChange: function () {
+                                Theme.tooltipster(this.labelNode.parent(), null, "update");
+                            },
 
-                        topic.publish(EventManager.FilterManager.GLOBAL_BOX_VISIBILITY_TOGGLED, {
-                            checked: checked
-                        });
-                    }
+                            master: {
+                                node: filterGlobalToggles.find(".checkbox-custom .eye + input"),
 
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_GLOBAL_LAYER_VISIBILITY, function (evt) {
-                        globalEyeCheckbox.setAll(evt.visible);
-                        toggleGlobalEye(evt.visible);
-                    });
+                                nodeIdAttr: "id",/*
 
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_GLOBAL_BOX_VISIBILITY, function (evt) {
-                        globalBoxCheckbox.setAll(evt.visible);
-                        toggleGlobalBox(evt.visible);
-                    });
+                                cssClass: {
+                                    active: "active",
+                                    focus: "focused",
+                                    check: "checked"
+                                }*/
 
-                    /* START GLOBAL "EYE" AND BOUNDING BOX BUTTON EVENTS */
-                    globalEyeCheckbox.getNodes()
-                        .on("change", function () {
-                            // True if the checkbox got selected, false otherwise
-                            var checked = $(this).is(':checked');
+                                label: {
+                                    check: localString.txtHideAllFeatures,
+                                    uncheck: localString.txtShowAllFeatures
+                                }/*,
 
-                            toggleGlobalEye(checked);
-                        })
-                        // Allow enter key to work too
-                        .on("keyup", function (e) {
-                            if (e.which === 13) {
-                                var node = $(this);
-                                node[0].checked = !node[0].checked;
-                                node.findInputLabel().toggleClass("checked");
-                                var checked = node.is(':checked');
-                                toggleGlobalEye(checked, node);
+                                onChange: Theme.tooltipster*/
                             }
                         });
 
-                    globalBoxCheckbox.getNodes()
-                        .on("change", function () {
-                            // True if the checkbox got selected, false otherwise
-                            var checked = $(this).is(':checked');
+                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
-                            toggleGlobalBox(checked);
-                        })
-                        // Allow enter key to work too
-                        .on("keyup", function (e) {
-                            if (e.which === 13) {
-                                var node = $(this);
-                                node[0].checked = !node[0].checked;
-                                node.findInputLabel().toggleClass("checked");
-                                var checked = node.is(':checked');
-                                toggleGlobalBox(checked, node);
-                            }
-                        });
-
-                    /* END GLOBAL "EYE" AND BOUNDING BOX BUTTONS */
-
-                    /* START INDIVIDUAL "EYE" AND BOUNDING BUTTON EVENTS */
-                    /**
-                    * Toggles the visibility button (or eye) beside a given layer in the legend. Fires the layer_visibility event.
-                    * @method toggleEye
-                    * @param {Boolean} checked The check status of the visibility button next to the target layer (on or off)
-                    * @param {Object} node The legend item representing the target layer
-                    */
-                    function toggleEye(checked, node) {
-                        // Figure out whether or not all the checkboxes are selected
-                        var allChecked = dojoArray.every(eyeCheckboxes.getNodes(), function (checkbox) {
-                            return $(checkbox).is(':checked');
-                        });
-
-                        globalEyeCheckbox.setAll(allChecked);
-
-                        // True if the checkbox got selected, false otherwise
                         topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
-                            checked: checked,
-                            node: node[0]
-                        });
-                    }
-                    /**
-                    * Toggles the boundary box button beside a given layer in the legend. Fires the box_visibility event.
-                    * @method toggleBox
-                    * @param {Boolean} checked The check status of the boundary box button next to the target layer (on or off)
-                    * @param {Object} node The legend item representing the target layer
-                    */
-                    function toggleBox(checked, node) {
-                        // Figure out whether or not all the checkboxes are selected
-                        var allChecked = dojoArray.every(boxCheckboxes.getNodes(), function (checkbox) {
-                            return $(checkbox).is(':checked');
-                        });
-
-                        globalBoxCheckbox.setAll(allChecked);
-
-                        topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
-                            checked: checked,
-                            node: node[0]
-                        });
-                    }
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYERS_VISIBILITY, function (evt) {
-                        // Set the checkboxes visually, checkboxes with an id in evt.layerIds gets
-                        // turned on, the rest gets turned off
-                        eyeCheckboxes.setState(function (checkbox) {
-                            var layerId = $(checkbox).findInputLabel().data("layer-id");
-                            if (evt.layerIds.contains(layerId)) {
-                                return evt.checked;
-                            } else {
-                                return !evt.checked;
-                            }
-                        });
-
-                        dojoArray.forEach(eyeCheckboxes.getNodes(), function (checkbox) {
-                            checkbox = $(checkbox);
-                            var layerId = checkbox.findInputLabel().data("layer-id");
-                            toggleEye(evt.layerIds.contains(layerId), checkbox);
+                            id: evt.checkbox.id,
+                            state: evt.checkbox.state
                         });
                     });
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOXES_VISIBILITY, function (evt) {
-                        // Set the checkboxes visually, checkboxes with an id in evt.layerIds gets
-                        // turned on, the rest gets turned off
-                        boxCheckboxes.setState(function (checkbox) {
-                            var layerId = $(checkbox).findInputLabel().data("layer-id");
-                            if (evt.layerIds.contains(layerId)) {
-                                return evt.checked;
-                            } else {
-                                return !evt.checked;
-                            }
-                        });
-
-                        dojoArray.forEach(boxCheckboxes.getNodes(), function (checkbox) {
-                            checkbox = $(checkbox);
-                            var layerId = checkbox.findInputLabel().data("layer-id");
-                            toggleBox(evt.layerIds.contains(layerId), checkbox);
-                        });
+                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
-                    // Event handling for individual "eye" and "box" toggle
-                    eyeCheckboxes.getNodes()
-                        .on("change", function () {
-                            var node = $(this),
-                                checked = node.is(':checked');
-
-                            toggleEye(checked, node);
-                        })
-                        // Allow enter key to work too.
-                        .on("keyup", function (e) {
-                            if (e.which === 13) {
-                                var node = $(this);
-                                node[0].checked = !node[0].checked;
-                                node.findInputLabel().toggleClass("checked");
-                                var checked = node.is(':checked');
-                                toggleEye(checked, node);
-                            }
-                        });
-
-                    boxCheckboxes.getNodes()
-                        .on("change", function () {
-                            var node = $(this),
-                            // True if the checkbox got selected, false otherwise
-                                checked = node.is(':checked');
-
-                            toggleBox(checked, node);
-                        })
-                        // Allow enter key to work too.
-                        .on("keyup", function (e) {
-                            if (e.which === 13) {
-                                var node = $(this);
-                                node[0].checked = !node[0].checked;
-                                node.findInputLabel().toggleClass("checked");
-                                var checked = node.is(':checked');
-                                toggleBox(checked, node);
-                            }
-                        });
-                    /* END INDIVIDUAL "EYE" AND BOUNDING BUTTON EVENTS */
+                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
+                        eyeCheckboxGroup.setState(evt.state, evt.layerId);
+                    });
                 }
                 /**
                 * initialize a tooltip for each layer, using the layer name.

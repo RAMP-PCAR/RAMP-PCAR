@@ -5,147 +5,271 @@
 */
 
 /**
-* [Description]
+* Wraps the specified checkbox input nodes to provide an alternative rendering of checkbox without compromising
+* its functionality. Handles synchronization of the checkbox's state with its new rendering.
+* Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
+*
 *
 * @class Checkbox
+* @constructor
+* @uses dojo/Evented
 * @uses dojo/_base/declare
+* @uses dojo/lang
+*
+* @param {jObject} node a jQuery object representing the input checkbox node to be wrapped
+* @param {Object} [options] Additional options
+* @param {String} [options.nodeIdAttr] Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id. If no appropriate "data-*" attribute found,
+* `nodeIdAttr` is used directly, failing that, regular `id` is used.
+* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
+* @param {Object} [options.cssClass.active] CSS class to be set when the Checkbox is `active`.
+* @param {Object} [options.cssClass.focus] CSS class to be set when the Checkbox is `focused`.
+* @param {Object} [options.cssClass.check] CSS class to be set when the Checkbox is `checked`.
+* @param {Object} [options.label] `check` and `uncheck` label texts to be applied to the Checkbox labels.
+* @param {Object} [options.label.check] A text to be set as a label when the Checkbox is `checked`
+* @param {Object} [options.label.uncheck] A text to be set as a label when the Checkbox is `unchecked`
+* @param {Function} [options.onChnage] A function to be called when the state of the Checkbox changes.
+*
+* @return {Checkbox} A control objects allowing to toggle checkbox.
 */
 
-define(["dojo/_base/declare"],
-    function (declare) {
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
+    function (Evented, declare, lang) {
         "use strict";
 
-        /*
-        * Goes through an array of checkboxes and if any are selected, add the "checked" css class to
-        * the label so it displays visually matches the changed state
-        *
-        * @method _toggleLabels
-        * @private
-        * @param {Object} objs An array of checkboxes to toggle
-        */
-        function _toggleLabels(that, objs) {
-            var label;
+        return declare([Evented], {
+            constructor: function (node, options) {
+                var that = this;
 
-            objs.each(function (i, obj) {
-                var node = $(obj),
-                    newText;
-                label = node.findInputLabel();
-                if (node.is(':checked')) {
-                    newText = String.format(that.labels.checked,
-                        label.data("label-name"));
-                    label
-                        .addClass(that.checkedClass)
+                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                lang.mixin(this,
+                    {
+                        /**
+                         * Node of the input checkbox originally supplied to the Checkbox.
+                         *
+                         * @property node
+                         * @type JObject
+                         * @default null
+                         */
+                        node: null,
+
+                        /**
+                         * Node of the input checkbox label.
+                         *
+                         * @property labelNode
+                         * @type JObject
+                         * @default null
+                         * @private
+                         */
+                        labelNode: null,
+
+                        /**
+                         * Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id.
+                         *
+                         * @property nodeIdAttr
+                         * @type String
+                         * @default "id"
+                         */
+                        nodeIdAttr: "id",
+
+                        /**
+                         * `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
+                         *
+                         * @property cssClass
+                         * @type {Object}
+                         * @default
+                         * @example
+                         *      cssClass: {
+                         *          active: "active",
+                         *          focus: "focused",
+                         *          check: "checked"
+                         *      }
+                         */
+                        cssClass: {
+                            active: "active",
+                            focus: "focused",
+                            check: "checked"
+                        },
+
+                        /**
+                         * `check` and `uncheck` label texts to be applied to the Checkbox labels.
+                         *
+                         * @property label
+                         * @type {Object}
+                         * @default
+                         * @example
+                         *      label: {
+                         *          check: "check",
+                         *          uncheck: "unchecked"
+                         *      }
+                         */
+                        label: {
+                            check: "checked",
+                            uncheck: "unchecked"
+                        },
+
+                        /**
+                         * A function to be called when the state of the Checkbox changes.
+                         *
+                         * @property onChnage
+                         * @type Function
+                         * @default
+                         * @example     function () { }
+                         */
+                        onChange: function () { },
+
+                        /**
+                         * State of the Checkbox: true | false
+                         *
+                         * @property state
+                         * @type Boolean
+                         * @default null
+                         */
+                        state: null,
+
+                        /**
+                         * Id of the Checkbox as specified by `nodeIdAttr`.
+                         *
+                         * @property id
+                         * @type String
+                         * @default null
+                         */
+                        id: null,
+
+                        /**
+                         * An object specifying possible agencies that can affect the Checkbox.
+                         *
+                         * @property agency
+                         * @type Object
+                         * @private
+                         * @default
+                         * @example
+                         *      agency: {
+                         *           USER: "USER",
+                         *           CODE: "CODE"
+                         *       }
+                         */
+                        agency: {
+                            USER: "USER",
+                            CODE: "CODE"
+                        },
+
+                        /**
+                         * Event names published by the Checkbox
+                         *
+                         * @private
+                         * @property event
+                         * @type Object
+                         * @default null
+                         * @example
+                         *      {
+                         *          TOGGLE: "checkbox/toggle"
+                         *      }
+                         */
+                        event: {
+                            /**
+                            * Published whenever a Checkbox get toggled.
+                            *
+                            * @event TOGGLE
+                            * @param event {Object}
+                            * @param event.checkbox {Checkbox} Checkbox object that has been toggled
+                            * @param event.agency {String} Agency that toggled the Checkbox
+                            */
+                            TOGGLE: "checkbox/toggle"
+                        }
+                    },
+                    options,
+                    {
+                        node: node
+                    }
+                );
+
+                this.node
+                    .on("change", function () {
+                        that._toggleLabel();
+
+                        that._emit(that.agency.USER);
+                    })
+                    .on("focus", function () {
+                        that.node.findInputLabel().addClass(that.cssClass.focus);
+                    })
+                    .on("focusout", function () {
+                        that.node.findInputLabel().removeClass(that.cssClass.focus);
+                    });
+
+                this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
+                this.labelNode = this.node.findInputLabel();
+
+                this._toggleLabel();
+            },
+
+            /*
+            * Adds the "checked", "focused" or "active" CSS class to the label so it displays visually matches the changed state.
+            * Updates the title attribute and text inside an invisible span housed inside the label.
+            *
+            * @method _toggleLabel
+            * @private
+            */
+            _toggleLabel: function () {
+                var newText;
+
+                this.state = this.node.is(':checked');
+
+                if (this.state) {
+                    newText = String.format(this.label.check,
+                        this.labelNode.data("label-name"));
+
+                    this.labelNode
+                        .addClass(this.cssClass.check)
                         .prop('title', newText)
                         .find("> span").text(newText);
                 } else {
-                    newText = String.format(that.labels.unchecked,
-                        label.data("label-name"));
-                    label
-                        .removeClass(that.checkedClass)
+                    newText = String.format(this.label.uncheck,
+                        this.labelNode.data("label-name"));
+
+                    this.labelNode
+                        .removeClass(this.cssClass.check)
                         .prop('title', newText)
                         .find("> span").text(newText);
                 }
-                if (that.fnc) {
-                    that.fnc.call(this, label.parent(), null, "update");
-                }
-            });
-        }
 
-        /*
-        * Goes through an array of checkboxes and toggles their checked state value based
-        * on the return value of the given function
-        *
-        * @private
-        * @method _toggleState
-        * @param {Object} nodes An Array of checkboxes
-        * @param {Function} fcn A function that takes a checkbox node as input and returns
-        * true if the checkbox should be checked, and false if the checkbox should be unchecked.
-        *
-        */
-        function _toggleState(that, nodes, fcn) {
-            nodes.each(function () {
-                $(this).prop('checked', fcn($(this)));
-            });
-
-            _toggleLabels(that, nodes);
-        }
-
-        return declare(null, {
-            /**
-            * Wraps the specified checkbox to provide an alternative rendering of checkbox without compromising
-            * its functionality. Handles synchronization of the checkbox's state with its new rendering.
-            * Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
-            *
-            * @method styleCheckboxes
-            * @static
-            * @param {jObject} nodes a jQuery object representing the checkbox
-            * @param {String} checkedClass Name of the CSS class to be used when checked
-            * @param {String} focusedClass Name of the CSS class to be used when focused
-            * @param {object} labels An object containing labels' text { checked: "label when checked", unchecked: "label when unchecked" }
-            * @param {Function} [fnc] Function to run on the label node when it's toggled
-            * @return {CheckboxWrapper} A control objects allowing to toggle checkboxes supplying a state, and retrieve original checkbox nodes
-            */
-            constructor: function (nodes, checkedClass, focusedClass, labels, fnc) {
-                this.checkedClass = checkedClass;
-                this.nodes = nodes;
-                this.labels = labels;
-                this.fnc = fnc;
-
-                var that = this;
-
-                nodes
-                    .on("change", function () {
-                        _toggleLabels(that, $(this));
-                    })
-                    .on("focus", function () {
-                        $(this).findInputLabel().addClass(focusedClass);
-                    })
-                    .on("focusout", function () {
-                        $(this).findInputLabel().removeClass(focusedClass);
-                    });
-
-                _toggleLabels(that, nodes);
+                this.onChange.call(this);
             },
 
             /**
-            * Toggle the state of checkboxes.
-            *
-            * @method setAll
-            * @param {boolean} state Specifies the state of the checkbox: true, false
-            * @return {object} Control object for chaining
-            * @chainable
-            * @for CheckboxWrapper
-            */
-            setAll: function (state) {
-                _toggleState(this, this.nodes, function () {
-                    return state;
-                }, this.checkedClass);
+             * Emits a `TOGGLE` event when the checkbox's state is changed.
+             *
+             * @method _emit
+             * @private
+             * @param {String} agency Specified the agency that toggled the Checkbox.
+             *
+             */
+            _emit: function (agency) {
+                console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
 
-                return this;
+                this.emit(this.event.TOGGLE, {
+                    agency: agency,
+                    checkbox: this
+                });
             },
 
             /**
-            * Toggles the checkboxes based on the return value of the given fcn.
+            * Toggle the state of Checkbox.
             *
             * @method setState
-            * @param {function} fcn A function to be run on each of the nodes to determine the state to be set
-            * @return {object} Control object for chaining
+            * @param {Boolean} state Specifies the state of the checkbox: true, false
+            * @return {Checkbox} Control object for chaining
             * @chainable
             */
-            setState: function (fcn) {
-                _toggleState(this, this.nodes, fcn);
+            setState: function (state) {
+                // change state only if it's different from the current one
+                if (this.state !== state) {
+                    this.node.prop('checked', state);
+                    this._toggleLabel();
+
+                    this._emit(this.agency.CODE);
+                }
 
                 return this;
-            },
-
-            /**
-            * Returns original checkbox nodes.
-            *
-            * @method getNodes
-            * @return {jObject} original checkbox nodes
-            */
-            getNodes: function () {
-                return this.nodes;
             }
         });
     });

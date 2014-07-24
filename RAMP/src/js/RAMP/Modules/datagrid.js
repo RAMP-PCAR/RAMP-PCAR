@@ -1302,7 +1302,6 @@ define([
         /**
         * Binding event handling for events:
         * filterManager/layer-visibility-toggled
-        * filterManager/global-layer-visibility-toggled
         * datagrid/applyExtentFilter
         *
         * @method initListeners
@@ -1310,10 +1309,6 @@ define([
         */
         function initListeners() {
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function () {
-                extentFilterExpired = true;
-            });
-
-            topic.subscribe(EventManager.FilterManager.GLOBAL_LAYER_VISIBILITY_TOGGLED, function () {
                 extentFilterExpired = true;
             });
 
@@ -1345,14 +1340,13 @@ define([
                     applyExtentFilter();
                 }
             });
-            
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });            
+            });
         }
 
         return {
