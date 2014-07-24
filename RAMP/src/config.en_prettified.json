@@ -86,7 +86,7 @@ Developers of the Almighty JSON Config Editor
     },
     "lang": "en",
     "helpContent": "Help Content",
-    "geometryService": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "../proxy.ashx",
     "spatialReference": 3978,
     "extents": {

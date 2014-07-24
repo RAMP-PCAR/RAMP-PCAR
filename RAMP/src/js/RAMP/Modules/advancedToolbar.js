@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, TimelineLite */
 
 /**
 * AdvancedToolbar submodule.
@@ -27,6 +27,8 @@ define([
         "dojo/_base/lang", "dojo/topic",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
+// Tools
+        "tools/measureTool", "tools/bufferTool", "tools/populationTool",
 // Util
         "utils/util", "utils/popupManager"
 ],
@@ -36,6 +38,8 @@ define([
         dojoLang, topic,
     // Ramp
         EventManager, RampMap, globalStorage,
+    // Tools
+        MeasureTool, BufferTool, PopulationTool,
     // Util
         UtilMisc, popupManager) {
         "use strict";
@@ -66,15 +70,15 @@ define([
 
                     toggleAdvancedToolbar();
 
-                    var transitionDuration = 0.4;
+                    var transitionDuration = 0.4,
 
-                    var advancedToolbarTimeLine = new TimelineLite({
-                        paused: true,
-                        onComplete: function () {
-                        },
-                        onReverseComplete: function () {
-                        }
-                    });
+                     advancedToolbarTimeLine = new TimelineLite({
+                         paused: true,
+                         onComplete: function () {
+                         },
+                         onReverseComplete: function () {
+                         }
+                     });
 
                     advancedToolbarTimeLine
                         .set(advancedSectionContainer, { display: "block" }, 0)
@@ -139,10 +143,10 @@ define([
         */
         function toggleAdvancedToolbar() {
             // Set whether each item should be visible.
-            var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled;
-            var populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled;
-            var measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled;
-            var bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
+            var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled,
+             populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled,
+             measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled,
+             bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
 
             // Show each item as indicated by variables.
             if (advancedToolbarIsEnabled) {
@@ -162,20 +166,21 @@ define([
         }
 
         // Hide advanced popup after clicking on any of the tools.
-        $('#population-tool').click(function () {
-            populationApp.toolbar.activate(esri.toolbars.Draw.FREEHAND_POLYGON);
+
+        $('#at-population-toggle').click(function () {
+            PopulationTool.activate();
             $('#advanced-info-box').hide();
             advancedPopup.close();
         });
 
-        $('#measure-tool').click(function () {
-            measureApp.toolbar.activate(esri.toolbars.Draw.FREEHAND_POLYGON);
+        $('#at-measure-toggle').click(function () {
+            MeasureTool.activate();
             $('#advanced-info-box').hide();
             advancedPopup.close();
         });
 
-        $('#buffer-tool').click(function () {
-            bufferApp.toolbar.activate(esri.toolbars.Draw.FREEHAND_POLYGON);
+        $('#at-buffer-toggle').click(function () {
+            BufferTool.activate();
             $('#population-info').hide();
             $('#measurement-info').hide();
             $('#buffer-info').show();

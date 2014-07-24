@@ -24,7 +24,8 @@
 * @uses esri/tasks/AreasAndLengthsParameters
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleFillSymbol
-* @uses ramp/map
+* @uses Map
+* @uses GlobalStorage
 */
 
 define([
@@ -34,7 +35,7 @@ define([
       "esri/config", "esri/graphic", "esri/tasks/GeometryService",
       "esri/tasks/AreasAndLengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
 // Ramp
-      "ramp/map"
+      "ramp/map", "ramp/globalStorage"
 ],
     function (
 // Dojo
@@ -42,49 +43,37 @@ define([
 // Esri
       esriConfig, Graphic, GeometryService, AreasAndLengthsParameters, Draw, SimpleFillSymbol,
 // Ramp
-      RampMap) {
+      RampMap, GlobalStorage) {
         "use strict";
 
-        var ui, map, geometryService, toolbar;
-
-        /**
-        * Initiliaze the the tool.
-        *
-        * @method initTools
-        * @private
-        * @param evtObj {Object} an object representing the event.
-        *
-        */
-        function initTools(evtObj) {
-            measureApp.toolbar = toolbar = new Draw(map);
-            toolbar.on("draw-end", lang.hitch(map, computeAreaAndLength));
-        }
+        var ui, geometryService, measureApp;
 
         /**
         * Compute the area and length of a specified polygon.
         *
         * @method computeAreaAndLength
         * @private
-        * @param evtObj {Object} an object representing the event.
+        * @param {Object} evtObj an object representing the event.
         *
         */
         function computeAreaAndLength(evtObj) {
             $("#map-load-indicator").removeClass("hidden");
 
-            geometryService = new GeometryService("http://sampleserver6.arcgisonline.com/arcgis/rest/services/Utilities/Geometry/GeometryServer");
+            geometryService = new GeometryService(GlobalStorage.config.geometryService);
             geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
 
-            var map = this,
-                geometry = evtObj.geometry;
-            map.graphics.clear();
+            var geometry = evtObj.geometry;
+            measureApp.map.graphics.clear();
 
-            map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
-            toolbar.deactivate();
+            measureApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
+
+            //TODO if we change to an "always on" we will want to make this a public function like the activate function below
+            measureApp.toolbar.deactivate();
 
             //setup the parameters for the areas and lengths operation
             var areasAndLengthParams = new AreasAndLengthsParameters();
-            areasAndLengthParams.lengthUnit = GeometryService.UNIT_FOOT;
-            areasAndLengthParams.areaUnit = GeometryService.UNIT_ACRES;
+            areasAndLengthParams.lengthUnit = GeometryService.UNIT_KILOMETER;
+            areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
             areasAndLengthParams.calculationType = "geodesic";
             geometryService.simplify([geometry], function (simplifiedGeometries) {
                 areasAndLengthParams.polygons = simplifiedGeometries;
@@ -97,18 +86,18 @@ define([
         *
         * @method outputAreaAndLength
         * @private
-        * @param evtObj {Object} an object representing the event.
+        * @param {Object} evtObj an object representing the event.
         *
         */
         function outputAreaAndLength(evtObj) {
             $("#map-load-indicator").addClass("hidden");
 
-            var result = evtObj.result;
+            var result = evtObj.result,
 
-            // Convert acres to km2.
-            var area = (result.areas[0] / 247.11).toFixed(3);
-            // Convert feet to km.
-            var length = (result.lengths[0] / 3280.8).toFixed(3);
+                // Convert acres to km2.
+                area = (result.areas[0] / 247.11).toFixed(3),
+                // Convert feet to km.
+                length = (result.lengths[0] / 3280.8).toFixed(3);
 
             dom.byId("area-output").innerHTML =
                 string.substitute("${number:dojo.number.format} km<sup>2</sup>", { number: area });
@@ -123,25 +112,43 @@ define([
 
         ui = {
             init: function () {
+                var map = RampMap.getMap(),
+                    toolbar = new Draw(map);
+
+                toolbar.on("draw-end", computeAreaAndLength);
+
                 measureApp = {
-                    "map": map,
-                    "toolbar": toolbar
+                    map: map,
+                    toolbar: toolbar
                 };
-
-                measureApp.map = map = RampMap.getMap();
-
-                initTools(measureApp);
 
                 //identify proxy page to use if the toJson payload to the geometry service is greater than 2000 characters.
                 //If this null or not available the project and lengths operation will not work.  Otherwise it will do a http post to the proxy.
-                esriConfig.defaults.io.proxyUrl = "/proxy";
+                esriConfig.defaults.io.proxyUrl = "proxy";
                 esriConfig.defaults.io.alwaysUseProxy = false;
             }
         };
 
         return {
+            /**
+            * Initialize the measure tool
+            *
+            * @method init
+            * @constructor
+            *
+            */
             init: function () {
                 ui.init();
+            },
+
+            /**
+            * Activate the tool
+            * @property activate
+            * @type {Object}
+            *
+            */
+            activate: function () {
+                measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
             }
         };
     });

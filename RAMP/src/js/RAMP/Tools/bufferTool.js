@@ -1,4 +1,4 @@
-﻿/*global define, $, document */
+﻿/*global define, $ */
 
 /**
 * BufferTool submodule.
@@ -28,7 +28,8 @@
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/BufferParameters
 * @uses esri/toolbars/draw
-* @uses ramp/map
+* @uses Map
+* @uses GlobalStorage
 */
 
 define([
@@ -47,7 +48,7 @@ define([
     "esri/symbols/SimpleFillSymbol",
     "esri/SpatialReference",
 // Ramp
-    "ramp/map"
+    "ramp/map", "ramp/globalStorage"
 ],
 
   function (
@@ -56,58 +57,46 @@ define([
 // Esri
       esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol, SpatialReference,
 // Ramp
-      RampMap) {
+      RampMap, GlobalStorage) {
       "use strict";
-      var ui, map, geometryService, toolbar;
+      var ui, bufferApp;
 
       parser.parse();
-
-      /**
-      * Initiliaze the the tool.
-      *
-      * @method initTools
-      * @private
-      * @param evtObj {Object} an object representing the event.
-      *
-      */
-      function initTools(evtObj) {
-          bufferApp.toolbar = toolbar = new Draw(evtObj.map);
-          bufferApp.toolbar.on("draw-end", computeBuffer);
-      }
 
       /**
       * Compute the buffer of a specified polygon.
       *
       * @method computeBuffer
       * @private
-      * @param evtObj {Object} an object representing the event.
+      * @param {Object} evtObj an object representing the event.
       *
       */
       function computeBuffer(evtObj) {
           $("#map-load-indicator").removeClass("hidden");
 
           var geometry = evtObj.geometry,
-          map = bufferApp.map,
-          geometryService = bufferApp.geometryService;
+              map = bufferApp.map,
+              geometryService = new GeometryService(GlobalStorage.config.geometryService),
 
-          var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
-              new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
-              new Color([255, 0, 0, 1]), new Color([0, 255, 0, 0.25])));
+              symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
+                 new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
+                 new Color([255, 0, 0, 1]), new Color([0, 255, 0, 0.25]))),
 
-          var graphic = new Graphic(geometry, symbol);
+              graphic = new Graphic(geometry, symbol);
+
           map.graphics.add(graphic);
 
           //setup the buffer parameters
-          var params = new BufferParameters();
+          var params = new BufferParameters(),
 
-          // Get rid of all non-numerical/non-period characters.
-          var distanceInput =
+              // Get rid of all non-numerical/non-period characters.
+              distanceInput =
               dom.byId("distance-input").value =
               dom.byId("distance-input").value.replace(/[^0-9\.]+/g, '');
 
           params.distances = [distanceInput];
-          params.bufferSpatialReference = new esri.SpatialReference({ wkid: "3978" });
-          params.outSpatialReference = map.spatialReference;
+          params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference });
+          params.outSpatialReference = bufferApp.map.spatialReference;
           params.unit = 9036; // Kilometers
 
           // Simplify polygon.  this will make the user drawn polygon topologically correct.
@@ -122,7 +111,7 @@ define([
       *
       * @method outputBuffer
       * @private
-      * @param evtObj {Object} an object representing the event.
+      * @param {Object} bufferedGeometries result of the geoprocessor.
       *
       */
       function outputBuffer(bufferedGeometries) {
@@ -141,24 +130,22 @@ define([
               var graphic = new Graphic(geometry, symbol);
               bufferApp.map.graphics.add(graphic);
           });
+          //TODO if we change to an "always on" we will want to make this a public function like the activate function below
           bufferApp.toolbar.deactivate();
           bufferApp.map.showZoomSlider();
       }
 
       ui = {
           init: function () {
-              geometryService = new GeometryService
-                  ("http://tasks.arcgisonline.com/ArcGIS/rest/services/Geometry/GeometryServer");
+              var map = RampMap.getMap(),
+                   toolbar = new Draw(map);
+
+              toolbar.on("draw-end", computeBuffer);
 
               bufferApp = {
                   map: map,
-                  toolbar: toolbar,
-                  geometryService: geometryService
+                  toolbar: toolbar
               };
-
-              bufferApp.map = map = RampMap.getMap();
-
-              initTools(bufferApp);
 
               // identify proxy page to use if the toJson payload to the geometry service is greater than
               // 2000 characters. If this null or not available the project and lengths operation will not
@@ -169,8 +156,25 @@ define([
       };
 
       return {
+          /**
+          * Initialize the buffer tool
+          *
+          * @method init
+          * @constructor
+          *
+          */
           init: function () {
               ui.init();
+          },
+
+          /**
+          * Activate the tool
+          * @property activate
+          * @type {Object}
+          *
+          */
+          activate: function () {
+              bufferApp.toolbar.activate(Draw.FREEHAND_POLYGON);
           }
       };
   });

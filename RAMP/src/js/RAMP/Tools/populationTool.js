@@ -25,7 +25,8 @@
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleLineSymbol
 * @uses esri/symbols/SimpleFillSymbol
-* @uses ramp/map
+* @uses Map
+* @uses GlobalStorage
 */
 
 define([
@@ -35,7 +36,7 @@ define([
         "esri/config", "esri/graphic", "esri/tasks/Geoprocessor", "esri/tasks/FeatureSet",
         "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 // Ramp
-        "ramp/map"
+        "ramp/map", "ramp/globalStorage"
 ],
     function (
 // Dojo
@@ -43,36 +44,17 @@ define([
 // Esri
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
-        RampMap) {
+        RampMap, GlobalStorage) {
         "use strict";
 
-        var ui, map, geoprocessor, toolbar;
-
-        /**
-        * Initiliaze the the tool.
-        *
-        * @method initTools
-        * @private
-        * @param evtObj {Object} an object representing the event.
-        *
-        */
-        function initTools(evtObj) {
-            geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
-            geoprocessor.setOutputSpatialReference({
-                wkid: 3978
-            });
-            geoprocessor.on("execute-complete", outputTotalPopulation);
-
-            populationApp.toolbar = toolbar = new Draw(evtObj.map);
-            toolbar.on("draw-end", computeZonalStats);
-        }
+        var ui, geoprocessor, populationApp;
 
         /**
         * Compute an estimated amount of people in a specified polygon.
         *
         * @method computeZonalStats
         * @private
-        * @param evtObj {Object} an object representing the event.
+        * @param {Object} evtObj an object representing the event.
         *
         */
         function computeZonalStats(evtObj) {
@@ -80,12 +62,14 @@ define([
 
             var geometry = evtObj.geometry;
             /*After user draws shape on map using the draw toolbar compute the zonal*/
-            map.graphics.clear();
+            populationApp.map.graphics.clear();
 
-            var graphic = map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
+            var graphic = populationApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
 
-            map.graphics.add(graphic);
-            toolbar.deactivate();
+            populationApp.map.graphics.add(graphic);
+
+            //TODO if we change to an "always on" we will want to make this a public function like the activate function below
+            populationApp.toolbar.deactivate();
 
             var features = [];
             features.push(graphic);
@@ -94,7 +78,7 @@ define([
             featureSet.features = features;
 
             var params = {
-                "inputPoly": featureSet
+                inputPoly: featureSet
             };
             geoprocessor.execute(params);
         }
@@ -104,15 +88,15 @@ define([
         *
         * @method outputTotalPopulation
         * @private
-        * @param evtObj {Object} an object representing the event.
+        * @param {Object} evtObj an object representing the event.
         *
         */
         function outputTotalPopulation(evtObj) {
             $("#map-load-indicator").addClass("hidden");
 
-            var results = evtObj.results;
+            var results = evtObj.results,
 
-            var totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
+                totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
 
             dom.byId("population-output").innerHTML =
                 string.substitute("${number:dojo.number.format}", { number: totalPopulation });
@@ -125,14 +109,23 @@ define([
 
         ui = {
             init: function () {
+                var map = RampMap.getMap(),
+                  toolbar = new Draw(map);
+
+                //TODO store this URL in config
+                geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
+
+                geoprocessor.setOutputSpatialReference({
+                    wkid: GlobalStorage.config.spatialReference
+                });
+                geoprocessor.on("execute-complete", outputTotalPopulation);
+
+                toolbar.on("draw-end", computeZonalStats);
+
                 populationApp = {
-                    "map": map,
-                    "toolbar": toolbar
+                    map: map,
+                    toolbar: toolbar
                 };
-
-                populationApp.map = map = RampMap.getMap();
-
-                initTools(populationApp);
 
                 //identify proxy page to use if the toJson payload to the geoprocessing service is greater than 2000 characters.
                 //If this null or not available the geoprocessor.execute operation will not work.  Otherwise it will do a http post to the proxy.
@@ -142,8 +135,25 @@ define([
         };
 
         return {
+            /**
+            * Initialize the population tool
+            *
+            * @method init
+            * @constructor
+            *
+            */
             init: function () {
                 ui.init();
+            },
+
+            /**
+            * Activate the tool
+            * @property activate
+            * @type {Object}
+            *
+            */
+            activate: function () {
+                populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
             }
         };
     });
