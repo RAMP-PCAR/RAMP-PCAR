@@ -196,7 +196,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
                         that.node.findInputLabel().removeClass(that.cssClass.focus);
                     });
 
-                this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || id;
+                this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
                 this.labelNode = this.node.findInputLabel();
 
                 this._toggleLabel();
