@@ -159,7 +159,9 @@ define([
                             },
 
                             master: {
-                                node: filterGlobalToggles.find(".checkbox-custom .box + input"),/*
+                                node: filterGlobalToggles.find(".checkbox-custom .box + input"),
+
+                                nodeIdAttr: "id",/*
 
                                 cssClass: {
                                     active: "active",
@@ -177,7 +179,7 @@ define([
                         })
                         .setState(false);
 
-                    boxCheckboxGroup.on("memberToggle", function (evt) {
+                    boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         if (evt.checkbox.id.indexOf("wms") === -1) {
@@ -187,7 +189,7 @@ define([
                             });
                         }
                     });
-                    boxCheckboxGroup.on("masterToggle", function (evt) {
+                    boxCheckboxGroup.on(boxCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
@@ -212,7 +214,9 @@ define([
                             },
 
                             master: {
-                                node: filterGlobalToggles.find(".checkbox-custom .eye + input"),/*
+                                node: filterGlobalToggles.find(".checkbox-custom .eye + input"),
+
+                                nodeIdAttr: "id",/*
 
                                 cssClass: {
                                     active: "active",
@@ -229,7 +233,7 @@ define([
                             }
                         });
 
-                    eyeCheckboxGroup.on("memberToggle", function (evt) {
+                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
@@ -237,7 +241,7 @@ define([
                             state: evt.checkbox.state
                         });
                     });
-                    eyeCheckboxGroup.on("masterToggle", function (evt) {
+                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
