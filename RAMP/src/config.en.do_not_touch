@@ -394,7 +394,7 @@ Developers of the Almighty JSON Config Editor
                 {
                     "name": "txtLinkToCap",
                     "type": "String",
-                    "value": "",
+                    "value": "Link To Capabilities",
                     "description": "",
                     "visibleText": false
                 }
@@ -6347,13 +6347,6 @@ Developers of the Almighty JSON Config Editor
                                     ]
                                 },
                                 {
-                                    "name": "legendURL",
-                                    "type": "String",
-                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
-                                    "description": "",
-                                    "visibleText": false
-                                },
-                                {
                                     "name": "name",
                                     "type": "String",
                                     "value": "RDPS.ETA_TT",
@@ -6498,6 +6491,26 @@ Developers of the Almighty JSON Config Editor
                                             "description": ""
                                         }
                                     ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "legend",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enable",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "legendURL",
+                                    "type": "String",
+                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
+                                    "description": "",
+                                    "visibleText": false
                                 }
                             ]
                         }

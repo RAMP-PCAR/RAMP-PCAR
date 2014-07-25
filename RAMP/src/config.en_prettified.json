@@ -59,7 +59,7 @@ Developers of the Almighty JSON Config Editor
         "txtLayerHandleLabel": "Layer handle for",
         "txtLayerListLabel": "Sortable layer list",
         "txtLegend": "Legend",
-        "txtLinkToCap": ""
+        "txtLinkToCap": "Link To Capabilities"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
@@ -1086,7 +1086,6 @@ Developers of the Almighty JSON Config Editor
                 "allExtents": [
                     
                 ],
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
                 "name": "RDPS.ETA_TT",
                 "spatialReferences": [
                     
@@ -1118,6 +1117,10 @@ Developers of the Almighty JSON Config Editor
                     "enabled": true,
                     "default": 0.5
                 }
+            },
+            "legend": {
+                "enable": true,
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
         }
     ]

@@ -402,24 +402,31 @@ define([
 
                             var layerConfig = Ramp.getLayerConfigwithGuid(guid);
 
+                            //only wms layers have this value
                             if (layerConfig.layerInfo != null) {
-                                //only wms layer has this value
-                                metadataUrl = layerConfig.layerInfo.legendURL;
+                                if (layerConfig.legend.enable) {
+                                    var legendUrl = layerConfig.legend.legendURL;
 
-                                //var wmsmeta = generateWmsMeataData(metadataUrl, layerConfig.url + "&request=GetCapabilities");
+                                    var wmsmeta = String.format(filter_wms_meta_Template,
+                                            localString.txtLegend,
+                                            legendUrl,
+                                            localString.txtLinkToCap,
+                                            layerConfig.url + "&request=GetCapabilities");
 
-                                var wmsmeta = String.format(filter_wms_meta_Template,
-                                    localString.txtLegend,
-                                    metadataUrl,
-                                    localString.txtLinktoCap,
-                                    layerConfig.url + "&request=GetCapabilities");
-
-                                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                    content: $(wmsmeta),
-                                    origin: "filterManager",
-                                    update: true,
-                                    guid: guid
-                                });
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: $(wmsmeta),
+                                        origin: "filterManager",
+                                        update: true,
+                                        guid: guid
+                                    });
+                                } else {
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: "<p>" + localString.txtMetadataNotFound + "</p>",
+                                        origin: "filterManager",
+                                        update: true,
+                                        guid: guid
+                                    });
+                                }
                             } else {
                                 //for feature layer
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
