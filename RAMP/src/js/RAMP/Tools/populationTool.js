@@ -37,8 +37,12 @@ define([
         "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 // Ramp
         "ramp/map", "ramp/globalStorage", "tools/baseTool",
+
+/* Text */
+     "dojo/text!./templates/tools_template.json",
+
 // Utils
-        "utils/popupManager"
+        "utils/tmplHelper"
 ],
     function (
 // Dojo
@@ -47,8 +51,10 @@ define([
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
         RampMap, GlobalStorage, BaseTool,
+// Text
+        tools_template_json,
 // Utils
-        PopupManager) {
+        TmplHelper) {
         "use strict";
 
         var ui,
@@ -145,6 +151,14 @@ define([
             }
         };
 
+        function activate() {
+            populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+        }
+
+        function deactivate() {
+            populationApp.toolbar.deactivate();
+        }
+
         return dojoLang.mixin({}, BaseTool, {
             /**
             * Initialize the population tool
@@ -155,9 +169,14 @@ define([
             */
             init: function () {
                 that = this;
-                this.initToggle($("#at-population-toggle"));
+                this.initToggle($("#at-population-toggle"), activate, deactivate);
 
                 ui.init();
+
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
+
+                $("#mainMap").append(tmpl("base_tool_float", { label: "Population" }));
             },
 
             /**
@@ -166,8 +185,7 @@ define([
             * @type {Object}
             *
             */
-            activate: function () {
-                populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+            /*activate: function () {
                 this.active = true;
             },
 
@@ -179,6 +197,6 @@ define([
 
                     this.handle.close();
                 }
-            }
+            }*/
         });
     });

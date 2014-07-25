@@ -28,21 +28,19 @@ define(["dojo/Evented", "dojo/_base/lang",
                 active: false,
 
                 handle: null,
-                initToggle: function (node) {
+                initToggle: function (node, activate, deactivate) {
                     var that = this;
 
                     this.handle = PopupManager.registerPopup(node, "click",
                         function (d) {
                             console.log("open tool");
-                            that.activate();
+                            activate.call(this);
 
                             d.resolve();
                         }, {
                             closeHandler: function (d) {
                                 console.log("close tool");
-                                if (that.active) {
-                                    that.deactivate();
-                                }
+                                deactivate.call(this);
 
                                 d.resolve();
                             },
@@ -55,10 +53,16 @@ define(["dojo/Evented", "dojo/_base/lang",
 
                 activate: function () {
                     console.log("base activate; nothing to see here;")
+                    if (this.handle) {
+                        this.handle.open();
+                    }
                 },
 
                 deactivate: function () {
                     console.log("base deactivate; nothing to see here;")
+                    if (this.handle) {
+                        this.handle.close();
+                    }
                 }
             }
         );
