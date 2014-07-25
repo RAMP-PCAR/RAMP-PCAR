@@ -320,14 +320,6 @@ define([
                         }
                     }
 
-                    function generateWmsMeataData(legendUrl, capabilityUrl) {
-                        var wmsmeta = "<b>Legend</b><br>";
-                        wmsmeta += "<img src='" + legendUrl + "' alt='Legend' height='100px' width='30px'><br>";
-                        wmsmeta += "<b>Link to WMS capabilities</b><br>";
-                        wmsmeta += "<a href='" + capabilityUrl + "'>" + capabilityUrl + "</a>";
-                        return wmsmeta;
-                    }
-
                     expandButtons.map(function () {
                         var handle = $(this),
                             target = handle.parents("fieldset").find("> .layerList-container");
@@ -405,9 +397,8 @@ define([
                             //only wms layers have this value
                             if (layerConfig.layerInfo != null) {
                                 if (layerConfig.legend.enable) {
-                                    var legendUrl = layerConfig.legend.legendURL;
-
-                                    var wmsmeta = String.format(filter_wms_meta_Template,
+                                    var legendUrl = layerConfig.legend.legendURL,
+                                        wmsmeta = String.format(filter_wms_meta_Template,
                                             localString.txtLegend,
                                             legendUrl,
                                             localString.txtLinkToCap,
