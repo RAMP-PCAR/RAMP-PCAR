@@ -16,12 +16,50 @@
 * @uses Checkbox
 */
 
-define(["dojo/Evented", "dojo/_base/lang"],
-    function (Evented, dojoLang) {
+define(["dojo/Evented", "dojo/_base/lang",
+
+        "utils/popupManager"],
+    function (Evented, dojoLang,
+            PopupManager) {
         "use strict";
 
         return dojoLang.mixin(new Evented(),
             {
+                active: false,
+
+                handle: null,
+                initToggle: function (node) {
+                    var that = this;
+
+                    this.handle = PopupManager.registerPopup(node, "click",
+                        function (d) {
+                            console.log("open tool");
+                            that.activate();
+
+                            d.resolve();
+                        }, {
+                            closeHandler: function (d) {
+                                console.log("close tool");
+                                if (that.active) {
+                                    that.deactivate();
+                                }
+
+                                d.resolve();
+                            },
+
+                            activeClass: "button-pressed",
+                            useAria: false
+                        }
+                    );
+                },
+
+                activate: function () {
+                    console.log("base activate; nothing to see here;")
+                },
+
+                deactivate: function () {
+                    console.log("base deactivate; nothing to see here;")
+                }
             }
         );
     }

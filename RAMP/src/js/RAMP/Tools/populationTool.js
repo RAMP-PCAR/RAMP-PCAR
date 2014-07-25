@@ -6,7 +6,7 @@
 * Computes the total population of a selected area. When the user draws a polygon, the population will
 * be displayed in the bottom right corner.
 *
-* @module RAMP
+* @module Tools
 * @submodule PopulationTool
 * @main PopulationTool
 */
@@ -53,7 +53,9 @@ define([
 
         var ui,
             geoprocessor,
-            populationApp;
+            populationApp,
+
+            that;
 
         //dojoLang.mixin(this, BaseTool);
 
@@ -112,6 +114,8 @@ define([
             $('#measurement-info').hide();
             $('#population-info').show();
             $('#advanced-info-box').show();
+
+            //that.deactivate();
         }
 
         ui = {
@@ -141,7 +145,7 @@ define([
             }
         };
 
-        return dojoLang.mixin(BaseTool, {
+        return dojoLang.mixin({}, BaseTool, {
             /**
             * Initialize the population tool
             *
@@ -150,28 +154,10 @@ define([
             *
             */
             init: function () {
+                that = this;
+                this.initToggle($("#at-population-toggle"));
+
                 ui.init();
-
-                PopupManager.registerPopup($("#at-population-toggle"), "click",
-                    function (d) {
-                        populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
-
-                        console.log("activate");
-
-                        d.resolve();
-                    }, {
-                        closeHandler: function (d) {
-                            populationApp.toolbar.deactivate();
-
-                            console.log("deactivate");
-
-                            d.resolve();
-                        },
-
-                        activeClass: "button-pressed",
-                        useAria: false
-                    }
-                );
             },
 
             /**
@@ -182,10 +168,17 @@ define([
             */
             activate: function () {
                 populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+                this.active = true;
             },
 
             deactivate: function () {
-                populationApp.toolbar.deactivate();
+                if (this.active) {
+                    console.log("deactivate population tool")
+                    populationApp.toolbar.deactivate();
+                    this.active = false;
+
+                    this.handle.close();
+                }
             }
         });
     });

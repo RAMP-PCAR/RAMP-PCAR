@@ -114,6 +114,11 @@ define([
                             closeHandler: function (d) {
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
 
+                                // deactivate all the tools
+                                UtilDict.forEachEntry(tools, function (name, tool) {
+                                    tool.deactivate();
+                                });
+
                                 // perform transitions
                                 subPanelContainer = viewport.find(".sub-panel-container");
                                 TweenLite.fromTo(subPanelContainer, transitionDuration,
