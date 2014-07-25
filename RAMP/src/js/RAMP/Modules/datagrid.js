@@ -898,9 +898,19 @@ define([
                     } else {
                         templateKey = "datagrid_full_manager_Template";
 
+                        // filter out static layers
+                        var lFeatureLayers = GlobalStorage.config.featureLayers;
+                        var nonStaticFeatureLayers = dojoArray.filter(lFeatureLayers, function (item) {                            
+                            if (item.isStatic) {
+                                return false;
+                            } else {
+                                return true;
+                            }                            
+                        });
+
                         templateData.buttons = lang.mixin(templateData.buttons,
                             {
-                                datasets: GlobalStorage.config.featureLayers,
+                                datasets: nonStaticFeatureLayers,
                                 toggleTitle: GlobalStorage.config.stringResources.txtDataSummary,
                                 txtDataset: GlobalStorage.config.stringResources.txtDataset
                             }
