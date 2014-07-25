@@ -31,23 +31,31 @@
 
 define([
 // Dojo
-        "dojo/dom", "dojo/string",
+        "dojo/dom", "dojo/string", "dojo/_base/lang",
 // Esri
         "esri/config", "esri/graphic", "esri/tasks/Geoprocessor", "esri/tasks/FeatureSet",
         "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 // Ramp
-        "ramp/map", "ramp/globalStorage"
+        "ramp/map", "ramp/globalStorage", "tools/baseTool",
+// Utils
+        "utils/popupManager"
 ],
     function (
 // Dojo
-        dom, string,
+        dom, string, dojoLang,
 // Esri
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
-        RampMap, GlobalStorage) {
+        RampMap, GlobalStorage, BaseTool,
+// Utils
+        PopupManager) {
         "use strict";
 
-        var ui, geoprocessor, populationApp;
+        var ui,
+            geoprocessor,
+            populationApp;
+
+        //dojoLang.mixin(this, BaseTool);
 
         /**
         * Compute an estimated amount of people in a specified polygon.
@@ -69,7 +77,7 @@ define([
             populationApp.map.graphics.add(graphic);
 
             //TODO if we change to an "always on" we will want to make this a public function like the activate function below
-            populationApp.toolbar.deactivate();
+            //populationApp.toolbar.deactivate();
 
             var features = [];
             features.push(graphic);
@@ -95,7 +103,6 @@ define([
             $("#map-load-indicator").addClass("hidden");
 
             var results = evtObj.results,
-
                 totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
 
             dom.byId("population-output").innerHTML =
@@ -110,7 +117,7 @@ define([
         ui = {
             init: function () {
                 var map = RampMap.getMap(),
-                  toolbar = new Draw(map);
+                    toolbar = new Draw(map);
 
                 //TODO store this URL in config
                 geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
@@ -134,7 +141,7 @@ define([
             }
         };
 
-        return {
+        return dojoLang.mixin(BaseTool, {
             /**
             * Initialize the population tool
             *
@@ -144,6 +151,27 @@ define([
             */
             init: function () {
                 ui.init();
+
+                PopupManager.registerPopup($("#at-population-toggle"), "click",
+                    function (d) {
+                        populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+
+                        console.log("activate");
+
+                        d.resolve();
+                    }, {
+                        closeHandler: function (d) {
+                            populationApp.toolbar.deactivate();
+
+                            console.log("deactivate");
+
+                            d.resolve();
+                        },
+
+                        activeClass: "button-pressed",
+                        useAria: false
+                    }
+                );
             },
 
             /**
@@ -154,6 +182,10 @@ define([
             */
             activate: function () {
                 populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+            },
+
+            deactivate: function () {
+                populationApp.toolbar.deactivate();
             }
-        };
+        });
     });

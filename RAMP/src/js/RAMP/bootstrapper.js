@@ -63,7 +63,7 @@ require([
     "utils/util",
 
 /* Tools */
-    "tools/populationTool", "tools/measureTool", "tools/bufferTool",
+    //"tools/populationTool", "tools/measureTool", "tools/bufferTool",
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
@@ -78,10 +78,10 @@ require([
     Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
     /* Utils */
-    UtilMisc,
+    UtilMisc//,
 
-    /* Tools */
-   PopulationTool, MeasureTool, BufferTool
+        /* Tools */
+        //PopulationTool, MeasureTool, BufferTool
     ) {
         "use strict";
 
@@ -117,10 +117,9 @@ require([
 
                 // Initialize the advanced toolbar and tools.
                 //TODO idea: have the tools init only if they are included in the config?
-                AdvancedToolbar.init();
-                PopulationTool.init();
-                MeasureTool.init();
-                BufferTool.init();
+                if (true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled) {
+                    AdvancedToolbar.init();
+                }
 
                 Datagrid.init();
 

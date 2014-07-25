@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite */
+﻿/*global define, $, TimelineLite, TweenLite, require */
 
 /**
 * AdvancedToolbar submodule.
@@ -24,34 +24,36 @@
 
 define([
 // Dojo
-        "dojo/_base/lang", "dojo/topic",
+        "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", //"require",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
 // Tools
-        "tools/measureTool", "tools/bufferTool", "tools/populationTool",
+        //"tools/measureTool", "tools/bufferTool",// "tools/populationTool",
 // Util
-        "utils/util", "utils/popupManager"
+        "utils/util", "utils/dictionary", "utils/popupManager"
 ],
 
     function (
     // Dojo
-        dojoLang, topic,
+        dojoLang, topic, domConstruct, //require,
     // Ramp
         EventManager, RampMap, globalStorage,
     // Tools
-        MeasureTool, BufferTool, PopulationTool,
+        //MeasureTool, BufferTool,// PopulationTool,
     // Util
-        UtilMisc, popupManager) {
+        UtilMisc, UtilDict, popupManager) {
         "use strict";
 
-        var advancedPopup,
-            advancedToggle,
+        var advancedToggle,
             advancedSectionContainer,
-            advancedSection,
 
             cssButtonPressedClass = "button-pressed",
 
+            transitionDuration = 0.4,
+
             map,
+
+            tools = {},
 
             ui = {
                 /**
@@ -61,37 +63,33 @@ define([
                 * @private
                 */
                 init: function () {
-                    advancedToggle = $("#advanced-toggle");
-                    advancedSectionContainer = $("#advanced-toolbar"); //$("#advanced-section-container");
-                    var advancedToolbarList = $("#advanced-toolbar-list"),
-                        panelToggle = $("#panel-toggle");
+                    var viewport = $(".viewport"),
+                        advancedToolbarList = viewport.find("#advanced-toolbar-list"),
+                        subPanelContainer,
+                        panelToggle = viewport.find("#panel-toggle"),
 
-                    advancedSection = $("#advanced-section");
+                        advancedToolbarTimeLine = new TimelineLite({
+                            paused: true,
+                            onComplete: function () {
+                            },
+                            onReverseComplete: function () {
+                            }
+                        });
+
+                    advancedToggle = viewport.find("#advanced-toggle");
+                    advancedSectionContainer = viewport.find("#advanced-toolbar"); //$("#advanced-section-container");
 
                     toggleAdvancedToolbar();
 
-                    var transitionDuration = 0.4,
-
-                     advancedToolbarTimeLine = new TimelineLite({
-                         paused: true,
-                         onComplete: function () {
-                         },
-                         onReverseComplete: function () {
-                         }
-                     });
-
                     advancedToolbarTimeLine
                         .set(advancedSectionContainer, { display: "block" }, 0)
-                        .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0 }, 0)
-                        .to(panelToggle, transitionDuration, { top: "+=32" }, 0);
+                        .set(viewport, { className: "+=advanced-toolbar-mode" }, 0)
+                        .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0, ease: "easeOutCirc" }, 0)
+                        .to(panelToggle, transitionDuration, { top: "+=32", ease: "easeOutCirc" }, 0);
 
-                    advancedPopup = popupManager.registerPopup(advancedToggle, "click",
+                    popupManager.registerPopup(advancedToggle, "click",
                         function (d) {
-                            topic.publish(EventManager.Advanced.ADVANCED_PANEL_CHANGED, {
-                                visible: true
-                            });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "help-section" });
-
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
                             // close this panel if any other panel is opened
                             UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
                                 function () {
@@ -101,32 +99,29 @@ define([
                                 })
                             );
 
+                            // perform transitions
+                            subPanelContainer = viewport.find(".sub-panel-container");
+                            TweenLite.fromTo(subPanelContainer, transitionDuration,
+                                    { "margin-top": 0 },
+                                    { "margin-top": 32, ease: "easeOutCirc" });
+
                             advancedToolbarTimeLine.eventCallback("onComplete", d.resolve, [], this);
                             advancedToolbarTimeLine.play();
-
-                            //d.resolve();
-
-                            /*advancedSectionContainer.slideDown("fast", function () {
-                                d.resolve();
-                            });*/
                         },
                         {
                             activeClass: cssButtonPressedClass,
                             target: advancedSectionContainer,
                             closeHandler: function (d) {
-                                topic.publish(EventManager.Advanced.ADVANCED_PANEL_CHANGED, {
-                                    visible: false
-                                });
-                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "help-section" });
+                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
+
+                                // perform transitions
+                                subPanelContainer = viewport.find(".sub-panel-container");
+                                TweenLite.fromTo(subPanelContainer, transitionDuration,
+                                    { "margin-top": 32 },
+                                    { "margin-top": 0, ease: "easeInCirc" });
 
                                 advancedToolbarTimeLine.eventCallback("onReverseComplete", d.resolve, [], this);
                                 advancedToolbarTimeLine.reverse();
-
-                                //d.resolve();
-
-                                /*advancedSectionContainer.slideUp("fast", function () {
-                                    d.resolve();
-                                });*/
                             }
                         }
                     );
@@ -142,41 +137,40 @@ define([
         * @private
         */
         function toggleAdvancedToolbar() {
-            // Set whether each item should be visible.
-            var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled,
-             populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled,
-             measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled,
-             bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
+            /*    // Set whether each item should be visible.
+                var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled,
+                    populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled,
+                    measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled,
+                    bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
 
-            // Show each item as indicated by variables.
-            if (advancedToolbarIsEnabled) {
-                advancedToggle.show();
-            } else {
-                return;
-            }
-            if (populationToolIsEnabled) {
-                $('#population-tool').css("display", "inline-block");
-            }
-            if (measureToolIsEnabled) {
-                $('#measure-tool').css("display", "inline-block");
-            }
-            if (bufferToolIsEnabled) {
-                $('#buffer-tool').css("display", "inline-block");
-            }
+                // Show each item as indicated by variables.
+                if (advancedToolbarIsEnabled) {
+                    advancedToggle.show();
+                } else {
+                    return;
+                }
+                if (populationToolIsEnabled) {
+                    $('#population-tool').css("display", "inline-block");
+                }
+                if (measureToolIsEnabled) {
+                    $('#measure-tool').css("display", "inline-block");
+                }
+                if (bufferToolIsEnabled) {
+                    $('#buffer-tool').css("display", "inline-block");
+                }
+                */
         }
 
         // Hide advanced popup after clicking on any of the tools.
 
-        $('#at-population-toggle').click(function () {
-            PopulationTool.activate();
+        /*$('#at-population-toggle').click(function () {
+            PopulationTools.activate();
             $('#advanced-info-box').hide();
-            advancedPopup.close();
         });
 
         $('#at-measure-toggle').click(function () {
             MeasureTool.activate();
             $('#advanced-info-box').hide();
-            advancedPopup.close();
         });
 
         $('#at-buffer-toggle').click(function () {
@@ -185,7 +179,6 @@ define([
             $('#measurement-info').hide();
             $('#buffer-info').show();
             $('#advanced-info-box').show();
-            advancedPopup.close();
         });
 
         // Clear info box and drawn polygons off the map when clear map button is clicked.
@@ -194,9 +187,46 @@ define([
             map.graphics.clear();
         });
 
+        */
+
         return {
             init: function () {
                 ui.init();
+
+                //HACK
+                globalStorage.config.advancedToolbar = {};
+                globalStorage.config.advancedToolbar.tools = {
+                    /*measure: {
+                        name: "measureTool",
+                        enabled: true
+                    },*/
+                    population: {
+                        name: "populationTool",
+                        enabled: true
+                    }/*,
+                    buffer: {
+                        name: "bufferTool",
+                        enabled: true
+                    }*/
+                };
+                //HACK
+
+                // load only enabled tools
+                UtilDict.forEachEntry(globalStorage.config.advancedToolbar.tools,
+                    function (key, value) {
+                        if (value.enabled) {
+                            require(["tools/" + value.name], function (module) {
+                                module.on("toggle", function (evt) {
+                                    console.log(evt);
+                                });
+
+                                module.init();
+
+                                tools[value.name] = module;
+                            });
+                        }
+                    }
+                );
             }
         };
     });
