@@ -38,6 +38,7 @@ define([
     "dojo/_base/array",
     "dojo/_base/Color",
     "dojo/parser",
+    "dojo/_base/lang",
 // Esri
     "esri/config",
     "esri/graphic",
@@ -48,20 +49,22 @@ define([
     "esri/symbols/SimpleFillSymbol",
     "esri/SpatialReference",
 // Ramp
-    "ramp/map", "ramp/globalStorage"
+    "ramp/map", "ramp/globalStorage", "tools/baseTool"
 ],
 
   function (
 // Dojo
-      dom, array, Color, parser,
+      dom, array, Color, parser, dojoLang,
 // Esri
       esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol, SpatialReference,
 // Ramp
-      RampMap, GlobalStorage) {
+      RampMap, GlobalStorage, BaseTool) {
       "use strict";
-      var ui, bufferApp;
+      var ui,
+          bufferApp,
+          that;
 
-      parser.parse();
+      //parser.parse();
 
       /**
       * Compute the buffer of a specified polygon.
@@ -72,8 +75,6 @@ define([
       *
       */
       function computeBuffer(evtObj) {
-          $("#map-load-indicator").removeClass("hidden");
-
           var geometry = evtObj.geometry,
               map = bufferApp.map,
               geometryService = new GeometryService(GlobalStorage.config.geometryService),
@@ -84,15 +85,15 @@ define([
 
               graphic = new Graphic(geometry, symbol);
 
+          that.working(true);
+
           map.graphics.add(graphic);
 
           //setup the buffer parameters
           var params = new BufferParameters(),
 
               // Get rid of all non-numerical/non-period characters.
-              distanceInput =
-              dom.byId("distance-input").value =
-              dom.byId("distance-input").value.replace(/[^0-9\.]+/g, '');
+              distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, '');
 
           params.distances = [distanceInput];
           params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference });
@@ -115,8 +116,6 @@ define([
       *
       */
       function outputBuffer(bufferedGeometries) {
-          $("#map-load-indicator").addClass("hidden");
-
           var symbol = new SimpleFillSymbol(
           SimpleFillSymbol.STYLE_SOLID,
           new SimpleLineSymbol(
@@ -131,8 +130,10 @@ define([
               bufferApp.map.graphics.add(graphic);
           });
           //TODO if we change to an "always on" we will want to make this a public function like the activate function below
-          bufferApp.toolbar.deactivate();
+
           bufferApp.map.showZoomSlider();
+
+          that.working(false);
       }
 
       ui = {
@@ -155,7 +156,30 @@ define([
           }
       };
 
-      return {
+      function activate() {
+          bufferApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+
+          displayOutput();
+      }
+
+      function deactivate() {
+          bufferApp.toolbar.deactivate();
+          clearMap();
+      }
+
+      function clearMap() {
+          bufferApp.map.graphics.clear();
+      }
+
+      function displayOutput() {
+          that.displayTemplateOutput("buffer_output",
+              {
+                  distanceLabel: "Distance"
+              }
+          );
+      }
+
+      return dojoLang.mixin({}, BaseTool, {
           /**
           * Initialize the buffer tool
           *
@@ -164,17 +188,18 @@ define([
           *
           */
           init: function () {
+              that = this;
+              this.initToggle($("#at-buffer-toggle"), activate, deactivate,
+                  {
+                      defaultAction: clearMap
+                  }
+              );
+
               ui.init();
+
+              return this;
           },
 
-          /**
-          * Activate the tool
-          * @property activate
-          * @type {Object}
-          *
-          */
-          activate: function () {
-              bufferApp.toolbar.activate(Draw.FREEHAND_POLYGON);
-          }
-      };
+          name: "bufferTool"
+      });
   });
