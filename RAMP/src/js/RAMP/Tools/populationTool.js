@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, tmpl */
 
 /**
 * PopulationTool submodule.
@@ -74,26 +74,28 @@ define([
         *
         */
         function computeZonalStats(evtObj) {
-            $("#map-load-indicator").removeClass("hidden");
+            var geometry = evtObj.geometry,
+                graphic,
+                features,
+                featureSet,
+                params;
 
-            var geometry = evtObj.geometry;
+            that.working(true);
             /*After user draws shape on map using the draw toolbar compute the zonal*/
             populationApp.map.graphics.clear();
-
-            var graphic = populationApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
-
+            graphic = populationApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
             populationApp.map.graphics.add(graphic);
 
             //TODO if we change to an "always on" we will want to make this a public function like the activate function below
             //populationApp.toolbar.deactivate();
 
-            var features = [];
+            features = [];
             features.push(graphic);
 
-            var featureSet = new FeatureSet();
+            featureSet = new FeatureSet();
             featureSet.features = features;
 
-            var params = {
+            params = {
                 inputPoly: featureSet
             };
             geoprocessor.execute(params);
@@ -108,20 +110,20 @@ define([
         *
         */
         function outputTotalPopulation(evtObj) {
-            $("#map-load-indicator").addClass("hidden");
-
             var results = evtObj.results,
                 totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
 
-            dom.byId("population-output").innerHTML =
-                string.substitute("${number:dojo.number.format}", { number: totalPopulation });
+            that.working(false);
 
-            $('#buffer-info').hide();
-            $('#measurement-info').hide();
-            $('#population-info').show();
-            $('#advanced-info-box').show();
+            tmpl.cache = {};
+            tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
 
-            //that.deactivate();
+            that.displayOutput(
+                tmpl("population_output", {
+                    totalPopulationLabel: "Population",
+                    populationOutput: totalPopulation
+                })
+            );
         }
 
         ui = {
@@ -153,10 +155,25 @@ define([
 
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+
+            tmpl.cache = {};
+            tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
+
+            that.displayOutput(
+                tmpl("population_output", {
+                    totalPopulationLabel: "Population",
+                    populationOutput: "n/a"
+                })
+            );
         }
 
         function deactivate() {
             populationApp.toolbar.deactivate();
+            clearMap();
+        }
+
+        function clearMap() {
+            populationApp.map.graphics.clear();
         }
 
         return dojoLang.mixin({}, BaseTool, {
@@ -169,34 +186,13 @@ define([
             */
             init: function () {
                 that = this;
-                this.initToggle($("#at-population-toggle"), activate, deactivate);
+                this.initToggle($("#at-population-toggle"), activate, deactivate,
+                    {
+                        defaultAction: clearMap
+                    }
+                );
 
                 ui.init();
-
-                tmpl.cache = {};
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
-
-                $("#mainMap").append(tmpl("base_tool_float", { label: "Population" }));
-            },
-
-            /**
-            * Activate the tool
-            * @property activate
-            * @type {Object}
-            *
-            */
-            /*activate: function () {
-                this.active = true;
-            },
-
-            deactivate: function () {
-                if (this.active) {
-                    console.log("deactivate population tool")
-                    populationApp.toolbar.deactivate();
-                    this.active = false;
-
-                    this.handle.close();
-                }
-            }*/
+            }
         });
     });

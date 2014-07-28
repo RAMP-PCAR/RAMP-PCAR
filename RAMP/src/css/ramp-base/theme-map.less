@@ -61,6 +61,31 @@
 		bottom: 0;
 		right: 0;
 		left: 0;
+
+		.map > .tooltip {
+			.tool-tooltip {
+				display: none;
+
+				.fa {
+					margin-right: 5px;
+				}
+			}
+
+			&.working {
+				width: auto;
+				padding: 5px 10px;
+				border-radius: 4px;
+				font-size: inherit;
+
+				.tool-tooltip {
+					display: block;
+				}
+
+				.esri-tooltip {
+					display: none;
+				}	
+			}
+		}
 	}
 
 	/* MAP TOOLBAR START */
@@ -292,7 +317,7 @@
 
 	/* MAP TOOLBAR END */
 	
-    #advanced-info-box {
+    .advanced-output-float {
         z-index: 9999999;
         position: absolute;
         bottom: 25px;
@@ -301,9 +326,9 @@
         background-color: white;
         border: 1px solid gray;
         border-radius: 5px;
-        display: none;
+        //display: none;
 
-        #clear-map-button {
+        .float-default-button {
             display: block;
             margin-top: 15px;
             width: 100%;

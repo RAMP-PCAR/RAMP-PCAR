@@ -8,13 +8,15 @@
                             <div class='clear'></div>
                         </a>",
 
-    "base_tool_float":  "<div id='advanced-info-box''>
-                            <div id='population-info'>
-                                <b>@@totalPopulation: {%= o.label %} </b>
-                                <br />
-                                <span id='population-output'></span>
-                            </div>
-                            <button id='clear-map-button' class='button button-info'>@@clearMap</button>
-                        </div>"
+    "base_tool_float":  "<div class='advanced-output-float'>                            
+                            <div class='float-content'></div>
+                            <button class='float-default-button' class='button button-info'>{%= o.clearMapButton %}</button>
+                        </div>",
+
+    "population_output":  "<div class='population-info'>
+                            <b>{%= o.totalPopulationLabel %}:</b>
+                            <br />
+                            <span class='population-output'>{%= o.populationOutput %}</span>
+                        </div>"                   
 }
 
