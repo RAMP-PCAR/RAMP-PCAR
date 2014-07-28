@@ -645,13 +645,67 @@
             top: 0;
             margin: 0 !important;
 
-            li {
-                list-style: none;
+            .layer-group-separator {
+                height: 1px;
 
-                &.sortable-placeholder {
-                    background-image: @dark-denim;
-                    background-color: @medium-grey-color;
-                    height: 48px;
+                &.active {
+                    background-color: @light-grey-color;
+                }
+
+                &:last-child {
+                    display: none;
+                }
+            }
+
+            > ul {
+                margin: 0;
+                position: relative;
+
+                &.sort-disabled {
+            		opacity: 0.5;
+
+                	&:before {
+	                    content: "";
+	                    position: absolute;
+	                    left: 0;
+	                    right: 0;
+	                    top: 0;
+	                    bottom: 0;
+	                    background-color: black;
+	                    opacity: 0.2;
+	                    z-index: 1;
+	                }
+                }
+
+                &.sort-active > li > fieldset:before {
+                    content: "";
+                    position: absolute;
+                    background-color: @accent-color;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    width: 3px;
+                    z-index: 1;
+                }
+
+                > li {
+                    list-style: none;
+                    background-color: white;
+
+                    &.list-item-grabbed {
+                    	//.highlighted-row;
+                    	
+                    	legend {
+	                    	.box-shadow (@separator-drag-shadow);
+	                    	z-index: 1;
+	                    }
+                    }
+
+                    &.sortable-placeholder {
+                        background-image: @dark-denim;
+                        background-color: @medium-grey-color;
+                        height: 48px;
+                    }
                 }
             }
 
@@ -659,7 +713,7 @@
                 display: none;
             }
 
-            &.ui-sortable {
+            .ui-sortable {
                 .sort-handle {
                     position: absolute;
                     display: inline-block;
@@ -684,17 +738,27 @@
                 padding: 0px 0 0 0;
             }
 
-            &.ui-sortable-helper legend {
-                .box-shadow (@separator-drag-shadow);
+            &.ui-sortable-helper
+            {
+            	// should settings panle be hidden on drag?
+                /*.filter-row-settings {
+                    display: none !important;
+                }*/
+
+				//.highlighted-row;
+				
+                legend {
+                    .box-shadow (@separator-drag-shadow);
+                }
             }
 
             legend {
                 padding: 8px 0 8px;
                 position: relative;
                 font-size: 100% !important;
-                background-color: white;
+                //background-color: white;
                 .box-shadow (@separator-shadow);
-                .transition(400ms, ease);
+                .transition(400ms, ease, background-color);
 
                 & > div {
                     padding-left: 15px;

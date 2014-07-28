@@ -62,7 +62,7 @@ define([
                 dataWrapper.str = GlobalStorage.config.stringResources;
 
                 if (layerUrl != null) {
-                    //get configturation from the layer with layerIndex
+                    //get configuration from the layer with layerIndex
                     dataWrapper.lyr = Ramp.getLayerConfig(layerUrl);
                 }
 

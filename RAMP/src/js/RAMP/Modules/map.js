@@ -323,20 +323,36 @@ define([
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
                 setBoundingBoxVisibility(evt.id, evt.state);
             });
+            /* END BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (evt) {
-                //this is handling the user trying to re-order the layers
-                if (!featureLayerStartIndex) {
-                    // Find the index of the first feature layer
-                    featureLayerStartIndex = UtilArray.indexOf(map.graphicsLayerIds, function (layerId) {
-                        var layer = map.getLayer(layerId);
-                        return layer.type && layer.type === "Feature Layer";
-                    });
+                // this is handling the user trying to re-order the layers
+                // graphical and feature layers must be handled separately from 
+                // all other layers as ESRI separates the two internally
+
+                var newIndex = evt.index,
+                    featureLayers;
+                
+                if (map.layerIds.contains(evt.id)) {
+                    featureLayers = dojoArray.map( map.graphicsLayerIds, function(x) {
+                                        return map.getLayer(x).type === 'Feature Layer' ? 1 : 0; 
+                                    } ).sum();
+                    newIndex += 1 - featureLayers; // offset by 1 basemap not accounted for
+                    console.log('newIndex '+newIndex);
+                    console.log(map.layerIds);
+                } else {
+                    if (!featureLayerStartIndex) {
+                        // Find the index of the first feature layer
+                        featureLayerStartIndex = UtilArray.indexOf(map.graphicsLayerIds, function (layerId) {
+                            var layer = map.getLayer(layerId);
+                            return layer.type && layer.type === "Feature Layer";
+                        });
+                    }
+                    newIndex += featureLayerStartIndex;
                 }
-                map.reorderLayer(map.getLayer(evt.id), featureLayerStartIndex + evt.index);
+                map.reorderLayer(map.getLayer(evt.id), newIndex);
                 topic.publish(EventManager.Map.REORDER_END);
             });
-            /* END BOUNDING BOX TOGGLE */
 
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {

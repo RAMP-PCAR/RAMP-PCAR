@@ -340,14 +340,14 @@ Developers of the Almighty JSON Config Editor
                     "type": "String",
                     "value": "Layer Settings",
                     "description": "",
-                    "visibleText": false
+                    "visibleText": true
                 },
                 {
                     "name": "txtSettingsOpacity",
                     "type": "String",
                     "value": "Opacity",
                     "description": "",
-                    "visibleText": false
+                    "visibleText": true
                 },
                 {
                     "name": "txtGetLinkShort",
@@ -6459,6 +6459,253 @@ Developers of the Almighty JSON Config Editor
                             "name": "uuid",
                             "type": "String",
                             "value": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.5,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "1 Winds",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "displayName",
+                            "type": "String",
+                            "value": "Winds",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "error",
+                            "type": "String",
+                            "value": "",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "extent",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "spatialReference",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "wkid",
+                                            "type": "Integer",
+                                            "value": 3978,
+                                            "description": ""
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "xmax",
+                                    "type": "Numeric",
+                                    "value": 20037508.0,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "xmin",
+                                    "type": "Numeric",
+                                    "value": -20037508.0,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "ymax",
+                                    "type": "Numeric",
+                                    "value": 103653320.0,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "ymin",
+                                    "type": "Numeric",
+                                    "value": -103653320.0,
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "format",
+                            "type": "String",
+                            "value": "png",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "id",
+                            "type": "String",
+                            "value": "wms5",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "layerInfo",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "allExtents",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "legendURL",
+                                    "type": "String",
+                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "RDPS.ETA_UU",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "spatialReferences",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "subLayers",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        
+                                    ]
+                                },
+                                {
+                                    "name": "title",
+                                    "type": "String",
+                                    "value": "RDPS.ETA - Winds (noeuds)",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "symbology",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "icons",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "default",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "imageUrl",
+                                                    "type": "String",
+                                                    "value": "assets/images/wms.png",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "legendText",
+                                                    "type": "String",
+                                                    "value": "Winds",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "renderer",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "key1",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key2",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key3",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "type",
+                                            "type": "String",
+                                            "value": "simple",
+                                            "description": "",
+                                            "visibleText": false
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "url",
+                            "type": "String",
+                            "value": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "uuid",
+                            "type": "String",
+                            "value": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
                             "description": "",
                             "visibleText": false
                         },

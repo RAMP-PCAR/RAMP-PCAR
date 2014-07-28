@@ -1117,6 +1117,58 @@
                 "enable": true,
                 "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
+        },
+        {
+            "displayName": "Winds",
+            "error": "",
+            "extent": {
+                "spatialReference": {
+                    "wkid": 3978
+                },
+                "xmax": 20037508.0,
+                "xmin": -20037508.0,
+                "ymax": 103653320.0,
+                "ymin": -103653320.0
+            },
+            "format": "png",
+            "id": "wms5",
+            "layerInfo": {
+                "allExtents": [
+                    
+                ],
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
+                "name": "RDPS.ETA_UU",
+                "spatialReferences": [
+                    
+                ],
+                "subLayers": [
+                    
+                ],
+                "title": "RDPS.ETA - Winds (noeuds)"
+            },
+            "symbology": {
+                "icons": {
+                    "default": {
+                        "imageUrl": "assets/images/wms.png",
+                        "legendText": "Winds"
+                    }
+                },
+                "renderer": {
+                    "key1": "",
+                    "key2": "",
+                    "key3": "",
+                    "type": "simple"
+                }
+            },
+            "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
+            "uuid": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.5
+                }
+            }
         }
     ]
 }

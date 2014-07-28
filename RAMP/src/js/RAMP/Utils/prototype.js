@@ -96,6 +96,15 @@ define([
                 this.push.apply(this, arr);
             });
 
+            // Sum all the elements in the array, no checking for non-numeric types
+            addPrototype(Array, "sum", function () {
+                var i, res;
+                for ( i=0, res=0; i < this.length; ++i) {
+                    res += this[i];
+                }
+                return res;
+            });
+
             // Returns true if the length of the array is 0.
             addPrototype(Array, "isEmpty", function () {
                 return this.length === 0;
