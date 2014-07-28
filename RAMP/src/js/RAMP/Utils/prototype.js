@@ -99,7 +99,7 @@ define([
             // Sum all the elements in the array, no checking for non-numeric types
             addPrototype(Array, "sum", function () {
                 var i, res;
-                for ( i=0, res=0; i < this.length; ++i) {
+                for (i = 0, res = 0; i < this.length; ++i) {
                     res += this[i];
                 }
                 return res;

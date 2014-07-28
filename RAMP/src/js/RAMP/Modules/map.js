@@ -334,11 +334,11 @@ define([
                     featureLayers;
                 
                 if (map.layerIds.contains(evt.id)) {
-                    featureLayers = dojoArray.map( map.graphicsLayerIds, function(x) {
+                    featureLayers = dojoArray.map(map.graphicsLayerIds, function (x) {
                                         return map.getLayer(x).type === 'Feature Layer' ? 1 : 0; 
-                                    } ).sum();
+                                    }).sum();
                     newIndex += 1 - featureLayers; // offset by 1 basemap not accounted for
-                    console.log('newIndex '+newIndex);
+                    console.log('newIndex ' + newIndex);
                     console.log(map.layerIds);
                 } else {
                     if (!featureLayerStartIndex) {
