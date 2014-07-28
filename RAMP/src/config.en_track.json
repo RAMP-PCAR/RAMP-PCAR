@@ -1320,8 +1320,8 @@
             "settings": {
                 "enabled": true,
                 "opacity": {
-                    "enabled": false,
-                    "default": 0.0
+                    "enabled": true,
+                    "default": 0.5
                 }
             },
             "layerType": "dynamic",

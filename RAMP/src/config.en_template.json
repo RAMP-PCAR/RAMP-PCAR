@@ -7807,13 +7807,13 @@
                                         {
                                             "name": "enabled",
                                             "type": "Boolean",
-                                            "value": false,
+                                            "value": true,
                                             "description": ""
                                         },
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.0,
+                                            "value": 0.5,
                                             "description": ""
                                         }
                                     ]

@@ -6287,13 +6287,13 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "enabled",
                                             "type": "Boolean",
-                                            "value": false,
+                                            "value": true,
                                             "description": ""
                                         },
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.3,
+                                            "value": 0.6,
                                             "description": ""
                                         }
                                     ]
@@ -8157,7 +8157,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "enabled",
                                     "type": "Boolean",
-                                    "value": false,
+                                    "value": true,
                                     "description": ""
                                 },
                                 {
@@ -8168,13 +8168,13 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "enabled",
                                             "type": "Boolean",
-                                            "value": false,
+                                            "value": true,
                                             "description": ""
                                         },
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.0,
+                                            "value": 0.5,
                                             "description": ""
                                         }
                                     ]
