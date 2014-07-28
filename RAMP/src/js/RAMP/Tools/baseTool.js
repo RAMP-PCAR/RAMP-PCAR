@@ -40,6 +40,12 @@ define([
                 handle: null,
                 outputFloat: null,
                 tooltip: null,
+                templates: null,
+
+                event: {
+                    ACTIVATE: "basetool-activate",
+                    DEACTIVATE: "basetool-deactivate"
+                },
 
                 initToggle: function (node, activate, deactivate, options) {
                     var that = this;
@@ -49,7 +55,7 @@ define([
                         {
                             target: $("#mainMap"),
                             outputFloatTemplate: "base_tool_float",
-                            outputFloatPayload: {
+                            outputFloatData: {
                                 clearMapButton: "Clear Map"
                             },
                             defaultAction: function () { console.log('default action'); }
@@ -58,12 +64,16 @@ define([
 
                     // creating the float to display output on
                     tmpl.cache = {};
-                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
-                    this.outputFloat = $(tmpl(this.options.outputFloatTemplate, this.options.outputFloatPayload));
+                    tmpl.templates = that.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
+                    this.outputFloat = $(tmpl(this.options.outputFloatTemplate, this.options.outputFloatData));
 
                     // initializing tools' toggle button
                     this.handle = PopupManager.registerPopup(node, "click",
                         function (d) {
+                            that.emit(that.event.ACTIVATE, {
+                                tool: that
+                            });
+
                             console.log("open tool");
 
                             activate.call(that);
@@ -92,6 +102,17 @@ define([
                             useAria: false
                         }
                     );
+                },
+
+                displayTemplateOutput: function (templateName, templateData) {
+                    var output;
+
+                    tmpl.cache = {};
+                    tmpl.templates = this.templates;
+
+                    output = tmpl(templateName, templateData);
+
+                    this.displayOutput(output);
                 },
 
                 displayOutput: function (output) {

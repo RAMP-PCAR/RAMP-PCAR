@@ -17,6 +17,19 @@
                             <b>{%= o.totalPopulationLabel %}:</b>
                             <br />
                             <span class='population-output'>{%= o.populationOutput %}</span>
-                        </div>"                   
+                        </div>",
+
+    "buffer_output": "<div class='buffer-info'>
+                        <b>{%= o.distanceLabel %}:</b><br />
+                        <input type='text' class='distance-input' size='5' value='40'> km
+                    </div>",
+
+    "measure_output":  "<div class='measurement-info'>
+                            <b>{%= o.areaLabel %}:</b>
+                            <span class='area-output'></span>
+                            <br />
+                            <b>{%= o.lengthLabel%}:</b>
+                            <span class='length-output'></span>
+                        </div>"   
 }
 

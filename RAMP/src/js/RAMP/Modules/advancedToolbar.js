@@ -70,16 +70,12 @@ define([
 
                         advancedToolbarTimeLine = new TimelineLite({
                             paused: true,
-                            onComplete: function () {
-                            },
-                            onReverseComplete: function () {
-                            }
+                            onComplete: function () { },
+                            onReverseComplete: function () { }
                         });
 
                     advancedToggle = viewport.find("#advanced-toggle");
-                    advancedSectionContainer = viewport.find("#advanced-toolbar"); //$("#advanced-section-container");
-
-                    toggleAdvancedToolbar();
+                    advancedSectionContainer = viewport.find("#advanced-toolbar");
 
                     advancedToolbarTimeLine
                         .set(advancedSectionContainer, { display: "block" }, 0)
@@ -90,6 +86,7 @@ define([
                     popupManager.registerPopup(advancedToggle, "click",
                         function (d) {
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
+
                             // close this panel if any other panel is opened
                             UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
                                 function () {
@@ -115,9 +112,7 @@ define([
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
 
                                 // deactivate all the tools
-                                UtilDict.forEachEntry(tools, function (name, tool) {
-                                    tool.deactivate();
-                                });
+                                deactivateAll();
 
                                 // perform transitions
                                 subPanelContainer = viewport.find(".sub-panel-container");
@@ -136,69 +131,26 @@ define([
             };
 
         /**
-        * Shows the advanced toolbar and its tools based off config settings.
+        * Deactivates all the tools. Used when closing the Advanced toolbar or when another tool is being activated.
         *
-        * @method toggleAdvancedToolbar
+        * @method deactivateAll
+        * @param {Tool} except A tool module that should not be deactivated.
         * @private
         */
-        function toggleAdvancedToolbar() {
-            /*    // Set whether each item should be visible.
-                var advancedToolbarIsEnabled = true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled,
-                    populationToolIsEnabled = true || globalStorage.config.advancedToolbar.populationToolIsEnabled,
-                    measureToolIsEnabled = true || globalStorage.config.advancedToolbar.measureToolIsEnabled,
-                    bufferToolIsEnabled = true || globalStorage.config.advancedToolbar.bufferToolIsEnabled;
-
-                // Show each item as indicated by variables.
-                if (advancedToolbarIsEnabled) {
-                    advancedToggle.show();
-                } else {
-                    return;
+        function deactivateAll(except) {
+            // deactivate all the tools except "except" tool
+            UtilDict.forEachEntry(tools, function (name, tool) {
+                if (except && except.name !== name) {
+                    tool.deactivate();
                 }
-                if (populationToolIsEnabled) {
-                    $('#population-tool').css("display", "inline-block");
-                }
-                if (measureToolIsEnabled) {
-                    $('#measure-tool').css("display", "inline-block");
-                }
-                if (bufferToolIsEnabled) {
-                    $('#buffer-tool').css("display", "inline-block");
-                }
-                */
+            });
         }
-
-        // Hide advanced popup after clicking on any of the tools.
-
-        /*$('#at-population-toggle').click(function () {
-            PopulationTools.activate();
-            $('#advanced-info-box').hide();
-        });
-
-        $('#at-measure-toggle').click(function () {
-            MeasureTool.activate();
-            $('#advanced-info-box').hide();
-        });
-
-        $('#at-buffer-toggle').click(function () {
-            BufferTool.activate();
-            $('#population-info').hide();
-            $('#measurement-info').hide();
-            $('#buffer-info').show();
-            $('#advanced-info-box').show();
-        });
-
-        // Clear info box and drawn polygons off the map when clear map button is clicked.
-        $('#clear-map-button').click(function () {
-            $('#advanced-info-box').hide();
-            map.graphics.clear();
-        });
-
-        */
 
         return {
             init: function () {
                 ui.init();
 
-                //HACK
+                //HACK --> should be moved to the config
                 globalStorage.config.advancedToolbar = {};
                 globalStorage.config.advancedToolbar.tools = {
                     /*measure: {
@@ -208,11 +160,11 @@ define([
                     population: {
                         name: "populationTool",
                         enabled: true
-                    }/*,
+                    },
                     buffer: {
                         name: "bufferTool",
                         enabled: true
-                    }*/
+                    }
                 };
                 //HACK
 
@@ -221,11 +173,12 @@ define([
                     function (key, value) {
                         if (value.enabled) {
                             require(["tools/" + value.name], function (module) {
-                                module.on("toggle", function (evt) {
-                                    console.log(evt);
-                                });
-
-                                module.init();
+                                module
+                                    .init()
+                                    .on(module.event.ACTIVATE, function (evt) {
+                                        console.log("Tool", module.name, "activated");
+                                        deactivateAll(module);
+                                    });
 
                                 tools[value.name] = module;
                             });

@@ -1,4 +1,4 @@
-﻿/*global define, $, tmpl */
+﻿/*global define, $ */
 
 /**
 * PopulationTool submodule.
@@ -36,13 +36,7 @@ define([
         "esri/config", "esri/graphic", "esri/tasks/Geoprocessor", "esri/tasks/FeatureSet",
         "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
 // Ramp
-        "ramp/map", "ramp/globalStorage", "tools/baseTool",
-
-/* Text */
-     "dojo/text!./templates/tools_template.json",
-
-// Utils
-        "utils/tmplHelper"
+        "ramp/map", "ramp/globalStorage", "tools/baseTool"
 ],
     function (
 // Dojo
@@ -50,11 +44,7 @@ define([
 // Esri
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
-        RampMap, GlobalStorage, BaseTool,
-// Text
-        tools_template_json,
-// Utils
-        TmplHelper) {
+        RampMap, GlobalStorage, BaseTool) {
         "use strict";
 
         var ui,
@@ -62,8 +52,6 @@ define([
             populationApp,
 
             that;
-
-        //dojoLang.mixin(this, BaseTool);
 
         /**
         * Compute an estimated amount of people in a specified polygon.
@@ -81,13 +69,11 @@ define([
                 params;
 
             that.working(true);
+
             /*After user draws shape on map using the draw toolbar compute the zonal*/
             populationApp.map.graphics.clear();
             graphic = populationApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
             populationApp.map.graphics.add(graphic);
-
-            //TODO if we change to an "always on" we will want to make this a public function like the activate function below
-            //populationApp.toolbar.deactivate();
 
             features = [];
             features.push(graphic);
@@ -115,15 +101,7 @@ define([
 
             that.working(false);
 
-            tmpl.cache = {};
-            tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
-
-            that.displayOutput(
-                tmpl("population_output", {
-                    totalPopulationLabel: "Population",
-                    populationOutput: totalPopulation
-                })
-            );
+            displayOutput(totalPopulation);
         }
 
         ui = {
@@ -156,15 +134,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            tmpl.cache = {};
-            tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
-
-            that.displayOutput(
-                tmpl("population_output", {
-                    totalPopulationLabel: "Population",
-                    populationOutput: "n/a"
-                })
-            );
+            displayOutput("n/a");
         }
 
         function deactivate() {
@@ -174,6 +144,15 @@ define([
 
         function clearMap() {
             populationApp.map.graphics.clear();
+        }
+
+        function displayOutput(value) {
+            that.displayTemplateOutput("population_output",
+                {
+                    totalPopulationLabel: "Population",
+                    populationOutput: value
+                }
+            );
         }
 
         return dojoLang.mixin({}, BaseTool, {
@@ -193,6 +172,10 @@ define([
                 );
 
                 ui.init();
-            }
+
+                return this;
+            },
+
+            name: "populationTool"
         });
     });
