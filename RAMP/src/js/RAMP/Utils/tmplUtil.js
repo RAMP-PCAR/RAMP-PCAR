@@ -108,9 +108,12 @@ define([],
             * @param o
             */
             generateBoundingBoxLegend: function (o) {
-
+                // adding flag for the generated o object
+                // o.disabled will indicate the bounding checkbox is to be disabled.
                 var checkboxDisabled = false;
 
+
+                // determine if given layer is static
                 if (o.data[o.idx].layerConfig.isStatic == true) {
                     checkboxDisabled = true;
                 } else {

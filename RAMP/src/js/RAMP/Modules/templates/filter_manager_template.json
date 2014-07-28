@@ -83,6 +83,7 @@
 
         // filter row legend template 
         // used by level 2 to generate visibility and bounding box legend checkbox
+        // added code to determine if bounding box is to be generated
         "filter_legend_template":"
                                     {% if(!o.disabled) { %}
                                     <div class='checkbox-custom'>
