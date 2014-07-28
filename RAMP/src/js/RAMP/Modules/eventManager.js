@@ -32,7 +32,15 @@ define([],
                 */
                 LAYER_VISIBILITY_TOGGLED: "filterManager/layer-visibility-toggled",
 
-                // ???
+                /**
+                * Published each time the transparency of a layer is modified.
+                *
+                * @event FilterManager.LAYER_TRANSPARENCY_CHANGED
+                * @for FilterManager
+                * @param event {Object}
+                * @param event.layerId {String} the id of the layer
+                * @param event.value {int} the value of the slider
+                */
                 LAYER_TRANSPARENCY_CHANGED: "filterManager/layer-transparency-changed",
 
                 /**

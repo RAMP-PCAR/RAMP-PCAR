@@ -252,6 +252,7 @@ define([
                             state: evt.checkbox.state
                         });
                     });
+
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });

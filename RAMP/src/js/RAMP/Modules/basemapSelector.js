@@ -37,7 +37,7 @@ define([
 // Esri
     "esri/dijit/BasemapGallery",
 // Util
-    "utils/popupManager", "utils/tmplHelper"],
+    "utils/popupManager", "utils/tmplHelper", "utils/array"],
 
 function (
         // Dojo
@@ -49,7 +49,7 @@ function (
         // Esri
         BasemapGallery,
         // Util
-        PopupManager, TmplHelper) {
+        PopupManager, TmplHelper, UtilArray) {
     "use strict";
 
     var basemapGallery,
@@ -183,8 +183,14 @@ function (
                 basemaps: basemaps,
                 map: RampMap.getMap()
             }, placementAnchorId);
+
             basemapGallery.startup();
-            basemapGallery.select(basemaps[0].id);
+
+            var startId = UtilArray.find(GlobalStorage.config.basemaps, function (basemap) {
+                return basemap.showOnInit;
+            }).id;
+
+            basemapGallery.select(startId);
 
             //take over the click
             $(".esriBasemapGalleryNode").on("mousedown keyup", function (evt) {

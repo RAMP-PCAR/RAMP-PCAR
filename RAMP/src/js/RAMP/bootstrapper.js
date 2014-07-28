@@ -75,6 +75,8 @@ require([
 
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
+            BookmarkLink.init(window.location.pathname.split("/").last());
+            BookmarkLink.updateConfig();
 
             //dojoOn.once(RampMap.getMap(), "update-end", function () {
             topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
@@ -87,7 +89,8 @@ require([
                 // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
                 // has finished rendering
                 utilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
-                    BookmarkLink.init(window.location.pathname.split("/").last());
+                    BookmarkLink.updateMap();
+                    BookmarkLink.subscribeAndUpdate();
                 });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;

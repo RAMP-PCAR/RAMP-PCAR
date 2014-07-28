@@ -71,7 +71,7 @@ define([
 // Ramp
         "ramp/globalStorage", "ramp/map", "ramp/eventManager",
 // Util
-        "utils/url", "utils/util", "utils/dictionary", "utils/popupManager"
+        "utils/url", "utils/util", "utils/dictionary", "utils/array", "utils/popupManager"
 ],
 
     function (
@@ -83,7 +83,7 @@ define([
     // Ramp
         GlobalStorage, RampMap, EventManager,
     // Util
-        Url, UtilMisc, UtilDict, PopupManager) {
+        Url, UtilMisc, UtilDict, UtilArray, PopupManager) {
         "use strict";
 
         var EVENT_ROOT = "bookmarkLink/", // trailing '/' is important
@@ -157,6 +157,8 @@ define([
         * @type {Object}
         */
             visibleBoxes = {},
+
+            layerTransparency = {},
 
             ui = {
                 /**
@@ -239,21 +241,6 @@ define([
                     });*/
                 }
             };
-        /*
-        *
-        *
-        *
-        */
-        function initTopics() {
-            /* PUBLISH */
-        }
-        /*
-        *
-        *
-        */
-        function initListeners() {
-            /* SUBSCRIBE */
-        }
 
         /**
         * Update the parameter dictionary with the new values for the parameter. If paramObj is set to null,
@@ -273,6 +260,7 @@ define([
                 parameters[paramKey] = dojoQuery.objectToQuery(paramObj);
             }
         }
+
         /*
         * Adds an anchor object to a tracking array
         * @method addAnchor
@@ -282,6 +270,7 @@ define([
         function addAnchor(anchorName, anchorObj) {
             anchors[anchorName] = anchorObj;
         }
+
         /*
         * Appends information to the current map's URL to create a mail-to link. Set the email buttons target URL.
         * @method setNewUrl
@@ -364,6 +353,56 @@ define([
             updateURL();
         }
 
+        function updateConfig() {
+            var event;
+
+            // check for map extent queries
+            if (queryObject.xmin) {
+                event = {
+                    xmin: parseFloat(queryObject.xmin.replace(/,/g, "")),
+                    ymin: parseFloat(queryObject.ymin.replace(/,/g, "")),
+                    xmax: parseFloat(queryObject.xmax.replace(/,/g, "")),
+                    ymax: parseFloat(queryObject.ymax.replace(/,/g, "")),
+                    sr: queryObject.sr
+                };
+
+                addParameter(EVENT_EXTENT_CHANGE, event);
+
+                GlobalStorage.config.extents.defaultExtent = event;
+                GlobalStorage.config.spatialReference = JSON.parse(queryObject.sr);
+
+                // Wait for things such as fullscreen or panel collapse
+                // to finish before doing an extent change.
+            }
+
+            // Select the correct basemap
+            if (queryObject.baseMap) {
+                event = {
+                    baseMap: queryObject.baseMap
+                };
+                addParameter(EVENT_BASEMAP_CHANGED, event);
+
+                dojoArray.forEach(GlobalStorage.config.basemaps, function (basemap) {
+                    basemap.showOnInit = (basemap.id === event.baseMap);
+                });
+            }
+
+            if (queryObject.layerTransparency) {
+                addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
+                    layerTransparency: queryObject.layerTransparency
+                });
+
+                UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
+                    var layerConfig = UtilArray.find(GlobalStorage.config.featureLayers, function (layer) {
+                        return layer.id === key;
+                    }) || UtilArray.find(GlobalStorage.config.wmsLayers, function (layer) {
+                        return String.format("wmsLayer_{0}", layer.layerInfo.title) === key;
+                    });
+                    layerConfig.settings.opacity.default = value;
+                });
+            }
+        }
+
         return {
             /**
             * Instantiates a BookmarkLink. Subscribes to all the events that causes
@@ -390,13 +429,12 @@ define([
                 // Move the API key to config.json??
                 jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
-                initTopics();
-                initListeners();
-
                 ui.init();
-                this.updateMap();
-                this.subscribeAndUpdate();
+                //this.updateMap();
+                //this.subscribeAndUpdate();
             },
+
+            updateConfig: updateConfig,
 
             /**
             * Subscribe to map state changes so the URL displayed can be changed accordingly.
@@ -514,6 +552,17 @@ define([
                     updateURL();
                 });
 
+                topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (event) {
+                    addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, event);
+                    layerTransparency[event.layerId] = event.value;
+
+                    addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
+                        layerTransparency: JSON.stringify(layerTransparency)
+                    });
+
+                    updateURL();
+                });
+
                 // This call is necessary to fill in the URL in the bookmark link
                 // if this call is removed, there will be no URL in the bookmark link
                 // until one of the above events fires
@@ -584,56 +633,6 @@ define([
                                 expand: true
                             },
                             subscribeName: EventManager.GUI.FULLSCREEN_CHANGE
-                        });
-                    }
-                }
-
-                // Select the correct basemap
-                if (queryObject.baseMap) {
-                    event = {
-                        id: queryObject.baseMap
-                    };
-                    addParameter(EVENT_BASEMAP_CHANGED, event);
-                    topic.publish(EventManager.BasemapSelector.TOGGLE, event);
-                }
-
-                // check for map extent queries
-                if (queryObject.xmin) {
-                    event = {
-                        xmin: parseFloat(queryObject.xmin.replace(/,/g, "")),
-                        ymin: parseFloat(queryObject.ymin.replace(/,/g, "")),
-                        xmax: parseFloat(queryObject.xmax.replace(/,/g, "")),
-                        ymax: parseFloat(queryObject.ymax.replace(/,/g, "")),
-                        sr: jQuery.parseJSON(queryObject.sr)
-                    };
-
-                    addParameter(EVENT_EXTENT_CHANGE, event);
-
-                    if (waitList.isEmpty()) {
-                        topic.publish(EventManager.Map.SET_EXTENT, {
-                            extent: new Extent(event)
-                        });
-                    } else {
-                        // Wait for things such as fullscreen or panel collapse
-                        // to finish before doing an extent change.
-
-                        // Note it's important to subscribe to the events, then
-                        // publish them, that's why it was done in such an obscure way
-                        // using the waitList (otherwise if we just publish the
-                        // event like above, then subscribe to it here, the event
-                        // might have completed before reaching this point)
-                        var eventNames = dojoArray.map(waitList, function (obj) {
-                            return obj.subscribeName;
-                        });
-
-                        UtilMisc.subscribeAll(eventNames, function () {
-                            topic.publish(EventManager.Map.SET_EXTENT, {
-                                extent: new Extent(event)
-                            });
-                        });
-
-                        dojoArray.forEach(waitList, function (obj) {
-                            topic.publish(obj.publishName, obj.eventArg);
                         });
                     }
                 }
