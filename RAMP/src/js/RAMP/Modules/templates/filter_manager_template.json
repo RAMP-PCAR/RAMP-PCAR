@@ -86,9 +86,12 @@
         "filter_legend_template":"<div class='checkbox-custom'>
                                         <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
                                             <span class='wb-invisible'>{%=o.label%}</span>
-                                        </label>
+                                        </label>                                       
                                         <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
-                                            type='checkbox'></input>
+                                            {% if(o.disabled){ %}
+                                             disabled='true'
+                                            {% } %}
+                                            type='checkbox'></input>                                       
                                     </div>",
         
         // filter row button template

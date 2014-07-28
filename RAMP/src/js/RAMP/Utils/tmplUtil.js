@@ -108,6 +108,15 @@ define([],
             * @param o
             */
             generateBoundingBoxLegend: function (o) {
+
+                var checkboxDisabled = false;
+
+                if (o.data[o.idx].layerConfig.isStatic == true) {
+                    checkboxDisabled = true;
+                } else {
+                    checkboxDisabled = false;
+                }
+
                 var attr = "",
                     boundingLegendLabel = {
                         for: "filterGroup_" + o.data[o.idx].id + "1",
@@ -116,6 +125,7 @@ define([],
                         checked: "checked",
                         label: o.data[o.idx].layerConfig.displayName,
                         class: "box checked",
+                        disabled: checkboxDisabled,
                         layerId: o.data[o.idx].id
                     };
 
