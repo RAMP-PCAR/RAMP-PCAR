@@ -450,7 +450,10 @@ module.exports = function (grunt) {
             },
 
             wtemplate: {
-                files: ['src/js/RAMP/Modules/templates/*.json'],
+                files: [
+                    'src/js/RAMP/Modules/templates/*.json',
+                    'src/js/RAMP/Tools/templates/*.json'
+                ],
                 tasks: ['copy:templates'] //, 'build:bump-only-build']
             }
         },
@@ -466,7 +469,14 @@ module.exports = function (grunt) {
                     cwd: 'src/js/RAMP/Modules/templates',
                     src: '**',
                     dest: 'build/js/RAMP/Modules/templates'
-                }]
+                },
+                {
+                    expand: true,
+                    cwd: 'src/js/RAMP/Tools/templates',
+                    src: '**',
+                    dest: 'build/js/RAMP/Tools/templates'
+                }
+                ]
             },
 
             rampJsLib: {
