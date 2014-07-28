@@ -738,8 +738,8 @@ module.exports = function (grunt) {
                     requireCommaBeforeLineBreak: true,
                     //requireOperatorBeforeLineBreak: ?
 
-                    requireSpaceAfterPrefixUnaryOperators: ["++", /*"--",*/ "+", /*"-",*/ "~"/*, "!"*/],
-                    disallowSpaceAfterPrefixUnaryOperators: [/*"++",*/ "--", /*"+", */"-", /*"~",*/ "!"],
+                    requireSpaceAfterPrefixUnaryOperators: [/*"++", "--",*/ "+", /*"-",*/ "~"/*, "!"*/],
+                    disallowSpaceAfterPrefixUnaryOperators: ["++", "--", /*"+", */"-", /*"~",*/ "!"],
 
                     //requireSpaceBeforePostfixUnaryOperators: ["++", "--"],
                     disallowSpaceBeforePostfixUnaryOperators: [
