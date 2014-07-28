@@ -10,7 +10,7 @@
 
     "base_tool_float":  "<div class='advanced-output-float'>                            
                             <div class='float-content'></div>
-                            <button class='float-default-button' class='button button-info'>{%= o.clearMapButton %}</button>
+                            <button class='float-default-button button button-info'>{%= o.clearMapButton %}</button>
                         </div>",
 
     "population_output":  "<div class='population-info'>
@@ -26,10 +26,10 @@
 
     "measure_output":  "<div class='measurement-info'>
                             <b>{%= o.areaLabel %}:</b>
-                            <span class='area-output'></span>
+                            <span class='area-output'>{%= o.areaOutput %}</span>
                             <br />
                             <b>{%= o.lengthLabel%}:</b>
-                            <span class='length-output'></span>
+                            <span class='length-output'>{%= o.lengthOutput %}</span>
                         </div>"   
 }
 

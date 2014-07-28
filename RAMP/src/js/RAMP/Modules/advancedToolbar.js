@@ -140,7 +140,7 @@ define([
         function deactivateAll(except) {
             // deactivate all the tools except "except" tool
             UtilDict.forEachEntry(tools, function (name, tool) {
-                if (except && except.name !== name) {
+                if (!except || except.name !== name) {
                     tool.deactivate();
                 }
             });
@@ -153,10 +153,10 @@ define([
                 //HACK --> should be moved to the config
                 globalStorage.config.advancedToolbar = {};
                 globalStorage.config.advancedToolbar.tools = {
-                    /*measure: {
+                    measure: {
                         name: "measureTool",
                         enabled: true
-                    },*/
+                    },
                     population: {
                         name: "populationTool",
                         enabled: true
@@ -175,7 +175,7 @@ define([
                             require(["tools/" + value.name], function (module) {
                                 module
                                     .init()
-                                    .on(module.event.ACTIVATE, function (evt) {
+                                    .on(module.event.ACTIVATE, function () {
                                         console.log("Tool", module.name, "activated");
                                         deactivateAll(module);
                                     });

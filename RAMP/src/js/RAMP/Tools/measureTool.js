@@ -35,18 +35,21 @@ define([
       "esri/config", "esri/graphic", "esri/tasks/GeometryService",
       "esri/tasks/AreasAndLengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
 // Ramp
-      "ramp/map", "ramp/globalStorage"
+      "ramp/map", "ramp/globalStorage", "tools/baseTool"
 ],
     function (
 // Dojo
-      dom, string, lang,
+      dom, string, dojoLang,
 // Esri
       esriConfig, Graphic, GeometryService, AreasAndLengthsParameters, Draw, SimpleFillSymbol,
 // Ramp
-      RampMap, GlobalStorage) {
+      RampMap, GlobalStorage, BaseTool) {
         "use strict";
 
-        var ui, geometryService, measureApp;
+        var ui,
+            geometryService,
+            measureApp,
+            that;
 
         /**
         * Compute the area and length of a specified polygon.
@@ -57,7 +60,7 @@ define([
         *
         */
         function computeAreaAndLength(evtObj) {
-            $("#map-load-indicator").removeClass("hidden");
+            that.working(true);
 
             geometryService = new GeometryService(GlobalStorage.config.geometryService);
             geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
@@ -66,9 +69,6 @@ define([
             measureApp.map.graphics.clear();
 
             measureApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
-
-            //TODO if we change to an "always on" we will want to make this a public function like the activate function below
-            measureApp.toolbar.deactivate();
 
             //setup the parameters for the areas and lengths operation
             var areasAndLengthParams = new AreasAndLengthsParameters();
@@ -90,24 +90,20 @@ define([
         *
         */
         function outputAreaAndLength(evtObj) {
-            $("#map-load-indicator").addClass("hidden");
-
             var result = evtObj.result,
-
                 // Convert acres to km2.
                 area = (result.areas[0] / 247.11).toFixed(3),
                 // Convert feet to km.
                 length = (result.lengths[0] / 3280.8).toFixed(3);
 
-            dom.byId("area-output").innerHTML =
+            that.working(false);
+
+            /*dom.byId("area-output").innerHTML =
                 string.substitute("${number:dojo.number.format} km<sup>2</sup>", { number: area });
             dom.byId("length-output").innerHTML =
-                string.substitute("${number:dojo.number.format} km", { number: length });
+                string.substitute("${number:dojo.number.format} km", { number: length });*/
 
-            $('#buffer-info').hide();
-            $('#population-info').hide();
-            $('#measurement-info').show();
-            $('#advanced-info-box').show();
+            displayOutput(length, area);
         }
 
         ui = {
@@ -129,26 +125,53 @@ define([
             }
         };
 
-        return {
+        function activate() {
+            measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+
+            displayOutput("n/a", "n/a");
+        }
+
+        function deactivate() {
+            measureApp.toolbar.deactivate();
+            clearMap();
+        }
+
+        function clearMap() {
+            measureApp.map.graphics.clear();
+        }
+
+        function displayOutput(length, area) {
+            that.displayTemplateOutput("measure_output",
+                {
+                    lengthLabel: "Length",
+                    areaLabel: "Area",
+                    lengthOutput: length,
+                    areaOutput: area
+                }
+            );
+        }
+
+        return dojoLang.mixin({}, BaseTool, {
             /**
-            * Initialize the measure tool
+            * Initialize the population tool
             *
             * @method init
             * @constructor
             *
             */
             init: function () {
+                that = this;
+                this.initToggle($("#at-measure-toggle"), activate, deactivate,
+                    {
+                        defaultAction: clearMap
+                    }
+                );
+
                 ui.init();
+
+                return this;
             },
 
-            /**
-            * Activate the tool
-            * @property activate
-            * @type {Object}
-            *
-            */
-            activate: function () {
-                measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
-            }
-        };
+            name: "measureTool"
+        });
     });
