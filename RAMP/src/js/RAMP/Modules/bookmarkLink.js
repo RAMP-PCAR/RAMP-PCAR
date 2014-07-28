@@ -433,7 +433,7 @@ define([
                         ymin: event.extent.ymin,
                         xmax: event.extent.xmax,
                         ymax: event.extent.ymax,
-                        sr: event.extent.spatialReference.wkid
+                        sr: JSON.stringify(event.extent.spatialReference)
                     });
                     updateURL();
                 });
@@ -603,7 +603,8 @@ define([
                         xmin: parseFloat(queryObject.xmin.replace(/,/g, "")),
                         ymin: parseFloat(queryObject.ymin.replace(/,/g, "")),
                         xmax: parseFloat(queryObject.xmax.replace(/,/g, "")),
-                        ymax: parseFloat(queryObject.ymax.replace(/,/g, ""))
+                        ymax: parseFloat(queryObject.ymax.replace(/,/g, "")),
+                        sr: jQuery.parseJSON(queryObject.sr)
                     };
 
                     addParameter(EVENT_EXTENT_CHANGE, event);

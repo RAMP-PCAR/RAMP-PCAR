@@ -693,9 +693,7 @@ define([
                 * @private
                 * @type {esri/SpatialReference}
                 */
-                    spatialReference = new esri.SpatialReference({
-                        wkid: config.spatialReference
-                    }),
+                    spatialReference = new esri.SpatialReference(config.spatialReference),
 
                 /**
                 * The URL of the basemap that is on by default

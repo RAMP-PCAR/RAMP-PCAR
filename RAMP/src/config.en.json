@@ -83,9 +83,11 @@
     },
     "lang": "en",
     "helpContent": "Help Content",
+    "spatialReference": {
+        "wkid": 3978
+    },
     "geometryService": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "../proxy.ashx",
-    "spatialReference": 3978,
     "extents": {
         "defaultExtent": {
             "xmin": -2681457,

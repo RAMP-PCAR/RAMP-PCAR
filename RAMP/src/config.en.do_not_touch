@@ -569,6 +569,19 @@ Developers of the Almighty JSON Config Editor
             "visibleText": false
         },
         {
+            "name": "spatialReference",
+            "type": "Object",
+            "description": "",
+            "fields": [
+                {
+                    "name": "wkid",
+                    "type": "Integer",
+                    "value": 3978,
+                    "description": ""
+                }
+            ]
+        },
+        {
             "name": "geometryService",
             "type": "String",
             "value": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
@@ -581,12 +594,6 @@ Developers of the Almighty JSON Config Editor
             "value": "../proxy.ashx",
             "description": "",
             "visibleText": false
-        },
-        {
-            "name": "spatialReference",
-            "type": "Integer",
-            "value": 3978,
-            "description": ""
         },
         {
             "name": "extents",
