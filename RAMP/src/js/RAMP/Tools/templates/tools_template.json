@@ -14,7 +14,7 @@
                                 
                                     
                                 <button class='button button-none float-default-button' >
-                                    <i class='fa fa-refresh'></i><span class='on-right'>{%= o.clearMapButton %}</span>
+                                    <i class='fa fa-trash-o'></i><span class='on-right'>{%= o.clearMapButton %}</span>
                                 </button>
                                 <div class='clear'></div>
                             </div>
