@@ -92,9 +92,9 @@ define([
         function outputAreaAndLength(evtObj) {
             var result = evtObj.result,
                 // Convert acres to km2.
-                area = (result.areas[0] / 247.11).toFixed(3),
+                area = result.areas[0].toFixed(3),// (result.areas[0] / 247.11).toFixed(3),
                 // Convert feet to km.
-                length = (result.lengths[0] / 3280.8).toFixed(3);
+                length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
 
             that.working(false);
 
