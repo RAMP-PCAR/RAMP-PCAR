@@ -98,12 +98,9 @@ define([
 
             that.working(false);
 
-            /*dom.byId("area-output").innerHTML =
-                string.substitute("${number:dojo.number.format} km<sup>2</sup>", { number: area });
-            dom.byId("length-output").innerHTML =
-                string.substitute("${number:dojo.number.format} km", { number: length });*/
-
-            displayOutput(length, area);
+            length = string.substitute("${number:dojo.number.format}", { number: length });
+            area = string.substitute("${number:dojo.number.format}", { number: area });
+            displayOutput(length, area, "km", "km");
         }
 
         ui = {
@@ -138,15 +135,19 @@ define([
 
         function clearMap() {
             measureApp.map.graphics.clear();
+
+            displayOutput("n/a", "n/a");
         }
 
-        function displayOutput(length, area) {
+        function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput("measure_output",
                 {
                     lengthLabel: "Length",
                     areaLabel: "Area",
                     lengthOutput: length,
-                    areaOutput: area
+                    areaOutput: area,
+                    lengthUnits: lengthUnits,
+                    areaUnits: areaUnits
                 }
             );
         }

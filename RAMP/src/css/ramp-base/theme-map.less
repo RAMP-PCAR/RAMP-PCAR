@@ -71,12 +71,17 @@
 				}
 			}
 
-			&.working {
-				width: auto;
-				padding: 5px 10px;
-				border-radius: 4px;
+			width: auto;
+				padding: 2px 10px;
+				border-radius: 0px;
 				font-size: inherit;
+				box-shadow: rgba(104, 104, 104, 0.74902) 3px 3px 3px 0px;
+				border: 1px solid @medium-grey-color;
+				margin: -4px 0 0 10px;
 
+			&.working {
+				//font-weight: bold;
+				
 				.tool-tooltip {
 					display: block;
 				}
@@ -368,10 +373,13 @@
 	        	float: left;
 	        	margin-right: 5px;
 
-	        	.population-info {
+	        	.population-info,
+	        	.buffer-info,
+	        	.measure-info {
 		        	.info-label {
 		        		font-weight: bold;
-		        		display: inline-block;;
+		        		display: inline-block;
+		        		width: 85px;
 		        	}
 		        }
 

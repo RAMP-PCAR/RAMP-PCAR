@@ -135,7 +135,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput("nothing selected");
+            displayOutput("n/a");
         }
 
         function deactivate() {
@@ -146,7 +146,7 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput("nothing selected");
+            displayOutput("n/a");
         }
 
         function displayOutput(value) {

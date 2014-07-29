@@ -26,18 +26,30 @@
                         </div>",
 
     "buffer_output": "<div class='buffer-info'>
-                        <b>{%= o.distanceLabel %}:</b><br />
-                        <input type='text' class='distance-input' size='5' value='40'> km
+                        <p class='info-label margin-bottom-small margin-top-none'>{%= o.distanceLabel %}:</p>                
+                        <input type='text' class='distance-input margin-bottom-small' size='5' value='40'> km
                     </div>",
 
-    "measure_output":  "<div class='measurement-info'>
-                            <b>{%= o.areaLabel %}:</b>
-                            <span class='area-output'>{%= o.areaOutput %}</span>
-                            <br />
-                            <b>{%= o.lengthLabel%}:</b>
-                            <span class='length-output'>{%= o.lengthOutput %}</span>
+    "measure_output":  "<div class='measure-info'>
+                            <div>
+                                <p class='info-label margin-bottom-small margin-top-none'>{%= o.areaLabel %}:</p>
+                                <span class='area-output working-placeholder'>{%= o.areaOutput %} 
+                                    {% if (o.areaUnits ) { %}
+                                        {%= o.areaUnits %}<sup>2</sup>
+                                    {% } %}
+                                </span>
+                            </div>
+                            <div>
+                                <p class='info-label margin-bottom-small margin-top-none'>{%= o.lengthLabel %}:</p>
+                                <span class='length-output working-placeholder'>{%= o.lengthOutput %} 
+                                    {% if (o.lengthUnits ) { %}
+                                        {%= o.lengthUnits %}
+                                    {% } %}
+                                </span> 
+                            </div>
                         </div>",
 
-    "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>Working...</span>"
+    "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>{%= o.workingLabel %}</span>"
 }
 
+                                                        
