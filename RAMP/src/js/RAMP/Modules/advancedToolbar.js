@@ -89,8 +89,8 @@ define([
 
                             // close this panel if any other panel is opened
                             UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
-                                function () {
-                                    if (this.isOpen()) {
+                                function (evt) {
+                                    if (evt.id !== "advanced-toolbar" && this.isOpen()) {
                                         this.close();
                                     }
                                 })
@@ -107,6 +107,7 @@ define([
                         },
                         {
                             activeClass: cssButtonPressedClass,
+                            setClassBefore: true,
                             target: advancedSectionContainer,
                             closeHandler: function (d) {
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
