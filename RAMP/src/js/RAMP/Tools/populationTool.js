@@ -101,6 +101,7 @@ define([
 
             that.working(false);
 
+            totalPopulation = string.substitute("${number:dojo.number.format}", { number: totalPopulation });
             displayOutput(totalPopulation);
         }
 
@@ -134,7 +135,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput("n/a");
+            displayOutput("nothing selected");
         }
 
         function deactivate() {
@@ -144,6 +145,8 @@ define([
 
         function clearMap() {
             populationApp.map.graphics.clear();
+
+            displayOutput("nothing selected");
         }
 
         function displayOutput(value) {

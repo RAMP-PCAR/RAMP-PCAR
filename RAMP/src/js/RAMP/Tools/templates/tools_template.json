@@ -8,15 +8,21 @@
                             <div class='clear'></div>
                         </a>",
 
-    "base_tool_float":  "<div class='advanced-output-float'>                            
-                            <div class='float-content'></div>
-                            <button class='float-default-button button button-info'>{%= o.clearMapButton %}</button>
+    "base_tool_float":  "<div class='advanced-output-section-container'>
+                            <div class='advanced-output-section'>                                
+                                <section class='float-content'></section>
+                                
+                                    
+                                <button class='button button-none float-default-button' >
+                                    <i class='fa fa-refresh'></i><span class='on-right'>{%= o.clearMapButton %}</span>
+                                </button>
+                                <div class='clear'></div>
+                            </div>
                         </div>",
 
     "population_output":  "<div class='population-info'>
-                            <b>{%= o.totalPopulationLabel %}:</b>
-                            <br />
-                            <span class='population-output'>{%= o.populationOutput %}</span>
+                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.totalPopulationLabel %}:</p>
+                            <span class='population-output working-placeholder'>{%= o.populationOutput %}</span>
                         </div>",
 
     "buffer_output": "<div class='buffer-info'>
@@ -30,6 +36,8 @@
                             <br />
                             <b>{%= o.lengthLabel%}:</b>
                             <span class='length-output'>{%= o.lengthOutput %}</span>
-                        </div>"   
+                        </div>",
+
+    "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>Working...</span>"
 }
 

@@ -39,6 +39,7 @@ define([
                 options: null,
                 handle: null,
                 outputFloat: null,
+                workingLabel: null,
                 tooltip: null,
                 templates: null,
 
@@ -56,7 +57,11 @@ define([
                             target: $("#mainMap"),
                             outputFloatTemplate: "base_tool_float",
                             outputFloatData: {
-                                clearMapButton: "Clear Map"
+                                clearMapButton: "Clear"
+                            },
+                            workingLabelTemplate: "working_label",
+                            workingLabelData: {
+                                workingLabel: "Working ..."
                             },
                             defaultAction: function () { console.log('default action'); }
                         },
@@ -66,6 +71,7 @@ define([
                     tmpl.cache = {};
                     tmpl.templates = that.templates = JSON.parse(TmplHelper.stringifyTemplate(tools_template_json));
                     this.outputFloat = $(tmpl(this.options.outputFloatTemplate, this.options.outputFloatData));
+                    this.workingLabel = tmpl(this.options.workingLabelTemplate, this.options.workingLabelData);
 
                     // initializing tools' toggle button
                     this.handle = PopupManager.registerPopup(node, "click",
@@ -83,7 +89,7 @@ define([
 
                             that.tooltip = $("#mainMap.map > .tooltip")
                                 .wrapInner("<span class='esri-tooltip'></span")
-                                .append("<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>Working...</span>");
+                                .append(that.workingLabel);
 
                             d.resolve();
                         }, {
@@ -124,8 +130,13 @@ define([
                 working: function (state) {
                     if (state) {
                         this.tooltip.addClass("working");
+                        this.outputFloat
+                            .find(".working-placeholder")
+                            .replaceWith(this.workingLabel);
                     } else {
                         this.tooltip.removeClass("working");
+                        this.outputFloat
+                            .find(".working-placeholder").empty();
                     }
                 },
 
