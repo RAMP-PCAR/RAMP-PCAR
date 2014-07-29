@@ -269,49 +269,7 @@
 			}
         }
 
-        #advanced-section-container {
-            position: absolute;
-            display: none;
-            left: 17%;
-            right: 13%;
-            z-index: 110;
-
-            #advanced-section {
-                position: relative;
-                float: none;
-                margin: 12px auto 0;
-                max-width: 1400px;
-                padding: 12px;
-                .box-shadow-section;
-
-                section {
-                    position: relative;
-                }
-
-                #population-tool, #measure-tool, #buffer-tool {
-                    //display: none;
-                    display: inline-block;
-                    text-align: center;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 7px;
-                }
-
-                #population-tool:hover, #measure-tool:hover, #buffer-tool:hover {
-                    background-color: #EEE;
-                    cursor: pointer;
-                }
-
-                img {
-                    height: 48px;
-                    width: 48px;
-                    margin-bottom: 5px;
-                }
-            }
-        }
-
-
-		#getlink-section-container {
+        #getlink-section-container {
 			
 			#getlink-section {
 				
@@ -346,30 +304,87 @@
 
 	/* MAP TOOLBAR END */
 	
-    .advanced-output-float {
-        z-index: 9999999;
+	#advanced-section-container {
+	            position: absolute;
+	            display: none;
+	            left: 17%;
+	            right: 13%;
+	            z-index: 110;
+
+	            #advanced-section {
+	                position: relative;
+	                float: none;
+	                margin: 12px auto 0;
+	                max-width: 1400px;
+	                padding: 12px;
+	                .box-shadow-section;
+
+	                section {
+	                    position: relative;
+	                }
+
+	                #population-tool, #measure-tool, #buffer-tool {
+	                    //display: none;
+	                    display: inline-block;
+	                    text-align: center;
+	                    padding: 10px;
+	                    border: none;
+	                    border-radius: 7px;
+	                }
+
+	                #population-tool:hover, #measure-tool:hover, #buffer-tool:hover {
+	                    background-color: #EEE;
+	                    cursor: pointer;
+	                }
+
+	                img {
+	                    height: 48px;
+	                    width: 48px;
+	                    margin-bottom: 5px;
+	                }
+	            }
+	        }
+
+    .advanced-output-section-container {
+        z-index: 500;
         position: absolute;
-        bottom: 25px;
-        right: 28px;
-        padding: 25px;
-        background-color: white;
-        border: 1px solid gray;
-        border-radius: 5px;
+        top: 31px;
+        left: 0;
+		right: 0;
+		margin: auto;
+		width: 370px;
+        
         //display: none;
 
-        .float-default-button {
-            display: block;
-            margin-top: 15px;
-            width: 100%;
-        }
+        .advanced-output-section {
+        	padding: 12px;
+	        background-color: white;
+	        border: 1px solid #DDDDDD;
+	        border-radius: 5px;
 
-        #population-info, #measurement-info, #buffer-info {
-            display: none;
-        }
+        	.box-shadow-section;
 
-        #buffer-info input {
-            margin: 0;
-            margin-top: 5px;
+        	section.float-content {
+	        	float: left;
+	        	margin-right: 5px;
+
+	        	.population-info {
+		        	.info-label {
+		        		font-weight: bold;
+		        		display: inline-block;;
+		        	}
+		        }
+
+		        .tool-tooltip .fa {
+					margin-right: 5px;
+				}
+	        }	        
+
+	        .float-default-button {
+	        	float: right;
+	        	.link-button;	        	
+	        	padding: 4px 2px 4px 10px !important;
+	        }
         }
     }
 
