@@ -117,7 +117,7 @@ require([
 
                 // Initialize the advanced toolbar and tools.
                 //TODO idea: have the tools init only if they are included in the config?
-                if (true || globalStorage.config.advancedToolbar.advancedToolbarIsEnabled) {
+                if (globalStorage.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
                 }
 

@@ -160,9 +160,9 @@ define([
             * @constructor
             *
             */
-            init: function () {
+            init: function (selector) {
                 that = this;
-                this.initToggle($("#at-measure-toggle"), activate, deactivate,
+                this.initToggle($(selector), activate, deactivate,
                     {
                         defaultAction: clearMap
                     }

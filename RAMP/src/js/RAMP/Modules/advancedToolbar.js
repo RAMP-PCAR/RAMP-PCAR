@@ -151,31 +151,13 @@ define([
             init: function () {
                 ui.init();
 
-                //HACK --> should be moved to the config
-                globalStorage.config.advancedToolbar = {};
-                globalStorage.config.advancedToolbar.tools = {
-                    measure: {
-                        name: "measureTool",
-                        enabled: true
-                    },
-                    population: {
-                        name: "populationTool",
-                        enabled: true
-                    },
-                    buffer: {
-                        name: "bufferTool",
-                        enabled: true
-                    }
-                };
-                //HACK
-
                 // load only enabled tools
                 UtilDict.forEachEntry(globalStorage.config.advancedToolbar.tools,
                     function (key, value) {
                         if (value.enabled) {
                             require(["tools/" + value.name], function (module) {
                                 module
-                                    .init()
+                                    .init(value.selector)
                                     .on(module.event.ACTIVATE, function () {
                                         console.log("Tool", module.name, "activated");
                                         deactivateAll(module);

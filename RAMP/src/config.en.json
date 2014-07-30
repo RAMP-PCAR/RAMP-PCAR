@@ -84,6 +84,26 @@
     "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "../proxy.ashx",
     "spatialReference": 3978,
+    "advancedToolbar": {
+        "enabled": true,
+        "tools": {
+            "measure": {
+                "name": "measureTool",
+                "selector": "#at-measure-toggle",
+                "enabled": true
+            },
+            "population": {
+                "name": "populationTool",
+                "selector": "#at-population-toggle",
+                "enabled": true
+            },
+            "buffer": {
+                "name": "bufferTool",
+                "selector": "#at-buffer-toggle",
+                "enabled": true
+            }
+        }
+    },
     "extents": {
         "defaultExtent": {
             "xmin": -2681457,
