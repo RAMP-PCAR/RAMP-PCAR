@@ -368,7 +368,7 @@ Developers of the Almighty JSON Config Editor
                     "type": "String",
                     "value": "Layer Handle",
                     "description": "",
-                    "visibleText": false
+                    "visibleText": true
                 },
                 {
                     "name": "txtLayerHandleLabel",
@@ -383,6 +383,62 @@ Developers of the Almighty JSON Config Editor
                     "value": "Sortable layer list",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtBaseToolClearMap",
+                    "type": "String",
+                    "value": "Clear",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtBaseToolWorking",
+                    "type": "String",
+                    "value": "Working ...",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtBufferToolDistance",
+                    "type": "String",
+                    "value": "Distance",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolLength",
+                    "type": "String",
+                    "value": "Length",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolArea",
+                    "type": "String",
+                    "value": "Area",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolNA",
+                    "type": "String",
+                    "value": "n/a",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtPopulationToolPopulation",
+                    "type": "String",
+                    "value": "Population",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtPopulationToolNA",
+                    "type": "String",
+                    "value": "n/a",
+                    "description": "",
+                    "visibleText": true
                 }
             ]
         },

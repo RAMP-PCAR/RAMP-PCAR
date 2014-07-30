@@ -52,7 +52,15 @@
         "txtGetLinkLong": "Long link",
         "txtLayerHandle": "Layer Handle",
         "txtLayerHandleLabel": "Layer handle for",
-        "txtLayerListLabel": "Sortable layer list"
+        "txtLayerListLabel": "Sortable layer list",
+        "txtBaseToolClearMap": "Clear",
+        "txtBaseToolWorking": "Working ...",
+        "txtBufferToolDistance": "Distance",
+        "txtMeasureToolLength": "Length",
+        "txtMeasureToolArea": "Area",
+        "txtMeasureToolNA": "n/a",
+        "txtPopulationToolPopulation": "Population",
+        "txtPopulationToolNA": "n/a"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",

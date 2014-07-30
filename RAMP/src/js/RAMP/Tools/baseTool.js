@@ -18,9 +18,11 @@
 
 define([
 // Dojo
-    "dojo/Evented", "dojo/_base/lang",
+        "dojo/Evented", "dojo/_base/lang",
 // Text
         "dojo/text!./templates/tools_template.json",
+// Ramp
+        "ramp/globalStorage",
 // Utils
         "utils/tmplHelper", "utils/popupManager"
 ],
@@ -29,6 +31,8 @@ define([
         Evented, dojoLang,
 // Text
         tools_template_json,
+// Ramp
+        GlobalStorage,
 // Utils
         TmplHelper, PopupManager
     ) {
@@ -42,6 +46,8 @@ define([
                 workingLabel: null,
                 tooltip: null,
                 templates: null,
+
+                stringResources: GlobalStorage.config.stringResources,
 
                 event: {
                     ACTIVATE: "basetool-activate",
@@ -57,11 +63,11 @@ define([
                             target: $("#mainMap"),
                             outputFloatTemplate: "base_tool_float",
                             outputFloatData: {
-                                clearMapButton: "Clear"
+                                clearMapButton: this.stringResources.txtBaseToolClearMap
                             },
                             workingLabelTemplate: "working_label",
                             workingLabelData: {
-                                workingLabel: "Working ..."
+                                workingLabel: this.stringResources.txtBaseToolWorking
                             },
                             defaultAction: function () { console.log('default action'); }
                         },

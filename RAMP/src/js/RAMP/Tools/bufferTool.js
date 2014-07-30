@@ -174,7 +174,7 @@ define([
       function displayOutput() {
           that.displayTemplateOutput("buffer_output",
               {
-                  distanceLabel: "Distance"
+                  distanceLabel: that.stringResources.txtBufferToolDistance
               }
           );
       }

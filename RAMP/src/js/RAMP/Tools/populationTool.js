@@ -135,7 +135,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput("n/a");
+            displayOutput(that.stringResources.txtPopulationToolNA);
         }
 
         function deactivate() {
@@ -146,13 +146,13 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput("n/a");
+            displayOutput(that.stringResources.txtPopulationToolNA);
         }
 
         function displayOutput(value) {
             that.displayTemplateOutput("population_output",
                 {
-                    totalPopulationLabel: "Population",
+                    totalPopulationLabel: that.stringResources.txtPopulationToolPopulation,
                     populationOutput: value
                 }
             );

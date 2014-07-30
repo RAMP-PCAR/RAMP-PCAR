@@ -125,7 +125,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput("n/a", "n/a");
+            displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
         }
 
         function deactivate() {
@@ -136,14 +136,14 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput("n/a", "n/a");
+            displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
         }
 
         function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput("measure_output",
                 {
-                    lengthLabel: "Length",
-                    areaLabel: "Area",
+                    lengthLabel: that.stringResources.txtMeasureToolLength,
+                    areaLabel: that.stringResources.txtMeasureToolArea,
                     lengthOutput: length,
                     areaOutput: area,
                     lengthUnits: lengthUnits,
