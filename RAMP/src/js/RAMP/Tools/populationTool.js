@@ -1,23 +1,20 @@
 ﻿/*global define, $ */
 
 /**
-* PopulationTool submodule.
-*
-* Computes the total population of a selected area. When the user draws a polygon, the population will
-* be displayed in the bottom right corner.
-*
 * @module Tools
-* @submodule PopulationTool
-* @main PopulationTool
 */
 
 /**
-* PopulationTool class.
+* PopulationTool.
+*
+* Computes the total population of a selected area. When the user draws a polygon, the population will
+* be displayed in the bottom right corner.
 *
 * @class PopulationTool
 * @static
 * @uses dojo/dom
 * @uses dojo/string
+* @uses dojo/_base/lang
 * @uses esri/config
 * @uses esri/graphic
 * @uses esri/tasks/Geoprocessor
@@ -27,6 +24,7 @@
 * @uses esri/symbols/SimpleFillSymbol
 * @uses Map
 * @uses GlobalStorage
+* @extends BaseTool
 */
 
 define([
@@ -106,6 +104,12 @@ define([
         }
 
         ui = {
+            /**
+            * Initiates additional UI components of the Tool.
+            *
+            * @method ui.init
+            * @private
+            */
             init: function () {
                 var map = RampMap.getMap(),
                     toolbar = new Draw(map);
@@ -132,23 +136,48 @@ define([
             }
         };
 
+        /**
+        * Activates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+        *
+        * @method activate
+        * @private
+        */
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
             displayOutput(that.stringResources.txtPopulationToolNA);
         }
 
+        /**
+        * Deactivates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+        *
+        * @method deactivate
+        * @private
+        */
         function deactivate() {
             populationApp.toolbar.deactivate();
             clearMap();
         }
 
+        /**
+        * Clears the map. This method is passed to the `initToggle` method as the `defaultAction`
+        * to be triggered by the BaseTool logic when the `float-default-button` is clicked.
+        *
+        * @method clearMap
+        * @private
+        */
         function clearMap() {
             populationApp.map.graphics.clear();
 
             displayOutput(that.stringResources.txtPopulationToolNA);
         }
 
+        /**
+        * Displays the tool's output by calling BaseTool's `displayOutput` function.
+        *
+        * @method displayOutput
+        * @private
+        */
         function displayOutput(value) {
             that.displayTemplateOutput("population_output",
                 {
@@ -163,6 +192,7 @@ define([
             * Initialize the population tool
             *
             * @method init
+            * @chainable
             * @constructor
             *
             */

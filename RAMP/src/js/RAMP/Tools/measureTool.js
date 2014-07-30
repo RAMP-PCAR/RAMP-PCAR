@@ -122,23 +122,48 @@ define([
             }
         };
 
+        /**
+        * Activates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+        *
+        * @method activate
+        * @private
+        */
         function activate() {
             measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
             displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
         }
 
+        /**
+        * Deactivates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+        *
+        * @method deactivate
+        * @private
+        */
         function deactivate() {
             measureApp.toolbar.deactivate();
             clearMap();
         }
 
+        /**
+        * Clears the map. This method is passed to the `initToggle` method as the `defaultAction`
+        * to be triggered by the BaseTool logic when the `float-default-button` is clicked.
+        *
+        * @method clearMap
+        * @private
+        */
         function clearMap() {
             measureApp.map.graphics.clear();
 
             displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
         }
 
+        /**
+        * Displays the tool's output by calling BaseTool's `displayOutput` function.
+        *
+        * @method displayOutput
+        * @private
+        */
         function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput("measure_output",
                 {

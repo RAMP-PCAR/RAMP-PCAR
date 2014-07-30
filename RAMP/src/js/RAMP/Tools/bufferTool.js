@@ -1,25 +1,19 @@
 ﻿/*global define, $ */
 
 /**
-* BufferTool submodule.
+* @module Tools
+*/
+
+/**
+* BufferTool.
 *
 * Adds a buffer around the a selected area. The user will be able to specify the distance
 * in the bottom right corner, then draw a polygon on the map.
 *
-* @module RAMP
-* @submodule BufferTool
-* @main BufferTool
-*/
-
-/**
-* BufferTool class.
-*
 * @class BufferTool
 * @static
-* @uses dojo/dom
 * @uses dojo/_base/array
 * @uses dojo/_base/Color
-* @uses dojo/parser
 * @uses esri/config
 * @uses esri/graphic
 * @uses esri/SpatialReference
@@ -30,6 +24,7 @@
 * @uses esri/toolbars/draw
 * @uses Map
 * @uses GlobalStorage
+* @extends BaseTool
 */
 
 define([
@@ -37,7 +32,6 @@ define([
     "dojo/dom",
     "dojo/_base/array",
     "dojo/_base/Color",
-    "dojo/parser",
     "dojo/_base/lang",
 // Esri
     "esri/config",
@@ -54,7 +48,7 @@ define([
 
   function (
 // Dojo
-      dom, array, Color, parser, dojoLang,
+      dom, array, Color, dojoLang,
 // Esri
       esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol, SpatialReference,
 // Ramp
@@ -64,14 +58,12 @@ define([
           bufferApp,
           that;
 
-      //parser.parse();
-
       /**
       * Compute the buffer of a specified polygon.
       *
       * @method computeBuffer
       * @private
-      * @param {Object} evtObj an object representing the event.
+      * @param {Object} evtObj an object representing the `draw-end` event.
       *
       */
       function computeBuffer(evtObj) {
@@ -137,6 +129,12 @@ define([
       }
 
       ui = {
+          /**
+            * Initiates additional UI components of the Tool.
+            *
+            * @method ui.init
+            * @private
+            */
           init: function () {
               var map = RampMap.getMap(),
                    toolbar = new Draw(map);
@@ -156,21 +154,46 @@ define([
           }
       };
 
+      /**
+       * Activates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+       *
+       * @method activate
+       * @private
+       */
       function activate() {
           bufferApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
           displayOutput();
       }
 
+      /**
+       * Deactivates the Tool. This method is passed to the `initToggle` method and is triggered by the BaseTool logic.
+       *
+       * @method deactivate
+       * @private
+       */
       function deactivate() {
           bufferApp.toolbar.deactivate();
           clearMap();
       }
 
+      /**
+       * Clears the map. This method is passed to the `initToggle` method as the `defaultAction`
+       * to be triggered by the BaseTool logic when the `float-default-button` is clicked.
+       *
+       * @method clearMap
+       * @private
+       */
       function clearMap() {
           bufferApp.map.graphics.clear();
       }
 
+      /**
+       * Displays the tool's output by calling BaseTool's `displayOutput` function.
+       *
+       * @method displayOutput
+       * @private
+       */
       function displayOutput() {
           that.displayTemplateOutput("buffer_output",
               {
@@ -184,6 +207,7 @@ define([
           * Initialize the buffer tool
           *
           * @method init
+          * @chainable
           * @constructor
           *
           */

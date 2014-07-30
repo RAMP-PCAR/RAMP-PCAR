@@ -1,13 +1,12 @@
 ﻿/*global define, $, TimelineLite, TweenLite, require */
 
 /**
-* AdvancedToolbar submodule.
+* Tools module. Contains tools accessible through Advanced Toolbar.
 *
 * Contains the advanced tools as a popup.
 *
-* @module RAMP
-* @submodule AdvancedToolbar
-* @main AdvancedToolbar
+* @module Tools
+* @main Tools
 */
 
 /**
@@ -15,6 +14,7 @@
 *
 * @class AdvancedToolbar
 * @static
+* @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses ramp/eventManager
 * @uses ramp/map
@@ -24,24 +24,20 @@
 
 define([
 // Dojo
-        "dojo/_base/lang", "dojo/topic", "dojo/dom-construct", //"require",
+        "dojo/_base/lang", "dojo/topic",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
-// Tools
-        //"tools/measureTool", "tools/bufferTool",// "tools/populationTool",
 // Util
         "utils/util", "utils/dictionary", "utils/popupManager"
 ],
 
     function (
     // Dojo
-        dojoLang, topic, domConstruct, //require,
+        dojoLang, topic,
     // Ramp
         EventManager, RampMap, globalStorage,
-    // Tools
-        //MeasureTool, BufferTool,// PopulationTool,
     // Util
-        UtilMisc, UtilDict, popupManager) {
+        UtilMisc, UtilDict, PopupManager) {
         "use strict";
 
         var advancedToggle,
@@ -83,7 +79,7 @@ define([
                         .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0, ease: "easeOutCirc" }, 0)
                         .to(panelToggle, transitionDuration, { top: "+=32", ease: "easeOutCirc" }, 0);
 
-                    popupManager.registerPopup(advancedToggle, "click",
+                    PopupManager.registerPopup(advancedToggle, "click",
                         function (d) {
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
 
