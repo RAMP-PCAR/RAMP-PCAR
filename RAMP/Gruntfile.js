@@ -934,6 +934,11 @@ module.exports = function (grunt) {
                    }
                 ]
             }
+        },
+        'json-minify': {
+            build: {
+                files: 'build/config.*.json'
+            }
         }
     });
 
@@ -962,6 +967,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-chmod');
     grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-json-minify');
 
     //# !Load Tasks
 
@@ -1218,8 +1224,8 @@ module.exports = function (grunt) {
         });
 
     // BUILD
-    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'tarball', 'notify:build']);
-    grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'version', 'notify:build']);
+    grunt.registerTask('build', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'json-minify', 'version', 'tarball', 'notify:build']);
+    grunt.registerTask('build:deploy', ['cleanAll', 'css', 'js', 'page', /*'api',*/ 'assets', 'json-minify', 'version', 'notify:build']);
 
     // DEPLOY
     grunt.registerTask('clean:deploy', function () {
