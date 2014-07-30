@@ -570,9 +570,12 @@ define([
 
                     var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
                         reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
+
                         onUpdate = function (event, ui) {
                             var layerId = ui.item[0].id,
-                                idArray = layerList.find("> li").map(function (i, elm) { return elm.id; }),
+                                idArray = layerList
+                                    .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
+                                    .map(function (i, elm) { return elm.id; }), // get ids
                                 index = dojoArray.indexOf(idArray, layerId);
 
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
@@ -586,6 +589,7 @@ define([
 
                             console.log("Layer", layerId, "moved ->", index);
                         },
+
                         onStop = function () {
                             layerList
                                 .removeClass("sort-active")
@@ -595,6 +599,7 @@ define([
 
                             console.log("Layer Reordering complete.");
                         },
+
                         onStart = function (event, ui) {
                             layerList
                                 .has(ui.item).addClass("sort-active")
@@ -630,8 +635,8 @@ define([
                         tmpl.cache = {};
                         tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
-                        // get visible layers
-                        var layers = RampMap.getMap().getLayersVisibleAtScale(),
+                        // get visible layers reversing their order; that's important
+                        var layers = RampMap.getMap().getLayersVisibleAtScale().reverse(),
                             layerGroups = {
                                 feature: [
 
@@ -641,8 +646,8 @@ define([
 
                                 ]
                             },
-
-                            lLayers = [];
+                            data,
+                            section;
 
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
@@ -662,15 +667,10 @@ define([
 
                                     layerGroups.feature.push(layer);
                                 }
-
-                                //lLayers.push(layer);
                             }
                         });
 
                         // put layer in datawrapper to be used in template
-                        var data = TmplHelper.dataBuilder(lLayers),
-                            section;
-
                         data = {
                             config: GlobalStorage.config,
                             str: GlobalStorage.config.stringResources,
