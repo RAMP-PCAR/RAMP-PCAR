@@ -88,7 +88,7 @@ define([
               distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, '');
 
           params.distances = [distanceInput];
-          params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference });
+          params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference.wkid });
           params.outSpatialReference = bufferApp.map.spatialReference;
           params.unit = 9036; // Kilometers
 

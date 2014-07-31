@@ -118,7 +118,7 @@ define([
                 geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
 
                 geoprocessor.setOutputSpatialReference({
-                    wkid: GlobalStorage.config.spatialReference
+                    wkid: GlobalStorage.config.spatialReference.wkid
                 });
                 geoprocessor.on("execute-complete", outputTotalPopulation);
 
