@@ -32,18 +32,24 @@
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
                                             <ul class='button-group margin-top-none'>												
-                                                <li>
-                                                    {% if(o.data[o.idx].layerConfig.isStatic === true) {} else { %}
-                                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
-                                                    {% } %}
-                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
-                                                    <span class='separator' role='presentation'></span>
-                                                </li>
-                                                <li>
-                                                    <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                
+                                                {% if(!o.data[o.idx].layerConfig.isStatic) { %}
+                                                    <li>   
+                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                    </li>
                                                 {% } %}
-                                                    
-                                                </li>
+                                                
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
+                                                    <li>
+                                                        <span class='separator' role='presentation'></span>
+                                                    </li>
+                                                {% } %}
+                                                
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
+                                                    <li>
+                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                    </li>
+                                                {% } %}
                                             </ul>
                                         </div>
                                     </div>
@@ -86,17 +92,16 @@
         // added code to determine if bounding box is to be generated
         "filter_legend_template":"
                                     {% if(!o.disabled) { %}
-                                    <div class='checkbox-custom'>
-                                        <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
-                                            <span class='wb-invisible'>{%=o.label%}</span>
-                                        </label>                                       
-                                        <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'                                           
-                                            type='checkbox'></input>                                       
-                                    </div>
+                                        <div class='checkbox-custom'>
+                                            <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
+                                                <span class='wb-invisible'>{%=o.label%}</span>
+                                            </label>                                       
+                                            <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'                                           
+                                                type='checkbox'></input>                                       
+                                        </div>
                                     {% } else{ %}
-                                        <span class='checkbox-custom' style='width:21px;'/>
-                                    {% } %}
-                                                ",
+                                        <div class='checkbox-custom placeholder' role='presentation'></div>
+                                    {% } %}",
         
         // filter row button template
         "filter_button_template":"<li>

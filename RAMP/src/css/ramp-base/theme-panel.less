@@ -550,6 +550,12 @@
             position: absolute;
             left: -9999px;
         }
+
+        &.placeholder {
+        	width: 21px;
+        	height: 21px;
+        	cursor: default;
+        }
     }
 
     .checkbox-custom-inverted() {
@@ -825,21 +831,31 @@
                     }
                 }
 
-                ul button {
-            		margin-left: 0 !important;
-        			margin-right: 0 !important;
+                ul {
+                	li {                		
+        				&:last-child {
+        					padding: 0px 6px !important;
+        				}
 
-        			&.button-pressed {
-						color: @attention-color !important;
-					}
-
-                	&.metadata-button {
-                    	padding: 0 6px 0 3px !important;
+                		&:first-child {
+            				padding: 0 6px 0 3px !important;
+        				}
                 	}
 
-                	&.settings-button {
-                		padding: 0px 6px !important;
-                	}
+                	button {
+	            		margin-left: 0 !important;
+	        			margin-right: 0 !important;
+
+	        			&.button-pressed {
+							color: @attention-color !important;
+						}
+
+	                	&.metadata-button {
+	                	}
+
+	                	&.settings-button {
+	                	}
+	                }
                 }
 
                 .separator {
