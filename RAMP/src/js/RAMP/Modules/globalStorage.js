@@ -22,8 +22,8 @@ define([],
             /**
              * Returns a URL that points to the application configuration (JSON format) if it's hosted on a web service.
              * This is not required if the application has a JSON config file in the website's folder
-             * @attribute getConfigUrl
-             * @readOnly
+             * @property getConfigUrl
+             * @type Object
              */
             getConfigUrl: function () {
                 return "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ECDMP_Service/";

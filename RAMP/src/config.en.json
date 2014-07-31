@@ -54,7 +54,15 @@
         "txtLayerHandleLabel": "Layer handle for",
         "txtLayerListLabel": "Sortable layer list",
         "txtLegend": "Legend",
-        "txtLinkToCap": "Link To Capabilities"
+        "txtLinkToCap": "Link To Capabilities",
+        "txtBaseToolClearMap": "Clear",
+        "txtBaseToolWorking": "Working ...",
+        "txtBufferToolDistance": "Distance",
+        "txtMeasureToolLength": "Length",
+        "txtMeasureToolArea": "Area",
+        "txtMeasureToolNA": "n/a",
+        "txtPopulationToolPopulation": "Population",
+        "txtPopulationToolNA": "n/a"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
@@ -86,8 +94,28 @@
     "spatialReference": {
         "wkid": 3978
     },
-    "geometryService": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "../proxy.ashx",
+    "advancedToolbar": {
+        "enabled": true,
+        "tools": {
+            "measure": {
+                "name": "measureTool",
+                "selector": "#at-measure-toggle",
+                "enabled": true
+            },
+            "population": {
+                "name": "populationTool",
+                "selector": "#at-population-toggle",
+                "enabled": true
+            },
+            "buffer": {
+                "name": "bufferTool",
+                "selector": "#at-buffer-toggle",
+                "enabled": true
+            }
+        }
+    },
     "extents": {
         "defaultExtent": {
             "xmin": -2681457,
@@ -1114,10 +1142,6 @@
                     "enabled": true,
                     "default": 0.5
                 }
-            },
-            "legend": {
-                "enable": true,
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
         },
         {
@@ -1170,6 +1194,10 @@
                     "enabled": true,
                     "default": 0.5
                 }
+            },
+            "legend": {
+                "enable": true,
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
         }
     ]

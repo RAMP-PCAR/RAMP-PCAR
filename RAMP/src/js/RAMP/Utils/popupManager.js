@@ -450,7 +450,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                             function () {
                                 this._isAnimating = false;
 
-                                if (!this.setCssBefore) {
+                                if (!this.setClassBefore) {
                                     cssAction.call(this);
                                 }
 

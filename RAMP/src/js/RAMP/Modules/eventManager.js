@@ -632,6 +632,16 @@ define([],
                * @event bookmark.GETLINK_PANEL_CHANGED
                */
                 GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
+            },
+
+            Advanced: {
+                /**
+                * Published whenever the user clicks on the get link button in the
+                * map toolbar.
+                *
+                * @event advanced.ADVANCED_PANEL_CHANGED
+                */
+                ADVANCED_PANEL_CHANGED: "advanced/advancedpanel-changed"
             }
         };
     });

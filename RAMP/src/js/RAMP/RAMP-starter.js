@@ -54,6 +54,10 @@ dojoConfig = {
         {
             name: "themes",
             location: pathname + jsFolderPath + "RAMP/Themes/" + themeName
+        },
+        {
+            name: "tools",
+            location: pathname + jsFolderPath + "RAMP/Tools/"
         }
     ],
     jsFolderPath: jsFolderPath,

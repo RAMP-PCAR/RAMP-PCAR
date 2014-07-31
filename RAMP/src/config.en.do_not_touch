@@ -397,6 +397,62 @@ Developers of the Almighty JSON Config Editor
                     "value": "Link To Capabilities",
                     "description": "",
                     "visibleText": false
+                },
+                {
+                    "name": "txtBaseToolClearMap",
+                    "type": "String",
+                    "value": "Clear",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtBaseToolWorking",
+                    "type": "String",
+                    "value": "Working ...",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtBufferToolDistance",
+                    "type": "String",
+                    "value": "Distance",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolLength",
+                    "type": "String",
+                    "value": "Length",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolArea",
+                    "type": "String",
+                    "value": "Area",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtMeasureToolNA",
+                    "type": "String",
+                    "value": "n/a",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtPopulationToolPopulation",
+                    "type": "String",
+                    "value": "Population",
+                    "description": "",
+                    "visibleText": true
+                },
+                {
+                    "name": "txtPopulationToolNA",
+                    "type": "String",
+                    "value": "n/a",
+                    "description": "",
+                    "visibleText": true
                 }
             ]
         },
@@ -584,7 +640,7 @@ Developers of the Almighty JSON Config Editor
         {
             "name": "geometryService",
             "type": "String",
-            "value": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+            "value": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
             "description": "",
             "visibleText": false
         },
@@ -594,6 +650,107 @@ Developers of the Almighty JSON Config Editor
             "value": "../proxy.ashx",
             "description": "",
             "visibleText": false
+        },
+        {
+            "name": "advancedToolbar",
+            "type": "Object",
+            "description": "",
+            "fields": [
+                {
+                    "name": "enabled",
+                    "type": "Boolean",
+                    "value": true,
+                    "description": "Specifies if the Advanced Toolbar is enabled."
+                },
+                {
+                    "name": "tools",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "measure",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "measureTool",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "selector",
+                                    "type": "String",
+                                    "value": "#at-measure-toggle",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "population",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "populationTool",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "selector",
+                                    "type": "String",
+                                    "value": "#at-population-toggle",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                }
+                            ]
+                        },
+                        {
+                            "name": "buffer",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "bufferTool",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "selector",
+                                    "type": "String",
+                                    "value": "#at-buffer-toggle",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         },
         {
             "name": "extents",

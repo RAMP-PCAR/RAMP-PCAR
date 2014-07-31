@@ -34,6 +34,10 @@
 * @uses GlobalStorage
 * @uses GUI
 * @uses EventManager
+* @uses AdvancedToolbar
+* @uses PopulationTool
+* @uses MeasureTool
+* @uses BufferTool
 *
 
 * @uses Util
@@ -52,10 +56,14 @@ require([
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/advancedToolbar",
     "themes/theme",
 
 /* Utils */
     "utils/util",
+
+/* Tools */
+    //"tools/populationTool", "tools/measureTool", "tools/bufferTool",
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
@@ -67,10 +75,14 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    ramp, globalStorage, gui, EventManager, theme,
+    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
     /* Utils */
-    utilMisc) {
+    UtilMisc//,
+
+        /* Tools */
+        //PopulationTool, MeasureTool, BufferTool
+    ) {
         "use strict";
 
         function initializeMap() {
@@ -88,7 +100,7 @@ require([
                 // but in the future, if other modules start publishing their own UI complete events, it needs
                 // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
                 // has finished rendering
-                utilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
+                UtilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
                     BookmarkLink.updateMap();
                     BookmarkLink.subscribeAndUpdate();
                 });
@@ -106,6 +118,12 @@ require([
                 //initialize the filter
                 FilterManager.init();
 
+                // Initialize the advanced toolbar and tools.
+                //TODO idea: have the tools init only if they are included in the config?
+                if (globalStorage.config.advancedToolbar.enabled) {
+                    AdvancedToolbar.init();
+                }
+
                 Datagrid.init();
 
                 theme.tooltipster();
@@ -120,7 +138,7 @@ require([
 
         // Check to make sure the console exists, redefines it to the no-op function
         // if it does not (e.g. in IE when the debugger is not on)
-        utilMisc.checkConsole();
+        UtilMisc.checkConsole();
 
         // Once all of our modules are loaded and the DOM is ready:
 
@@ -158,7 +176,7 @@ require([
                 gui.load(null, null, function () { });
 
                 initializeMap();
-                ramp.loadStrings();
+                Ramp.loadStrings();
             },
             function (error) {
                 console.log("An error occurred when retrieving the JSON Config: " + error);
@@ -190,7 +208,7 @@ require([
 
         globalStorage.config = json.fromJson(fileContent.json);
         initializeMap();
-        ramp.loadStrings();
+        Ramp.loadStrings();
 
         var handle = window.setTimeout(function () {
         }, 2000);
