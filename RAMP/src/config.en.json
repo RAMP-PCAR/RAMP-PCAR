@@ -1049,7 +1049,7 @@
         {
             "id": "oilSandsRegions",
             "displayName": "Oil Sands Regions",
-            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer",
+            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
                 "gridColumns": [
@@ -1110,12 +1110,12 @@
                 }
             },
             "isStatic": true,
-            "layerType": "dynamic"
+            "layerType": "feature"
         },
         {
             "id": "oilAreaOverlay",
             "displayName": "CESI Oil Area Overlay",
-            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/CESI_Air_NO2/MapServer",
+            "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
                 "gridColumns": [
@@ -1396,11 +1396,6 @@
             "filter": {
                 
             },
-            "mapTipSettings": {
-                "template": "",
-                "hoverTemplate": "",
-                "anchorTemplate": ""
-            },
             "symbology": {
                 "renderer": {
                     "type": "",
@@ -1425,8 +1420,13 @@
                     "default": 0.5
                 }
             },
-            "layerType": "dynamic",
-            "isStatic": true
+            "layerType": "feature",
+            "isStatic": true,
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            }
         }
     ],
     "datagrid": {

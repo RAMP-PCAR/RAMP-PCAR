@@ -6180,7 +6180,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "url",
                             "type": "String",
-                            "value": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer",
+                            "value": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
                             "description": "",
                             "visibleText": false
                         },
@@ -6508,7 +6508,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "layerType",
                             "type": "String",
-                            "value": "dynamic",
+                            "value": "feature",
                             "description": "",
                             "visibleText": false
                         }
@@ -6536,7 +6536,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "url",
                             "type": "String",
-                            "value": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/CESI_Air_NO2/MapServer",
+                            "value": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
                             "description": "",
                             "visibleText": false
                         },
@@ -8230,34 +8230,6 @@ Developers of the Almighty JSON Config Editor
                             ]
                         },
                         {
-                            "name": "mapTipSettings",
-                            "type": "Object",
-                            "description": "",
-                            "fields": [
-                                {
-                                    "name": "template",
-                                    "type": "String",
-                                    "value": "",
-                                    "description": "",
-                                    "visibleText": false
-                                },
-                                {
-                                    "name": "hoverTemplate",
-                                    "type": "String",
-                                    "value": "",
-                                    "description": "",
-                                    "visibleText": false
-                                },
-                                {
-                                    "name": "anchorTemplate",
-                                    "type": "String",
-                                    "value": "",
-                                    "description": "",
-                                    "visibleText": false
-                                }
-                            ]
-                        },
-                        {
                             "name": "symbology",
                             "type": "Object",
                             "description": "",
@@ -8383,7 +8355,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "layerType",
                             "type": "String",
-                            "value": "dynamic",
+                            "value": "feature",
                             "description": "",
                             "visibleText": false
                         },
@@ -8392,6 +8364,34 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": true,
                             "description": ""
+                        },
+                        {
+                            "name": "mapTipSettings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "template",
+                                    "type": "String",
+                                    "value": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "hoverTemplate",
+                                    "type": "String",
+                                    "value": "feature_hover_maptip_template",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "anchorTemplate",
+                                    "type": "String",
+                                    "value": "anchored_map_tip",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
                         }
                     ]
                 }
