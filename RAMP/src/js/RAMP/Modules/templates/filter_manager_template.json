@@ -35,7 +35,7 @@
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
                                                 <li>
-                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtMetadata%}</button>
+                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
                                                     </li>
                                                 {% } %}
                                                     
@@ -47,7 +47,7 @@
                                                 
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
                                                 <li>
-                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.fn.getDataLayerUUID(o.data[o.idx].layerConfig.id)%}'>{%=o.str.txtSettings%}</button>
+                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtSettings%}</button>
                                                     </li>
                                                 {% } %}
                                             </ul>
@@ -90,8 +90,7 @@
         // filter row legend template 
         // used by level 2 to generate visibility and bounding box legend checkbox
         // added code to determine if bounding box is to be generated
-        "filter_legend_template":"
-                                    {% if(!o.disabled) { %}
+        "filter_legend_template":"{% if(!o.disabled) { %}
                                         <div class='checkbox-custom'>
                                         <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
                                             <span class='wb-invisible'>{%=o.label%}</span>
@@ -105,28 +104,28 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
-                                    </li>",
+                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
+                                </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json
         // level 1: filter panel global section
-        "filter_global_row_template":	"<div>
-                                    <div class='global-details'>
-                                        <div class='global-controls'>
-                                            <ul class='button-group margin-top-none'>
-                                                {%=o.txtAllData%}
-                                            </ul>
+        "filter_global_row_template":"<div>
+                                        <div class='global-details'>
+                                            <div class='global-controls'>
+                                                <ul class='button-group margin-top-none'>
+                                                    {%=o.txtAllData%}
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class='global-checkboxes'>
-                                        {% o.toggleLabels.forEach(function(item){
-                                                include('filter_global_label_template',item); 
-                                            });											
-                                        %}										
-                                    </div>
-                                    <div class='clear'>
-                                    </div>
-                                </div>",
+                                        <div class='global-checkboxes'>
+                                            {% o.toggleLabels.forEach(function(item){
+                                                    include('filter_global_label_template',item); 
+                                                });											
+                                            %}										
+                                        </div>
+                                        <div class='clear'>
+                                        </div>
+                                    </div>",
         // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
         //			This template is used to generate 'eye' and 'boundingbox' for All Data
         "filter_global_label_template":	"<div class='checkbox-custom'>
@@ -136,17 +135,17 @@
                                             <input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>
                                         </div>",
 
-        "layerGroup": "<ul>
-                    {%
-                        var i=0;
-                        o.data.forEach(function(layer) {
-                            o.idx = i;
-                            include('filter_section_template',o);
-                            i++;
-                        });
-                    %}
-                </ul>
-                <li class='layer-group-separator' role='presentation'></li>",
+        "layerGroup":   "<ul>
+                        {%
+                            var i=0;
+                            o.data.forEach(function(layer) {
+                                o.idx = i;
+                                include('filter_section_template',o);
+                                i++;
+                            });
+                        %}
+                    </ul>
+                    <li class='layer-group-separator' role='presentation'></li>",
 
 
         // Entry point
