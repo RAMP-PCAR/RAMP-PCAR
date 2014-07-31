@@ -6230,7 +6230,7 @@ Developers of the Almighty JSON Config Editor
                                                 {
                                                     "name": "imageUrl",
                                                     "type": "String",
-                                                    "value": "assets/images/wms.png",
+                                                    "value": "assets/images/icons/oil-128-128.png",
                                                     "description": "",
                                                     "visibleText": false
                                                 },
@@ -8111,7 +8111,7 @@ Developers of the Almighty JSON Config Editor
                                                 {
                                                     "name": "imageUrl",
                                                     "type": "String",
-                                                    "value": "assets/images/wms.png",
+                                                    "value": "assets/images/icons/oil-128-128.png",
                                                     "description": "",
                                                     "visibleText": false
                                                 },

@@ -1059,7 +1059,7 @@
                 },
                 "icons": {
                     "default": {
-                        "imageUrl": "assets/images/wms.png",
+                        "imageUrl": "assets/images/icons/oil-128-128.png",
                         "legendText": "Oil Sands Regions"
                     }
                 }
@@ -1375,7 +1375,7 @@
                 },
                 "icons": {
                     "default": {
-                        "imageUrl": "assets/images/wms.png",
+                        "imageUrl": "assets/images/icons/oil-128-128.png",
                         "legendText": "Static Layer"
                     }
                 }
