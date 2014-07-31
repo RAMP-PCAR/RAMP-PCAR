@@ -110,27 +110,23 @@ define([],
             generateBoundingBoxLegend: function (o) {
                 // adding flag for the generated o object
                 // o.disabled will indicate the bounding checkbox is to be disabled.
-                var checkboxDisabled = false;
-
+                var checkboxDisabled = false,
+                    attr = "",
+                    boundingLegendLabel;
 
                 // determine if given layer is static
-                if (o.data[o.idx].layerConfig.isStatic == true) {
-                    checkboxDisabled = true;
-                } else {
-                    checkboxDisabled = false;
-                }
+                checkboxDisabled = Boolean(o.data[o.idx].layerConfig.isStatic);
 
-                var attr = "",
-                    boundingLegendLabel = {
-                        for: "filterGroup_" + o.data[o.idx].id + "1",
-                        attr: attr + "1",
-                        value: o.data[o.idx].id,
-                        checked: "checked",
-                        label: o.data[o.idx].layerConfig.displayName,
-                        class: "box checked",
-                        disabled: checkboxDisabled,
-                        layerId: o.data[o.idx].id
-                    };
+                boundingLegendLabel = {
+                    for: "filterGroup_" + o.data[o.idx].id + "1",
+                    attr: attr + "1",
+                    value: o.data[o.idx].id,
+                    checked: "checked",
+                    label: o.data[o.idx].layerConfig.displayName,
+                    class: "box checked",
+                    disabled: checkboxDisabled,
+                    layerId: o.data[o.idx].id
+                };
 
                 return boundingLegendLabel;
             },

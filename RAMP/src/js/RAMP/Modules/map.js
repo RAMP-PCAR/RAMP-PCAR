@@ -327,16 +327,16 @@ define([
 
             topic.subscribe(EventManager.FilterManager.SELECTION_CHANGED, function (evt) {
                 // this is handling the user trying to re-order the layers
-                // graphical and feature layers must be handled separately from 
+                // graphical and feature layers must be handled separately from
                 // all other layers as ESRI separates the two internally
 
                 var newIndex = evt.index,
                     featureLayers;
-                
+
                 if (map.layerIds.contains(evt.id)) {
                     featureLayers = dojoArray.map(map.graphicsLayerIds, function (x) {
-                                        return map.getLayer(x).type === 'Feature Layer' ? 1 : 0; 
-                                    }).sum();
+                        return map.getLayer(x).type === 'Feature Layer' ? 1 : 0;
+                    }).sum();
                     newIndex += 1 - featureLayers; // offset by 1 basemap not accounted for
                     console.log('newIndex ' + newIndex);
                     console.log(map.layerIds);
@@ -458,7 +458,7 @@ define([
         }
 
         /**
-        * Add a static, non-interactive Llyer to the map
+        * Add a static, non-interactive Layer to the map
         *
         * @private
         * @method AddStaticLayer
@@ -551,7 +551,7 @@ define([
             switch (staticLayer.layerType) {
                 case "feature":
                     tempLayer = new FeatureLayer(staticLayer.url, {
-                        opacity: staticLayer.opacity,
+                        //opacity: staticLayer.opacity,
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         id: "static_" + staticLayer.id
                     });
@@ -578,7 +578,6 @@ define([
                     break;
             }
             return tempLayer;
-
         }
 
         return {
@@ -800,7 +799,6 @@ define([
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(config.featureLayers, function (layer) {
-
                     var fl;
 
                     if (layer.isStatic) {
@@ -812,8 +810,6 @@ define([
                             outFields: [layer.layerAttributes]
                         });
                     }
-
-                    
 
                     return fl;
                 });
@@ -926,8 +922,5 @@ define([
                 _initListeners(map);
                 _initEventHandlers(map, featureLayers);
             }
-
-
-            
         };
     });
