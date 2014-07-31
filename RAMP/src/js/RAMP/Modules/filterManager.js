@@ -566,7 +566,7 @@ define([
                         dojoArray.forEach(layers, function (layer) {
                             //WMS does not have layer type property.  must use layer id to determine if we want to show layer in filter
 
-                            if (layer.type === "Feature Layer" || layer.id.indexOf("wmsLayer") === 0) {
+                            if (layer.type === "Feature Layer" || layer.id.indexOf("wmsLayer") === 0 || layer.id.indexOf("static_")===0) {
                                 // modify layer object
 
                                 var wmsLayerName = null;

@@ -1045,6 +1045,388 @@
                     "default": 0.3
                 }
             }
+        },
+        {
+            "id": "oilSandsRegions",
+            "displayName": "Oil Sands Regions",
+            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer",
+            "datagrid": {
+                "rowsPerPage": 0,
+                "gridColumns": [
+                    {
+                        "id": "iconCol",
+                        "fieldName": "",
+                        "width": "50px",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Icon",
+                        "columnTemplate": "graphic_icon"
+                    },
+                    {
+                        "id": "nameCol",
+                        "fieldName": "NAME",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Station Name",
+                        "columnTemplate": "unformatted_grid_value"
+                    }
+                ],
+                "summaryRowTemplate": "default_grid_summary_row"
+            },
+            "layerAttributes": "*",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "symbology": {
+                "renderer": {
+                    "type": "simple",
+                    "key1": "",
+                    "key2": "",
+                    "key3": ""
+                },
+                "icons": {
+                    "default": {
+                        "imageUrl": "assets/images/icons/oil-128-128.png",
+                        "legendText": "Oil Sands Regions"
+                    }
+                }
+            },
+            "uuid": "xxxxxx-xxxxxx-xxxxx-xxxxxx",
+            "detailTemplate": "default_feature_details",
+            "nameField": "NAME",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.6
+                }
+            },
+            "isStatic": true,
+            "layerType": "dynamic"
+        },
+        {
+            "id": "oilAreaOverlay",
+            "displayName": "CESI Oil Area Overlay",
+            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/CESI_Air_NO2/MapServer",
+            "datagrid": {
+                "rowsPerPage": 0,
+                "gridColumns": [
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    },
+                    {
+                        "id": "",
+                        "fieldName": "",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "",
+                        "alignment": 0,
+                        "title": "",
+                        "columnTemplate": ""
+                    }
+                ],
+                "summaryRowTemplate": ""
+            },
+            "layerAttributes": "",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "",
+                "hoverTemplate": "",
+                "anchorTemplate": ""
+            },
+            "symbology": {
+                "renderer": {
+                    "type": "",
+                    "key1": "",
+                    "key2": "",
+                    "key3": ""
+                },
+                "icons": {
+                    "default": {
+                        "imageUrl": "assets/images/icons/oil-128-128.png",
+                        "legendText": "Static Layer"
+                    }
+                }
+            },
+            "uuid": "",
+            "detailTemplate": "",
+            "nameField": "",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.5
+                }
+            },
+            "layerType": "dynamic",
+            "isStatic": true
         }
     ],
     "datagrid": {

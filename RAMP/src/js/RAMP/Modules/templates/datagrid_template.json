@@ -77,9 +77,11 @@
 														{% if (o.datasets.length > 1) { %}
 															<select name='select' id='datasetSelector' class='span-2 margin-bottom-none' data-role='none'>
 															
-																{% for (var i = 0; i < o.datasets.length; i++) { %}
+																{% for (var i = 0; i < o.datasets.length; i++) {  %}
+
+                                                                   
 																		<option value='{%=o.datasets[i].url%}'>{%=o.datasets[i].displayName%}</option>
-																		
+														
 																{% } %}
 															
 															</select>

@@ -6157,6 +6157,2243 @@ Developers of the Almighty JSON Config Editor
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "3 Oil Sands Regions",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "String",
+                            "value": "oilSandsRegions",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "displayName",
+                            "type": "String",
+                            "value": "Oil Sands Regions",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "url",
+                            "type": "String",
+                            "value": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "datagrid",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "rowsPerPage",
+                                    "type": "Integer",
+                                    "value": 0,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "gridColumns",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "0 Icon",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "iconCol",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "50px",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "string",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 1,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "Icon",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "graphic_icon",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "1 Name",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "nameCol",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "NAME",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "string",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 1,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "Station Name",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "unformatted_grid_value",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "summaryRowTemplate",
+                                    "type": "String",
+                                    "value": "default_grid_summary_row",
+                                    "description": "Template to use for the summary grid cell",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "layerAttributes",
+                            "type": "String",
+                            "value": "*",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "filter",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                
+                            ]
+                        },
+                        {
+                            "name": "mapTipSettings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "template",
+                                    "type": "String",
+                                    "value": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "hoverTemplate",
+                                    "type": "String",
+                                    "value": "feature_hover_maptip_template",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "anchorTemplate",
+                                    "type": "String",
+                                    "value": "anchored_map_tip",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "symbology",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "renderer",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "type",
+                                            "type": "String",
+                                            "value": "simple",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key1",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key2",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key3",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "icons",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "default",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "imageUrl",
+                                                    "type": "String",
+                                                    "value": "assets/images/icons/oil-128-128.png",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "legendText",
+                                                    "type": "String",
+                                                    "value": "Oil Sands Regions",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "uuid",
+                            "type": "String",
+                            "value": "xxxxxx-xxxxxx-xxxxx-xxxxxx",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "detailTemplate",
+                            "type": "String",
+                            "value": "default_feature_details",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "nameField",
+                            "type": "String",
+                            "value": "NAME",
+                            "description": "the attribute that describes the feature",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.6,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "isStatic",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        },
+                        {
+                            "name": "layerType",
+                            "type": "String",
+                            "value": "dynamic",
+                            "description": "",
+                            "visibleText": false
+                        }
+                    ]
+                },
+                {
+                    "name": "4 CESI Oil Area Overlay",
+                    "type": "Object",
+                    "description": "",
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": "String",
+                            "value": "oilAreaOverlay",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "displayName",
+                            "type": "String",
+                            "value": "CESI Oil Area Overlay",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "url",
+                            "type": "String",
+                            "value": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/CESI_Air_NO2/MapServer",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "datagrid",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "rowsPerPage",
+                                    "type": "Integer",
+                                    "value": 0,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "gridColumns",
+                                    "type": "Collection",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "0 Icon",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Details",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "FID",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "1 Name",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "2 Area",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "LAT",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "LON",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Province",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "CLC_V4",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "CLC_V5",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "DEPICTN",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "KIND",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "WATRBODY_C",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "COUNTRY_C",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "USAGE",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "1 Name (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "2 Area (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "LAT (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "LON (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Province (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "CLC_V4 (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "CLC_V5 (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "DEPICTN (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "KIND (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "WATRBODY_C (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "COUNTRY_C (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "name": "USAGE (2)",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "id",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "unique id to identify the column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "fieldName",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "If using a default grid cell template, this field name will be used to supply data",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "width",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "grid width",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "isSortable",
+                                                    "type": "Boolean",
+                                                    "value": false,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "sortType",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "alignment",
+                                                    "type": "Integer",
+                                                    "value": 0,
+                                                    "description": ""
+                                                },
+                                                {
+                                                    "name": "title",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Title of grid column",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "columnTemplate",
+                                                    "type": "String",
+                                                    "value": "",
+                                                    "description": "Template to apply to values in this column",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "summaryRowTemplate",
+                                    "type": "String",
+                                    "value": "",
+                                    "description": "Template to use for the summary grid cell",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "layerAttributes",
+                            "type": "String",
+                            "value": "",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "filter",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                
+                            ]
+                        },
+                        {
+                            "name": "mapTipSettings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "template",
+                                    "type": "String",
+                                    "value": "",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "hoverTemplate",
+                                    "type": "String",
+                                    "value": "",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "anchorTemplate",
+                                    "type": "String",
+                                    "value": "",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "symbology",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "renderer",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "type",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key1",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key2",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "key3",
+                                            "type": "String",
+                                            "value": "",
+                                            "description": "",
+                                            "visibleText": false
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "icons",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "default",
+                                            "type": "Object",
+                                            "description": "",
+                                            "fields": [
+                                                {
+                                                    "name": "imageUrl",
+                                                    "type": "String",
+                                                    "value": "assets/images/icons/oil-128-128.png",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                },
+                                                {
+                                                    "name": "legendText",
+                                                    "type": "String",
+                                                    "value": "Static Layer",
+                                                    "description": "",
+                                                    "visibleText": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "uuid",
+                            "type": "String",
+                            "value": "",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "detailTemplate",
+                            "type": "String",
+                            "value": "",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "nameField",
+                            "type": "String",
+                            "value": "",
+                            "description": "the attribute that describes the feature",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "settings",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "opacity",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "default",
+                                            "type": "Numeric",
+                                            "value": 0.5,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "layerType",
+                            "type": "String",
+                            "value": "dynamic",
+                            "description": "",
+                            "visibleText": false
+                        },
+                        {
+                            "name": "isStatic",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        }
+                    ]
                 }
             ]
         },
