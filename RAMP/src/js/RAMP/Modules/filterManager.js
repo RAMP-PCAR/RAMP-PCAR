@@ -106,19 +106,43 @@ define([
                                     panel_selector: ".highlightPanel"
                                 },
                                 value_changed_callback: function (cause, leftValue, rightValue, prevMin, prevMax) {
-                                    var slider = $(this);
-                                    slider.parent().find('.leftLabel').text(Math.round(leftValue * 100) + "%");
-                                    slider.nstSlider('highlight_range', 0, leftValue);
+                                    var slider = $(this),
+                                        sliderId = slider.data("layer-id"),
+                                        newState;
+
+                                    slider
+                                        .parent().find('.leftLabel').text(Math.round(leftValue * 100) + "%").end().end()
+                                        .nstSlider('highlight_range', 0, leftValue);
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                                        layerId: $(this).data("layer-id"),
+                                        layerId: sliderId,
                                         value: leftValue
                                     });
+
+                                    newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
+
+                                    if (!UtilMisc.isUndefined(newState)) {
+                                        topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
+                                            state: newState,
+                                            layerId: sliderId
+                                        });
+                                    }
 
                                     console.log(cause, leftValue, rightValue, prevMin, prevMax);
                                 }
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
+
+                        topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
+                            var slider = transparencySliders
+                                    .filter("[data-layer-id='" + evt.id + "']")
+                                    .toggleClass("disabled", !evt.state),
+                                value = slider.nstSlider("get_current_min_value");
+
+                            if (value === 0 && evt.state) {
+                                slider.nstSlider("set_position", 1);
+                            }
+                        });
                     }
 
                     return {
