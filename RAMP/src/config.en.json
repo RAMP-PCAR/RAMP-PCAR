@@ -94,23 +94,23 @@
     "spatialReference": 3978,
     "advancedToolbar": {
         "enabled": true,
-        "tools": {
-            "measure": {
+        "tools": [
+            {
                 "name": "measureTool",
                 "selector": "#at-measure-toggle",
                 "enabled": true
             },
-            "population": {
+            {
                 "name": "populationTool",
                 "selector": "#at-population-toggle",
                 "enabled": true
             },
-            "buffer": {
+            {
                 "name": "bufferTool",
                 "selector": "#at-buffer-toggle",
                 "enabled": true
             }
-        }
+        ]
     },
     "extents": {
         "defaultExtent": {
