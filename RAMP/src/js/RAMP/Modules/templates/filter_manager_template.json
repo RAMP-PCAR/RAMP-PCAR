@@ -30,11 +30,13 @@
                                         </div>
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
-                                                <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span></div>
+                                                <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
+                                                <span class='opacity-helper font-xsmall'>({%=o.str.txtSettingsOpacity.toLowerCase()%}<span class='opacity-helper-value'></span>)</span>
+                                            </div>
                                             <ul class='button-group margin-top-none'>												
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                                <li>
+                                                    <li>
                                                         <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
                                                     </li>
                                                 {% } %}
