@@ -97,9 +97,11 @@ define([
                     function initTransparencySliders() {
                         var transparencySliders;
 
+                        // initializes all sliders in the layer list
                         transparencySliders = layerList.find(".nstSlider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
+                                aria_valuetext: "Layer opacity {0} out of {1}",
                                 rounding: 0.01,
                                 highlight: {
                                     grip_class: "gripHighlighted",
@@ -112,10 +114,12 @@ define([
                                         opacityHelper = slider.parents(".layerList1").find(".opacity-helper"),
                                         newState;
 
+                                    // update the slider label and highlight range
                                     slider
                                         .parent().find('.leftLabel').text(leftValueFormatted).end().end()
                                         .nstSlider('highlight_range', 0, leftValue);
 
+                                    // update opacity helper label
                                     opacityHelper
                                         .find(".opacity-helper-value").text(leftValueFormatted).end()
                                         .toggle(leftValue !== 0 && leftValue !== 1);
@@ -125,6 +129,8 @@ define([
                                         value: leftValue
                                     });
 
+                                    // Setting Opacity to 0.0, sets layer to invisible
+                                    // Setting Opacity to >0.0, sets layer to visible
                                     newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
 
                                     if (!UtilMisc.isUndefined(newState)) {
@@ -145,6 +151,7 @@ define([
                                     .toggleClass("disabled", !evt.state),
                                 value = slider.nstSlider("get_current_min_value");
 
+                            // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
                             if (value === 0 && evt.state) {
                                 slider.nstSlider("set_position", 1);
                             }
@@ -422,6 +429,7 @@ define([
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
                             var guid = button.data("layer-uuid"),
+                                layerConfig = Ramp.getLayerConfigwithGuid(guid),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -434,8 +442,6 @@ define([
                                 doOnOpen: function () { node.addClass("selected-row"); },
                                 doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
                             });
-
-                            var layerConfig = Ramp.getLayerConfigwithGuid(guid);
 
                             //only wms layers have this value
                             if (layerConfig.layerInfo != null) {

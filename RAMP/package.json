@@ -79,7 +79,7 @@
             "gsap.1.11.8/src/minified/TimelineLite.min.js",
             "gsap.1.11.8/src/minified/plugins/CSSPlugin.min.js",
             "gsap.1.11.8/src/minified/easing/EasePack.min.js",
-            "jquery-nstslider.1.0.5/jquery.nstSlider.js",
+            "jquery-nstslider.1.0.5/jquery.nstSlider.min.js",
             "jquery.ui.1.10.4/jquery.ui.navigation.min.js",
             "jquery.ui.1.10.4/jquery-ui-1.10.4.custom.min.js",
             "modernizr.2.7.1/modernizr.custom.38737.min.js",
