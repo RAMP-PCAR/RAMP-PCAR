@@ -15,7 +15,7 @@
                 <li>Click Pan North/South/East/West to move the map in that particular direction.</li>
                 <li>Click Canada View to view map at its full extent.</li>
                 <li>Click Zoom In/Out to change the map extent.</li>
-				<li>Click and drag the Zoom Slider to zoom in/out.</li>
+                <li>Click and drag the Zoom Slider to zoom in/out.</li>
             </ul>
         </div>
     </div>
@@ -118,17 +118,32 @@
             <p>
                 The Datasets tab lists the selected layers to display in the map and data grid.
                 The Datasets tab also serves as a map legend.</p>
-            <p>
-                <b>Usage:</b></p>
-            <p>
-                <img src="./assets/images/help/en/help_datasets.png" style="max-width:100%" class="image-actual"
-                    alt="Data Sets" /></p>
-            <p>
-                Select the "eye" icon next to a dataset name to toggle the layer on or off. Use
-                the "cross hatch" icon to the right of the eye icon to display the bounding box
-                of the dataset. Click and drag the 6 dots to the left of the dataset up or down
-                to re-order the layers on the map interface. Select the metadata link to display
-                relevant metadata for that source in a collapsible Info Panel.</p>
+
+            <h3>Usage</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+            	    <img src="./assets/images/help/en/help_datasets.png" alt="Data Sets" class="image-actual" />
+                    <p class="position-top-medium position-left background-dark">
+                        Data Sets
+                    </p>
+                </div>
+            </div>
+
+            <h4>Layer Visiblity</h4>
+            <p>Select the "eye" icon next to a dataset name to toggle the layer on or off.</p>
+
+            <h4>Layer Bounding box</h4>
+            <p>Use the "cross hatch" icon to the right of the eye icon to display the bounding box of the dataset.</p>
+
+            <h4>Layer Reordering</h4>
+            <p>Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.</p>
+
+            <h4>Layer Metadata</h4>
+            <p>Select the "Metadata" link to display relevant metadata for that source in a collapsible Info Panel.</p>
+
+            <h4>Layer Settings</h4>
+            <p>Select the "Settings" link to change layer's opacity using the slider control.</p>
         </div>
     </div>
 </details>
@@ -151,31 +166,31 @@
                 <li><span class="bold-text">Sorting:</span> Select the Sort link at the top of the data
                     grid to sort by field name, descending. Select the Sort link again to switch the
                     sort to ascending mode.
-					<p><img src="./assets/images/help/en/summary_grid/sort_button.jpg" style="max-width:100%" class="image-actual"
+                    <p><img src="./assets/images/help/en/summary_grid/sort_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Sort Button" /></p></li>
                 <li><span class="bold-text">Details:</span> Select the Details link next to each data
                     row to display its information in an Info Panel. This function replicates clicking
-                    directly on a map feature. 
-					<p><img src="./assets/images/help/en/summary_grid/details_button.jpg" style="max-width:100%" class="image-actual"
+                    directly on a map feature.
+                    <p><img src="./assets/images/help/en/summary_grid/details_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Details Button" /></p></li></li>
                 <li><span class="bold-text">Zoom To:</span> Every row on the data grid has an option
                     to quickly zoom the map view to that data point. If the "Zoom To" link is clicked,
-                    the map and the data grid will dynamically zoom to that specific point. 
-					<p><img src="./assets/images/help/en/summary_grid/zoomto_button.jpg" style="max-width:100%" class="image-actual"
+                    the map and the data grid will dynamically zoom to that specific point.
+                    <p><img src="./assets/images/help/en/summary_grid/zoomto_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Zoom To Button" /></p></li></li>
-				<li><span class="bold-text">Zoom Back:</span>After the "Zoom To" link is clicked, the link
-					will be replaced by a "Zoom Back" link. Clicking on the "Zoom Back" link will bring 
-					the user back to the extent of the map before the "Zoom To" link was clicked.
-					<p><img src="./assets/images/help/en/summary_grid/zoomback_button.jpg" style="max-width:100%" class="image-actual"
+                <li><span class="bold-text">Zoom Back:</span>After the "Zoom To" link is clicked, the link
+                    will be replaced by a "Zoom Back" link. Clicking on the "Zoom Back" link will bring
+                    the user back to the extent of the map before the "Zoom To" link was clicked.
+                    <p><img src="./assets/images/help/en/summary_grid/zoomback_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Zoom Back Button" /></p></li>
                 <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
                     jump to the first or last page, respectively, of the information in the data grid.
                     Use the inner left and right buttons to move back or forward one page at a time.
                     Selecting the Page link will permit you to quickly jump to any page in the data
                     grid listing. There is also a record count next to the pagination buttons, which indicates
-					the number of features currently in the map extent versus the total number of features 
-					in the map.
-					<p><img src="./assets/images/help/en/summary_grid/pagination.jpg" class="image-actual"
+                    the number of features currently in the map extent versus the total number of features
+                    in the map.
+                    <p><img src="./assets/images/help/en/summary_grid/pagination.jpg" class="image-actual"
                     alt="The Pagination Control" style="max-width:100%" /></p></li>
             </ul>
         </div>
@@ -198,35 +213,35 @@
                     alt="The Extended Grid" /></p>
             <ul>
 
-                <li><span class="bold-text">Full Data Button:</span> Select the "Full Data" button 
-					at the top right corner of the Summary Grid to show the Extended Grid. 
-					<p>
+                <li><span class="bold-text">Full Data Button:</span> Select the "Full Data" button
+                    at the top right corner of the Summary Grid to show the Extended Grid.
+                    <p>
                 <img src="./assets/images/help/en/extended_grid_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Extended Grid Button" /></p>
-				</li>
-				<li><span class="bold-text">Data Summary Button:</span> Select the "Data Summary" button 
-					at the top right corner of the Extended Grid to go back to the Summary Grid view. 
-					<p>
+                </li>
+                <li><span class="bold-text">Data Summary Button:</span> Select the "Data Summary" button
+                    at the top right corner of the Extended Grid to go back to the Summary Grid view.
+                    <p>
                 <img src="./assets/images/help/en/data_summary_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Data Summary Button" /></p>
-				</li>
-				<li><span class="bold-text">Sorting:</span> For any column, selecting the upward arrow will sort the 
-					extended grid in ascending order by that column, selecting the downward arrow will sort the grid 
-					in descending order by that column.</li> 
-					<img src="./assets/images/help/en/extended_grid/sorting.jpg" style="max-width:100%" class="image-actual"
-                    alt="The Sorting Button" /></p></li>               
+                </li>
+                <li><span class="bold-text">Sorting:</span> For any column, selecting the upward arrow will sort the
+                    extended grid in ascending order by that column, selecting the downward arrow will sort the grid
+                    in descending order by that column.</li>
+                    <img src="./assets/images/help/en/extended_grid/sorting.jpg" style="max-width:100%" class="image-actual"
+                    alt="The Sorting Button" /></p></li>
                 <li><span class="bold-text">Details:</span> Select the Details link next to each data
-                    row to display its information in an Info Panel. 
-					<img src="./assets/images/help/en/extended_grid/details_button.jpg" style="max-width:100%" class="image-actual"
+                    row to display its information in an Info Panel.
+                    <img src="./assets/images/help/en/extended_grid/details_button.jpg" style="max-width:100%" class="image-actual"
                     alt="The Details Button" /></p></li>
                 <li><span class="bold-text">Pagination:</span> Use the far left and right arrows to
                     jump to the first or last page, respectively, of the information in the data grid.
                     Use the inner left and right buttons to move back or forward one page at a time.
                     Selecting the Page link will permit you to quickly jump to any page in the data
                     grid listing. There is also a record count next to the pagination buttons, which indicates
-					the number of features currently in the map extent versus the total number of features 
-					in the map.
-					<img src="./assets/images/help/en/extended_grid/pagination.jpg" style="max-width:100%" class="image-actual"
+                    the number of features currently in the map extent versus the total number of features
+                    in the map.
+                    <img src="./assets/images/help/en/extended_grid/pagination.jpg" style="max-width:100%" class="image-actual"
                     alt="The Pagination Controls" /></p></li>
             </ul>
         </div>
@@ -264,21 +279,21 @@
     <div>
         <div class="helpSectionBody">
             <p>This page is WCAG 2.0 AA compliant.</p>
-			<p><b>Keyboard Accessibility:</b></p>
-			<p>Keyboard functionality is provided as an alternative for users who are unable to use a mouse. 
-			Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one 
-			step. Use the Enter or Spacebar keys to activate links and controls.</p>
-			<p><b>Navigation Controls:</b></p>
-			<p>Zoom Slider: With the Zoom Slider highlighted, use the Up arrow key to zoom in and the Down arrow 
-			key to zoom out.</p>
-			<p><b>Datasets/Data Tabs:</b></p>
-			<p>With either the Datasets or Data tab highlighted, use the Left and Right arrow keys to switch 
-			between them.</p>
-			<p><b>Datasets Tab:</b></p>
-			<p>Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the 
-			layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are 
-			indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to 
-			re-order the layers on the map interface. Press Enter or Spacebar again to release the layer.</p>
+            <p><b>Keyboard Accessibility:</b></p>
+            <p>Keyboard functionality is provided as an alternative for users who are unable to use a mouse.
+            Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one
+            step. Use the Enter or Spacebar keys to activate links and controls.</p>
+            <p><b>Navigation Controls:</b></p>
+            <p>Zoom Slider: With the Zoom Slider highlighted, use the Up arrow key to zoom in and the Down arrow
+            key to zoom out.</p>
+            <p><b>Datasets/Data Tabs:</b></p>
+            <p>With either the Datasets or Data tab highlighted, use the Left and Right arrow keys to switch
+            between them.</p>
+            <p><b>Datasets Tab:</b></p>
+            <p>Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the
+            layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are
+            indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to
+            re-order the layers on the map interface. Press Enter or Spacebar again to release the layer.</p>
         </div>
     </div>
 </details>
