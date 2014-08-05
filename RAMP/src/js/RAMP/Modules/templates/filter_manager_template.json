@@ -31,12 +31,11 @@
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
-                                                <span class='opacity-helper font-xsmall'>({%=o.str.txtSettingsOpacity.toLowerCase()%}<span class='opacity-helper-value'></span>)</span>
                                             </div>
                                             <ul class='button-group margin-top-none'>												
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                                    <li>
+                                                <li>
                                                         <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
                                                     </li>
                                                 {% } %}
@@ -67,26 +66,26 @@
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
                                             
-                                            <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
+                                                <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
     
                                             {% if (o.opacity.enabled) { %}
                                             
-                                            <div class='transparency-setting'>
-                                                <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
+                                                <div class='transparency-setting'>
+                                                    <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
                                                 
-                                                <div class='nstSlider' data-aria_enabled='true'
-                                                    data-range_min='0' data-range_max='1' 
+                                                    <div class='nstSlider' data-aria_enabled='true'
+                                                        data-range_min='0' data-range_max='1' 
                                                     data-cur_min='{%=o.opacity.default%}'
     
-                                                    data-layer-id='{%=o.layerId%}' >                                                      
+                                                        data-layer-id='{%=o.layerId%}' >                                                      
                                                 
-                                                    <div class='highlightPanel'></div>
-                                                    <div class='leftGrip'></div>              
+                                                        <div class='highlightPanel'></div>
+                                                        <div class='leftGrip'></div>              
+                                                    </div>
+                                                    <span class='leftLabel'></span>                
                                                 </div>
-                                                <span class='leftLabel'></span>                
-                                            </div>
 
-                                            {% } %}
+                                                {% } %}
                                         </div>",
 
         // filter row legend template 

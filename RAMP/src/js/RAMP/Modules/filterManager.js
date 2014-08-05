@@ -111,18 +111,12 @@ define([
                                     var slider = $(this),
                                         sliderId = slider.data("layer-id"),
                                         leftValueFormatted = Math.round(leftValue * 100) + "%",
-                                        opacityHelper = slider.parents(".layerList1").find(".opacity-helper"),
                                         newState;
 
                                     // update the slider label and highlight range
-                                    slider
+                                   slider
                                         .parent().find('.leftLabel').text(leftValueFormatted).end().end()
                                         .nstSlider('highlight_range', 0, leftValue);
-
-                                    // update opacity helper label
-                                    opacityHelper
-                                        .find(".opacity-helper-value").text(leftValueFormatted).end()
-                                        .toggle(leftValue !== 0 && leftValue !== 1);
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
                                         layerId: sliderId,
