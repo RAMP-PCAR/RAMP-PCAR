@@ -411,6 +411,7 @@ define([
             // Deselect all highlighted points if the map is clicked
             map.on("click", function (evt) {
                 FeatureClickHandler.onFeatureDeselect(evt);
+                topic.publish(EventManager.Map.CLICK, evt);
             });
 
             // Hide all the maptips if the map finishes updating
@@ -789,6 +790,10 @@ define([
                             extent: new EsriExtent(layer.extent),
                             layerInfos: [new WMSLayerInfo(layer.layerInfo)]
                         }
+                    });
+
+                    topic.subscribe(EventManager.Map.CLICK, function (evt) {
+                        console.log('wms click: '+wmsl.url);
                     });
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);

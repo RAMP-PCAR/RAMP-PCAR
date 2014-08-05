@@ -378,6 +378,9 @@ define([],
             },
 
             Map: {
+                // NOTE: Map events fall into two categories.  There are native RAMP events and others which republish events from the ESRI API.
+                // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events should be prefixed with map/
+
                 /**
                  * Indicates that all the map layers are loaded.
                  *
@@ -426,6 +429,14 @@ define([],
                 * @param event.callback {function} the function to call after the extent change is complete
                 */
                 SET_EXTENT: "rampMap/set-extent",
+
+                /**
+                * Republishes a standard ESRI map click event 'click'.
+                *
+                * @event RampMap.CLICK
+                * @for RampMap
+                */
+                CLICK: "map/click",
 
                 /**
                 * Fires when the reorder of the layers in the layer managers has completed finished.
