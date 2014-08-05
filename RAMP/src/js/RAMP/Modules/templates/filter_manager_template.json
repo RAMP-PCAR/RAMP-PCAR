@@ -64,18 +64,19 @@
         
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_settings_template":"<div class='filter-row-settings background-medium'>
+        "filter_row_settings_template":"{% if (o.settings.enabled) { %}
+                                            <div class='filter-row-settings background-medium'>
                                             
                                                 <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
     
-                                            {% if (o.opacity.enabled) { %}
+                                                {% if (o.settings.opacity.enabled) { %}
                                             
                                                 <div class='transparency-setting'>
                                                     <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
                                                 
                                                     <div class='nstSlider' data-aria_enabled='true'
                                                         data-range_min='0' data-range_max='1' 
-                                                    data-cur_min='{%=o.opacity.default%}'
+                                                        data-cur_min='{%=o.settings.opacity.default%}'
     
                                                         data-layer-id='{%=o.layerId%}' >                                                      
                                                 
@@ -86,7 +87,8 @@
                                                 </div>
 
                                                 {% } %}
-                                        </div>",
+                                            </div>
+                                        {% } %}",
 
         // filter row legend template 
         // used by level 2 to generate visibility and bounding box legend checkbox
