@@ -377,8 +377,17 @@ define([
         */
         function _initEventHandlers(map) {
             var handle;
+            
+            // filter out non static layers for any feature interaction: maptip
+            var nonStaticLayers = dojoArray.filter(featureLayers, function (lLayer) {
+                var isStatic = Ramp.getLayerConfig(lLayer.url).isStatic;
+                return (UtilMisc.isUndefined(isStatic) || !isStatic );
+            });
 
-            dojoArray.forEach(featureLayers, function (fl) {
+
+            // original value : featureLayers
+            // updated with nonStaticLayer
+            dojoArray.forEach(nonStaticLayers, function (fl) {
                 //TODO: set timer for maptips onMouseOver event
 
                 fl.on("click", function (evt) {
