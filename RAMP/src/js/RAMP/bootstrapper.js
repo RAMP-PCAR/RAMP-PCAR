@@ -87,49 +87,45 @@ require([
 
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
-            BookmarkLink.init(window.location.pathname.split("/").last());
 
-            topic.subscribe(EventManager.BookmarkLink.UPDATE_COMPLETE, function () {
-                topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
-                    console.log("map - >> first update-end; init the rest");
+            topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
+                console.log("map - >> first update-end; init the rest");
 
-                    // Only initialize the bookmark link after all the UI events of all other modules have
-                    // finished loading
-                    // IMPORTANT: for now, only basemapselector and filtermanager have a UI complete event
-                    // but in the future, if other modules start publishing their own UI complete events, it needs
-                    // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
-                    // has finished rendering
-                    UtilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
-                        BookmarkLink.updateMap();
-                        BookmarkLink.subscribeAndUpdate();
-                    });
-                    // Added current level so slider will know how to adjust the position
-                    var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
-
-                    NavWidget.init(currentLevel);
-                    FeatureHighlighter.init();
-
-                    Maptips.init();
-
-                    //Apply listeners for basemap gallery
-                    BasemapSelector.init();
-
-                    //initialize the filter
-                    FilterManager.init();
-
-                    // Initialize the advanced toolbar and tools.
-                    //TODO idea: have the tools init only if they are included in the config?
-                    if (globalStorage.config.advancedToolbar.enabled) {
-                        AdvancedToolbar.init();
-                    }
-
-                    Datagrid.init();
-
-                    theme.tooltipster();
+                // Only initialize the bookmark link after all the UI events of all other modules have
+                // finished loading
+                // IMPORTANT: for now, only basemapselector and filtermanager have a UI complete event
+                // but in the future, if other modules start publishing their own UI complete events, it needs
+                // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
+                // has finished rendering
+                UtilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
+                    BookmarkLink.updateMap();
+                    BookmarkLink.subscribeAndUpdate();
                 });
-                RampMap.init();
+                // Added current level so slider will know how to adjust the position
+                var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
+
+                NavWidget.init(currentLevel);
+                FeatureHighlighter.init();
+
+                Maptips.init();
+
+                //Apply listeners for basemap gallery
+                BasemapSelector.init();
+
+                //initialize the filter
+                FilterManager.init();
+
+                // Initialize the advanced toolbar and tools.
+                //TODO idea: have the tools init only if they are included in the config?
+                if (globalStorage.config.advancedToolbar.enabled) {
+                    AdvancedToolbar.init();
+                }
+
+                Datagrid.init();
+
+                theme.tooltipster();
             });
-            BookmarkLink.updateConfig();
+            RampMap.init();
 
             /* End - RAMP Events */
         }
@@ -172,9 +168,16 @@ require([
 
                 globalStorage.config = fileContent;
 
+                BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+
                 gui.load(null, null, function () { });
 
-                initializeMap();
+                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    initializeMap();
+                });
+
+                BookmarkLink.createUI();
+
                 Ramp.loadStrings();
             },
             function (error) {

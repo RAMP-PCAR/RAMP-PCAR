@@ -96,6 +96,8 @@ define([
             EVENT_FILTER_VISIBLE_BOXES = "activeBoxes",
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
 
+            config,
+
             queryObject,
 
             linkPaneTextbox,
@@ -276,8 +278,8 @@ define([
         */
         function setNewUrl(url) {
             var mailToHref = String.format(HREF_MAILTO_TEMPLATE,
-                GlobalStorage.config.stringResources.txtEmailUrlSubject,
-                GlobalStorage.config.stringResources.txtEmailUrlBody,
+                config.stringResources.txtEmailUrlSubject,
+                config.stringResources.txtEmailUrlBody,
                 encodeURIComponent(url));
 
             linkPaneTextbox.val(url);
@@ -343,7 +345,7 @@ define([
         */
         function toggleShortLinkMode(value) {
             var label,
-                localStrings = GlobalStorage.config.stringResources;
+                localStrings = config.stringResources;
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
             label = isShortLinkMode ? localStrings.txtGetLinkLong : localStrings.txtGetLinkShort;
@@ -351,14 +353,23 @@ define([
             updateURL();
         }
 
-        function updateConfig() {
+        function updateConfig(homePage) {
             var event,
-                // List of objects containing an event name and an event argument. The events should
-                // be anything to wait for before publishing a map extent change, it should include
-                // anything that will change the size of the map (e.g. fullscreen, closing the panel).
-                // If the map extent change occurs BEFORE something that changes the size of the map (e.g. fullscreen)
-                // then the map extent will change again.
-                    waitList = [];
+                urlObj = new Url(dojoRequire.toUrl(document.location));
+
+            config = GlobalStorage.config;
+            baseUrl = urlObj.uri;
+            queryObject = dojoQuery.queryToObject(urlObj.query);
+
+            //adds homePage (e.g. default.aspx or rampmap.aspx) if not present;
+            //used in getlink or else the link would be invalid.
+            if (baseUrl.indexOf(homePage) === -1) {
+                baseUrl += homePage;
+            }
+            baseUrl += "?lang=" + config.lang;
+
+            // Move the API key to config.json??
+            jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
             // Toggle the main panel
             if (queryObject.panelVisible) {
@@ -366,19 +377,8 @@ define([
                     visible: UtilMisc.parseBool(queryObject.panelVisible)
                 };
 
-                if (!event.visible) {
-                    addParameter(EVENT_PANEL_CHANGE, event);
-
-                    // NOTE: panel change not triggered here (see map extent change below)
-                    waitList.push({
-                        publishName: EventManager.GUI.PANEL_TOGGLE,
-                        eventArg: {
-                            origin: "bootstrapper",
-                            visible: event.visible
-                        },
-                        subscribeName: EventManager.GUI.PANEL_CHANGE
-                    });
-                }
+                addParameter(EVENT_PANEL_CHANGE, event);
+                config.ui.sidePanelOpened = event.visible;
             }
 
             // Toggle fullscreen mode
@@ -387,17 +387,7 @@ define([
                     fullscreen: UtilMisc.parseBool(queryObject.fullscreen)
                 };
                 addParameter(EVENT_FULLSCREEN, event);
-
-                if (event.fullscreen) {
-                    // NOTE: fullscreen not triggered here (see map extent change below)
-                    waitList.push({
-                        publishName: EventManager.GUI.TOGGLE_FULLSCREEN,
-                        eventArg: {
-                            expand: true
-                        },
-                        subscribeName: EventManager.GUI.FULLSCREEN_CHANGE
-                    });
-                }
+                config.ui.fullscreen = event.fullscreen;
             }
 
             // Check for map extent queries
@@ -412,8 +402,8 @@ define([
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                GlobalStorage.config.extents.defaultExtent = event;
-                GlobalStorage.config.spatialReference = JSON.parse(queryObject.sr);
+                config.extents.defaultExtent = event;
+                config.spatialReference = JSON.parse(queryObject.sr);
 
                 // Wait for things such as fullscreen or panel collapse
                 // to finish before doing an extent change.
@@ -426,7 +416,7 @@ define([
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
-                dojoArray.forEach(GlobalStorage.config.basemaps, function (basemap) {
+                dojoArray.forEach(config.basemaps, function (basemap) {
                     basemap.showOnInit = (basemap.id === event.baseMap);
                 });
             }
@@ -438,9 +428,9 @@ define([
                 });
 
                 UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
-                    var layerConfig = UtilArray.find(GlobalStorage.config.featureLayers, function (layer) {
+                    var layerConfig = UtilArray.find(config.featureLayers, function (layer) {
                         return layer.id === key;
-                    }) || UtilArray.find(GlobalStorage.config.wmsLayers, function (layer) {
+                    }) || UtilArray.find(config.wmsLayers, function (layer) {
                         return String.format("wmsLayer_{0}", layer.layerInfo.title) === key;
                     });
                     layerConfig.settings.opacity.default = value;
@@ -455,31 +445,6 @@ define([
                     index: queryObject.selectedTab
                 });
             }
-
-            // This should be the last thing that happens
-            if (waitList.isEmpty()) {
-                topic.publish(EventManager.BookmarkLink.UPDATE_COMPLETE);
-            } else {
-                // Wait for things such as fullscreen or panel collapse
-                // to finish before publishing the UPDATE_COMPLETE.
-
-                // Note it's important to subscribe to the events, then
-                // publish them, that's why it was done in such an obscure way
-                // using the waitList (otherwise if we just publish the
-                // event like above, then subscribe to it here, the event
-                // might have completed before reaching this point)
-                var eventNames = dojoArray.map(waitList, function (obj) {
-                    return obj.subscribeName;
-                });
-
-                UtilMisc.subscribeAll(eventNames, function () {
-                    topic.publish(EventManager.BookmarkLink.UPDATE_COMPLETE);
-                });
-
-                dojoArray.forEach(waitList, function (obj) {
-                    topic.publish(obj.publishName, obj.eventArg);
-                });
-            }
         }
 
         return {
@@ -492,25 +457,8 @@ define([
             * @param {String} homePage a string denoting the name of the homePage
             * (e.g. usually "Default.aspx" or "index.html")
             */
-            init: function (homePage) {
-                var urlObj = new Url(dojoRequire.toUrl(document.location));
-                baseUrl = urlObj.uri;
-
-                //adds homePage (e.g. default.aspx or rampmap.aspx) if not present;
-                //used in getlink or else the link would be invalid.
-                if (baseUrl.indexOf(homePage) === -1) {
-                    baseUrl += homePage;
-                }
-                baseUrl += "?lang=" + GlobalStorage.config.lang;
-
-                queryObject = dojoQuery.queryToObject(urlObj.query);
-
-                // Move the API key to config.json??
-                jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
-
+            createUI: function () {
                 ui.init();
-                //this.updateMap();
-                //this.subscribeAndUpdate();
             },
 
             updateConfig: updateConfig,

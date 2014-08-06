@@ -606,7 +606,9 @@
                     "enabled": true,
                     "default": 0.5
                 }
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "id": "layer_dd1m3",
@@ -980,7 +982,9 @@
                     "enabled": false,
                     "default": 0.1
                 }
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "id": "layer_w9v8u",
@@ -1044,7 +1048,9 @@
                     "enabled": true,
                     "default": 0.3
                 }
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "id": "oilSandsRegions",
@@ -1110,7 +1116,9 @@
                 }
             },
             "isStatic": true,
-            "layerType": "feature"
+            "layerType": "feature",
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "id": "oilAreaOverlay",
@@ -1426,7 +1434,9 @@
                 "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
                 "hoverTemplate": "feature_hover_maptip_template",
                 "anchorTemplate": "anchored_map_tip"
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         }
     ],
     "datagrid": {
@@ -1524,7 +1534,9 @@
                     "enabled": true,
                     "default": 0.5
                 }
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "displayName": "Winds",
@@ -1580,11 +1592,13 @@
             "legend": {
                 "enable": true,
                 "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
-            }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
         }
     ],
     "ui": {
-        "fullscreen": false,
-        "sidePanelOpened": false
+        "fullscreen": true,
+        "sidePanelOpened": true
     }
 }
