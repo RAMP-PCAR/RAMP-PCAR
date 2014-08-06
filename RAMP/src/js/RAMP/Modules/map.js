@@ -376,14 +376,13 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            var handle;
-            
-            // filter out non static layers for any feature interaction: maptip
-            var nonStaticLayers = dojoArray.filter(featureLayers, function (lLayer) {
-                var isStatic = Ramp.getLayerConfig(lLayer.url).isStatic;
-                return (UtilMisc.isUndefined(isStatic) || !isStatic );
-            });
-
+            var handle,
+                // filter out non static layers for any feature interaction: maptip
+                nonStaticLayers = dojoArray.filter(featureLayers, function (lLayer) {
+                    var isStatic = Ramp.getLayerConfig(lLayer.url).isStatic;
+                    return (UtilMisc.isUndefined(isStatic) || !isStatic);
+                }
+            );
 
             // original value : featureLayers
             // updated with nonStaticLayer
@@ -554,13 +553,17 @@ define([
             boxLayer.setVisibility(visibility);
         }
 
+        function resolveLayerOpacity(layerOpacity) {
+            return layerOpacity.enabled ? layerOpacity.default : 1;
+        }
+
         function generateStaticLayer(staticLayer) {
             var tempLayer;
             //determine layer type and process
             switch (staticLayer.layerType) {
                 case "feature":
                     tempLayer = new FeatureLayer(staticLayer.url, {
-                        //opacity: staticLayer.opacity,
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         id: "static_" + staticLayer.id
                     });
@@ -568,7 +571,7 @@ define([
 
                 case "tile":
                     tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                        opacity: staticLayer.opacity,
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         id: "static_" + staticLayer.id
                     });
                     console.log("tile layer added. " + "static_" + staticLayer.id);
@@ -576,7 +579,7 @@ define([
 
                 case "dynamic":
                     tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                        opacity: staticLayer.opacity,
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         id: "static_" + staticLayer.id
                     });
                     console.log("dynamic layer added. " + "static_" + staticLayer.id);
@@ -793,7 +796,7 @@ define([
                     var wmsl = new WMSLayer(layer.url, {
                         id: String.format("wmsLayer_{0}", layer.layerInfo.title),
                         format: layer.format,
-                        opacity: layer.opacity,
+                        opacity: resolveLayerOpacity(layer.settings.opacity),
                         resourceInfo: {
                             extent: new EsriExtent(layer.extent),
                             layerInfos: [new WMSLayerInfo(layer.layerInfo)]
@@ -816,7 +819,8 @@ define([
                         fl = new FeatureLayer(layer.url, {
                             id: layer.id,
                             mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layer.layerAttributes]
+                            outFields: [layer.layerAttributes],
+                            opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
                     }
 
