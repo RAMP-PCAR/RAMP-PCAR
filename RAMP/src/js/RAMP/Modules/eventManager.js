@@ -631,7 +631,13 @@ define([],
                *
                * @event bookmark.GETLINK_PANEL_CHANGED
                */
-                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
+                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed",
+
+                /**
+                * Published when the bookmark finishes updating the config and any necessary UI transitions have been completed.
+                * Bootstrapper should wait for this event before loading the map (or else it may mess up the .
+                */
+                UPDATE_COMPLETE: "bookmark/update-complete"
             },
 
             Advanced: {

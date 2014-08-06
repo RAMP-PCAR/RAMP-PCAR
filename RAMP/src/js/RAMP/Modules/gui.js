@@ -727,8 +727,6 @@ define([
 
                 layoutChange,
 
-                _isFullScreen = false,
-
                 _isFullData = false,
                 fullDataTimeLine = new TimelineLite({
                     paused: true,
@@ -771,6 +769,9 @@ define([
             function onFullScreenComplete() {
                 adjustHeight();
                 layoutChange();
+                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
+                    visible: Theme.isFullScreen()
+                });
             }
 
             /**
@@ -917,11 +918,9 @@ define([
                 /*jshint validthis: true */
                 panelToggleTimeLine.eventCallback("onComplete",
                         function () {
-                            UtilMisc.subscribeOnce("map/update-end", function () {
-                                console.log("GUI <-- map/update-end from gui");
-                                panelChange(false);
-                            });
+                            console.log("GUI <-- map/update-end from gui");
                             layoutChange();
+                            panelChange(false);
 
                             panelToggle
                                 .tooltipster("content", GlobalStorage.config.stringResources.txtOpen)
@@ -970,8 +969,12 @@ define([
                     );
 
                     // set listener to the panel toggle
-                    topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function () {
-                        panelPopup.toggle();
+                    topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
+                        if (event.visible) {
+                            panelPopup.open();
+                        } else {
+                            panelPopup.close();
+                        }
                     });
 
                     Theme
@@ -989,10 +992,6 @@ define([
                     });
 
                     adjustHeight();
-                },
-
-                isFullScreen: function () {
-                    return _isFullScreen;
                 },
 
                 /**

@@ -9165,6 +9165,25 @@ Developers of the Almighty JSON Config Editor
                     ]
                 }
             ]
+        },
+        {
+            "name": "ui",
+            "type": "Object",
+            "description": "",
+            "fields": [
+                {
+                    "name": "fullscreen",
+                    "type": "Boolean",
+                    "value": false,
+                    "description": ""
+                },
+                {
+                    "name": "sidePanelOpened",
+                    "type": "Boolean",
+                    "value": false,
+                    "description": ""
+                }
+            ]
         }
     ]
 }
