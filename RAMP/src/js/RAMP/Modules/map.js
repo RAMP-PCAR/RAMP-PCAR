@@ -554,7 +554,7 @@ define([
         }
 
         function resolveLayerOpacity(layerOpacity) {
-            return layerOpacity.enabled ? layerOpacity.default : 1;
+            return layerOpacity.default || 1;
         }
 
         function generateStaticLayer(staticLayer) {
