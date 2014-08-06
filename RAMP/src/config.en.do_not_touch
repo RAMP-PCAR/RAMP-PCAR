@@ -8894,6 +8894,27 @@ Developers of the Almighty JSON Config Editor
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "featureInfo",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "parser",
+                                    "type": "String",
+                                    "value": "stringParse",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "mimeType",
+                                    "type": "String",
+                                    "value": "text/plain",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
                         }
                     ]
                 },
@@ -9161,6 +9182,27 @@ Developers of the Almighty JSON Config Editor
                                     "visibleText": false
                                 }
                             ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "plugins",
+            "type": "Object",
+            "description": "All plugins to be dynamically loaded at startup",
+            "fields": [
+                {
+                    "name": "featureInfoParser",
+                    "type": "Object",
+                    "description": "All plugins which can be used to parse data from WMS getFeatureInfo requests",
+                    "fields": [
+                        {
+                            "name": "stringParse",
+                            "type": "String",
+                            "value": "/js/stringParse.js",
+                            "description": "",
+                            "visibleText": false
                         }
                     ]
                 }
