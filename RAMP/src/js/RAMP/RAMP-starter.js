@@ -18,6 +18,7 @@
 //required to get draw bar to show in french
 var //sPath = window.location.href,
     //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
+    RAMP = { plugins: {} },
     jsFolderPath = "js/",
     cssFolderPath = "css/",
     state = "src/", // replace with "build" upon release,
@@ -62,6 +63,7 @@ dojoConfig = {
     ],
     jsFolderPath: jsFolderPath,
     cssFolderPath: cssFolderPath,
+    fullPluginPath: pathname + jsFolderPath + 'plugins/',
     extensionPrefix: state === "build/" ? ".min" : "",
     buildState: state
 };

@@ -9189,22 +9189,15 @@ Developers of the Almighty JSON Config Editor
         },
         {
             "name": "plugins",
-            "type": "Object",
-            "description": "All plugins to be dynamically loaded at startup",
+            "type": "Collection",
+            "description": "",
             "fields": [
                 {
-                    "name": "featureInfoParser",
-                    "type": "Object",
-                    "description": "All plugins which can be used to parse data from WMS getFeatureInfo requests",
-                    "fields": [
-                        {
-                            "name": "stringParse",
-                            "type": "String",
-                            "value": "/js/stringParse.js",
-                            "description": "",
-                            "visibleText": false
-                        }
-                    ]
+                    "name": "(untitled)",
+                    "type": "String",
+                    "value": "stringParse.js",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         }

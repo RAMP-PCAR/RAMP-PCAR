@@ -49,7 +49,7 @@ require([
 /* Dojo */
     "dojo/parser", "dojo/on", "dojo/topic",
     "dojo/request/script",
-    "dojo/request/xhr",
+    "dojo/request/xhr", "dojo/_base/array",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
@@ -70,7 +70,7 @@ require([
 
     function (
     /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr,
+    parser, dojoOn, topic, requestScript, xhr, dojoArray,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
@@ -84,6 +84,15 @@ require([
         //PopulationTool, MeasureTool, BufferTool
     ) {
         "use strict";
+
+        function loadPlugin(pluginPath) {
+            var head = document.getElementsByTagName('head')[0],
+                script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = dojoConfig.fullPluginPath + pluginPath;
+            console.log('loading plugin: '+script.src);
+            head.appendChild(script);
+        }
 
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
@@ -169,10 +178,17 @@ require([
 
         defJson.then(
             function (fileContent) {
+                var pluginConfig;
                 //there is no need to convert the result to an object.  it comes through pre-parsed
 
                 globalStorage.config = fileContent;
-
+                
+                pluginConfig = globalStorage.config.plugins;
+                if (pluginConfig) {
+                    dojoArray.map(pluginConfig, function (pName) {
+                        loadPlugin(pName);
+                    });
+                }
                 gui.load(null, null, function () { });
 
                 initializeMap();

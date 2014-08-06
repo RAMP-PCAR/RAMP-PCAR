@@ -1587,9 +1587,7 @@
             }
         }
     ],
-    "plugins": {
-        "featureInfoParser": {
-            "stringParse": "/js/stringParse.js"
-        }
-    }
+    "plugins": [
+        "stringParse.js"
+    ]
 }
