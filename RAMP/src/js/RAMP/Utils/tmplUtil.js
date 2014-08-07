@@ -114,8 +114,8 @@ define([],
                     attr = "",
                     boundingLegendLabel;
 
-                // determine if given layer is static
-                checkboxDisabled = Boolean(o.data[o.idx].layerConfig.isStatic);
+                // determine if given layer is static or WMS
+                checkboxDisabled = Boolean(o.data[o.idx].layerConfig.isStatic || o.data[o.idx].layerConfig.layerInfo);
 
                 boundingLegendLabel = {
                     for: "filterGroup_" + o.data[o.idx].id + "1",
