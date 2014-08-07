@@ -149,8 +149,8 @@ define([
               // identify proxy page to use if the toJson payload to the geometry service is greater than
               // 2000 characters. If this null or not available the project and lengths operation will not
               // work.  Otherwise it will do a http post to the proxy.
-              esriConfig.defaults.io.proxyurl = "/proxy";
-              esriConfig.defaults.io.alwaysuseproxy = false;
+              esriConfig.defaults.io.proxyUrl = "/proxy";
+              esriConfig.defaults.io.alwaysUseProxy = false;
           }
       };
 
