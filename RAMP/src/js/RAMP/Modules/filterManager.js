@@ -86,6 +86,7 @@ define([
 
         var config,
             localString,
+            layerIdField = "layer-id",
 
             ui = (function () {
                 var sectionNode,
@@ -111,7 +112,7 @@ define([
                                     slider.nstSlider('highlight_range', 0, leftValue);
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                                        layerId: $(this).data("layer-id"),
+                                        layerId: $(this).data(layerIdField),
                                         value: leftValue
                                     });
 
@@ -146,7 +147,7 @@ define([
                     boxCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .box + input"),
                         {
-                            nodeIdAttr: "layer-id",
+                            nodeIdAttr: layerIdField,
 
                             cssClass: {
                                 active: "active",
@@ -181,19 +182,19 @@ define([
 
                                 onChange: Theme.tooltipster*/
                             }
-                        })
-                        // Turn off the bounding boxes by default
-                        .setState(false);
+                        });
+                    boxCheckboxGroup.setEachState(function (checkbox) {
+                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
+                        return layerConfig.boundingBoxVisible;
+                    });
 
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
-                        if (evt.checkbox.id.indexOf("wms") === -1) {
-                            topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
-                                id: evt.checkbox.id,
-                                state: evt.checkbox.state
-                            });
-                        }
+                        topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
+                            id: evt.checkbox.id,
+                            state: evt.checkbox.state
+                        });
                     });
 
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
@@ -207,7 +208,7 @@ define([
                     eyeCheckboxGroup = new CheckboxGroup(
                         layerList.find(".checkbox-custom .eye + input"),
                         {
-                            nodeIdAttr: "layer-id",
+                            nodeIdAttr: layerIdField,
 
                             cssClass: {
                                 active: "active",
@@ -243,6 +244,11 @@ define([
                                 onChange: Theme.tooltipster*/
                             }
                         });
+
+                    eyeCheckboxGroup.setEachState(function (checkbox) {
+                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
+                        return layerConfig.layerVisible;
+                    });
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);

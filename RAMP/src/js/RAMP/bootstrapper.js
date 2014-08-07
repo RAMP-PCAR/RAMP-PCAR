@@ -168,14 +168,23 @@ require([
 
                 globalStorage.config = fileContent;
 
+                // Modify the config based on the url
+                // needs to do this before the gui loads because the gui module
+                // also reads from the config
                 BookmarkLink.updateConfig(window.location.pathname.split("/").last());
 
-                gui.load(null, null, function () { });
-
+                // Initialize the map only after the gui loads
+                // if we do it beforehand, the map extent may get messed up since
+                // the available screen size may still be changing (e.g. due to fullscreen
+                // or subpanel closing)
                 topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
                     initializeMap();
                 });
 
+                gui.load(null, null, function () { });
+
+                // Create the panel that the bookmark link sits in
+                // can only do this after the gui loads
                 BookmarkLink.createUI();
 
                 Ramp.loadStrings();

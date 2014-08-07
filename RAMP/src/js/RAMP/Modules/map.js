@@ -512,7 +512,7 @@ define([
         function setBoundingBoxVisibility(layerId, visibility) {
             var boxLayer = boundingBoxMapping[layerId];
 
-            if (boxLayer.graphics.isEmpty()) {
+            if (boxLayer.graphics.isEmpty() && visibility) {
                 // Generate the bounding box if this is the first time we're viewing it
                 var featureLayer = map.getLayer(layerId),
                 boundingBoxExtent = esriGraphicUtils.graphicsExtent(featureLayer.graphics);
@@ -782,7 +782,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
-                        id: String.format("wmsLayer_{0}", layer.layerInfo.title),
+                        id: String.format("wmsLayer_{0}", layer.id),
                         format: layer.format,
                         opacity: layer.opacity,
                         resourceInfo: {
@@ -825,16 +825,16 @@ define([
                 // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
                 boundingBoxMapping = {};
 
-                var boundingBoxLayers = dojoArray.map(featureLayers.concat(wmsLayers), function (layer) {
+                var boundingBoxLayers = dojoArray.map(config.featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
+
                     var attrLayer = new esri.layers.GraphicsLayer({
                         //change to support WMS layers
-                        //id: String.format("boundingBoxLayer_{0}", Ramp.getLayerConfig(layer.url).displayName),
-                        id: String.format("boundingBoxLayer_{0}", layer.id.substring(layer.id.indexOf("_") + 1, layer.id.length - layer.id.indexOf("_") + 1)),
-                        visible: false // bounding boxes are not visible by default
+                        id: String.format("boundingBoxLayer_{0}", layer.id),
+                        visible: layer.boundingBoxVisible
                     });
                     boundingBoxMapping[layer.id] = attrLayer;
                     return attrLayer;
@@ -903,8 +903,16 @@ define([
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
-                // Combine all layer arrays then add them all at once (for efficiency)
+                // Can only initialize the bounding boxes after the map layers finishes loading
+                dojoOn.once(map, "update-end", function () {
+                    dojoArray.forEach(config.featureLayers, function (layer) {
+                        if (!layer.isStatic) {
+                            setBoundingBoxVisibility(layer.id, layer.boundingBoxVisible);
+                        }
+                    });
+                });
 
+                // Combine all layer arrays then add them all at once (for efficiency)
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
 
                 /* Start - Show scalebar */

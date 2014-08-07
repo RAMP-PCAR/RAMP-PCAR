@@ -3588,7 +3588,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "boundingBoxVisible",
                             "type": "Boolean",
-                            "value": false,
+                            "value": true,
                             "description": ""
                         }
                     ]
@@ -6189,7 +6189,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "boundingBoxVisible",
                             "type": "Boolean",
-                            "value": false,
+                            "value": true,
                             "description": ""
                         }
                     ]
@@ -6552,12 +6552,6 @@ Developers of the Almighty JSON Config Editor
                             "name": "layerVisible",
                             "type": "Boolean",
                             "value": true,
-                            "description": ""
-                        },
-                        {
-                            "name": "boundingBoxVisible",
-                            "type": "Boolean",
-                            "value": false,
                             "description": ""
                         }
                     ]
@@ -8446,12 +8440,6 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": true,
                             "description": ""
-                        },
-                        {
-                            "name": "boundingBoxVisible",
-                            "type": "Boolean",
-                            "value": false,
-                            "description": ""
                         }
                     ]
                 }
@@ -8960,12 +8948,6 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": true,
                             "description": ""
-                        },
-                        {
-                            "name": "boundingBoxVisible",
-                            "type": "Boolean",
-                            "value": false,
-                            "description": ""
                         }
                     ]
                 },
@@ -9238,12 +9220,6 @@ Developers of the Almighty JSON Config Editor
                             "name": "layerVisible",
                             "type": "Boolean",
                             "value": true,
-                            "description": ""
-                        },
-                        {
-                            "name": "boundingBoxVisible",
-                            "type": "Boolean",
-                            "value": false,
                             "description": ""
                         }
                     ]

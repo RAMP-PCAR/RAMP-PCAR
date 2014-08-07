@@ -1464,7 +1464,7 @@ define([
                         publishName: EventManager.GUI.PANEL_TOGGLE,
                         eventArg: {
                             origin: "bootstrapper",
-                            visible: event.visible
+                            visible: GlobalStorage.config.ui.sidePanelOpened
                         },
                         subscribeName: EventManager.GUI.PANEL_CHANGE
                     });
