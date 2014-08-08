@@ -604,11 +604,11 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.8
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": true
+            "boundingBoxVisible": false
         },
         {
             "id": "layer_dd1m3",
@@ -1050,7 +1050,7 @@
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": true
+            "boundingBoxVisible": false
         },
         {
             "id": "oilSandsRegions",
@@ -1112,7 +1112,7 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.6
+                    "default": 0.8
                 }
             },
             "isStatic": true,
@@ -1424,7 +1424,7 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.7
                 }
             },
             "layerType": "feature",
@@ -1530,13 +1530,17 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.2
                 }
             },
             "layerVisible": true,
             "featureInfo": {
                 "parser": "stringParse",
                 "mimeType": "text/plain"
+            }
+            "legend": {
+                "enable": false,
+                "legendURL": ""
             }
         },
         {
@@ -1587,7 +1591,7 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.2
                 }
             },
             "legend": {
@@ -1601,7 +1605,7 @@
         "stringParse.js"
     ],
     "ui": {
-        "fullscreen": true,
+        "fullscreen": false,
         "sidePanelOpened": true
     }
 }

@@ -3572,7 +3572,7 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.5,
+                                            "value": 0.8,
                                             "description": ""
                                         }
                                     ]
@@ -3588,7 +3588,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "boundingBoxVisible",
                             "type": "Boolean",
-                            "value": true,
+                            "value": false,
                             "description": ""
                         }
                     ]
@@ -6189,7 +6189,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "boundingBoxVisible",
                             "type": "Boolean",
-                            "value": true,
+                            "value": false,
                             "description": ""
                         }
                     ]
@@ -6528,7 +6528,7 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.6,
+                                            "value": 0.8,
                                             "description": ""
                                         }
                                     ]
@@ -8387,7 +8387,7 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.5,
+                                            "value": 0.7,
                                             "description": ""
                                         }
                                     ]
@@ -8936,7 +8936,7 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.5,
+                                            "value": 0.2,
                                             "description": ""
                                         }
                                     ]
@@ -8965,6 +8965,26 @@ Developers of the Almighty JSON Config Editor
                                     "name": "mimeType",
                                     "type": "String",
                                     "value": "text/plain",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
+                            "name": "legend",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "enable",
+                                    "type": "Boolean",
+                                    "value": false,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "legendURL",
+                                    "type": "String",
+                                    "value": "",
                                     "description": "",
                                     "visibleText": false
                                 }
@@ -9210,7 +9230,7 @@ Developers of the Almighty JSON Config Editor
                                         {
                                             "name": "default",
                                             "type": "Numeric",
-                                            "value": 0.5,
+                                            "value": 0.2,
                                             "description": ""
                                         }
                                     ]
@@ -9269,7 +9289,7 @@ Developers of the Almighty JSON Config Editor
                 {
                     "name": "fullscreen",
                     "type": "Boolean",
-                    "value": true,
+                    "value": false,
                     "description": ""
                 },
                 {
