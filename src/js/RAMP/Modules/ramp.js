@@ -104,6 +104,13 @@ define([
                     });
             },
 
+            getLayerConfigWithId: function (id) {
+                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
+                    function (layerConfig) {
+                        return layerConfig.id === id;
+                    });
+            },
+
             /**
              * Gets the defined symbology from a layer's web service
              * @method _getSymbolConfig

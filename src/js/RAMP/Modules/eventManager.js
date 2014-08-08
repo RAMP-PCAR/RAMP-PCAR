@@ -265,7 +265,13 @@ define([],
                  * @param evt {Object} the event Object
                  * @param evt.id {String} id of the source section / widget
                  */
-                TOOLBAR_SECTION_CLOSE: "gui/toolbar-section-close"
+                TOOLBAR_SECTION_CLOSE: "gui/toolbar-section-close",
+
+                /**
+                * Published when the gui module has completely finished rendering the UI.
+                * The bootstrapper should wait for this event to fire before initializing map.
+                */
+                UPDATE_COMPLETE: "gui/update-complete"
             },
 
             FeatureHighlighter: {

@@ -3578,6 +3578,18 @@ Developers of the Almighty JSON Config Editor
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        },
+                        {
+                            "name": "boundingBoxVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
                         }
                     ]
                 },
@@ -5812,6 +5824,18 @@ Developers of the Almighty JSON Config Editor
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        },
+                        {
+                            "name": "boundingBoxVisible",
+                            "type": "Boolean",
+                            "value": false,
+                            "description": ""
                         }
                     ]
                 },
@@ -6155,6 +6179,18 @@ Developers of the Almighty JSON Config Editor
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        },
+                        {
+                            "name": "boundingBoxVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
                         }
                     ]
                 },
@@ -6511,6 +6547,12 @@ Developers of the Almighty JSON Config Editor
                             "value": "feature",
                             "description": "",
                             "visibleText": false
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
                         }
                     ]
                 },
@@ -8392,6 +8434,12 @@ Developers of the Almighty JSON Config Editor
                                     "visibleText": false
                                 }
                             ]
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
                         }
                     ]
                 }
@@ -8896,6 +8944,12 @@ Developers of the Almighty JSON Config Editor
                             ]
                         },
                         {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
+                        },
+                        {
                             "name": "featureInfo",
                             "type": "Object",
                             "description": "",
@@ -9182,6 +9236,12 @@ Developers of the Almighty JSON Config Editor
                                     "visibleText": false
                                 }
                             ]
+                        },
+                        {
+                            "name": "layerVisible",
+                            "type": "Boolean",
+                            "value": true,
+                            "description": ""
                         }
                     ]
                 }
@@ -9198,6 +9258,25 @@ Developers of the Almighty JSON Config Editor
                     "value": "stringParse.js",
                     "description": "",
                     "visibleText": false
+                }
+            ]
+        },
+        {
+            "name": "ui",
+            "type": "Object",
+            "description": "",
+            "fields": [
+                {
+                    "name": "fullscreen",
+                    "type": "Boolean",
+                    "value": true,
+                    "description": ""
+                },
+                {
+                    "name": "sidePanelOpened",
+                    "type": "Boolean",
+                    "value": true,
+                    "description": ""
                 }
             ]
         }

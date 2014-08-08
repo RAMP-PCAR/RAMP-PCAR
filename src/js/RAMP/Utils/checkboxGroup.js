@@ -323,6 +323,22 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 }
 
                 return this;
+            },
+
+            /**
+            * Toggle all the checkboxes based on the return value of the given function.
+            *
+            * @param {Function} fcn a function that takes a checkbox as an argument and returns
+            * true if the given checkbox should be toggled on, false if it should be toggled off
+            * @method setEachState
+            * @chainable
+            */
+            setEachState: function (fcn) {
+                this.checkboxes.forEach(function (checkbox) {
+                    checkbox.setState(fcn(checkbox));
+                });
+                this._checkMaster();
+                return this;
             }
         });
     });

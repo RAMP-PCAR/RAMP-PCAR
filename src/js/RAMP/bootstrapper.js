@@ -96,10 +96,7 @@ require([
 
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
-            BookmarkLink.init(window.location.pathname.split("/").last());
-            BookmarkLink.updateConfig();
 
-            //dojoOn.once(RampMap.getMap(), "update-end", function () {
             topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
                 console.log("map - >> first update-end; init the rest");
 
@@ -138,8 +135,6 @@ require([
                 theme.tooltipster();
             });
             RampMap.init();
-
-            //init only creates the grid, does not populate it with data
 
             /* End - RAMP Events */
         }
@@ -182,16 +177,32 @@ require([
                 //there is no need to convert the result to an object.  it comes through pre-parsed
 
                 globalStorage.config = fileContent;
-                
+
                 pluginConfig = globalStorage.config.plugins;
                 if (pluginConfig) {
                     dojoArray.map(pluginConfig, function (pName) {
                         loadPlugin(pName);
                     });
                 }
+                // Modify the config based on the url
+                // needs to do this before the gui loads because the gui module
+                // also reads from the config
+                BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+
+                // Initialize the map only after the gui loads
+                // if we do it beforehand, the map extent may get messed up since
+                // the available screen size may still be changing (e.g. due to fullscreen
+                // or subpanel closing)
+                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    initializeMap();
+                });
+
                 gui.load(null, null, function () { });
 
-                initializeMap();
+                // Create the panel that the bookmark link sits in
+                // can only do this after the gui loads
+                BookmarkLink.createUI();
+
                 Ramp.loadStrings();
             },
             function (error) {

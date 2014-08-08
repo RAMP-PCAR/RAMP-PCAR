@@ -727,8 +727,6 @@ define([
 
                 layoutChange,
 
-                _isFullScreen = false,
-
                 _isFullData = false,
                 fullDataTimeLine = new TimelineLite({
                     paused: true,
@@ -771,6 +769,9 @@ define([
             function onFullScreenComplete() {
                 adjustHeight();
                 layoutChange();
+                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
+                    visible: Theme.isFullScreen()
+                });
             }
 
             /**
@@ -917,11 +918,9 @@ define([
                 /*jshint validthis: true */
                 panelToggleTimeLine.eventCallback("onComplete",
                         function () {
-                            UtilMisc.subscribeOnce("map/update-end", function () {
-                                console.log("GUI <-- map/update-end from gui");
-                                panelChange(false);
-                            });
+                            console.log("GUI <-- map/update-end from gui");
                             layoutChange();
+                            panelChange(false);
 
                             panelToggle
                                 .tooltipster("content", GlobalStorage.config.stringResources.txtOpen)
@@ -970,8 +969,12 @@ define([
                     );
 
                     // set listener to the panel toggle
-                    topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function () {
-                        panelPopup.toggle();
+                    topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
+                        if (event.visible) {
+                            panelPopup.open();
+                        } else {
+                            panelPopup.close();
+                        }
                     });
 
                     Theme
@@ -989,10 +992,6 @@ define([
                     });
 
                     adjustHeight();
-                },
-
-                isFullScreen: function () {
-                    return _isFullScreen;
                 },
 
                 /**
@@ -1452,8 +1451,63 @@ define([
                         });
                 });
 
+                // List of objects containing an event name and an event argument. The events should
+                // be anything to wait for before publishing a map extent change, it should include
+                // anything that will change the size of the map (e.g. fullscreen, closing the panel).
+                // If the map extent change occurs BEFORE something that changes the size of the map (e.g. fullscreen)
+                // then the map extent will change again.
+                var waitList = [];
+
+                if (!GlobalStorage.config.ui.sidePanelOpened) {
+                    // NOTE: panel change not triggered here (see map extent change below)
+                    waitList.push({
+                        publishName: EventManager.GUI.PANEL_TOGGLE,
+                        eventArg: {
+                            origin: "bootstrapper",
+                            visible: GlobalStorage.config.ui.sidePanelOpened
+                        },
+                        subscribeName: EventManager.GUI.PANEL_CHANGE
+                    });
+                }
+
+                if (GlobalStorage.config.ui.fullscreen) {
+                    // NOTE: fullscreen not triggered here (see map extent change below)
+                    waitList.push({
+                        publishName: EventManager.GUI.TOGGLE_FULLSCREEN,
+                        eventArg: {
+                            expand: true
+                        },
+                        subscribeName: EventManager.GUI.FULLSCREEN_CHANGE
+                    });
+                }
+
                 // return the callback
                 load();
+
+                // This should be the last thing that happens
+                if (waitList.isEmpty()) {
+                    topic.publish(EventManager.GUI.UPDATE_COMPLETE);
+                } else {
+                    // Wait for things such as fullscreen or panel collapse
+                    // to finish before publishing the UPDATE_COMPLETE.
+
+                    // Note it's important to subscribe to the events, then
+                    // publish them, that's why it was done in such an obscure way
+                    // using the waitList (otherwise if we just publish the
+                    // event like above, then subscribe to it here, the event
+                    // might have completed before reaching this point)
+                    var eventNames = dojoArray.map(waitList, function (obj) {
+                        return obj.subscribeName;
+                    });
+
+                    UtilMisc.subscribeAll(eventNames, function () {
+                        topic.publish(EventManager.GUI.UPDATE_COMPLETE);
+                    });
+
+                    dojoArray.forEach(waitList, function (obj) {
+                        topic.publish(obj.publishName, obj.eventArg);
+                    });
+                }
             }
         };
     }
