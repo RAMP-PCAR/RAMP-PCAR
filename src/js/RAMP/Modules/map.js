@@ -419,6 +419,7 @@ define([
             // Deselect all highlighted points if the map is clicked
             map.on("click", function (evt) {
                 FeatureClickHandler.onFeatureDeselect(evt);
+                topic.publish(EventManager.Map.CLICK, evt);
             });
 
             // Hide all the maptips if the map finishes updating
@@ -811,7 +812,7 @@ define([
                         console.log(esriConfig.defaults.io.proxyUrl);
                         console.log(wmsl);
                         topic.subscribe(EventManager.Map.CLICK, function (evt) {
-                            console.log(wmsl);
+                            console.log('click for '+wmsl);
                             var req = new EsriRequest({
                                 url: wmsl.url.split('?')[0],
                                 content: {
@@ -838,8 +839,8 @@ define([
                                         panelName: layer.displayName,
                                         title: layer.displayName,
                                         content: result,
-                                        //target: node.find(".layer-details"),
                                         origin: "wmsFeatureInfo",
+                                        target: $("#map-div"),
                                         guid: wmsl.id
                                     });
                                 },
