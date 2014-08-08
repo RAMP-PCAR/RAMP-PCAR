@@ -454,8 +454,6 @@ define([
             * change).
             *
             * @method init
-            * @param {String} homePage a string denoting the name of the homePage
-            * (e.g. usually "Default.aspx" or "index.html")
             */
             createUI: function () {
                 ui.init();

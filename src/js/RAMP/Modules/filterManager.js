@@ -102,7 +102,6 @@ define([
                         transparencySliders = layerList.find(".nstSlider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
-                                aria_valuetext: "Layer opacity {0} out of {1}",
                                 rounding: 0.01,
                                 highlight: {
                                     grip_class: "gripHighlighted",
@@ -115,7 +114,8 @@ define([
                                         newState;
 
                                     // update the slider label and highlight range
-                                   slider.parent().find('.leftLabel').text(leftValueFormatted).end().end()
+                                    slider
+                                        .parent().find('.leftLabel').text(leftValueFormatted).end().end()
                                         .nstSlider('highlight_range', 0, leftValue);
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
