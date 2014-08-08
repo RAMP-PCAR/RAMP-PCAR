@@ -140,14 +140,17 @@ define([
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
 
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                            var slider = transparencySliders
-                                    .filter("[data-layer-id='" + evt.id + "']")
-                                    .toggleClass("disabled", !evt.state),
+                            var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
+                                value;
+                                    
+                            if (slider.length > 0) {
+                                slider.toggleClass("disabled", !evt.state);
                                 value = slider.nstSlider("get_current_min_value");
 
                             // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
                             if (value === 0 && evt.state) {
                                 slider.nstSlider("set_position", 1);
+                            }
                             }
                         });
                     }
