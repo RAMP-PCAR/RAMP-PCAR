@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig */
+﻿/*global define, esri, dojoConfig, RAMP */
 
 /**
 *
