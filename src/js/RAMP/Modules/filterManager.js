@@ -147,10 +147,10 @@ define([
                                 slider.toggleClass("disabled", !evt.state);
                                 value = slider.nstSlider("get_current_min_value");
 
-                            // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
-                            if (value === 0 && evt.state) {
-                                slider.nstSlider("set_position", 1);
-                            }
+                                // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
+                                if (value === 0 && evt.state) {
+                                    slider.nstSlider("set_position", 1);
+                                }
                             }
                         });
                     }
@@ -278,10 +278,10 @@ define([
                             }
                         });
 
-                    eyeCheckboxGroup.setEachState(function (checkbox) {
+                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
                         return layerConfig.layerVisible;
-                    });
+                    });*/
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
