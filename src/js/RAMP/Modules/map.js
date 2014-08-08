@@ -810,9 +810,10 @@ define([
                         //registerWMSClickHandler(wmsl);
                         console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
                         console.log(esriConfig.defaults.io.proxyUrl);
-                        console.log(wmsl);
                         topic.subscribe(EventManager.Map.CLICK, function (evt) {
-                            console.log('click for '+wmsl);
+                            if (!wmsl.visible) {
+                                return;
+                            }
                             var req = new EsriRequest({
                                 url: wmsl.url.split('?')[0],
                                 content: {
@@ -832,9 +833,7 @@ define([
                             });
                             req.then(
                                 function (data) {
-                                    console.log(RAMP.plugins.featureInfoParser);
                                     var result = RAMP.plugins.featureInfoParser[layer.featureInfo.parser](data);
-                                    console.log(result);
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         panelName: layer.displayName,
                                         title: layer.displayName,
