@@ -1537,7 +1537,7 @@
             "featureInfo": {
                 "parser": "stringParse",
                 "mimeType": "text/plain"
-            }
+            },
             "legend": {
                 "enable": false,
                 "legendURL": ""
