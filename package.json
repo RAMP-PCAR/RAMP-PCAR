@@ -141,7 +141,7 @@
             "includes/**/*.*"
         ],
 
-        "deployFolder": "c:\\inetpub\\wwwroot\\ramp",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
 
         "docco": {
             "path": "./src/js/RAMP",
