@@ -34,6 +34,12 @@ var //sPath = window.location.href,
                     )[0] || "ramp-base"),
     dojoConfig;
 
+/**
+* RAMP global class.
+* A general globally available class to hold any RAMP global data.  Currently houses any plugins which are not loaded via AMD.
+*
+* @class RAMP
+*/
 RAMP = {
     plugins: {
         featureInfoParser: {}

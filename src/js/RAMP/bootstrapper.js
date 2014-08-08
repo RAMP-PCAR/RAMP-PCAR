@@ -85,6 +85,14 @@ require([
     ) {
         "use strict";
 
+        /**
+        * loadPlugin takes a plugin file and loads it into the DOM.
+        * Creates a dynamic script tag to load the script at runtime.
+        *
+        * @method loadPlugin
+        * @private
+        * @param {String} pluginName, the file name of the plugin to be loaded (should be in the plugins folder)
+        */
         function loadPlugin(pluginName) {
             var head = document.getElementsByTagName('head')[0],
                 script = document.createElement('script');

@@ -806,14 +806,18 @@ define([
                         }
                     });
 
+                    // WMS binding for getFeatureInfo calls
+
                     if (layer.featureInfo !== undefined) {
-                        //registerWMSClickHandler(wmsl);
                         console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
                         console.log(esriConfig.defaults.io.proxyUrl);
                         topic.subscribe(EventManager.Map.CLICK, function (evt) {
                             if (!wmsl.visible) {
                                 return;
                             }
+
+                            // create a new request using the parameters speced by WMS
+
                             var req = new EsriRequest({
                                 url: wmsl.url.split('?')[0],
                                 content: {
