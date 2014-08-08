@@ -247,6 +247,9 @@ define([
 
                     eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
+                        if (!layerConfig) {
+                            return true;
+                        }
                         return layerConfig.layerVisible;
                     });
 

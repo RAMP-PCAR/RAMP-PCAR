@@ -792,7 +792,7 @@ define([
                     });
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);
-                    wmsl.setVisibility(true);
+                    wmsl.setVisibility(layer.layerVisible);
 
                     return wmsl;
                 });
@@ -807,7 +807,8 @@ define([
                         fl = new FeatureLayer(layer.url, {
                             id: layer.id,
                             mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layer.layerAttributes]
+                            outFields: [layer.layerAttributes],
+                            visible: layer.layerVisible
                         });
                     }
 
