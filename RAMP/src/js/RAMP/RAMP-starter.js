@@ -18,7 +18,7 @@
 //required to get draw bar to show in french
 var //sPath = window.location.href,
     //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
-    RAMP = { plugins: {} },
+    RAMP,
     jsFolderPath = "js/",
     cssFolderPath = "css/",
     state = "src/", // replace with "build" upon release,
@@ -33,6 +33,12 @@ var //sPath = window.location.href,
                     }
                     )[0] || "ramp-base"),
     dojoConfig;
+
+RAMP = {
+    plugins: {
+        featureInfoParser: {}
+    }
+};
 
 dojoConfig = {
     parseOnLoad: false,

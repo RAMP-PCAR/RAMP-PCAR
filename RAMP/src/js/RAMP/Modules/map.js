@@ -1,4 +1,4 @@
-﻿/*global define, esri */
+﻿/*global define, esri, dojoConfig */
 
 /**
 *
@@ -54,8 +54,8 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference",
-"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo",
+"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference", "esri/config",
+"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -69,8 +69,8 @@ define([
 
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    GeometryService, ProjectParameters, Polygon, SpatialReference,
-    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo,
+    GeometryService, ProjectParameters, Polygon, SpatialReference, esriConfig,
+    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
@@ -689,6 +689,10 @@ define([
                     return adjustedEx;
                 }
             },
+
+            /*
+            */
+
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
             *
@@ -780,6 +784,8 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
+                esriConfig.defaults.io.proxyUrl = "/proxy/proxy.ashx";
+                dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
@@ -792,9 +798,49 @@ define([
                         }
                     });
 
-                    topic.subscribe(EventManager.Map.CLICK, function (evt) {
-                        console.log('wms click: '+wmsl.url);
-                    });
+                    if (layer.featureInfo !== undefined) {
+                        //registerWMSClickHandler(wmsl);
+                        console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
+                        console.log(esriConfig.defaults.io.proxyUrl);
+                        console.log(wmsl);
+                        topic.subscribe(EventManager.Map.CLICK, function (evt) {
+                            console.log(wmsl);
+                            var req = new EsriRequest({
+                                url: wmsl.url.split('?')[0],
+                                content: {
+                                    SERVICE: "WMS",
+                                    REQUEST: "GetFeatureInfo",
+                                    VERSION: wmsl.version,
+                                    SRS: "EPSG:" + wmsl.spatialReference.wkid,
+                                    BBOX: map.extent.xmin + "," + map.extent.ymin + "," + map.extent.xmax + "," + map.extent.ymax,
+                                    WIDTH: map.width,
+                                    HEIGHT: map.height,
+                                    QUERY_LAYERS: layer.layerInfo.name,
+                                    INFO_FORMAT: layer.featureInfo.mimeType,
+                                    X: evt.layerX,
+                                    Y: evt.layerY
+                                },
+                                handleAs: "text"
+                            });
+                            req.then(
+                                function (data) {
+                                    console.log(RAMP.plugins.featureInfoParser);
+                                    var result = RAMP.plugins.featureInfoParser[layer.featureInfo.parser](data);
+                                    console.log(result);
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        panelName: layer.displayName,
+                                        title: layer.displayName,
+                                        content: result,
+                                        //target: node.find(".layer-details"),
+                                        origin: "wmsFeatureInfo",
+                                        guid: wmsl.id
+                                    });
+                                },
+                                function (error) {
+                                    console.log("Error: ", error.message);
+                                });
+                        });
+                    }
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);
                     wmsl.setVisibility(true);

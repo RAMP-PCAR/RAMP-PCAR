@@ -9193,7 +9193,7 @@ Developers of the Almighty JSON Config Editor
             "description": "",
             "fields": [
                 {
-                    "name": "(untitled)",
+                    "name": "stringParse",
                     "type": "String",
                     "value": "stringParse.js",
                     "description": "",

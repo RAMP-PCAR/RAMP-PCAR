@@ -1,4 +1,4 @@
-﻿/*global require, window, esri */
+﻿/*global require, window, esri, dojoConfig */
 
 /**
 * Ramp module
@@ -85,12 +85,12 @@ require([
     ) {
         "use strict";
 
-        function loadPlugin(pluginPath) {
+        function loadPlugin(pluginName) {
             var head = document.getElementsByTagName('head')[0],
                 script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = dojoConfig.fullPluginPath + pluginPath;
-            console.log('loading plugin: '+script.src);
+            script.src = dojoConfig.fullPluginPath + pluginName;
+            console.log('loading plugin: ' + script.src);
             head.appendChild(script);
         }
 
