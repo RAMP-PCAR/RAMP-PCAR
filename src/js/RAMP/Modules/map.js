@@ -58,7 +58,8 @@ define([
 "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager", "ramp/boundingBoxLayer",
+"ramp/staticLayer",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -73,7 +74,7 @@ define([
     EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
+    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager, BoundingBoxLayer, StaticLayer,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
@@ -548,7 +549,7 @@ define([
             //determine layer type and process
             switch (staticLayer.layerType) {
                 case "feature":
-                    tempLayer = new FeatureLayer(staticLayer.url, {
+                    tempLayer = new StaticLayer(staticLayer.url, {
                         //opacity: staticLayer.opacity,
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         id: "static_" + staticLayer.id
@@ -837,7 +838,7 @@ define([
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
 
-                    return new esri.layers.GraphicsLayer({
+                    return new BoundingBoxLayer({
                         id: String.format("boundingBoxLayer_{0}", layer.id),
                         visible: layer.boundingBoxVisible
                     });
