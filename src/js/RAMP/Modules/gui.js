@@ -334,11 +334,11 @@ define([
                 *
                 * @property _animatePanelDuration
                 * @private
-                * @default 400
+                * @default 0.5
                 * @type {Number}
                 */
 
-                _animatePanelDuration: 500, //400,
+                _animatePanelDuration: 0.5, //0.4,
 
                 timeLine: null,
 
@@ -536,7 +536,7 @@ define([
                     //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
                     //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
 
-                    this.container = this._attr.target.after(subPanelString).parent().find(".sub-panel-container");
+                    this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
                     this._subPanelContentDiv = this.panel.find(".sub-panel-content");
@@ -559,7 +559,7 @@ define([
                             },
                             onCompleteScope: this
                         })
-                        .to(this.panel, this._animatePanelDuration / 1000,
+                        .to(this.panel, this._animatePanelDuration,
                             {
                                 left: 0,
                                 ease: "easeOutCirc"
