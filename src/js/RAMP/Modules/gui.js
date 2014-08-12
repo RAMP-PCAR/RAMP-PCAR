@@ -334,11 +334,11 @@ define([
                 *
                 * @property _animatePanelDuration
                 * @private
-                * @default 400
+                * @default 0.5
                 * @type {Number}
                 */
 
-                _animatePanelDuration: 500, //400,
+                _animatePanelDuration: 0.5, //0.4,
 
                 timeLine: null,
 
@@ -536,7 +536,7 @@ define([
                     //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
                     //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
 
-                    this.container = this._attr.target.after(subPanelString).parent().find(".sub-panel-container");
+                    this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
                     this._subPanelContentDiv = this.panel.find(".sub-panel-content");
@@ -559,7 +559,7 @@ define([
                             },
                             onCompleteScope: this
                         })
-                        .to(this.panel, this._animatePanelDuration / 1000,
+                        .to(this.panel, this._animatePanelDuration,
                             {
                                 left: 0,
                                 ease: "easeOutCirc"
@@ -714,6 +714,7 @@ define([
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
                 fullScreenToggle = $("#fullScreenToggle"),
+                fullScreenPopup,
 
                 mapToolbar = $("#map-toolbar"),
                 basemapControls = $("#basemapControls"),
@@ -769,6 +770,7 @@ define([
             function onFullScreenComplete() {
                 adjustHeight();
                 layoutChange();
+                
                 topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
                     visible: Theme.isFullScreen()
                 });
@@ -960,6 +962,10 @@ define([
                 init: function () {
                     //jWindow.on("resize", adjustWidth);
 
+                    Theme
+                        .fullScreenCallback("onComplete", onFullScreenComplete)
+                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
+
                     // initialize the panel popup
                     panelPopup = popupManager.registerPopup(panelToggle, "click",
                         openPanel, {
@@ -970,26 +976,24 @@ define([
 
                     // set listener to the panel toggle
                     topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
-                        if (event.visible) {
-                            panelPopup.open();
-                        } else {
-                            panelPopup.close();
-                        }
+                        panelPopup.toggle(null, event.visible);
                     });
-
-                    Theme
-                        .fullScreenCallback("onComplete", onFullScreenComplete)
-                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
+                    
+                    // set listener to the full-screen toggle
+                    fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
+                        function (d) {
+                            Theme.toggleFullScreenMode();
+                            d.resolve();
+                        }, {
+                            activeClass: "button-pressed",
+                            setClassBefore: true
+                        }
+                    );                    
 
                     // if the vertical space is too small, trigger the full-screen
                     if (mapContent.height() < jWindow.height() * 0.6) {
-                        Theme.toggleFullScreenMode(true);
+                        fullScreenPopup.open();
                     }
-
-                    // set listener to the full-screen toggle
-                    fullScreenToggle.click(function () {
-                        Theme.toggleFullScreenMode();
-                    });
 
                     adjustHeight();
                 },
@@ -1002,7 +1006,7 @@ define([
                 * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
                 */
                 toggleFullScreenMode: function (fullscreen) {
-                    Theme.toggleFullScreenMode(fullscreen);
+                    fullScreenPopup.toggle(null, fullscreen);
                 },
 
                 isFullData: function () {

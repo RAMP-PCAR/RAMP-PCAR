@@ -103,7 +103,7 @@ define([
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
             config,
-            layerConfig,
+            //layerConfig,
             gridConfig,
 
             /**
@@ -328,7 +328,7 @@ define([
                             var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
 
                             tmpl.cache = {
-                            };
+                                };
 
                             tmpl.templates = data_grid_template_json;
 
@@ -336,6 +336,7 @@ define([
                             tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
+                                                
                         }
 
                         return obj[datagridMode];
@@ -1147,6 +1148,12 @@ define([
                 dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
 
+            // filter out static layers
+            visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                //return (utilMisc.isUndefined(Ramp.getLayerConfig(layer.url).isStatic) || Ramp.getLayerConfig(layer.url).isStatic == false);
+                return !Ramp.getLayerConfig(layer.url).isStatic;
+            });
+
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                     return layer.url === ui.getSelectedDatasetUrl();
@@ -1367,8 +1374,16 @@ define([
             */
             init: function () {
                 config = GlobalStorage.config;
-                layerConfig = config.featureLayers;
-                gridConfig = layerConfig[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
+
+                // Added to make sure the first layer is not static
+                var layerConfigs = dojoArray.filter(config.featureLayers, function (layerConfig) {
+                    //return (utilMisc.isUndefined(layerConfig.isStatic) || layerConfig.isStatic == false);
+                    return !layerConfig.isStatic;
+                });
+
+                // layerConfig = config.featureLayers;
+                gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
+
                 /*
                 $.fn.dataTable.ext.search.push(
                     function (settings, data, dataIndex) {

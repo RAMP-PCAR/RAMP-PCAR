@@ -271,11 +271,12 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Toggles all the popups described by this PopupBase instance.
                 *
                 * @method toggle
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
+                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle. Generally, selector is not needed if popup manages only one handle/target pair.
+                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open; false - close;
                 */
-                toggle: function (selector) {
+                toggle: function (selector, state) {
                     this._spawnPopups(selector).forEach(function (p) {
-                        p.toggle();
+                        p.toggle(state);
                     });
                 },
 
@@ -424,9 +425,11 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Toggles this Popup.
                 *
                 * @method toggle
+                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open; false - close;
                 */
-                toggle: function () {
-                    if (this.isOpen()) {
+                toggle: function (state) {
+                    state = UtilMisc.isUndefined(state) ? this.isOpen() : !state;
+                    if (state) {
                         this.close();
                     } else {
                         this.open();
@@ -479,10 +482,15 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                     }
 
                     if (this.useAria) {
-                        this.target.attr({
-                            "aria-expanded": visible,
-                            "aria-hidden": !visible
-                        });
+                        this.handle.attr("aria-pressed", visible);
+
+                        // if handle and target are the same object, do not set aria attributes on target
+                        if (this.handle[0] !== this.target[0]) {
+                            this.target.attr({
+                                "aria-expanded": visible,
+                                "aria-hidden": !visible
+                            });
+                        }                       
                     }
                 }
             };
@@ -505,7 +513,13 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
             popup._spawnPopups().forEach(function (p) {
                 if (p.useAria) {
-                    p.handle.attr("aria-haspopup", true);
+                    p.handle.attr("aria-pressed", false);
+
+                    // if handle and target are the same object, do not set aria attributes on target
+                    if (p.handle[0] !== p.target[0]) {
+                        p.handle.attr("aria-haspopup", true);
+                    }
+
                     p.setTargetAttr();
                 }
 

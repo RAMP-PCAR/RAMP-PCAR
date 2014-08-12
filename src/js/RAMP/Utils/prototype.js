@@ -265,7 +265,8 @@ define([
             // Detects if the given span is overflowing with text
             $.fn.isOverflowed = function () {
                 var result,
-                    element = $(this)
+                    span = $(this),
+                    element = span
                         .clone()
                         .css({
                             display: 'inline',
@@ -274,7 +275,8 @@ define([
                         })
                         .appendTo('body');
 
-                result = element.width() > $(this).width();
+                // also check the size of the parent's container
+                result = element.width() > span.width() || span.width() > span.parent().width();
 
                 element.remove();
 
