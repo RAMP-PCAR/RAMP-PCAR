@@ -58,11 +58,13 @@
         "txtBaseToolClearMap": "Clear",
         "txtBaseToolWorking": "Working ...",
         "txtBufferToolDistance": "Distance",
-        "txtMeasureToolLength": "Length",
-        "txtMeasureToolArea": "Area",
-        "txtMeasureToolNA": "n/a",
+        "txtAreaToolLength": "Length",
+        "txtAreaToolArea": "Area",
+        "txtAreaToolNA": "n/a",
         "txtPopulationToolPopulation": "Population",
-        "txtPopulationToolNA": "n/a"
+        "txtPopulationToolNA": "n/a",
+        "txtDistanceToolNA": "n/a",
+        "txtDistanceToolLength": "Length"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
@@ -98,23 +100,33 @@
     "proxyUrl": "../proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
-        "tools": {
-            "measure": {
-                "name": "measureTool",
-                "selector": "#at-measure-toggle",
+        "tools": [
+            {
+                "name": "areaTool",
+                "selector": "#at-area-toggle",
                 "enabled": true
             },
-            "population": {
+            {
                 "name": "populationTool",
                 "selector": "#at-population-toggle",
                 "enabled": true
             },
-            "buffer": {
+            {
                 "name": "bufferTool",
                 "selector": "#at-buffer-toggle",
+                "enabled": true,
+                "2": {
+                    "name": "bufferTool",
+                    "selector": "#at-buffer-toggle",
+                    "enabled": true
+                }
+            },
+            {
+                "name": "distanceTool",
+                "selector": "#at-distance-toggle",
                 "enabled": true
             }
-        }
+        ]
     },
     "extents": {
         "defaultExtent": {
