@@ -21,7 +21,7 @@
 * @uses esri/config
 * @uses esri/graphic
 * @uses esri/tasks/GeometryService
-* @uses esri/tasks/AreasAndLengthsParameters
+* @uses esri/tasks/LengthsParameters
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleFillSymbol
 * @uses Map
@@ -33,7 +33,7 @@ define([
       "dojo/dom", "dojo/string", "dojo/_base/lang",
 // Esri
       "esri/config", "esri/graphic", "esri/tasks/GeometryService",
-      "esri/tasks/AreasAndLengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
+      "esri/tasks/LengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
 // Ramp
       "ramp/map", "ramp/globalStorage", "tools/baseTool"
 ],
@@ -41,7 +41,7 @@ define([
 // Dojo
       dom, string, dojoLang,
 // Esri
-      esriConfig, Graphic, GeometryService, AreasAndLengthsParameters, Draw, SimpleFillSymbol,
+      esriConfig, Graphic, GeometryService, LengthsParameters, Draw, SimpleFillSymbol,
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
         "use strict";
@@ -63,7 +63,7 @@ define([
             that.working(true);
 
             geometryService = new GeometryService(GlobalStorage.config.geometryService);
-            geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
+            geometryService.on("lengths-complete", outputAreaAndLength);
 
             var geometry = evtObj.geometry;
             measureApp.map.graphics.clear();
@@ -71,13 +71,13 @@ define([
             measureApp.map.graphics.add(new Graphic(geometry, new SimpleFillSymbol()));
 
             //setup the parameters for the areas and lengths operation
-            var areasAndLengthParams = new AreasAndLengthsParameters();
-            areasAndLengthParams.lengthUnit = GeometryService.UNIT_KILOMETER;
-            areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
-            areasAndLengthParams.calculationType = "geodesic";
+            var lengthsParams = new LengthsParameters();
+            lengthsParams.lengthUnit = GeometryService.UNIT_KILOMETER;
+            lengthsParams.calculationType = "geodesic";
+
             geometryService.simplify([geometry], function (simplifiedGeometries) {
-                areasAndLengthParams.polygons = simplifiedGeometries;
-                geometryService.areasAndLengths(areasAndLengthParams);
+                lengthsParams.polylines = simplifiedGeometries;
+                geometryService.lengths(lengthsParams);
             });
         }
 
@@ -91,16 +91,13 @@ define([
         */
         function outputAreaAndLength(evtObj) {
             var result = evtObj.result,
-                // Convert acres to km2.
-                area = result.areas[0].toFixed(3),// (result.areas[0] / 247.11).toFixed(3),
                 // Convert feet to km.
                 length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
 
             that.working(false);
 
             length = string.substitute("${number:dojo.number.format}", { number: length });
-            area = string.substitute("${number:dojo.number.format}", { number: area });
-            displayOutput(length, area, "km", "km");
+            displayOutput(length, "km");
         }
 
         ui = {
@@ -129,9 +126,9 @@ define([
         * @private
         */
         function activate() {
-            measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
+            measureApp.toolbar.activate(Draw.LINE);
 
-            displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
+            displayOutput(that.stringResources.txtDistanceToolNA);
         }
 
         /**
@@ -155,7 +152,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(that.stringResources.txtMeasureToolNA, that.stringResources.txtMeasureToolNA);
+            displayOutput(that.stringResources.txtDistanceToolNA);
         }
 
         /**
@@ -164,15 +161,12 @@ define([
         * @method displayOutput
         * @private
         */
-        function displayOutput(length, area, lengthUnits, areaUnits) {
-            that.displayTemplateOutput("measure_output",
+        function displayOutput(length, lengthUnits) {
+            that.displayTemplateOutput("distance_output",
                 {
-                    lengthLabel: that.stringResources.txtMeasureToolLength,
-                    areaLabel: that.stringResources.txtMeasureToolArea,
+                    lengthLabel: that.stringResources.txtDistanceToolLength,
                     lengthOutput: length,
-                    areaOutput: area,
-                    lengthUnits: lengthUnits,
-                    areaUnits: areaUnits
+                    lengthUnits: lengthUnits                    
                 }
             );
         }
@@ -198,6 +192,6 @@ define([
                 return this;
             },
 
-            name: "measureTool"
+            name: "distanceTool"
         });
     });

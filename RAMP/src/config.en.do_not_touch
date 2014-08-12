@@ -406,21 +406,21 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": true
                 },
                 {
-                    "name": "txtMeasureToolLength",
+                    "name": "txtAreaToolLength",
                     "type": "String",
                     "value": "Length",
                     "description": "",
                     "visibleText": true
                 },
                 {
-                    "name": "txtMeasureToolArea",
+                    "name": "txtAreaToolArea",
                     "type": "String",
                     "value": "Area",
                     "description": "",
                     "visibleText": true
                 },
                 {
-                    "name": "txtMeasureToolNA",
+                    "name": "txtAreaToolNA",
                     "type": "String",
                     "value": "n/a",
                     "description": "",
@@ -439,6 +439,20 @@ Developers of the Almighty JSON Config Editor
                     "value": "n/a",
                     "description": "",
                     "visibleText": true
+                },
+                {
+                    "name": "txtDistanceToolNA",
+                    "type": "String",
+                    "value": "n/a",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "txtDistanceToolLength",
+                    "type": "String",
+                    "value": "Length",
+                    "description": "",
+                    "visibleText": false
                 }
             ]
         },
@@ -654,14 +668,14 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "name",
                                     "type": "String",
-                                    "value": "measureTool",
+                                    "value": "areaTool",
                                     "description": "",
                                     "visibleText": false
                                 },
                                 {
                                     "name": "selector",
                                     "type": "String",
-                                    "value": "#at-measure-toggle",
+                                    "value": "#at-area-toggle",
                                     "description": "",
                                     "visibleText": false
                                 },
@@ -716,6 +730,60 @@ Developers of the Almighty JSON Config Editor
                                     "name": "selector",
                                     "type": "String",
                                     "value": "#at-buffer-toggle",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "enabled",
+                                    "type": "Boolean",
+                                    "value": true,
+                                    "description": ""
+                                },
+                                {
+                                    "name": "2",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "name",
+                                            "type": "String",
+                                            "value": "bufferTool",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "selector",
+                                            "type": "String",
+                                            "value": "#at-buffer-toggle",
+                                            "description": "",
+                                            "visibleText": false
+                                        },
+                                        {
+                                            "name": "enabled",
+                                            "type": "Boolean",
+                                            "value": true,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "3",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "name",
+                                    "type": "String",
+                                    "value": "distanceTool",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "selector",
+                                    "type": "String",
+                                    "value": "#at-distance-toggle",
                                     "description": "",
                                     "visibleText": false
                                 },
