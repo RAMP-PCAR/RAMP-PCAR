@@ -134,6 +134,7 @@
         "assetsToCopy": [
             "config.en.json",
             "config.fr.json",
+            "proxy/**/*.*",
             "assets/**/*.*",
             "!assets/*.csv",
             "!assets/*.xlsx",

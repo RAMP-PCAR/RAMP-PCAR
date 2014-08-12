@@ -208,7 +208,7 @@ public class ProxyConfig
 
     public static string GetFilename(HttpContext context)
     {
-        return context.Server.MapPath("~/proxy.config");
+        return context.Server.MapPath("proxy.config");
     }
     #endregion
 

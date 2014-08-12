@@ -792,7 +792,7 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
-                esriConfig.defaults.io.proxyUrl = "/proxy/proxy.ashx";
+                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;// "/proxy/proxy.ashx";
                 dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
