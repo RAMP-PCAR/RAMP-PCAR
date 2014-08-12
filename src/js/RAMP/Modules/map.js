@@ -816,8 +816,17 @@ define([
                                 return;
                             }
 
-                            // create a new request using the parameters speced by WMS
+                            // open details panel immediately after click event
+                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                panelName: layer.displayName,
+                                title: layer.displayName,
+                                content: null,
+                                origin: "wmsFeatureInfo",
+                                target: $("#map-div"),
+                                guid: wmsl.id
+                            });
 
+                            // create a new request using the parameters speced by WMS
                             var req = new EsriRequest({
                                 url: wmsl.url.split('?')[0],
                                 content: {
@@ -838,16 +847,33 @@ define([
                             req.then(
                                 function (data) {
                                     var result = RAMP.plugins.featureInfoParser[layer.featureInfo.parser](data);
+
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: result,
+                                        origin: "wmsFeatureInfo",
+                                        update: true,
+                                        guid: wmsl.id
+                                    });
+
+                                    /*topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         panelName: layer.displayName,
                                         title: layer.displayName,
                                         content: result,
                                         origin: "wmsFeatureInfo",
                                         target: $("#map-div"),
                                         guid: wmsl.id
-                                    });
+                                    });*/
+
                                 },
                                 function (error) {
+                                    // display error message in the details panel
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: "Error: " + error.message,
+                                        origin: "wmsFeatureInfo",
+                                        update: true,
+                                        guid: wmsl.id
+                                    });
+
                                     console.log("Error: ", error.message);
                                 });
                         });
