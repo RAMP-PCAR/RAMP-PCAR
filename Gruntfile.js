@@ -240,6 +240,28 @@ module.exports = function (grunt) {
                         return nd;
                     }
                 }]
+            },
+
+            rampJsPlugins: {
+                options: {
+                    compress: {
+                        drop_console: true // strip all console statements from generated code
+                    },
+                    report: 'min',
+                    sourceMap: false,
+                    sourceMapIncludeSources: false,
+                    preserveComments: false,
+                    // the banner is inserted at the top of the output
+                    banner: '/*! <%= pkg.name %> Plugins <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
+                },
+
+                files: [{
+                    expand: true,
+
+                    cwd: 'src/js/plugins/',
+                    src: '**/*.js',
+                    dest: 'build/js/plugins/'
+                }]
             }
         },
 
@@ -358,7 +380,10 @@ module.exports = function (grunt) {
         },
 
         jshint: {
-            files: ['src/js/RAMP/**/*.js'],
+            files: [
+                'src/js/RAMP/**/*.js',
+                'src/js/plugins/**/*.js'
+            ],
             options: {
                 reporter: require('jshint-stylish-plain'),
 
@@ -430,7 +455,10 @@ module.exports = function (grunt) {
                 options: {
                     spawn: false
                 },
-                files: ['src/js/RAMP/**/*.js'],
+                files: [
+                    'src/js/RAMP/**/*.js',
+                    'src/js/plugins/**/*.js'
+                ],
                 tasks: ['js'] //, 'build:bump-only-build']
                 //tasks: ['hint', 'jsstyle']
             },
@@ -844,7 +872,10 @@ module.exports = function (grunt) {
                     //config: '.jscs-secondary.json'
                 },
                 files: {
-                    src: ['src/js/RAMP/**/*.js']
+                    src: [
+                        'src/js/RAMP/**/*.js',
+                        'src/js/plugins/**/*.js'
+                    ]
                 }
             }
         },
@@ -1304,6 +1335,9 @@ module.exports = function (grunt) {
     if (grunt.option('source')) {
         grunt.config('uglify.rampJsCore.options.sourceMap', true);
         grunt.config('uglify.rampJsCore.options.sourceMapIncludeSources', true);
+
+        grunt.config('uglify.rampJsPlugins.options.sourceMap', true);
+        grunt.config('uglify.rampJsPlugins.options.sourceMapIncludeSources', true);
     }
 
     // on watch events configure jshint:all to only run on changed file

@@ -661,7 +661,7 @@ Developers of the Almighty JSON Config Editor
         {
             "name": "proxyUrl",
             "type": "String",
-            "value": "../proxy.ashx",
+            "value": "proxy/proxy.ashx",
             "description": "",
             "visibleText": false
         },

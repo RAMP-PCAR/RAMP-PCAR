@@ -97,7 +97,7 @@
         "wkid": 3978
     },
     "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "../proxy.ashx",
+    "proxyUrl": "proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -1547,7 +1547,7 @@
             },
             "layerVisible": true,
             "featureInfo": {
-                "parser": "stringParse",
+                "parser": "tempParse",
                 "mimeType": "text/plain"
             },
             "legend": {
@@ -1614,7 +1614,7 @@
         }
     ],
     "plugins": [
-        "stringParse.js"
+        "tempParse.js"
     ],
     "ui": {
         "fullscreen": false,
