@@ -1535,7 +1535,7 @@
             },
             "layerVisible": true,
             "featureInfo": {
-                "parser": "stringParse",
+                "parser": "tempParse",
                 "mimeType": "text/plain"
             },
             "legend": {
@@ -1602,7 +1602,7 @@
         }
     ],
     "plugins": [
-        "stringParse.js"
+        "tempParse.js"
     ],
     "ui": {
         "fullscreen": false,
