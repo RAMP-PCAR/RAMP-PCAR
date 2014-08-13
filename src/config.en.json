@@ -1547,12 +1547,12 @@
             },
             "layerVisible": true,
             "featureInfo": {
-                "parser": "tempParse",
+                "parser": "stringParse",
                 "mimeType": "text/plain"
             },
             "legend": {
                 "enable": false,
-                "legendURL": ""
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
         },
         {
@@ -1608,13 +1608,13 @@
             },
             "legend": {
                 "enable": true,
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
+                "legendURL": ""
             },
             "layerVisible": true
         }
     ],
     "plugins": [
-        "tempParse.js"
+        "stringParse.js"
     ],
     "ui": {
         "fullscreen": false,

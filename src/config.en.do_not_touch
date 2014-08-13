@@ -9052,7 +9052,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "legendURL",
                                     "type": "String",
-                                    "value": "",
+                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
                                     "description": "",
                                     "visibleText": false
                                 }
@@ -9319,7 +9319,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "legendURL",
                                     "type": "String",
-                                    "value": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png",
+                                    "value": "",
                                     "description": "",
                                     "visibleText": false
                                 }
