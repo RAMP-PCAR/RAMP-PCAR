@@ -458,7 +458,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 deferred.then(function () {
                     window.clearInterval(handle);
-                    console.log("deffered resolved");
+                    //console.log("deffered resolved");
 
                     callback();
                 });

@@ -437,7 +437,7 @@ define([
                         function (layerId) {
                             var layer = map.getLayer(layerId);
 
-                            console.log(layer.loaded, layer);
+                            console.log(layer.loaded, layerId, layer);
                             return layer.loaded;
                         }
                     );

@@ -244,7 +244,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
              *
              */
             _emit: function (agency) {
-                console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
+                //console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
 
                 this.emit(this.event.TOGGLE, {
                     agency: agency,

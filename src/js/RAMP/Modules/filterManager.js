@@ -134,7 +134,7 @@ define([
                                         });
                                     }
 
-                                    console.log(cause, leftValue, rightValue, prevMin, prevMax);
+                                    //console.log(cause, leftValue, rightValue, prevMin, prevMax);
                                 }
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
@@ -142,7 +142,7 @@ define([
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
                             var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
                                 value;
-                                    
+
                             if (slider.length > 0) {
                                 slider.toggleClass("disabled", !evt.state);
                                 value = slider.nstSlider("get_current_min_value");

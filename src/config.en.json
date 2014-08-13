@@ -1551,7 +1551,7 @@
                 "mimeType": "text/plain"
             },
             "legend": {
-                "enable": false,
+                "enable": true,
                 "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
             }
         },
@@ -1607,7 +1607,7 @@
                 }
             },
             "legend": {
-                "enable": true,
+                "enable": false,
                 "legendURL": ""
             },
             "layerVisible": true
