@@ -105,14 +105,12 @@ define([
             },
 
             getLayerConfigWithId: function (id) {
-
                 // id has static_, wmsLayer_ prefix to the layerId
                 if (id.indexOf("static_") > -1) {
-                    id = id.replace("static_","");
+                    id = id.replace("static_", "");
                 } else if (id.indexOf("wmsLayer_") > -1) {
                     id = id.replace("wmsLayer_", "");
                 }
-
 
                 return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
                     function (layerConfig) {

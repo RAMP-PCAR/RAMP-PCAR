@@ -863,7 +863,6 @@ define([
                                         target: $("#map-div"),
                                         guid: wmsl.id
                                     });*/
-
                                 },
                                 function (error) {
                                     // display error message in the details panel
@@ -897,7 +896,7 @@ define([
                             mode: FeatureLayer.MODE_SNAPSHOT,
                             outFields: [layer.layerAttributes],
                             visible: layer.layerVisible,
-                            opacity: resolveLayerOpacity(layer.settings.opacity),
+                            opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
                     }
 
@@ -938,6 +937,8 @@ define([
                     maxZoom: config.levelOfDetails.maxLevel,
                     slider: false
                 });
+
+                GlobalStorage.map = map;
 
                 /*  START - Add static layers   */
 

@@ -76,7 +76,7 @@ define([
         Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
 
     // Util
-        utilMisc, utilArray, utilDict, popupManager, tmplHelper) {
+        utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
         "use strict";
 
         var GRID_MODE_SUMMARY = "summary",
@@ -328,7 +328,7 @@ define([
                             var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
 
                             tmpl.cache = {
-                                };
+                            };
 
                             tmpl.templates = data_grid_template_json;
 
@@ -336,7 +336,6 @@ define([
                             tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
-                                                
                         }
 
                         return obj[datagridMode];
@@ -900,14 +899,9 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var lFeatureLayers = GlobalStorage.config.featureLayers,
-                            nonStaticFeatureLayers = dojoArray.filter(lFeatureLayers, function (item) {
-                                if (item.isStatic) {
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            });
+                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.featureLayers, function (layerConfig) {
+                            return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                        });
 
                         templateData.buttons = lang.mixin(templateData.buttons,
                             {
@@ -1050,7 +1044,10 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                selectedDatasetUrl = GlobalStorage.config.featureLayers[0].url;
+                                //selectedDatasetUrl = datasetSelector.find("option").first().value;
+                                selectedDatasetUrl = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                                    return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                                }).url;
                             }
                         } else {
                             datasetSelector.find("option[value='" + selectedDatasetUrl + "']").prop('selected', true);
@@ -1308,7 +1305,7 @@ define([
                 oid = parseInt(buttonNode.data(featureOidField)),
                 featureLayer = RampMap.getFeatureLayer(featureUrl),
 
-                graphic = utilArray.binaryFind(featureLayer.graphics,
+                graphic = UtilArray.binaryFind(featureLayer.graphics,
                     function (a_graphic) {
                         return GraphicExtension.getOid(a_graphic) - oid;
                     });
