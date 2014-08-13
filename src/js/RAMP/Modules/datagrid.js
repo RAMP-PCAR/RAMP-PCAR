@@ -413,7 +413,7 @@ define([
                         //layout for variable column (extended grid)
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: dojoArray.map(getGridConfig(ui.getSelectedDatasetUrl()).gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetUrl() === null ? [{ title: "" }] : dojoArray.map(getGridConfig(ui.getSelectedDatasetUrl()).gridColumns, function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -1044,10 +1044,10 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                //selectedDatasetUrl = datasetSelector.find("option").first().value;
-                                selectedDatasetUrl = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                                var firstVisibleLayer = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
                                     return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
-                                }).url;
+                                });
+                                selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
                             }
                         } else {
                             datasetSelector.find("option[value='" + selectedDatasetUrl + "']").prop('selected', true);

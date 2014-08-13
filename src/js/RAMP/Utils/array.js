@@ -78,10 +78,10 @@ define(["dojo/_base/array", "dojo/_base/lang"],
                 var i;
                 for (i = 0; i < arr.length; i++) {
                     if (predicate(arr[i])) {
-                        break;
+                        return i;
                     }
                 }
-                return i;
+                return -1;
             },
 
             /**
