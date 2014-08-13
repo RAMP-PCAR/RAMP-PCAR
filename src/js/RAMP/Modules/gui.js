@@ -724,6 +724,8 @@ define([
                 panelPopup,
                 panelWidthDefault,
 
+                windowWidth,
+
                 duration = 0.5,
 
                 layoutChange,
@@ -791,36 +793,51 @@ define([
                 return panelWidthDefault;
             }
 
-            // fullDataTransition
-            fullDataTimeLine
-                .set(viewport, { className: "+=full-data-mode" })
-                .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
+            function createTimelines() {
+                // fullDataTransition
+                fullDataTimeLine
+                    .set(viewport, { className: "+=full-data-mode" })
+                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
 
-                .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
-                .set(mapContent, { top: "500px" })
+                    .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
+                    .set(mapContent, { top: "500px" })
 
-                .to(panelToggle, transitionDuration, { right: -13, ease: "easeOutCirc" }, 0)
-                .set(panelToggle, { display: "none" })
+                    .to(panelToggle, transitionDuration, { right: -13, ease: "easeOutCirc" }, 0)
+                    .set(panelToggle, { display: "none" })
 
-                .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
-                .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
-                .fromTo(mapToolbar, transitionDuration / 2,
-                    { width: "100%", height: "31px" },
-                    { width: 31, height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
+                    .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
+                    .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
+                    .fromTo(mapToolbar, transitionDuration / 2,
+                        { width: "100%", height: "31px" },
+                        { width: 31, height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
 
-                .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
-                .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
+                    .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
+                    .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
-                .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
-                .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
 
-            // panelToggleTransition
-            panelToggleTimeLine
-                .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
-                .set(panelDiv, { display: "none" }, transitionDuration)
-                .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
+                // panelToggleTransition
+                panelToggleTimeLine
+                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
+                    .set(panelDiv, { display: "none" }, transitionDuration)
+                    .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: "430px", ease: "easeOutCirc" });
+                fullDataSubpanelChangeTimeLine
+                    .fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
+            }
+
+            function killTimelines() {
+                fullDataSubpanelChangeTimeLine.kill();
+                panelToggleTimeLine.kill();
+                fullDataTimeLine.kill();
+            }
+
+            function recreateTimelines() {
+                panelWidthDefault = null;
+                killTimelines();
+                createTimelines();
+            }
 
             /*function _toggleFullScreenMode_(fullscreen) {
             megaMenu.css({
@@ -935,18 +952,18 @@ define([
             }
 
             function _toggleFullDataMode(fullData) {
-                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : _isFullData;
+                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
                 if (_isFullData) {
                     TweenLite.fromTo(panelDiv, transitionDuration,
-                        { width: 430, right: 0, left: "auto" },
+                        { width: getPanelWidthDefault(), right: 0, left: "auto" },
                         { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {
                     TweenLite.fromTo(panelDiv, transitionDuration,
                         { left: 35, width: "auto", right: panelDiv.css("right") },
-                        { right: 0, width: 430, ease: "easeInCirc" });
+                        { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }
@@ -958,9 +975,21 @@ define([
                 });
             }
 
+            function optimizeLayout() {
+                if ((windowWidth < 1200 && jWindow.width() > 1200) || 
+                    (windowWidth > 1200 && jWindow.width() < 1200)) {                  
+                    recreateTimelines();
+
+                    windowWidth = jWindow.width();
+                }                
+            }
+
             return {
                 init: function () {
-                    //jWindow.on("resize", adjustWidth);
+                    createTimelines();
+
+                    windowWidth = jWindow.width();
+                    jWindow.on("resize", optimizeLayout);
 
                     Theme
                         .fullScreenCallback("onComplete", onFullScreenComplete)
