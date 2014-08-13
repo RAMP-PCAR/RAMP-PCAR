@@ -107,7 +107,7 @@ define([
                                     grip_class: "gripHighlighted",
                                     panel_selector: ".highlightPanel"
                                 },
-                                value_changed_callback: function (cause, leftValue, rightValue, prevMin, prevMax) {
+                                value_changed_callback: function (cause, leftValue) { //, rightValue, prevMin, prevMax) {
                                     var slider = $(this),
                                         sliderId = slider.data(layerIdField),
                                         leftValueFormatted = Math.round(leftValue * 100) + "%",
