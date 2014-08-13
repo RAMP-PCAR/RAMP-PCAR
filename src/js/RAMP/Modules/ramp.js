@@ -113,7 +113,6 @@ define([
                     id = id.replace("wmsLayer_", "");
                 }
 
-
                 return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
                     function (layerConfig) {
                         return layerConfig.id === id;

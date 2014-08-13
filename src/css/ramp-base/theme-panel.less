@@ -29,7 +29,7 @@
 // Full data mode
 .full-data-mode {
     .sub-panel-container {
-        right: 0;
+        right: 0 !important;
         top: 44px;
 
         .sub-panel {
@@ -192,11 +192,9 @@
 
 .sub-panel-container { // panel that slides out to display more data
     position: fixed;
-    //height: 584px;
     overflow-x: hidden;
     overflow-y: auto;
-    right: 430px;
-    //right: 0;
+    right: @panel-width-large; // override set by theme-layout
     top: 247px;
     bottom: 0;
 
@@ -227,10 +225,8 @@
     .sub-panel {
         position: relative;
         float: left;
-        //width: @panel-width-large;
-        width: 424px;
+        width: @panel-width-large - 6;  // override set by theme-layout
         left: 100%;
-        //left: 431px;
         height: 100%;
         background: none repeat scroll 0 0 #FFFFFF;
         border-right: 3px solid @accent-color;
