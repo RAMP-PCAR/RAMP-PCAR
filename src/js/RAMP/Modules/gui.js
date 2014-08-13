@@ -820,7 +820,7 @@ define([
                 .set(panelDiv, { display: "none" }, transitionDuration)
                 .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: "430px", ease: "easeOutCirc" });
+            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
 
             /*function _toggleFullScreenMode_(fullscreen) {
             megaMenu.css({
@@ -939,14 +939,14 @@ define([
 
                 if (_isFullData) {
                     TweenLite.fromTo(panelDiv, transitionDuration,
-                        { width: 430, right: 0, left: "auto" },
+                        { width: getPanelWidthDefault(), right: 0, left: "auto" },
                         { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {
                     TweenLite.fromTo(panelDiv, transitionDuration,
                         { left: 35, width: "auto", right: panelDiv.css("right") },
-                        { right: 0, width: 430, ease: "easeInCirc" });
+                        { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }
