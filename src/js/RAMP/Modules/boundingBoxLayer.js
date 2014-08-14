@@ -1,4 +1,4 @@
-﻿/*global define */
+﻿/*global define, esri */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -17,15 +17,10 @@
 
 define(["dojo/_base/declare"],
     function (declare) {
-        "use strict";
+        //"use strict";
         return declare(esri.layers.GraphicsLayer, {
-            // Do this so we can call the superclass constructor ourselves
-            "-chains-": {
-                constructor: "manual"
-            },
-
-            constructor: function (arg) {
-                this.inherited(arg);
+            constructor: function (options) {
+                this.inherited(arguments);
             }
         });
     });
