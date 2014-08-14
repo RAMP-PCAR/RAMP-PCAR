@@ -278,13 +278,10 @@ define([
                             }
                         });
 
-                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
+                    eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        if (!layerConfig) {
-                            return true;
-                        }
                         return layerConfig.layerVisible;
-                    });*/
+                    });
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
