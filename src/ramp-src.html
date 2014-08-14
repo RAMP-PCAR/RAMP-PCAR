@@ -129,19 +129,18 @@
                             <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium align-right">-->
                             <ul id="map-toolbar" class="align-right">
                                 <li id="basemapControls" class="float-left map-toolbar-item" style="display: inline;">
-                                    <button class="button map-toolbar-item-button button-none" aria-haspopup="true" id="baseMapToggle">
+                                    <button class="button map-toolbar-item-button button-none" id="baseMapToggle">
                                         <span>Topographic</span><span class="separator"></span>
                                     </button>
-                                    <div id="basemapGallery" aria-hidden="true" aria-expanded="false">
+                                    <div id="basemapGallery">
                                     </div>
                                 </li>
                                 <li class="map-toolbar-item">
-                                    <button class="button map-toolbar-item-button button-none" id="addLayer-toggle" aria-haspopup="true"
+                                    <button class="button map-toolbar-item-button button-none" id="addLayer-toggle" 
                                             onclick="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start 100 @@addLayer-opacity-display-end'">
                                         <i class="fa fa-plus"></i><span class="on-right">@@addLayerTitle</span>
                                     </button>
-                                    <div id="addLayer-section-container" class="map-toolbar-item-container" aria-hidden="true"
-                                         aria-expanded="false">
+                                    <div id="addLayer-section-container" class="map-toolbar-item-container">
                                         <div id="addLayer-section" class="map-toolbar-item-section align-left background-white box-shadow-section">
                                             <section>
                                                 <h2 class="margin-top-none">
@@ -221,7 +220,7 @@
                                                     </ul>
                                                 </div>
                                                 <p class="margin-top-medium margin-bottom-small">
-                                                    <a href="mailto:?subject={0}&body={1}" class="button button-info float-right getlink-email-button">
+                                                    <a href="mailto:" class="button button-info float-right getlink-email-button">
                                                         <span class="wb-icon-mail"></span>@@getLinkEmail
                                                     </a> <span class="clear"></span>
                                                 </p>
@@ -232,7 +231,7 @@
                                     </div>
                                 </li>
                                 <li class="map-toolbar-item">
-                                    <button class="button map-toolbar-item-button button-none" id="advanced-toggle" aria-haspopup="true">
+                                    <button class="button map-toolbar-item-button button-none" id="advanced-toggle">
                                         <i class="fa fa-cog"></i><span class="on-right">@@advancedTitle</span>
                                     </button>
                                     <div id="advanced-toolbar">
@@ -266,11 +265,10 @@
                                     </button>
                                 </li>
                                 <li class="map-toolbar-item">
-                                    <button class="button map-toolbar-item-button button-none" aria-haspopup="true" id="helpToggle">
+                                    <button class="button map-toolbar-item-button button-none" id="helpToggle">
                                         <i class="fa fa-question"></i><span class="on-right">@@helpTitle</span>
                                     </button>
-                                    <div id="help-section-container" class="map-toolbar-item-container" aria-hidden="true"
-                                         aria-expanded="false">
+                                    <div id="help-section-container" class="map-toolbar-item-container">
                                         <div id="help-section-shadow" class="background-white">
                                             <div id="help-section" class="align-left">
 

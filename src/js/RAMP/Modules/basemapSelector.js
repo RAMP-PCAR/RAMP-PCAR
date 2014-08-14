@@ -76,7 +76,7 @@ function (
             init: function () {
                 baseMapControls = $("#basemapControls");
                 baseMapToggle = $("#baseMapToggle");
-                basemapGalleryNode = $("#basemapGallery");
+                basemapGalleryNode = $("#basemapGallery").attr("role", "listbox");
 
                 // Set alt text for selector thumbnails
                 dojoArray.forEach(config.basemaps, function (basemap) {
@@ -89,7 +89,7 @@ function (
                     $(node).html(tmpl(config.siteTemplate.basemapTemplate, TmplHelper.dataBuilder(config.basemaps[i])));
                 });
 
-                // turn on the opening and closing of the basemape selector section
+                // turn on the opening and closing of the basemap selector section
                 PopupManager.registerPopup(baseMapControls, "hoverIntent",
                     function (d) {
                         basemapGalleryNode.slideDown("fast", function () { d.resolve(); });
