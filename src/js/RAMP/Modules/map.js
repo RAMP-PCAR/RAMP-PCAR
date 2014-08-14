@@ -797,7 +797,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
-                        id: String.format("wmsLayer_{0}", layer.id),
+                        id: layer.id,
                         format: layer.format,
                         opacity: resolveLayerOpacity(layer.settings.opacity),
                         resourceInfo: {

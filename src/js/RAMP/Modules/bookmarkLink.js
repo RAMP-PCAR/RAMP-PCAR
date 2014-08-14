@@ -428,10 +428,8 @@ define([
                 });
 
                 UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
-                    var layerConfig = UtilArray.find(config.featureLayers, function (layer) {
+                    var layerConfig = UtilArray.find(config.featureLayers.concat(config.wmsLayers), function (layer) {
                         return layer.id === key;
-                    }) || UtilArray.find(config.wmsLayers, function (layer) {
-                        return String.format("wmsLayer_{0}", layer.id) === key;
                     });
                     layerConfig.settings.opacity.default = value;
                 });
