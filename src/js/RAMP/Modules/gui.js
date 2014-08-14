@@ -1397,7 +1397,7 @@ define([
                 $("#addLayer-add").on("click", function () {
                     topic.publish(EventManager.Map.ADD_LAYER, null);
 
-                    addLayerSectionContainer.slideToggle("fast");
+                    addLayerPanelPopup.close();
                 });
                 //End Add Layer
 
