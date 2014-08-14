@@ -3650,7 +3650,7 @@ Developers of the Almighty JSON Config Editor
                         {
                             "name": "layerVisible",
                             "type": "Boolean",
-                            "value": false,
+                            "value": true,
                             "description": ""
                         },
                         {

@@ -607,22 +607,16 @@ define([
 
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
-                            //WMS does not have layer type property.  must use layer id to determine if we want to show layer in filter
+                            var wmsLayerName = null;
+                            if (layer instanceof WMSLayer) {
+                                wmsLayerName = layer.layerInfos[0].name;
 
-                            if (layer.type === "Feature Layer" || layer instanceof WMSLayer || layer.id.indexOf("static_") === 0) {
-                                // modify layer object
+                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+                                layerGroups.wms.push(layer);
+                            } else if (layer.type === "Feature Layer" || layer.id.indexOf("static_") === 0) {
+                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
 
-                                var wmsLayerName = null;
-                                if (layer instanceof WMSLayer) {
-                                    wmsLayerName = layer.layerInfos[0].name;
-
-                                    layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-                                    layerGroups.wms.push(layer);
-                                } else {
-                                    layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-
-                                    layerGroups.feature.push(layer);
-                                }
+                                layerGroups.feature.push(layer);
                             }
                         });
 

@@ -898,18 +898,17 @@ define([
                             visible: layer.layerVisible,
                             opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
-                        if (layer.layerVisible === false) {
-                            dojoOn.once(fl, "update-end", function () {
-                                fl.setVisibility(false);
-                            });
-                        }
                         if (layer.boundingBoxVisible === true) {
                             dojoOn.once(fl, "update-end", function () {
                                 setBoundingBoxVisibility(layer.id, true);
                             });
                         }
                     }
-
+                    if (layer.layerVisible === false) {
+                        dojoOn.once(fl, "update-end", function () {
+                            fl.setVisibility(false);
+                        });
+                    }
                     return fl;
                 });
 
