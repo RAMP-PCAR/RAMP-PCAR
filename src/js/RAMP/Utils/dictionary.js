@@ -141,6 +141,47 @@ define([
                     copy[key] = value;
                 });
                 return copy;
+            },
+
+            /**
+            * Converts the given array into a dictionary, where the values of the dictionary are values in
+            * the array, and the keys are the return value of the given function.
+            *
+            * @static
+            * @method arrayToMap
+            * @param {Object} arr an array
+            * @param {Function} fcn a function that takes one argument and returns a key for the given argument
+            * @return {Object} a dictionary
+            */
+            arrayToMap: function (arr, fcn) {
+                var dict = {};
+                dojoArray.forEach(arr, function (element) {
+                    dict[fcn(arr)] = element;
+                });
+                return dict;
+            },
+
+            /**
+            * Convert the given array into a dictionary, where the keys of the dictionary are the elements in the
+            * first array and the values of the dictionary are elements in the second array. The size of the two arrays
+            * must match.
+            *
+            * @static
+            * @method zip
+            * @param {Object} arr1 the key array
+            * @param {Object} arr2 the value array
+            * @return {Object} a dictionary
+            */
+            zip: function (arr1, arr2) {
+                if (arr1.length !== arr2.length) {
+                    throw "Array lengths differ";
+                }
+
+                var dict = {};
+                dojoArray.forEach(arr1, function (element, i) {
+                    dict[element] = arr2[i];
+                });
+                return dict;
             }
         };
     });

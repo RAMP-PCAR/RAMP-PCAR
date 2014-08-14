@@ -58,7 +58,7 @@ define([
         "dojo/text!./templates/filter_wms_meta_Template.html",
 
 /* Esri */
-        "esri/tasks/query", "esri/layers/FeatureLayer",
+        "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
 
 /* Ramp */
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
@@ -75,7 +75,7 @@ define([
         filter_wms_meta_Template,
 
     /* Esri */
-        EsriQuery, FeatureLayer,
+        EsriQuery, FeatureLayer, WMSLayer,
 
     /* Ramp */
         Ramp, GlobalStorage, RampMap, EventManager, Theme,
@@ -278,13 +278,10 @@ define([
                             }
                         });
 
-                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
+                    eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        if (!layerConfig) {
-                            return true;
-                        }
                         return layerConfig.layerVisible;
-                    });*/
+                    });
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
@@ -612,11 +609,11 @@ define([
                         dojoArray.forEach(layers, function (layer) {
                             //WMS does not have layer type property.  must use layer id to determine if we want to show layer in filter
 
-                            if (layer.type === "Feature Layer" || layer.id.indexOf("wmsLayer") === 0 || layer.id.indexOf("static_") === 0) {
+                            if (layer.type === "Feature Layer" || layer instanceof WMSLayer || layer.id.indexOf("static_") === 0) {
                                 // modify layer object
 
                                 var wmsLayerName = null;
-                                if (layer.id.indexOf("wmsLayer") === 0) {
+                                if (layer instanceof WMSLayer) {
                                     wmsLayerName = layer.layerInfos[0].name;
 
                                     layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);

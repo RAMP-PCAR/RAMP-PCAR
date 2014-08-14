@@ -1446,7 +1446,7 @@
                 "hoverTemplate": "feature_hover_maptip_template",
                 "anchorTemplate": "anchored_map_tip"
             },
-            "layerVisible": true
+            "layerVisible": false
         }
     ],
     "datagrid": {
@@ -1610,7 +1610,7 @@
                 "enable": false,
                 "legendURL": ""
             },
-            "layerVisible": true
+            "layerVisible": false
         }
     ],
     "plugins": [

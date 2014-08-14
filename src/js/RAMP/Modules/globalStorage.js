@@ -6,6 +6,7 @@
 *
 *
 * @module RAMP
+* @submodule GlobalStorage
 *
 */
 

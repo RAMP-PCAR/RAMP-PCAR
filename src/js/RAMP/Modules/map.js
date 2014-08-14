@@ -58,10 +58,11 @@ define([
 "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager", "ramp/boundingBoxLayer",
+"ramp/staticLayer",
 
 /* Util */
-"utils/util", "utils/array"],
+"utils/util", "utils/array", "utils/dictionary"],
 
     function (
     /* Dojo */
@@ -73,10 +74,10 @@ define([
     EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
+    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager, BoundingBoxLayer, StaticLayer,
 
     /* Util */
-    UtilMisc, UtilArray) {
+    UtilMisc, UtilArray, UtilDict) {
         "use strict";
 
         /**
@@ -436,8 +437,7 @@ define([
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
                             var layer = map.getLayer(layerId);
-
-                            console.log(layer.loaded, layerId, layer);
+                            //console.log(layer.loaded, layerId, layer);
                             return layer.loaded;
                         }
                     );
@@ -797,7 +797,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
-                        id: String.format("wmsLayer_{0}", layer.id),
+                        id: layer.id,
                         format: layer.format,
                         opacity: resolveLayerOpacity(layer.settings.opacity),
                         resourceInfo: {
@@ -898,6 +898,16 @@ define([
                             visible: layer.layerVisible,
                             opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
+                        if (layer.layerVisible === false) {
+                            dojoOn.once(fl, "update-end", function () {
+                                fl.setVisibility(false);
+                            });
+                        }
+                        if (layer.boundingBoxVisible === true) {
+                            dojoOn.once(fl, "update-end", function () {
+                                setBoundingBoxVisibility(layer.id, true);
+                            });
+                        }
                     }
 
                     return fl;
@@ -911,8 +921,6 @@ define([
                 * @property boundingBoxLayers
                 * @type {array of esri/layer/GraphicsLayer}
                 */
-                // Maps graphicsLayerId to a GraphicsLayer Object that represents an extent bounding box
-                boundingBoxMapping = {};
 
                 var boundingBoxLayers = dojoArray.map(config.featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
@@ -920,14 +928,17 @@ define([
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
 
-                    var attrLayer = new esri.layers.GraphicsLayer({
-                        //change to support WMS layers
+                    return new BoundingBoxLayer({
                         id: String.format("boundingBoxLayer_{0}", layer.id),
                         visible: layer.boundingBoxVisible
                     });
-                    boundingBoxMapping[layer.id] = attrLayer;
-                    return attrLayer;
                 });
+
+                // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
+                // for that layer
+                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.featureLayers, function (layer) {
+                    return layer.id;
+                }), boundingBoxLayers);
 
                 //the map!
                 map = new EsriMap(config.divNames.map, {
@@ -946,41 +957,9 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.map(config.featureLayers, function (layer) {
+                dojoArray.forEach(config.featureLayers, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
-                        //var tempLayer;
-                        //determine layer type and process
-                        //switch (staticLayer.layerType) {
-                        //    case "feature":
-                        //        tempLayer = new FeatureLayer(staticLayer.url, {
-                        //            opacity: staticLayer.opacity,
-                        //            mode: FeatureLayer.MODE_SNAPSHOT,
-                        //            id: "static_" + staticLayer.id
-                        //        });
-                        //        break;
-
-                        //    case "tile":
-                        //        tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                        //            opacity: staticLayer.opacity,
-                        //            id: "static_" + staticLayer.id
-                        //        });
-                        //        console.log("tile layer added. " + "static_" + staticLayer.id);
-                        //        break;
-
-                        //    case "dynamic":
-                        //        tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                        //            opacity: staticLayer.opacity,
-                        //            id: "static_" + staticLayer.id
-                        //        });
-                        //        console.log("dynamic layer added. " + "static_" + staticLayer.id);
-                        //        break;
-
-                        //    default:
-                        //        //TODO add in other types of maps... wms?  non-esri tile?
-                        //        break;
-                        //}
-
                         var tempLayer = map.generateStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
@@ -993,15 +972,6 @@ define([
 
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
-
-                // Can only initialize the bounding boxes after the map layers finishes loading
-                dojoOn.once(map, "update-end", function () {
-                    dojoArray.forEach(config.featureLayers, function (layer) {
-                        if (!layer.isStatic) {
-                            setBoundingBoxVisibility(layer.id, layer.boundingBoxVisible);
-                        }
-                    });
-                });
 
                 // Combine all layer arrays then add them all at once (for efficiency)
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
