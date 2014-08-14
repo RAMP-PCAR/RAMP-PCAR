@@ -58,11 +58,13 @@
         "txtBaseToolClearMap": "Clear",
         "txtBaseToolWorking": "Working ...",
         "txtBufferToolDistance": "Distance",
-        "txtMeasureToolLength": "Length",
-        "txtMeasureToolArea": "Area",
-        "txtMeasureToolNA": "n/a",
+        "txtAreaToolLength": "Length",
+        "txtAreaToolArea": "Area",
+        "txtAreaToolNA": "n/a",
         "txtPopulationToolPopulation": "Population",
-        "txtPopulationToolNA": "n/a"
+        "txtPopulationToolNA": "n/a",
+        "txtDistanceToolNA": "n/a",
+        "txtDistanceToolLength": "Length"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
@@ -95,26 +97,36 @@
         "wkid": 3978
     },
     "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "../proxy.ashx",
+    "proxyUrl": "proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
-        "tools": {
-            "measure": {
-                "name": "measureTool",
-                "selector": "#at-measure-toggle",
+        "tools": [
+            {
+                "name": "areaTool",
+                "selector": "#at-area-toggle",
                 "enabled": true
             },
-            "population": {
+            {
                 "name": "populationTool",
                 "selector": "#at-population-toggle",
                 "enabled": true
             },
-            "buffer": {
+            {
                 "name": "bufferTool",
                 "selector": "#at-buffer-toggle",
+                "enabled": true,
+                "2": {
+                    "name": "bufferTool",
+                    "selector": "#at-buffer-toggle",
+                    "enabled": true
+                }
+            },
+            {
+                "name": "distanceTool",
+                "selector": "#at-distance-toggle",
                 "enabled": true
             }
-        }
+        ]
     },
     "extents": {
         "defaultExtent": {
@@ -604,11 +616,11 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.8
                 }
             },
-            "layerVisible": false,
-            "boundingBoxVisible": true
+            "layerVisible": true,
+            "boundingBoxVisible": false
         },
         {
             "id": "layer_dd1m3",
@@ -1050,7 +1062,7 @@
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": true
+            "boundingBoxVisible": false
         },
         {
             "id": "oilSandsRegions",
@@ -1112,7 +1124,7 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.6
+                    "default": 0.8
                 }
             },
             "isStatic": true,
@@ -1424,7 +1436,7 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.7
                 }
             },
             "layerType": "feature",
@@ -1530,10 +1542,18 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.2
                 }
             },
-            "layerVisible": true
+            "layerVisible": true,
+            "featureInfo": {
+                "parser": "tempParse",
+                "mimeType": "text/plain"
+            },
+            "legend": {
+                "enable": true,
+                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
+            }
         },
         {
             "displayName": "Winds",
@@ -1583,18 +1603,21 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 0.5
+                    "default": 0.2
                 }
             },
             "legend": {
-                "enable": true,
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
+                "enable": false,
+                "legendURL": ""
             },
             "layerVisible": false
         }
     ],
+    "plugins": [
+        "tempParse.js"
+    ],
     "ui": {
-        "fullscreen": true,
+        "fullscreen": false,
         "sidePanelOpened": true
     }
 }

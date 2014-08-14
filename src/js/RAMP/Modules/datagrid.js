@@ -76,7 +76,7 @@ define([
         Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
 
     // Util
-        utilMisc, utilArray, utilDict, popupManager, tmplHelper) {
+        utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
         "use strict";
 
         var GRID_MODE_SUMMARY = "summary",
@@ -103,7 +103,7 @@ define([
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
             config,
-            layerConfig,
+            //layerConfig,
             gridConfig,
 
             /**
@@ -413,7 +413,7 @@ define([
                         //layout for variable column (extended grid)
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: dojoArray.map(getGridConfig(ui.getSelectedDatasetUrl()).gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetUrl() === null ? [{ title: "" }] : dojoArray.map(getGridConfig(ui.getSelectedDatasetUrl()).gridColumns, function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -899,14 +899,9 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var lFeatureLayers = GlobalStorage.config.featureLayers,
-                            nonStaticFeatureLayers = dojoArray.filter(lFeatureLayers, function (item) {
-                                if (item.isStatic) {
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            });
+                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.featureLayers, function (layerConfig) {
+                            return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                        });
 
                         templateData.buttons = lang.mixin(templateData.buttons,
                             {
@@ -1049,7 +1044,10 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                selectedDatasetUrl = GlobalStorage.config.featureLayers[0].url;
+                                var firstVisibleLayer = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                                    return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                                });
+                                selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
                             }
                         } else {
                             datasetSelector.find("option[value='" + selectedDatasetUrl + "']").prop('selected', true);
@@ -1146,6 +1144,12 @@ define([
                 visibleGridLayers = RampMap.getVisibleFeatureLayers(),
                 dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
+
+            // filter out static layers
+            visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                //return (utilMisc.isUndefined(Ramp.getLayerConfig(layer.url).isStatic) || Ramp.getLayerConfig(layer.url).isStatic == false);
+                return !Ramp.getLayerConfig(layer.url).isStatic;
+            });
 
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
@@ -1301,7 +1305,7 @@ define([
                 oid = parseInt(buttonNode.data(featureOidField)),
                 featureLayer = RampMap.getFeatureLayer(featureUrl),
 
-                graphic = utilArray.binaryFind(featureLayer.graphics,
+                graphic = UtilArray.binaryFind(featureLayer.graphics,
                     function (a_graphic) {
                         return GraphicExtension.getOid(a_graphic) - oid;
                     });
@@ -1367,8 +1371,16 @@ define([
             */
             init: function () {
                 config = GlobalStorage.config;
-                layerConfig = config.featureLayers;
-                gridConfig = layerConfig[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
+
+                // Added to make sure the first layer is not static
+                var layerConfigs = dojoArray.filter(config.featureLayers, function (layerConfig) {
+                    //return (utilMisc.isUndefined(layerConfig.isStatic) || layerConfig.isStatic == false);
+                    return !layerConfig.isStatic;
+                });
+
+                // layerConfig = config.featureLayers;
+                gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
+
                 /*
                 $.fn.dataTable.ext.search.push(
                     function (settings, data, dataIndex) {

@@ -240,7 +240,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
 
                     checkbox.on(checkbox.event.TOGGLE, function (evt) {
                         // re-emit individual checkbox's toggle event as groups;
-                        console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         that.emit(that.event.MEMBER_TOGGLE, evt);
 

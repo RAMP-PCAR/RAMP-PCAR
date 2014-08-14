@@ -148,18 +148,18 @@ define([
                 ui.init();
 
                 // load only enabled tools
-                UtilDict.forEachEntry(globalStorage.config.advancedToolbar.tools,
-                    function (key, value) {
-                        if (value.enabled) {
-                            require(["tools/" + value.name], function (module) {
+                globalStorage.config.advancedToolbar.tools.forEach(
+                    function (tool) {
+                        if (tool.enabled) {
+                            require(["tools/" + tool.name], function (module) {
                                 module
-                                    .init(value.selector)
+                                    .init(tool.selector)
                                     .on(module.event.ACTIVATE, function () {
                                         console.log("Tool", module.name, "activated");
                                         deactivateAll(module);
                                     });
 
-                                tools[value.name] = module;
+                                tools[tool.name] = module;
                             });
                         }
                     }

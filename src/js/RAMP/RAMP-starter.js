@@ -18,6 +18,7 @@
 //required to get draw bar to show in french
 var //sPath = window.location.href,
     //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
+    RAMP,
     jsFolderPath = "js/",
     cssFolderPath = "css/",
     state = "src/", // replace with "build" upon release,
@@ -32,6 +33,18 @@ var //sPath = window.location.href,
                     }
                     )[0] || "ramp-base"),
     dojoConfig;
+
+/**
+* RAMP global class.
+* A general globally available class to hold any RAMP global data.  Currently houses any plugins which are not loaded via AMD.
+*
+* @class RAMP
+*/
+RAMP = {
+    plugins: {
+        featureInfoParser: {}
+    }
+};
 
 dojoConfig = {
     parseOnLoad: false,
@@ -62,6 +75,7 @@ dojoConfig = {
     ],
     jsFolderPath: jsFolderPath,
     cssFolderPath: cssFolderPath,
+    fullPluginPath: pathname + jsFolderPath + 'plugins/',
     extensionPrefix: state === "build/" ? ".min" : "",
     buildState: state
 };

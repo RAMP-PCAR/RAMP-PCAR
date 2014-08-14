@@ -98,6 +98,7 @@ define([
                     function initTransparencySliders() {
                         var transparencySliders;
 
+                        // initializes all sliders in the layer list
                         transparencySliders = layerList.find(".nstSlider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
@@ -106,20 +107,52 @@ define([
                                     grip_class: "gripHighlighted",
                                     panel_selector: ".highlightPanel"
                                 },
-                                value_changed_callback: function (cause, leftValue, rightValue, prevMin, prevMax) {
-                                    var slider = $(this);
-                                    slider.parent().find('.leftLabel').text(Math.round(leftValue * 100) + "%");
-                                    slider.nstSlider('highlight_range', 0, leftValue);
+                                value_changed_callback: function (cause, leftValue) { //, rightValue, prevMin, prevMax) {
+                                    var slider = $(this),
+                                        sliderId = slider.data(layerIdField),
+                                        leftValueFormatted = Math.round(leftValue * 100) + "%",
+                                        newState;
+
+                                    // update the slider label and highlight range
+                                    slider
+                                        .parent().find('.leftLabel').text(leftValueFormatted).end().end()
+                                        .nstSlider('highlight_range', 0, leftValue);
 
                                     topic.publish(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                                        layerId: $(this).data(layerIdField),
+                                        layerId: sliderId,
                                         value: leftValue
                                     });
 
-                                    console.log(cause, leftValue, rightValue, prevMin, prevMax);
+                                    // Setting Opacity to 0.0, sets layer to invisible
+                                    // Setting Opacity to >0.0, sets layer to visible
+                                    newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
+
+                                    if (!UtilMisc.isUndefined(newState)) {
+                                        topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
+                                            state: newState,
+                                            layerId: sliderId
+                                        });
+                                    }
+
+                                    //console.log(cause, leftValue, rightValue, prevMin, prevMax);
                                 }
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
+
+                        topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
+                            var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
+                                value;
+
+                            if (slider.length > 0) {
+                                slider.toggleClass("disabled", !evt.state);
+                                value = slider.nstSlider("get_current_min_value");
+
+                                // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
+                                if (value === 0 && evt.state) {
+                                    slider.nstSlider("set_position", 1);
+                                }
+                            }
+                        });
                     }
 
                     return {
@@ -245,13 +278,13 @@ define([
                             }
                         });
 
-                    eyeCheckboxGroup.setEachState(function (checkbox) {
+                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
                         if (!layerConfig) {
                             return true;
                         }
                         return layerConfig.layerVisible;
-                    });
+                    });*/
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
@@ -401,6 +434,7 @@ define([
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
                             var guid = button.data("layer-uuid"),
+                                layerConfig = Ramp.getLayerConfigwithGuid(guid),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -413,8 +447,6 @@ define([
                                 doOnOpen: function () { node.addClass("selected-row"); },
                                 doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
                             });
-
-                            var layerConfig = Ramp.getLayerConfigwithGuid(guid);
 
                             //only wms layers have this value
                             if (layerConfig.layerInfo != null) {

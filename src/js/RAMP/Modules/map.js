@@ -1,4 +1,4 @@
-﻿/*global define, esri */
+﻿/*global define, esri, dojoConfig, RAMP */
 
 /**
 *
@@ -54,8 +54,8 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference",
-"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo",
+"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference", "esri/config",
+"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager", "ramp/boundingBoxLayer",
@@ -70,8 +70,8 @@ define([
 
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    GeometryService, ProjectParameters, Polygon, SpatialReference,
-    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo,
+    GeometryService, ProjectParameters, Polygon, SpatialReference, esriConfig,
+    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager, BoundingBoxLayer, StaticLayer,
@@ -377,9 +377,17 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            var handle;
+            var handle,
+                // filter out non static layers for any feature interaction: maptip
+                nonStaticLayers = dojoArray.filter(featureLayers, function (lLayer) {
+                    var isStatic = Ramp.getLayerConfig(lLayer.url).isStatic;
+                    return (UtilMisc.isUndefined(isStatic) || !isStatic);
+                }
+            );
 
-            dojoArray.forEach(featureLayers, function (fl) {
+            // original value : featureLayers
+            // updated with nonStaticLayer
+            dojoArray.forEach(nonStaticLayers, function (fl) {
                 //TODO: set timer for maptips onMouseOver event
 
                 fl.on("click", function (evt) {
@@ -412,6 +420,7 @@ define([
             // Deselect all highlighted points if the map is clicked
             map.on("click", function (evt) {
                 FeatureClickHandler.onFeatureDeselect(evt);
+                topic.publish(EventManager.Map.CLICK, evt);
             });
 
             // Hide all the maptips if the map finishes updating
@@ -428,6 +437,7 @@ define([
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
                             var layer = map.getLayer(layerId);
+                            //console.log(layer.loaded, layerId, layer);
                             return layer.loaded;
                         }
                     );
@@ -544,13 +554,17 @@ define([
             boxLayer.setVisibility(visibility);
         }
 
+        function resolveLayerOpacity(layerOpacity) {
+            return layerOpacity.default || 1;
+        }
+
         function generateStaticLayer(staticLayer) {
             var tempLayer;
             //determine layer type and process
             switch (staticLayer.layerType) {
                 case "feature":
-                    tempLayer = new StaticLayer(staticLayer.url, {
-                        //opacity: staticLayer.opacity,
+                    tempLayer = new FeatureLayer(staticLayer.url, {
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         id: "static_" + staticLayer.id
                     });
@@ -558,7 +572,7 @@ define([
 
                 case "tile":
                     tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                        opacity: staticLayer.opacity,
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         id: "static_" + staticLayer.id
                     });
                     console.log("tile layer added. " + "static_" + staticLayer.id);
@@ -566,7 +580,7 @@ define([
 
                 case "dynamic":
                     tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                        opacity: staticLayer.opacity,
+                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         id: "static_" + staticLayer.id
                     });
                     console.log("dynamic layer added. " + "static_" + staticLayer.id);
@@ -778,17 +792,91 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
+                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;// "/proxy/proxy.ashx";
+                dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
                         id: String.format("wmsLayer_{0}", layer.id),
                         format: layer.format,
-                        opacity: layer.opacity,
+                        opacity: resolveLayerOpacity(layer.settings.opacity),
                         resourceInfo: {
                             extent: new EsriExtent(layer.extent),
                             layerInfos: [new WMSLayerInfo(layer.layerInfo)]
                         }
                     });
+
+                    // WMS binding for getFeatureInfo calls
+
+                    if (layer.featureInfo !== undefined) {
+                        console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
+                        console.log(esriConfig.defaults.io.proxyUrl);
+                        topic.subscribe(EventManager.Map.CLICK, function (evt) {
+                            if (!wmsl.visible) {
+                                return;
+                            }
+
+                            // open details panel immediately after click event
+                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                panelName: layer.displayName,
+                                title: layer.displayName,
+                                content: null,
+                                origin: "wmsFeatureInfo",
+                                target: $("#map-div"),
+                                guid: wmsl.id
+                            });
+
+                            // create a new request using the parameters speced by WMS
+                            var req = new EsriRequest({
+                                url: wmsl.url.split('?')[0],
+                                content: {
+                                    SERVICE: "WMS",
+                                    REQUEST: "GetFeatureInfo",
+                                    VERSION: wmsl.version,
+                                    SRS: "EPSG:" + wmsl.spatialReference.wkid,
+                                    BBOX: map.extent.xmin + "," + map.extent.ymin + "," + map.extent.xmax + "," + map.extent.ymax,
+                                    WIDTH: map.width,
+                                    HEIGHT: map.height,
+                                    QUERY_LAYERS: layer.layerInfo.name,
+                                    INFO_FORMAT: layer.featureInfo.mimeType,
+                                    X: evt.layerX,
+                                    Y: evt.layerY
+                                },
+                                handleAs: "text"
+                            });
+                            req.then(
+                                function (data) {
+                                    var result = RAMP.plugins.featureInfoParser[layer.featureInfo.parser](data);
+
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: result,
+                                        origin: "wmsFeatureInfo",
+                                        update: true,
+                                        guid: wmsl.id
+                                    });
+
+                                    /*topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        panelName: layer.displayName,
+                                        title: layer.displayName,
+                                        content: result,
+                                        origin: "wmsFeatureInfo",
+                                        target: $("#map-div"),
+                                        guid: wmsl.id
+                                    });*/
+                                },
+                                function (error) {
+                                    // display error message in the details panel
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: "Error: " + error.message,
+                                        origin: "wmsFeatureInfo",
+                                        update: true,
+                                        guid: wmsl.id
+                                    });
+
+                                    console.log("Error: ", error.message);
+                                });
+                        });
+                    }
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);
                     wmsl.setVisibility(layer.layerVisible);
@@ -806,7 +894,9 @@ define([
                         fl = new FeatureLayer(layer.url, {
                             id: layer.id,
                             mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layer.layerAttributes]
+                            outFields: [layer.layerAttributes],
+                            visible: layer.layerVisible,
+                            opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
                         if (layer.layerVisible === false) {
                             dojoOn.once(fl, "update-end", function () {
@@ -858,6 +948,8 @@ define([
                     maxZoom: config.levelOfDetails.maxLevel,
                     slider: false
                 });
+
+                GlobalStorage.map = map;
 
                 /*  START - Add static layers   */
 

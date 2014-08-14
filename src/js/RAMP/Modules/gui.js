@@ -334,11 +334,11 @@ define([
                 *
                 * @property _animatePanelDuration
                 * @private
-                * @default 400
+                * @default 0.5
                 * @type {Number}
                 */
 
-                _animatePanelDuration: 500, //400,
+                _animatePanelDuration: 0.5, //0.4,
 
                 timeLine: null,
 
@@ -536,7 +536,7 @@ define([
                     //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
                     //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
 
-                    this.container = this._attr.target.after(subPanelString).parent().find(".sub-panel-container");
+                    this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
                     this._subPanelContentDiv = this.panel.find(".sub-panel-content");
@@ -559,7 +559,7 @@ define([
                             },
                             onCompleteScope: this
                         })
-                        .to(this.panel, this._animatePanelDuration / 1000,
+                        .to(this.panel, this._animatePanelDuration,
                             {
                                 left: 0,
                                 ease: "easeOutCirc"
@@ -714,6 +714,7 @@ define([
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
                 fullScreenToggle = $("#fullScreenToggle"),
+                fullScreenPopup,
 
                 mapToolbar = $("#map-toolbar"),
                 basemapControls = $("#basemapControls"),
@@ -722,6 +723,8 @@ define([
                 panelToggle = $("#panel-toggle"),
                 panelPopup,
                 panelWidthDefault,
+
+                windowWidth,
 
                 duration = 0.5,
 
@@ -769,6 +772,7 @@ define([
             function onFullScreenComplete() {
                 adjustHeight();
                 layoutChange();
+                
                 topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
                     visible: Theme.isFullScreen()
                 });
@@ -789,36 +793,51 @@ define([
                 return panelWidthDefault;
             }
 
-            // fullDataTransition
-            fullDataTimeLine
-                .set(viewport, { className: "+=full-data-mode" })
-                .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
+            function createTimelines() {
+                // fullDataTransition
+                fullDataTimeLine
+                    .set(viewport, { className: "+=full-data-mode" })
+                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
 
-                .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
-                .set(mapContent, { top: "500px" })
+                    .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
+                    .set(mapContent, { top: "500px" })
 
-                .to(panelToggle, transitionDuration, { right: -13, ease: "easeOutCirc" }, 0)
-                .set(panelToggle, { display: "none" })
+                    .to(panelToggle, transitionDuration, { right: -13, ease: "easeOutCirc" }, 0)
+                    .set(panelToggle, { display: "none" })
 
-                .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
-                .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
-                .fromTo(mapToolbar, transitionDuration / 2,
-                    { width: "100%", height: "31px" },
-                    { width: 31, height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
+                    .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
+                    .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
+                    .fromTo(mapToolbar, transitionDuration / 2,
+                        { width: "100%", height: "31px" },
+                        { width: 31, height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
 
-                .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
-                .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
+                    .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
+                    .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
-                .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
-                .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
 
-            // panelToggleTransition
-            panelToggleTimeLine
-                .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
-                .set(panelDiv, { display: "none" }, transitionDuration)
-                .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
+                // panelToggleTransition
+                panelToggleTimeLine
+                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
+                    .set(panelDiv, { display: "none" }, transitionDuration)
+                    .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-            fullDataSubpanelChangeTimeLine.fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: "430px", ease: "easeOutCirc" });
+                fullDataSubpanelChangeTimeLine
+                    .fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
+            }
+
+            function killTimelines() {
+                fullDataSubpanelChangeTimeLine.kill();
+                panelToggleTimeLine.kill();
+                fullDataTimeLine.kill();
+            }
+
+            function recreateTimelines() {
+                panelWidthDefault = null;
+                killTimelines();
+                createTimelines();
+            }
 
             /*function _toggleFullScreenMode_(fullscreen) {
             megaMenu.css({
@@ -933,18 +952,18 @@ define([
             }
 
             function _toggleFullDataMode(fullData) {
-                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : _isFullData;
+                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
                 if (_isFullData) {
                     TweenLite.fromTo(panelDiv, transitionDuration,
-                        { width: 430, right: 0, left: "auto" },
+                        { width: getPanelWidthDefault(), right: 0, left: "auto" },
                         { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {
                     TweenLite.fromTo(panelDiv, transitionDuration,
                         { left: 35, width: "auto", right: panelDiv.css("right") },
-                        { right: 0, width: 430, ease: "easeInCirc" });
+                        { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }
@@ -956,9 +975,25 @@ define([
                 });
             }
 
+            function optimizeLayout() {
+                if ((windowWidth < 1200 && jWindow.width() > 1200) || 
+                    (windowWidth > 1200 && jWindow.width() < 1200)) {                  
+                    recreateTimelines();
+
+                    windowWidth = jWindow.width();
+                }                
+            }
+
             return {
                 init: function () {
-                    //jWindow.on("resize", adjustWidth);
+                    createTimelines();
+
+                    windowWidth = jWindow.width();
+                    jWindow.on("resize", optimizeLayout);
+
+                    Theme
+                        .fullScreenCallback("onComplete", onFullScreenComplete)
+                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
 
                     // initialize the panel popup
                     panelPopup = popupManager.registerPopup(panelToggle, "click",
@@ -970,26 +1005,24 @@ define([
 
                     // set listener to the panel toggle
                     topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
-                        if (event.visible) {
-                            panelPopup.open();
-                        } else {
-                            panelPopup.close();
-                        }
+                        panelPopup.toggle(null, event.visible);
                     });
-
-                    Theme
-                        .fullScreenCallback("onComplete", onFullScreenComplete)
-                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
+                    
+                    // set listener to the full-screen toggle
+                    fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
+                        function (d) {
+                            Theme.toggleFullScreenMode();
+                            d.resolve();
+                        }, {
+                            activeClass: "button-pressed",
+                            setClassBefore: true
+                        }
+                    );                    
 
                     // if the vertical space is too small, trigger the full-screen
                     if (mapContent.height() < jWindow.height() * 0.6) {
-                        Theme.toggleFullScreenMode(true);
+                        fullScreenPopup.open();
                     }
-
-                    // set listener to the full-screen toggle
-                    fullScreenToggle.click(function () {
-                        Theme.toggleFullScreenMode();
-                    });
 
                     adjustHeight();
                 },
@@ -1002,7 +1035,7 @@ define([
                 * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
                 */
                 toggleFullScreenMode: function (fullscreen) {
-                    Theme.toggleFullScreenMode(fullscreen);
+                    fullScreenPopup.toggle(null, fullscreen);
                 },
 
                 isFullData: function () {
