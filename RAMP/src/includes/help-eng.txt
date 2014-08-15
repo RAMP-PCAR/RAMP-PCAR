@@ -140,10 +140,19 @@
     <div>
         <div class="helpSectionBody">
             <p>
-                The Datasets tab lists the selected layers to display in the map and data grid.
+                The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid.
                 The Datasets tab also serves as a map legend.</p>
 
             <h3>Usage</h3>
+
+			<h4>Layer Types</h4>
+			<p>There are three types of layers that can reside in the Dataset tab. 
+				<ul>
+					<li>Feature layers represent data that can be interacted with on the map, and viewed in the data grid. </li> 
+					<li>Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.</li>
+					<li>WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid.</li>
+				</ul>		
+			</p>
 
             <div class="span-3 float-right">
                 <div class="module-poster">
@@ -163,7 +172,7 @@
             <div class="clear"></div>
 
             <h4>Layer Reordering</h4>
-            <p>Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.
+            <p>Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.</p>
 
                 <div class="span- float-right">
                     <div class="module-poster">
@@ -174,6 +183,9 @@
                     </div>
                 </div>
                 <div class="clear"></div>
+			<p>
+				While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  WMS layers will
+				always be displayed beneath the other layers, but may be re-ordered amongst other WMS layers.
 
             </p>
 
