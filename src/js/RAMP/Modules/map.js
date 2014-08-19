@@ -53,13 +53,12 @@ define([
         "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/_base/lang", "dojo/topic", "dojo/on",
 
 /* Esri */
-"esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
+"esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
 "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference", "esri/config",
 "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager", "ramp/boundingBoxLayer",
-"ramp/staticLayer",
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -69,12 +68,12 @@ define([
     declare, dojoArray, dom, domClass, domConstruct, number, query, dojoLang, topic, dojoOn,
 
     /* Esri */
-    EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
+    EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
     GeometryService, ProjectParameters, Polygon, SpatialReference, esriConfig,
     EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager, BoundingBoxLayer, StaticLayer,
+    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
@@ -568,6 +567,9 @@ define([
                         mode: FeatureLayer.MODE_SNAPSHOT,
                         id: "static_" + staticLayer.id
                     });
+                    tempLayer.ramp = {
+                        type: GlobalStorage.layerType.Static
+                    };
                     break;
 
                 case "tile":
@@ -805,6 +807,9 @@ define([
                             layerInfos: [new WMSLayerInfo(layer.layerInfo)]
                         }
                     });
+                    wmsl.ramp = {
+                        type: GlobalStorage.layerType.WMS
+                    };
 
                     // WMS binding for getFeatureInfo calls
 
@@ -898,6 +903,9 @@ define([
                             visible: layer.layerVisible,
                             opacity: resolveLayerOpacity(layer.settings.opacity)
                         });
+                        fl.ramp = {
+                            type: GlobalStorage.layerType.Feature
+                        };
                         if (layer.boundingBoxVisible === true) {
                             dojoOn.once(fl, "update-end", function () {
                                 setBoundingBoxVisibility(layer.id, true);
@@ -926,11 +934,14 @@ define([
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
-
-                    return new BoundingBoxLayer({
+                    var boundingBox = new GraphicsLayer({
                         id: String.format("boundingBoxLayer_{0}", layer.id),
                         visible: layer.boundingBoxVisible
                     });
+                    boundingBox.ramp = {
+                        type: GlobalStorage.layerType.BoundingBox
+                    };
+                    return boundingBox;
                 });
 
                 // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
@@ -972,6 +983,9 @@ define([
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
+                baseLayer.ramp = {
+                    type: GlobalStorage.layerType.Basemap
+                };
                 // Combine all layer arrays then add them all at once (for efficiency)
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
 

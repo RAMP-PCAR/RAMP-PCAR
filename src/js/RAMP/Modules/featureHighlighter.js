@@ -347,6 +347,9 @@ define([
                     id: "highlightLayer",
                     className: "highlightLayer"
                 });
+                highlightLayer.ramp = {
+                    type: GlobalStorage.layerType.Highlight
+                };
 
                 // Layer for showing the graphic that appears when a point
                 // has the mouse hovering over it but the point has not been
@@ -355,6 +358,9 @@ define([
                     id: "hoverlightLayer",
                     className: "hoverlightLayer"
                 });
+                hoverlightLayer.ramp = {
+                    type: GlobalStorage.layerType.Hoverlight
+                };
 
                 // Layer for showing the graphic that appears after the user
                 // presses zoom to on a point
@@ -362,6 +368,9 @@ define([
                     id: "zoomLightLayer",
                     className: "zoomlightLayer"
                 });
+                zoomlightLayer.ramp = {
+                    type: GlobalStorage.layerType.Zoomlight
+                };
 
                 map.addLayer(highlightLayer);
                 map.addLayer(hoverlightLayer, 0);

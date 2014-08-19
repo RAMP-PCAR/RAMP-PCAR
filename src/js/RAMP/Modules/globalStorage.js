@@ -28,6 +28,17 @@ define([],
              */
             getConfigUrl: function () {
                 return "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ECDMP_Service/";
+            },
+
+            layerType: {
+                Basemap: "Basemap",
+                WMS: "WMS",
+                BoundingBox: "Bounding Box",
+                Feature: "Feature Layer",
+                Static: "Static",
+                Highlight: "Highlight",
+                Hoverlight: "Hoverlight",
+                Zoomlight: "Zoomlight"
             }
         };
     });

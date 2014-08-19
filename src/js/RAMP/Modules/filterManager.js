@@ -608,12 +608,12 @@ define([
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
                             var wmsLayerName = null;
-                            if (layer instanceof WMSLayer) {
+                            if (layer.ramp.type === GlobalStorage.layerType.WMS) {
                                 wmsLayerName = layer.layerInfos[0].name;
 
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
                                 layerGroups.wms.push(layer);
-                            } else if (layer.type === "Feature Layer" || layer.id.indexOf("static_") === 0) {
+                            } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.id.indexOf("static_") === 0) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
 
                                 layerGroups.feature.push(layer);
