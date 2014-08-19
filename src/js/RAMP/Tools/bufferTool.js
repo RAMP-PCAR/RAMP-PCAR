@@ -87,16 +87,20 @@ define([
               // Get rid of all non-numerical/non-period characters.
               distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, '');
 
-          params.distances = [distanceInput];
-          params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference.wkid });
-          params.outSpatialReference = bufferApp.map.spatialReference;
-          params.unit = 9036; // Kilometers
+          if (distanceInput === "") {
+              that.working(false);
+          } else {
+              params.distances = [distanceInput];
+              params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference.wkid });
+              params.outSpatialReference = bufferApp.map.spatialReference;
+              params.unit = 9036; // Kilometers
 
-          // Simplify polygon.  this will make the user drawn polygon topologically correct.
-          geometryService.simplify([geometry], function (geometries) {
-              params.geometries = geometries;
-              geometryService.buffer(params, outputBuffer);
-          });
+              // Simplify polygon.  this will make the user drawn polygon topologically correct.
+              geometryService.simplify([geometry], function (geometries) {
+                  params.geometries = geometries;
+                  geometryService.buffer(params, outputBuffer);
+              });
+          }
       }
 
       /**
