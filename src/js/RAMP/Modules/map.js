@@ -564,7 +564,7 @@ define([
                     tempLayer = new FeatureLayer(staticLayer.url, {
                         opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                         mode: FeatureLayer.MODE_SNAPSHOT,
-                        id: "static_" + staticLayer.id
+                        id: staticLayer.id
                     });
                     tempLayer.ramp = {
                         type: GlobalStorage.layerType.Static
@@ -574,17 +574,17 @@ define([
                 case "tile":
                     tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
                         opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: "static_" + staticLayer.id
+                        id: staticLayer.id
                     });
-                    console.log("tile layer added. " + "static_" + staticLayer.id);
+                    console.log("tile layer added. " + staticLayer.id);
                     break;
 
                 case "dynamic":
                     tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
                         opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: "static_" + staticLayer.id
+                        id: staticLayer.id
                     });
-                    console.log("dynamic layer added. " + "static_" + staticLayer.id);
+                    console.log("dynamic layer added. " + staticLayer.id);
                     break;
 
                 default:
@@ -973,7 +973,7 @@ define([
 
                         staticLayers.push(tempLayer);
                         //creates an array of all static layers defined for the current, single feature layer
-                        perLayerStaticMaps[i] = "static_" + staticLayer.id;
+                        perLayerStaticMaps[i] = staticLayer.id;
                     });
                     //adds the static layer id array as a value to an array indexed by feature layer id
                     staticLayerMap[layer.id] = perLayerStaticMaps;

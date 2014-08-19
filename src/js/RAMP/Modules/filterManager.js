@@ -613,7 +613,7 @@ define([
 
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
                                 layerGroups.wms.push(layer);
-                            } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.id.indexOf("static_") === 0) {
+                            } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.ramp.type === GlobalStorage.layerType.Static) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
 
                                 layerGroups.feature.push(layer);
