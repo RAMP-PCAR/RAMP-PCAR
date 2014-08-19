@@ -14,8 +14,8 @@
 * @static
 */
 
-define([],
-    function () {
+define(["ramp/globalStorage"],
+    function (GlobalStorage) {
         "use strict";
 
         return {
@@ -115,7 +115,8 @@ define([],
                     boundingLegendLabel;
 
                 // determine if given layer is static or WMS
-                checkboxDisabled = Boolean(o.data[o.idx].layerConfig.isStatic || o.data[o.idx].layerConfig.layerInfo);
+                checkboxDisabled = Boolean(o.data[o.idx].ramp.type === GlobalStorage.layerType.Static
+                    || o.data[o.idx].ramp.type === GlobalStorage.layerType.WMS);
 
                 boundingLegendLabel = {
                     for: "filterGroup_" + o.data[o.idx].id + "1",

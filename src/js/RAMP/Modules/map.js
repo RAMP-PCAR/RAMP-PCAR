@@ -378,9 +378,8 @@ define([
         function _initEventHandlers(map) {
             var handle,
                 // filter out non static layers for any feature interaction: maptip
-                nonStaticLayers = dojoArray.filter(featureLayers, function (lLayer) {
-                    var isStatic = Ramp.getLayerConfig(lLayer.url).isStatic;
-                    return (UtilMisc.isUndefined(isStatic) || !isStatic);
+                nonStaticLayers = dojoArray.filter(featureLayers, function (layer) {
+                    return layer.ramp.type !== GlobalStorage.layerType.Static;
                 }
             );
 
@@ -890,29 +889,29 @@ define([
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(config.featureLayers, function (layer) {
+                featureLayers = dojoArray.map(config.featureLayers, function (layerConfig) {
                     var fl;
 
-                    if (layer.isStatic) {
-                        fl = generateStaticLayer(layer);
+                    if (layerConfig.isStatic) {
+                        fl = generateStaticLayer(layerConfig);
                     } else {
-                        fl = new FeatureLayer(layer.url, {
-                            id: layer.id,
+                        fl = new FeatureLayer(layerConfig.url, {
+                            id: layerConfig.id,
                             mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layer.layerAttributes],
-                            visible: layer.layerVisible,
-                            opacity: resolveLayerOpacity(layer.settings.opacity)
+                            outFields: [layerConfig.layerAttributes],
+                            visible: layerConfig.layerVisible,
+                            opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                         });
                         fl.ramp = {
                             type: GlobalStorage.layerType.Feature
                         };
-                        if (layer.boundingBoxVisible === true) {
+                        if (layerConfig.boundingBoxVisible === true) {
                             dojoOn.once(fl, "update-end", function () {
-                                setBoundingBoxVisibility(layer.id, true);
+                                setBoundingBoxVisibility(layerConfig.id, true);
                             });
                         }
                     }
-                    if (layer.layerVisible === false) {
+                    if (layerConfig.layerVisible === false) {
                         dojoOn.once(fl, "update-end", function () {
                             fl.setVisibility(false);
                         });

@@ -900,7 +900,8 @@ define([
 
                         // filter out static layers
                         var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.featureLayers, function (layerConfig) {
-                            return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                            var layer = GlobalStorage.map.getLayer(layerConfig.id);
+                            return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
 
                         templateData.buttons = lang.mixin(templateData.buttons,
@@ -1045,7 +1046,8 @@ define([
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
                                 var firstVisibleLayer = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
-                                    return !layerConfig.isStatic && GlobalStorage.map.getLayer(layerConfig.id).visible;
+                                    var layer = GlobalStorage.map.getLayer(layerConfig.id);
+                                    return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
                                 selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
                             }
@@ -1147,8 +1149,7 @@ define([
 
             // filter out static layers
             visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
-                //return (utilMisc.isUndefined(Ramp.getLayerConfig(layer.url).isStatic) || Ramp.getLayerConfig(layer.url).isStatic == false);
-                return !Ramp.getLayerConfig(layer.url).isStatic;
+                return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
             if (dataGridMode === GRID_MODE_FULL) {
@@ -1372,9 +1373,8 @@ define([
             init: function () {
                 config = GlobalStorage.config;
 
-                // Added to make sure the first layer is not static
+                // Added to make sure the layer is not static
                 var layerConfigs = dojoArray.filter(config.featureLayers, function (layerConfig) {
-                    //return (utilMisc.isUndefined(layerConfig.isStatic) || layerConfig.isStatic == false);
                     return !layerConfig.isStatic;
                 });
 
