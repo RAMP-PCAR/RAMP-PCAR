@@ -64,14 +64,14 @@ define(["utils/util", "dojo/_base/lang", "defaultTheme/theme"],
                 fullScreenTimeLine.play();
 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "87px", bottom: "10px", ease: "easeOutCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "86px", bottom: "10px", ease: "easeOutCirc" }, 0)
                     .to(".sub-panel-container.full-data-details", transitionDuration, { top: "55px", bottom: "10px", ease: "easeOutCirc" }, 0)
                     .to(".full-data-mode .dataTables_scrollBody", transitionDuration, { height: "+=179px", ease: "easeOutCirc" }, 0.01);
             } else {
                 fullScreenTimeLine.reverse();
 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "247px", bottom: "0px", ease: "easeInCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "246px", bottom: "0px", ease: "easeInCirc" }, 0)
                     .to(".sub-panel-container.full-data-details", transitionDuration, { top: "215px", bottom: "0px", ease: "easeInCirc" }, 0)
                     .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.01, { height: "-=179px", ease: "easeInCirc" }, 0);
             }
