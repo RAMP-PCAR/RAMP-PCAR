@@ -97,7 +97,7 @@ module.exports = function (grunt) {
             tarball: {
                 options: {
                     message: 'Tarball is created!'
-                }
+            }
             }
         },
 
@@ -900,7 +900,7 @@ module.exports = function (grunt) {
                             }) : [];
                         buildVersion = buildVersion[0] ? buildVersion[0].replace('.version', '') : null;
                         return 'dist/' + (buildVersion || grunt.config('pkg.name') + ' ' + grunt.config('pkg.version')) + '.tar';
-                    }
+        }
                 },
                 files: [
                    {
