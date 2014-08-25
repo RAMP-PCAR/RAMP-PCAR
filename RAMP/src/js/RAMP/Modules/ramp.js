@@ -86,10 +86,11 @@ define([
 
                 
                 var res = UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers), function (layerConfig) {
-                    if (wmsName == null)
+                    if (wmsName == null) {
                         return layerConfig.url === url;
-                    else
+                    } else {
                         return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerInfo.name === wmsName);
+                    }
                 });
 
                 GlobalStorage.urlCfg[url] = res;
