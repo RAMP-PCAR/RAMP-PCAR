@@ -115,7 +115,6 @@ require([
                 // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
                 // has finished rendering
                 UtilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
-                    BookmarkLink.updateMap();
                     BookmarkLink.subscribeAndUpdate();
                 });
                 // Added current level so slider will know how to adjust the position

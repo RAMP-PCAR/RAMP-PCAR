@@ -69,7 +69,7 @@ define([
 // Esri
         "esri/geometry/Extent",
 // Ramp
-        "ramp/globalStorage", "ramp/map", "ramp/eventManager",
+        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/ramp",
 // Util
         "utils/url", "utils/util", "utils/dictionary", "utils/array", "utils/popupManager"
 ],
@@ -81,7 +81,7 @@ define([
     // Esri
         Extent,
     // Ramp
-        GlobalStorage, RampMap, EventManager,
+        GlobalStorage, RampMap, EventManager, Ramp,
     // Util
         Url, UtilMisc, UtilDict, UtilArray, PopupManager) {
         "use strict";
@@ -92,8 +92,14 @@ define([
             EVENT_PANEL_CHANGE = "panelChange",
             EVENT_TAB_CHANGE = "selectedTab",
             EVENT_BASEMAP_CHANGED = "basemapChange",
-            EVENT_FILTER_VISIBLE_LAYERS = "activeLayers",
-            EVENT_FILTER_VISIBLE_BOXES = "activeBoxes",
+            PARAM = {
+                FILTER: {
+                    VISIBLE_LAYERS: "visibleLayers",
+                    HIDDEN_LAYERS: "hiddenLayers",
+                    VISIBLE_BOXES: "visibleBoxes",
+                    HIDDEN_BOXES: "hiddenBoxes"
+                }
+            },
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
 
             config,
@@ -139,25 +145,31 @@ define([
         */
             anchors = {},
 
-        /**
-        * A dictionary mapping layer id (String) to layer objects (FeatureLayer) that are currently visible on the map.
-        *
-        * @private
-        * @property hiddenLayers
-        * @type {Object}
-        */
-            hiddenLayers = {},
+            /**
+             * A dictionary containing layer id (String) as key and layer visiblility (boolean) as value
+             *
+             * @private
+             * @property layerVisibility
+             * @type {Object}
+             */
+            layerVisibility = {},
 
-        /**
-        * A set containing the names of all the layers that currently have their bounding boxes
-        * toggled on (the key is the name and the value is arbitrary, currently set to "true").
-        *
-        * @private
-        * @property visibleBoxes
-        * @type {Object}
-        */
-            visibleBoxes = {},
+            /**
+             * A dictionary containing layer id (String) as key and bounding box visibility (boolean) as value
+             *
+             * @private
+             * @property boundingBoxVisibility
+             * @type {Object}
+             */
+            boundingBoxVisibility = {},
 
+            /**
+             * A dictionary with the layer id as key, and the transparency as value.
+             *
+             * @private
+             * @property layerTransparency
+             * @type {Object}
+             */
             layerTransparency = {},
 
             ui = {
@@ -443,6 +455,68 @@ define([
                     index: queryObject.selectedTab
                 });
             }
+
+            var layerIds;
+
+            if (queryObject.visibleLayers) {
+                layerIds = queryObject.visibleLayers.split("+");
+
+                layerIds.forEach(function (layerId) {
+                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    layerConfig.layerVisible = true;
+
+                    layerVisibility[layerId] = true;
+                });
+
+                addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
+                    visibleLayers: queryObject.visibleLayers
+                });
+            }
+
+            if (queryObject.hiddenLayers) {
+                layerIds = queryObject.hiddenLayers.split("+");
+
+                layerIds.forEach(function (layerId) {
+                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    layerConfig.layerVisible = false;
+
+                    layerVisibility[layerId] = false;
+                });
+
+                addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
+                    hiddenLayers: queryObject.hiddenLayers
+                });
+            }
+
+            if (queryObject.visibleBoxes) {
+                layerIds = queryObject.visibleBoxes.split("+");
+
+                layerIds.forEach(function (layerId) {
+                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    layerConfig.boundingBoxVisible = true;
+
+                    boundingBoxVisibility[layerId] = true;
+                });
+
+                addParameter(PARAM.FILTER.VISIBLE_BOXES, {
+                    visibleBoxes: queryObject.visibleBoxes
+                });
+            }
+
+            if (queryObject.hiddenBoxes) {
+                layerIds = queryObject.hiddenBoxes.split("+");
+
+                layerIds.forEach(function (layerId) {
+                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    layerConfig.boundingBoxVisible = false;
+
+                    boundingBoxVisibility[layerId] = false;
+                });
+
+                addParameter(PARAM.FILTER.HIDDEN_BOXES, {
+                    hiddenBoxes: queryObject.hiddenBoxes
+                });
+            }
         }
 
         return {
@@ -531,49 +605,50 @@ define([
 
                 topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
                     var layerName = event.id;
+                    layerVisibility[layerName] = event.state;
 
-                    if (event.state) {
-                        delete hiddenLayers[layerName];
-                    } else {
-                        hiddenLayers[layerName] = true;
-                    }
-
-                    if (UtilDict.isEmpty(hiddenLayers)) {
-                        // If we have no hidden layers, remove both parameters (since it's status quo)
-                        addParameter(EVENT_FILTER_VISIBLE_LAYERS, null);
-                    } else {
-                        // Otherwise add the hidden layers parameter and remove the global layer
-                        // parameter
-                        addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
-                            // Convert an array of string into a "+" delimited string
-                            hiddenLayers: Object.keys(hiddenLayers).join("+")
+                    // Only keep attributes that are different from the default config
+                    var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
+                        return layerVisible && !Ramp.getLayerConfigWithId(key).layerVisible;
+                    }),
+                        hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
+                            return !boxVisible && Ramp.getLayerConfigWithId(key).layerVisible;
                         });
-                    }
+
+                    addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        hiddenLayers: Object.keys(hiddenLayers).join("+")
+                    });
+
+                    addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        visibleLayers: Object.keys(visibleLayers).join("+")
+                    });
 
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (event) {
                     var layerName = event.id;
+                    boundingBoxVisibility[layerName] = event.state;
 
-                    if (event.state) {
-                        visibleBoxes[layerName] = true;
-                    } else {
-                        delete visibleBoxes[layerName];
-                    }
-
-                    if (UtilDict.isEmpty(visibleBoxes)) {
-                        // If we have no visible boxes, remove the visible boxes parameter
-                        // and set global box to false
-                        addParameter(EVENT_FILTER_VISIBLE_BOXES, null);
-                    } else {
-                        // Otherwise add the visible boxes parameter and remove the global box
-                        // parameter
-                        addParameter(EVENT_FILTER_VISIBLE_BOXES, {
-                            // Convert an array of string into a "+" delimited string
-                            visibleBoxes: Object.keys(visibleBoxes).join("+")
+                    // Only keep attributes that are different from the default config
+                    var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
+                        return boxVisible && !Ramp.getLayerConfigWithId(key).boundingBoxVisible;
+                    }),
+                        hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
+                            return !boxVisible && Ramp.getLayerConfigWithId(key).boundingBoxVisible;
                         });
-                    }
+
+                    addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        hiddenBoxes: Object.keys(hiddenBoxes).join("+")
+                    });
+
+                    addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        visibleBoxes: Object.keys(visibleBoxes).join("+")
+                    });
 
                     updateURL();
                 });
@@ -593,63 +668,6 @@ define([
                 // if this call is removed, there will be no URL in the bookmark link
                 // until one of the above events fires
                 updateURL();
-            },
-
-            /**
-            * Publish events based on the query parameter (if any) in the URL.
-            *
-            * @method updateMap
-            */
-            updateMap: function () {
-                // If there is no query just return
-                if (!queryObject) {
-                    return;
-                }
-
-                var layerIds;
-
-                if (queryObject.hiddenLayers) {
-                    // Doing "else if" here instead of "if" because these two options are exclusive
-
-                    layerIds = queryObject.hiddenLayers.split("+");
-
-                    // Selectively turn off the ones that were in the query (the rest will be
-                    // turned on)
-                    layerIds.forEach(function (layerId) {
-                        topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
-                            layerId: layerId,
-                            state: false
-                        });
-
-                        hiddenLayers[layerId] = false;
-                    });
-
-                    addParameter(EVENT_FILTER_VISIBLE_LAYERS, {
-                        hiddenLayers: queryObject.hiddenLayers
-                    });
-                }
-
-                if (queryObject.visibleBoxes) {
-                    // Doing "else if" here instead of "if" because these two options are exclusive
-
-                    // Selective turn on the bounding boxes, no need to turn off all bounding boxes
-                    // first since all bounding boxes are off by default
-
-                    layerIds = queryObject.visibleBoxes.split("+");
-
-                    layerIds.forEach(function (layerId) {
-                        topic.publish(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, {
-                            layerId: layerId,
-                            state: true
-                        });
-
-                        visibleBoxes[layerId] = true;
-                    });
-
-                    addParameter(EVENT_FILTER_VISIBLE_BOXES, {
-                        visibleBoxes: queryObject.visibleBoxes
-                    });
-                }
             }
         };
     });

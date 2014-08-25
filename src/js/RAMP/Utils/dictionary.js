@@ -103,6 +103,16 @@ define([
                 return index;
             },
 
+            filter: function (dict, predicate) {
+                var filteredDict = {};
+                this.forEachEntry(dict, function (key, value) {
+                    if (predicate(key, value)) {
+                        filteredDict[key] = value;
+                    }
+                });
+                return filteredDict;
+            },
+
             /**
             * Returns the number of keys in the given dictionary.
             *
