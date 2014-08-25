@@ -66,7 +66,7 @@ define(["utils/util", "dojo/_base/lang", "defaultTheme/theme"],
                 fullScreenTimeLine.play();
 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "87px", bottom: "10px", ease: "easeOutCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "86px", bottom: "10px", ease: "easeOutCirc" }, 0)
                     .to(".sub-panel-container.full-data-details", transitionDuration, { top: "55px", bottom: "10px", ease: "easeOutCirc" }, 0)
 
                     .to(".full-data-mode .dataTables_scrollBody", transitionDuration, { height: "+=160px", ease: "easeOutCirc" }, 0.01); // animate height of the datatable scrollBody since it's explicitly set
@@ -74,7 +74,7 @@ define(["utils/util", "dojo/_base/lang", "defaultTheme/theme"],
                 fullScreenTimeLine.reverse();
 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "227px", bottom: "0px", ease: "easeInCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "226px", bottom: "0px", ease: "easeInCirc" }, 0)
                     .to(".sub-panel-container.full-data-details", transitionDuration, { top: "195px", bottom: "0px", ease: "easeInCirc" }, 0)
 
                     .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.01, { height: "-=160px", ease: "easeInCirc" }, 0); // animate height of the datatable scrollBody since it's explicitly set
