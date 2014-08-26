@@ -15,6 +15,7 @@
 * @class AdvancedToolbar
 * @static
 * @uses dojo/_base/lang
+* @uses dojo/_base/array
 * @uses dojo/topic
 * @uses ramp/eventManager
 * @uses ramp/map
@@ -24,20 +25,25 @@
 
 define([
 // Dojo
-        "dojo/_base/lang", "dojo/topic",
+        "dojo/_base/lang", "dojo/_base/array", "dojo/topic",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
 // Util
-        "utils/util", "utils/dictionary", "utils/popupManager"
+        "utils/util", "utils/dictionary", "utils/popupManager",
+        "utils/tmplHelper",
+// Text
+        "dojo/text!./templates/advanced_toolbar_template.json"
 ],
 
     function (
     // Dojo
-        dojoLang, topic,
+        dojoLang, dojoArray, topic,
     // Ramp
         EventManager, RampMap, globalStorage,
     // Util
-        UtilMisc, UtilDict, PopupManager) {
+        UtilMisc, UtilDict, PopupManager,TmplHelper,
+    // Text
+        advanced_toolbar_template_json) {
         "use strict";
 
         var advancedToggle,
@@ -143,9 +149,31 @@ define([
             });
         }
 
+
+        function generateAdvancedToolbarHTML() {
+            // create html code for advancedToolbar
+                var enabledTools = [];
+
+                enabledTools = globalStorage.config.advancedToolbar.tools;
+
+                enabledTools = dojoArray.filter(enabledTools,function(tool){
+                            return tool.enabled;
+                    }
+                );
+
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
+                var htmlFragment = tmpl("at_main", enabledTools);
+
+            return htmlFragment;
+        }
+
         return {
             init: function () {
                 ui.init();
+
+                $("#advanced-toolbar").append(generateAdvancedToolbarHTML());
+
 
                 // load only enabled tools
                 globalStorage.config.advancedToolbar.tools.forEach(
