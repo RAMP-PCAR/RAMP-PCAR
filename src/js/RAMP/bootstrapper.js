@@ -135,6 +135,8 @@ require([
                 //TODO idea: have the tools init only if they are included in the config?
                 if (globalStorage.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
+                }else{
+                    $("li.map-toolbar-item #advanced-toggle").remove();
                 }
 
                 Datagrid.init();
