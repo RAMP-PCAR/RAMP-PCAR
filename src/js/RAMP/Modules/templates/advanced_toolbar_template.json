@@ -1,0 +1,41 @@
+﻿/* 
+ * 
+ * This template is not proper JSON as it allows for comments (like this one) and multi-line values.
+ * 
+ * 
+ * JavaScript-Templates templating engine
+ * https://github.com/blueimp/JavaScript-Templates
+ * 
+ *
+ *
+ */
+{
+    "at_main": "<ul id='advanced-toolbar-list'>
+                {% 
+                     o.forEach(function(tool){
+                        include(tool.name,o);
+                     });
+                %}
+            </ul>",
+    "populationTool": "<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-population-toggle'>
+                            <i class='fa fa-male'></i><span class='on-right'>Population</span>
+                        </button>
+                    </li>",
+    "bufferTool": "<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-buffer-toggle'>
+                            <i class='fa fa-wrench'></i><span class='on-right'>Buffer</span>
+                        </button>
+                    </li>",
+    "areaTool": "<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-area-toggle'>
+                            <i class='fa fa-arrows'></i><span class='on-right'>Area</span>
+                        </button>
+                    </li>",
+    "distanceTool":"<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-distance-toggle'>
+                            <i class='fa fa-arrows-h'></i><span class='on-right'>Distance</span>
+                        </button>
+                    </li>"
+
+}
