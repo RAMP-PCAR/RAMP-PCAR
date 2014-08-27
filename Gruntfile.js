@@ -63,6 +63,18 @@ module.exports = function (grunt) {
                 }
             },
 
+            templates: {
+                options: {
+                    message: 'Templates are a GO.' //required
+                }
+            },
+
+            assets: {
+                options: {
+                    message: 'Assets are a GO.' //required
+                }
+            },
+
             api: {
                 options: {
                     message: 'API docs are a GO.' //required
@@ -468,6 +480,11 @@ module.exports = function (grunt) {
                 tasks: ['css'] //, 'build:bump-only-build']
             },
 
+            wlocales: {
+                files: ['src/locales/**/*.json'],
+                tasks: ['assets']
+            },
+
             wpage: {
                 files: [
                     'src/ramp-src.html',
@@ -482,7 +499,7 @@ module.exports = function (grunt) {
                     'src/js/RAMP/Modules/templates/*.json',
                     'src/js/RAMP/Tools/templates/*.json'
                 ],
-                tasks: ['copy:templates'] //, 'build:bump-only-build']
+                tasks: ['copy:templates', 'notify:templates'] //, 'build:bump-only-build']
             }
         },
 
@@ -1178,11 +1195,11 @@ module.exports = function (grunt) {
 
     // ASSETS
 
-    grunt.registerTask('assets', ['clean:assets', 'copy:assets']);
+    grunt.registerTask('assets', ['clean:assets', 'copy:assets', 'notify:assets']);
 
     // JS
     grunt.registerTask('jsClean', ['clean:rampJsBefore', 'clean:rampJsAfter']);
-    grunt.registerTask('jsCopy', ['copy:rampJsLib', 'copy:rampJsLibResources', 'copy:rampJsExtra', 'copy:templates']);
+    grunt.registerTask('jsCopy', ['copy:rampJsLib', 'copy:rampJsLibResources', 'copy:rampJsExtra', 'copy:templates', 'notify:templates']);
     grunt.registerTask('jsConcat', ['concat:rampJsLib']);
     grunt.registerTask('jsReplace', ['replace:rampJsCore']);
 
