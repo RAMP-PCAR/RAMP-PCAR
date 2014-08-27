@@ -54,17 +54,7 @@
         "txtLayerHandleLabel": "Layer handle for",
         "txtLayerListLabel": "Sortable layer list",
         "txtLegend": "Legend",
-        "txtLinkToCap": "Link To Capabilities",
-        "txtBaseToolClearMap": "Clear",
-        "txtBaseToolWorking": "Working ...",
-        "txtBufferToolDistance": "Distance",
-        "txtAreaToolLength": "Length",
-        "txtAreaToolArea": "Area",
-        "txtAreaToolNA": "n/a",
-        "txtPopulationToolPopulation": "Population",
-        "txtPopulationToolNA": "n/a",
-        "txtDistanceToolNA": "n/a",
-        "txtDistanceToolLength": "Length"
+        "txtLinkToCap": "Link To Capabilities"
     },
     "gridstrings": {
         "sEmptyTable": "No data available in table",
