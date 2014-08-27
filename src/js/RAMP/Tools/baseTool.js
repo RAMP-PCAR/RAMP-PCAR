@@ -190,11 +190,11 @@ define([
                             target: $("#mainMap"),
                             outputFloatTemplate: "base_tool_float",
                             outputFloatData: {
-                                clearMapButton: i18n.t("basetool.clearmap") // this.stringResources.txtBaseToolClearMap
+                                clearMapButton: i18n.t("tools.basetool.clearmap") // this.stringResources.txtBaseToolClearMap
                             },
                             workingLabelTemplate: "working_label",
                             workingLabelData: {
-                                workingLabel: i18n.t("basetool.working") // this.stringResources.txtBaseToolWorking
+                                workingLabel: i18n.t("tools.basetool.working") // this.stringResources.txtBaseToolWorking
                             },
                             defaultAction: function () { console.log('default action'); }
                         },

@@ -1,29 +1,148 @@
 {
-    "app": {
-        "name": "i18next"
-    },
+    "page": {
 
+        "title": "Reusable Accessible Mapping Platform (RAMP)",
 
-    "wet": {
-        "header": {
-
+        "lang": {
+            "main": "en",
+            "mainLong": "eng",
+            "mainFull": "English",
+            "alt": "fr",
+            "altLong": "fra",
+            "altFull": "Français"
         },
-        "footer": {
 
+        "meta": {
+            "description": "Sample of an implementation of RAMP",
+            "creator": "Environment Canada, CSB BASD BeSD",
+            "title": "Reusable Accessible Mapping Platform",
+            "issued": "Date Published (2014-07-01)",
+            "modified": "Date Published (2014-07-01)",
+            "subject": "Environment",
+            "languge": "eng"
+        },
+
+        "header": {
+            "skipToMain": "Skip to main content",
+            "skipToFooter": "Skip to footer",
+
+            "navigationBar": "Navigation Bar",
+
+            "rampAltLangLink": "carte.html",
+
+            "servicesTitle": "Services",
+            "departmentsTitle": "Departments",
+            "goc": "Government of Canada",
+            "sgoc": "Symbol of the Government of Canada",
+
+            "titleLink": "Reusable Accessible Mapping Platform (RAMP)",
+            "titleSubLink": "EC's Enterprise Geospatial Viewer"
+        },
+
+        "menu": {
+            "siteMenu": "Site menu",
+
+            "link1Url": "http://ramp-racp.github.io/index-en.html",
+            "link2Url": "http://ramp-racp.github.io/docs/started-en.html",
+            "link3Url": "http://ramp-racp.github.io/docs/index-en.html",
+
+            "link1Title": "RAMP Project",
+            "link2Title": "Using RAMP",
+            "link3Title": "RAMP Documentation"
+        },
+
+        "footer": {
+            "footer": "Footer",
+            "siteFooter": "Site footer",
+            "transparency": "Transparency",
+            "transparencyLink": "http://www.ec.gc.ca/default.asp?lang=En&amp;n=390AF41B-1",
+            "termsConditions": "Terms and conditions",
+            "termsConditionsLink": "http://www.ec.gc.ca/default.asp?lang=En&amp;xml=5830C36B-1773-4E3E-AF8C-B21F54633E0A",
+            "dateModifiedTitle": "Date Modified"
         }
     },
 
-    "ramp": {
-        "module": {
-            "advancedtoolbar": {
+    "addLayer": {
+        "addLayerTitle": "Add Layer from Web",
+        "addLayerSelectTypeText": "What type of data are you referencing?",
+        "addLayerType1": "An ArcGIS Server Web Service",
+        "addLayerType2": "A WMS OGC Web Service",
+        "addLayerType3": "A WMTS OGC Web Service",
+        "addLayerType4": "A Tile Layer",
+        "addLayerType5": "A KML File",
+        "addLayerType6": "A GeoRSS File",
+        "addLayerType7": "A CSV File",
+        "addLayerPlaceholder": " http://<MyServerName>/ArcGIS/rest/services/<MyServiceName>",
+        "addLayerAddButton": " Add Layer",
+        "addLayer-URL-label": " URL:",
+        "addLayer-Opacity-label": " Opacity:",
+        "addLayer-opacity-alt": " Range: 0 to 10 in steps of 1",
+        "addLayer-opacity-display-start": " (Current Value:",
+        "addLayer-opacity-display-end": "%)"
+    },
 
+    "advancedToolbar": {
+        "advancedTitle": "Advanced"
+    },
+
+    "bookmarkLink": {
+        "getLinkTitle": "Get Link",
+        "getLinkDescription": "Link to Map Viewer",
+        "getLinkShortLink": "Short link",
+        "getLinkEmail": "Email"
+    },
+
+    "datagrid": {
+        "dataTabTitle": "Data",
+
+        "gridstrings": {
+            "sEmptyTable": "No data available in table",
+            "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "sInfoEmpty": "Showing 0 to 0 of 0 entries",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Show _MENU_ entries",
+            "sLoadingRecords": "Loading...",
+            "sProcessing": "Processing...",
+            "sSearch": "Search:",
+            "sZeroRecords": "No matching records found",
+            "oPaginate": {
+                "sFirst": "First",
+                "sLast": "Last",
+                "sNext": "Next",
+                "sPrevious": "Previous",
+                "sRecords": "Records",
+                "sPage": "Page"
             },
-            "basemapselector": {
-
+            "oAria": {
+                "sSortAscending": ": activate to sort column ascending",
+                "sSortDescending": ": activate to sort column descending"
             }
         }
     },
 
+    "filterManager": {
+        "datasetsTabTitle": "Datasets"
+    },
+
+    "gui": {
+        "actions": {
+            "close": "Close",
+            "open": "Open",
+            "fullScreen": "Full Screen"
+        }
+    },
+
+    "map": {
+        "loadingTitle": "Loading"
+
+    },
+
+    "help": {
+        "title": "Help",
+        "sectionsTitle": "Help Sections"
+    },
 
 
     "nav": {
@@ -32,53 +151,11 @@
         "page2": "Page Two"
     },
 
-    "basemaps": {
-        "baseNrCan": {
-            "name": "Canada Atlas",
-            "description": "Canada Atlas basemap"
+    "tools": {
 
-        },
-
-        "baseNrCan_name": "Canada Atlas",
-        "baseNrCan_description": "Canada Atlas basemap"
-    },
-
-    "ui": {
-        "actions": {
-            "close": "Close i18n",
-            "open": "Open i18n"
+        "basetool": {
+            "clearmap": "Clear",
+            "working": "Working..."
         }
-    },
-
-    "gridstrings": {
-        "sEmptyTable": "No data available in table",
-        "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
-        "sInfoEmpty": "Showing 0 to 0 of 0 entries",
-        "sInfoFiltered": "(filtered from _MAX_ total entries)",
-        "sInfoPostFix": "",
-        "sInfoThousands": ",",
-        "sLengthMenu": "Show _MENU_ entries",
-        "sLoadingRecords": "Loading...",
-        "sProcessing": "Processing...",
-        "sSearch": "Search:",
-        "sZeroRecords": "No matching records found",
-        "oPaginate": {
-            "sFirst": "First",
-            "sLast": "Last",
-            "sNext": "Next",
-            "sPrevious": "Previous",
-            "sRecords": "Records",
-            "sPage": "Page"
-        },
-        "oAria": {
-            "sSortAscending": ": activate to sort column ascending",
-            "sSortDescending": ": activate to sort column descending"
-        }
-    },
-
-    "basetool": {
-        "clearmap": "Clear",
-        "working": "Working..."
     }
 }
-
