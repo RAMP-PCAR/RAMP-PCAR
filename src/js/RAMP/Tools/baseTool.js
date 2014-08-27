@@ -1,4 +1,4 @@
-﻿/* global define, tmpl */
+﻿/* global define, tmpl, i18n */
 
 /**
 * @module Tools
@@ -117,15 +117,6 @@ define([
                 templates: null,
 
                 /**
-                 * Local strings
-                 *
-                 * @property stringResources
-                 * @type Object
-                 * @default GlobalStorage.config.stringResources
-                 */
-                stringResources: GlobalStorage.config.stringResources,
-
-                /**
                 * Event names published by the BaseTool
                 *
                 * @property event
@@ -157,6 +148,8 @@ define([
                     DEACTIVATE: "basetool-deactivate"
                 },
 
+                ns: "tools/",
+
                 /**
                  * Name of the tool so AdvancedToolbar can distinguish between them.
                  *
@@ -187,17 +180,21 @@ define([
                 initToggle: function (node, activate, deactivate, options) {
                     var that = this;
 
+                    that.ns += that.name;
+                    // load tool's i18n namespace
+                    i18n.loadNamespace(that.ns);
+
                     // BaseTool default options
                     this.options = dojoLang.mixin(
                         {
                             target: $("#mainMap"),
                             outputFloatTemplate: "base_tool_float",
                             outputFloatData: {
-                                clearMapButton: this.stringResources.txtBaseToolClearMap
+                                clearMapButton: i18n.t("basetool.clearmap") // this.stringResources.txtBaseToolClearMap
                             },
                             workingLabelTemplate: "working_label",
                             workingLabelData: {
-                                workingLabel: this.stringResources.txtBaseToolWorking
+                                workingLabel: i18n.t("basetool.working") // this.stringResources.txtBaseToolWorking
                             },
                             defaultAction: function () { console.log('default action'); }
                         },
@@ -320,7 +317,7 @@ define([
                 * @return This tool
                 */
                 activate: function () {
-                    console.log("base activate; nothing to see here;");
+                    //console.log("base activate; nothing to see here;");
                     if (this.handle) {
                         this.handle.open();
                     }
@@ -335,7 +332,7 @@ define([
                 * @return This tool
                 */
                 deactivate: function () {
-                    console.log("base deactivate; nothing to see here;");
+                    //console.log("base deactivate; nothing to see here;");
                     if (this.handle && this.handle.isOpen()) {
                         this.handle.close();
                     }

@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, i18n */
 
 /**
 * @module Tools
@@ -201,7 +201,7 @@ define([
       function displayOutput() {
           that.displayTemplateOutput("buffer_output",
               {
-                  distanceLabel: that.stringResources.txtBufferToolDistance
+                  distanceLabel: i18n.t(that.ns + ":distance") // that.stringResources.txtBufferToolDistance
               }
           );
       }
@@ -215,8 +215,9 @@ define([
           * @constructor
           *
           */
-          init: function (selector) {
+          init: function (selector, name) {
               that = this;
+              this.name = name;
               this.initToggle($(selector), activate, deactivate,
                   {
                       defaultAction: clearMap
@@ -226,8 +227,6 @@ define([
               ui.init();
 
               return this;
-          },
-
-          name: "bufferTool"
+          }
       });
   });

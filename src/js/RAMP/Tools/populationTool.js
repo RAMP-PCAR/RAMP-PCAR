@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, i18n */
 
 /**
 * @module Tools
@@ -145,7 +145,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(that.stringResources.txtPopulationToolNA);
+            displayOutput(i18n.t(that.ns + ":na")); // that.stringResources.txtPopulationToolNA);
         }
 
         /**
@@ -169,7 +169,7 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput(that.stringResources.txtPopulationToolNA);
+            displayOutput(i18n.t(that.ns + ":na")); //that.stringResources.txtPopulationToolNA);
         }
 
         /**
@@ -181,7 +181,7 @@ define([
         function displayOutput(value) {
             that.displayTemplateOutput("population_output",
                 {
-                    totalPopulationLabel: that.stringResources.txtPopulationToolPopulation,
+                    totalPopulationLabel: i18n.t(that.ns + ":population"), //that.stringResources.txtPopulationToolPopulation,
                     populationOutput: value
                 }
             );
@@ -196,8 +196,9 @@ define([
             * @constructor
             *
             */
-            init: function (selector) {
+            init: function (selector, name) {
                 that = this;
+                this.name = name;
                 this.initToggle($(selector), activate, deactivate,
                     {
                         defaultAction: clearMap
@@ -207,8 +208,6 @@ define([
                 ui.init();
 
                 return this;
-            },
-
-            name: "populationTool"
+            }
         });
     });
