@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n */
 /*jslint white: true */
 
 /**
@@ -307,7 +307,7 @@ define([
                     // provided. A temporary property name "attribute" is used. Not sure if this will be
                     // used by ECDMP, therefore, leave the empty value in the template
                     var toggleButtonData = {
-                        buttonLabel: config.stringResources.txtSort,
+                        buttonLabel: i18n.t("datagrid.sort"),
                         classAddition: "font-medium global-button",
                         someAttribute: ""
                     };
@@ -388,7 +388,7 @@ define([
                             scrollX: true,
                             destroy: true,
                             pageLength: gridConfig.rowsPerPage,
-                            language: config.gridstrings,
+                            language: i18n.t("datagrid.gridstrings", { returnObjectTrees: true }),
                             getTotalRecords: function () {
                                 return totalRecords;
                             }
@@ -549,7 +549,7 @@ define([
                         zoomlightRow.focusedButton = "button.zoomto";
 
                         // Zoom To
-                        if (zoomNode.text() === config.stringResources.txtGrid_zoomTo) {
+                        if (zoomNode.text() === i18n.t("datagrid.zoomTo")) {
                             handleGridEvent(evt, function () {
                                 zoomToGraphic = getGraphicFromButton(zoomNode);
 
@@ -566,12 +566,12 @@ define([
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getOid(zoomToGraphic),
                                                     featureUrlField, zoomToGraphic.getLayer().url));
-                                    newNode.text(config.stringResources.txtGrid_zoomBack);
+                                    newNode.text(i18n.t("datagrid.zoomBack"));
                                 });
                             });
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack(zoomToGraphic);
-                            zoomNode.text(config.stringResources.txtGrid_zoomTo);
+                            zoomNode.text(i18n.t("datagrid.zoomTo"));
 
                             // Reset focus back to "Zoom To" link after map extent change
                             utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
@@ -811,8 +811,8 @@ define([
                     datasetSelectorSubmitButton
                         .attr("disabled", state)
                         .text(state ?
-                            GlobalStorage.config.stringResources.txtDatasetSelectorButtonLoaded
-                            : GlobalStorage.config.stringResources.txtDatasetSelectorButtonLoad);
+                            i18n.t("datagrid.ex.datasetSelectorButtonLoaded")
+                            : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
                     layer = dojoArray.filter(GlobalStorage.config.featureLayers,
                         function (layer) {
@@ -890,7 +890,7 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         templateKey = "datagrid_manager_Template";
-                        templateData.buttons.toggleTitle = GlobalStorage.config.stringResources.txtFullData;
+                        templateData.buttons.toggleTitle = i18n.t("datagrid.fullData");
 
                         if (extendedTabTitle) {
                             extendedTabTitle.remove();
@@ -907,8 +907,8 @@ define([
                         templateData.buttons = lang.mixin(templateData.buttons,
                             {
                                 datasets: nonStaticFeatureLayers,
-                                toggleTitle: GlobalStorage.config.stringResources.txtDataSummary,
-                                txtDataset: GlobalStorage.config.stringResources.txtDataset
+                                toggleTitle: i18n.t("datagrid.ex.dataSummary"),
+                                txtDataset: i18n.t("datagrid.ex.dataset")
                             }
                         );
 
@@ -1239,7 +1239,7 @@ define([
         }
 
         function updateRecordsCount(visibleRecords) {
-            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, config.gridstrings.oPaginate.sRecords));
+            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, i18n.t("datagrid.gridstrings.oPaginate.sRecords"))); // config.gridstrings.oPaginate.sRecords));
         }
 
         /**

@@ -56,55 +56,6 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 },
                 {
-                    "name": "txtUndoGridZoom",
-                    "type": "String",
-                    "value": "Undo Grid Zoom",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtPrevPage",
-                    "type": "String",
-                    "value": "Prev Page",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtNextPage",
-                    "type": "String",
-                    "value": "Next Page",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtRecords",
-                    "type": "String",
-                    "value": "Records",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtGrid_zoomTo",
-                    "type": "String",
-                    "value": "Zoom To",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtGrid_zoomBack",
-                    "type": "String",
-                    "value": "Zoom Back",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtGrid_details",
-                    "type": "String",
-                    "value": "Details",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
                     "name": "altMaptip_image",
                     "type": "String",
                     "value": "Feature icon",
@@ -217,20 +168,6 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 },
                 {
-                    "name": "txtFullData",
-                    "type": "String",
-                    "value": "Full Data",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtDataSummary",
-                    "type": "String",
-                    "value": "Data Summary",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
                     "name": "txtMetadataNotFound",
                     "type": "String",
                     "value": "No metadata was found for this layer.",
@@ -241,20 +178,6 @@ Developers of the Almighty JSON Config Editor
                     "name": "txtMetadataNotPublished",
                     "type": "String",
                     "value": "No metadata was published for this layer.",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtDatasetSelectorButtonLoad",
-                    "type": "String",
-                    "value": "Load",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtDatasetSelectorButtonLoaded",
-                    "type": "String",
-                    "value": "Loaded",
                     "description": "",
                     "visibleText": false
                 },
@@ -297,20 +220,6 @@ Developers of the Almighty JSON Config Editor
                     "name": "txtHideAllBounds",
                     "type": "String",
                     "value": "Hide All Bounds",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtSort",
-                    "type": "String",
-                    "value": "Sort",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtDataset",
-                    "type": "String",
-                    "value": "Dataset",
                     "description": "",
                     "visibleText": false
                 },

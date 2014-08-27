@@ -98,6 +98,19 @@
     "datagrid": {
         "dataTabTitle": "Data",
 
+        "sort": "Sort",
+        "details": "Details",
+        "zoomTo": "Zoom To",
+        "zoomBack": "Zoom Back",
+        "fullData": "Full Data",
+
+        "ex": {
+            "datasetSelectorButtonLoad": "Load",
+            "datasetSelectorButtonLoaded": "Loaded",
+            "dataSummary": "Data Summary",
+            "dataset": "Dataset"
+        },
+
         "gridstrings": {
             "sEmptyTable": "No data available in table",
             "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
