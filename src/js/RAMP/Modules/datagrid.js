@@ -1239,7 +1239,7 @@ define([
         }
 
         function updateRecordsCount(visibleRecords) {
-            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, i18n.t("datagrid.gridstrings.oPaginate.sRecords"))); // config.gridstrings.oPaginate.sRecords));
+            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, i18n.t("datagrid.gridstrings.oPaginate.sRecords")));
         }
 
         /**
