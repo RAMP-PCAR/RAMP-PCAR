@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n */
 /*jslint white: true */
 
 /**
@@ -528,7 +528,7 @@ define([
                         dojoLang.mixin(
                             this._attr,
                             {
-                                closeTitle: GlobalStorage.config.stringResources.txtClose
+                                closeTitle: i18n.t('gui.actions.close')
                             }
                         )
                     );
@@ -838,56 +838,7 @@ define([
                 killTimelines();
                 createTimelines();
             }
-
-            /*function _toggleFullScreenMode_(fullscreen) {
-            megaMenu.css({
-            position: "static"
-            });
-            subTitleText.css({
-            position: "static"
-            });
-
-            toggleSubPanelContainer();
-            toggleFooter();
-
-            wbCore.animate({
-            height: viewPortHeight + fullScreenDelta2
-            }, "slow");
-
-            titleBanner.animate({
-            height: titleBanner.height() - titleBannerHalfHeight
-            }, "slow");
-
-            if (UtilMisc.isUndefined(fullscreen)) {
-            // If expand is undefined, we toggle
-            titleBannerHalfHeight *= -1;
-            fullScreenDelta2 *= -1;
-            } else if (fullscreen) {
-            titleBannerHalfHeight = -1;
-            fullScreenDelta2 = -Math.abs(fullScreenDelta2);
-            } else {
-            titleBannerHalfHeight = 1;
-            fullScreenDelta2 = Math.abs(fullScreenDelta2);
-            }
-
-            var strings = GlobalStorage.config.stringResources;
-            fullScreenToggle.text(fullScreenDelta2 < 0 ? strings.txtShowHeaders : strings.txtFullScreen);
-
-            navigation.slideToggle("slow");
-            //subTitleText.slideToggle("fast");
-            megaMenuDiv.slideToggle("slow",
-            function () {
-            megaMenu.removeAttr('style');
-            // needed to prevent "disappearing toolbar" effect
-            megamenuBar.css({
-            "min-height": "32px"
-            });
-
-            adjustHeight();
-            adjutSubPanelDimensions();
-            });
-            }*/
-
+            
             /**
             * Publishes `PANEL_CHANGE` event when the visibility of the SidePanel changes.
             *
@@ -917,8 +868,8 @@ define([
                             panelChange(true);
 
                             panelToggle
-                                .tooltipster("content", GlobalStorage.config.stringResources.txtClose)
-                                .find("span.wb-invisible").text(GlobalStorage.config.stringResources.txtClose);
+                                .tooltipster("content", i18n.t("ui.actions.close"))
+                                .find("span.wb-invisible").text(i18n.t("ui.actions.close"));
 
                             d.resolve();
                         }, [], this);
@@ -942,8 +893,8 @@ define([
                             panelChange(false);
 
                             panelToggle
-                                .tooltipster("content", GlobalStorage.config.stringResources.txtOpen)
-                                .find("span.wb-invisible").text(GlobalStorage.config.stringResources.txtOpen);
+                                .tooltipster("content", i18n.t("ui.actions.open"))
+                                .find("span.wb-invisible").text(i18n.t("ui.actions.open"));
 
                             d.resolve();
                         }, [], this);

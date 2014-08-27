@@ -14,9 +14,7 @@
         "txtExtent": "Extent",
         "txtScope": "Scope",
         "txtTimePeriod": "Time Period",
-        "txtSupplementalData": "Supplemental Data",
-        "txtClose": "Close",
-        "txtOpen": "Open"
+        "txtSupplementalData": "Supplemental Data"
     },
     "lang": "en",
     "helpContent": "Help Content",

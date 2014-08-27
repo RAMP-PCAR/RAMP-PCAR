@@ -117,20 +117,6 @@ Developers of the Almighty JSON Config Editor
                     "value": "Supplemental Data",
                     "description": "",
                     "visibleText": false
-                },
-                {
-                    "name": "txtClose",
-                    "type": "String",
-                    "value": "Close",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtOpen",
-                    "type": "String",
-                    "value": "Open",
-                    "description": "",
-                    "visibleText": false
                 }
             ]
         },
