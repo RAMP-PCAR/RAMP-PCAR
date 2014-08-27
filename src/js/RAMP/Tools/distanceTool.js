@@ -128,7 +128,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.LINE);
 
-            displayOutput(i18n.t(that.ns + ":na")); // that.stringResources.txtDistanceToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -152,7 +152,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na")); // that.stringResources.txtDistanceToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -164,7 +164,7 @@ define([
         function displayOutput(length, lengthUnits) {
             that.displayTemplateOutput("distance_output",
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"), //that.stringResources.txtDistanceToolLength,
+                    lengthLabel: i18n.t(that.ns + ":length"),
                     lengthOutput: length,
                     lengthUnits: lengthUnits                    
                 }

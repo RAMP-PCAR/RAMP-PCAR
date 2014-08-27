@@ -145,7 +145,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(i18n.t(that.ns + ":na")); // that.stringResources.txtPopulationToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -169,7 +169,7 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na")); //that.stringResources.txtPopulationToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -181,7 +181,7 @@ define([
         function displayOutput(value) {
             that.displayTemplateOutput("population_output",
                 {
-                    totalPopulationLabel: i18n.t(that.ns + ":population"), //that.stringResources.txtPopulationToolPopulation,
+                    totalPopulationLabel: i18n.t(that.ns + ":population"),
                     populationOutput: value
                 }
             );

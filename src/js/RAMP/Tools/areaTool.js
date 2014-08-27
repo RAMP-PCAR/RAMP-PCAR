@@ -167,8 +167,8 @@ define([
         function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput("area_output",
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"), // that.stringResources.txtAreaToolLength,
-                    areaLabel: i18n.t(that.ns + ":area"), //that.stringResources.txtAreaToolArea,
+                    lengthLabel: i18n.t(that.ns + ":length"),
+                    areaLabel: i18n.t(that.ns + ":area"),
                     lengthOutput: length,
                     areaOutput: area,
                     lengthUnits: lengthUnits,

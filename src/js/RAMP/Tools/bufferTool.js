@@ -201,7 +201,7 @@ define([
       function displayOutput() {
           that.displayTemplateOutput("buffer_output",
               {
-                  distanceLabel: i18n.t(that.ns + ":distance") // that.stringResources.txtBufferToolDistance
+                  distanceLabel: i18n.t(that.ns + ":distance")
               }
           );
       }
