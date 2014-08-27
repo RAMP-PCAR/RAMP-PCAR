@@ -86,10 +86,13 @@
     },
 
     "bookmarkLink": {
-        "getLinkTitle": "Get Link",
-        "getLinkDescription": "Link to Map Viewer",
-        "getLinkShortLink": "Short link",
-        "getLinkEmail": "Email"
+        "title": "Get Link",
+        "description": "Link to Map Viewer",
+        "shortLink": "Short link",
+        "longLink": "Long link",
+        "email": "Email",
+        "emailUrlSubject": "RAMP GIS Viewer",
+        "emailUrlBody": "Here's a cool map:"
     },
 
     "datagrid": {

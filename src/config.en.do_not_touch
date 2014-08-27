@@ -203,20 +203,6 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 },
                 {
-                    "name": "txtEmailUrlSubject",
-                    "type": "String",
-                    "value": "RAMP GIS Viewer",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtEmailUrlBody",
-                    "type": "String",
-                    "value": "Here's a cool map:",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
                     "name": "txtClose",
                     "type": "String",
                     "value": "Close",
@@ -348,20 +334,6 @@ Developers of the Almighty JSON Config Editor
                     "value": "Opacity",
                     "description": "",
                     "visibleText": true
-                },
-                {
-                    "name": "txtGetLinkShort",
-                    "type": "String",
-                    "value": "Short link",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtGetLinkLong",
-                    "type": "String",
-                    "value": "Long link",
-                    "description": "",
-                    "visibleText": false
                 },
                 {
                     "name": "txtLayerHandle",
