@@ -49,13 +49,6 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 },
                 {
-                    "name": "txtScale",
-                    "type": "String",
-                    "value": "Scale",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
                     "name": "altMaptip_image",
                     "type": "String",
                     "value": "Feature icon",
