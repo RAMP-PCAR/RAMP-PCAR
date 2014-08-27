@@ -139,7 +139,36 @@
     },
 
     "filterManager": {
-        "datasetsTabTitle": "Datasets"
+        "datasetsTabTitle": "Datasets",
+
+        "allData": "All Data",
+
+        "showBounds": "Show Bounds of {0}",
+        "showAllBounds": "Show All Bounds",
+        
+        "showFeatures": "Show {0}",
+        "showAllFeatures": "Show All",
+        
+        "hideFeatures": "Hide {0}",
+        "hideAllFeatures": "Hide All",
+        
+        "hideBounds": "Hide Bounds of {0}",
+        "hideAllBounds": "Hide All Bounds",
+
+        "metadata": "Metadata",
+        "metadataNotFound": "No metadata was found for this layer.",
+        "metadataNotPublished": "No metadata was published for this layer.",
+
+        "legend": "Legend",
+        "linkToCap": "Link To Capabilities",
+
+        "settings": "Settings",
+        "settingsLayerSettings": "Layer Settings",
+        "settingsOpacity": "Opacity",
+
+        "layerHandle": "Layer Handle",
+        "layerHandleLabel": "Layer handle for __layerName__",
+        "layerListLabel": "Sortable layer list"
     },
 
     "gui": {
