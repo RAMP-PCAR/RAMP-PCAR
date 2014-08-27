@@ -14,34 +14,6 @@ Developers of the Almighty JSON Config Editor
             "description": "",
             "fields": [
                 {
-                    "name": "txtPageTitle",
-                    "type": "String",
-                    "value": "ECDMP",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtPageSubTitle",
-                    "type": "String",
-                    "value": "View Your Data",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtMapTitle",
-                    "type": "String",
-                    "value": "Accessible Map",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
-                    "name": "txtMapSubTitle",
-                    "type": "String",
-                    "value": "",
-                    "description": "",
-                    "visibleText": false
-                },
-                {
                     "name": "txtHelp",
                     "type": "String",
                     "value": "Help",
