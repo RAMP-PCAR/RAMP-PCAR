@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig */
+﻿/*global require, window, esri, dojoConfig, i18n */
 
 /**
 * Ramp module
@@ -169,6 +169,39 @@ require([
         if (lang !== "en" && lang !== "fr") {
             lang = "en";
         }
+
+        i18n.init(
+        {
+            lng: lang +  "-CA",
+            load: "current",
+            fallbackLng: false
+        }/*,
+        function (t) {
+            // tests
+            // translate nav
+            $(".mb-menu").i18n();
+
+            var bname = "baseNrCan";
+
+            console.log(t("basemaps." + bname, { context: "name" }));
+            console.log(t("basemaps." + bname, { context: "description" }));
+
+            console.log(t("basemaps" + "." + bname + "." + "name"));
+            console.log(t("basemaps" + "." + bname + "." + "description"));
+
+            console.log("->", t("translation2.measure"));
+
+            i18n.loadNamespace('tools/translation2', function () {
+                console.log("--->", i18n.t("tools/translation2.measure"));
+                console.log("-->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
+            });
+
+            window.setTimeout(function () {
+                console.log("---->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
+            }, 1000);
+            
+        }*/
+        );
 
         //loading config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
