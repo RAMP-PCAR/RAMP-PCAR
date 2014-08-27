@@ -189,18 +189,27 @@
         "sectionsTitle": "Help Sections"
     },
 
-
-    "nav": {
-        "home": "Home",
-        "page1": "Page One",
-        "page2": "Page Two"
-    },
-
     "tools": {
 
         "basetool": {
             "clearmap": "Clear",
             "working": "Working..."
         }
+    },
+
+    "_unused": {
+        "altMaptip_image": "Feature icon",
+        "fullScreen": "Full Screen",
+        "showHeaders": "Show Headers",
+        
+        "expandAll": "Expand All",
+        "abstract": "Abstract",
+        "extent": "Extent",
+        "scope": "Scope",
+        "timePeriod": "Time Period",
+        "supplementalData": "Supplemental Data",
+        
+        
+        "show": "Show"
     }
 }

@@ -1,16 +1,4 @@
 {
-    "stringResources": {
-        "txtHelp": "Help",
-        "altMaptip_image": "Feature icon",
-        "txtFullScreen": "Full Screen",
-        "txtShowHeaders": "Show Headers",
-        "txtExpandAll": "Expand All",
-        "txtAbstract": "Abstract",
-        "txtExtent": "Extent",
-        "txtScope": "Scope",
-        "txtTimePeriod": "Time Period",
-        "txtSupplementalData": "Supplemental Data"
-    },
     "lang": "en",
     "helpContent": "Help Content",
     "spatialReference": {
