@@ -1,4 +1,4 @@
-﻿/*global define, $, i18n */
+﻿/*global define, i18n */
 
 /**
 * MeasureTool submodule.
@@ -165,7 +165,7 @@ define([
         * @private
         */
         function displayOutput(length, area, lengthUnits, areaUnits) {
-            that.displayTemplateOutput("area_output",
+            that.displayTemplateOutput(
                 {
                     lengthLabel: i18n.t(that.ns + ":length"),
                     areaLabel: i18n.t(that.ns + ":area"),
@@ -185,11 +185,12 @@ define([
             * @constructor
             *
             */
-            init: function (selector) {
+            init: function (selector, d) {
                 that = this;
-
-                this.initToggle($(selector), activate, deactivate,
+                this.initToggle(selector, d,
                     {
+                        activate: activate,
+                        deactivate: deactivate,
                         defaultAction: clearMap
                     }
                 );

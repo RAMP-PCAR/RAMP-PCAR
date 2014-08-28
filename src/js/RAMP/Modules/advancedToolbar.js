@@ -17,6 +17,7 @@
 * @uses dojo/_base/lang
 * @uses dojo/_base/array
 * @uses dojo/topic
+* @uses dojo/Deferred
 * @uses ramp/eventManager
 * @uses ramp/map
 * @uses ramp/globalStorage
@@ -25,7 +26,7 @@
 
 define([
 // Dojo
-        "dojo/_base/lang", "dojo/_base/array", "dojo/topic",
+        "dojo/_base/lang", "dojo/_base/array", "dojo/topic", "dojo/Deferred",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
 // Util
@@ -37,7 +38,7 @@ define([
 
     function (
     // Dojo
-        dojoLang, dojoArray, topic,
+        dojoLang, dojoArray, topic, Deferred,
     // Ramp
         EventManager, RampMap, globalStorage,
     // Util
@@ -161,30 +162,36 @@ define([
 
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
-                var htmlFragment = tmpl("at_main", enabledTools);
+                var htmlFragment = tmpl("at_main");
 
             return htmlFragment;
         }
 
         return {
             init: function () {
-                ui.init();
 
                 $("#advanced-toolbar").append(generateAdvancedToolbarHTML());
+
+                ui.init();
 
                 // load only enabled tools
                 globalStorage.config.advancedToolbar.tools.forEach(
                     function (tool) {
                         if (tool.enabled) {
                             require(["tools/" + tool.name], function (module) {
+                                var deferred = new Deferred();
+                                deferred.then(function (module) {
+                                    tools[tool.name] = module;
+
+                                    $("#advanced-toolbar-list").append(module.node);
+                                });
+
                                 module
-                                    .init(tool.selector)
+                                    .init(tool.selector, deferred)
                                     .on(module.event.ACTIVATE, function () {
                                         console.log("Tool", module.name, "activated");
                                         deactivateAll(module);
-                                    });
-
-                                tools[tool.name] = module;
+                                    });                                
                             });
                         }
                     }
