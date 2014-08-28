@@ -191,6 +191,7 @@ define([
                  */
                 initToggle: function (selector, d, options) {
                     var that = this,
+                        toolTemplate,
                         deferrList = [
                             new Deferred(),
                             new Deferred()
@@ -199,6 +200,12 @@ define([
                     // wait for translation and template to load
                     Util.afterAll(deferrList,
                         function () {
+                            tmpl.cache = {};
+                            // mixin base tools template with individual tool's template
+                            tmpl.templates = that.templates = dojoLang.mixin(
+                                JSON.parse(TmplHelper.stringifyTemplate(tools_template_json)),
+                                JSON.parse(TmplHelper.stringifyTemplate(toolTemplate)));
+
                             // create tool button, outputfloat, and working label
                             this.node = $(tmpl(this.options.toolButtonTemplate, this.options.toolButtonData));
                             // creating the float to display output on
@@ -257,14 +264,9 @@ define([
                     });
 
                     // load toll's template
-                    require(["dojo/text!tools/templates/" + that.name + ".json"], function (toolTemplate) {
+                    require(["dojo/text!tools/templates/" + that.name + ".json"], function (tt) {
                         console.log(that.name, ": template is loaded");
-
-                        tmpl.cache = {};
-                        // mixin base tools template with individual tool's template
-                        tmpl.templates = that.templates = dojoLang.mixin(
-                            JSON.parse(TmplHelper.stringifyTemplate(tools_template_json)),
-                            JSON.parse(TmplHelper.stringifyTemplate(toolTemplate)));
+                        toolTemplate = tt;
 
                         deferrList[1].resolve();
                     });
