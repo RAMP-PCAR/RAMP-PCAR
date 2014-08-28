@@ -189,7 +189,7 @@ define([
                                 module
                                     .init(tool.selector, deferred)
                                     .on(module.event.ACTIVATE, function () {
-                                        console.log("Tool", module.name, "activated");
+                                        console.log(module.name, ": is activated");
                                         deactivateAll(module);
                                     });                                
                             });

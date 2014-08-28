@@ -11,23 +11,5 @@
  */
 {
     "at_main": "<ul id='advanced-toolbar-list'>
-                </ul>",
-        
-     "populationTool": "<li class='map-toolbar-item'>
-                        <button class='button map-toolbar-item-button button-none' id='at-population-toggle'>
-                            <i class='fa fa-male'></i><span class='on-right'>Population</span>
-                        </button>
-                    </li>",
-    "bufferTool": "<li class='map-toolbar-item'>
-                        <button class='button map-toolbar-item-button button-none' id='at-buffer-toggle'>
-                            <i class='fa fa-wrench'></i><span class='on-right'>Buffer</span>
-                        </button>
-                    </li>",
-    
-    "distanceTool":"<li class='map-toolbar-item'>
-                        <button class='button map-toolbar-item-button button-none' id='at-distance-toggle'>
-                            <i class='fa fa-arrows-h'></i><span class='on-right'>Distance</span>
-                        </button>
-                    </li>"
-
+                </ul>"
 }

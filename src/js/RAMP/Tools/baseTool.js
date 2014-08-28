@@ -212,7 +212,7 @@ define([
                                         tool: that
                                     });
 
-                                    console.log("open tool", that.name);
+                                    console.log(that.name, ": tool opens");
 
                                     that.options.activate.call(that);
                                     that.options.target.append(that.outputFloat);
@@ -230,7 +230,7 @@ define([
                                             tool: that
                                         });
 
-                                        console.log("close tool", that.name);
+                                        console.log(that.name, "tool closes");
 
                                         that.options.deactivate.call(that);
                                         that.outputFloat.detach();
@@ -252,13 +252,13 @@ define([
                     // load tool's i18n namespace
                     that.ns += that.name;
                     i18n.loadNamespace(that.ns, function () {
-                        console.log(that.name, "translation is loaded");
+                        console.log(that.name, ": translation is loaded");
                         deferrList[0].resolve();
                     });
 
                     // load toll's template
                     require(["dojo/text!tools/templates/" + that.name + ".json"], function (toolTemplate) {
-                        console.log(that.name, "template is loaded");
+                        console.log(that.name, ": template is loaded");
 
                         tmpl.cache = {};
                         // mixin base tools template with individual tool's template
@@ -286,6 +286,7 @@ define([
 
                             toolButtonTemplate: "base_tool_button",
                             toolButtonData: {
+                                ns: that.ns
                             },
 
                             toolOutputTemplate: "base_tool_output",

@@ -15,30 +15,9 @@
 
     "base_tool_button": "<li class='map-toolbar-item'>
                             <button class='button map-toolbar-item-button button-none' id='at-area-toggle'>
-                                <i class='fa fa-arrows'></i><span class='on-right'>Area</span>
+                                <i class='fa fa-arrows'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
                             </button>
                         </li>",
-
-    "population_output":  "<div class='population-info'>
-                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.totalPopulationLabel %}:</p>
-                            <span class='population-output working-placeholder'>{%= o.populationOutput %}</span>
-                        </div>",
-
-    "buffer_output": "<div class='buffer-info'>
-                        <p class='info-label margin-bottom-small margin-top-none'>{%= o.distanceLabel %}:</p>                
-                        <input type='text' class='distance-input margin-bottom-small' size='5' value='40'> km
-                    </div>",
-
-    
-                            
-    "distance_output":  "<div class='distance-info'>
-                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.lengthLabel %}:</p>
-                            <span class='length-output working-placeholder'>{%= o.lengthOutput %} 
-                                {% if (o.lengthUnits ) { %}
-                                    {%= o.lengthUnits %}
-                                {% } %}
-                            </span> 
-                        </div>",
 
     "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>{%= o.workingLabel %}</span>"
 }
