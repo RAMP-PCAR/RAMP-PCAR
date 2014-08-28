@@ -49,6 +49,7 @@ define([
 
         var advancedToggle,
             advancedSectionContainer,
+            advancedToolbarList,
 
             cssButtonPressedClass = "button-pressed",
 
@@ -56,7 +57,12 @@ define([
 
             map,
 
-            tools = {},
+            tools = [
+                // name,
+                // selector,
+                // enabled,
+                // module
+            ],
 
             ui = {
                 /**
@@ -67,7 +73,6 @@ define([
                 */
                 init: function () {
                     var viewport = $(".viewport"),
-                        advancedToolbarList = viewport.find("#advanced-toolbar-list"),
                         subPanelContainer,
                         panelToggle = viewport.find("#panel-toggle"),
 
@@ -80,12 +85,19 @@ define([
                     advancedToggle = viewport.find("#advanced-toggle");
                     advancedSectionContainer = viewport.find("#advanced-toolbar");
 
+                    // create html code for advancedToolbar
+                    tmpl.cache = {};
+                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
+                    advancedSectionContainer.append(tmpl("at_main"));
+                    advancedToolbarList = advancedSectionContainer.find("#advanced-toolbar-list");
+
                     advancedToolbarTimeLine
                         .set(advancedSectionContainer, { display: "block" }, 0)
                         .set(viewport, { className: "+=advanced-toolbar-mode" }, 0)
                         .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0, ease: "easeOutCirc" }, 0)
                         .to(panelToggle, transitionDuration, { top: "+=32", ease: "easeOutCirc" }, 0);
 
+                    // register the popup for the advanced toolbar
                     PopupManager.registerPopup(advancedToggle, "click",
                         function (d) {
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
@@ -131,6 +143,10 @@ define([
                     );
 
                     map = RampMap.getMap();
+                },
+
+                addTool: function (tool) {
+                    advancedToolbarList.append(tool.module.node);
                 }
             };
 
@@ -143,59 +159,51 @@ define([
         */
         function deactivateAll(except) {
             // deactivate all the tools except "except" tool
-            UtilDict.forEachEntry(tools, function (name, tool) {
-                if (!except || except.name !== name) {
-                    tool.deactivate();
+            tools.forEach(function (tool) {
+                if ((!except || except.name !== tool.name) && tool.module) {
+                    tool.module.deactivate();
                 }
             });
-        }
-        
-        function generateAdvancedToolbarHTML() {
-            // create html code for advancedToolbar
-                var enabledTools = [];
-
-                enabledTools = globalStorage.config.advancedToolbar.tools;
-
-                enabledTools = dojoArray.filter(enabledTools, function (tool) {
-                    return tool.enabled;
-                });
-
-                tmpl.cache = {};
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
-                var htmlFragment = tmpl("at_main");
-
-            return htmlFragment;
         }
 
         return {
             init: function () {
-
-                $("#advanced-toolbar").append(generateAdvancedToolbarHTML());
+                var toolsRequire;
 
                 ui.init();
 
-                // load only enabled tools
-                globalStorage.config.advancedToolbar.tools.forEach(
-                    function (tool) {
-                        if (tool.enabled) {
-                            require(["tools/" + tool.name], function (module) {
-                                var deferred = new Deferred();
-                                deferred.then(function (module) {
-                                    tools[tool.name] = module;
+                tools = globalStorage.config.advancedToolbar.tools;
+                toolsRequire = tools
+                    .filter(function (tool) { return tool.enabled; })
+                    .map(function (tool) {
+                        return "tools/" + tool.name;
+                    });
 
-                                    $("#advanced-toolbar-list").append(module.node);
-                                });
+                // load all the tools in one go
+                console.log("toolbar : loading tools", toolsRequire);
+                require(toolsRequire, function () {
+                    var deferred = new Deferred(),
+                        args = Array.prototype.slice.call(arguments);
 
-                                module
-                                    .init(tool.selector, deferred)
-                                    .on(module.event.ACTIVATE, function () {
-                                        console.log(module.name, ": is activated");
-                                        deactivateAll(module);
-                                    });                                
+                    args.forEach(function (arg, index) {
+                        deferred = new Deferred();
+
+                        deferred.then(function (module) {
+                            tools[index].module = module;
+                            
+                            ui.addTool(tools[index]);
+                        });
+
+                        arg
+                            .init(tools[index].selector, deferred)
+                            .on(arg.event.ACTIVATE, function () {
+                                console.log(arg.name, ": is activated");
+                                deactivateAll(arg);
                             });
-                        }
-                    }
-                );
+                    });
+
+                    console.log(args);
+                });
             }
         };
     });
