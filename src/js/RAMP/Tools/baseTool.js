@@ -206,7 +206,7 @@ define([
                             this.workingLabel = tmpl(this.options.workingLabelTemplate, this.options.workingLabelData);
 
                             // initializing tools' toggle button
-                            this.handle = PopupManager.registerPopup(this.node, "click",
+                            this.handle = PopupManager.registerPopup(this.node.find(selector), "click",
                                 function (d) {
                                     that.emit(that.event.ACTIVATE, {
                                         tool: that
