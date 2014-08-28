@@ -230,7 +230,7 @@ define([
                                             tool: that
                                         });
 
-                                        console.log(that.name, "tool closes");
+                                        console.log(that.name, ": tool closes");
 
                                         that.options.deactivate.call(that);
                                         that.outputFloat.detach();
