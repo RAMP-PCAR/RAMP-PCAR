@@ -1,22 +1,22 @@
 ﻿<!DOCTYPE html>
-<!--[if IE 7]><html lang="@@langMain" class="no-js ie7 @@rampTheme"><![endif]-->
-<!--[if IE 8]><html lang="@@langMain" class="no-js ie8 @@rampTheme"><![endif]-->
+<!--[if IE 7]><html lang="@@page.lang.main" class="no-js ie7 @@rampTheme"><![endif]-->
+<!--[if IE 8]><html lang="@@page.lang.main" class="no-js ie8 @@rampTheme"><![endif]-->
 <!--[if gt IE 8]><!-->
-<html lang="@@langMain" class="no-js @@rampTheme">
+<html lang="@@page.lang.main" class="no-js @@rampTheme">
 <!--<![endif]-->
 <head>
     <meta charset="utf-8" />
     <!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
         wet-boew.github.io/wet-boew/License-eng.html / wet-boew.github.io/wet-boew/Licence-fra.html -->
-    <title>@@title</title>
+    <title>@@page.title</title>
     <link rel="shortcut icon" href="js/APIs/wet-v3.1.4/theme-gcwu-intranet/images/favicon.ico" />
-    <meta name="description" content="@@metaDescription" />
-    <meta name="dcterms.creator" content="@@metaCreator" />
-    <meta name="dcterms.title" content="@@metaTitle" />
-    <meta name="dcterms.issued" title="W3CDTF" content="@@metaIssued" />
-    <meta name="dcterms.modified" title="W3CDTF" content="@@metaModified" />
-    <meta name="dcterms.subject" title="scheme" content="@@metaSubject" />
-    <meta name="dcterms.language" title="ISO639-2" content="@@metaLanguge" />
+    <meta name="description" content="@@page.meta.description" />
+    <meta name="dcterms.creator" content="@@page.meta.creator" />
+    <meta name="dcterms.title" content="@@page.meta.title" />
+    <meta name="dcterms.issued" title="W3CDTF" content="@@page.meta.issued" />
+    <meta name="dcterms.modified" title="W3CDTF" content="@@page.meta.modified" />
+    <meta name="dcterms.subject" title="scheme" content="@@page.meta.subject" />
+    <meta name="dcterms.language" title="ISO639-2" content="@@page.meta.languge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- build:section head.wetCss -->
     <!--[if lte IE 8]>
@@ -70,40 +70,25 @@
                     <nav role="navigation">
                         <div id="gcwu-psnb">
                             <h2>
-                                @@siteMenu
+                                page.menu.siteMenu
                             </h2>
                             <div id="gcwu-psnb-in">
                                 <div class="wet-boew-menubar mb-mega">
                                     <div>
-                                        <ul class="mb-menu" data-ajax-replace="includes/menu-@@langMainLong.txt">
+                                        <ul class="mb-menu" data-ajax-replace="includes/menu-@@page.lang.mainLong.txt">
                                             <li>
                                                 <div>
-                                                    <a href="@@link1Url">@@link1Title</a>
+                                                    <a href="@@page.menu.link1Url" data-i18n="nav.home">@@page.menu.link1Title</a>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link2Url">@@link2Title</a>
+                                                    <a href="@@page.menu.link2Url">@@page.menu.link2Title</a>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div>
-                                                    <a href="@@link3Url">@@link3Title</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div>
-                                                    <a href="@@link4Url">@@link4Title</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div>
-                                                    <a href="@@link5Url">@@link5Title</a>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div>
-                                                    <a href="@@link6Url">@@link6Title</a>
+                                                    <a href="@@page.menu.link3Url">@@page.menu.link3Title</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -123,7 +108,7 @@
                     <div id="wb-main-in" class="width-100 height-100 viewport ">
                         <!-- MainContentStart -->
                         <h1 id="wb-cont" class="wb-invisible">
-                            @@titleLink
+                            @@page.header.titleLink
                         </h1>
                         <section id="map-div" class="height-100 background-light margin-bottom-none">
                             <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium align-right">-->
@@ -135,50 +120,50 @@
                                     <div id="basemapGallery">
                                     </div>
                                 </li>
-                                <li class="map-toolbar-item">
-                                    <button class="button map-toolbar-item-button button-none" id="addLayer-toggle" 
-                                            onclick="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start 100 @@addLayer-opacity-display-end'">
-                                        <i class="fa fa-plus"></i><span class="on-right">@@addLayerTitle</span>
+                                <!--<li class="map-toolbar-item">
+                                    <button class="button map-toolbar-item-button button-none" id="addLayer-toggle"
+                                            onclick="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer.addLayer-opacity-display-start 100 @@addLayer.addLayer-opacity-display-end'">
+                                        <i class="fa fa-plus"></i><span class="on-right">@@addLayer.addLayerTitle</span>
                                     </button>
                                     <div id="addLayer-section-container" class="map-toolbar-item-container">
                                         <div id="addLayer-section" class="map-toolbar-item-section align-left background-white box-shadow-section">
                                             <section>
                                                 <h2 class="margin-top-none">
-                                                    @@addLayerTitle
+                                                    @@addLayer.addLayerTitle
                                                 </h2>
                                                 <button class="button-none button-close tooltip" title="@@closeTitle">
                                                     <span class="wb-invisible">@@closeTitle</span>
                                                 </button>
                                                 <p class="margin-bottom-small margin-top-none">
                                                     <label class="argin-bottom-small margin-top-small" for="addLayer-select-type">
-                                                        @@addLayerSelectTypeText
+                                                        @@addLayer.addLayerSelectTypeText
                                                     </label>
                                                     <select id="addLayer-select-type">
-                                                        <option value="dynamic">@@addLayerType1</option>
-                                                        <option value="wms">@@addLayerType2</option>
-                                                        <option value="wmts">@@addLayerType3</option>
-                                                        <option value="tile">@@addLayerType4</option>
-                                                        <option value="kml">@@addLayerType5</option>
-                                                        <option value="georss">@@addLayerType6</option>
-                                                        <option value="csv">@@addLayerType7</option>
+                                                        <option value="dynamic">@@addLayer.addLayerType1</option>
+                                                        <option value="wms">@@addLayer.addLayerType2</option>
+                                                        <option value="wmts">@@addLayer.addLayerType3</option>
+                                                        <option value="tile">@@addLayer.addLayerType4</option>
+                                                        <option value="kml">@@addLayer.addLayerType5</option>
+                                                        <option value="georss">@@addLayer.addLayerType6</option>
+                                                        <option value="csv">@@addLayer.addLayerType7</option>
                                                     </select>
                                                 </p>
                                                 <p class="margin-bottom-small margin-top-none">
                                                     <label for="addLayer-URL-input">
-                                                        @@addLayer-URL-label
+                                                        @@addLayer.addLayer-URL-label
                                                     </label>
-                                                    <input id="addLayer-URL-input" type="text" placeholder="@@addLayerPlaceholder" />
+                                                    <input id="addLayer-URL-input" type="text" placeholder="@@addLayer.addLayerPlaceholder" />
                                                 </p>
                                                 <p class="margin-bottom-small margin-top-none">
                                                     <label for="addLayer-Opacity">
-                                                        @@addLayer-Opacity-label <span id="addLayer-Opacity-out"></span>
+                                                        @@addLayer.addLayer-Opacity-label <span id="addLayer-Opacity-out"></span>
                                                     </label>
                                                     <input name="addLayer-Opacity" id="addLayer-Opacity" type="range" min="10" max="100"
-                                                           step="10" title="@@addLayer-opacity-alt" value="100" onchange="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer-opacity-display-start ' + this.value + '@@addLayer-opacity-display-end'" />
+                                                           step="10" title="@@addLayer.addLayer-opacity-alt" value="100" onchange="document.getElementById('addLayer-Opacity-out').innerHTML = '@@addLayer.addLayer-opacity-display-start ' + this.value + '@@addLayer.addLayer-opacity-display-end'" />
                                                 </p>
                                                 <p class="margin-top-medium margin-bottom-small">
                                                     <button class="button button-info float-right" id="addLayer-add">
-                                                        @@addLayerAddButton
+                                                        @@addLayer.addLayerAddButton
                                                     </button><span class="clear"></span>
                                                 </p>
                                                 <div class="clear">
@@ -186,26 +171,26 @@
                                             </section>
                                         </div>
                                     </div>
-                                </li>
+                                </li>-->
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="getlink-toggle">
-                                        <i class="fa fa-link"></i><span class="on-right">@@getLinkTitle</span>
+                                        <i class="fa fa-link"></i><span class="on-right">@@bookmarkLink.title</span>
                                     </button>
                                     <div id="getlink-section-container" class="map-toolbar-item-container">
                                         <div id="getlink-section" class="map-toolbar-item-section align-left background-white box-shadow-section">
                                             <section>
                                                 <h2 class="margin-top-none ">
-                                                    @@getLinkTitle
+                                                    @@bookmarkLink.title
                                                 </h2>
-                                                <button class="button-none button-close tooltip" title="@@closeTitle">
-                                                    <span class="wb-invisible">@@closeTitle</span>
+                                                <button class="button-none button-close tooltip" title="@@gui.actions.close">
+                                                    <span class="wb-invisible">@@gui.actions.close</span>
                                                 </button>
                                                 <label class="argin-bottom-small margin-top-small wb-invisible" for="getlink-input">
-                                                    @@getLinkDescription
+                                                    @@bookmarkLink.description
                                                 </label>
                                                 <p class="margin-bottom-small margin-top-none getlink-input-holder">
                                                     <button class="button button-none button-small getlink-shorten-button">
-                                                        @@getLinkShortLink
+                                                        @@bookmarkLink.shortLink
                                                     </button>
                                                     <input type="text" data-role="none" id="getlink-input" class="margin-bottom-none width-100">
                                                 </p>
@@ -221,7 +206,7 @@
                                                 </div>
                                                 <p class="margin-top-medium margin-bottom-small">
                                                     <a href="mailto:" class="button button-info float-right getlink-email-button">
-                                                        <span class="wb-icon-mail"></span>@@getLinkEmail
+                                                        <span class="wb-icon-mail"></span>@@bookmarkLink.email
                                                     </a> <span class="clear"></span>
                                                 </p>
                                                 <div class="clear">
@@ -232,7 +217,7 @@
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="advanced-toggle">
-                                        <i class="fa fa-cog"></i><span class="on-right">@@advancedTitle</span>
+                                        <i class="fa fa-cog"></i><span class="on-right">@@advancedToolbar.advancedTitle</span>
                                     </button>
                                     <div id="advanced-toolbar">
                                         
@@ -240,12 +225,12 @@
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="fullScreenToggle">
-                                        <i class="fa fa-arrows-alt"></i><span class="on-right">@@fullScreenTitle</span>
+                                        <i class="fa fa-arrows-alt"></i><span class="on-right">@@gui.actions.fullScreen</span>
                                     </button>
                                 </li>
                                 <li class="map-toolbar-item">
                                     <button class="button map-toolbar-item-button button-none" id="helpToggle">
-                                        <i class="fa fa-question"></i><span class="on-right">@@helpTitle</span>
+                                        <i class="fa fa-question"></i><span class="on-right">@@help.title</span>
                                     </button>
                                     <div id="help-section-container" class="map-toolbar-item-container">
                                         <div id="help-section-shadow" class="background-white">
@@ -253,16 +238,16 @@
 
                                                 <section>
                                                     <h2 class="margin-top-small">
-                                                        @@helpSectionsTitle
+                                                        @@help.sectionsTitle
                                                     </h2>
-                                                    <button class="button-none button-close tooltip" title="@@closeTitle">
+                                                    <button class="button-none button-close tooltip" title="@@gui.actions.close">
                                                         <span class="wb-invisible">Close</span>
                                                     </button>
 
-                                                    <div data-ajax-replace="includes/help-@@langMainLong.txt"></div>
+                                                    <div data-ajax-replace="includes/help-@@page.lang.mainLong.txt"></div>
                                                 </section>
                                             </div>
-                                            <!--<div id="help-section" class="align-left" data-ajax-replace="includes/help-@@langMainLong.txt">
+                                            <!--<div id="help-section" class="align-left" data-ajax-replace="includes/help-@@page.lang.mainLong.txt">
                                             </div>-->
                                         </div>
                                     </div>
@@ -275,7 +260,7 @@
                                         </div>
                                     </div>
                                     <div id="map-load-indicator">
-                                        <span>@@loadingTitle</span><ul>
+                                        <span>@@map.loadingTitle</span><ul>
                                             <li></li>
                                             <li></li>
                                             <li></li>
@@ -283,14 +268,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="panel-toggle" class="button-none side-toggle state-expanded tooltip" title="@@closeTitle"><span class="wb-invisible">Close</span></button>
+                            <button id="panel-toggle" class="button-none side-toggle state-expanded tooltip" title="@@gui.actions.close">
+                                <span class="wb-invisible">@@gui.actions.close</span>
+                            </button>
                         </section>
                         <section id="panel-div" class="height-100 background-white tundra">
                             <div class="width-100 height-100">
                                 <div class="wet-boew-tabbedinterface">
                                     <ul id="tabs" class="tabs background-white">
-                                        <li class="background-light"><a href="#tabs1_1" data-panel-name="filterManager">@@datasetsTabTitle</a></li>
-                                        <li class="background-light"><a href="#tabs1_2" data-panel-name="datagrid">@@dataTabTitle</a></li>
+                                        <li class="background-light"><a href="#tabs1_1" data-panel-name="filterManager">@@filterManager.datasetsTabTitle</a></li>
+                                        <li class="background-light"><a href="#tabs1_2" data-panel-name="datagrid">@@datagrid.dataTabTitle</a></li>
                                     </ul>
                                     <div class="tabs-panel width-100">
                                         <div id="tabs1_1">
@@ -344,13 +331,13 @@
             <div id="wb-foot-in">
                 <footer>
                     <h2 id="wb-nav">
-                        @@footer
+                        @@page.footer.footer
                     </h2>
                     <!-- FooterStart -->
                     <nav role="navigation">
                         <div id="gcwu-sft">
                             <h3>
-                                @@siteFooter
+                                @@page.footer.siteFooter
                             </h3>
                             <div id="gcwu-sft-in">
                                 <div id="gcwu-tctr">
@@ -389,7 +376,8 @@
     <script src="js/lib/gsap.1.11.8/src/minified/TimelineLite.min.js" type="text/javascript"></script>
     <script src="js/lib/gsap.1.11.8/src/minified/plugins/CSSPlugin.min.js" type="text/javascript"></script>
     <script src="js/lib/gsap.1.11.8/src/minified/easing/EasePack.min.js" type="text/javascript"></script>
-    <script src="js/lib/jquery-nstslider.1.0.5/jquery.nstSlider.js" text="text/javascript"></script>
+    <script src="js/lib/i18next.1.7.4/i18next-1.7.4.min.js" type="text/javascript"></script>
+    <script src="js/lib/jquery-nstslider.1.0.5/jquery.nstSlider.js" type="text/javascript"></script>
     <script src="js/lib/datatables.1.10/jquery.dataTables.min.js" type="text/javascript"></script>
     <script src="js/lib/datatables.1.10/jquery.dataTables.pagination.ramp.js" type="text/javascript"></script>
     <script src="js/lib/jquery.ui.1.10.4/jquery-ui-1.10.4.custom.min.js" type="text/javascript"></script>

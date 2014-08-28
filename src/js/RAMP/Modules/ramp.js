@@ -58,18 +58,7 @@ define([
             * @method loadStrings
             */
             loadStrings: function () {
-                var stringResources = GlobalStorage.config.stringResources;
-                //<Title>
-                //dojoQuery("title")[0].text(stringResources.txtPageTitle + " " + stringResources.txtPageSubTitle);
-
-                //H1
-                //$("#H1")[0].text(stringResources.txtMapTitle);
-
-                //pageTitle
-                //$("#pageTitle")[0].text(stringResources.txtPageTitle);
-
-                //envm
-                $("#envm")[0].text(stringResources.txtPageSubTitle);
+                // doesn't seem to be doing a lot, this function
             },
 
             /**

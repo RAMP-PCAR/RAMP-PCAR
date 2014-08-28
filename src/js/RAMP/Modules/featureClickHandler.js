@@ -1,4 +1,4 @@
-﻿/* global define */
+﻿/* global define, i18n */
 
 /**
 *
@@ -18,7 +18,6 @@
 * @static
 * @uses GraphicExtension
 * @uses EventManager
-* @uses GlobalStorage
 * @uses dojo/topic
 * @uses dojo/dom-construct
 * @uses Util
@@ -26,7 +25,7 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager", "ramp/globalStorage",
+    "ramp/graphicExtension", "ramp/eventManager",
 
 /* Dojo */
     "dojo/topic", "dojo/dom-construct",
@@ -36,7 +35,7 @@ define([
 
     function (
     /* RAMP */
-    GraphicExtension, EventManager, GlobalStorage,
+    GraphicExtension, EventManager,
 
     /* Dojo */
     topic, domConstruct,
@@ -58,7 +57,7 @@ define([
                 var selectedGraphic = evt.graphic;
 
                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                    panelName: GlobalStorage.config.stringResources.txtGrid_details,
+                    panelName: i18n.t('datagrid.details'),
                     title: GraphicExtension.getGraphicTitle(selectedGraphic),
                     content: GraphicExtension.getTextContent(selectedGraphic),
                     target: $("#map-div"),

@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, i18n */
 
 /**
 * MeasureTool submodule.
@@ -128,7 +128,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.LINE);
 
-            displayOutput(that.stringResources.txtDistanceToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -152,7 +152,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(that.stringResources.txtDistanceToolNA);
+            displayOutput(i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -164,7 +164,7 @@ define([
         function displayOutput(length, lengthUnits) {
             that.displayTemplateOutput("distance_output",
                 {
-                    lengthLabel: that.stringResources.txtDistanceToolLength,
+                    lengthLabel: i18n.t(that.ns + ":length"),
                     lengthOutput: length,
                     lengthUnits: lengthUnits                    
                 }
@@ -179,8 +179,10 @@ define([
             * @constructor
             *
             */
-            init: function (selector) {
+            init: function (selector, name) {
                 that = this;
+                this.name = name;
+
                 this.initToggle($(selector), activate, deactivate,
                     {
                         defaultAction: clearMap
@@ -190,8 +192,6 @@ define([
                 ui.init();
 
                 return this;
-            },
-
-            name: "distanceTool"
+            }
         });
     });

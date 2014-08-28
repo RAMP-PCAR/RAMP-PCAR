@@ -63,6 +63,18 @@ module.exports = function (grunt) {
                 }
             },
 
+            templates: {
+                options: {
+                    message: 'Templates are a GO.' //required
+                }
+            },
+
+            assets: {
+                options: {
+                    message: 'Assets are a GO.' //required
+                }
+            },
+
             api: {
                 options: {
                     message: 'API docs are a GO.' //required
@@ -468,6 +480,11 @@ module.exports = function (grunt) {
                 tasks: ['css'] //, 'build:bump-only-build']
             },
 
+            wlocales: {
+                files: ['src/locales/**/*.json'],
+                tasks: ['assets']
+            },
+
             wpage: {
                 files: [
                     'src/ramp-src.html',
@@ -482,7 +499,7 @@ module.exports = function (grunt) {
                     'src/js/RAMP/Modules/templates/*.json',
                     'src/js/RAMP/Tools/templates/*.json'
                 ],
-                tasks: ['copy:templates'] //, 'build:bump-only-build']
+                tasks: ['copy:templates', 'notify:templates'] //, 'build:bump-only-build']
             }
         },
 
@@ -1101,6 +1118,44 @@ module.exports = function (grunt) {
         });
     });
 
+    // load and parse locale strings from the config file either local or returned by the service
+    grunt.registerTask('i18nStrings', function (suffix) {
+        var done = this.async(),
+            fileName = 'src/locales/' + suffix + '-CA/translation.json';
+
+        if (fileName) {
+            fileName = fileName.replace('{lang}', suffix);
+        } else {
+            done();
+            return;
+        }
+
+        function parseStrings(json) {
+            localeStrings[suffix] = extend(localeStrings[suffix], json);
+        }
+
+        console.log("Loading", fileName);
+
+        fs.readFile(fileName, function (err, data) {
+            if (err) {
+                request(fileName,
+                    function (error, response, body) {
+                        if (!error && response.statusCode === 200) {
+                            parseStrings(JSON.parse(JSON.parse(body).json));
+                            done();
+                        } else {
+                            console.log("Error loading file", fileName);
+                            done();
+                        }
+                    }
+                );
+            } else {
+                parseStrings(JSON.parse(data));
+                done();
+            }
+        });
+    });
+
     grunt.registerTask('cake', function () {
         var done = this.async();
 
@@ -1140,11 +1195,11 @@ module.exports = function (grunt) {
 
     // ASSETS
 
-    grunt.registerTask('assets', ['clean:assets', 'copy:assets']);
+    grunt.registerTask('assets', ['clean:assets', 'copy:assets', 'notify:assets']);
 
     // JS
     grunt.registerTask('jsClean', ['clean:rampJsBefore', 'clean:rampJsAfter']);
-    grunt.registerTask('jsCopy', ['copy:rampJsLib', 'copy:rampJsLibResources', 'copy:rampJsExtra', 'copy:templates']);
+    grunt.registerTask('jsCopy', ['copy:rampJsLib', 'copy:rampJsLibResources', 'copy:rampJsExtra', 'copy:templates', 'notify:templates']);
     grunt.registerTask('jsConcat', ['concat:rampJsLib']);
     grunt.registerTask('jsReplace', ['replace:rampJsCore']);
 
@@ -1160,7 +1215,8 @@ module.exports = function (grunt) {
     grunt.registerTask('css', ['clean:rampCssBefore', 'lessCss', 'prefix', 'cssmin', 'cssCopy', 'cssConcat', 'clean:rampCssAfter', 'copy:cssLibResourcesToCopy', 'notify:css']);
 
     // PAGES
-    grunt.registerTask('pageStrings', ['csvStrings:en', 'csvStrings:fr', 'configStrings:en', 'configStrings:fr']);
+    //grunt.registerTask('pageStrings', ['csvStrings:en', 'csvStrings:fr', 'configStrings:en', 'configStrings:fr']);
+    grunt.registerTask('pageStrings', ['i18nStrings:en', 'i18nStrings:fr']);
     grunt.registerTask('pageReplace', ['replace:stringsEn', 'replace:stringsFr']);
 
     grunt.registerTask('updateConfig', function (key, value) {

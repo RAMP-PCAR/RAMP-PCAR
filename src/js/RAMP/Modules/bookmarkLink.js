@@ -1,4 +1,4 @@
-/*global define */
+/* global define, i18n */
 
 /**
 * BookmarkLink submodule
@@ -290,10 +290,10 @@ define([
         */
         function setNewUrl(url) {
             var mailToHref = String.format(HREF_MAILTO_TEMPLATE,
-                config.stringResources.txtEmailUrlSubject,
-                config.stringResources.txtEmailUrlBody,
+                i18n.t("bookmarkLink.emailUrlSubject"),
+                i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
-
+            
             linkPaneTextbox.val(url);
             getlinkEmailButton.attr("href", mailToHref);
         }
@@ -356,11 +356,10 @@ define([
         * @private
         */
         function toggleShortLinkMode(value) {
-            var label,
-                localStrings = config.stringResources;
+            var label;
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
-            label = isShortLinkMode ? localStrings.txtGetLinkLong : localStrings.txtGetLinkShort;
+            label = isShortLinkMode ? i18n.t("bookmarkLink.longLink") : i18n.t("bookmarkLink.shortLink");
             getlinkShortenButton.text(label);
             updateURL();
         }

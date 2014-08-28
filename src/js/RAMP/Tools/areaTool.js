@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, $, i18n */
 
 /**
 * MeasureTool submodule.
@@ -131,7 +131,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(that.stringResources.txtAreaToolNA, that.stringResources.txtAreaToolNA);
+            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -155,7 +155,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(that.stringResources.txtAreaToolNA, that.stringResources.txtAreaToolNA);
+            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
         }
 
         /**
@@ -167,8 +167,8 @@ define([
         function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput("area_output",
                 {
-                    lengthLabel: that.stringResources.txtAreaToolLength,
-                    areaLabel: that.stringResources.txtAreaToolArea,
+                    lengthLabel: i18n.t(that.ns + ":length"),
+                    areaLabel: i18n.t(that.ns + ":area"),
                     lengthOutput: length,
                     areaOutput: area,
                     lengthUnits: lengthUnits,
@@ -185,8 +185,10 @@ define([
             * @constructor
             *
             */
-            init: function (selector) {
+            init: function (selector, name) {
                 that = this;
+                this.name = name;
+
                 this.initToggle($(selector), activate, deactivate,
                     {
                         defaultAction: clearMap
@@ -196,8 +198,6 @@ define([
                 ui.init();
 
                 return this;
-            },
-
-            name: "areaTool"
+            }
         });
     });

@@ -29,11 +29,11 @@
 									<div class='record-controls wb-invisible'>
 										<ul class='button-group margin-top-none'>
 											<li>
-												<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=o.str.txtGrid_details%}</button>
+												<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>
 												<span class='separator' role='presentation'></span>
 											</li>
 											<li>
-												<button class='button button-none button-small font-xsmall zoomto' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=o.str.txtGrid_zoomTo%}</button>
+												<button class='button button-none button-small font-xsmall zoomto' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.zoomTo')%}</button>
 											</li>
 										</ul>
 									</div>
