@@ -178,7 +178,7 @@ define([
                         if (tool.enabled) {
                             require(["tools/" + tool.name], function (module) {
                                 module
-                                    .init(tool.selector, tool.name)
+                                    .init(tool.selector)
                                     .on(module.event.ACTIVATE, function () {
                                         console.log("Tool", module.name, "activated");
                                         deactivateAll(module);

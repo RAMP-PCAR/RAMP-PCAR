@@ -179,9 +179,8 @@ define([
             * @constructor
             *
             */
-            init: function (selector, name) {
+            init: function (selector) {
                 that = this;
-                this.name = name;
 
                 this.initToggle($(selector), activate, deactivate,
                     {
@@ -192,6 +191,8 @@ define([
                 ui.init();
 
                 return this;
-            }
+            },
+
+            name: "distanceTool"
         });
     });
