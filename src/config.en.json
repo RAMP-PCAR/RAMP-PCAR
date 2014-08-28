@@ -22,12 +22,7 @@
             {
                 "name": "bufferTool",
                 "selector": "#at-buffer-toggle",
-                "enabled": true,
-                "2": {
-                    "name": "bufferTool",
-                    "selector": "#at-buffer-toggle",
-                    "enabled": true
-                }
+                "enabled": true
             },
             {
                 "name": "distanceTool",

@@ -143,33 +143,6 @@ Developers of the Almighty JSON Config Editor
                                     "type": "Boolean",
                                     "value": true,
                                     "description": ""
-                                },
-                                {
-                                    "name": "2",
-                                    "type": "Object",
-                                    "description": "",
-                                    "fields": [
-                                        {
-                                            "name": "name",
-                                            "type": "String",
-                                            "value": "bufferTool",
-                                            "description": "",
-                                            "visibleText": false
-                                        },
-                                        {
-                                            "name": "selector",
-                                            "type": "String",
-                                            "value": "#at-buffer-toggle",
-                                            "description": "",
-                                            "visibleText": false
-                                        },
-                                        {
-                                            "name": "enabled",
-                                            "type": "Boolean",
-                                            "value": true,
-                                            "description": ""
-                                        }
-                                    ]
                                 }
                             ]
                         },
