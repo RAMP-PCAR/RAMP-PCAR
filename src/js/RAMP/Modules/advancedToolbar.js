@@ -182,16 +182,25 @@ define([
                 // load all the tools in one go
                 console.log("toolbar : loading tools", toolsRequire);
                 require(toolsRequire, function () {
-                    var deferred = new Deferred(),
+                    var deferredList = [],
+                        deferred,
                         args = Array.prototype.slice.call(arguments);
+
+                    args.forEach(function () {
+                        deferredList.push(new Deferred());
+                    });
+
+                    UtilMisc.afterAll(deferredList, function () {
+                        // insert tool buttons into the toolbar
+                        tools.forEach(ui.addTool);
+                    });
 
                     args.forEach(function (arg, index) {
                         deferred = new Deferred();
 
                         deferred.then(function (module) {
                             tools[index].module = module;
-                            
-                            ui.addTool(tools[index]);
+                            deferredList[index].resolve();
                         });
 
                         arg
