@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require */
+﻿/*global define, $, TimelineLite, TweenLite, require, tmpl */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.
@@ -41,7 +41,7 @@ define([
     // Ramp
         EventManager, RampMap, globalStorage,
     // Util
-        UtilMisc, UtilDict, PopupManager,TmplHelper,
+        UtilMisc, UtilDict, PopupManager, TmplHelper,
     // Text
         advanced_toolbar_template_json) {
         "use strict";
@@ -148,18 +148,16 @@ define([
                 }
             });
         }
-
-
+        
         function generateAdvancedToolbarHTML() {
             // create html code for advancedToolbar
                 var enabledTools = [];
 
                 enabledTools = globalStorage.config.advancedToolbar.tools;
 
-                enabledTools = dojoArray.filter(enabledTools,function(tool){
-                            return tool.enabled;
-                    }
-                );
+                enabledTools = dojoArray.filter(enabledTools, function (tool) {
+                    return tool.enabled;
+                });
 
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
@@ -173,7 +171,6 @@ define([
                 ui.init();
 
                 $("#advanced-toolbar").append(generateAdvancedToolbarHTML());
-
 
                 // load only enabled tools
                 globalStorage.config.advancedToolbar.tools.forEach(

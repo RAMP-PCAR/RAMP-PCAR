@@ -127,7 +127,7 @@ require([
 
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
-
+                
                 //initialize the filter
                 FilterManager.init();
 
@@ -135,7 +135,7 @@ require([
                 //TODO idea: have the tools init only if they are included in the config?
                 if (globalStorage.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
-                }else{
+                } else {
                     $("li.map-toolbar-item #advanced-toggle").remove();
                 }
 
