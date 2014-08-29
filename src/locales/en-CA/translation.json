@@ -199,7 +199,6 @@
 
     "_unused": {
         "altMaptip_image": "Feature icon",
-        "fullScreen": "Full Screen",
         "showHeaders": "Show Headers",
         
         "expandAll": "Expand All",
@@ -207,8 +206,7 @@
         "extent": "Extent",
         "scope": "Scope",
         "timePeriod": "Time Period",
-        "supplementalData": "Supplemental Data",
-        
+        "supplementalData": "Supplemental Data",        
         
         "show": "Show"
     }

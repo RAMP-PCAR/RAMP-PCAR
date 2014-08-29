@@ -1,0 +1,213 @@
+{
+    "page": {
+
+        "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+
+        "lang": {
+            "main": "fr",
+            "mainLong": "fra",
+            "mainFull": "Français",
+            "alt": "en",
+            "altLong": "eng",
+            "altFull": "English"
+        },
+
+        "meta": {
+            "description": "Échantillon d'une mise en oeuvre d'une PCAR",
+            "creator": "Environnement Canada, DGSM DAAS SAE",
+            "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+            "issued": "Date de publication (2014-07-01)",
+            "modified": "Date de publication (2014-07-01)",
+            "subject": "Environnement",
+            "languge": "fra"
+        },
+
+        "header": {
+            "skipToMain": "Passer aux informations sur le site",
+            "skipToFooter": "Passer aux informations sur le site",
+
+            "navigationBar": "Barre de navigation",
+
+            "rampAltLangLink": "map.html",
+
+            "servicesTitle": "Services",
+            "departmentsTitle": "Ministères",
+            "goc": "Gouvernement du Canada",
+            "sgoc": "Symbole du gouvernement du Canada",
+
+            "titleLink": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+            "titleSubLink": "Plate-forme de visualisation géospatiale d'EC"
+        },
+
+        "menu": {
+            "siteMenu": "Site menu",
+
+            "link1Url": "http://ramp-racp.github.io/index-fr.html",
+            "link2Url": "http://ramp-racp.github.io/docs/started-fr.html",
+            "link3Url": "http://ramp-racp.github.io/docs/index-fr.html",
+
+            "link1Title": "Projet de PCAR",
+            "link2Title": "Utilisation de la PCAR",
+            "link3Title": "Documentation de la PCAR"
+        },
+
+        "footer": {
+            "footer": "Pied de page",
+            "siteFooter": "Informations sur le site",
+            "transparency": "Transparence",
+            "transparencyLink": "http://www.ec.gc.ca/default.asp?lang=Fr&n=390AF41B-1",
+            "termsConditions": "Avis",
+            "termsConditionsLink": "http://www.ec.gc.ca/default.asp?lang=Fr&xml=5830C36B-1773-4E3E-AF8C-B21F54633E0A",
+            "dateModifiedTitle": "Date de modification"
+        }
+    },
+
+    "addLayer": {
+        "addLayerTitle": "Ajouter une couche provenant du Web",
+        "addLayerSelectTypeText": "À quel type de données faites-vous référence?",
+        "addLayerType1": "Un service Web du serveur ArcSIG",
+        "addLayerType2": "Un service Web SCW CGO",
+        "addLayerType3": "Un service Web SMCW CGO",
+        "addLayerType4": "Une couche de mosaïque",
+        "addLayerType5": "Un fichier KML",
+        "addLayerType6": "Un fichier GeoRSS",
+        "addLayerType7": "Un fichier CSV",
+        "addLayerPlaceholder": " http://<MyServerName>/ArcGIS/rest/services/<MyServiceName>",
+        "addLayerAddButton": " Ajouter une couche",
+        "addLayer-URL-label": " URL:",
+        "addLayer-Opacity-label": " Opacité :",
+        "addLayer-opacity-alt": " Étendue : de 0 à 10 par bond de 1",
+        "addLayer-opacity-display-start": " (Valeur actuelle:",
+        "addLayer-opacity-display-end": "%)"
+    },
+
+    "advancedToolbar": {
+        "advancedTitle": "Avancé"
+    },
+
+    "bookmarkLink": {
+        "title": "Obtenir le lien",
+        "description": "Lien vers le visualiseur de cartes",
+        "shortLink": "Lien raccourci",
+        "longLink": "Lien intégral",
+        "email": "Courriel",
+        "emailUrlSubject": "Visionneuse de PCAR des SIG",
+        "emailUrlBody": ""
+    },
+
+    "datagrid": {
+        "dataTabTitle": "Données",
+
+        "sort": "Sorte",
+        "details": "Détails",
+        "zoomTo": "Zoom vers",
+        "zoomBack": "Zoom arrière",
+        "fullData": "Données complètes",
+
+        "ex": {
+            "datasetSelectorButtonLoad": "Charger",
+            "datasetSelectorButtonLoaded": "Chargement terminé",
+            "dataSummary": "Résumé des données",
+            "dataset": "Ensemble de données"
+        },
+
+        "gridstrings": {
+            "sEmptyTable": "Aucune donnée disponible dans le tableau",
+            "sInfo": "Afficher_START_à_la_END_du_TOTAL_d'entrées_",
+            "sInfoEmpty": "Afficher de 0 à 0 de 0 d'entrées",
+            "sInfoFiltered": "(filtré à partir de_MAX_d'entrées totales)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Afficher_MENU_entrées",
+            "sLoadingRecords": "Chargement",
+            "sProcessing": "Traitement en cours...",
+            "sSearch": "Recherche",
+            "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+            "oPaginate": {
+                "sFirst": "Premier",
+                "sLast": "Dernier",
+                "sNext": "Suivant",
+                "sPrevious": "Précédente",
+                "sRecords": "Fichiers",
+                "sPage": "Page"
+            },
+            "oAria": {
+                "sSortAscending": ": Activer pour trier la colonne dans l'ordre croissant",
+                "sSortDescending": ": Activer pour trier la colonne dans l'ordre décroissant"
+            }
+        }
+    },
+
+    "filterManager": {
+        "datasetsTabTitle": "Ensembles de données",
+
+        "allData": "Toutes les données",
+
+        "showBounds": "Afficher les limites de {0}",
+        "showAllBounds": "Afficher toutes les limites",
+
+        "showFeatures": "Afficher {0}",
+        "showAllFeatures": "Afficher tout",
+
+        "hideFeatures": "Masquer {0}",
+        "hideAllFeatures": "Masquer tout",
+
+        "hideBounds": "Masquer les limites de {0}",
+        "hideAllBounds": "Masquer toutes les limites",
+
+        "metadata": "Métadonnées",
+        "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche",
+        "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche",
+
+        "legend": "Légende",
+        "linkToCap": "Lien vers les capacités",
+
+        "settings": "Paramètres",
+        "settingsLayerSettings": "Paramètres de la couche",
+        "settingsOpacity": "Opacité",
+
+        "layerHandle": "Descripteur de couche",
+        "layerHandleLabel": "Descripteur de couche pour __layerName__",
+        "layerListLabel": "Liste des couches sortable"
+    },
+
+    "gui": {
+        "actions": {
+            "close": "Fermer",
+            "open": "Ouvrir",
+            "fullScreen": "Plein écran"
+        }
+    },
+
+    "map": {
+        "loadingTitle": "Chargement",
+        "scale": "Scale"
+    },
+
+    "help": {
+        "title": "Aide",
+        "sectionsTitle": "Sections d'aide"
+    },
+
+    "tools": {
+
+        "basetool": {
+            "clearmap": "Effacer",
+            "working": "Traitement en cours…"
+        }
+    },
+
+    "_unused": {
+        "altMaptip_image": "Icône vedette",
+        "showHeaders": "Afficher haut de page",
+
+        "expandAll": "Développer tout",
+        "abstract": "Sommaire ",
+        "extent": "Couverture",
+        "scope": "Portée",
+        "timePeriod": "Période",
+        "supplementalData": "Données supplémentaires",
+
+        "show": "Afficher"
+    }
+}
