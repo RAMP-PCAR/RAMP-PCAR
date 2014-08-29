@@ -1,0 +1,574 @@
+﻿<!-- navControls BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Navigation Controls</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Navigation controls is used for changing the viewing extent of the map; the datagrid
+                updates accordingly to what's viewable in the current extent.</p>
+
+            <h3>Usage</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/help_navigation_toolbar.png" alt="Map navigation controls" class="image-actual" />
+                    <p class="position-top- position-right background-dark">
+                        Map navigation controls
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                Click Pan North/South/East/West to move the map in that particular direction.</br>
+                Click Canada View to view map at its full extent.</br>
+                Click Zoom In/Out to change the map extent.</br>
+                Click and drag the Zoom Slider to zoom in/out.</br>
+            </p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- navControls ENDS -->
+<!-- basemaps BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Basemaps</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Basemap selector is used to modify the underlying basemap to provide a variety
+                of geographical contexts.</p>
+            <h3>Usage</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/help_basemaps.png" alt="Basemap selector widget" class="image-actual" />
+                    <p class="position-top- position-right background-dark">
+                        Basemap selector widget
+                    </p>
+                </div>
+            </div>
+            <p>
+                From the dropdown, select the basemap of your choice and the map display will update.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- basemaps ENDS -->
+<!-- Add Layer BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Add Layer from Web</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.</p>
+            <h3>Usage:</h3>
+
+            <div class="span-3 float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/help_addlayer.png" alt="Add layer widget" class="" />
+                    <p class="position-top- position-right background-dark">
+                        Add layer widget
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- Add Layer ENDS -->
+<!-- getLink BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Get Link</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Get Link is used to generate a shareable URL of the current map state with selected
+                datasets.</p>
+            <h3>Usage:</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/help_getlink.png" alt="Get Link widget" class="image-actual" />
+                    <p class="position-top- position-right background-dark">
+                        Get Link widget
+                    </p>
+                </div>
+            </div>
+
+            <h4>Short link</h4>
+            <p>Select this link to use Google's URL
+                shortening service to generate a concise and easily shareable link to the current
+                state of the RAMP map viewer.</p>
+
+            <h4>Email</h4>
+            <p>Select this link to open a new email in your
+                default mail client, with the URL contained in the body for convenient sharing.</p>
+
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- getLink ENDS -->
+<!-- fullScreen BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Full Screen</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Full Screen is used to collapse the departmental headers and footers to provide
+                larger screen space for mapping.</p>
+            <h3>Usage:</h3>
+            <p>
+                Click the Full Screen button in the toolbar to hide departmental header and footer
+                information. Select the Show Headers link to restore to default view.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- fullScreen ENDS -->
+<!-- datasets BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Data Sets</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid.
+                The Datasets tab also serves as a map legend.</p>
+
+            <h3>Usage</h3>
+
+			<h4>Layer Types</h4>
+			<p>There are three types of layers that can reside in the Dataset tab. 
+				<ul>
+					<li>Feature layers represent data that can be interacted with on the map, and viewed in the data grid. </li> 
+					<li>Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.</li>
+					<li>WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid.</li>
+				</ul>		
+			</p>
+
+            <div class="span-3 float-right">
+                <div class="module-poster">
+            	    <img src="./assets/images/help/en/help_datasets.png" alt="Data Sets" class="" />
+                    <p class="position-top- position-right background-dark">
+                        Data Sets
+                    </p>
+                </div>
+            </div>
+
+            <h4>Layer Visiblity</h4>
+            <p>Select the "eye" icon next to a dataset name to toggle the layer on or off.</p>
+
+            <h4>Layer Bounding box</h4>
+            <p>Use the "cross hatch" icon to the right of the eye icon to display the bounding box of the dataset.</p>
+
+            <div class="clear"></div>
+
+            <h4>Layer Reordering</h4>
+            <p>Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.</p>
+
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/help_datasets_reordering.png" alt="Layer Reordering" class="" />
+                        <p class="position-top- position-right background-dark">
+                            Layer Reordering
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+			<p>
+				While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  WMS layers will
+				always be displayed beneath the other layers, but may be re-ordered amongst other WMS layers.
+
+            </p>
+
+            <h4>Layer Metadata</h4>
+            <p>Select the "Metadata" link to display relevant metadata for that source in a collapsible Info Panel.</p>
+
+            <h4>Layer Settings</h4>
+            <p>Select the "Settings" link to change layer's opacity using the slider control.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- datasets ENDS -->
+<!-- summary grid BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Summary Grid</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Summary Grid lists basic information for all the features that is visible in the current map extent.</p>
+            <h3>Usage:</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/summary_grid/screenshot.jpg" alt="The Summary Grid" class="" />
+                    <p class="position-top- position-right background-dark">
+                        The Summary Grid
+                    </p>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <h4>Sorting</h4>
+            <p> Select the Sort link at the top of the data
+                grid to sort by field name, descending. Select the Sort link again to switch the
+                sort to ascending mode.
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/summary_grid/sort_button.jpg" alt="The Sort Button" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Sort Button
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Details</h4>
+            <p> Select the Details link next to each data
+                row to display its information in an Info Panel. This function replicates clicking
+                directly on a map feature.
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/summary_grid/details_button.jpg" alt="The Details Button" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Details Button
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Zoom To</h4>
+            <p> Every row on the data grid has an option
+                to quickly zoom the map view to that data point. If the "Zoom To" link is clicked,
+                the map and the data grid will dynamically zoom to that specific point.
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/summary_grid/zoomto_button.jpg" alt="The Zoom To Button" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Zoom To Button
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Zoom Back</h4>
+            <p>After the "Zoom To" link is clicked, the link
+                will be replaced by a "Zoom Back" link. Clicking on the "Zoom Back" link will bring
+                the user back to the extent of the map before the "Zoom To" link was clicked.
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/summary_grid/zoomback_button.jpg" alt="The Zoom Back Button" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Zoom Back Button
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Pagination</h4>
+            <p> Use the far left and right arrows to
+                jump to the first or last page, respectively, of the information in the data grid.
+                Use the inner left and right buttons to move back or forward one page at a time.
+                Selecting the Page link will permit you to quickly jump to any page in the data
+                grid listing. There is also a record count next to the pagination buttons, which indicates
+                the number of features currently in the map extent versus the total number of features
+                in the map.
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/summary_grid/pagination.jpg" alt="The Pagination Control" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Pagination Control
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- summary grid ENDS -->
+<!-- extendedGrid BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Extended Grid</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Extended Grid lists detailed information about all the features that in the current map extent.</p>
+            <h3>Usage:</h3>
+
+            <div class="span-3 float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/extended_grid/screenshot_1.jpg" alt="The Extended Grid" class="" />
+                    <p class="position-top- position-right background-dark">
+                        The Extended Grid
+                    </p>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+
+
+                <h4>Full Data Button</h4>
+                <p>Select the "Full Data" button
+                    at the top right corner of the Summary Grid to show the Extended Grid.
+                    <div class="span- float-right">
+                        <div class="module-poster">
+                            <img src="./assets/images/help/en/extended_grid_button.jpg" alt="The Extended Grid Button" class="" />
+                            <p class="position-top- position-right background-dark">
+                                The Extended Grid Button
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </p>
+
+                <h4>Data Summary Button</h4>
+                <p>Select the "Data Summary" button
+                    at the top right corner of the Extended Grid to go back to the Summary Grid view.
+                    <div class="span- float-right">
+                        <div class="module-poster">
+                            <img src="./assets/images/help/en/data_summary_button.jpg" alt="The Data Summary Button" class="" />
+                            <p class="position-top- position-right background-dark">
+                                The Data Summary Button
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </p>
+
+                <h4>Sorting</h4>
+                <p>For any column, selecting the upward arrow will sort the
+                    extended grid in ascending order by that column, selecting the downward arrow will sort the grid
+                    in descending order by that column.
+                    <div class="span- float-right">
+                        <div class="module-poster">
+                            <img src="./assets/images/help/en/extended_grid/sorting.jpg" alt="The Sorting Button" class="" />
+                            <p class="position-top- position-right background-dark">
+                                The Pagination Control
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+
+                    </p>
+                <h4>Details</h4>
+                <p>Select the Details link next to each data
+                    row to display its information in an Info Panel.
+                    <div class="span- float-right">
+                        <div class="module-poster">
+                            <img src="./assets/images/help/en/extended_grid/details_button.jpg" alt="The Details Button" class="" />
+                            <p class="position-top- position-right background-dark">
+                                The Details Button
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+
+                    </p>
+                <h4>Pagination</h4>
+                <p>Use the far left and right arrows to
+                    jump to the first or last page, respectively, of the information in the data grid.
+                    Use the inner left and right buttons to move back or forward one page at a time.
+                    Selecting the Page link will permit you to quickly jump to any page in the data
+                    grid listing. There is also a record count next to the pagination buttons, which indicates
+                    the number of features currently in the map extent versus the total number of features
+                    in the map.
+                    <div class="span-3 float-right">
+                        <div class="module-poster">
+                            <img src="./assets/images/help/en/extended_grid/pagination.jpg" alt="The Pagination Controls" class="" />
+                            <p class="position-top- position-right background-dark">
+                                The Pagination Controls
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+
+                    </p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- extended grid ENDS -->
+<!-- infoPanel BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Info Panel</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The Info Panel displays data associated with a selected feature.</p>
+            <h3>Usage:</h3>
+
+            <div class="span- float-right">
+                <div class="module-poster">
+                    <img src="./assets/images/help/en/help_infopanel.png" alt="The Info Panel" class="image-actual" />
+                    <p class="position-top- position-right background-dark">
+                        The Info Panel
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                Select a feature on the map interface, or select the Details link in the Data Grid.
+                The Info Panel will display information related to the selected feature. Clicking
+                away from the feature or clicking the arrow in the top left corner of the panel
+                will hide the display.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- infoPanel ENDS -->
+<!-- accessibility BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Accessibility</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>This page is WCAG 2.0 AA compliant.</p>
+            <h4>Keyboard Accessibility:</h4>
+            <p>Keyboard functionality is provided as an alternative for users who are unable to use a mouse.
+            Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one
+            step. Use the Enter or Spacebar keys to activate links and controls.</p>
+            <h4>Navigation Controls:</h4>
+            <p>Zoom Slider: With the Zoom Slider highlighted, use the Up arrow key to zoom in and the Down arrow
+            key to zoom out.</p>
+            <h4>Datasets/Data Tabs:</h4>
+            <p>With either the Datasets or Data tab highlighted, use the Left and Right arrow keys to switch
+            between them.</p>
+            <h4>Datasets Tab:</h4>
+            <p>Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the
+            layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are
+            indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to
+            re-order the layers on the map interface. Press Enter or Spacebar again to release the layer.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- accessibility ENDS -->
+<!-- advanced toolbar BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Advanced Toolbar</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                The advanced toolbar provides utilities that can break accessibility, usually due to their dependance on a mouse-driven input.</p>
+            <h3>Usage:</h3>
+
+
+            <h4>Opening the Toolbar:</h4>
+            <p>Select the Advanced button on the main toolbar to open the advanced toolbar.
+				Selecting the button a second time will close the advanced toolbar and de-activate any active tools.
+
+                <div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/advanced_toolbar/advanced_toolbar_button.jpg" alt="The Toolbar Button" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Toolbar Button
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+			<h4>Tool Activation:</h4>
+            <p>Any tool can be activated by clicking the appropriate button on the advanced toolbar.
+				Clicking a second time will de-activate the tool, as will closing the advanced toolbar, or selecting a new tool.
+				While active, you may use a tool as many times as you like.
+				<div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/advanced_toolbar/advanced_toolbar.jpg" alt="The Advanced Toolbar" class="" />
+                        <p class="position-top- position-right background-dark">
+                            The Advanced Toolbar
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Population Tool:</h4>
+            <p>Select the Population button to activate the population tool.
+				Draw a polygon on the map and release the mouse.  The population of people inside the polygon will be displayed in
+				the results window.  The Clear button will erase an existing result from the map.
+				<div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/advanced_toolbar/population_tool.jpg" alt="Population Polygon and Result" class="" />
+                        <p class="position-top- position-right background-dark">
+                            Population Polygon and Result
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+            <h4>Buffer Tool:</h4>
+            <p>Select the Buffer button to activate the buffer tool.
+				Enter a desired buffer size in kilometers in the tool input.
+				Draw a polygon on the map and release the mouse.  A buffer of the desired size will be applied to the polygon and displayed.
+				<div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/advanced_toolbar/buffer_tool.jpg" alt="Buffer Input and Result" class="" />
+                        <p class="position-top- position-right background-dark">
+                            Buffer Input and Result
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+			<h4>Measure Tool:</h4>
+            <p>Select the Measure button to activate the tool.
+				Draw a polygon on the map and release the mouse.  The area and the circumference of the polygon will be displayed in
+				the results window.
+				<div class="span- float-right">
+                    <div class="module-poster">
+                        <img src="./assets/images/help/en/advanced_toolbar/measure_tool.jpg" alt="Measurement Polygon and Result" class="" />
+                        <p class="position-top- position-right background-dark">
+                            Measurement Polygon and Result
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+                </p>
+
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- advanced toolbar ENDS -->
+<!-- misc BEGINS -->
+<details class="margin-bottom-medium">
+    <summary class="">Load Times / Unanticipated Behaviour</summary>
+    <div>
+        <div class="helpSectionBody">
+            <p>
+                Load times may vary based on network location and bandwidth availability, and unanticipated
+                behaviour may occur if any map interactions occur before data is fully loaded. Please
+                allow the webpage to load completely before triggering any map functions. <b>Note:</b>
+                If the "Loading..." text appears in the lower right corner of map or the data grid
+                displays a loading message, please allow the loading indicator to disappear before
+                triggering any function on the map.</p>
+        </div>
+    </div>
+</details>
+<div class="clear">
+</div>
+<!-- misc ENDS -->

@@ -190,15 +190,15 @@ node_modules
 
 #### RAMP-specific
 theme.less.pref.css
-/RAMP/src/css/ramp-gcwu-intranet/*.css
-/RAMP/src/css/ramp-gcwu-intranet/*.map
-/RAMP/src/css/ramp-gcwu-fegc/*.css
-/RAMP/src/css/ramp-gcwu-fegc/*.map
-/RAMP/src/css/ramp-base/*.css
-/RAMP/src/css/ramp-base/*.map
+/src/css/ramp-gcwu-intranet/*.css
+/src/css/ramp-gcwu-intranet/*.map
+/src/css/ramp-gcwu-fegc/*.css
+/src/css/ramp-gcwu-fegc/*.map
+/src/css/ramp-base/*.css
+/src/css/ramp-base/*.map
 
-/RAMP/.stylishcolors
-/RAMP/docs
+/.stylishcolors
+/docs
 jscs.txt
 
 dist
@@ -207,3 +207,4 @@ dist
 
 *.swo
 *.swp
+/proxy
