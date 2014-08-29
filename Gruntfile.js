@@ -996,6 +996,10 @@ module.exports = function (grunt) {
         'json-minify': {
             build: {
                 files: 'build/config.*.json'
+            },
+
+            locale: {
+                files: 'build/locales/**/*.json'
             }
         }
     });
