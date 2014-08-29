@@ -186,7 +186,26 @@
 
     "help": {
         "title": "Aide",
-        "sectionsTitle": "Sections d'aide"
+        "sectionsTitle": "Sections d'aide",
+
+        "s1": {
+            "header": "Contrôles de navigation",
+            "p1": "Les contrôles de navigation servent à modifier la taille de l’affichage de la carte; la grille de données sera actualisée et ajustée selon le contenu visible dans l’affichage en cours.",
+            "h1": "Utilisation",
+            "img1": "Contrôles de navigation sur la carte",
+            "p2": "Cliquez sur Vers le nord / sud / est / ouest pour déplacer la carte dans une direction particulière.",
+            "p3": "Cliquez sur Voir Canada pour afficher la carte en entier.",
+            "p4": "Cliquez sur « Zoom avant » ou sur « Zoom arrière » pour modifier la taille de l’affichage de la carte.",
+            "p5": "Cliquez et faites glisser le curseur de zoom pour faire un zoom avant ou arrière."
+        },
+
+        "s2": {
+            "header": "Fonds de carte",
+            "p1": "Utilisez le sélecteur de fond de carte pour remplacer le fond de carte et afficher divers contextes géographiques.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre de sélection de fond de carte",
+            "p2": "Dans le menu déroulant, sélectionnez le fond de carte désiré et la carte sera actualisée en conséquence."
+        }
     },
 
     "tools": {

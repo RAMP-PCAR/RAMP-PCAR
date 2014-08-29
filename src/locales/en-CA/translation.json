@@ -145,13 +145,13 @@
 
         "showBounds": "Show Bounds of {0}",
         "showAllBounds": "Show All Bounds",
-        
+
         "showFeatures": "Show {0}",
         "showAllFeatures": "Show All",
-        
+
         "hideFeatures": "Hide {0}",
         "hideAllFeatures": "Hide All",
-        
+
         "hideBounds": "Hide Bounds of {0}",
         "hideAllBounds": "Hide All Bounds",
 
@@ -186,7 +186,26 @@
 
     "help": {
         "title": "Help",
-        "sectionsTitle": "Help Sections"
+        "sectionsTitle": "Help Sections",
+
+        "s1": {
+            "header": "Navigation Controls",
+            "p1": "Navigation controls is used for changing the viewing extent of the map; the datagrid updates accordingly to what's viewable in the current extent.",
+            "h1": "Usage",
+            "img1": "Map navigation controls",
+            "p2": "Click Pan North/South/East/West to move the map in that particular direction.",
+            "p3": "Click Canada View to view map at its full extent.",
+            "p4": "Click Zoom In/Out to change the map extent.",
+            "p5": "Click and drag the Zoom Slider to zoom in/out."
+        },
+
+        "s2": {
+            "header": "Basemaps",
+            "p1": "The Basemap selector is used to modify the underlying basemap to provide a variety of geographical contexts.",
+            "h1": "Usage",
+            "img1": "Basemap selector widget",
+            "p2": "From the dropdown, select the basemap of your choice and the map display will update."
+        }
     },
 
     "tools": {
@@ -200,14 +219,14 @@
     "_unused": {
         "altMaptip_image": "Feature icon",
         "showHeaders": "Show Headers",
-        
+
         "expandAll": "Expand All",
         "abstract": "Abstract",
         "extent": "Extent",
         "scope": "Scope",
         "timePeriod": "Time Period",
-        "supplementalData": "Supplemental Data",        
-        
+        "supplementalData": "Supplemental Data",
+
         "show": "Show"
     }
 }
