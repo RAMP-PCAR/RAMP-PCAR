@@ -205,6 +205,64 @@
             "h1": "Usage",
             "img1": "Basemap selector widget",
             "p2": "From the dropdown, select the basemap of your choice and the map display will update."
+        },
+
+        "s3": {
+            "header": "Add Layer from Web",
+            "p1": "Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.",
+            "h1": "Usage",
+            "img1": "Add layer widget",
+            "p2": "From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add."
+        },
+
+        "s4": {
+            "header": "Get Link",
+            "p1": "Get Link is used to generate a shareable URL of the current map state with selected datasets.",
+            "h1": "Usage",
+            "img1": "Get Link widget",
+            "h2": "Short link",
+            "p2": "Select this link to use Google's URL shortening service to generate a concise and easily shareable link to the current state of the RAMP map viewer.",
+            "h3": "Email",
+            "p3": "Select this link to open a new email in your default mail client, with the URL contained in the body for convenient sharing."
+        },
+
+        "s5": {
+            "header": "Full Screen",
+            "p1": "Get Link is used to generate a shareable URL of the current map state with selected datasets.",
+            "h1": "Usage",
+            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Show Headers link to restore to default view."
+        },
+
+        "s6": {
+            "header": "Data Sets",
+            "p1": "The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid. The Datasets tab also serves as a map legend.",
+            "h1": "Usage",
+
+            "h2": "Layer Types",
+            "p2": "There are three types of layers that can reside in the Dataset tab.",
+            "ul2": {
+                "li1" : "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.",
+                "li2" : "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.",
+                "li3" : "WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid."
+            },
+            "img2": "Data Sets",
+
+            "h3": "Layer Visibility",
+            "p3": "Select the \"eye\" icon next to a dataset name to toggle the layer on or off.",
+
+            "h4": "Layer Bounding Box",
+            "p4": "Use the \"cross hatch\" icon to the right of the eye icon to display the bounding box of the dataset.",
+
+            "h5": "Layer Reordering",
+            "p5": "Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.",
+            "img5": "Layer Reordering",
+            "p51": "While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  WMS layers will always be displayed beneath the other layers, but may be re-ordered amongst other WMS layers.",
+
+            "h6": "Layer Metadata",
+            "p6": "Select the \"Metadata\" link to display relevant metadata for that source in a collapsible Info Panel.",
+
+            "h7": "Layer Settings",
+            "p7": "Select the \"Settings\" link to change layer's opacity using the slider control."
         }
     },
 
