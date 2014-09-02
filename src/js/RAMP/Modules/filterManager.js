@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl */
+﻿/*global define, window, tmpl, i18n */
 
 /**
 * FilterManager submodule
@@ -85,7 +85,6 @@ define([
         "use strict";
 
         var config,
-            localString,
             layerIdField = "layer-id",
 
             ui = (function () {
@@ -189,8 +188,8 @@ define([
                             },
 
                             label: {
-                                check: localString.txtHideBounds,
-                                uncheck: localString.txtShowBounds
+                                check: i18n.t('filterManager.hideBounds'), 
+                                uncheck: i18n.t('filterManager.showBounds')
                             },
 
                             onChange: function () {
@@ -209,8 +208,8 @@ define([
                                 },*/
 
                                 label: {
-                                    check: localString.txtHideAllBounds,
-                                    uncheck: localString.txtShowAllBounds
+                                    check: i18n.t('filterManager.hideAllBounds'),
+                                    uncheck: i18n.t('filterManager.showAllBounds')
                                 }/*,
 
                                 onChange: Theme.tooltipster*/
@@ -250,8 +249,8 @@ define([
                             },
 
                             label: {
-                                check: localString.txtHideFeatures,
-                                uncheck: localString.txtShowFeatures
+                                check: i18n.t('filterManager.hideFeatures'),
+                                uncheck: i18n.t('filterManager.showFeatures')
                             },
 
                             onChange: function () {
@@ -270,8 +269,8 @@ define([
                                 }*/
 
                                 label: {
-                                    check: localString.txtHideAllFeatures,
-                                    uncheck: localString.txtShowAllFeatures
+                                    check: i18n.t('filterManager.hideAllFeatures'),
+                                    uncheck: i18n.t('filterManager.showAllFeatures')
                                 }/*,
 
                                 onChange: Theme.tooltipster*/
@@ -435,7 +434,7 @@ define([
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                panelName: localString.txtMetadata,
+                                panelName: i18n.t('filterManager.metadata'),
                                 title: node.find(".layer-name span").text(), // + " " + guid,
                                 content: null,
                                 target: node.find(".layer-details"),
@@ -450,9 +449,9 @@ define([
                                 if (layerConfig.legend.enable) {
                                     var legendUrl = layerConfig.legend.legendURL,
                                         wmsmeta = String.format(filter_wms_meta_Template,
-                                            localString.txtLegend,
+                                            i18n.t('filterManager.legend'),
                                             legendUrl,
-                                            localString.txtLinkToCap,
+                                            i18n.t('filterManager.linkToCap'),
                                             layerConfig.url + "&request=GetCapabilities");
 
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -463,7 +462,7 @@ define([
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + localString.txtMetadataNotFound + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: guid
@@ -479,7 +478,7 @@ define([
                                     function (error, data) {
                                         if (error) {
                                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                content: "<p>" + localString.txtMetadataNotFound + "</p>",
+                                                content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                                 origin: "filterManager",
                                                 update: true,
                                                 guid: guid
@@ -623,7 +622,6 @@ define([
                         // put layer in datawrapper to be used in template
                         data = {
                             config: GlobalStorage.config,
-                            str: GlobalStorage.config.stringResources,
                             layerGroups: {
                                 feature: TmplHelper.dataBuilder(layerGroups.feature),
                                 wms: TmplHelper.dataBuilder(layerGroups.wms)
@@ -693,7 +691,6 @@ define([
             init: function () {
                 // Convenience config objects
                 config = GlobalStorage.config;
-                localString = GlobalStorage.config.stringResources;
 
                 initListeners();
 

@@ -42,7 +42,6 @@ define([
              * @returns {Object} Returns a JSON object with following properties
              *      .data = {}
              *      .config = <global config object>
-             *      .str = <global config object . stringResources>
              *      .lyr = <global config object . featurelayers [parameter index] >
              *      .fn = object with helper functions assigned to it.
              *
@@ -59,7 +58,6 @@ define([
 
                 dataWrapper.data = data;
                 dataWrapper.config = GlobalStorage.config;
-                dataWrapper.str = GlobalStorage.config.stringResources;
 
                 if (layerUrl != null) {
                     //get configuration from the layer with layerIndex
@@ -77,7 +75,6 @@ define([
              * @returns {Object} Returns a JSON object with following properties
              *      .data = {}
              *      .config = <global config object>
-             *      .str = <global config object . stringResources>
              *      .lyr = <global config object . featurelayers [parameter index] >
              *      .fn = object with helper functions assigned to it.
              *
@@ -93,7 +90,6 @@ define([
 
                 dataWrapper.data = data;
                 dataWrapper.config = GlobalStorage.config;
-                dataWrapper.str = GlobalStorage.config.stringResources;
 
                 dataWrapper.fn = TmplUtil;
                 return dataWrapper;

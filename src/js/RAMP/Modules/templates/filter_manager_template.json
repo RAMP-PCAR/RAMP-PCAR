@@ -23,7 +23,7 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_template":"<div class='filter-row'>
-                                    <div class='sort-handle' tabindex='0' aria-label='{%=o.str.txtLayerHandleLabel%} {%=o.data[o.idx].layerConfig.displayName%}'></div>
+                                    <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
                                     <div class='layer-details'>
                                         <div class='layer-image-box'>									
                                             <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image background-white'>
@@ -36,7 +36,7 @@
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
                                                 <li>
-                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
+                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                                     </li>
                                                 {% } %}
                                                     
@@ -48,7 +48,7 @@
                                                 
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
                                                 <li>
-                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtSettings%}</button>
+                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.settings')%}</button>
                                                     </li>
                                                 {% } %}
                                             </ul>
@@ -67,12 +67,12 @@
         "filter_row_settings_template":"{% if (o.settings.enabled) { %}
                                             <div class='filter-row-settings background-medium'>
                                             
-                                                <h4 class='margin-top-none margin-bottom-medium background-light'>{%=o.str.txtSettingsLayerSettings%}</h4>
+                                                <h4 class='margin-top-none margin-bottom-medium background-light'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
     
                                                 {% if (o.settings.opacity.enabled) { %}
                                             
                                                 <div class='transparency-setting'>
-                                                    <span class='float-left'>{%=o.str.txtSettingsOpacity%}</span>                
+                                                    <span class='float-left'>{%=i18n.t('filterManager.settingsOpacity')%}</span>                
                                                 
                                                     <div class='nstSlider' data-aria_enabled='true'
                                                         data-range_min='0' data-range_max='1' 
@@ -107,7 +107,7 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=o.str.txtMetadata%}</button>
+                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                 </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json
@@ -116,7 +116,7 @@
                                         <div class='global-details'>
                                             <div class='global-controls'>
                                                 <ul class='button-group margin-top-none'>
-                                                    {%=o.txtAllData%}
+                                                    {%=i18n.t('filterManager.allData')%}
                                                 </ul>
                                             </div>
                                         </div>
@@ -159,7 +159,7 @@
                                             {% include('filter_global_row_template', o.config.globalFilter);%}
                                         </div>
                                         <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
-                                        <ul id='layerList' role='listbox' aria-label='{%=o.str.txtLayerListLabel%}'>
+                                        <ul id='layerList' role='listbox' aria-label='{%=i18n.t('filterManager.layerListLabel')%}'>
 
                                             {% 				
                                                 for (var prop in o.layerGroups ) {

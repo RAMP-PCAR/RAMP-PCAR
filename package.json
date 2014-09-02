@@ -79,6 +79,7 @@
             "gsap.1.11.8/src/minified/TimelineLite.min.js",
             "gsap.1.11.8/src/minified/plugins/CSSPlugin.min.js",
             "gsap.1.11.8/src/minified/easing/EasePack.min.js",
+            "i18next.1.7.4/i18next-1.7.4.min.js",
             "jquery-nstslider.1.0.5/jquery.nstSlider.min.js",
             "jquery.ui.1.10.4/jquery.ui.navigation.min.js",
             "jquery.ui.1.10.4/jquery-ui-1.10.4.custom.min.js",
@@ -138,7 +139,8 @@
             "assets/**/*.*",
             "!assets/*.csv",
             "!assets/*.xlsx",
-            "includes/**/*.*"
+            "includes/**/*.*",
+            "locales/**/*.*"
         ],
 
         "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",

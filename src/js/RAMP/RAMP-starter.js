@@ -82,13 +82,13 @@ dojoConfig = {
 
 $(document).ready(function () {
     "use strict";
-    // when loadin js file that way, it will NOT show up in the debug panel in Firebug
+    // when loading js file that way, it will NOT show up in the debug panel in Firebug
     /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",
         function( data, textStatus, jqxhr ) {
             console.log( jqxhr.status ); // 200
     });*/
 
-    // when loadin js file that way, it will show up in the debug panel in Firebug
+    // when loading js file that way, it will show up in the debug panel in Firebug
     var head = document.getElementsByTagName('head')[0],
         script = document.createElement('script');
     script.type = 'text/javascript';

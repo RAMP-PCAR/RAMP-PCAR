@@ -1,4 +1,4 @@
-﻿/*global define */
+﻿/*global define, i18n */
 
 /**
 *
@@ -15,7 +15,6 @@
 * @uses RAMP
 * @uses GraphicExtension
 * @uses EventManager
-* @uses GlobalStorage
 * @uses dojo/topic
 * @uses dojo/dom-construct
 * @uses Util
@@ -23,7 +22,7 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager", "ramp/globalStorage",
+    "ramp/graphicExtension", "ramp/eventManager",
 
 /* Dojo */
     "dojo/topic", "dojo/dom-construct",
@@ -33,7 +32,7 @@ define([
 
     function (
     /* RAMP */
-    GraphicExtension, EventManager, GlobalStorage,
+    GraphicExtension, EventManager,
 
     /* Dojo */
     topic, domConstruct,
@@ -72,7 +71,7 @@ define([
 
                 if (mode === "summary") {
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                        panelName: GlobalStorage.config.stringResources.txtGrid_details,
+                        panelName: i18n.t('datagrid.details'),
                         title: title,
                         content: content,
                         target: node.find(".record-controls"),
@@ -105,7 +104,7 @@ define([
                     node = buttonNode;
 
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                        panelName: GlobalStorage.config.stringResources.txtGrid_details,
+                        panelName: i18n.t('datagrid.details'),
                         title: title,
                         content: content,
                         target: node,
