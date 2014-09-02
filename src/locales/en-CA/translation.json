@@ -319,6 +319,65 @@
             "img6": "The Pagination Controls",
             "p6": "Use the far left and right arrows to jump to the first or last page, respectively, of the information in the data grid. Use the inner left and right buttons to move back or forward one page at a time. Selecting the Page link will permit you to quickly jump to any page in the data grid listing.",
             "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
+        },
+
+        "s9": {
+            "header": "Info Panel",
+            "p1": "The Info Panel displays data associated with a selected feature.",
+            "h1": "Usage",
+            "img1": "The Info Panel",
+            "p2": "Select a feature on the map interface, or select the Details link in the Data Grid. The Info Panel will display information related to the selected feature. Clicking away from the feature or clicking the arrow in the top left corner of the panel will hide the display."
+        },
+
+        "s10": {
+            "header": "Accessibility",
+            "p1": "This page is WCAG 2.0 AA compliant.",
+            
+            "h2": "Keyboard Accessibility",
+            "p2": "Keyboard functionality is provided as an alternative for users who are unable to use a mouse. Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one step. Use the Enter or Spacebar keys to activate links and controls.",
+
+            "h3": "Navigation Controls",
+            "p3": "Zoom Slider: With the Zoom Slider highlighted, use the Up arrow key to zoom in and the Down arrow key to zoom out.",
+
+            "h4": "Datasets/Data Tabs",
+            "p4": "With either the Datasets or Data tab highlighted, use the Left and Right arrow keys to switch between them.",
+
+            "h5": "Datasets Tab",
+            "p5": "Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to re-order the layers on the map interface. Press Enter or Spacebar again to release the layer."
+        },
+
+        "s11" : {
+            "header": "Advanced Toolbar",
+            "p1": "The advanced toolbar provides utilities that can break accessibility, usually due to their dependance on a mouse-driven input.",
+            "h1": "Usage",
+
+            "h2": "Opening the Toolbar",
+            "img2": "The Toolbar Button",
+            "p2": "Select the Advanced button on the main toolbar to open the advanced toolbar. Selecting the button a second time will close the advanced toolbar and de-activate any active tools.",
+
+            "h3": "Tool Activation",
+            "img3": "The Advanced Toolbar",
+            "p3": "Any tool can be activated by clicking the appropriate button on the advanced toolbar. Clicking a second time will de-activate the tool, as will closing the advanced toolbar, or selecting a new tool.",
+            "p31": "While active, you may use a tool as many times as you like.",
+
+            "h4": "Population Tool",
+            "img4": "Population Polygon and Result",
+            "p4": "Select the Population button to activate the population tool. Draw a polygon on the map and release the mouse.  The population of people inside the polygon will be displayed in the results window.  The Clear button will erase an existing result from the map.",
+
+            "h5": "Buffer Tool",
+            "img5": "Buffer Input and Result",
+            "p5": "Select the Buffer button to activate the buffer tool. Enter a desired buffer size in kilometers in the tool input. Draw a polygon on the map and release the mouse.  A buffer of the desired size will be applied to the polygon and displayed.",
+
+            "h6": "Measure Tool",
+            "img6": "Measurement Polygon and Result",
+            "p6": "Select the Measure button to activate the tool. Draw a polygon on the map and release the mouse.  The area and the circumference of the polygon will be displayed in the results window."
+        },
+
+        "s12": {
+            "header": "Load Times / Unanticipated Behaviour",
+            "p1": "Load times may vary based on network location and bandwidth availability, and unanticipated behaviour may occur if any map interactions occur before data is fully loaded. Please allow the webpage to load completely before triggering any map functions.",
+            "h2": "Note",
+            "p2": "If the \"Loading...\" text appears in the lower right corner of map or the data grid displays a loading message, please allow the loading indicator to disappear before triggering any function on the map."
         }
     },
 
