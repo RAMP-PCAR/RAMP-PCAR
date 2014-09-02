@@ -263,6 +263,62 @@
 
             "h7": "Layer Settings",
             "p7": "Select the \"Settings\" link to change layer's opacity using the slider control."
+        },
+
+        "s7": {
+            "header": "Summary Grid",
+            "p1": "The Summary Grid lists basic information for all the features that is visible in the current map extent.",
+            "h1": "Usage",
+            "img1": "The Summary Grid",
+
+            "h2": "Sorting",
+            "img2": "The Sort Button",
+            "p2": "Select the Sort link at the top of the data grid to sort by field name, descending. Select the Sort link again to switch the sort to ascending mode.",
+            
+            "h3": "Details",
+            "img3": "The Details Button",
+            "p3": "Select the Details link next to each data row to display its information in an Info Panel. This function replicates clicking directly on a map feature.",
+
+            "h4": "Zoom To",
+            "img4": "The Zoom To Button",
+            "p4": "Every row on the data grid has an option to quickly zoom the map view to that data point. If the \"Zoom To\" link is clicked, the map and the data grid will dynamically zoom to that specific point.",
+
+            "h5": "Zoom Back",
+            "img5": "The Zoom Back Button",
+            "p5": "After the \"Zoom To\" link is clicked, the link will be replaced by a \"Zoom Back\" link. Clicking on the \"Zoom Back\" link will bring the user back to the extent of the map before the \"Zoom To\" link was clicked.",
+
+            "h6": "Pagination",
+            "img6": "The Pagination Control",
+            "p6": "Use the far left and right arrows to jump to the first or last page, respectively, of the information in the data grid. Use the inner left and right buttons to move back or forward one page at a time. Selecting the Page link will permit you to quickly jump to any page in the data grid listing.",
+            "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
+        },
+
+        "s8" : {
+            "header": "Extended Grid",
+            "p1": "The Extended Grid lists detailed information about all the features that in the current map extent.",
+            "h1": "Usage",
+            "img1": "The Extended Grid",
+
+            "h2": "Full Data Button",
+            "img2": "The Extended Grid Button",
+            "p2": "Select the \"Full Data\" button at the top right corner of the Summary Grid to show the Extended Grid.",
+            
+            "h3": "Data Summary Button",
+            "img3": "The Data Summary Button",
+            "p3": "Select the \"Data Summary\" button at the top right corner of the Extended Grid to go back to the Summary Grid view.",
+
+            "h4": "Sorting",
+            "img4": "The Sorting Button",
+            "p4": "For any column, selecting the upward arrow will sort the extended grid in ascending order by that column, selecting the downward arrow will sort the grid in descending order by that column.",
+
+            "h5": "Details",
+            "img5": "The Details Button",
+            "p5": "Select the Details link next to each data row to display its information in an Info Panel.",
+
+            "h6": "Pagination",
+            "img6": "The Pagination Controls",
+            "p6": "Use the far left and right arrows to jump to the first or last page, respectively, of the information in the data grid. Use the inner left and right buttons to move back or forward one page at a time. Selecting the Page link will permit you to quickly jump to any page in the data grid listing.",
+            "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
         }
     },
 
