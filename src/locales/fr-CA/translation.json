@@ -208,176 +208,176 @@
         },
 
         "s3": {
-            "header": "Add Layer from Web",
-            "p1": "Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.",
-            "h1": "Usage",
-            "img1": "Add layer widget",
-            "p2": "From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add."
+            "header": "Ajout d’une couche provenant du Web",
+            "p1": "Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d’autres couches disponibles dans l’application de cartographie.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre d’ajout de couche",
+            "p2": "À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis saisissez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d’opacité pour la couche que vous ajoutez."
         },
 
         "s4": {
-            "header": "Get Link",
-            "p1": "Get Link is used to generate a shareable URL of the current map state with selected datasets.",
-            "h1": "Usage",
-            "img1": "Get Link widget",
-            "h2": "Short link",
-            "p2": "Select this link to use Google's URL shortening service to generate a concise and easily shareable link to the current state of the RAMP map viewer.",
-            "h3": "Email",
-            "p3": "Select this link to open a new email in your default mail client, with the URL contained in the body for convenient sharing."
+            "header": "Obtenir le lien",
+            "p1": "L’option « Obtenir le lien » est utilisée pour générer une URL partageable de l’état actuel de la carte avec les ensembles de données sélectionnés.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre « Obtenir le lien »",
+            "h2": "Lien raccourci",
+            "p2": "Cliquez ce lien pour utiliser le service de raccourci URL de Google pour générer un lien concis et aisément partageable vers l’état actuel du visualiseur de cartes PCAR.",
+            "h3": "Courriel",
+            "p3": "Cliquez ce lien pour ouvrir un nouveau message dans votre service de courriel par défaut; l’URL sera insérée dans le corps du message, permettant de la partager aisément."
         },
 
         "s5": {
-            "header": "Full Screen",
-            "p1": "Get Link is used to generate a shareable URL of the current map state with selected datasets.",
-            "h1": "Usage",
-            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Show Headers link to restore to default view."
+            "header": "Plein écran",
+            "p1": "Le plein écran est utilisé pour masquer le haut et le bas de page du Ministère afin d’allouer plus d’espace à l’écran pour l’affichage cartographique.",
+            "h1": "Utilisation",
+            "p2": "Cliquez sur le bouton « Plein écran » dans la barre d’outils pour masquer le haut et le bas de page du Ministère. Cliquez sur le lien « Afficher haut de page » pour rétablir l’affichage par défaut."
         },
 
         "s6": {
-            "header": "Data Sets",
-            "p1": "The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid. The Datasets tab also serves as a map legend.",
-            "h1": "Usage",
+            "header": "Ensembles de données",
+            "p1": "Les ensembles de données présentent la liste des couches disponibles pour l’affichage sur la carte. La grille de données présente aussi les couches d’éléments interactifs. Les ensembles de données agissent également à titre de légende de la carte.",
+            "h1": "Utilisation",
 
-            "h2": "Layer Types",
-            "p2": "There are three types of layers that can reside in the Dataset tab.",
+            "h2": "Types de couche",
+            "p2": "Trois types de couche peuvent être présentés sous l’onglet « Ensemble de données ».",
             "ul2": {
-                "li1" : "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.",
-                "li2" : "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.",
-                "li3" : "WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid."
+                "li1" : "Les couches d’éléments interactifs affichent des données avec lesquelles on peut interagir sur la carte, et qui peuvent être affichées dans la grille de données.",
+                "li2" : "Les couches statiques ajoutent un contexte géographique au fond de carte. Elles ne sont pas interactives et ne sont pas affichées dans la grille de données.",
+                "li3" : "Les couches SCW sont des couches superposées de données fournies par un service de cartes Web. Ces données sont interactives sur la carte, mais ne sont pas affichées dans la grille de données."
             },
-            "img2": "Data Sets",
+            "img2": "Ensembles de données",
 
-            "h3": "Layer Visibility",
-            "p3": "Select the \"eye\" icon next to a dataset name to toggle the layer on or off.",
+            "h3": "Visibilité de la couche",
+            "p3": "Sélectionnez l’icône en forme d’œil près du nom de l’ensemble de données pour masquer ou afficher la couche.",
 
-            "h4": "Layer Bounding Box",
-            "p4": "Use the \"cross hatch\" icon to the right of the eye icon to display the bounding box of the dataset.",
+            "h4": "Tracé des limites des couches",
+            "p4": "Cliquez sur l’icône hachurée placée à droite de l’icône en forme d’œil pour afficher le tracé des limites pour l’ensemble de données associé.",
 
-            "h5": "Layer Reordering",
-            "p5": "Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.",
-            "img5": "Layer Reordering",
-            "p51": "While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  WMS layers will always be displayed beneath the other layers, but may be re-ordered amongst other WMS layers.",
+            "h5": "Changement de l’ordre des couches",
+            "p5": "Cliquez et faites glisser les six points à gauche de l’ensemble de données vers le haut ou vers le bas pour changer l’ordre d’affichage des couches sur la carte.",
+            "img5": "Changement de l’ordre des couches",
+            "p51": "L’ordre des couches peut être modifié, mais les couches SCW et les couches d’éléments interactifs ou les couches statiques ne peuvent être combinées. Les couches SCW seront toujours affichées sous les autres couches; toutefois, leur ordre d’affichage peut être modifié parmi les autres couches SCW.",
 
-            "h6": "Layer Metadata",
-            "p6": "Select the \"Metadata\" link to display relevant metadata for that source in a collapsible Info Panel.",
+            "h6": "Métadonnées sur la couche",
+            "p6": "Sélectionnez le lien « Métadonnées » pour afficher les métadonnées associées à cette source dans un panneau d’information repliable.",
 
-            "h7": "Layer Settings",
-            "p7": "Select the \"Settings\" link to change layer's opacity using the slider control."
+            "h7": "Paramètres de la couche",
+            "p7": "Sélectionnez le lien « Paramètres » pour modifier l’opacité de la couche à l’aide de la barre de contrôle."
         },
 
         "s7": {
-            "header": "Summary Grid",
-            "p1": "The Summary Grid lists basic information for all the features that is visible in the current map extent.",
-            "h1": "Usage",
-            "img1": "The Summary Grid",
+            "header": "Grille synthèse",
+            "p1": "La grille synthèse affiche les renseignements de base sur tous les éléments visibles dans l’affichage de la carte en cours.",
+            "h1": "Utilisation",
+            "img1": "Grille synthèse",
 
-            "h2": "Sorting",
-            "img2": "The Sort Button",
-            "p2": "Select the Sort link at the top of the data grid to sort by field name, descending. Select the Sort link again to switch the sort to ascending mode.",
+            "h2": "Trier",
+            "img2": "Bouton « Trier »",
+            "p2": "Sélectionnez le lien « Trier » dans la partie supérieure de la grille de données pour effectuer un tri selon le nom du champ dans l’ordre décroissant. Sélectionnez le lien « Trier » à nouveau pour effectuer un tri dans l’ordre croissant.",
             
-            "h3": "Details",
-            "img3": "The Details Button",
-            "p3": "Select the Details link next to each data row to display its information in an Info Panel. This function replicates clicking directly on a map feature.",
+            "h3": "Détails",
+            "img3": "Bouton « Détails »",
+            "p3": "Sélectionnez le lien « Détails » associé à chaque ensemble de données pour afficher les renseignements sur l’ensemble dans le panneau d’information. Cette fonction reproduit un clic direct sur l’un des éléments interactifs affichés sur la carte.",
 
-            "h4": "Zoom To",
-            "img4": "The Zoom To Button",
-            "p4": "Every row on the data grid has an option to quickly zoom the map view to that data point. If the \"Zoom To\" link is clicked, the map and the data grid will dynamically zoom to that specific point.",
+            "h4": "Zoom vers",
+            "img4": "Bouton « Zoom vers »",
+            "p4": "Les ensembles de données dans la grille de données sont accompagnés d’une option permettant d’effectuer un zoom sur la carte affichée vers ce point de données. Un clic sur le lien « Zoom vers » permet d’effectuer un zoom dynamique sur la carte et la grille de données vers ce point précis.",
 
-            "h5": "Zoom Back",
-            "img5": "The Zoom Back Button",
-            "p5": "After the \"Zoom To\" link is clicked, the link will be replaced by a \"Zoom Back\" link. Clicking on the \"Zoom Back\" link will bring the user back to the extent of the map before the \"Zoom To\" link was clicked.",
+            "h5": "Zoom arrière",
+            "img5": "Bouton « Zoom arrière »",
+            "p5": "Après un clic sur le lien « Zoom vers », ce lien est remplacé par le lien « Zoom arrière ». Un clic sur le lien « Zoom arrière » ramène l’utilisateur à l’affichage de la carte affichée avant le clic sur le lien « Zoom vers ».",
 
             "h6": "Pagination",
-            "img6": "The Pagination Control",
-            "p6": "Use the far left and right arrows to jump to the first or last page, respectively, of the information in the data grid. Use the inner left and right buttons to move back or forward one page at a time. Selecting the Page link will permit you to quickly jump to any page in the data grid listing.",
-            "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
+            "img6": "Contrôle de pagination",
+            "p6": "Utilisez les flèches à l’extrême droite et à l’extrême gauche pour atteindre la première ou la dernière page de renseignements dans la grille de données. Utilisez les flèches intérieures orientées vers la gauche ou vers la droite pour reculer ou avancer d’une page à la fois. Le lien « Page » permet de passer rapidement à la page désirée dans la grille de données.",
+            "p61": "Le compteur d’éléments près des boutons de pagination indique le nombre d’éléments qui apparaissent dans l’affichage de la carte en cours par rapport au nombre total d’éléments présents sur la carte."
         },
 
         "s8" : {
-            "header": "Extended Grid",
-            "p1": "The Extended Grid lists detailed information about all the features that in the current map extent.",
-            "h1": "Usage",
-            "img1": "The Extended Grid",
+            "header": "Grille étendue",
+            "p1": "La grille étendue présente les renseignements détaillés de tous les éléments interactifs qui apparaissent dans l’étendue de la carte courante.",
+            "h1": "Utilisation",
+            "img1": "Grille étendue",
 
-            "h2": "Full Data Button",
-            "img2": "The Extended Grid Button",
-            "p2": "Select the \"Full Data\" button at the top right corner of the Summary Grid to show the Extended Grid.",
+            "h2": "Bouton « Données complètes »",
+            "img2": "Bouton « Grille étendue »",
+            "p2": "Sélectionnez le bouton « Données complètes » situé dans le coin supérieur droit de la grille synthèse pour afficher la grille étendue.",
             
-            "h3": "Data Summary Button",
-            "img3": "The Data Summary Button",
-            "p3": "Select the \"Data Summary\" button at the top right corner of the Extended Grid to go back to the Summary Grid view.",
+            "h3": "Bouton « Résumé des données »",
+            "img3": "Bouton « Résumé des données »",
+            "p3": "Sélectionnez le bouton « Résumé des données » dans le coin supérieur droit de la grille étendue pour retourner à la grille synthèse.",
 
-            "h4": "Sorting",
-            "img4": "The Sorting Button",
-            "p4": "For any column, selecting the upward arrow will sort the extended grid in ascending order by that column, selecting the downward arrow will sort the grid in descending order by that column.",
+            "h4": "Trier",
+            "img4": "Contrôle de pagination",
+            "p4": "Toutes les colonnes de la grille étendue peuvent être triées dans l’ordre croissant en cliquant sur la flèche orientée vers le haut. De même, un clic sur la flèche orientée vers le bas activera le tri de la grille dans l’ordre décroissant en fonction de la colonne correspondante.",
 
-            "h5": "Details",
-            "img5": "The Details Button",
-            "p5": "Select the Details link next to each data row to display its information in an Info Panel.",
+            "h5": "Détails",
+            "img5": "Bouton « Détails »",
+            "p5": "Sélectionnez le lien « Détails » associé à chaque ensemble de données pour afficher les renseignements au sujet de l’ensemble dans le panneau d’information.",
 
             "h6": "Pagination",
-            "img6": "The Pagination Controls",
-            "p6": "Use the far left and right arrows to jump to the first or last page, respectively, of the information in the data grid. Use the inner left and right buttons to move back or forward one page at a time. Selecting the Page link will permit you to quickly jump to any page in the data grid listing.",
-            "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
+            "img6": "Contrôles de pagination",
+            "p6": "Utilisez les flèches à l’extrême droite et à l’extrême gauche pour atteindre la première ou la dernière page de renseignements dans la grille de données. Utilisez les flèches intérieures orientées vers la gauche ou vers la droite pour reculer ou avancer d’une page à la fois. Le lien « Page » permet de passer rapidement à la page désirée dans la grille de données.",
+            "p61": "Le compteur d’éléments près des boutons de pagination indique le nombre d’éléments qui apparaissent dans l’affichage de la carte en cours par rapport au nombre total d’éléments présents sur la carte."
         },
 
         "s9": {
-            "header": "Info Panel",
-            "p1": "The Info Panel displays data associated with a selected feature.",
-            "h1": "Usage",
-            "img1": "The Info Panel",
-            "p2": "Select a feature on the map interface, or select the Details link in the Data Grid. The Info Panel will display information related to the selected feature. Clicking away from the feature or clicking the arrow in the top left corner of the panel will hide the display."
+            "header": "Panneau d’information",
+            "p1": "Le panneau d’information affiche les données associées à l’élément interactif sélectionné.",
+            "h1": "Utilisation",
+            "img1": "Panneau d’information",
+            "p2": "Sélectionnez un élément interactif directement sur la carte ou cliquez sur le lien « Détails » dans la grille de données. Le panneau d’information affichera les renseignements relatifs à l’élément sélectionné. Un clic à côté de l’élément interactif ou sur la flèche située dans le coin supérieur gauche du panneau masquera l’affichage du panneau."
         },
 
         "s10": {
-            "header": "Accessibility",
-            "p1": "This page is WCAG 2.0 AA compliant.",
+            "header": "Accessibilité",
+            "p1": "Cette page respecte les règles pour l’accessibilité des contenus Web WCAG 2.0 AA.",
             
-            "h2": "Keyboard Accessibility",
-            "p2": "Keyboard functionality is provided as an alternative for users who are unable to use a mouse. Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one step. Use the Enter or Spacebar keys to activate links and controls.",
+            "h2": "Accessibilité au clavier",
+            "p2": "La fonctionnalité du clavier est offerte en tant qu’alternative pour les utilisateurs qui sont incapables d’utiliser une souris. Utilisez la touche de tabulation pour naviguer vers les liens et les contrôles sur la page. Appuyez simultanément sur les touches Majuscule+Tabulation pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d’espace pour activer les liens et les contrôles.",
 
-            "h3": "Navigation Controls",
-            "p3": "Zoom Slider: With the Zoom Slider highlighted, use the Up arrow key to zoom in and the Down arrow key to zoom out.",
+            "h3": "Contrôles de navigation",
+            "p3": "Curseur de zoom : Avec le curseur de zoom sélectionné, utilisez la touche flèche orientée vers le haut pour effectuer un zoom avant; utilisez la touche flèche orientée vers le bas pour effectuer un zoom arrière.",
 
-            "h4": "Datasets/Data Tabs",
-            "p4": "With either the Datasets or Data tab highlighted, use the Left and Right arrow keys to switch between them.",
+            "h4": "Onglets « Ensembles de données » et « Données »",
+            "p4": "Avec l’onglet « Ensembles de données » ou l’onglet « Données » sélectionné, utilisez les touches flèches orientées vers la gauche ou vers la droite pour passer d’un onglet à l’autre.",
 
-            "h5": "Datasets Tab",
-            "p5": "Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to re-order the layers on the map interface. Press Enter or Spacebar again to release the layer."
+            "h5": "Onglet « Ensembles de données »",
+            "p5": "Dans l’onglet « Ensembles de données », utilisez les flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec la poignée de couche (l’icône à six points) sélectionnée, utilisez la touche Entrée ou la barre d’espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu foncé. Avec la couche saisie, utilisez les flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l’interface cartographique. Appuyez sur la touche Entrée ou la barre d’espace pour libérer la couche."
         },
 
         "s11" : {
-            "header": "Advanced Toolbar",
-            "p1": "The advanced toolbar provides utilities that can break accessibility, usually due to their dependance on a mouse-driven input.",
-            "h1": "Usage",
+            "header": "Barre d’outils avancée",
+            "p1": "La barre d’outils avancée offre des utilitaires qui peuvent interrompre l’accès, habituellement parce que la saisie de données dans ces utilitaires se fait à l’aide de la souris.",
+            "h1": "Utilisation",
 
-            "h2": "Opening the Toolbar",
-            "img2": "The Toolbar Button",
-            "p2": "Select the Advanced button on the main toolbar to open the advanced toolbar. Selecting the button a second time will close the advanced toolbar and de-activate any active tools.",
+            "h2": "Ouvrir la barre d’outils",
+            "img2": "Bouton « Barre d’outils »",
+            "p2": "Cliquez sur le bouton « Avancée » dans la barre d’outils principale pour ouvrir la barre d’outils avancée. Cliquez sur le bouton une deuxième fois fermera la barre d’outils avancée et désactivera les outils activés.",
 
-            "h3": "Tool Activation",
-            "img3": "The Advanced Toolbar",
-            "p3": "Any tool can be activated by clicking the appropriate button on the advanced toolbar. Clicking a second time will de-activate the tool, as will closing the advanced toolbar, or selecting a new tool.",
-            "p31": "While active, you may use a tool as many times as you like.",
+            "h3": "Activation de la barre d’outils",
+            "img3": "Barre d’outils avancée",
+            "p3": "Tous les outils peuvent être activés en cliquant sur les boutons correspondants dans la barre d’outils avancée. Un deuxième clic désactivera l’outil, tout comme la fermeture de la barre d’outils avancée ou la sélection d’un nouvel outil.",
+            "p31": "Un outil activé peut être utilisé aussi souvent que souhaité.",
 
-            "h4": "Population Tool",
-            "img4": "Population Polygon and Result",
-            "p4": "Select the Population button to activate the population tool. Draw a polygon on the map and release the mouse.  The population of people inside the polygon will be displayed in the results window.  The Clear button will erase an existing result from the map.",
+            "h4": "Outil de population",
+            "img4": "Polygone de population et résultats",
+            "p4": "Sélectionnez le bouton « Population » pour activer l’outil de population. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. Les renseignements sur la population à l’intérieur du polygone seront affichés dans la fenêtre de résultats. Le bouton « Annuler » permet d’annuler les résultats générés.",
 
-            "h5": "Buffer Tool",
-            "img5": "Buffer Input and Result",
-            "p5": "Select the Buffer button to activate the buffer tool. Enter a desired buffer size in kilometers in the tool input. Draw a polygon on the map and release the mouse.  A buffer of the desired size will be applied to the polygon and displayed.",
+            "h5": "Outil de délimitation",
+            "img5": "Saisie de la délimitation et résultats",
+            "p5": "Cliquez sur le bouton « Délimitation » pour activer l’outil de délimitation. Saisissez la taille de délimitation désirée en kilomètres dans l’outil de saisie. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. Une délimitation de la taille désirée sera appliquée au polygone et affichée.",
 
-            "h6": "Measure Tool",
-            "img6": "Measurement Polygon and Result",
-            "p6": "Select the Measure button to activate the tool. Draw a polygon on the map and release the mouse.  The area and the circumference of the polygon will be displayed in the results window."
+            "h6": "Outil de mesure",
+            "img6": "Mesure du polygone et résultats",
+            "p6": "Cliquez sur le bouton « Mesure » pour activer l’outil. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. L’aire et le périmètre du polygone seront affichés dans la fenêtre de résultats."
         },
 
         "s12": {
-            "header": "Load Times / Unanticipated Behaviour",
-            "p1": "Load times may vary based on network location and bandwidth availability, and unanticipated behaviour may occur if any map interactions occur before data is fully loaded. Please allow the webpage to load completely before triggering any map functions.",
-            "h2": "Note",
-            "p2": "If the \"Loading...\" text appears in the lower right corner of map or the data grid displays a loading message, please allow the loading indicator to disappear before triggering any function on the map."
+            "header": "Durée du chargement / Comportement imprévu",
+            "p1": "La durée des chargements peut varier selon l’emplacement réseau et la disponibilité de la largeur de bande. Un comportement imprévu peut survenir lorsque des interactions avec la carte ont lieu avant la conclusion du chargement des données. Veuillez permettre le chargement complet de la page Web avant d’activer d’autres fonctions sur la carte.",
+            "h2": "Remarque",
+            "p2": "Lorsque la mention « Chargement » apparaît dans le coin inférieur droit de la carte ou lorsque la grille de données affiche un message de chargement en cours, attendez que l’indicateur de chargement disparaisse avant d’activer d’autres fonctions sur la carte."
         }
     },
 
