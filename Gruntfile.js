@@ -277,7 +277,7 @@ module.exports = function (grunt) {
                         replacement: 'build/'
                     }, {
                         match: /$/,
-                        replacement: '\nconsole.log("<%= pkg.ramp.arcticFox %>");'
+                        replacement: '\nconsole.log("<%= pkg.ramp.rampASCII %>");'
                     }],
                     usePrefix: false
                 },
