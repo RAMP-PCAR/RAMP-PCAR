@@ -1,0 +1,405 @@
+{
+    "page": {
+
+        "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+
+        "lang": {
+            "main": "fr",
+            "mainLong": "fra",
+            "mainFull": "Français",
+            "alt": "en",
+            "altLong": "eng",
+            "altFull": "English"
+        },
+
+        "meta": {
+            "description": "Échantillon d'une mise en oeuvre d'une PCAR",
+            "creator": "Environnement Canada, DGSM DAAS SAE",
+            "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+            "issued": "Date de publication (2014-07-01)",
+            "modified": "Date de publication (2014-07-01)",
+            "subject": "Environnement",
+            "languge": "fra"
+        },
+
+        "header": {
+            "skipToMain": "Passer aux informations sur le site",
+            "skipToFooter": "Passer aux informations sur le site",
+
+            "navigationBar": "Barre de navigation",
+
+            "rampAltLangLink": "map.html",
+
+            "servicesTitle": "Services",
+            "departmentsTitle": "Ministères",
+            "goc": "Gouvernement du Canada",
+            "sgoc": "Symbole du gouvernement du Canada",
+
+            "titleLink": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+            "titleSubLink": "Plate-forme de visualisation géospatiale d'EC"
+        },
+
+        "menu": {
+            "siteMenu": "Site menu",
+
+            "link1Url": "http://ramp-racp.github.io/index-fr.html",
+            "link2Url": "http://ramp-racp.github.io/docs/started-fr.html",
+            "link3Url": "http://ramp-racp.github.io/docs/index-fr.html",
+
+            "link1Title": "Projet de PCAR",
+            "link2Title": "Utilisation de la PCAR",
+            "link3Title": "Documentation de la PCAR"
+        },
+
+        "footer": {
+            "footer": "Pied de page",
+            "siteFooter": "Informations sur le site",
+            "transparency": "Transparence",
+            "transparencyLink": "http://www.ec.gc.ca/default.asp?lang=Fr&n=390AF41B-1",
+            "termsConditions": "Avis",
+            "termsConditionsLink": "http://www.ec.gc.ca/default.asp?lang=Fr&xml=5830C36B-1773-4E3E-AF8C-B21F54633E0A",
+            "dateModifiedTitle": "Date de modification"
+        }
+    },
+
+    "addLayer": {
+        "addLayerTitle": "Ajouter une couche provenant du Web",
+        "addLayerSelectTypeText": "À quel type de données faites-vous référence?",
+        "addLayerType1": "Un service Web du serveur ArcSIG",
+        "addLayerType2": "Un service Web SCW CGO",
+        "addLayerType3": "Un service Web SMCW CGO",
+        "addLayerType4": "Une couche de mosaïque",
+        "addLayerType5": "Un fichier KML",
+        "addLayerType6": "Un fichier GeoRSS",
+        "addLayerType7": "Un fichier CSV",
+        "addLayerPlaceholder": " http://<MyServerName>/ArcGIS/rest/services/<MyServiceName>",
+        "addLayerAddButton": " Ajouter une couche",
+        "addLayer-URL-label": " URL:",
+        "addLayer-Opacity-label": " Opacité :",
+        "addLayer-opacity-alt": " Étendue : de 0 à 10 par bond de 1",
+        "addLayer-opacity-display-start": " (Valeur actuelle:",
+        "addLayer-opacity-display-end": "%)"
+    },
+
+    "advancedToolbar": {
+        "advancedTitle": "Avancé"
+    },
+
+    "bookmarkLink": {
+        "title": "Obtenir le lien",
+        "description": "Lien vers le visualiseur de cartes",
+        "shortLink": "Lien raccourci",
+        "longLink": "Lien intégral",
+        "email": "Courriel",
+        "emailUrlSubject": "Visionneuse de PCAR des SIG",
+        "emailUrlBody": ""
+    },
+
+    "datagrid": {
+        "dataTabTitle": "Données",
+
+        "sort": "Sorte",
+        "details": "Détails",
+        "zoomTo": "Zoom vers",
+        "zoomBack": "Zoom arrière",
+        "fullData": "Données complètes",
+
+        "ex": {
+            "datasetSelectorButtonLoad": "Charger",
+            "datasetSelectorButtonLoaded": "Chargement terminé",
+            "dataSummary": "Résumé des données",
+            "dataset": "Ensemble de données"
+        },
+
+        "gridstrings": {
+            "sEmptyTable": "Aucune donnée disponible dans le tableau",
+            "sInfo": "Afficher_START_à_la_END_du_TOTAL_d'entrées_",
+            "sInfoEmpty": "Afficher de 0 à 0 de 0 d'entrées",
+            "sInfoFiltered": "(filtré à partir de_MAX_d'entrées totales)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Afficher_MENU_entrées",
+            "sLoadingRecords": "Chargement",
+            "sProcessing": "Traitement en cours...",
+            "sSearch": "Recherche",
+            "sZeroRecords": "Aucun enregistrement correspondant trouvé",
+            "oPaginate": {
+                "sFirst": "Premier",
+                "sLast": "Dernier",
+                "sNext": "Suivant",
+                "sPrevious": "Précédente",
+                "sRecords": "Fichiers",
+                "sPage": "Page"
+            },
+            "oAria": {
+                "sSortAscending": ": Activer pour trier la colonne dans l'ordre croissant",
+                "sSortDescending": ": Activer pour trier la colonne dans l'ordre décroissant"
+            }
+        }
+    },
+
+    "filterManager": {
+        "datasetsTabTitle": "Ensembles de données",
+
+        "allData": "Toutes les données",
+
+        "showBounds": "Afficher les limites de {0}",
+        "showAllBounds": "Afficher toutes les limites",
+
+        "showFeatures": "Afficher {0}",
+        "showAllFeatures": "Afficher tout",
+
+        "hideFeatures": "Masquer {0}",
+        "hideAllFeatures": "Masquer tout",
+
+        "hideBounds": "Masquer les limites de {0}",
+        "hideAllBounds": "Masquer toutes les limites",
+
+        "metadata": "Métadonnées",
+        "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche",
+        "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche",
+
+        "legend": "Légende",
+        "linkToCap": "Lien vers les capacités",
+
+        "settings": "Paramètres",
+        "settingsLayerSettings": "Paramètres de la couche",
+        "settingsOpacity": "Opacité",
+
+        "layerHandle": "Descripteur de couche",
+        "layerHandleLabel": "Descripteur de couche pour __layerName__",
+        "layerListLabel": "Liste des couches sortable"
+    },
+
+    "gui": {
+        "actions": {
+            "close": "Fermer",
+            "open": "Ouvrir",
+            "fullScreen": "Plein écran"
+        }
+    },
+
+    "map": {
+        "loadingTitle": "Chargement",
+        "scale": "Scale"
+    },
+
+    "help": {
+        "title": "Aide",
+        "sectionsTitle": "Sections d'aide",
+
+        "s1": {
+            "header": "Contrôles de navigation",
+            "p1": "Les contrôles de navigation servent à modifier la taille de l’affichage de la carte; la grille de données sera actualisée et ajustée selon le contenu visible dans l’affichage en cours.",
+            "h1": "Utilisation",
+            "img1": "Contrôles de navigation sur la carte",
+            "p2": "Cliquez sur Vers le nord / sud / est / ouest pour déplacer la carte dans une direction particulière.",
+            "p3": "Cliquez sur Voir Canada pour afficher la carte en entier.",
+            "p4": "Cliquez sur « Zoom avant » ou sur « Zoom arrière » pour modifier la taille de l’affichage de la carte.",
+            "p5": "Cliquez et faites glisser le curseur de zoom pour faire un zoom avant ou arrière."
+        },
+
+        "s2": {
+            "header": "Fonds de carte",
+            "p1": "Utilisez le sélecteur de fond de carte pour remplacer le fond de carte et afficher divers contextes géographiques.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre de sélection de fond de carte",
+            "p2": "Dans le menu déroulant, sélectionnez le fond de carte désiré et la carte sera actualisée en conséquence."
+        },
+
+        "s3": {
+            "header": "Ajout d’une couche provenant du Web",
+            "p1": "Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d’autres couches disponibles dans l’application de cartographie.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre d’ajout de couche",
+            "p2": "À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis saisissez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d’opacité pour la couche que vous ajoutez."
+        },
+
+        "s4": {
+            "header": "Obtenir le lien",
+            "p1": "L’option « Obtenir le lien » est utilisée pour générer une URL partageable de l’état actuel de la carte avec les ensembles de données sélectionnés.",
+            "h1": "Utilisation",
+            "img1": "Fenêtre « Obtenir le lien »",
+            "h2": "Lien raccourci",
+            "p2": "Cliquez ce lien pour utiliser le service de raccourci URL de Google pour générer un lien concis et aisément partageable vers l’état actuel du visualiseur de cartes PCAR.",
+            "h3": "Courriel",
+            "p3": "Cliquez ce lien pour ouvrir un nouveau message dans votre service de courriel par défaut; l’URL sera insérée dans le corps du message, permettant de la partager aisément."
+        },
+
+        "s5": {
+            "header": "Plein écran",
+            "p1": "Le plein écran est utilisé pour masquer le haut et le bas de page du Ministère afin d’allouer plus d’espace à l’écran pour l’affichage cartographique.",
+            "h1": "Utilisation",
+            "p2": "Cliquez sur le bouton « Plein écran » dans la barre d’outils pour masquer le haut et le bas de page du Ministère. Cliquez sur le lien « Afficher haut de page » pour rétablir l’affichage par défaut."
+        },
+
+        "s6": {
+            "header": "Ensembles de données",
+            "p1": "Les ensembles de données présentent la liste des couches disponibles pour l’affichage sur la carte. La grille de données présente aussi les couches d’éléments interactifs. Les ensembles de données agissent également à titre de légende de la carte.",
+            "h1": "Utilisation",
+
+            "h2": "Types de couche",
+            "p2": "Trois types de couche peuvent être présentés sous l’onglet « Ensemble de données ».",
+            "ul2": {
+                "li1" : "Les couches d’éléments interactifs affichent des données avec lesquelles on peut interagir sur la carte, et qui peuvent être affichées dans la grille de données.",
+                "li2" : "Les couches statiques ajoutent un contexte géographique au fond de carte. Elles ne sont pas interactives et ne sont pas affichées dans la grille de données.",
+                "li3" : "Les couches SCW sont des couches superposées de données fournies par un service de cartes Web. Ces données sont interactives sur la carte, mais ne sont pas affichées dans la grille de données."
+            },
+            "img2": "Ensembles de données",
+
+            "h3": "Visibilité de la couche",
+            "p3": "Sélectionnez l’icône en forme d’œil près du nom de l’ensemble de données pour masquer ou afficher la couche.",
+
+            "h4": "Tracé des limites des couches",
+            "p4": "Cliquez sur l’icône hachurée placée à droite de l’icône en forme d’œil pour afficher le tracé des limites pour l’ensemble de données associé.",
+
+            "h5": "Changement de l’ordre des couches",
+            "p5": "Cliquez et faites glisser les six points à gauche de l’ensemble de données vers le haut ou vers le bas pour changer l’ordre d’affichage des couches sur la carte.",
+            "img5": "Changement de l’ordre des couches",
+            "p51": "L’ordre des couches peut être modifié, mais les couches SCW et les couches d’éléments interactifs ou les couches statiques ne peuvent être combinées. Les couches SCW seront toujours affichées sous les autres couches; toutefois, leur ordre d’affichage peut être modifié parmi les autres couches SCW.",
+
+            "h6": "Métadonnées sur la couche",
+            "p6": "Sélectionnez le lien « Métadonnées » pour afficher les métadonnées associées à cette source dans un panneau d’information repliable.",
+
+            "h7": "Paramètres de la couche",
+            "p7": "Sélectionnez le lien « Paramètres » pour modifier l’opacité de la couche à l’aide de la barre de contrôle."
+        },
+
+        "s7": {
+            "header": "Grille synthèse",
+            "p1": "La grille synthèse affiche les renseignements de base sur tous les éléments visibles dans l’affichage de la carte en cours.",
+            "h1": "Utilisation",
+            "img1": "Grille synthèse",
+
+            "h2": "Trier",
+            "img2": "Bouton « Trier »",
+            "p2": "Sélectionnez le lien « Trier » dans la partie supérieure de la grille de données pour effectuer un tri selon le nom du champ dans l’ordre décroissant. Sélectionnez le lien « Trier » à nouveau pour effectuer un tri dans l’ordre croissant.",
+            
+            "h3": "Détails",
+            "img3": "Bouton « Détails »",
+            "p3": "Sélectionnez le lien « Détails » associé à chaque ensemble de données pour afficher les renseignements sur l’ensemble dans le panneau d’information. Cette fonction reproduit un clic direct sur l’un des éléments interactifs affichés sur la carte.",
+
+            "h4": "Zoom vers",
+            "img4": "Bouton « Zoom vers »",
+            "p4": "Les ensembles de données dans la grille de données sont accompagnés d’une option permettant d’effectuer un zoom sur la carte affichée vers ce point de données. Un clic sur le lien « Zoom vers » permet d’effectuer un zoom dynamique sur la carte et la grille de données vers ce point précis.",
+
+            "h5": "Zoom arrière",
+            "img5": "Bouton « Zoom arrière »",
+            "p5": "Après un clic sur le lien « Zoom vers », ce lien est remplacé par le lien « Zoom arrière ». Un clic sur le lien « Zoom arrière » ramène l’utilisateur à l’affichage de la carte affichée avant le clic sur le lien « Zoom vers ».",
+
+            "h6": "Pagination",
+            "img6": "Contrôle de pagination",
+            "p6": "Utilisez les flèches à l’extrême droite et à l’extrême gauche pour atteindre la première ou la dernière page de renseignements dans la grille de données. Utilisez les flèches intérieures orientées vers la gauche ou vers la droite pour reculer ou avancer d’une page à la fois. Le lien « Page » permet de passer rapidement à la page désirée dans la grille de données.",
+            "p61": "Le compteur d’éléments près des boutons de pagination indique le nombre d’éléments qui apparaissent dans l’affichage de la carte en cours par rapport au nombre total d’éléments présents sur la carte."
+        },
+
+        "s8" : {
+            "header": "Grille étendue",
+            "p1": "La grille étendue présente les renseignements détaillés de tous les éléments interactifs qui apparaissent dans l’étendue de la carte courante.",
+            "h1": "Utilisation",
+            "img1": "Grille étendue",
+
+            "h2": "Bouton « Données complètes »",
+            "img2": "Bouton « Grille étendue »",
+            "p2": "Sélectionnez le bouton « Données complètes » situé dans le coin supérieur droit de la grille synthèse pour afficher la grille étendue.",
+            
+            "h3": "Bouton « Résumé des données »",
+            "img3": "Bouton « Résumé des données »",
+            "p3": "Sélectionnez le bouton « Résumé des données » dans le coin supérieur droit de la grille étendue pour retourner à la grille synthèse.",
+
+            "h4": "Trier",
+            "img4": "Contrôle de pagination",
+            "p4": "Toutes les colonnes de la grille étendue peuvent être triées dans l’ordre croissant en cliquant sur la flèche orientée vers le haut. De même, un clic sur la flèche orientée vers le bas activera le tri de la grille dans l’ordre décroissant en fonction de la colonne correspondante.",
+
+            "h5": "Détails",
+            "img5": "Bouton « Détails »",
+            "p5": "Sélectionnez le lien « Détails » associé à chaque ensemble de données pour afficher les renseignements au sujet de l’ensemble dans le panneau d’information.",
+
+            "h6": "Pagination",
+            "img6": "Contrôles de pagination",
+            "p6": "Utilisez les flèches à l’extrême droite et à l’extrême gauche pour atteindre la première ou la dernière page de renseignements dans la grille de données. Utilisez les flèches intérieures orientées vers la gauche ou vers la droite pour reculer ou avancer d’une page à la fois. Le lien « Page » permet de passer rapidement à la page désirée dans la grille de données.",
+            "p61": "Le compteur d’éléments près des boutons de pagination indique le nombre d’éléments qui apparaissent dans l’affichage de la carte en cours par rapport au nombre total d’éléments présents sur la carte."
+        },
+
+        "s9": {
+            "header": "Panneau d’information",
+            "p1": "Le panneau d’information affiche les données associées à l’élément interactif sélectionné.",
+            "h1": "Utilisation",
+            "img1": "Panneau d’information",
+            "p2": "Sélectionnez un élément interactif directement sur la carte ou cliquez sur le lien « Détails » dans la grille de données. Le panneau d’information affichera les renseignements relatifs à l’élément sélectionné. Un clic à côté de l’élément interactif ou sur la flèche située dans le coin supérieur gauche du panneau masquera l’affichage du panneau."
+        },
+
+        "s10": {
+            "header": "Accessibilité",
+            "p1": "Cette page respecte les règles pour l’accessibilité des contenus Web WCAG 2.0 AA.",
+            
+            "h2": "Accessibilité au clavier",
+            "p2": "La fonctionnalité du clavier est offerte en tant qu’alternative pour les utilisateurs qui sont incapables d’utiliser une souris. Utilisez la touche de tabulation pour naviguer vers les liens et les contrôles sur la page. Appuyez simultanément sur les touches Majuscule+Tabulation pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d’espace pour activer les liens et les contrôles.",
+
+            "h3": "Contrôles de navigation",
+            "p3": "Curseur de zoom : Avec le curseur de zoom sélectionné, utilisez la touche flèche orientée vers le haut pour effectuer un zoom avant; utilisez la touche flèche orientée vers le bas pour effectuer un zoom arrière.",
+
+            "h4": "Onglets « Ensembles de données » et « Données »",
+            "p4": "Avec l’onglet « Ensembles de données » ou l’onglet « Données » sélectionné, utilisez les touches flèches orientées vers la gauche ou vers la droite pour passer d’un onglet à l’autre.",
+
+            "h5": "Onglet « Ensembles de données »",
+            "p5": "Dans l’onglet « Ensembles de données », utilisez les flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec la poignée de couche (l’icône à six points) sélectionnée, utilisez la touche Entrée ou la barre d’espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu foncé. Avec la couche saisie, utilisez les flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l’interface cartographique. Appuyez sur la touche Entrée ou la barre d’espace pour libérer la couche."
+        },
+
+        "s11" : {
+            "header": "Barre d’outils avancée",
+            "p1": "La barre d’outils avancée offre des utilitaires qui peuvent interrompre l’accès, habituellement parce que la saisie de données dans ces utilitaires se fait à l’aide de la souris.",
+            "h1": "Utilisation",
+
+            "h2": "Ouvrir la barre d’outils",
+            "img2": "Bouton « Barre d’outils »",
+            "p2": "Cliquez sur le bouton « Avancée » dans la barre d’outils principale pour ouvrir la barre d’outils avancée. Cliquez sur le bouton une deuxième fois fermera la barre d’outils avancée et désactivera les outils activés.",
+
+            "h3": "Activation de la barre d’outils",
+            "img3": "Barre d’outils avancée",
+            "p3": "Tous les outils peuvent être activés en cliquant sur les boutons correspondants dans la barre d’outils avancée. Un deuxième clic désactivera l’outil, tout comme la fermeture de la barre d’outils avancée ou la sélection d’un nouvel outil.",
+            "p31": "Un outil activé peut être utilisé aussi souvent que souhaité.",
+
+            "h4": "Outil de population",
+            "img4": "Polygone de population et résultats",
+            "p4": "Sélectionnez le bouton « Population » pour activer l’outil de population. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. Les renseignements sur la population à l’intérieur du polygone seront affichés dans la fenêtre de résultats. Le bouton « Annuler » permet d’annuler les résultats générés.",
+
+            "h5": "Outil de délimitation",
+            "img5": "Saisie de la délimitation et résultats",
+            "p5": "Cliquez sur le bouton « Délimitation » pour activer l’outil de délimitation. Saisissez la taille de délimitation désirée en kilomètres dans l’outil de saisie. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. Une délimitation de la taille désirée sera appliquée au polygone et affichée.",
+
+            "h6": "Outil de mesure",
+            "img6": "Mesure du polygone et résultats",
+            "p6": "Cliquez sur le bouton « Mesure » pour activer l’outil. Tracez un polygone sur la carte, puis relâchez le bouton de la souris. L’aire et le périmètre du polygone seront affichés dans la fenêtre de résultats."
+        },
+
+        "s12": {
+            "header": "Durée du chargement / Comportement imprévu",
+            "p1": "La durée des chargements peut varier selon l’emplacement réseau et la disponibilité de la largeur de bande. Un comportement imprévu peut survenir lorsque des interactions avec la carte ont lieu avant la conclusion du chargement des données. Veuillez permettre le chargement complet de la page Web avant d’activer d’autres fonctions sur la carte.",
+            "h2": "Remarque",
+            "p2": "Lorsque la mention « Chargement » apparaît dans le coin inférieur droit de la carte ou lorsque la grille de données affiche un message de chargement en cours, attendez que l’indicateur de chargement disparaisse avant d’activer d’autres fonctions sur la carte."
+        }
+    },
+
+    "tools": {
+
+        "basetool": {
+            "clearmap": "Effacer",
+            "working": "Traitement en cours…"
+        }
+    },
+
+    "_unused": {
+        "altMaptip_image": "Icône vedette",
+        "showHeaders": "Afficher haut de page",
+
+        "expandAll": "Développer tout",
+        "abstract": "Sommaire ",
+        "extent": "Couverture",
+        "scope": "Portée",
+        "timePeriod": "Période",
+        "supplementalData": "Données supplémentaires",
+
+        "show": "Afficher"
+    }
+}
