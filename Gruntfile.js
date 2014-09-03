@@ -1293,7 +1293,8 @@ module.exports = function (grunt) {
             encoding: "utf8"
         });
         if (data) {
-            data = data.replace('<h1><img src="{{projectLogo}}" title="{{projectName}}"></h1>', '<h1><img src="{{projectLogo}}" title="{{projectName}}">{{projectName}}</h1>');
+            data = data.replace('<h1><img src="{{projectLogo}}" title="{{projectName}}"></h1>', '<h1><img src="{{projectLogo}}" title="{{projectName}}">' + grunt.config('pkg.subname') + '</h1>');
+            
             fs.writeFileSync(themeFileName, data);
         }
 
