@@ -144,6 +144,7 @@ require([
                 theme.tooltipster();
             });
             RampMap.init();
+            NavWidget.construct();
 
             /* End - RAMP Events */
         }
