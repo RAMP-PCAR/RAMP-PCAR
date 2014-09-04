@@ -1606,6 +1606,10 @@
                     "default": 0.2
                 }
             },
+            "featureInfo": {
+                "parser": "stringParse",
+                "mimeType": "text/plain"
+            },
             "legend": {
                 "enable": false,
                 "legendURL": ""
@@ -1614,7 +1618,8 @@
         }
     ],
     "plugins": [
-        "tempParse.js"
+        "tempParse.js",
+        "stringParse.js"
     ],
     "ui": {
         "fullscreen": false,

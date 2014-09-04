@@ -9306,6 +9306,27 @@ Developers of the Almighty JSON Config Editor
                             ]
                         },
                         {
+                            "name": "featureInfo",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "parser",
+                                    "type": "String",
+                                    "value": "stringParse",
+                                    "description": "",
+                                    "visibleText": false
+                                },
+                                {
+                                    "name": "mimeType",
+                                    "type": "String",
+                                    "value": "text/plain",
+                                    "description": "",
+                                    "visibleText": false
+                                }
+                            ]
+                        },
+                        {
                             "name": "legend",
                             "type": "Object",
                             "description": "",
@@ -9341,9 +9362,16 @@ Developers of the Almighty JSON Config Editor
             "description": "",
             "fields": [
                 {
-                    "name": "stringParse",
+                    "name": "tempParse",
                     "type": "String",
                     "value": "tempParse.js",
+                    "description": "",
+                    "visibleText": false
+                },
+                {
+                    "name": "stringParse ",
+                    "type": "String",
+                    "value": "stringParse.js",
                     "description": "",
                     "visibleText": false
                 }

@@ -10,3 +10,4 @@ RAMP.plugins.featureInfoParser.tempParse = function (data) {
     unit = unit ? unit[1] : '';
     return "<p>{0} &deg;C</p>".format(val, unit);
 };
+console.log('loaded tempParse');

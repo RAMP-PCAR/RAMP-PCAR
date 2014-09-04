@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig, RAMP */
+﻿/*global define, esri, dojoConfig */
 
 /**
 *
@@ -58,7 +58,7 @@ define([
 "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/navigation", "ramp/eventManager",
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -73,7 +73,7 @@ define([
     EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, Navigation, EventManager,
+    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
@@ -814,72 +814,7 @@ define([
 
                     if (layer.featureInfo !== undefined) {
                         console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
-                        console.log(esriConfig.defaults.io.proxyUrl);
-                        topic.subscribe(EventManager.Map.CLICK, function (evt) {
-                            if (!wmsl.visible) {
-                                return;
-                            }
-
-                            // open details panel immediately after click event
-                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                panelName: layer.displayName,
-                                title: layer.displayName,
-                                content: null,
-                                origin: "wmsFeatureInfo",
-                                target: $("#map-div"),
-                                guid: wmsl.id
-                            });
-
-                            // create a new request using the parameters speced by WMS
-                            var req = new EsriRequest({
-                                url: wmsl.url.split('?')[0],
-                                content: {
-                                    SERVICE: "WMS",
-                                    REQUEST: "GetFeatureInfo",
-                                    VERSION: wmsl.version,
-                                    SRS: "EPSG:" + wmsl.spatialReference.wkid,
-                                    BBOX: map.extent.xmin + "," + map.extent.ymin + "," + map.extent.xmax + "," + map.extent.ymax,
-                                    WIDTH: map.width,
-                                    HEIGHT: map.height,
-                                    QUERY_LAYERS: layer.layerInfo.name,
-                                    INFO_FORMAT: layer.featureInfo.mimeType,
-                                    X: evt.layerX,
-                                    Y: evt.layerY
-                                },
-                                handleAs: "text"
-                            });
-                            req.then(
-                                function (data) {
-                                    var result = RAMP.plugins.featureInfoParser[layer.featureInfo.parser](data);
-
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: result,
-                                        origin: "wmsFeatureInfo",
-                                        update: true,
-                                        guid: wmsl.id
-                                    });
-
-                                    /*topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        panelName: layer.displayName,
-                                        title: layer.displayName,
-                                        content: result,
-                                        origin: "wmsFeatureInfo",
-                                        target: $("#map-div"),
-                                        guid: wmsl.id
-                                    });*/
-                                },
-                                function (error) {
-                                    // display error message in the details panel
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "Error: " + error.message,
-                                        origin: "wmsFeatureInfo",
-                                        update: true,
-                                        guid: wmsl.id
-                                    });
-
-                                    console.log("Error: ", error.message);
-                                });
-                        });
+                        MapClickHandler.registerWMSClick({wmsLayer: wmsl, layerConfig: layer});
                     }
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);
@@ -959,6 +894,7 @@ define([
                 });
 
                 GlobalStorage.map = map;
+                MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
 
