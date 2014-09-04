@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig */
+﻿/*global define, esri, dojoConfig, RAMP, i18n */
 
 /**
 *
@@ -172,7 +172,7 @@ define([
                 }),
                 currentScale,
                 scaleLabelText;
-            $(scaleDiv).html("<span>" + GlobalStorage.config.stringResources.txtScale + "</span><br><span id='scaleLabel'><span/>");
+            $(scaleDiv).html("<span>" + i18n.t('map.scale') + "</span><br><span id='scaleLabel'><span/>");
             currentScale = number.format(map.getScale());
             scaleLabelText = "1 : " + currentScale;
 

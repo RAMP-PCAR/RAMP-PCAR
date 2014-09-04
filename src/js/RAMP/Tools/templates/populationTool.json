@@ -1,0 +1,12 @@
+﻿{
+    "base_tool_output":  "<div class='population-info'>
+                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.totalPopulationLabel %}:</p>
+                            <span class='population-output working-placeholder'>{%= o.populationOutput %}</span>
+                        </div>",
+
+    "base_tool_button": "<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-population-toggle'>
+                            <i class='fa fa-male'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
+                        </button>
+                    </li>"
+}

@@ -1,4 +1,4 @@
-﻿/*global define, $ */
+﻿/*global define, i18n */
 
 /**
 * @module Tools
@@ -199,9 +199,9 @@ define([
        * @private
        */
       function displayOutput() {
-          that.displayTemplateOutput("buffer_output",
+          that.displayTemplateOutput(
               {
-                  distanceLabel: that.stringResources.txtBufferToolDistance
+                  distanceLabel: i18n.t(that.ns + ":distance")
               }
           );
       }
@@ -215,10 +215,12 @@ define([
           * @constructor
           *
           */
-          init: function (selector) {
+          init: function (selector, d) {
               that = this;
-              this.initToggle($(selector), activate, deactivate,
+              this.initToggle(selector, d,
                   {
+                      activate: activate,
+                      deactivate: deactivate,
                       defaultAction: clearMap
                   }
               );

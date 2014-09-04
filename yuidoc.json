@@ -1,5 +1,6 @@
 {
     "name": "ramp-gis-viewer",
+    "subname": "Reusable Accessible Mapping Platform",
     "version": "1.1.0-1",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
     "linkNatives": "true",
@@ -44,5 +45,5 @@
             }
         }
     },
-    "logo": "../../src/assets/images/arctic_fox_logo_200x100.png"
+    "logo": "../../src/assets/images/bobcat_logo_sharp_smaller_s.png"
 }

@@ -1,13 +1,4 @@
 {
-    "default_basemap":	"<a href='javascript:void(0);'>
-                            <div class='esriBasemapGalleryLabelContainer'>
-                                <span alt='{%= o.data.name %} ({%= o.data.type %})' title='{%= o.data.name %} ({%= o.data.type %})'>{%= o.data.name %} ({%= o.data.type %})</span>
-                                <span class='font-xsmall extra'>{%= o.data.description %}</span>
-                            </div>
-                            <img class='esriBasemapGalleryThumbnail' src='{%= o.data.thumbnail %}' alt='{%= o.data.altText %}'>
-                            <div class='clear'></div>
-                        </a>",
-
     "base_tool_float":  "<div class='advanced-output-section-container'>
                             <div class='advanced-output-section'>                                
                                 <section class='float-content'></section>
@@ -20,43 +11,13 @@
                             </div>
                         </div>",
 
-    "population_output":  "<div class='population-info'>
-                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.totalPopulationLabel %}:</p>
-                            <span class='population-output working-placeholder'>{%= o.populationOutput %}</span>
-                        </div>",
+    "base_tool_output": "",
 
-    "buffer_output": "<div class='buffer-info'>
-                        <p class='info-label margin-bottom-small margin-top-none'>{%= o.distanceLabel %}:</p>                
-                        <input type='text' class='distance-input margin-bottom-small' size='5' value='40'> km
-                    </div>",
-
-    "area_output":  "<div class='area-info'>
-                            <div>
-                                <p class='info-label margin-bottom-small margin-top-none'>{%= o.areaLabel %}:</p>
-                                <span class='area-output working-placeholder'>{%= o.areaOutput %} 
-                                    {% if (o.areaUnits ) { %}
-                                        {%= o.areaUnits %}<sup>2</sup>
-                                    {% } %}
-                                </span>
-                            </div>
-                            <div>
-                                <p class='info-label margin-bottom-small margin-top-none'>{%= o.lengthLabel %}:</p>
-                                <span class='length-output working-placeholder'>{%= o.lengthOutput %} 
-                                    {% if (o.lengthUnits ) { %}
-                                        {%= o.lengthUnits %}
-                                    {% } %}
-                                </span> 
-                            </div>
-                        </div>",
-
-    "distance_output":  "<div class='distance-info'>
-                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.lengthLabel %}:</p>
-                            <span class='length-output working-placeholder'>{%= o.lengthOutput %} 
-                                {% if (o.lengthUnits ) { %}
-                                    {%= o.lengthUnits %}
-                                {% } %}
-                            </span> 
-                        </div>",
+    "base_tool_button": "<li class='map-toolbar-item'>
+                            <button class='button map-toolbar-item-button button-none' id='at-area-toggle'>
+                                <i class='fa fa-arrows'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
+                            </button>
+                        </li>",
 
     "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>{%= o.workingLabel %}</span>"
 }

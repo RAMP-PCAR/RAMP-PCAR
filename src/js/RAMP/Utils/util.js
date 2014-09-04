@@ -110,7 +110,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {array} deferredList A list of Deferred objects
             * @param {function} callback The callback to be executed
             */
-            afterAll: function (deferredList, callback) {
+            afterAll: function (deferredList, callback, context) {
                 if (deferredList.length === 0) {
                     callback();
                     return;
@@ -121,7 +121,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     deferred.then(function () {
                         completed++;
                         if (completed === deferredList.length) {
-                            callback();
+                            callback.call(context);
                         }
                     });
                 });

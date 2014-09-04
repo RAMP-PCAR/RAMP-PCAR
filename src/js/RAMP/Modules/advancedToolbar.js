@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require */
+﻿/*global define, $, TimelineLite, TweenLite, require, tmpl */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.
@@ -15,7 +15,9 @@
 * @class AdvancedToolbar
 * @static
 * @uses dojo/_base/lang
+* @uses dojo/_base/array
 * @uses dojo/topic
+* @uses dojo/Deferred
 * @uses ramp/eventManager
 * @uses ramp/map
 * @uses ramp/globalStorage
@@ -24,24 +26,30 @@
 
 define([
 // Dojo
-        "dojo/_base/lang", "dojo/topic",
+        "dojo/_base/lang", "dojo/_base/array", "dojo/topic", "dojo/Deferred",
 // Ramp
         "ramp/eventManager", "ramp/map", "ramp/globalStorage",
 // Util
-        "utils/util", "utils/dictionary", "utils/popupManager"
+        "utils/util", "utils/dictionary", "utils/popupManager",
+        "utils/tmplHelper",
+// Text
+        "dojo/text!./templates/advanced_toolbar_template.json"
 ],
 
     function (
     // Dojo
-        dojoLang, topic,
+        dojoLang, dojoArray, topic, Deferred,
     // Ramp
         EventManager, RampMap, globalStorage,
     // Util
-        UtilMisc, UtilDict, PopupManager) {
+        UtilMisc, UtilDict, PopupManager, TmplHelper,
+    // Text
+        advanced_toolbar_template_json) {
         "use strict";
 
         var advancedToggle,
             advancedSectionContainer,
+            advancedToolbarList,
 
             cssButtonPressedClass = "button-pressed",
 
@@ -49,7 +57,12 @@ define([
 
             map,
 
-            tools = {},
+            tools = [
+                // name,
+                // selector,
+                // enabled,
+                // module
+            ],
 
             ui = {
                 /**
@@ -60,7 +73,6 @@ define([
                 */
                 init: function () {
                     var viewport = $(".viewport"),
-                        advancedToolbarList = viewport.find("#advanced-toolbar-list"),
                         subPanelContainer,
                         panelToggle = viewport.find("#panel-toggle"),
 
@@ -73,12 +85,19 @@ define([
                     advancedToggle = viewport.find("#advanced-toggle");
                     advancedSectionContainer = viewport.find("#advanced-toolbar");
 
+                    // create html code for advancedToolbar
+                    tmpl.cache = {};
+                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
+                    advancedSectionContainer.append(tmpl("at_main"));
+                    advancedToolbarList = advancedSectionContainer.find("#advanced-toolbar-list");
+
                     advancedToolbarTimeLine
                         .set(advancedSectionContainer, { display: "block" }, 0)
                         .set(viewport, { className: "+=advanced-toolbar-mode" }, 0)
                         .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0, ease: "easeOutCirc" }, 0)
                         .to(panelToggle, transitionDuration, { top: "+=32", ease: "easeOutCirc" }, 0);
 
+                    // register the popup for the advanced toolbar
                     PopupManager.registerPopup(advancedToggle, "click",
                         function (d) {
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
@@ -124,6 +143,10 @@ define([
                     );
 
                     map = RampMap.getMap();
+                },
+
+                addTool: function (tool) {
+                    advancedToolbarList.append(tool.module.node);
                 }
             };
 
@@ -136,34 +159,60 @@ define([
         */
         function deactivateAll(except) {
             // deactivate all the tools except "except" tool
-            UtilDict.forEachEntry(tools, function (name, tool) {
-                if (!except || except.name !== name) {
-                    tool.deactivate();
+            tools.forEach(function (tool) {
+                if ((!except || except.name !== tool.name) && tool.module) {
+                    tool.module.deactivate();
                 }
             });
         }
 
         return {
             init: function () {
+                var toolsRequire;
+
                 ui.init();
 
-                // load only enabled tools
-                globalStorage.config.advancedToolbar.tools.forEach(
-                    function (tool) {
-                        if (tool.enabled) {
-                            require(["tools/" + tool.name], function (module) {
-                                module
-                                    .init(tool.selector)
-                                    .on(module.event.ACTIVATE, function () {
-                                        console.log("Tool", module.name, "activated");
-                                        deactivateAll(module);
-                                    });
+                tools = globalStorage.config.advancedToolbar.tools;
+                toolsRequire = tools
+                    .filter(function (tool) { return tool.enabled; })
+                    .map(function (tool) {
+                        return "tools/" + tool.name;
+                    });
 
-                                tools[tool.name] = module;
+                // load all the tools in one go
+                console.log("toolbar : loading tools", toolsRequire);
+                require(toolsRequire, function () {
+                    var deferredList = [],
+                        deferred,
+                        args = Array.prototype.slice.call(arguments);
+
+                    args.forEach(function () {
+                        deferredList.push(new Deferred());
+                    });
+
+                    UtilMisc.afterAll(deferredList, function () {
+                        // insert tool buttons into the toolbar
+                        tools.forEach(ui.addTool);
+                    });
+
+                    args.forEach(function (arg, index) {
+                        deferred = new Deferred();
+
+                        deferred.then(function (module) {
+                            tools[index].module = module;
+                            deferredList[index].resolve();
+                        });
+
+                        arg
+                            .init(tools[index].selector, deferred)
+                            .on(arg.event.ACTIVATE, function () {
+                                console.log(arg.name, ": is activated");
+                                deactivateAll(arg);
                             });
-                        }
-                    }
-                );
+                    });
+
+                    console.log(args);
+                });
             }
         };
     });
