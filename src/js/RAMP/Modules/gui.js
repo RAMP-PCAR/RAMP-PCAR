@@ -868,8 +868,8 @@ define([
                             panelChange(true);
 
                             panelToggle
-                                .tooltipster("content", i18n.t("ui.actions.close"))
-                                .find("span.wb-invisible").text(i18n.t("ui.actions.close"));
+                                .tooltipster("content", i18n.t("gui.actions.close"))
+                                .find("span.wb-invisible").text(i18n.t("gui.actions.close"));
 
                             d.resolve();
                         }, [], this);
@@ -893,8 +893,8 @@ define([
                             panelChange(false);
 
                             panelToggle
-                                .tooltipster("content", i18n.t("ui.actions.open"))
-                                .find("span.wb-invisible").text(i18n.t("ui.actions.open"));
+                                .tooltipster("content", i18n.t("gui.actions.open"))
+                                .find("span.wb-invisible").text(i18n.t("gui.actions.open"));
 
                             d.resolve();
                         }, [], this);
