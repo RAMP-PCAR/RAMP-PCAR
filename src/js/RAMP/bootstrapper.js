@@ -114,9 +114,13 @@ require([
                 // but in the future, if other modules start publishing their own UI complete events, it needs
                 // to be subscribe to here so BookmarkLink will not attempt to call the module before its GUI
                 // has finished rendering
-                UtilMisc.subscribeAll([EventManager.BasemapSelector.UI_COMPLETE, EventManager.FilterManager.UI_COMPLETE], function () {
-                    BookmarkLink.subscribeAndUpdate();
-                });
+                UtilMisc.subscribeAll(
+                    [
+                        EventManager.BasemapSelector.UI_COMPLETE,
+                        EventManager.FilterManager.UI_COMPLETE
+                    ], function () {
+                        BookmarkLink.subscribeAndUpdate();
+                    });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
@@ -127,7 +131,7 @@ require([
 
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
-                
+
                 //initialize the filter
                 FilterManager.init();
 
@@ -144,6 +148,9 @@ require([
                 theme.tooltipster();
             });
             RampMap.init();
+
+            // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
+            theme.tooltipster();            
 
             /* End - RAMP Events */
         }
@@ -174,7 +181,7 @@ require([
 
         i18n.init(
         {
-            lng: lang +  "-CA",
+            lng: lang + "-CA",
             load: "current",
             fallbackLng: false
         }/*,
