@@ -8663,7 +8663,7 @@ Developers of the Almighty JSON Config Editor
                                 {
                                     "name": "parser",
                                     "type": "String",
-                                    "value": "stringParse",
+                                    "value": "windParse",
                                     "description": "",
                                     "visibleText": false
                                 },
@@ -8719,9 +8719,9 @@ Developers of the Almighty JSON Config Editor
                     "visibleText": false
                 },
                 {
-                    "name": "stringParse ",
+                    "name": "windParse ",
                     "type": "String",
-                    "value": "stringParse.js",
+                    "value": "windParse.js",
                     "description": "",
                     "visibleText": false
                 }

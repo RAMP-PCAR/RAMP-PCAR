@@ -52,6 +52,8 @@ define([
             init: function (map) {
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
+                    var visibleLayers = [],
+                        rqPromises = [];
 
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                         panelName: "WMS Click Results",
@@ -63,12 +65,12 @@ define([
                     });
 
                     // filter only currently visible layers
-                    var visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
+                    visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
                         return wmsData.wmsLayer.visible;
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
-                    var rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
+                    rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
                         return new EsriRequest({
                             url: wmsData.wmsLayer.url.split('?')[0],
                             content: {
@@ -95,7 +97,9 @@ define([
                         console.log(results);
 
                         var strings = dojoArray.map(results, function (response, index) {
-                            return RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response);
+                            var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
+                                      RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response);
+                            return res;
                         });
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {

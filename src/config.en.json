@@ -1509,7 +1509,7 @@
                 }
             },
             "featureInfo": {
-                "parser": "stringParse",
+                "parser": "windParse",
                 "mimeType": "text/plain"
             },
             "legend": {
@@ -1521,7 +1521,7 @@
     ],
     "plugins": [
         "tempParse.js",
-        "stringParse.js"
+        "windParse.js"
     ],
     "ui": {
         "fullscreen": false,
