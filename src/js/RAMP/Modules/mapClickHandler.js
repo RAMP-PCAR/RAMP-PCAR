@@ -55,6 +55,16 @@ define([
                     var visibleLayers = [],
                         rqPromises = [];
 
+                    // filter only currently visible layers
+                    visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
+                        return wmsData.wmsLayer.visible;
+                    });
+
+                    // if no visible layers return early and do not open the panel
+                    if (visibleLayers.length === 0) {
+                        return;
+                    }
+
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                         panelName: "WMS Click Results",
                         title: "WMS Click Results",
@@ -62,11 +72,6 @@ define([
                         origin: "wmsFeatureInfo",
                         target: $("#map-div"),
                         guid: 'wms-guid'
-                    });
-
-                    // filter only currently visible layers
-                    visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
-                        return wmsData.wmsLayer.visible;
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
