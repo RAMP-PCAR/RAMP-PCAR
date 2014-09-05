@@ -1,0 +1,49 @@
+{
+    "name": "ramp-gis-viewer",
+    "subname": "Reusable Accessible Mapping Platform",
+    "version": "2.0.0",
+    "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
+    "linkNatives": "true",
+    "options": {
+        "paths": [
+            "./src/js/RAMP"
+        ],
+        "outdir": "./docs/yuidoc",
+        "exnatives": {
+            "JQuery": "http://api.jquery.com/Types/#jQuery",
+            "Esri/layers/ArcGISTiledMapServiceLayer": "_esri/arcgistiledmapservicelayer-amd.html",
+            "Esri/layer/FeatureLayer": "_esri/featurelayer-amd.html",
+            "Esri/layer/GraphicsLayer": "_esri/graphicslayer-amd.html",
+            "Esri/SpatialReference": "_esri/spatialreference-amd.html"
+        },
+        "exlinks": {
+            "esri": {
+                "esri/geometry/Extent": "_esri/extent-amd",
+                "esri/tasks/query": "_esri/query-amd",
+                "esri/tasks/QueryTask": "_esri/querytask-amd",
+                "esri/layers/FeatureLayer": "_esri/featurelayer-amd",
+                "esri/layer/GraphicsLayer": "_esri/graphicslayer-amd",
+                "esri/dijit/BasemapGallery": "_esri/basemapgallery-amd",
+                "esri/map": "_esri/map-amd",
+                "esri/layers/ArcGISTiledMapServiceLayer": "_esri/arcgistiledmapservicelayer-amd",
+                "esri/layers/ArcGISDynamicMapServiceLayer": "_esri/arcgisdynamicmapservicelayer-amd",
+                "esri/tasks/GeometryService": "_esri/geometryservice-amd",
+                "esri/tasks/ProjectParameters": "_esri/projectparameters-amd",
+                "esri/geometry/Polygon": "_esri/polygon-amd",
+                "esri/SpatialReference": "_esri/spatialreference-amd",
+                "esri/dijit/Scalebar": "_esri/scalebar-amd",
+                "esri/graphicsUtils": "_esri/esri.graphicsutils-amd",
+                "esri/lang": "_esri/esri.lang-amd",
+
+                "_esri": "https://developers.arcgis.com/javascript/jsapi"
+            },
+            "dojo": {
+                "dijit/": "_dojo/dijit/",
+                "dojo/": "_dojo/dojo/",
+
+                "_dojo": "http://dojotoolkit.org/reference-guide/1.9"
+            }
+        }
+    },
+    "logo": "../../src/assets/images/bobcat_logo_sharp_smaller_s.png"
+}

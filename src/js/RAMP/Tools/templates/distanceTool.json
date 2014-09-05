@@ -1,0 +1,16 @@
+﻿{
+    "base_tool_output": "<div class='distance-info'>
+                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.lengthLabel %}:</p>
+                            <span class='length-output working-placeholder'>{%= o.lengthOutput %} 
+                                {% if (o.lengthUnits ) { %}
+                                    {%= o.lengthUnits %}
+                                {% } %}
+                            </span> 
+                        </div>",
+
+    "base_tool_button": "<li class='map-toolbar-item'>
+                        <button class='button map-toolbar-item-button button-none' id='at-distance-toggle'>
+                            <i class='fa fa-arrows-h'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
+                        </button>
+                    </li>"
+}

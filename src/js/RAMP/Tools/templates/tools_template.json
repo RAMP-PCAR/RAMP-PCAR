@@ -1,0 +1,25 @@
+{
+    "base_tool_float":  "<div class='advanced-output-section-container'>
+                            <div class='advanced-output-section'>                                
+                                <section class='float-content'></section>
+                                
+                                    
+                                <button class='button button-none float-default-button' >
+                                    <i class='fa fa-trash-o'></i><span class='on-right'>{%= o.clearMapButton %}</span>
+                                </button>
+                                <div class='clear'></div>
+                            </div>
+                        </div>",
+
+    "base_tool_output": "",
+
+    "base_tool_button": "<li class='map-toolbar-item'>
+                            <button class='button map-toolbar-item-button button-none' id='at-area-toggle'>
+                                <i class='fa fa-arrows'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
+                            </button>
+                        </li>",
+
+    "working_label": "<span class='tool-tooltip'><i class='fa fa-cog fa-spin'></i>{%= o.workingLabel %}</span>"
+}
+
+                                                        
