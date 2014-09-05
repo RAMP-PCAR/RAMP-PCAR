@@ -1512,10 +1512,15 @@
                 "enable": false,
                 "legendURL": ""
             },
-            "layerVisible": false
+            "layerVisible": false,
+            "featureInfo": {
+                "parser": "windParse",
+                "mimeType": "text/plain"
+            }
         }
     ],
     "plugins": [
+        "windParse.js",
         "tempParse.js"
     ],
     "ui": {
