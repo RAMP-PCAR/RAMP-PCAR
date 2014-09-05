@@ -1401,6 +1401,19 @@ module.exports = function (grunt) {
         grunt.config('uglify.rampJsPlugins.options.sourceMapIncludeSources', true);
     }
 
+    if (grunt.option('pretty')) {
+        var uglifyJsCore = 'uglify.rampJsCore.options.',
+            uglifyJsPlugins = 'uglify.rampJsPlugins.options.';
+
+        grunt.config(uglifyJsCore + 'compress', false);
+        grunt.config(uglifyJsCore + 'mangle', false);
+        grunt.config(uglifyJsCore + 'beautify', true);
+
+        grunt.config(uglifyJsPlugins + 'compress', false);
+        grunt.config(uglifyJsPlugins + 'mangle', false);
+        grunt.config(uglifyJsPlugins + 'beautify', true);
+    }
+
     // on watch events configure jshint:all to only run on changed file
     grunt.event.on('watch', function (action, filepath) {
         grunt.config('jshint.files', filepath);
