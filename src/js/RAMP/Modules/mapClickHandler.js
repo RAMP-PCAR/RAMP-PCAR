@@ -91,6 +91,13 @@ define([
 
                     });
 
+                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                        content: "",
+                        origin: "wmsFeatureInfo",
+                        update: true,
+                        guid: 'wms-guid'
+                    });
+
                     // wait for all success or any failure in the requests
                     all(rqPromises).then(function (results) {
                         console.log('all success');
