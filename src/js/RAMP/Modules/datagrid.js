@@ -1354,14 +1354,14 @@ define([
                 if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
                 }
-            });
+            });            
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });
+            });            
         }
 
         return {
