@@ -1,0 +1,46 @@
+{
+    "name": "ramp-gis-viewer",
+    "version": "2.0.0",
+    "homepage": "http://ramp-pcar.github.io",
+    "scripts": {
+        "postinstall": "bower update"
+    },
+    "authors": [
+        "BeSD - SA Team"
+    ],
+    "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
+    "keywords": [
+        "ramp",
+        "gis",
+        "viewer"
+    ],
+    "license": "none",
+    "ignore": [
+        ".git*",
+        ".travis.yml",
+        ".editorconfig",
+        "node_modules",
+        "test",
+        "lib"
+    ],
+    "dependencies": {
+        "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
+        "DataTables": "~1.10.0",
+        "jquery": "~2.1.1",
+        "gsap": "~1.11.8",
+        "jquery-nstSlider": "~1.0.5",
+        "jqueryui": "~1.10.4",
+        "modernizr": "~2.7.1",
+        "jquery.scrollTo": "~1.4.13",
+        "shorten": "https://github.com/viralpatel/jquery.shorten.git#master",
+        "Snap.svg": "~0.1.0",
+        "blueimp-tmpl": "~2.5.0",
+        "tooltipster": "~3.0.1",
+        "urlshortener": "https://github.com/hayageek/jQuery-URL-shortener.git#1.0.1",
+        "animate.css": "~3.0.0",
+        "fontawesome": "~4.2.0"
+    },
+    "moduleType": [
+        "globals"
+    ]
+}
