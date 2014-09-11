@@ -12,6 +12,7 @@
 [Rr]elease/
 x64/
 build/
+_build/
 [Bb]in/
 [Oo]bj/
 
@@ -203,6 +204,7 @@ theme.less.pref.css
 jscs.txt
 
 dist
+_dist/
 
 ### VIM temp files
 
