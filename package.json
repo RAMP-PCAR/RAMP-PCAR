@@ -54,7 +54,9 @@
 		"assemble": "~0.4.12",
 		"assemble-contrib-i18n": "~0.1.2",
 		"fs-utils": "~0.4.3",
-		"grunt-contrib-connect": "~0.8.0"    
+		"grunt-contrib-connect": "~0.8.0",
+		"grunt-contrib-imagemin": "~0.5.0",
+		"grunt-newer": "~0.7.0"
     },
 
     "hintColors" : {
