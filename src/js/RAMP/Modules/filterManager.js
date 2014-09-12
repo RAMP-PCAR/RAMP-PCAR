@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl, i18n */
+﻿/*global define, window, tmpl, i18n, console, $ */
 
 /**
 * FilterManager submodule

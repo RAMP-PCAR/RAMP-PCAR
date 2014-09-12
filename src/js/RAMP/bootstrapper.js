@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n */
+﻿/*global require, window, esri, dojoConfig, i18n, document, $, console */
 
 /**
 * Ramp module

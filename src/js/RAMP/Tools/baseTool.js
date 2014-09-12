@@ -1,4 +1,4 @@
-﻿/* global define, tmpl, i18n, require */
+﻿/* global define, tmpl, i18n, require, console, $ */
 
 /**
 * @module Tools

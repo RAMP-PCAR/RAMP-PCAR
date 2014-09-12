@@ -1,4 +1,4 @@
-﻿/*global define, window */
+﻿/*global define, window, $, document */
 
 /**
 * Utility module containint useful static classes.

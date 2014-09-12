@@ -1,4 +1,4 @@
-﻿/*global define, TimelineLite */
+﻿/*global define, TimelineLite, $ */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 

@@ -1,4 +1,4 @@
-﻿/*global define, TimelineLite */
+﻿/*global define, TimelineLite, $ */
 
 /**
 *

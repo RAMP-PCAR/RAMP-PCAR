@@ -1,4 +1,4 @@
-﻿/* global define, RAMP */
+﻿/* global define, RAMP, console, $ */
 
 /**
 * @module RAMP
