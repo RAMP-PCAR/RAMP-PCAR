@@ -4,9 +4,10 @@
     "version": "2.0.0",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
     "main": "index.js",
-    "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
+    "url": "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "postinstall": "grunt init"
     },
     "keywords": [
         "ramp",
@@ -14,13 +15,16 @@
         "viewer"
     ],
     "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
-    "contributors": [{
-        "name": "TBD 1",
-        "email": "x.y@ec.gc.ca"
-    }, {
-        "name": "TBD 2",
-        "email": "a.b@ec.gc.ca"
-    }],
+    "contributors": [
+        {
+            "name": "TBD 1",
+            "email": "x.y@ec.gc.ca"
+        },
+        {
+            "name": "TBD 2",
+            "email": "a.b@ec.gc.ca"
+        }
+    ],
     "license": "none",
     "devDependencies": {
         "grunt": "~0.4.2",
@@ -48,18 +52,19 @@
         "grunt-chmod": "~1.0.3",
         "grunt-contrib-compress": "~0.9.1",
         "grunt-json-minify": "~0.4.0",
-		
-		"i18next": "~1.7.4",
-		"time-grunt": "~1.0.0",
-		"assemble": "~0.4.12",
-		"assemble-contrib-i18n": "~0.1.2",
-		"fs-utils": "~0.4.3",
-		"grunt-contrib-connect": "~0.8.0",
-		"grunt-contrib-imagemin": "~0.5.0",
-		"grunt-newer": "~0.7.0"
+
+        "i18next": "~1.7.4",
+        "time-grunt": "~1.0.0",
+        "assemble": "~0.4.12",
+        "assemble-contrib-i18n": "~0.1.2",
+        "fs-utils": "~0.4.3",
+        "grunt-contrib-connect": "~0.8.0",
+        "grunt-contrib-imagemin": "~0.5.0",
+        "grunt-newer": "~0.7.0",
+        "grunt-modernizr": "~0.4.0"
     },
 
-    "hintColors" : {
+    "hintColors": {
         "meta": "gray",
         "reason": "cyan",
         "verbose": "white",
@@ -101,6 +106,53 @@
             "urlshortener.1.0.1/jquery.urlshortener.min.js",
             "tmplEx.2.4.1/tmplEx.min.js"
         ],
+
+        "concat": {
+            "jsLib": [
+                "DataTables/media/js/jquery.dataTables.js",
+                "gsap/src/uncompressed/TweenLite.js",
+                "gsap/src/uncompressed/TimelineLite.js",
+                "gsap/src/uncompressed/plugins/CSSPlugin.js",
+                "gsap/src/uncompressed/easing/EasePack.js",
+                "i18next/i18next.js",
+                "jquery-nstSlider/dist/jquery.nstSlider.js",
+                "jqueryui/ui/jquery.ui.core.js",
+                "jqueryui/ui/jquery.ui.widget.js",
+                "jqueryui/ui/jquery.ui.mouse.js",
+                "jqueryui/ui/jquery.ui.position.js",
+                "jqueryui/ui/jquery.ui.draggable.js",
+                "jqueryui/ui/jquery.ui.droppable.js",
+                "jqueryui/ui/jquery.ui.sortable.js",
+                "jqueryui/ui/jquery.ui.slider.js",
+                "jqueryui/ui/jquery.ui.effect.j",
+                "modernizr/modernizr-custom.js",
+                "jquery.scrollTo/jquery.scrollTo.js",
+                "shorten/src/jquery.shorten.js",
+                "Snap.svg/dist/snap.svg.js",
+                "tooltipster/js/jquery.tooltipster.js",
+                "urlshortener/jquery.urlshortener.js",
+                "blueimp-tmpl/js/tmpl.js"
+            ],
+
+            "cssLib": [
+                "animate.css/animate.css",
+                "tooltipster/css/tooltipster.css",
+                "fontawesome/css/font-awesome.css"
+            ]
+        },
+
+        "copy": {
+            "cssLibRes": [
+                {
+                    "expand": true,
+                    "cwd": "lib/fontawesome/",
+                    "src": [
+                        "fonts/**/*.*"
+                    ],
+                    "dest": "build/css/"
+                }
+            ]
+        },
 
         "jsLibResourcesToCopy": [
         ],
