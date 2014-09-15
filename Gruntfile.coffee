@@ -692,6 +692,14 @@ module.exports = (grunt) ->
                     'notify:page'
                 ]
 
+            templates:
+                files: [
+                    'src/js/RAMP/**/*.json'
+                ]
+                tasks: [
+                    'copy:templates'
+                ]
+
             js:
                 options:
                     spawn: false
