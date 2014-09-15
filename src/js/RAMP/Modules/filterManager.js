@@ -55,7 +55,7 @@ define([
         "dojo/aspect", "dojo/promise/all",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
-        "dojo/text!./templates/filter_wms_meta_Template.html",
+        "dojo/text!./templates/filter_wms_meta_Template.json",
 
 /* Esri */
         "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
@@ -188,7 +188,7 @@ define([
                             },
 
                             label: {
-                                check: i18n.t('filterManager.hideBounds'), 
+                                check: i18n.t('filterManager.hideBounds'),
                                 uncheck: i18n.t('filterManager.showBounds')
                             },
 
@@ -448,11 +448,23 @@ define([
                             if (layerConfig.layerInfo != null) {
                                 if (layerConfig.legend.enable) {
                                     var legendUrl = layerConfig.legend.legendURL,
-                                        wmsmeta = String.format(filter_wms_meta_Template,
-                                            i18n.t('filterManager.legend'),
-                                            legendUrl,
-                                            i18n.t('filterManager.linkToCap'),
-                                            layerConfig.url + "&request=GetCapabilities");
+                                        wmsmeta;
+
+                                    //wmsmeta = String.format(filter_wms_meta_Template,
+                                    //        i18n.t('filterManager.legend'),
+                                    //    legendUrl,
+                                    //        i18n.t('filterManager.linkToCap'),
+                                    //    layerConfig.url + "&request=GetCapabilities");
+
+                                    tmpl.cache = {};
+                                    tmpl.templates = filter_wms_meta_Template;
+
+                                    wmsmeta = tmpl("wms_meta_main",
+                                        {
+                                            legendUrl: legendUrl,
+                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
+                                        }
+                                    );
 
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: $(wmsmeta),

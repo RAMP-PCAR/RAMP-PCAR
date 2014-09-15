@@ -41,9 +41,7 @@ define([
         "themes/theme",
 
 // Text
-        "dojo/text!./templates/sub_panel_Template.html",
         "dojo/text!./templates/sub_panel_template.json",
-        "dojo/text!./templates/sub_panel_content_Template.html",
 
 // Util
         "utils/util", "utils/dictionary", "utils/popupManager", "utils/tmplHelper",
@@ -62,9 +60,7 @@ define([
         Theme,
 
     // Text
-        subPanelTemplate2,
         subPanelTemplate,
-        subPanelContentTemplate,
 
     // Util
         UtilMisc, utilDict, popupManager, tmplHelper) {
