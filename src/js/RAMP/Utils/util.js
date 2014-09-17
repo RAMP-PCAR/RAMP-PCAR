@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, XDomainRequest */
 /* jshint bitwise:false  */
 
 /**
@@ -589,6 +589,18 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                               point.y + toleraceInMapCoords,
                               map.spatialReference);
             },
+            /**
+            * Checks if the string ends with the supplied suffix.
+            *
+            * @method endsWith
+            * @static
+            * @param {String} str String to be evaluated
+            * @param {String} suffix Ending string to be matched
+            * @return {boolean} True if suffix matches
+            */
+            endsWith: function (str, suffix) {
+                return str.indexOf(suffix, str.length - suffix.length) !== -1;
+            },
 
             /**
             * Applies supplied xslt to supplied xml. IE always returns a String; others may return a documentFragment or a jObject.
@@ -604,65 +616,106 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 var xmld = new Deferred(),
                     xsld = new Deferred(),
                     xml, xsl,
-                    dlist = [xmld, xsld],
+                    dlist = [xmld, xsld],  
                     result,
-                    xsltProcessor,
-                    error;
+                    error,
+                    that = this;
 
-                function loadXMLFileIE(filename) {
-                    var xhttp;
-
-                    if (window.ActiveXObject) {
-                        xhttp = new ActiveXObject("Msxml2.XMLHTTP");
-                    } else {
-                        xhttp = new XMLHttpRequest();
-                    }
-                    xhttp.open("GET", filename, false);
-                    try {
-                        xhttp.responseType = "msxml-document";
-                    } catch (err) { } // Helping IE11
-                    xhttp.send("");
-                    return xhttp.responseXML;
-                }
-
-                this.afterAll(dlist, function () {
+                that.afterAll(dlist, function () {
                     if (!error) {
-                        xsltProcessor = new XSLTProcessor();
-                        xsltProcessor.importStylesheet(xsl);
-                        result = xsltProcessor.transformToFragment(xml, document);
+                        result = applyXSLT(xml, xsl);
+                    }
+                    callback(error, result);
+                });
+
+                // Transform XML using XSLT
+                function applyXSLT(xmlString, xslString) {
+                    var output;
+                    if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) { // IE
+                        var xslt = new ActiveXObject("Msxml2.XSLTemplate"),
+                            xmlDoc = new ActiveXObject("Msxml2.DOMDocument"),
+                            xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument"),
+                            xslProc;
+
+                        xmlDoc.loadXML(xmlString);
+                        xslDoc.loadXML(xslString);
+                        xslt.stylesheet = xslDoc;
+                        xslProc = xslt.createProcessor();
+                        xslProc.input = xmlDoc;
+                        xslProc.transform();
+                        output = xslProc.output;
+                    } else { // Chrome/FF/Others
+                        var xsltProcessor = new XSLTProcessor();
+                        xsltProcessor.importStylesheet(xslString);
+                        output = xsltProcessor.transformToFragment(xmlString, document);
 
                         // turn a document fragment into a proper jQuery object
                         if (!returnFragment) {
-                            result = ($('body')
-                                .append(result)
+                            output = ($('body')
+                                .append(output)
                                 .children().last())
                                 .detach();
                         }
                     }
+                    return output;
+                }
 
-                    callback(error, result);
-                });
+                // Distinguish between XML/XSL deferred objects to resolve and set response
+                function resolveDeferred(filename, responseObj) {
+                    if (filename.endsWith(".xsl")) {
+                        xsl = responseObj.responseText;
+                        xsld.resolve();
+                    } else {
+                        xml = responseObj.responseText;
+                        xmld.resolve();
+                    }
+                }
 
-                if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) {
-                    // second part is for IE11 benefit - for some reason it fail the first check
-                    xml = loadXMLFileIE(xmlurl);
-                    xsl = loadXMLFileIE(xslurl);
+                // IE9 specific cross domain request handling
+                function loadXMLFileIE9(filename) {
+                    var xdr = new XDomainRequest();
+                    xdr.open("GET", filename);
+                    xdr.onload = function () {
+                        resolveDeferred(filename, xdr);
+                    };
+                    xdr.onprogress = function () { };
+                    xdr.ontimeout = function () { };
+                    xdr.onerror = function () {
+                        error = true;
+                        resolveDeferred(filename, xdr);
+                    };
+                    window.setTimeout(function () {
+                        xdr.send();
+                    }, 0);
+                }
 
-                    var xslt = new ActiveXObject("Msxml2.XSLTemplate"),
-                        xmlDoc = new ActiveXObject("Msxml2.DOMDocument"),
-                        xslDoc = new ActiveXObject("Msxml2.FreeThreadedDOMDocument"),
-                        xslProc;
+                // IE10+
+                function loadXMLFileIE(filename) {
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", filename);
+                    try {
+                        xhttp.responseType = "msxml-document";
+                    } catch (err) { } // Helping IE11
+                    xhttp.onreadystatechange = function () {
+                        if (xhttp.readyState === 4) {
+                            if (xhttp.status !== 200) {
+                                error = true;
+                            }
+                            resolveDeferred(filename, xhttp);
+                        }
+                    };
+                    xhttp.send("");
+                }
 
-                    xmlDoc.loadXML(xml.xml);
-                    xslDoc.loadXML(xsl.xml);
-                    xslt.stylesheet = xslDoc;
-                    xslProc = xslt.createProcessor();
-                    xslProc.input = xmlDoc;
-                    xslProc.transform();
+                if ('withCredentials' in new XMLHttpRequest() && "ActiveXObject" in window) { // IE10 and above
+                    loadXMLFileIE(xmlurl);
+                    loadXMLFileIE(xslurl);
+                } else if (window.XDomainRequest) { // IE9 and below
+                    loadXMLFileIE9(xmlurl);
+                    loadXMLFileIE9(xslurl);
+                } else { // Good browsers (Chrome/FF)
 
-                    callback(error, xslProc.output);
-                } else {
-                    $.ajax({
+                   $.ajax({
                         type: "GET",
                         url: xmlurl,
                         dataType: "xml",
