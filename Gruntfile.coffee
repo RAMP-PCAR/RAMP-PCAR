@@ -8,7 +8,7 @@ module.exports = (grunt) ->
         [
             # no need to build wet, I hope
             #'install-dependencies'
-            #'hub'
+            'hub'
             'modernizr'
             'thanks'
         ]
@@ -752,14 +752,14 @@ module.exports = (grunt) ->
         #        failOnError: false
         #        isDevelopment: true
 
-        #hub:
-        #    "wet-boew":
-        #        src: [
-        #            "lib/wet-boew/Gruntfile.coffee"
-        #        ]
-        #        tasks: [
-        #            "dist"
-        #        ]
+        hub:
+            "wet-boew":
+                src: [
+                    "lib/wet-boew/Gruntfile.coffee"
+                ]
+                tasks: [
+                    "dist"
+                ]
 
     # These plugins provide necessary tasks.
     @loadNpmTasks "assemble"
@@ -778,7 +778,9 @@ module.exports = (grunt) ->
     @loadNpmTasks "grunt-modernizr"
     @loadNpmTasks "grunt-jscs-checker"
     @loadNpmTasks "grunt-contrib-jshint"
-
+    @loadNpmTasks "grunt-install-dependencies"
+    @loadNpmTasks "grunt-hub"
+        
     @task.run "notify_hooks"
 
     #on watch events configure jshint:all to only run on changed file

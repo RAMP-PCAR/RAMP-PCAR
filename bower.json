@@ -2,9 +2,6 @@
     "name": "ramp-gis-viewer",
     "version": "2.0.0",
     "homepage": "http://ramp-pcar.github.io",
-    "scripts": {
-        "postinstall": "grunt init"
-    },
     "authors": [
         "BeSD - SA Team"
     ],
@@ -25,7 +22,6 @@
     ],
     "dependencies": {
         "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
-        "wet-boew-dist": "https://github.com/wet-boew/wet-boew-dist/archive/v4.0.5.zip",
         "DataTables": "~1.10.0",
         "jquery": "~2.1.1",
         "gsap": "~1.11.8",
