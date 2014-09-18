@@ -3,7 +3,7 @@
     "version": "2.0.0",
     "homepage": "http://ramp-pcar.github.io",
     "scripts": {
-        "postinstall": "bower update"
+        "postinstall": "grunt init"
     },
     "authors": [
         "BeSD - SA Team"
@@ -25,6 +25,7 @@
     ],
     "dependencies": {
         "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
+        "wet-boew-dist": "https://github.com/wet-boew/wet-boew-dist/archive/v4.0.5.zip",
         "DataTables": "~1.10.0",
         "jquery": "~2.1.1",
         "gsap": "~1.11.8",
@@ -33,8 +34,8 @@
         "jquery.scrollTo": "~1.4.13",
         "shorten": "https://github.com/viralpatel/jquery.shorten.git#master",
         "Snap.svg": "~0.1.0",
-        "blueimp-tmpl": "~2.5.0",
-        "tooltipster": "~3.0.1",
+        "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.5",
+        "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#3.0.1-r",
         "urlshortener": "https://github.com/hayageek/jQuery-URL-shortener.git#1.0.1",
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",

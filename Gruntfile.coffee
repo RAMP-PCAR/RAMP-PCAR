@@ -6,6 +6,9 @@ module.exports = (grunt) ->
         "init"
         "Only needed when the repo is first cloned"
         [
+            # no need to build wet, I hope
+            #'install-dependencies'
+            #'hub'
             'modernizr'
             'thanks'
         ]
@@ -47,6 +50,10 @@ module.exports = (grunt) ->
                 smartExpand(
                     'lib/'
                     grunt.config 'pkg.ramp.concat.jsLib'
+                    [
+                        'src/js/lib/jquery.dataTables.pagination.ramp.js'
+                        'src/js/lib/jquery.ui.navigation.ramp.js'
+                    ]
                 )
             )
 
@@ -178,10 +185,12 @@ module.exports = (grunt) ->
                     done()
     )
 
-    smartExpand = ( cwd, arr ) ->    
+    smartExpand = ( cwd, arr, extra ) ->    
         # determine file order here and concat to arr
-        arr.map ( file ) ->
+        extra = extra or []
+        arr.map(( file ) ->
             cwd + file
+        ).concat extra
 
     @util.linefeed = "\n"
     # Project configuration.
@@ -249,7 +258,7 @@ module.exports = (grunt) ->
 
             wetboewBuild:
                 expand: true
-                cwd: "lib/wet-boew/dist/unmin"
+                cwd: "lib/wet-boew-dist/unmin"
                 src: [
                     "**/*.*"
                     "!ajax/**/*.*"
@@ -265,7 +274,7 @@ module.exports = (grunt) ->
 
             wetboewDist:
                 expand: true
-                cwd: "lib/wet-boew/dist"
+                cwd: "lib/wet-boew-dist"
                 src: [
                     "**/*.*"
                     "!ajax/**/*.*"
@@ -491,6 +500,7 @@ module.exports = (grunt) ->
             files: [
                 'src/js/RAMP/**/*.js'
                 'src/js/plugins/**/*.js'
+                '!src/js/lib/**/*.js'
             ]
             options:                
                 # options here to override JSHint defaults
@@ -662,6 +672,7 @@ module.exports = (grunt) ->
                     src: [
                         'src/js/RAMP/**/*.js'
                         'src/js/plugins/**/*.js'
+                        '!src/js/lib/**/*.js'
                     ]
 
         connect:
@@ -734,6 +745,21 @@ module.exports = (grunt) ->
             dist: [
                 'dist'
             ]
+
+        #"install-dependencies":
+        #    options:
+        #        cwd: "lib/wet-boew"
+        #        failOnError: false
+        #        isDevelopment: true
+
+        #hub:
+        #    "wet-boew":
+        #        src: [
+        #            "lib/wet-boew/Gruntfile.coffee"
+        #        ]
+        #        tasks: [
+        #            "dist"
+        #        ]
 
     # These plugins provide necessary tasks.
     @loadNpmTasks "assemble"
