@@ -258,7 +258,7 @@ module.exports = (grunt) ->
 
             wetboewBuild:
                 expand: true
-                cwd: "lib/wet-boew-dist/unmin"
+                cwd: "lib/wet-boew/dist/unmin"
                 src: [
                     "**/*.*"
                     "!ajax/**/*.*"
@@ -274,7 +274,7 @@ module.exports = (grunt) ->
 
             wetboewDist:
                 expand: true
-                cwd: "lib/wet-boew-dist"
+                cwd: "lib/wet-boew/dist"
                 src: [
                     "**/*.*"
                     "!ajax/**/*.*"
