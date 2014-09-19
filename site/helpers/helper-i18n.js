@@ -20,11 +20,12 @@ module.exports.register = function(Handlebars, options) {
         debug: debug
     });
 
-    Handlebars.registerHelper('t', function(i18n_key, lang) {
+    Handlebars.registerHelper('t', function(i18n_key) {
         var result;
-        i18n.setLng(lang + '-' + countryCode);
+
+        i18n.setLng(this.language + '-' + countryCode);
         result = i18n.t(i18n_key);
-        //console.log(i18n_key, result, lang);
+        //console.log(i18n_key, result, this.language);
         return new Handlebars.SafeString(result);
     });
 };
