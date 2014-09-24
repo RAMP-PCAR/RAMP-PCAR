@@ -35,6 +35,7 @@ module.exports = (grunt) ->
             'copy:config'
             'copy:wetboewBuild'
             'copy:assetsBuild'
+            'copy:proxyBuild'
             'copy:locales'
             'copy:templates'
             'notify:assets'
@@ -301,6 +302,18 @@ module.exports = (grunt) ->
                 src: "**/*.*"
                 dest: "dist/assets"
 
+            proxyBuild:
+                expand: true
+                cwd: "src/proxy"
+                src: "**/*.*"
+                dest: "build/proxy"
+            
+            proxyDist:
+                expand: true
+                cwd: "src/proxy"
+                src: "**/*.*"
+                dest: "dist/proxy"
+                
             locales:
                 expand: true
                 cwd: 'src/locales'
