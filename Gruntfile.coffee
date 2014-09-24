@@ -693,6 +693,9 @@ module.exports = (grunt) ->
                     keepalive: true
 
         watch:
+            options:
+                livereload: true
+    
             pages:
                 files: [
                     'site/**/*.hbs'
@@ -715,6 +718,8 @@ module.exports = (grunt) ->
                 options:
                     spawn: false
                 files: [
+                    '!src/js/APIs/**/*.*' # temporary
+                    '!src/js/lib/**/*.*' # temporary
                     'src/js/**/*.js'
                 ]
                 tasks: [
@@ -734,6 +739,11 @@ module.exports = (grunt) ->
                     'less'
                     'autoprefixer'
                     'notify:css'
+                ]
+            
+            config:
+                files: [
+                    'Gruntfile.coffee'
                 ]
 
         clean:
