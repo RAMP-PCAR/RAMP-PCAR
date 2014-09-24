@@ -621,6 +621,9 @@ define([
                                     scrollTop: 0
                                 }, animateContentDuration, "easeOutCirc");*/
 
+                                TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
+                                    {scrollTop: 0, ease: "easeOutCirc"});
+
                                 setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
                                 setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);
 
@@ -819,9 +822,11 @@ define([
                     .set(panelDiv, { display: "none" }, transitionDuration)
                     .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-                /*fullDataSubpanelChangeTimeLine
-                    .fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
-                    */
+                fullDataSubpanelChangeTimeLine
+                    .fromTo(panelDiv, transitionDuration,
+                        { right: "0px", left: "35px" },
+                        { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
+                    
             }
 
             function killTimelines() {
