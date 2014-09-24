@@ -617,9 +617,9 @@ define([
 
                         updateContent = dojoLang.hitch(this,
                             function (a) {
-                                this._subPanelContentDiv.animate({
+                                /*this._subPanelContentDiv.animate({
                                     scrollTop: 0
-                                }, animateContentDuration, "easeOutCirc");
+                                }, animateContentDuration, "easeOutCirc");*/
 
                                 setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
                                 setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);

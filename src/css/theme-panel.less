@@ -39,6 +39,8 @@
                 height: 22px;
                 font-weight: 700;
                 font-family: Verdana,Arial,Helvetica,sans-serif;
+
+
             }
 
             .sub-panel-content {
@@ -195,14 +197,14 @@
     overflow-x: hidden;
     overflow-y: auto;
     right: @panel-width-large; // override set by theme-layout
-    top: 76px;
-    bottom: 0;
+    top: 231px;
+    bottom: 30px;
 
     &.full-data-details {
         .sub-panel {
             .sub-panel-toggle {
                 border: 0;
-                background: #176ca7;
+                background: @accent-color;
                 position: absolute;
                 left: auto;
                 right: 0;
@@ -239,6 +241,13 @@
             background-image: none !important;
             border-radius: 0;
             margin: 0 !important;
+
+            font-weight: 700;
+            vertical-align: bottom;
+            border-radius: 0;
+            margin: 0!important;
+            padding: 6px 10px!important;
+            text-shadow: 0 1px 1px #222;
         }
 
         .sub-panel-content {
@@ -935,7 +944,7 @@
                 }*/
 
                 > div.btn-group {
-                    margin: -5px 0 0 -3px !important;
+                    margin: -6px 0 0 -3px !important;
                     padding: 0 !important;
                                         
                     button {

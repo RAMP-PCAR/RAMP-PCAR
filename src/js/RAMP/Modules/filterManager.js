@@ -445,7 +445,7 @@ define([
                             });
 
                             //only wms layers have this value
-                            if (layerConfig.layerInfo != null) {
+                            if (layerConfig.layerInfo) {
                                 if (layerConfig.legend.enable) {
                                     var legendUrl = layerConfig.legend.legendURL,
                                         wmsmeta;
@@ -457,7 +457,7 @@ define([
                                     //    layerConfig.url + "&request=GetCapabilities");
 
                                     tmpl.cache = {};
-                                    tmpl.templates = filter_wms_meta_Template;
+                                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_wms_meta_Template));
 
                                     wmsmeta = tmpl("wms_meta_main",
                                         {
