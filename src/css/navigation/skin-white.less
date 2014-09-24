@@ -1,0 +1,237 @@
+@urlPath: "../../assets/images/navigation/";
+@filename: "wmat_white_sprite.png";
+
+.jq-navigation {
+    display: block;
+    position: absolute;
+
+    .jq-sliderbase.jq-slider {
+        vertical-align: top !important;
+    }
+}
+
+.jq-navigation-content {
+    position: absolute;
+}
+
+.jq-navigation-pan, .jq-navigation-zoom {
+    padding: 0;
+    margin: 0;
+    position: relative;
+
+    li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        a {
+            display: block;
+
+            span {
+                display: block;
+                width: 0;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+.jq-navigation-pan li {
+    position: absolute;
+}
+
+.jq-skin-wmat {
+
+    .jq-navigation-zoomIn-disabled a, .jq-navigation-zoomOut-disabled a {
+        height: 29px;
+        width: 29px;
+    }
+    
+    .jq-navigation-pan {
+        background: url("@{urlPath}@{filename}") no-repeat scroll -2px -2px transparent;
+        width: 74px;
+        height: 74px;
+        padding: 0;
+        margin: 0;
+        position: relative;
+    }
+    
+    .NavControlSizePosition (@width, @height, @top, @left) {
+        width: @width;
+        height: @height;
+        top: @top;
+        left: @left;
+    }
+    
+    .jq-navigation-panUp {
+
+        .NavControlSizePosition(50px, 30px, 0px, 12px);
+        a {
+
+            height: 28px;
+
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -90px -2px transparent;
+            }
+
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -90px -78px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-panDown {
+
+        .NavControlSizePosition(50px, 28px, 46px, 12px);
+        a {
+
+            height: 28px;
+
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -90px -48px transparent;
+            }
+
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -90px -124px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-panRight {
+
+        .NavControlSizePosition(28px, 50px, 12px, auto);
+        right: 0px;
+        a {
+
+            height: 50px;
+
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -200px -14px transparent;
+            }
+
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -200px -90px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-panLeft {
+
+        .NavControlSizePosition(28px, 50px, 12px, 0px);
+
+        a {
+            height: 50px;
+
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -154px -14px transparent;
+            }
+
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -154px -90px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-fullExtent {
+        
+        .NavControlSizePosition(34px, 34px, 20px, 20px);
+        
+        a {
+            height: 34px;
+            
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -250px -22px transparent;
+            }
+            
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -250px -98px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-zoom {
+        padding: 0;
+        position: relative;
+        margin: 10px 23px 0;
+        background: url("@{urlPath}@{filename}") no-repeat scroll -2px -154px transparent;
+    }
+    
+    .jq-navigation-zoomIn {
+
+        a {
+            background: url("@{urlPath}@{filename}") no-repeat scroll -39px -154px transparent;
+            height: 29px;
+            width: 29px;
+        
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -78px -154px transparent;
+            }
+        
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -115px -154px transparent;
+            }
+        }
+    }
+    
+    .jq-navigation-zoomOut {
+        a {
+            height: 29px;
+            width: 29px;
+            background: url("@{urlPath}@{filename}") no-repeat scroll -39px -185px transparent;
+        
+            &:hover, &:focus {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -78px -185px transparent;
+            }
+        
+            &:active {
+                background: url("@{urlPath}@{filename}") no-repeat scroll -115px -185px transparent;
+            }
+        }
+    }
+}
+
+.jq-navigation-zoomIn-disabled {
+    a, a:hover, a:active, a:focus {
+        background: url("@{urlPath}@{filename}") no-repeat scroll -154px -154px transparent;
+    }
+}
+
+.jq-navigation-zoomOut-disabled {
+    a, a:hover, a:active, a:focus {
+        background: url("@{urlPath}@{filename}") no-repeat scroll -154px -185px transparent;
+    }
+}
+
+.ui-widget-content {
+    background: transparent;
+    width: 29px;
+}
+
+.ui-slider {
+    position: relative;
+    text-align: left;
+    .ui-slider-handle {
+        position: absolute;
+        width: 29px;
+        height: 29px;
+        &:hover, &:focus {
+            background: url("@{urlPath}@{filename}") no-repeat scroll -78px -216px transparent;
+        }
+        &:active {
+            background: url("@{urlPath}@{filename}") no-repeat scroll -115px -216px transparent;
+        }
+    }
+}
+
+.ui-slider-vertical {
+    height: 58px;
+    margin: 8px 0px 8px 0px !important;
+    .ui-slider-handle {
+        margin: -14px 0 -14px 0 !important;
+        cursor: pointer;
+    }
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    background: url("@{urlPath}@{filename}") no-repeat scroll -39px -216px transparent;
+}
