@@ -32,7 +32,7 @@
         <div class='sub-panel-content'>
             <h4 class='mrgn-tp-md mrgn-bttm-md mrgn-lft-md panel-title'>
                 {%=o.title%}</h4>
-            <div class='mrgn-lft-md mrgn-rght-md panel-content-div'>
+            <div class='mrgn-rght-sm mrgn-lft-md small panel-content-div'>
             </div>
         </div>",
     
@@ -62,7 +62,7 @@
         <div class='sub-panel-content'>
             <h4 class='mrgn-tp-md mrgn-bttm-md mrgn-lft-md panel-title'>
                 {%=o.title%}</h4>
-            <div class='mrgn-lft-md mrgn-rght-md panel-content-div'>
+            <div class='mrgn-rght-sm mrgn-lft-md small panel-content-div'>
             </div>
         </div>"
 }
