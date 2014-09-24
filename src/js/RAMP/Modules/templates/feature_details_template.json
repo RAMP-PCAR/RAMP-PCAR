@@ -10,7 +10,7 @@
 
 {
     // generates a list of all the properties and their corresponding values of a given object "o"
-    "CESI2012_freshwater_quality":	"<div class='point-details-list small'>
+    "CESI2012_freshwater_quality":	"<div class='point-details-list'>
                                         <ul class='zebra-list'>
                                             
                                             {% include('simpleListItem', {key: 'A template', value: 'that iterates over all object properties'}); %}
@@ -25,7 +25,7 @@
                                     </div>",
 
     // generates a list with an image, several simple key-value pairs, and a link
-    "Test_coarse_proj":	"<div class='point-details-list small'>
+    "Test_coarse_proj":	"<div class='point-details-list'>
                             <ul class='zebra-list' style='list-style: none; margin: 0;'>
                                 {% include('simpleListItem', {key: 'A template', value: 'with an image'}); %}
                                 {% include('imageListItem', {url: 'http://lorempixel.com/100/100/nature/' + o.NAME, text: 'A random image from the internet or a logo'}); %}
@@ -53,7 +53,7 @@
                                 </p>",
 
     // generates a list of all items in a "features" array of a given object "o"
-    "default_feature_details":	"<div class='point-details-list small'>
+    "default_feature_details":	"<div class='point-details-list'>
                             <ul class='zebra-list'>
                                 
                                 {% for (var prop in o.data.attributes ) { 
