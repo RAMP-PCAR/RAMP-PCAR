@@ -1,4 +1,6 @@
-﻿/*global define, TimelineLite, TweenLite, $ */
+﻿/*global define, TimelineLite, $ */
+
+// , TweenLite,
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -20,7 +22,7 @@ define(["utils/util"],
     function (util) {
         "use strict";
 
-        var body = $("body"),
+        var /*body = $("body"),
             wbCore = $("#wb-core"),
             wbFoot = $("#wb-foot"),
 
@@ -28,7 +30,7 @@ define(["utils/util"],
             megaMenuDiv = $("#gcwu-psnb-in"),
             navigation = $("nav[role='navigation']:first"),
 
-            transitionDuration = 0.5,
+            transitionDuration = 0.5,*/
 
             isFullScreen = false,
             fullScreenTimeLine = new TimelineLite(
@@ -36,7 +38,7 @@ define(["utils/util"],
                     paused: true
                 });
 
-        fullScreenTimeLine
+        /*fullScreenTimeLine
                 .to(titleBanner, transitionDuration, { height: 54, ease: "easeOutCirc" }, 0)
                 .to(navigation, transitionDuration, { height: 0, ease: "easeOutCirc" }, 0)
                 .set([navigation, megaMenuDiv], { display: "none" })
@@ -44,7 +46,7 @@ define(["utils/util"],
                 .to(wbCore, transitionDuration, { top: "55px", bottom: "10px", ease: "easeOutCirc" }, 0)
                 .to(wbFoot, transitionDuration, { height: 10, ease: "easeOutCirc" }, 0)
 
-                .set(body, { className: "+=full-screen" });
+                .set(body, { className: "+=full-screen" });*/
 
         /**
          * Toggles full screen mode
@@ -55,7 +57,7 @@ define(["utils/util"],
         function _toggleFullScreenMode(fullscreen) {
             isFullScreen = util.isUndefined(fullscreen) ? !isFullScreen : fullscreen;
 
-            if (isFullScreen) {
+            /*if (isFullScreen) {
                 fullScreenTimeLine.play();
 
                 TweenLite.to(".sub-panel-container", transitionDuration, { top: "87px", bottom: "10px", ease: "easeOutCirc" });
@@ -63,7 +65,7 @@ define(["utils/util"],
                 fullScreenTimeLine.reverse();
 
                 TweenLite.to(".sub-panel-container", transitionDuration, { top: "76px", bottom: "0px", ease: "easeOutCirc" });
-            }
+            }*/
         }
 
         return {

@@ -819,8 +819,9 @@ define([
                     .set(panelDiv, { display: "none" }, transitionDuration)
                     .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
-                fullDataSubpanelChangeTimeLine
+                /*fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
+                    */
             }
 
             function killTimelines() {

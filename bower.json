@@ -35,6 +35,7 @@
         "urlshortener": "https://github.com/hayageek/jQuery-URL-shortener.git#1.0.1",
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",
+		"jquery-hoverIntent": "~1.8.1",
         "i18next": "~1.7.4"
     },
     "moduleType": [

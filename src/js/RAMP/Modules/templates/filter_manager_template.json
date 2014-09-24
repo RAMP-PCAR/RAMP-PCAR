@@ -32,26 +32,26 @@
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
                                             </div>
-                                            <ul class='button-group margin-top-none'>												
+                                            <div class='btn-group margin-top-none'>												
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                                <li>
-                                                        <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
-                                                    </li>
+                                                
+                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                                   
                                                 {% } %}
                                                     
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
-                                                    <li>
+                                                    
                                                     <span class='separator' role='presentation'></span>
-                                                </li>
+                                                
                                                 {% } %}
                                                 
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
-                                                <li>
-                                                        <button class='button button-none button-small font-xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.settings')%}</button>
-                                                    </li>
+                                                
+                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                                  
                                                 {% } %}
-                                            </ul>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class='layer-checkboxes'>										
@@ -95,7 +95,7 @@
         // added code to determine if bounding box is to be generated
         "filter_legend_template":"{% if(!o.disabled) { %}
                                         <div class='checkbox-custom'>
-                                        <label for='{%=o.for%}' class='form-checkbox tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
+                                        <label for='{%=o.for%}' class='form-checkbox _tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
                                             <span class='wb-invisible'>{%=o.label%}</span>
                                         </label>
                                         <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' data-layer-id='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
@@ -107,7 +107,7 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                    <button class='button button-none button-small font-xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                 </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json
@@ -115,7 +115,7 @@
         "filter_global_row_template":"<div>
                                         <div class='global-details'>
                                             <div class='global-controls'>
-                                                <ul class='button-group margin-top-none'>
+                                                <ul class='btn-group margin-top-none'>
                                                     {%=i18n.t('filterManager.allData')%}
                                                 </ul>
                                             </div>
@@ -132,7 +132,7 @@
         // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
         //			This template is used to generate 'eye' and 'boundingbox' for All Data
         "filter_global_label_template":	"<div class='checkbox-custom'>
-                                            <label for='{%=o.id%}' class='form-checkbox  tooltip {%=o.classAddition%}' title='{%=o.title%}'>
+                                            <label for='{%=o.id%}' class='form-checkbox _tooltip {%=o.classAddition%}' title='{%=o.title%}'>
                                                 <span class='wb-invisible'>{%=o.title%}</span>
                                             </label>
                                             <input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>

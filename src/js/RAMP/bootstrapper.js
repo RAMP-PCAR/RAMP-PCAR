@@ -68,6 +68,8 @@ require([
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
 
+    //"dojo/domReady!"],
+
     function (
     /* Dojo */
     parser, dojoOn, topic, requestScript, xhr, dojoArray,

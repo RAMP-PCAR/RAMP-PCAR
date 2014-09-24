@@ -1,3 +1,5 @@
+;
+
 $.fn.dataTableExt.oPagination.executeOnLoad = function (target, func, callback) {
     var handle;
 
