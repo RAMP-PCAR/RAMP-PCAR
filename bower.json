@@ -24,7 +24,7 @@
         "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
         "DataTables": "~1.10.0",
         "jquery": "~2.1.1",
-        "gsap": "~1.11.8",
+        "gsap": "~1.13.2",
         "jquery-nstSlider": "~1.0.5",
         "jqueryui": "~1.10.4",
         "jquery.scrollTo": "~1.4.13",
@@ -35,7 +35,7 @@
         "urlshortener": "https://github.com/hayageek/jQuery-URL-shortener.git#1.0.1",
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",
-		"jquery-hoverIntent": "~1.8.1",
+        "jquery-hoverIntent": "~1.8.1",
         "i18next": "~1.7.4"
     },
     "moduleType": [
