@@ -62,7 +62,9 @@ define(["utils/util"],
             } else {
                 fullScreenTimeLine.reverse();
 
-                TweenLite.to(".sub-panel-container", transitionDuration, { top: "187px", bottom: "0px", ease: "easeInCirc" });
+                TweenLite.fromTo(".sub-panel-container", transitionDuration,
+                    { top: "96px", bottom: "5px" },
+                    { top: "187px", bottom: "30px", ease: "easeInCirc" });
             }
         }
 

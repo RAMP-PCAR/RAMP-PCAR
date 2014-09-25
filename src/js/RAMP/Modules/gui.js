@@ -818,6 +818,7 @@ define([
 
                 // panelToggleTransition
                 panelToggleTimeLine
+                    .set(viewport, { className: "+=no-sidepanel-mode" })
                     .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
                     .set(panelDiv, { display: "none" }, transitionDuration)
                     .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);

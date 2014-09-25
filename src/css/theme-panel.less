@@ -26,6 +26,12 @@
     }
 }
 
+.no-sidepanel-mode {
+    .sub-panel-container {
+        right: 0 !important;
+    }
+}
+
 // Full data mode
 .full-data-mode {
     .sub-panel-container {
@@ -197,8 +203,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     right: @panel-width-large; // override set by theme-layout
-    top: 187px;
-    bottom: 30px;
+    top: @header-height + @toolbar-height;
+    bottom: @footer-height;
 
     &.full-data-details {
         .sub-panel {
@@ -358,6 +364,8 @@
                 width: 50%;
                 margin: 0;
                 overflow: hidden;
+                top: 0;
+
                 //.default-transition;
                 /* &:after {
                     position: absolute;
