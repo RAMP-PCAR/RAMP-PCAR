@@ -129,9 +129,10 @@ if (!String.prototype.format) {
         },
 
         /* Toggle the transition flag */
-        toggleTransition: function () {
+        toggleTransition: function (inTransition) {
             var o = this.options;
-            o._inTransition = !o._inTransition;
+            // use the supplied parameter if it's a true or a false, reverse current value if not
+            o._inTransition = inTransition === false ? false : inTransition === true ? true : !o._inTransition;
         },
 
         /* Check if the slider"s minimum and maximum values are valid.
