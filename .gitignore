@@ -206,6 +206,8 @@ jscs.txt
 dist
 _dist/
 
+_css/
+
 ### VIM temp files
 
 *.swo
