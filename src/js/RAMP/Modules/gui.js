@@ -807,7 +807,7 @@ define([
                     .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
                     .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
                     .fromTo(mapToolbar, transitionDuration / 2,
-                        { width: "100%", height: "31px" },
+                        { width: "100%", height: "32px" },
                         { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
 
                     .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
