@@ -148,6 +148,7 @@ require([
                 theme.tooltipster();
             });
             RampMap.init();
+            NavWidget.construct();
 
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
             theme.tooltipster();            
