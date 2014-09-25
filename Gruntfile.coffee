@@ -151,7 +151,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         "useMinAssets"
-        "Replace unmin WET refrences with the min paths for HTML files"
+        "Replace unmin WET references with the min paths for HTML files"
         () ->
             htmlFiles = grunt.file.expand(
                 'dist/**/*.html'
