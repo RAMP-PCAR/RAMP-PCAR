@@ -67,12 +67,12 @@
         "filter_row_settings_template":"{% if (o.settings.enabled) { %}
                                             <div class='filter-row-settings background-medium'>
                                             
-                                                <h4 class='margin-top-none margin-bottom-medium background-light'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
+                                                <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
     
                                                 {% if (o.settings.opacity.enabled) { %}
                                             
                                                 <div class='transparency-setting'>
-                                                    <span class='float-left'>{%=i18n.t('filterManager.settingsOpacity')%}</span>                
+                                                    <span class='pull-left'>{%=i18n.t('filterManager.settingsOpacity')%}</span>                
                                                 
                                                     <div class='nstSlider' data-aria_enabled='true'
                                                         data-range_min='0' data-range_max='1' 
