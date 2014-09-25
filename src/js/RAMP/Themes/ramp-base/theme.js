@@ -1,6 +1,4 @@
-﻿/*global define, TimelineLite, $ */
-
-// , TweenLite,
+﻿/*global define, TimelineLite, $ , TweenLite*/
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -22,15 +20,16 @@ define(["utils/util"],
     function (util) {
         "use strict";
 
-        var /*body = $("body"),
-            wbCore = $("#wb-core"),
-            wbFoot = $("#wb-foot"),
+        var body = $("body"),
+            wbCore = $("main"),
+            wbFoot = $("footer"),
 
-            titleBanner = $("#gcwu-bnr"),
-            megaMenuDiv = $("#gcwu-psnb-in"),
-            navigation = $("nav[role='navigation']:first"),
+            megaMenuDiv = $("#wb-sm"),
+            navigation = $("#wb-bar"),
 
-            transitionDuration = 0.5,*/
+            header = $("header"),
+
+            transitionDuration = 0.5,
 
             isFullScreen = false,
             fullScreenTimeLine = new TimelineLite(
@@ -38,15 +37,14 @@ define(["utils/util"],
                     paused: true
                 });
 
-        /*fullScreenTimeLine
-                .to(titleBanner, transitionDuration, { height: 54, ease: "easeOutCirc" }, 0)
-                .to(navigation, transitionDuration, { height: 0, ease: "easeOutCirc" }, 0)
-                .set([navigation, megaMenuDiv], { display: "none" })
+        fullScreenTimeLine
+                .to(header, transitionDuration, { top: "-36px", position: "relative", ease: "easeOutCirc" }, 0)
+                .set([navigation, megaMenuDiv], { display: "none !important" })
 
-                .to(wbCore, transitionDuration, { top: "55px", bottom: "10px", ease: "easeOutCirc" }, 0)
-                .to(wbFoot, transitionDuration, { height: 10, ease: "easeOutCirc" }, 0)
+                .to(wbCore, transitionDuration, { top: "64px", bottom: "5px", ease: "easeOutCirc" }, 0)
+                .to(wbFoot, transitionDuration, { height: "5px", ease: "easeOutCirc" }, 0)
 
-                .set(body, { className: "+=full-screen" });*/
+                .set(body, { className: "+=full-screen" });
 
         /**
          * Toggles full screen mode
@@ -57,15 +55,15 @@ define(["utils/util"],
         function _toggleFullScreenMode(fullscreen) {
             isFullScreen = util.isUndefined(fullscreen) ? !isFullScreen : fullscreen;
 
-            /*if (isFullScreen) {
+            if (isFullScreen) {
                 fullScreenTimeLine.play();
 
-                TweenLite.to(".sub-panel-container", transitionDuration, { top: "87px", bottom: "10px", ease: "easeOutCirc" });
+                TweenLite.to(".sub-panel-container", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" });
             } else {
                 fullScreenTimeLine.reverse();
 
-                TweenLite.to(".sub-panel-container", transitionDuration, { top: "76px", bottom: "0px", ease: "easeOutCirc" });
-            }*/
+                TweenLite.to(".sub-panel-container", transitionDuration, { top: "187px", bottom: "0px", ease: "easeInCirc" });
+            }
         }
 
         return {
