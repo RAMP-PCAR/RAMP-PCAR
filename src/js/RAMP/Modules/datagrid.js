@@ -649,7 +649,7 @@ define([
                                 d.resolve();
                             },
 
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -660,7 +660,7 @@ define([
                         },
                         {
                             handleSelector: ".full-table tr",
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );

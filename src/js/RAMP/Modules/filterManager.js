@@ -401,7 +401,7 @@ define([
                         {
                             handleSelector: "li.layerList1:not(.list-item-grabbed):not(.ui-sortable-helper)",
                             targetSelector: ":tabbable",
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -571,7 +571,7 @@ define([
                             layerList
                                 .has(ui.item).addClass("sort-active")
                                 .end().filter(":not(.sort-active)").addClass("sort-disabled");
-                            ui.item.removeClass("background-light");
+                            ui.item.removeClass("bg-very-light");
 
                             layerGroupSeparator.addClass("active");
 
