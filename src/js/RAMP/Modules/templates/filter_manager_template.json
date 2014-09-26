@@ -58,7 +58,7 @@
                                         {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
                                         {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
                                     </div>
-                                    <div class='clear'>
+                                    <div class='clearfix'>
                                     </div>
                                 </div>",
         
@@ -126,7 +126,7 @@
                                                 });											
                                             %}										
                                         </div>
-                                        <div class='clear'>
+                                        <div class='clearfix'>
                                         </div>
                                     </div>",
         // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.

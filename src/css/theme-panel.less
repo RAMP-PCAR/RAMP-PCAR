@@ -106,6 +106,7 @@
                     //position: absolute;
                     //top: 92px;
                     //bottom: 0px;
+                    border-bottom: 0;
                 }
             }
 
@@ -447,7 +448,7 @@
     .global-toggles {
         background: none repeat scroll 0 0 #FFFFFF;
         border-bottom: 1px solid #BFBFBF;
-        padding: 10px 0 10px 10px;
+        padding: 11px 0 11px 10px;
         position: absolute;
         right: 0;
         left: 0;
@@ -1318,7 +1319,7 @@
         .jqgrid_table_wrapper {
             bottom: 0;
             left: 0;
-            padding-top: 41px;
+            padding-top: 46px;
             overflow-y: auto;
             position: absolute;
             right: 0;
@@ -1335,6 +1336,10 @@
 
             .summary-table .dataTables_scrollHead {
                 display: none;
+            }
+
+            .dataTables_scrollBody {
+                border-bottom: 0;
             }
         }
 
@@ -1468,7 +1473,7 @@
                         bottom: 4px;
                         right: 2px;
 
-                        ul {
+                        > div.btn-group {
                             margin: 0 0 0 -3px !important;
                             padding: 0 !important;
 
