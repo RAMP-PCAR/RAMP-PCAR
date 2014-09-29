@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, event */
 /*jslint white: true */
 
 /**
@@ -1138,8 +1138,11 @@ define([
                 subPanel.open();
                 subPanel.getPanel().find(".sub-panel-toggle")
                     .on("click", dojoLang.hitch(this, function () {
+                        // event: jQuery event, event is added to global define to pass jsLint
+                        // need to stop event propogation, or else all browser will have undefined exception thrown.
+                        event.stopPropagation();
                         hideSubPanel(attr);
-
+                        
                         // reset focus back to link where the subpanel was created from
                         if (attr.target.selector !== "#map-div") {
                             $(attr.target).find(":tabbable").first().focus();
