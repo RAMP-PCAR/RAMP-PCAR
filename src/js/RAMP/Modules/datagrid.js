@@ -912,7 +912,7 @@ define([
                             }
                         );
 
-                        extendedTabTitle = $("#tabs1_2-link").append("<span>").find("span");
+                        extendedTabTitle = $("#tabs1_2-lnk").append("<span>").find("span");
                     }
 
                     // generate the content using rowData and given template

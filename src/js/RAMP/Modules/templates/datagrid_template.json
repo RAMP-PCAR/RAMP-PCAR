@@ -123,7 +123,7 @@
 
     // nested under datagrid_global_row_template; toggle button
     "filter_button_Template":"<li>
-                                <button class='btn button-none btn-xs xsmall button-sort {%=o.classAddition%}' {%=o.someAttribute%}>{%=o.buttonLabel%}</button>
+                                <button class='btn button-none btn-xs small button-sort {%=o.classAddition%}' {%=o.someAttribute%}>{%=o.buttonLabel%}</button>
                             </li>"
 
 

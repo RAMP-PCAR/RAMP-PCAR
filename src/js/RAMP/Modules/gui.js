@@ -813,8 +813,8 @@ define([
                     .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
                     .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
-                    .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
-                    .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0);
 
                 // panelToggleTransition
                 panelToggleTimeLine
@@ -825,8 +825,8 @@ define([
 
                 fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration,
-                        { right: "0px", left: "35px" },
-                        { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
+                        { right: "0px" },
+                        { right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
                     
             }
 
@@ -909,15 +909,18 @@ define([
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
                 if (_isFullData) {
-                    TweenLite.fromTo(panelDiv, transitionDuration,
-                        { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                        { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
+                    TweenLite
+                        .fromTo(panelDiv, transitionDuration,
+                            { width: getPanelWidthDefault(), right: 0, left: "auto" },
+                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {
-                    TweenLite.fromTo(panelDiv, transitionDuration,
-                        { left: 35, width: "auto", right: panelDiv.css("right") },
-                        { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
+                    TweenLite
+                        //.set(panelDiv, {  }, 0)
+                        .fromTo(panelDiv, transitionDuration,
+                            { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
+                            { right: 0,  width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }

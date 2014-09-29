@@ -1,4 +1,4 @@
-﻿/*global define, TimelineLite, $ , TweenLite*/
+﻿/*global define, TimelineLite, $ */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -53,19 +53,36 @@ define(["utils/util"],
          * @param  {Boolean} fullscreen true - full screen on; false - full screen off; undefined - toggle;
          */
         function _toggleFullScreenMode(fullscreen) {
+            var extraTweeen = new TimelineLite({ paused: true });
+
             isFullScreen = util.isUndefined(fullscreen) ? !isFullScreen : fullscreen;
 
             if (isFullScreen) {
                 fullScreenTimeLine.play();
 
-                TweenLite.to(".sub-panel-container", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" });
+                //TweenLite.to(".sub-panel-container", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" });
+                
+                extraTweeen
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" }, 0)
+                    .to(".sub-panel-container.full-data-details", transitionDuration, { top: "64px", bottom: "5px", ease: "easeOutCirc" }, 0)
+
+                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration, { height: "+=116px", ease: "easeOutCirc" }, 0.01); // animate height of the datatable scrollBody since it's explicitly set
+
             } else {
                 fullScreenTimeLine.reverse();
 
-                TweenLite.fromTo(".sub-panel-container", transitionDuration,
+                /*TweenLite.fromTo(".sub-panel-container", transitionDuration,
                     { top: "96px", bottom: "5px" },
-                    { top: "187px", bottom: "30px", ease: "easeInCirc" });
+                    { top: "187px", bottom: "30px", ease: "easeInCirc" });*/
+                
+                extraTweeen
+                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "187px", bottom: "30px", ease: "easeInCirc" }, 0)
+                    .to(".sub-panel-container.full-data-details", transitionDuration, { top: "155px", bottom: "30px", ease: "easeInCirc" }, 0)
+
+                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.01, { height: "-=116px", ease: "easeInCirc" }, 0); // animate height of the datatable 
             }
+
+            extraTweeen.play();
         }
 
         return {
