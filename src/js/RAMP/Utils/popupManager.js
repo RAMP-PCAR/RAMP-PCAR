@@ -562,7 +562,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             *
             *               closeHandler: closeFunction,
             *
-            *               activeClass: "background-light",
+            *               activeClass: "bg-very-light",
             *               useAria: false
             *           }
             *       );

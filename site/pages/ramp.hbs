@@ -1,17 +1,17 @@
 ---
 {
-	"altLangPrefix": "ramp",
-	"dateModified": "2014-09-22",
-	"sitesearch": "false",
+    "altLangPrefix": "ramp",
+    "dateModified": "2014-09-22",
+    "sitesearch": "false",
     "breadcrumb": "false"
 }
 ---
 <section class="height-100 viewport small">
-	<!--<h2 id="ramp-title" class="wb-invisible">
-        @@page.header.titleLink
+    <!--<h2 id="ramp-title" class="wb-invisible">
+        {{t "page.header.titleLink"}}
     </h2>-->
-	
-    <section id="map-div" class="height-100 background-light margin-bottom-none">
+    
+    <section id="map-div" class="height-100 margin-bottom-none">
         <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium text-right">-->
         <ul id="map-toolbar" class="text-right">
             <li id="basemapControls" class="pull-left map-toolbar-item" style="display: inline;">
@@ -26,39 +26,51 @@
                     <i class="fa fa-link"></i><span class="on-right">{{t "bookmarkLink.title"}}</span>
                 </button>
                 <div id="getlink-section-container" class="map-toolbar-item-container">
-                    <div id="getlink-section" class="map-toolbar-item-section text-left background-white box-shadow-section">
+                    <div id="getlink-section" class="map-toolbar-item-section text-left box-shadow-section">
                         <section>
-                            <h2 class="margin-top-none ">
+                            <h2 class="mrgn-tp-sm page-header h3">
                                 {{t "bookmarkLink.title"}}
                             </h2>
                             <button class="button-none button-close _tooltip" title="{{t "gui.actions.close"}}">
                                 <span class="wb-invisible">{{t "gui.actions.close"}}</span>
                             </button>
-                            <label class="argin-bottom-small margin-top-small wb-invisible" for="getlink-input">
-                                {{t "bookmarkLink.description"}}
-                            </label>
-                            <p class="margin-bottom-small margin-top-none getlink-input-holder">
-                                <button class="button button-none button-small getlink-shorten-button">
-                                    {{t "bookmarkLink.shortLink"}}
-                                </button>
-                                <input type="text" data-role="none" id="getlink-input" class="margin-bottom-none width-100">
-                            </p>
-                            <div class="get-link-loading-div">
-                                <ul class="loadingAnimation" style="display: none;">
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                </ul>
-                            </div>
-                            <p class="margin-top-medium margin-bottom-small">
-                                <a href="mailto:" class="button button-info pull-right getlink-email-button">
-                                    <span class="wb-icon-mail"></span>@@bookmarkLink.email
-                                </a> <span class="clear"></span>
-                            </p>
-                            <div class="clear">
+                            <div class="get-link-content">
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm getlink-shorten-button" type="button">
+                                                    <i class="fa fa-link"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.shortLink"}}</span>
+                                                </button>                                                                                                
+                                            </span>
+                                            <label class="wb-inv" for="getlink-input">{{t "bookmarkLink.description"}}</label>
+                                            <input type="text" data-role="none" readonly="readonly" class="form-control input-sm" id="getlink-input" />
+                                            
+                                            <span class="input-group-btn">
+                                                <a href="mailto:" class="btn btn-info btn-sm getlink-email-button">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.email"}}</span>
+                                                </a>                                                                                              
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="get-link-loading-div">
+                                    <ul class="loadingAnimation" style="display: none;">
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="clearfix">
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -82,7 +94,7 @@
                     <i class="fa fa-question"></i><span class="on-right">{{t "help.title"}}</span>
                 </button>
                 <div id="help-section-container" class="map-toolbar-item-container">
-                    <div id="help-section-shadow" class="background-white">
+                    <div id="help-section-shadow" class="">
                         <div id="help-section" class="text-left">
 
                             <section>
@@ -92,9 +104,9 @@
                                 <button class="button-none button-close _tooltip" title="{{t "gui.actions.close"}}">
                                     <span class="wb-invisible">{{t "gui.actions.close"}}</span>
                                 </button>
-								<div id="help-content">
-									{{>help}}
-								</div>
+                                <div id="help-content">
+                                    {{>help}}
+                                </div>
                             </section>
                         </div>                                            
                     </div>
@@ -117,14 +129,14 @@
             </div>
         </div>
         <button id="panel-toggle" class="button-none side-toggle state-expanded _tooltip" title="{{t "gui.actions.close"}}">
-            <span class="wb-invisible">@@gui.actions.close</span>
+            <span class="wb-invisible">{{t "gui.actions.close"}}</span>
         </button>
     </section>
     <section id="panel-div" class="height-100 tundra">
         <div class="wb-tabs">
             <div class="tabpanels width-100">
                 <details id="tabs1_1">
-					<summary class="background-light" data-panel-name="filterManager">{{t "filterManager.datasetsTabTitle"}}</summary>
+                    <summary class="" data-panel-name="filterManager">{{t "filterManager.datasetsTabTitle"}}</summary>
                     <!-- SEARCH MAP BEGIN -->
                     <div id="searchMapSection">
                         <!--<h2 id="searchMapHeader">
@@ -145,7 +157,7 @@
                     <!-- SEARCH MAP END -->
                 </details>
                 <details id="tabs1_2">
-					<summary class="background-light" data-panel-name="datagrid">{{t "datagrid.dataTabTitle"}}</summary>
+                    <summary class="" data-panel-name="datagrid">{{t "datagrid.dataTabTitle"}}</summary>
                     <div id="gridpane">
                         <ul class="loadingAnimation">
                             <li></li>
@@ -163,6 +175,6 @@
     <!--<dl id="gcwu-date-mod" role="contentinfo">
         <dt>Date modified:</dt><dd><span><time>2013-06-25</time></span></dd>
     </dl>-->
-    <div class="clear">
+    <div class="clearfix">
     </div>
 </section>

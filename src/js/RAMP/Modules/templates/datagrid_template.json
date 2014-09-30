@@ -19,7 +19,7 @@
     "default_grid_summary_row": "<div class='record-row'>
                                     <div class='record-details'>
                                         <div class='point-image-box'>											
-                                            <img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image background-white'>
+                                            <img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
                                         </div>
                                         <div class='record-names'>
                                             <span class='point-name' title='{%=o.fn.getFeatureName(o.data, o.lyr)%}'>{%=o.fn.getFeatureName(o.data, o.lyr)%}</span>
@@ -50,7 +50,7 @@
     
     // The following three templates are used to generate the top section (global) for layer toggle.	
     // datagrid global template, used by datagrid.js to generate top section before layer toggles. E.g. All-data
-    "datagrid_full_manager_Template":	"<div id='datagridGlobalToggles' class='global-toggles background-light'>
+    "datagrid_full_manager_Template":	"<div id='datagridGlobalToggles' class='global-toggles bg-very-light'>
                                             {% include('datagrid_full_global_row_Template', o.buttons);%}
                                         </div>
                                     

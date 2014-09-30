@@ -11,7 +11,7 @@
     "summary_sub_panel_container":
 
         "<div class='sub-panel-container summary-data-details'>
-            <div class='sub-panel background-white'>
+            <div class='sub-panel bg-white'>
                 
                 {% include('summary_sub_panel_content', o); %}
 
@@ -39,7 +39,7 @@
     "full_sub_panel_container":
 
         "<div class='sub-panel-container full-data-details'>
-            <div class='sub-panel background-white'>
+            <div class='sub-panel bg-white'>
                 
                 {% include('full_sub_panel_content', o); %}
 
@@ -55,7 +55,7 @@
 
     "full_sub_panel_content":
         
-        "<div class='background-white panel-name-div'>
+        "<div class='bg-white panel-name-div'>
             <h3 class='panel-name h5'>
                 {%=o.panelName%}</h3>
         </div>

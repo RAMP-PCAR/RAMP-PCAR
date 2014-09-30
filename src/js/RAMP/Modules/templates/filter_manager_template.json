@@ -26,7 +26,7 @@
                                     <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
                                     <div class='layer-details'>
                                         <div class='layer-image-box'>									
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image background-white'>
+                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
                                         </div>
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
@@ -65,7 +65,7 @@
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"{% if (o.settings.enabled) { %}
-                                            <div class='filter-row-settings background-medium'>
+                                            <div class='filter-row-settings bg-medium'>
                                             
                                                 <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
     
