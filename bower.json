@@ -32,7 +32,7 @@
         "Snap.svg": "~0.1.0",
         "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.5",
         "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#3.0.1-r",
-        "urlshortener": "https://github.com/hayageek/jQuery-URL-shortener.git#1.0.1",
+        "urlshortener": "https://github.com/RAMP-PCAR/jQuery-URL-shortener.git#1.0.1-r",
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",
         "jquery-hoverIntent": "~1.8.1",
