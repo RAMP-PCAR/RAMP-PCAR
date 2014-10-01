@@ -68,7 +68,10 @@ define([
 
         var jWindow = $(window),
 
-            panelTabs = $("ul#tabs"),
+            sidePanelWbTabs = $("#panel-div > .wb-tabs"),
+            sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
+            sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
+            //panelTabs = 
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
@@ -1405,7 +1408,7 @@ define([
                             dockSubPanel(na);
                         });
                     }
-                    console.log(EventManager.GUI.SUBPANEL_DOCK);
+                    console.log(EventManager.GUI.SUBPANEL_DOCK, attr);
                 });
 
                 topic.subscribe(EventManager.GUI.SUBPANEL_CAPTURE, function (attr) {
@@ -1423,22 +1426,29 @@ define([
                             captureSubPanel(na);
                         });
                     }
-                    console.log(EventManager.GUI.SUBPANEL_CAPTURE);
+                    console.log(EventManager.GUI.SUBPANEL_CAPTURE, attr);
                 });
+                
+                sidePanelTabList.find("li a").click(function () {
+                    var selectedPanelId = $(this).attr("href").substr(1);
 
-                panelTabs.find("li a").click(function () {
-                    topic.publish(EventManager.GUI.TAB_SELECTED, {
-                        id: this.id,
-                        tabName: this.attributes["data-panel-name"].value
-                    });
+                    sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
+                        function () {
+                            topic.publish(EventManager.GUI.TAB_SELECTED, {
+                                id: this.id,
+                                tabName: $(this).data("panel-name")
+                            });
+                        });
 
-                    panelTabs.find("li:not(.active) a").each(
+                    // the panel currently open is being deselected
+                    sidePanelTabPanels.find("details[aria-expanded=true]").each(
                         function () {
                             topic.publish(EventManager.GUI.TAB_DESELECTED, {
                                 id: this.id,
-                                tabName: this.attributes["data-panel-name"].value
+                                tabName: $(this).data("panel-name")
                             });
                         });
+
                 });
 
                 // List of objects containing an event name and an event argument. The events should
