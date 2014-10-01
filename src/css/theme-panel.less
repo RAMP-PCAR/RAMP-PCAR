@@ -194,6 +194,9 @@
     top: @header-height + @toolbar-height;
     bottom: @footer-height;
 
+    opacity: 1 !important;
+    visibility: visible !important;
+
     &.full-data-details {
         .sub-panel {
 
@@ -436,6 +439,9 @@
             height: 100%;
             position: static;
             border: none;
+
+            animation-duration: 0;
+            animation-name: none;
         }
 
         .panel-end {
@@ -1012,6 +1018,11 @@
         .animation-duration (500ms);
 
         #datagridGlobalToggles {
+
+            padding-bottom: 11px;
+            padding-top: 11px;
+
+
             .global-controls {
                 //margin-left: 37px;
                 .inline-control-group;
