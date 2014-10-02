@@ -3,11 +3,17 @@ fs = require("fs")
 module.exports = (grunt) ->
 
     @registerTask(
-        "init"
-        "Only needed when the repo is first cloned"
+        'default'
+        'Default task create a distribution package.'
         [
-            # no need to build wet, I hope
-            #'install-dependencies'
+            'dist'
+        ]
+    )
+
+    @registerTask(
+        'init'
+        'Only needed when the repo is first cloned'
+        [
             'hub'
             'modernizr'
             'thanks'
@@ -32,12 +38,12 @@ module.exports = (grunt) ->
         'copy:build'
         'INTERNAL: Copies files (except JS and CSS) needed for a build'
         [
-            'copy:config'
+            'copy:configBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
-            'copy:locales'
-            'copy:templates'
+            'copy:localesBuild'
+            'copy:templatesBuild'
             'notify:assets'
         ]
     )
@@ -87,14 +93,14 @@ module.exports = (grunt) ->
                 'less'
                 'autoprefixer'
                 'concat:cssLib'
-                'copy:cssLibRes'
+                'copy:cssLibResBuild'
                 'notify:css'
             ]
     )
 
     @registerTask(
-        "hint"
-        "INTERNAL: "
+        'hint'
+        'INTERNAL: Runs JSHint and JSStyle on JS code.'
         [
             'jshint'
             'notify:hint'
@@ -102,8 +108,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "jsstyle"
-        "INTERNAL: "
+        'jsstyle'
+        'INTERNAL: '
         [
             'jscs'
             'notify:jsstyle'
@@ -115,19 +121,39 @@ module.exports = (grunt) ->
         'Produces the production files'
         [
             'clean:dist'
-            'copy:wetboewDist'
-            'copy:assetsDist'
+            'copy:dist'
             'build'
+            'js:dist'
+            'templatemin'
+            'json-minify'
+            'cssmin'
             'htmlmin'
             'useMinAssets'
             'imagemin'
+            'notify:min'
+            'notify:dist'
+        ]
+    )
+
+    @registerTask(
+        'copy:dist'
+        'INTERNAL: Copies files (except JS and CSS) needed for a distribution package'
+        [
+            'copy:wetboewDist'
+            'copy:assetsDist'
+            'copy:configDist'
+            'copy:proxyDist'
+            'copy:localesDist'
+            'copy:cssLibResDist'
+            'copy:templatesDist'
         ]
     )
 
     @registerTask(
         'js:dist'
         [
-            'replace:jsCore'
+            'uglify'
+            'replace:jsCoreDist'
         ]
     )
 
@@ -151,6 +177,39 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
+        'templatemin'
+        'INTERNAL: Converts templates into proper JSON.'
+        () ->
+            templates = grunt.file.expand(
+                'dist/js/RAMP/**/*.json'
+            )
+
+            templates.forEach(
+                ( file ) ->
+
+                    contents = grunt.file.read file
+                    ## chaining functions fails; maybe it's related to the version of CoffeeScript Grunt uses
+                    # strip comments
+                    contents = contents.replace(/`(?:\\.|[^`])*`|'(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\/\*[^]*?\*\/|\/\/.*\n?/g,
+                            (s) -> 
+                                 if s.charAt(0) == '/' 
+                                     return ''
+                                  else 
+                                     return s                                
+                        )
+                    # strip hard breaks and tabs
+                    contents = contents.replace /[\n\r\t]/g, ''
+                    # strip some of the white space
+                    contents = contents.replace />\s*?</g, '><'
+
+                    # stripping all space causes errors
+                    #contents = contents.replace /(\s){2,}/g, '><'
+
+                    grunt.file.write file, contents
+            )
+    )
+
+    @registerTask(
         "useMinAssets"
         "Replace unmin WET references with the min paths for HTML files"
         () ->
@@ -161,12 +220,15 @@ module.exports = (grunt) ->
             htmlFiles.forEach(
                 ( file ) ->
 
-                    contents = grunt.file.read( file )
+                    contents = grunt.file.read file 
                     #contents = contents.replace( /\/unmin/g, "" )
-                    contents = contents.replace( /((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2' )
+                    contents = contents.replace 'js/lib/lib.js', 'js/lib/lib.min.js'
+                    contents = contents.replace 'css/lib/lib.css', 'css/lib/lib.min.css'
+                    contents = contents.replace 'css/theme.less.css', 'css/theme.less.min.css'
+                    contents = contents.replace /((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2'
 
-                    grunt.file.write( file, contents )
-            );
+                    grunt.file.write file, contents 
+            )
     )
 
     @registerTask(
@@ -243,6 +305,10 @@ module.exports = (grunt) ->
                     title: "Build is Deployed"
                     message: "Done, thanks!"
 
+            min:
+                options:
+                    message: "Minification is complete."        
+
             clean:
                 options:
                     message: "Mopping up is done!"
@@ -252,11 +318,17 @@ module.exports = (grunt) ->
                     message: "Tarball is created!"
 
         copy:
-            config:
+            configBuild:
                 expand: true
                 cwd: 'src'
                 src: 'config.*.json'
                 dest: 'build/'
+
+            configDist:
+                expand: true
+                cwd: 'src'
+                src: 'config.*.json'
+                dest: 'dist/'
 
             wetboewBuild:
                 expand: true
@@ -315,13 +387,19 @@ module.exports = (grunt) ->
                 src: "**/*.*"
                 dest: "dist/proxy"
                 
-            locales:
+            localesBuild:
                 expand: true
                 cwd: 'src/locales'
                 src: '**/*.json'
                 dest: 'build/locales'
 
-            templates:
+            localesDist:
+                expand: true
+                cwd: 'src/locales'
+                src: '**/*.json'
+                dest: 'dist/locales'
+
+            templatesBuild:
                 files: [
                     expand: true
                     cwd: 'src/js/RAMP/Modules/templates'
@@ -332,6 +410,19 @@ module.exports = (grunt) ->
                     cwd: 'src/js/RAMP/Tools/templates'
                     src: '**/*.json'
                     dest: 'build/js/RAMP/Tools/templates'
+                ]
+
+            templatesDist:
+                files: [
+                    expand: true
+                    cwd: 'src/js/RAMP/Modules/templates'
+                    src: '**/*.json'
+                    dest: 'dist/js/RAMP/Modules/templates'
+                ,
+                    expand: true
+                    cwd: 'src/js/RAMP/Tools/templates'
+                    src: '**/*.json'
+                    dest: 'dist/js/RAMP/Tools/templates'
                 ]
 
             jsCore:
@@ -346,8 +437,17 @@ module.exports = (grunt) ->
                 src: '**/*.js'
                 dest: 'build/js/plugins/'
 
-            cssLibRes:
-                files: '<%= pkg.ramp.copy.cssLibRes %>'
+            cssLibResBuild:
+                expand: true
+                cwd: 'lib/fontawesome/'
+                src: 'fonts/**/*.*'
+                dest: 'build/css/'
+
+            cssLibResDist:
+                expand: true
+                cwd: 'lib/fontawesome/'
+                src: 'fonts/**/*.*'
+                dest: 'dist/css/'
 
         assemble:
             options:
@@ -406,20 +506,18 @@ module.exports = (grunt) ->
         htmlmin:
             options:
                 collapseWhitespace: true
-                preserveLineBreaks: true
+                preserveLineBreaks: false
                 removeAttributeQuotes: false
             all:
                 cwd: 'build'
-                src: [
-                    "**/*.html"
-                ]
+                src: '**/*.html'
                 dest: 'dist'
                 expand: true
 
         imagemin:
             all:
                 cwd: "dist/assets"
-                src: ['**/*.{png,jpg,gif}']
+                src: '**/*.{png,jpg,gif}'
                 dest: "dist/assets"
                 expand: true
 
@@ -434,6 +532,59 @@ module.exports = (grunt) ->
             cssLib:
                 dest: 'build/css/lib/lib.css'
 
+        cssmin:
+            dist:
+                expand: true
+                cwd: 'build/css/'
+                src: [
+                    'theme.less.css' 
+                    'lib/lib.css'
+                ]
+                dest: 'dist/css/'
+                rename: (dest, src) ->
+                        dest + src.replace('.css', '.min.css');
+
+        uglify:
+            options:
+                compress:
+                    drop_console: true
+                report: 'min'
+                sourceMap: false
+                sourceMapIncludeSources: false
+                preserveComments: false
+
+            jsCore:
+                options:
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
+
+                expand: true
+                cwd: 'build/js/RAMP/'
+                src: '**/*.js'
+                dest: 'dist/js/RAMP/'
+
+            jsLib:
+                src: 'build/js/lib/lib.js'
+                dest: 'dist/js/lib/lib.min.js'
+
+            jsPlugins:
+                options:
+                        banner: '/*! <%= pkg.name %> Plugins <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
+
+                expand: true
+                cwd: 'build/js/plugins/'
+                src: '**/*.js'
+                dest: 'dist/js/plugins/'
+
+        "json-minify":
+            configDist:
+                files: 'dist/config.*.json'
+                
+            localeDist:
+                files: 'dist/locales/**/*.json'  
+
+            templatesDist:
+                files: 'dist/js/RAMP/**/*.json'
+
         less:
             cssCore:
                 expand: true
@@ -441,7 +592,7 @@ module.exports = (grunt) ->
                 src: '**/theme.less'
                 dest: 'build/css/'
                 rename: (dest, src) ->
-                        dest + src.replace('.less', '.less.css');                    
+                        dest + src.replace('.less', '.less.css');
 
         autoprefixer:
             options:
@@ -486,7 +637,6 @@ module.exports = (grunt) ->
                     dest: 'build/js/RAMP/RAMP-starter.js'
                 ]
 
-            ###
             jsCoreDist:
                 options:
                     patterns: [
@@ -496,10 +646,9 @@ module.exports = (grunt) ->
                     usePrefix: false
 
                 files: [
-                    src: 'build/js/RAMP/RAMP-starter.js'
-                    dest: 'build/js/RAMP/RAMP-starter.js'
+                    src: 'dist/js/RAMP/RAMP-starter.js'
+                    dest: 'dist/js/RAMP/RAMP-starter.js'
                 ]
-            ###
 
         modernizr:
             devFile: "lib/modernizr/modernizr-custom.js"
@@ -785,12 +934,6 @@ module.exports = (grunt) ->
                 'dist'
             ]
 
-        #"install-dependencies":
-        #    options:
-        #        cwd: "lib/wet-boew"
-        #        failOnError: false
-        #        isDevelopment: true
-
         hub:
             "wet-boew":
                 src: [
@@ -809,9 +952,11 @@ module.exports = (grunt) ->
     @loadNpmTasks "grunt-contrib-watch"
     @loadNpmTasks "grunt-contrib-clean"
     @loadNpmTasks "grunt-contrib-less"
+    @loadNpmTasks "grunt-contrib-uglify"
     @loadNpmTasks "grunt-autoprefixer"
     @loadNpmTasks "grunt-contrib-htmlmin"
     @loadNpmTasks "grunt-contrib-imagemin"
+    @loadNpmTasks "grunt-contrib-cssmin"
     @loadNpmTasks "grunt-notify"
     @loadNpmTasks "grunt-replace"
     @loadNpmTasks "grunt-modernizr"
@@ -819,6 +964,7 @@ module.exports = (grunt) ->
     @loadNpmTasks "grunt-contrib-jshint"
     @loadNpmTasks "grunt-install-dependencies"
     @loadNpmTasks "grunt-hub"
+    @loadNpmTasks "grunt-json-minify"
         
     @task.run "notify_hooks"
 
