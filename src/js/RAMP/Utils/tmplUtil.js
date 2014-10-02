@@ -31,16 +31,71 @@ define(["ramp/globalStorage"],
             * @return {String} imageUrl Url to the features symbology image
             */
             getGraphicIcon: function (graphic, layerConfig) {
-                var symbolConfig = layerConfig.symbology;
+                var i, symbolConfig = layerConfig.symbology, img = "";
 
-                //TODO expand logic.  Need to handle up to 3 keys in unique renderer.  Need to handle Ranged renderer
-                switch (symbolConfig.renderer.type) {
-                    case "unique":
-                        var key = graphic.attributes[symbolConfig.renderer.key1];
-                        return symbolConfig.icons[key].imageUrl;
-
+                switch (symbolConfig.type) {
                     case "simple":
-                        return symbolConfig.icons["default"].imageUrl;
+                        return symbolConfig.imageUrl;
+
+                    case "uniqueValue":
+                        //make a key value for the graphic in question, using comma-space delimiter if multiple fields
+                        var graphicKey = graphic.attributes[symbolConfig.renderer.field1];
+                        if (symbolConfig.field2 !== null) {
+                            graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
+                            if (symbolConfig.field3 !== null) {
+                                graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field3];
+                            }
+                        }
+
+                        //search the value maps for a matching entry.  if no match found, use the default image
+
+                        for (i = 0; i < symbolConfig.valueMaps.length; i++) {
+                            if (symbolConfig.valueMaps[i].value === graphicKey) {
+                                img = symbolConfig.valueMaps[i].imageUrl;
+                                break;
+                            }
+                        }
+
+                        if (img === "") {
+                            img = symbolConfig.defaultImageUrl;
+                        }
+
+                        return img;
+
+                    case "classBreaks":
+
+                        var gVal, lower, upper;
+                        gVal = graphic.attributes[symbolConfig.field];
+
+                        //find where the value exists in the range
+                        lower = symbolConfig.minValue;
+
+                        if (gVal < lower) {
+                            img = symbolConfig.defaultImageUrl;
+                        } else {
+                            // a trick to prime the first loop iteration
+                            // the first low value is inclusive.  every other low value is exlusive.
+                            // if we have entered this else bracket, we know we are not below the first lower limit.
+                            // so we reduce lower by 1 to make the first exclusive test inclusive
+                            upper = lower - 1;
+
+                            for (i = 0; i < symbolConfig.rangeMaps.length; i++) {
+                                lower = upper;
+                                upper = symbolConfig.rangeMaps[i].maxValue;
+                                if ((gVal > lower) && (gVal <= upper)) {
+                                    img = symbolConfig.rangeMaps[i].imageUrl;
+                                    break;
+                                }
+                            }
+
+                            if (img === "") {
+                                //no match in defined ranges.
+                                img = symbolConfig.defaultImageUrl;
+                            }
+                        }
+
+                        return img;
+
                     default:
                         return symbolConfig.icons["default"].imageUrl;
                 }
