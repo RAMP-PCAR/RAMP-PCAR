@@ -66,6 +66,7 @@ module.exports = (grunt) ->
                 'concat:jsLib'
                 'copy:jsCore'
                 'copy:jsPlugins'
+                'replace:jsCoreBuild'
                 'notify:js'               
             ]        
     )
@@ -472,7 +473,7 @@ module.exports = (grunt) ->
             options:
                 force: true
 
-            jsCore:
+            jsCoreBuild:
                 options:
                     patterns: [
                         match: /$/
@@ -484,6 +485,21 @@ module.exports = (grunt) ->
                     src: 'build/js/RAMP/RAMP-starter.js'
                     dest: 'build/js/RAMP/RAMP-starter.js'
                 ]
+
+            ###
+            jsCoreDist:
+                options:
+                    patterns: [
+                        match: /$/
+                        replacement: '\nconsole.log(\"<%= pkg.ramp.rampASCII %>\");'
+                    ]
+                    usePrefix: false
+
+                files: [
+                    src: 'build/js/RAMP/RAMP-starter.js'
+                    dest: 'build/js/RAMP/RAMP-starter.js'
+                ]
+            ###
 
         modernizr:
             devFile: "lib/modernizr/modernizr-custom.js"
