@@ -131,6 +131,7 @@ module.exports = (grunt) ->
             'useMinAssets'
             'imagemin'
             'notify:min'
+            'tarball'
             'notify:dist'
         ]
     )
@@ -229,6 +230,16 @@ module.exports = (grunt) ->
 
                     grunt.file.write file, contents 
             )
+    )
+
+    @registerTask(
+        'tarball'
+        'INTERNAL: Creates a tarball of the distribution package.'
+        [
+            'clean:tarball'
+            'compress'
+            'notify:tarball'
+        ]
     )
 
     @registerTask(
@@ -927,11 +938,17 @@ module.exports = (grunt) ->
         clean:
             optiosn:
                 force: true
+            
             build:[
                 'build'
             ]
+
             dist: [
                 'dist'
+            ]
+
+            tarball: [
+                'tarball'
             ]
 
         hub:
@@ -941,6 +958,29 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     "dist"
+                ]
+
+        compress:
+            tar:
+                options:
+                    mode: 'tar'
+                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.tar'
+                files: [
+                    expand: true
+                    src: '**/*'
+                    cwd: 'dist/'
+                ]
+
+            zip:
+                options:
+                    mode: 'zip'
+                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.zip',
+                    level: 9
+
+                files: [
+                    expand: true
+                    src: '**/*'
+                    cwd: 'dist/'
                 ]
 
     # These plugins provide necessary tasks.
@@ -965,6 +1005,7 @@ module.exports = (grunt) ->
     @loadNpmTasks "grunt-install-dependencies"
     @loadNpmTasks "grunt-hub"
     @loadNpmTasks "grunt-json-minify"
+    @loadNpmTasks "grunt-contrib-compress"
         
     @task.run "notify_hooks"
 

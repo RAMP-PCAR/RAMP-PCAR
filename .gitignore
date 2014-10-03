@@ -208,6 +208,8 @@ _dist/
 
 _css/
 
+tarball/
+
 ### VIM temp files
 
 *.swo
