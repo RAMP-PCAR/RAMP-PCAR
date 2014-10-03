@@ -984,28 +984,28 @@ module.exports = (grunt) ->
                 ]
 
     # These plugins provide necessary tasks.
-    @loadNpmTasks "assemble"
-    @loadNpmTasks "grunt-newer"
-    @loadNpmTasks "grunt-contrib-copy"
-    @loadNpmTasks "grunt-contrib-connect"
-    @loadNpmTasks "grunt-contrib-concat"
-    @loadNpmTasks "grunt-contrib-watch"
-    @loadNpmTasks "grunt-contrib-clean"
-    @loadNpmTasks "grunt-contrib-less"
-    @loadNpmTasks "grunt-contrib-uglify"
-    @loadNpmTasks "grunt-autoprefixer"
-    @loadNpmTasks "grunt-contrib-htmlmin"
-    @loadNpmTasks "grunt-contrib-imagemin"
-    @loadNpmTasks "grunt-contrib-cssmin"
-    @loadNpmTasks "grunt-notify"
-    @loadNpmTasks "grunt-replace"
-    @loadNpmTasks "grunt-modernizr"
-    @loadNpmTasks "grunt-jscs-checker"
-    @loadNpmTasks "grunt-contrib-jshint"
-    @loadNpmTasks "grunt-install-dependencies"
-    @loadNpmTasks "grunt-hub"
-    @loadNpmTasks "grunt-json-minify"
-    @loadNpmTasks "grunt-contrib-compress"
+    @loadNpmTasks 'assemble'
+    @loadNpmTasks 'grunt-autoprefixer'
+    @loadNpmTasks 'grunt-contrib-clean'
+    @loadNpmTasks 'grunt-contrib-compress'
+    @loadNpmTasks 'grunt-contrib-concat'
+    @loadNpmTasks 'grunt-contrib-connect'
+    @loadNpmTasks 'grunt-contrib-copy'
+    @loadNpmTasks 'grunt-contrib-cssmin'
+    @loadNpmTasks 'grunt-contrib-htmlmin'
+    @loadNpmTasks 'grunt-contrib-imagemin'
+    @loadNpmTasks 'grunt-contrib-jshint'
+    @loadNpmTasks 'grunt-contrib-less'
+    @loadNpmTasks 'grunt-contrib-uglify'
+    @loadNpmTasks 'grunt-contrib-watch'
+    @loadNpmTasks 'grunt-hub'
+    @loadNpmTasks 'grunt-install-dependencies'
+    @loadNpmTasks 'grunt-jscs-checker'
+    @loadNpmTasks 'grunt-json-minify'
+    @loadNpmTasks 'grunt-modernizr'
+    @loadNpmTasks 'grunt-newer'
+    @loadNpmTasks 'grunt-notify'
+    @loadNpmTasks 'grunt-replace'
         
     @task.run "notify_hooks"
 
