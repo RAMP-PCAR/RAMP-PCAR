@@ -907,7 +907,6 @@ module.exports = (grunt) ->
                 options:
                     spawn: false
                 files: [
-                    '!src/js/APIs/**/*.*' # temporary
                     '!src/js/lib/**/*.*' # temporary
                     'src/js/**/*.js'
                 ]
@@ -999,7 +998,6 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-uglify'
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-hub'
-    @loadNpmTasks 'grunt-install-dependencies'
     @loadNpmTasks 'grunt-jscs-checker'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-modernizr'
