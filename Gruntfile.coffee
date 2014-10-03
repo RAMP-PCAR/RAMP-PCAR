@@ -907,7 +907,6 @@ module.exports = (grunt) ->
                 options:
                     spawn: false
                 files: [
-                    '!src/js/lib/**/*.*' # temporary
                     'src/js/**/*.js'
                 ]
                 tasks: [
