@@ -17,6 +17,7 @@ module.exports = (grunt) ->
             'hub'
             'modernizr'
             'thanks'
+            'api:enhance'
         ]
     )
 
@@ -243,6 +244,57 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
+        'api'
+        'Creating API docs'
+        [
+            'clean:yuidoc'
+            'yuidoc'
+            'replace:api_dojo'
+            'replace:api_esri'
+            'clean:docco'
+            'docco'
+            'notify:api'
+        ]
+    )
+
+    @registerTask(
+        'api:enhance'
+        'INTERNAL: '
+        () ->
+            done = @async()
+            themeFileName = "./node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/layouts/main.handlebars"
+            optionsFileName = "./node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/partials/options.handlebars"
+            builderFileName = "./node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/lib/builder.js"
+            q = "this.NATIVES = Y.merge(options.exnatives, this.NATIVES);"
+            data = undefined
+
+            data = fs.readFileSync(optionsFileName,
+                encoding: "utf8"
+            )
+
+            if data
+                data = data.replace("<input type=\"checkbox\" id=\"api-show-inherited\" checked>", "<input type=\"checkbox\" id=\"api-show-inherited\">")
+                fs.writeFileSync optionsFileName, data
+            data = fs.readFileSync(themeFileName,
+                encoding: "utf8"
+            )
+
+            if data
+                data = data.replace("<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\"></h1>", "<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\">" + grunt.config("pkg.subname") + "</h1>")
+                fs.writeFileSync themeFileName, data
+            data = fs.readFileSync(builderFileName,
+                encoding: "utf8"
+            )
+
+            if data and data.indexOf(q) is -1
+                data = data.replace("Y.DocBuilder = function (options, data) {", "Y.DocBuilder = function (options, data) {\n" + q)
+                data = data.replace("return url + name;", "return url.indexOf(\"developer.mozilla.org\") !== -1 ? url + name : url;")
+                fs.writeFileSync builderFileName, data
+            
+            done()
+    )
+
+    @registerTask(
         'thanks'
         ->
             done = @async()
@@ -273,6 +325,8 @@ module.exports = (grunt) ->
 
         # Metadata.
         pkg: grunt.file.readJSON("package.json")
+
+        yuidocconfig: grunt.file.readJSON('yuidoc.json')
 
         notify:
             hint:
@@ -661,6 +715,40 @@ module.exports = (grunt) ->
                     dest: 'dist/js/RAMP/RAMP-starter.js'
                 ]
 
+            api_esri:
+                options:
+                    patterns: [json: '<%= yuidocconfig.options.exlinks.esri %>']
+                    prefix: 'href="'
+                    preservePrefix: true
+                    preserveOrder: false
+
+                files: [
+                    expand: true
+                    cwd: '<%= yuidocconfig.options.outdir %>'
+                    src: [
+                        '**/*.html'
+                        '!**/*-src.html'
+                    ]
+                    dest: '<%= yuidocconfig.options.outdir %>'
+                ]
+
+            api_dojo:
+                options:
+                    patterns: [json: '<%= yuidocconfig.options.exlinks.dojo %>']
+                    prefix: 'href="'
+                    preservePrefix: true
+                    preserveOrder: false
+
+                files: [
+                    expand: true
+                    cwd: '<%= yuidocconfig.options.outdir %>'
+                    src: [
+                        '**/*.html'
+                        '!**/*-src.html'
+                    ]
+                    dest: '<%= yuidocconfig.options.outdir %>'
+                ]
+
         modernizr:
             devFile: "lib/modernizr/modernizr-custom.js"
             outputFile: "lib/modernizr/modernizr-custom.js"
@@ -949,6 +1037,13 @@ module.exports = (grunt) ->
                 'tarball'
             ]
 
+            yuidoc: [
+                '<%= yuidocconfig.options.outdir %>'
+            ]
+
+            docco: [
+            ]
+
         hub:
             "wet-boew":
                 src: [
@@ -981,6 +1076,14 @@ module.exports = (grunt) ->
                     cwd: 'dist/'
                 ]
 
+        yuidoc:
+            compile: '<%= yuidocconfig %>'
+
+        docco:
+            src: '<%= pkg.ramp.docco.path %>/**/*.js'
+            options:
+                output: '<%= pkg.ramp.docco.outdir %>'
+
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
@@ -996,6 +1099,8 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-less'
     @loadNpmTasks 'grunt-contrib-uglify'
     @loadNpmTasks 'grunt-contrib-watch'
+    @loadNpmTasks 'grunt-contrib-yuidoc'
+    @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-hub'
     @loadNpmTasks 'grunt-jscs-checker'
     @loadNpmTasks 'grunt-json-minify'
