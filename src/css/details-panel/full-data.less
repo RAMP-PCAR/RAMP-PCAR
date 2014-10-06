@@ -1,0 +1,48 @@
+﻿.full-data-mode {
+
+    .sub-panel-container {
+        right: 0 !important;
+        top: 155px;
+
+        .sub-panel {
+            margin-left: 0 !important;
+
+            .sub-panel-content {
+                text-align: left;
+                top: 33px;
+            }
+        }
+    }
+}
+
+.sub-panel-container.full-data-details {
+    .sub-panel {
+
+        h3 {
+            height: 32px;
+            text-shadow: none;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .sub-panel-toggle {
+            border: 0;
+            background: @accent-color;
+            position: absolute;
+            left: auto;
+            right: 0;
+            height: 33px;
+            width: 33px;
+
+            &:focus,
+            &:hover {
+                background: @attention-color !important;
+            }
+
+            &.state-expanded:after {
+                left: 10px;
+                top: 11px;
+            }
+        }
+    }
+}

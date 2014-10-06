@@ -36,3 +36,52 @@
         color: @attention-color;
     }
 }
+
+/* Toggle for sub-panel and details panel. */
+
+.side-toggle () {
+    border-bottom: 16px solid rgba(0, 0, 0, 0) !important;
+    border-right: 16px solid @accent-color !important;
+    border-top: none;
+    cursor: pointer;
+    display: block;
+
+    padding: 0;
+    margin: 0;
+
+    position: absolute;
+    right: 3px;
+    top: 32px;
+
+    height: 56px;
+    width: 0;
+
+    overflow: visible;
+
+    &:after {
+        border-bottom: 2px solid #FFFFFF;
+        border-right: 2px solid #FFFFFF;
+        content: "";
+        display: block;
+        height: 9px;
+        left: 6px;
+        position: absolute;
+        top: 23px;
+        width: 9px;
+
+        .rotation(-225deg);
+        .transition(400ms, ease);
+    }
+
+    &:focus,
+    &:hover {
+        border-right: 16px solid @attention-color !important;
+    }
+
+    &.state-expanded:after {
+        left: 1px;
+
+        .rotation(-45deg);
+        .transition(400ms, ease);
+    }
+}

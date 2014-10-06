@@ -1,4 +1,6 @@
-﻿@import "resources/elements.less";
+﻿@import "assets/nst-slider.less";
+
+@import "resources/elements.less";
 @import "resources/css-shapes.less";
 
 @import "variables.less";
@@ -9,84 +11,15 @@
 @import "tooltips/base.less";
 @import "navigation/base.less";
 @import "help/base.less";
+@import "layout/base.less";
+@import "map/base.less";
 
-@import "theme-layout.less";
-@import "theme-map.less";
-@import "theme-panel.less";
-@import "theme-effects.less";
+@import "side-panel/base.less";
+@import "details-panel/base.less";
 
 
 
-.on-left {
-    margin-right: 5px;
-}
 
-.on-left-more {
-    margin-right: 10px;
-}
-
-.on-right {
-    margin-left: 5px;
-}
-
-.on-right-more {
-    margin-left: 10px;
-}
-
-.overflow-x-hidden {
-    overflow-x: hidden !important;
-}
-
-/* PANEL START */
-
-.side-toggle () {
-    border-bottom: 16px solid rgba(0, 0, 0, 0) !important;
-    border-right: 16px solid @accent-color !important;
-    border-top: none;
-    cursor: pointer;
-    display: block;
-
-    padding: 0;
-    margin: 0;
-
-    position: absolute;
-    right: 3px;
-    top: 32px;
-
-    height: 56px;
-    width: 0;
-
-    overflow: visible;
-
-    &:after {
-        border-bottom: 2px solid #FFFFFF;
-        border-right: 2px solid #FFFFFF;
-        content: "";
-        display: block;
-        height: 9px;
-        left: 6px;
-        position: absolute;
-        top: 23px;
-        width: 9px;
-
-        .rotation(-225deg);
-        .transition(400ms, ease);
-    }
-
-    &:focus,
-    &:hover {
-        border-right: 16px solid @attention-color !important;
-    }
-
-    &.state-expanded:after {
-        left: 1px;
-
-        .rotation(-45deg);
-        .transition(400ms, ease);
-    }
-}
-
-/* PANEL END */
 
 
 /* SIZZLE */
@@ -154,69 +87,4 @@
         border-color: #000 rgba(0,0,0,0) rgba(0,0,0,0);
         border-width:6px;
     }
-}
-
-
-
-/* EFFECTS */
-
-/* LOADING ANIMATION */
-
-.details-loading
-{
-    margin: 0px !important;
-    padding: 0px !important;
-}
-
-.details-loaded
-{
-    margin: 0px !important;
-    padding: 10px !important;
-}
-
-ul.loadingAnimation {
-    margin: 10px 0;
-    height: 4px;
-    left: 0;
-    right: 0;
-    position: absolute;
-    top: 10%;
-    list-style: none;
-    text-align: center;
-    display: block;
-
-    @dot-animation: 5s cubic-bezier(0.03, 0.615, 0.995, 0.415) 0s normal both infinite loading;
-
-    .dot-animation-delay (@delay) {
-        animation-delay: @delay;
-    }
-
-    li {
-        animation: @dot-animation;
-        //background-color: #1BA1E2;
-        background-color: @accent-color;
-        border-radius: 20% 20% 20% 20%;
-        display: inline-block;
-        height: 4px;
-        margin: 0 4px 11px 0;
-        width: 4px;
-
-        &:nth-child(6) { .dot-animation-delay (0s); }
-        &:nth-child(5) { .dot-animation-delay (0.2s); }
-        &:nth-child(4) { .dot-animation-delay (0.4s); }
-        &:nth-child(3) { .dot-animation-delay (0.6s); }
-        &:nth-child(2) { .dot-animation-delay (0.8s); }
-        &:nth-child(1) { .dot-animation-delay (1.0s); }
-    }
-}
-
-@keyframes loading {
-    0% {transform: translateX(-150px); opacity: 0}
-    25% {opacity: 1}
-    50% {transform: translateX(150px); opacity: 0}
-    100% {opacity: 0}
-}
-
-.esriControlsBR {
-    display: none;
 }
