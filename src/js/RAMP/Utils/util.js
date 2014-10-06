@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, XDomainRequest */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor */
 /* jshint bitwise:false  */
 
 /**
@@ -670,10 +670,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         xmld.resolve();
                     }
                 }
-
-                // IE9 specific cross domain request handling
-                function loadXMLFileIE9(filename) {
-                    var xdr = new XDomainRequest();
+                /*
+               function loadXMLFileIE9(filename) {
+                   var xdr = new XDomainRequest();
+                    xdr.contentType = "text/plain";
                     xdr.open("GET", filename);
                     xdr.onload = function () {
                         resolveDeferred(filename, xdr);
@@ -686,9 +686,11 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     };
                     window.setTimeout(function () {
                         xdr.send();
-                    }, 0);
-                }
+                    }, 0); 
 
+                   
+               }
+               */
                 // IE10+
                 function loadXMLFileIE(filename) {
                     var xhttp = new XMLHttpRequest();
@@ -707,12 +709,47 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     xhttp.send("");
                 }
 
+                
+
                 if ('withCredentials' in new XMLHttpRequest() && "ActiveXObject" in window) { // IE10 and above
                     loadXMLFileIE(xmlurl);
                     loadXMLFileIE(xslurl);
                 } else if (window.XDomainRequest) { // IE9 and below
+                   /*
                     loadXMLFileIE9(xmlurl);
                     loadXMLFileIE9(xslurl);
+                   */
+                   // dataType need to be set to "text" for xml doc requests.                   
+                   $.ajax({
+                        type: "GET",
+                        url: xmlurl,
+                        dataType:  "text",
+                        cache: false,
+                        success: function (data) {
+                            xml = data;
+                            xmld.resolve();
+                        },
+                        error: function () {
+                            error = true;
+                            xmld.resolve();
+                        }
+                    });
+
+                    $.ajax({
+                        type: "GET",
+                        url: xslurl,
+                        dataType: "text",
+                        cache: false,
+                        success: function (data) {
+                            xsl = data;
+                            xsld.resolve();
+                        },
+                        error: function () {
+                            error = true;
+                            xsld.resolve();
+                        }
+                    });
+                    
                 } else { // Good browsers (Chrome/FF)
 
                    $.ajax({
