@@ -18,7 +18,7 @@
         ".editorconfig",
         "node_modules",
         "test",
-        "lib"
+        "./lib"
     ],
     "dependencies": {
         "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
