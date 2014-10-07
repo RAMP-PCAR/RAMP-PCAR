@@ -50,8 +50,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "js:build"
-        "INTERNAL: Copies and concatenates all JS to the build folder"
+        'js:build'
+        'INTERNAL: Copies and concatenates all JS to the build folder'
         ->
             grunt.config(
                 'concat.jsLib.src'
@@ -79,8 +79,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "css:build"
-        "INTERNAL: "
+        'css:build'
+        'INTERNAL: '
         ->
             grunt.config(
                 'concat.cssLib.src'
@@ -160,8 +160,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "serve:build"
-        "INTERNAL: Create unminified docs"
+        'serve:build'
+        'INTERNAL: Create unminified docs'
         [
             'build'
             'connect:build'
@@ -170,8 +170,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "serve:dist"
-        "INTERNAL: Create unminified docs"
+        'serve:dist'
+        'INTERNAL: Create unminified docs'
         [
             'dist'
             'connect:dist'
@@ -212,8 +212,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        "useMinAssets"
-        "Replace unmin WET references with the min paths for HTML files"
+        'useMinAssets'
+        'Replace unmin WET references with the min paths for HTML files'
         () ->
             htmlFiles = grunt.file.expand(
                 'dist/**/*.html'
@@ -269,21 +269,21 @@ module.exports = (grunt) ->
             data = undefined
 
             data = fs.readFileSync(optionsFileName,
-                encoding: "utf8"
+                encoding: 'utf8'
             )
 
             if data
                 data = data.replace("<input type=\"checkbox\" id=\"api-show-inherited\" checked>", "<input type=\"checkbox\" id=\"api-show-inherited\">")
                 fs.writeFileSync optionsFileName, data
             data = fs.readFileSync(themeFileName,
-                encoding: "utf8"
+                encoding: 'utf8'
             )
 
             if data
                 data = data.replace("<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\"></h1>", "<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\">" + grunt.config("pkg.subname") + "</h1>")
                 fs.writeFileSync themeFileName, data
             data = fs.readFileSync(builderFileName,
-                encoding: "utf8"
+                encoding: 'utf8'
             )
 
             if data and data.indexOf(q) is -1
@@ -298,16 +298,16 @@ module.exports = (grunt) ->
         'thanks'
         ->
             done = @async()
-            fileName = "./node_modules/grunt/lib/grunt/fail.js"
+            fileName = './node_modules/grunt/lib/grunt/fail.js'
 
             fs.readFile fileName,
-                encoding: "utf8"
+                encoding: 'utf8'
             , (err, data) ->
                 if err
-                    console.log "Error loading file", fileName, err
+                    console.log 'Error loading file', fileName, err
                     done()
                 else
-                    data = data.replace("Done, without errors.", "Done, thanks!")
+                    data = data.replace 'Done, without errors.', 'Done, thanks!'
                     fs.writeFileSync fileName, data
                     done()
     )
@@ -324,7 +324,7 @@ module.exports = (grunt) ->
     @initConfig
 
         # Metadata.
-        pkg: grunt.file.readJSON("package.json")
+        pkg: grunt.file.readJSON('package.json')
 
         yuidocconfig: grunt.file.readJSON('yuidoc.json')
 
@@ -430,27 +430,27 @@ module.exports = (grunt) ->
 
             assetsBuild:
                 expand: true
-                cwd: "src/assets"
-                src: "**/*.*"
-                dest: "build/assets"
+                cwd: 'src/assets'
+                src: '**/*.*'
+                dest: 'build/assets'
 
             assetsDist:
                 expand: true
-                cwd: "src/assets"
-                src: "**/*.*"
-                dest: "dist/assets"
+                cwd: 'src/assets'
+                src: '**/*.*'
+                dest: 'dist/assets'
 
             proxyBuild:
                 expand: true
-                cwd: "src/proxy"
-                src: "**/*.*"
-                dest: "build/proxy"
+                cwd: 'src/proxy'
+                src: '**/*.*'
+                dest: 'build/proxy'
             
             proxyDist:
                 expand: true
-                cwd: "src/proxy"
-                src: "**/*.*"
-                dest: "dist/proxy"
+                cwd: 'src/proxy'
+                src: '**/*.*'
+                dest: 'dist/proxy'
                 
             localesBuild:
                 expand: true
@@ -543,30 +543,30 @@ module.exports = (grunt) ->
                     rampAssets: 'assets'
                     
                     environment:
-                        jqueryVersion: "2.1.1"
+                        jqueryVersion: '2.1.1'
                         #jqueryVersion: "<%= jqueryVersion.version %>"
                         #jqueryOldIEVersion: "<%= jqueryOldIEVersion.version %>"
                     flatten: true
-                    plugins: ["assemble-contrib-i18n"]
+                    plugins: ['assemble-contrib-i18n']
                     i18n:
                         languages: ['en', 'fr']
                         templates: [
                             'site/pages/ramp.hbs'
                         ]
-                dest: "build/"
-                src: "!*.*"
+                dest: 'build/'
+                src: '!*.*'
 
             ajax:
                 options:
                     flatten: true
-                    plugins: ["assemble-contrib-i18n"]
+                    plugins: ['assemble-contrib-i18n']
                     i18n:
                         languages: ['en', 'fr']
                         templates: [
                             'site/pages/ajax/*.hbs'
                         ]
-                dest: "build/ajax/"
-                src: "!*.*"
+                dest: 'build/ajax/'
+                src: '!*.*'
 
         htmlmin:
             options:
@@ -581,9 +581,9 @@ module.exports = (grunt) ->
 
         imagemin:
             all:
-                cwd: "dist/assets"
+                cwd: 'dist/assets'
                 src: '**/*.{png,jpg,gif}'
-                dest: "dist/assets"
+                dest: 'dist/assets'
                 expand: true
 
         concat:
@@ -640,7 +640,7 @@ module.exports = (grunt) ->
                 src: '**/*.js'
                 dest: 'dist/js/plugins/'
 
-        "json-minify":
+        'json-minify':
             configDist:
                 files: 'dist/config.*.json'
                 
@@ -663,14 +663,14 @@ module.exports = (grunt) ->
             options:
                 map: false
                 browsers: [
-                    "> 1%"
-                    "bb >= 7"
-                    "ff >= 17"
-                    "ie > 8"
-                    "ios 5"
-                    "last 5 versions"
-                    "Firefox ESR"
-                    "Opera 12.1"
+                    '> 1%'
+                    'bb >= 7'
+                    'ff >= 17'
+                    'ie > 8'
+                    'ios 5'
+                    'last 5 versions'
+                    'Firefox ESR'
+                    'Opera 12.1'
                 ]
 
             cssCore:
