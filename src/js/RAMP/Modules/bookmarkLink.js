@@ -462,9 +462,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.layerVisible = true;
+                    // make sure not null
+                    if (layerConfig !== null) {
+                        layerConfig.layerVisible = true;
 
-                    layerVisibility[layerId] = true;
+                        layerVisibility[layerId] = true;
+                    }
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
@@ -477,9 +480,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.layerVisible = false;
 
-                    layerVisibility[layerId] = false;
+                    if (layerConfig !== null) {
+                        layerConfig.layerVisible = false;
+
+                        layerVisibility[layerId] = false;
+                    }
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
@@ -492,9 +498,11 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.boundingBoxVisible = true;
-
-                    boundingBoxVisibility[layerId] = true;
+                    if (layerConfig !== null) {
+                        layerConfig.boundingBoxVisible = true;
+                        boundingBoxVisibility[layerId] = true;
+                    }
+                    
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
@@ -507,9 +515,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.boundingBoxVisible = false;
 
-                    boundingBoxVisibility[layerId] = false;
+                    if (layerConfig !== null) {
+                        layerConfig.boundingBoxVisible = false;
+                        boundingBoxVisibility[layerId] = false;
+                    }
+                    
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {
