@@ -1,7 +1,5 @@
 ﻿/*global define, TimelineLite, $ */
 
-//the "use strict" forces the ECMA Script 5 interpretation of the code
-
 /**
 * This submodule contains theme-specific classes with animation sequences such as Full Screen transition or tooltip setter helper method.
 *
