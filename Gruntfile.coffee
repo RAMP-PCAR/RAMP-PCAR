@@ -966,7 +966,6 @@ module.exports = (grunt) ->
                 options:
                     base: 'dist'
                     port: 3002
-                    livereload: true
                     keepalive: true
 
         watch:
