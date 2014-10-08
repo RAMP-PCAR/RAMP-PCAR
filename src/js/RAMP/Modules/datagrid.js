@@ -55,7 +55,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "themes/theme",
+        "ramp/eventManager", "ramp/theme",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],

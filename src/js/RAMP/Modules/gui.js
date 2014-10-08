@@ -38,7 +38,7 @@ define([
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
 
-        "themes/theme",
+        "ramp/theme",
 
 // Text
         "dojo/text!./templates/sub_panel_template.json",

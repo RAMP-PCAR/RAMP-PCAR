@@ -24,14 +24,6 @@ var //sPath = window.location.href,
     state = "src/", // replace with "build" upon release,
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
     htmlNode = $("html"),
-    themeName = (htmlNode
-                    .attr("class")
-                    .split(" ")
-                    .filter(function (one) {
-                        "use strict";
-                        return one.indexOf("ramp-") === 0;
-                    }
-                    )[0] || "ramp-base"),
     dojoConfig;
 
 /**
@@ -59,14 +51,6 @@ dojoConfig = {
         {
             name: "utils",
             location: pathname + jsFolderPath + "RAMP/Utils"
-        },
-        {
-            name: "defaultTheme",
-            location: pathname + jsFolderPath + "RAMP/Themes/ramp-base"
-        },
-        {
-            name: "themes",
-            location: pathname + jsFolderPath + "RAMP/Themes/" + themeName
         },
         {
             name: "tools",

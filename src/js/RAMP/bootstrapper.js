@@ -57,7 +57,7 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "themes/theme",
+    "ramp/theme",
 
 /* Utils */
     "utils/util",

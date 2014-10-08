@@ -60,8 +60,9 @@
     },
 
     "ramp": {
-        
+
         "concat": {
+
             "jsLib": [
                 "DataTables/media/js/jquery.dataTables.js",
                 "gsap/src/uncompressed/TweenLite.js",

@@ -61,7 +61,7 @@ define([
         "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
+        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
