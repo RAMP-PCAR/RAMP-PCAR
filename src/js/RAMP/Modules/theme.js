@@ -29,6 +29,20 @@ define(["utils/util"],
 
             transitionDuration = 0.5,
 
+            layout = {
+                headerHeight: 155,
+                headerHeightCollapsed: 64,
+
+                footerHeight: 30,
+                footerHeightCollapsed: 5,
+
+                subtitleHeight: 35,
+
+                toolbarHeight: 32
+            },
+
+            heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight - layout.footerHeightCollapsed,
+
             isFullScreen = false,
             fullScreenTimeLine = new TimelineLite(
                 {
@@ -36,11 +50,11 @@ define(["utils/util"],
                 });
 
         fullScreenTimeLine
-                .to(header, transitionDuration, { top: "-36px", position: "relative", ease: "easeOutCirc" }, 0)
+                .to(header, transitionDuration, { top: navigation.outerHeight() * -1, position: "relative", ease: "easeOutCirc" }, 0)
                 .set([navigation, megaMenuDiv], { display: "none !important" })
 
-                .to(wbCore, transitionDuration, { top: "64px", bottom: "5px", ease: "easeOutCirc" }, 0)
-                .to(wbFoot, transitionDuration, { height: "5px", ease: "easeOutCirc" }, 0)
+                .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
+                .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
 
                 .set(body, { className: "+=full-screen" });
 
@@ -61,10 +75,13 @@ define(["utils/util"],
                 //TweenLite.to(".sub-panel-container", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" });
                 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "96px", bottom: "5px", ease: "easeOutCirc" }, 0)
-                    .to(".sub-panel-container.full-data-details", transitionDuration, { top: "64px", bottom: "5px", ease: "easeOutCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration,
+                        { top: layout.headerHeightCollapsed + layout.toolbarHeight, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
+                    .to(".sub-panel-container.full-data-details", transitionDuration,
+                        { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
 
-                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration, { height: "+=116px", ease: "easeOutCirc" }, 0.01); // animate height of the datatable scrollBody since it's explicitly set
+                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration,
+                        { height: "+=" + heightGain, ease: "easeOutCirc" }, 0.01); // animate height of the datatable scrollBody since it's explicitly set  
 
             } else {
                 fullScreenTimeLine.reverse();
@@ -74,10 +91,13 @@ define(["utils/util"],
                     { top: "187px", bottom: "30px", ease: "easeInCirc" });*/
                 
                 extraTweeen
-                    .to(".sub-panel-container.summary-data-details", transitionDuration, { top: "187px", bottom: "30px", ease: "easeInCirc" }, 0)
-                    .to(".sub-panel-container.full-data-details", transitionDuration, { top: "155px", bottom: "30px", ease: "easeInCirc" }, 0)
+                    .to(".sub-panel-container.summary-data-details", transitionDuration,
+                        { top: layout.headerHeight + layout.toolbarHeight, bottom: layout.footerHeight, ease: "easeInCirc" }, 0)
+                    .to(".sub-panel-container.full-data-details", transitionDuration,
+                        { top: layout.headerHeight, bottom: layout.footerHeight, ease: "easeInCirc" }, 0)
 
-                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.01, { height: "-=116px", ease: "easeInCirc" }, 0); // animate height of the datatable 
+                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.01,
+                        { height: "-=" + heightGain, ease: "easeInCirc" }, 0); // animate height of the datatable scrollBody since it's explicitly set
             }
 
             extraTweeen.play();
