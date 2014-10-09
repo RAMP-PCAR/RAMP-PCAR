@@ -106,6 +106,7 @@
 
         "ex": {
             "datasetSelectorButtonLoad": "Load",
+            "datasetSelectorButtonLoading": "Loading...",
             "datasetSelectorButtonLoaded": "Loaded",
             "dataSummary": "Data Summary",
             "dataset": "Dataset"

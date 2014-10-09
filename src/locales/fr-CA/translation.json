@@ -106,6 +106,7 @@
 
         "ex": {
             "datasetSelectorButtonLoad": "Charger",
+            "datasetSelectorButtonLoading": "Chargement en cours ...",
             "datasetSelectorButtonLoaded": "Chargement terminé",
             "dataSummary": "Résumé des données",
             "dataset": "Ensemble de données"
