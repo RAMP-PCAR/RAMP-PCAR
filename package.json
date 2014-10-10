@@ -97,7 +97,7 @@
             ]
         },
 
-        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
 
         "docco": {
             "path": "src/js/RAMP",
