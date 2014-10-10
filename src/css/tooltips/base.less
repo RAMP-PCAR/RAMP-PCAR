@@ -1,6 +1,11 @@
 ﻿@import "map-tip.less";
 @import "map-tool-tip.less";
 
+/* border-box is breaking tooltips */
+.tooltipster-base {
+    box-sizing: content-box;
+}
+
 .tooltipster-light {
     border-radius: 0;
     border: 1px solid #cccccc;
