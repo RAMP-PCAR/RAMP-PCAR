@@ -803,6 +803,8 @@ define([
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, zoomlightrowShow);
 
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_HIDE, zoomlightrowHide);
+
+                    topic.subscribe(EventManager.Datagrid.DRAW_COMPLETE, updateDatasetSelectorToLoaded);
                 }
 
                 function updateDatasetSelectorState(state) {
@@ -811,7 +813,7 @@ define([
                     datasetSelectorSubmitButton
                         .attr("disabled", state)
                         .text(state ?
-                            i18n.t("datagrid.ex.datasetSelectorButtonLoaded")
+                            i18n.t("datagrid.ex.datasetSelectorButtonLoading")
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
                     layer = dojoArray.filter(GlobalStorage.config.featureLayers,
@@ -822,6 +824,11 @@ define([
                     if (extendedTabTitle && layer.length > 0) {
                         extendedTabTitle.text(": " + layer[0].displayName);
                     }
+                }
+
+                function updateDatasetSelectorToLoaded() {                    
+                    datasetSelectorSubmitButton                        
+                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));                    
                 }
 
                 function refreshTable() {
