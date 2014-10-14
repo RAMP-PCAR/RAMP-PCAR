@@ -3,28 +3,24 @@
     "subname": "Reusable Accessible Mapping Platform",
     "version": "2.0.0",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
-    "main": "index.js",
-    "url": "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RAMP-PCAR/RAMP-PCAR.git"
+    },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "grunt test",
         "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && cd ../.. && grunt init"
     },
     "keywords": [
         "ramp",
         "gis",
-        "viewer"
+        "viewer",
+        "web",
+        "javascript",
+        "map"
     ],
     "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
-    "contributors": [
-        {
-            "name": "TBD 1",
-            "email": "x.y@ec.gc.ca"
-        },
-        {
-            "name": "TBD 2",
-            "email": "a.b@ec.gc.ca"
-        }
-    ],
     "license": "none",
     "devDependencies": {
         "assemble": "~0.4.12",
