@@ -1,0 +1,54 @@
+﻿.details-loading
+{
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.details-loaded
+{
+    margin: 0 !important;
+    padding: 10px !important;
+}
+
+ul.loadingAnimation {
+    margin: 10px 0;
+    height: 4px;
+    left: 0;
+    right: 0;
+    position: absolute;
+    top: 10%;
+    list-style: none;
+    text-align: center;
+    display: block;
+
+    @dot-animation: 5s cubic-bezier(0.03, 0.615, 0.995, 0.415) 0s normal both infinite loading;
+
+    .dot-animation-delay (@delay) {
+        animation-delay: @delay;
+    }
+
+    li {
+        animation: @dot-animation;
+        //background-color: #1BA1E2;
+        background-color: @accent-color;
+        border-radius: 20% 20% 20% 20%;
+        display: inline-block;
+        height: 4px;
+        margin: 0 4px 11px 0;
+        width: 4px;
+
+        &:nth-child(6) { .dot-animation-delay (0s); }
+        &:nth-child(5) { .dot-animation-delay (0.2s); }
+        &:nth-child(4) { .dot-animation-delay (0.4s); }
+        &:nth-child(3) { .dot-animation-delay (0.6s); }
+        &:nth-child(2) { .dot-animation-delay (0.8s); }
+        &:nth-child(1) { .dot-animation-delay (1.0s); }
+    }
+}
+
+@keyframes loading {
+    0% {transform: translateX(-150px); opacity: 0}
+    25% {opacity: 1}
+    50% {transform: translateX(150px); opacity: 0}
+    100% {opacity: 0}
+}

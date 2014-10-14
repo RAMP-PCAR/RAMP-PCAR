@@ -2,6 +2,7 @@
     "page": {
 
         "title": "Reusable Accessible Mapping Platform (RAMP)",
+		"siteTitle": "Reusable Accessible Mapping Platform",
 
         "lang": {
             "main": "en",
@@ -47,8 +48,24 @@
             "link3Url": "http://ramp-racp.github.io/docs/index-en.html",
 
             "link1Title": "RAMP Project",
+			
+			"link1sub1Title": "About RAMP",
+			"link1sub2Title": "Benefits",
+			"link1sub3Title": "Source Code",
+			"link1sub4Title": "Terms and Conditions",
+			
             "link2Title": "Using RAMP",
-            "link3Title": "RAMP Documentation"
+			
+			"link2sub1Title": "Getting Started",
+			"link2sub2Title": "Download RAMP",
+			"link2sub3Title": "Working Examples",
+			
+            "link3Title": "RAMP Documentation",
+			
+			"link3sub1Title": "Table of Contents",
+			"link3sub2Title": "API Reference",
+			"link3sub3Title": "Roadmap",
+			"link3sub4Title": "About the Web Standards"
         },
 
         "footer": {
@@ -106,6 +123,7 @@
 
         "ex": {
             "datasetSelectorButtonLoad": "Load",
+            "datasetSelectorButtonLoading": "Loading...",
             "datasetSelectorButtonLoaded": "Loaded",
             "dataSummary": "Data Summary",
             "dataset": "Dataset"

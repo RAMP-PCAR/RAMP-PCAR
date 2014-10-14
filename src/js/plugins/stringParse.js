@@ -1,4 +1,4 @@
-﻿/* global RAMP */
+﻿/* global RAMP, console */
 
 console.log('loading stringParse');
 RAMP.plugins.featureInfoParser.stringParse = function (data) {

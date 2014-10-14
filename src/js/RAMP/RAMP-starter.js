@@ -1,4 +1,4 @@
-﻿/*global location */
+﻿/*global location, $, document */
 
 /**
 *
@@ -24,14 +24,6 @@ var //sPath = window.location.href,
     state = "src/", // replace with "build" upon release,
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
     htmlNode = $("html"),
-    themeName = (htmlNode
-                    .attr("class")
-                    .split(" ")
-                    .filter(function (one) {
-                        "use strict";
-                        return one.indexOf("ramp-") === 0;
-                    }
-                    )[0] || "ramp-base"),
     dojoConfig;
 
 /**
@@ -61,14 +53,6 @@ dojoConfig = {
             location: pathname + jsFolderPath + "RAMP/Utils"
         },
         {
-            name: "defaultTheme",
-            location: pathname + jsFolderPath + "RAMP/Themes/ramp-base"
-        },
-        {
-            name: "themes",
-            location: pathname + jsFolderPath + "RAMP/Themes/" + themeName
-        },
-        {
             name: "tools",
             location: pathname + jsFolderPath + "RAMP/Tools/"
         }
@@ -95,5 +79,3 @@ $(document).ready(function () {
     script.src = pathname + jsFolderPath + "RAMP/bootstrapper.js";
     head.appendChild(script);
 });
-
-console.log("\n                        ______         _                   _                 \n                        | ___ \\       | |                 | |                \n                        | |_/ /  ___  | |__    ___   __ _ | |_               \n         ,  ,           | ___ \\ / _ \\ | '_ \\  / __| / _` || __|              \n        (\\ \"\\           | |_/ /| (_) || |_) || (__ | (_| || |_               \n        ,--;.)._        \\____/  \\___/ |_.__/  \\___| \\__,_| \\__|              \n       ).,-._ . \"\"-,_   \n      /.'\".- \" 8 o . \";_                             \n      `L_ ,-)) o . 8.o .\"\"-.---...,,--------.._   _\"\";\n       \"\"\"  \")) 8 . . 8 . 8   8  8  8  8. 8 8 ._\"\"._;\n             \";. .8 .8  .8  8  8  8  8 . 8. 8 .\".\"\"\n                ;.. 8 ; .  8. 8  8  8 . } 8 . 8 :\n                 ;.. 8 ; 8. 8  8  8  8 (  . 8 . :\n                   ;. 8 \\ .   .......;;;  8 . 8 :\n                    ;o  ;\"\\\\\\\\```````( o(  8   .;\n                    : o:  ;           :. : . 8 (\n                    :o ; ;             \"; \";. o :\n                    ; o; ;               \"; ;\";..\\\n            ctr     ;.; .:                )./  ;. ;\n                   _).< .;              _;./  _;./\n                 ;\"__/--\"             ((__7  ((_J -._ v2 _.\n\n");

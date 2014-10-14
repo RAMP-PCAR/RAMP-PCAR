@@ -1,0 +1,126 @@
+﻿@import "full-screen.less";
+@import "advanced-mode.less";
+@import "no-sidepanel.less";
+@import "full-data.less";
+
+.sub-panel-container { // panel that slides out to display more data
+    position: fixed;
+    overflow-x: hidden;
+    overflow-y: auto;
+    right: @panel-width-large; // override set by theme-layout
+    top: @header-height + @toolbar-height;
+    bottom: @footer-height;
+    opacity: 1 !important;
+    visibility: visible !important;
+
+    .sub-panel {
+        position: relative;
+        float: left;
+        width: @panel-width-large; // override set by theme-layout
+        left: 100%;
+        height: 100%;
+        background: none repeat scroll 0 0 #FFFFFF;
+        border-right: 3px solid @accent-color;
+        border-left: 3px solid @accent-color;
+        margin: 0 0 0 25px !important;
+        color: #000000 !important;
+        //.default-transition(400ms, cubic-bezier(0.075, 0.82, 0.165, 1));
+        //.default-transition();
+        h3 {
+            background-image: none !important;
+            border-radius: 0;
+            margin: 0 !important;
+            font-weight: 700;
+            vertical-align: bottom;
+            border-radius: 0;
+            margin: 0 !important;
+            padding: 6px 10px !important;
+            text-shadow: 0 1px 1px #222;
+        }
+
+        .sub-panel-content {
+            bottom: 0;
+            overflow-x: hidden;
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            word-wrap: break-word;
+
+            img {
+                height: auto;
+                width: auto;
+            }
+        }
+
+        .sub-panel-toggle {
+            .side-toggle;
+            left: -19px;
+            top: 0;
+        }
+
+        .panel-name-div {
+            border-bottom: 1px solid @light-border-color;
+        }
+
+        .panel-name,
+        .panel-title,
+        .panel-content-div {
+            .animation-duration (300ms);
+        }
+        /*.guide {
+            border-bottom: 8px solid rgba(0, 0, 0, 0);
+            border-right: 8px solid #176CA7;
+            height: 189px;
+            margin: 0 20px 0 0;
+        }*/
+    }
+
+    .shadow {
+        .box-shadow (@left-shadow);
+        height: 100%;
+        position: relative;
+        width: 13px;
+        left: 100%;
+        border-collapse: separate;
+    }
+
+    .point-details-list {
+        li {
+            padding: 5px !important;
+
+            .pair-value,
+            .pair-key {
+                position: relative;
+                margin-right: 0;
+                padding: 0;
+            }
+
+            .pair-value p {
+                font-weight: bold;
+            }
+
+            .pair-value:before {
+                content: ":";
+                position: absolute;
+                left: -10px;
+                font-weight: bold;
+            }
+
+            p {
+                padding: 0 10px !important;
+                margin: 0 !important;
+            }
+        }
+    }
+
+    .metadata-view {
+        h5 {
+            padding: 3px 10px !important;
+        }
+    }
+
+    .morelink {
+        .link-button;
+    }
+}

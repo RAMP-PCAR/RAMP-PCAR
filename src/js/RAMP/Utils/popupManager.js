@@ -1,4 +1,4 @@
-﻿/*global define, window */
+﻿/*global define, window, $, document */
 
 /**
 * Utility module containint useful static classes.
@@ -562,7 +562,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             *
             *               closeHandler: closeFunction,
             *
-            *               activeClass: "background-light",
+            *               activeClass: "bg-very-light",
             *               useAria: false
             *           }
             *       );

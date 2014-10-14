@@ -1,4 +1,4 @@
-/* global define, i18n */
+/* global define, i18n, jQuery, console, $, document */
 
 /**
 * BookmarkLink submodule
@@ -115,6 +115,7 @@ define([
             getlinkSection,
 
             getlinkShortenButton,
+            getlinkShortenButtonLabel,
             getlinkEmailButton,
 
             getlinkloadinganimation,
@@ -209,6 +210,8 @@ define([
                     getlinkShortenButton =
                         $(".getlink-shorten-button")
                         .on("click", toggleShortLinkMode);
+
+                    getlinkShortenButtonLabel = getlinkShortenButton.find("span.on-right");
 
                     getlinkPopup = PopupManager.registerPopup(getlinkToggle, "click",
                         function (d) {
@@ -360,7 +363,7 @@ define([
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
             label = isShortLinkMode ? i18n.t("bookmarkLink.longLink") : i18n.t("bookmarkLink.shortLink");
-            getlinkShortenButton.text(label);
+            getlinkShortenButtonLabel.text(label);
             updateURL();
         }
 
@@ -462,9 +465,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.layerVisible = true;
+                    // make sure not null
+                    if (layerConfig !== null) {
+                        layerConfig.layerVisible = true;
 
-                    layerVisibility[layerId] = true;
+                        layerVisibility[layerId] = true;
+                    }
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
@@ -477,9 +483,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.layerVisible = false;
 
-                    layerVisibility[layerId] = false;
+                    if (layerConfig !== null) {
+                        layerConfig.layerVisible = false;
+
+                        layerVisibility[layerId] = false;
+                    }
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
@@ -492,9 +501,11 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.boundingBoxVisible = true;
-
-                    boundingBoxVisibility[layerId] = true;
+                    if (layerConfig !== null) {
+                        layerConfig.boundingBoxVisible = true;
+                        boundingBoxVisibility[layerId] = true;
+                    }
+                    
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
@@ -507,9 +518,12 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
-                    layerConfig.boundingBoxVisible = false;
 
-                    boundingBoxVisibility[layerId] = false;
+                    if (layerConfig !== null) {
+                        layerConfig.boundingBoxVisible = false;
+                        boundingBoxVisibility[layerId] = false;
+                    }
+                    
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {

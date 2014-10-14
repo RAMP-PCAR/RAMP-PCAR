@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console */
 /*jslint white: true */
 
 /**
@@ -55,7 +55,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "themes/theme",
+        "ramp/eventManager", "ramp/theme",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -649,7 +649,7 @@ define([
                                 d.resolve();
                             },
 
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -660,7 +660,7 @@ define([
                         },
                         {
                             handleSelector: ".full-table tr",
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -803,6 +803,8 @@ define([
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, zoomlightrowShow);
 
                     topic.subscribe(EventManager.Datagrid.ZOOMLIGHTROW_HIDE, zoomlightrowHide);
+
+                    topic.subscribe(EventManager.Datagrid.DRAW_COMPLETE, updateDatasetSelectorToLoaded);
                 }
 
                 function updateDatasetSelectorState(state) {
@@ -811,7 +813,7 @@ define([
                     datasetSelectorSubmitButton
                         .attr("disabled", state)
                         .text(state ?
-                            i18n.t("datagrid.ex.datasetSelectorButtonLoaded")
+                            i18n.t("datagrid.ex.datasetSelectorButtonLoading")
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
                     layer = dojoArray.filter(GlobalStorage.config.featureLayers,
@@ -822,6 +824,11 @@ define([
                     if (extendedTabTitle && layer.length > 0) {
                         extendedTabTitle.text(": " + layer[0].displayName);
                     }
+                }
+
+                function updateDatasetSelectorToLoaded() {                    
+                    datasetSelectorSubmitButton                        
+                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));                    
                 }
 
                 function refreshTable() {
@@ -912,7 +919,7 @@ define([
                             }
                         );
 
-                        extendedTabTitle = $("#tabs1_2-link").append("<span>").find("span");
+                        extendedTabTitle = $("#tabs1_2-lnk").append("<span>").find("span");
                     }
 
                     // generate the content using rowData and given template
@@ -994,7 +1001,7 @@ define([
                             consumeOrigin: origin,
                             origin: origin
                         });
-                    }
+                    }                    
                 }
 
                 function adjustPanelWidth() {
@@ -1239,7 +1246,7 @@ define([
         }
 
         function updateRecordsCount(visibleRecords) {
-            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, i18n.t("datagrid.gridstrings.oPaginate.sRecords")));
+            $(".pagination-record-number").text(String.format("{0} / {1}", visibleRecords, totalRecords));
         }
 
         /**
@@ -1354,14 +1361,14 @@ define([
                 if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
                 }
-            });            
+            });
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });            
+            });
         }
 
         return {

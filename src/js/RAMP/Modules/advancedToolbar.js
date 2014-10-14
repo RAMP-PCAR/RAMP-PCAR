@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require, tmpl */
+﻿/*global define, $, TimelineLite, TweenLite, require, tmpl, console */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.

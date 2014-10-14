@@ -1,0 +1,47 @@
+{
+    "name": "ramp-pcar",
+    "version": "2.0.0",
+    "homepage": "http://ramp-pcar.github.io",
+    "authors": [
+        "BeSD - SA Team"
+    ],
+    "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
+    "keywords": [
+        "ramp",
+        "gis",
+        "viewer"
+    ],
+    "license": "none",
+    "ignore": [
+        ".git*",
+        ".travis.yml",
+        ".editorconfig",
+        "node_modules",
+        "test",
+        "./lib"
+    ],
+    "dependencies": {
+        "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
+        "DataTables": "1.10.1",
+        "jquery": "~2.1.1",
+        "gsap": "~1.13.2",
+        "jquery-nstSlider": "~1.0.5",
+        "jqueryui": "~1.10.4",
+        "jquery.scrollTo": "~1.4.13",
+        "shorten": "https://github.com/viralpatel/jquery.shorten.git#master",
+        "Snap.svg": "~0.1.0",
+        "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.5",
+        "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#3.0.1-r",
+        "urlshortener": "https://github.com/RAMP-PCAR/jQuery-URL-shortener.git#1.0.1-r",
+        "animate.css": "~3.0.0",
+        "fontawesome": "~4.2.0",
+        "jquery-hoverIntent": "~1.8.1",
+        "i18next": "~1.7.4"
+    },
+    "moduleType": [
+        "globals"
+    ],
+    "resolutions": {
+        "DataTables": "1.10.1"
+    }
+}

@@ -1,0 +1,43 @@
+﻿@media screen and (min-device-width: 768px) and (min-width: 768px) {
+    .viewport {
+        #map-div {
+            right: @panel-width-medium;
+            left: 0;
+        }
+
+        #panel-div {
+            width: @panel-width-medium;
+            right: 0;
+
+            #jqgrid .record-row .record-details .record-names {
+                width: 250px;
+
+                .category-name {
+                    width: 150px;
+                }
+            }
+
+            #jqgrid_paginate .pagination-controls .pagination-record-number {
+                margin-left: 0;
+            }
+        }
+
+        &.side-panel-mode {
+            #map-div {
+                right: 0 !important;
+            }
+
+            #panel-div {
+                right: -@panel-width-medium;
+            }
+        }
+    }
+
+    .sub-panel-container {
+        right: @panel-width-medium !important;
+
+        .sub-panel {
+            width: @panel-width-medium !important;
+        }
+    }
+}

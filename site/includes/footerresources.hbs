@@ -1,0 +1,17 @@
+<!--[if gte IE 9 | !IE ]><!-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryVersion}}/jquery{{environment.suffix}}.js"></script>
+<script src="{{assets}}/js/wet-boew{{environment.suffix}}.js"></script>
+<!--<![endif]-->
+<!--[if lt IE 9]>
+<script src="{{assets}}/js/ie8-wet-boew2{{environment.suffix}}.js"></script>
+<![endif]-->
+{{#if page.js}}{{#each page.js}}<script src="{{this}}{{../environment.suffix}}.js"></script>{{/each}}{{/if}}
+
+
+<script type="text/javascript" src="js/lib/lib.js"></script>
+<!-- JS RAMP -->
+<script type="text/javascript" src="js/RAMP/RAMP-starter.js"></script>
+<!-- !JS RAMP -->
+
+<!-- ARCGIS API: make sure there is a script tag in the head node of the document to avoid "Cannot read property 'insertBefore' of null" errors caused by urlshortener jQuery plugin -->
+<script src="http://js.arcgis.com/3.8/" type="text/javascript"></script>

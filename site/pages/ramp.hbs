@@ -1,0 +1,180 @@
+---
+{
+    "altLangPrefix": "ramp",
+    "dateModified": "2014-09-22",
+    "sitesearch": "false",
+    "breadcrumb": "false"
+}
+---
+<section class="height-100 viewport small">
+    <!--<h2 id="ramp-title" class="wb-invisible">
+        {{t "page.header.titleLink"}}
+    </h2>-->
+    
+    <section id="map-div" class="height-100 margin-bottom-none">
+        <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium text-right">-->
+        <ul id="map-toolbar" class="text-right">
+            <li id="basemapControls" class="pull-left map-toolbar-item" style="display: inline;">
+                <button class="btn btn-xs map-toolbar-item-button button-none" id="baseMapToggle">
+                    <span>Topographic</span><span class="separator"></span>
+                </button>
+                <div id="basemapGallery">
+                </div>
+            </li>
+            <li class="map-toolbar-item">
+                <button class="btn btn-xs map-toolbar-item-button button-none" id="getlink-toggle">
+                    <i class="fa fa-link"></i><span class="on-right">{{t "bookmarkLink.title"}}</span>
+                </button>
+                <div id="getlink-section-container" class="map-toolbar-item-container">
+                    <div id="getlink-section" class="map-toolbar-item-section text-left box-shadow-section">
+                        <section>
+                            <h2 class="mrgn-tp-sm page-header h3">
+                                {{t "bookmarkLink.title"}}
+                            </h2>
+                            <button class="button-none button-close _tooltip" title="{{t "gui.actions.close"}}">
+                                <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+                            </button>
+                            <div class="get-link-content">
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm getlink-shorten-button" type="button">
+                                                    <i class="fa fa-link"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.shortLink"}}</span>
+                                                </button>                                                                                                
+                                            </span>
+                                            <label class="wb-inv" for="getlink-input">{{t "bookmarkLink.description"}}</label>
+                                            <input type="text" data-role="none" readonly="readonly" class="form-control input-sm" id="getlink-input" />
+                                            
+                                            <span class="input-group-btn">
+                                                <a href="mailto:" class="btn btn-info btn-sm getlink-email-button">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.email"}}</span>
+                                                </a>                                                                                              
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="get-link-loading-div">
+                                    <ul class="loadingAnimation" style="display: none;">
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </li>
+            <li class="map-toolbar-item">
+                <button class="btn btn-xs map-toolbar-item-button button-none" id="advanced-toggle">
+                    <i class="fa fa-cog"></i><span class="on-right">{{t "advancedToolbar.advancedTitle"}}</span>
+                </button>
+                <div id="advanced-toolbar">
+                    
+                </div>
+            </li>
+            <li class="map-toolbar-item">
+                <button class="btn btn-xs map-toolbar-item-button button-none" id="fullScreenToggle">
+                    <i class="fa fa-arrows-alt"></i><span class="on-right">{{t "gui.actions.fullScreen"}}</span>
+                </button>
+            </li>
+            <li class="map-toolbar-item">
+                <button class="btn btn-xs map-toolbar-item-button button-none" id="helpToggle">
+                    <i class="fa fa-question"></i><span class="on-right">{{t "help.title"}}</span>
+                </button>
+                <div id="help-section-container" class="map-toolbar-item-container">
+                    <div id="help-section-shadow" class="">
+                        <div id="help-section" class="text-left">
+
+                            <section>
+                                <h2 class="mrgn-tp-sm page-header h3">
+                                    {{t "help.sectionsTitle"}}
+                                </h2>
+                                <button class="button-none button-close _tooltip" title="{{t "gui.actions.close"}}">
+                                    <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+                                </button>
+                                <div id="help-content">
+                                    {{>help}}
+                                </div>
+                            </section>
+                        </div>                                            
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div id="mapContent" class="yui3-skin-wmat_blue _height-100">
+            <div id="mainMap" class="height-100 width-100 map">
+                <div id="mapControl">
+                    <div id="map-navigation">
+                    </div>
+                </div>
+                <div id="map-load-indicator" class="">
+                    <span>{{t "map.loadingTitle"}}</span><ul>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button id="panel-toggle" class="button-none side-toggle state-expanded _tooltip" title="{{t "gui.actions.close"}}">
+            <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+        </button>
+    </section>
+    <section id="panel-div" class="height-100 tundra">
+        <div class="wb-tabs">
+            <div class="tabpanels width-100">
+                <details id="tabs1_1" data-panel-name="filterManager">
+                    <summary class="">{{t "filterManager.datasetsTabTitle"}}</summary>
+                    <!-- SEARCH MAP BEGIN -->
+                    <div id="searchMapSection">
+                        <!--<h2 id="searchMapHeader">
+                        </h2>-->
+                        <div id="searchMapSectionBody">
+                            <!--LAYER SELECTION BEGINS-->
+                            <ul class="loadingAnimation">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            <!--LAYER SECTION END-->
+                        </div>
+                    </div>
+                    <!-- SEARCH MAP END -->
+                </details>
+                <details id="tabs1_2" data-panel-name="datagrid">
+                    <summary class="">{{t "datagrid.dataTabTitle"}}</summary>
+                    <div id="gridpane">
+                        <ul class="loadingAnimation">
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+    <!--<dl id="gcwu-date-mod" role="contentinfo">
+        <dt>Date modified:</dt><dd><span><time>2013-06-25</time></span></dd>
+    </dl>-->
+    <div class="clearfix">
+    </div>
+</section>
