@@ -1,0 +1,52 @@
+﻿@media screen and (min-device-width: 1024px) and (min-width: 1200px) {
+    .viewport {
+        #map-div {
+            right: @panel-width-large;
+            left: 0;
+        }
+
+        #panel-div {
+            width: @panel-width-large;
+            right: 0;
+            
+            #jqgrid .record-row .record-details .record-names {
+                width: 347px;
+
+                .category-name {
+                    width: 240px;
+                }
+            }
+        }
+
+        &.side-panel-mode {
+            #map-div {
+                right: 0 !important;
+            }
+
+            #panel-div {
+                right: -@panel-width-large;
+            }
+        }
+
+        /*&.full-data-mode {
+            #map-div {
+                //width: @panel-width-large;
+                //right: auto;
+            }
+
+            #panel-div {
+                //width: auto;
+                //left: 35px;
+                        //right: @panel-width-large !important;
+            }
+        }*/
+    }
+
+    .sub-panel-container {
+        right: @panel-width-large !important;
+
+        .sub-panel {
+            width: @panel-width-large !important;
+        }
+    }
+}

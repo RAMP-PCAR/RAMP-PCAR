@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery */
 /* jshint bitwise:false  */
 
 /**

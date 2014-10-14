@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, event */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, event */
 /*jslint white: true */
 
 /**
@@ -38,12 +38,10 @@ define([
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
 
-        "themes/theme",
+        "ramp/theme",
 
 // Text
-        "dojo/text!./templates/sub_panel_Template.html",
         "dojo/text!./templates/sub_panel_template.json",
-        "dojo/text!./templates/sub_panel_content_Template.html",
 
 // Util
         "utils/util", "utils/dictionary", "utils/popupManager", "utils/tmplHelper",
@@ -62,9 +60,7 @@ define([
         Theme,
 
     // Text
-        subPanelTemplate2,
         subPanelTemplate,
-        subPanelContentTemplate,
 
     // Util
         UtilMisc, utilDict, popupManager, tmplHelper) {
@@ -72,7 +68,10 @@ define([
 
         var jWindow = $(window),
 
-            panelTabs = $("ul#tabs"),
+            sidePanelWbTabs = $("#panel-div > .wb-tabs"),
+            sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
+            sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
+            //panelTabs = 
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
@@ -621,9 +620,12 @@ define([
 
                         updateContent = dojoLang.hitch(this,
                             function (a) {
-                                this._subPanelContentDiv.animate({
+                                /*this._subPanelContentDiv.animate({
                                     scrollTop: 0
-                                }, animateContentDuration, "easeOutCirc");
+                                }, animateContentDuration, "easeOutCirc");*/
+
+                                TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
+                                    {scrollTop: 0, ease: "easeOutCirc"});
 
                                 setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
                                 setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);
@@ -808,23 +810,27 @@ define([
                     .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
                     .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
                     .fromTo(mapToolbar, transitionDuration / 2,
-                        { width: "100%", height: "31px" },
+                        { width: "100%", height: "32px" },
                         { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
 
                     .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
                     .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
-                    .fromTo(panelDiv.find(".tabs li:first"), transitionDuration, { width: "50%" }, { width: "0%", ease: "easeOutCirc" }, 0)
-                    .fromTo(panelDiv.find(".tabs li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=font-large", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0);
 
                 // panelToggleTransition
                 panelToggleTimeLine
+                    .set(viewport, { className: "+=no-sidepanel-mode" })
                     .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
                     .set(panelDiv, { display: "none" }, transitionDuration)
                     .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
                 fullDataSubpanelChangeTimeLine
-                    .fromTo(panelDiv, transitionDuration, { right: "0px", left: "35px" }, { left: "35px", right: getPanelWidthDefault(), ease: "easeOutCirc" });
+                    .fromTo(panelDiv, transitionDuration,
+                        { right: "0px" },
+                        { right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
+                    
             }
 
             function killTimelines() {
@@ -906,15 +912,18 @@ define([
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
                 if (_isFullData) {
-                    TweenLite.fromTo(panelDiv, transitionDuration,
+                    TweenLite
+                        .fromTo(panelDiv, transitionDuration,
                         { width: getPanelWidthDefault(), right: 0, left: "auto" },
                         { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {
-                    TweenLite.fromTo(panelDiv, transitionDuration,
-                        { left: 35, width: "auto", right: panelDiv.css("right") },
-                        { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
+                    TweenLite
+                        //.set(panelDiv, {  }, 0)
+                        .fromTo(panelDiv, transitionDuration,
+                            { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
+                            { right: 0,  width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }
@@ -1142,7 +1151,7 @@ define([
                         // need to stop event propogation, or else all browser will have undefined exception thrown.
                         event.stopPropagation();
                         hideSubPanel(attr);
-                        
+
                         // reset focus back to link where the subpanel was created from
                         if (attr.target.selector !== "#map-div") {
                             $(attr.target).find(":tabbable").first().focus();
@@ -1402,7 +1411,7 @@ define([
                             dockSubPanel(na);
                         });
                     }
-                    console.log(EventManager.GUI.SUBPANEL_DOCK);
+                    console.log(EventManager.GUI.SUBPANEL_DOCK, attr);
                 });
 
                 topic.subscribe(EventManager.GUI.SUBPANEL_CAPTURE, function (attr) {
@@ -1420,22 +1429,29 @@ define([
                             captureSubPanel(na);
                         });
                     }
-                    console.log(EventManager.GUI.SUBPANEL_CAPTURE);
+                    console.log(EventManager.GUI.SUBPANEL_CAPTURE, attr);
                 });
 
-                panelTabs.find("li a").click(function () {
+                sidePanelTabList.find("li a").click(function () {
+                    var selectedPanelId = $(this).attr("href").substr(1);
+
+                    sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
+                        function () {
                     topic.publish(EventManager.GUI.TAB_SELECTED, {
                         id: this.id,
-                        tabName: this.attributes["data-panel-name"].value
+                                tabName: $(this).data("panel-name")
+                            });
                     });
 
-                    panelTabs.find("li:not(.active) a").each(
+                    // the panel currently open is being deselected
+                    sidePanelTabPanels.find("details[aria-expanded=true]").each(
                         function () {
                             topic.publish(EventManager.GUI.TAB_DESELECTED, {
                                 id: this.id,
-                                tabName: this.attributes["data-panel-name"].value
+                                tabName: $(this).data("panel-name")
                             });
                         });
+
                 });
 
                 // List of objects containing an event name and an event argument. The events should

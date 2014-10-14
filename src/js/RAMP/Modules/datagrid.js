@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console */
 /*jslint white: true */
 
 /**
@@ -55,7 +55,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "themes/theme",
+        "ramp/eventManager", "ramp/theme",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -649,7 +649,7 @@ define([
                                 d.resolve();
                             },
 
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -660,7 +660,7 @@ define([
                         },
                         {
                             handleSelector: ".full-table tr",
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -919,7 +919,7 @@ define([
                             }
                         );
 
-                        extendedTabTitle = $("#tabs1_2-link").append("<span>").find("span");
+                        extendedTabTitle = $("#tabs1_2-lnk").append("<span>").find("span");
                     }
 
                     // generate the content using rowData and given template
@@ -1001,7 +1001,7 @@ define([
                             consumeOrigin: origin,
                             origin: origin
                         });
-                    }
+                    }                    
                 }
 
                 function adjustPanelWidth() {
@@ -1246,7 +1246,7 @@ define([
         }
 
         function updateRecordsCount(visibleRecords) {
-            $(".pagination-record-number").text(String.format("{0}/{1} {2}", visibleRecords, totalRecords, i18n.t("datagrid.gridstrings.oPaginate.sRecords")));
+            $(".pagination-record-number").text(String.format("{0} / {1}", visibleRecords, totalRecords));
         }
 
         /**
@@ -1361,14 +1361,14 @@ define([
                 if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     applyExtentFilter();
                 }
-            });            
+            });
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
-            });            
+            });
         }
 
         return {

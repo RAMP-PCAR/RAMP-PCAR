@@ -1,154 +1,103 @@
 {
-    "name": "ramp-gis-viewer",
+    "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
     "version": "2.0.0",
     "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
-    "main": "index.js",
-    "url" : "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RAMP-PCAR/RAMP-PCAR.git"
+    },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "grunt test",
+        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && cd ../.. && grunt init"
     },
     "keywords": [
         "ramp",
         "gis",
-        "viewer"
+        "viewer",
+        "web",
+        "javascript",
+        "map"
     ],
     "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
-    "contributors": [{
-        "name": "TBD 1",
-        "email": "x.y@ec.gc.ca"
-    }, {
-        "name": "TBD 2",
-        "email": "a.b@ec.gc.ca"
-    }],
     "license": "none",
     "devDependencies": {
+        "assemble": "~0.4.12",
+        "assemble-contrib-i18n": "~0.1.2",
         "grunt": "~0.4.2",
-        "grunt-contrib-jshint": "~0.10.0",
-        "grunt-contrib-concat": "~0.3.0",
-        "grunt-contrib-uglify": "~0.4.0",
-        "grunt-contrib-cssmin": "~0.7.0",
-        "grunt-contrib-watch": "~0.5.3",
-        "grunt-contrib-copy": "~0.5.0",
-        "grunt-contrib-clean": "~0.5.0",
-        "grunt-contrib-less": "~0.11.0",
-        "grunt-replace": "~0.6.2",
         "grunt-autoprefixer": "~0.7.2",
-        "csvtojson": "~0.1.7",
-        "request": "~2.34.0",
-        "grunt-docco": "~0.3.3",
-        "grunt-contrib-yuidoc": "~0.5.2",
-        "grunt-notify": "~0.2.20",
-        "jshint-stylish-plain": "https://github.com/AleksueiR/jshint-stylish-plain/archive/v0.0.2.tar.gz",
-        "grunt-complexity": "~0.1.6",
         "grunt-bump": "~0.0.13",
-        "grunt-contrib-htmlmin": "~0.3.0",
-        "grunt-jscs-checker": "~0.4.3",
-        "grunt-html-build": "~0.3.2",
-        "grunt-chmod": "~1.0.3",
+        "grunt-contrib-clean": "~0.5.0",
         "grunt-contrib-compress": "~0.9.1",
-        "grunt-json-minify": "~0.4.0"
-    },
-
-    "hintColors" : {
-        "meta": "gray",
-        "reason": "cyan",
-        "verbose": "white",
-        "error": "red",
-        "noproblem": "green"
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-connect": "~0.8.0",
+        "grunt-contrib-copy": "~0.5.0",
+        "grunt-contrib-cssmin": "~0.7.0",
+        "grunt-contrib-htmlmin": "~0.3.0",
+        "grunt-contrib-imagemin": "~0.5.0",
+        "grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-less": "~0.11.0",
+        "grunt-contrib-uglify": "~0.4.0",
+        "grunt-contrib-watch": "~0.5.3",
+        "grunt-contrib-yuidoc": "~0.5.2",
+        "grunt-docco": "~0.3.3",
+        "grunt-hub": "~0.7.0",
+        "grunt-jscs-checker": "~0.4.3",
+        "grunt-json-minify": "~0.4.0",
+        "grunt-modernizr": "~0.4.0",
+        "grunt-newer": "~0.7.0",
+        "grunt-notify": "~0.2.20",
+        "grunt-replace": "~0.6.2",
+        "fs-utils": "~0.5.0",
+        "i18next": "~1.7.4",
+        "request": "~2.34.0",
+        "time-grunt": "~1.0.0"
     },
 
     "ramp": {
-        "srcFolder": "src",
-        "buildFolder": "build",
 
-        "jsFolder": "javascript",
+        "concat": {
 
-        "jsLibToUglify": [
-            "datatables.1.10/jquery.dataTables.pagination.ramp.js",
-            "shorten.1.0.0/jquery.shorten.js",
-            "jquery.ui.1.10.4/jquery.ui.navigation.js",
-            "tooltipster.3.0.1/js/jquery.tooltipster.js",
-            "urlshortener.1.0.1/jquery.urlshortener.js",
-            "tmplEx.2.4.1/tmplEx.js"
-        ],
+            "jsLib": [
+                "DataTables/media/js/jquery.dataTables.js",
+                "gsap/src/uncompressed/TweenLite.js",
+                "gsap/src/uncompressed/TimelineLite.js",
+                "gsap/src/uncompressed/plugins/CSSPlugin.js",
+                "gsap/src/uncompressed/easing/EasePack.js",
+                "i18next/i18next.js",
+                "jquery-nstSlider/dist/jquery.nstSlider.js",
+                "jqueryui/ui/jquery.ui.core.js",
+                "jqueryui/ui/jquery.ui.widget.js",
+                "jqueryui/ui/jquery.ui.mouse.js",
+                "jqueryui/ui/jquery.ui.position.js",
+                "jqueryui/ui/jquery.ui.draggable.js",
+                "jqueryui/ui/jquery.ui.droppable.js",
+                "jqueryui/ui/jquery.ui.sortable.js",
+                "jqueryui/ui/jquery.ui.slider.js",
+                "jqueryui/ui/jquery.ui.effect.j",
+                "jquery-hoverIntent/jquery.hoverIntent.js",
+                "modernizr/modernizr-custom.js",
+                "jquery.scrollTo/jquery.scrollTo.js",
+                "shorten/src/jquery.shorten.js",
+                "Snap.svg/dist/snap.svg.js",
+                "tooltipster/js/jquery.tooltipster.js",
+                "urlshortener/jquery.urlshortener.js",
+                "blueimp-tmpl/js/tmpl.js"
+            ],
 
-        "jsLibToConcat": [
-            "datatables.1.10/jquery.dataTables.min.js",
-            "datatables.1.10/jquery.dataTables.pagination.ramp.min.js",
-            "gsap.1.11.8/src/minified/TweenLite.min.js",
-            "gsap.1.11.8/src/minified/TimelineLite.min.js",
-            "gsap.1.11.8/src/minified/plugins/CSSPlugin.min.js",
-            "gsap.1.11.8/src/minified/easing/EasePack.min.js",
-            "i18next.1.7.4/i18next-1.7.4.min.js",
-            "jquery-nstslider.1.0.5/jquery.nstSlider.min.js",
-            "jquery.ui.1.10.4/jquery.ui.navigation.min.js",
-            "jquery.ui.1.10.4/jquery-ui-1.10.4.custom.min.js",
-            "modernizr.2.7.1/modernizr.custom.38737.min.js",
-            "scrollTo.1.4.3.1/jquery.scrollTo.min.js",
-            "shorten.1.0.0/jquery.shorten.min.js",
-            "Snap.0.1.0/dist/snap.svg-min.js",
-            "tooltipster.3.0.1/js/jquery.tooltipster.min.js",
-            "urlshortener.1.0.1/jquery.urlshortener.min.js",
-            "tmplEx.2.4.1/tmplEx.min.js"
-        ],
+            "cssLib": [
+                "animate.css/animate.css",
+                "tooltipster/css/tooltipster.css",
+                "fontawesome/css/font-awesome.css"
+            ]
+        },
 
-        "jsLibResourcesToCopy": [
-        ],
-
-        "jsExtraToCopy": [
-            "APIs/**/*.*"
-        ],
-
-        "cssFolder": "css",
-
-        "cssLibToMinify": [
-            "tooltipster.3.0.1/css/tooltipster.css",
-            "font-awesome-4.1.0/font-awesome-ramp.css"
-        ],
-
-        "cssLibToConcat": [
-            "animate.3.0.0/animate.min.css",
-            "tooltipster.3.0.1/css/tooltipster.min.css",
-            "font-awesome-4.1.0/font-awesome-ramp.min.css"
-        ],
-
-        "cssLibResourcesToCopy": [
-            "font-awesome-4.1.0/fonts/**/*.*"
-        ],
-
-        "themes": [
-            "ramp-gcwu-fegc",
-            "ramp-gcwu-intranet"
-        ],
-
-        "pageFolder": "pages",
-
-        "pageSource": [
-            "gcwu-intranet-src.html",
-            "gcwu-fegc-src.html"
-        ],
-
-        "pageToBuildEn": "map",
-
-        "pageToBuildFr": "carte",
-
-        "assetsToCopy": [
-            "config.en.json",
-            "config.fr.json",
-            "proxy/**/*.*",
-            "assets/**/*.*",
-            "!assets/*.csv",
-            "!assets/*.xlsx",
-            "includes/**/*.*",
-            "locales/**/*.*"
-        ],
-
-        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
 
         "docco": {
-            "path": "./src/js/RAMP",
-            "outdir": "./docs/docco"
+            "path": "src/js/RAMP",
+            "outdir": "docs/docco"
         },
 
         "rampASCII": "\\n                        ______         _                   _                 \\n                        | ___ \\\\       | |                 | |                \\n                        | |_/ /  ___  | |__    ___   __ _ | |_               \\n         ,  ,           | ___ \\\\ / _ \\\\ | '_ \\\\  / __| / _` || __|              \\n        (\\\\ \\\"\\\\           | |_/ /| (_) || |_) || (__ | (_| || |_               \\n        ,--;.)._        \\\\____/  \\\\___/ |_.__/  \\\\___| \\\\__,_| \\\\__|              \\n       ).,-._ . \\\"\\\"-,_   \\n      /.'\\\".- \\\" 8 o . \\\";_                             \\n      `L_ ,-)) o . 8.o .\\\"\\\"-.---...,,--------.._   _\\\"\\\";\\n       \\\"\\\"\\\"  \\\")) 8 . . 8 . 8   8  8  8  8. 8 8 ._\\\"\\\"._;\\n             \\\";. .8 .8  .8  8  8  8  8 . 8. 8 .\\\".\\\"\\\"\\n                ;.. 8 ; .  8. 8  8  8 . } 8 . 8 :\\n                 ;.. 8 ; 8. 8  8  8  8 (  . 8 . :\\n                   ;. 8 \\\\ .   .......;;;  8 . 8 :\\n                    ;o  ;\\\"\\\\\\\\\\\\\\\\```````( o(  8   .;\\n                    : o:  ;           :. : . 8 (\\n                    :o ; ;             \\\"; \\\";. o :\\n                    ; o; ;               \\\"; ;\\\";..\\\\\\n            ctr     ;.; .:                )./  ;. ;\\n                   _).< .;              _;./  _;./\\n                 ;\\\"__/--\\\"             ((__7  ((_J -._ v2 _.\\n\\n"

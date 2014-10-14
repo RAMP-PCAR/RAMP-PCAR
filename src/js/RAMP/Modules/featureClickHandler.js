@@ -1,4 +1,4 @@
-﻿/* global define, i18n */
+﻿/* global define, i18n, $ */
 
 /**
 *

@@ -1,4 +1,4 @@
-﻿/*global define, dojoConfig */
+﻿/*global define, dojoConfig, $*/
 
 /**
 * Navigation submodule

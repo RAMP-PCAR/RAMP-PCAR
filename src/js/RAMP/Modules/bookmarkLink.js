@@ -1,4 +1,4 @@
-/* global define, i18n */
+/* global define, i18n, jQuery, console, $, document */
 
 /**
 * BookmarkLink submodule
@@ -115,6 +115,7 @@ define([
             getlinkSection,
 
             getlinkShortenButton,
+            getlinkShortenButtonLabel,
             getlinkEmailButton,
 
             getlinkloadinganimation,
@@ -209,6 +210,8 @@ define([
                     getlinkShortenButton =
                         $(".getlink-shorten-button")
                         .on("click", toggleShortLinkMode);
+
+                    getlinkShortenButtonLabel = getlinkShortenButton.find("span.on-right");
 
                     getlinkPopup = PopupManager.registerPopup(getlinkToggle, "click",
                         function (d) {
@@ -360,7 +363,7 @@ define([
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
             label = isShortLinkMode ? i18n.t("bookmarkLink.longLink") : i18n.t("bookmarkLink.shortLink");
-            getlinkShortenButton.text(label);
+            getlinkShortenButtonLabel.text(label);
             updateURL();
         }
 

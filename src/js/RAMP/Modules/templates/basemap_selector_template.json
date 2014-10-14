@@ -5,7 +5,7 @@
                                 <span class='font-xsmall extra'>{%= o.data.description %}</span>
                             </div>
                             <img class='esriBasemapGalleryThumbnail' src='{%= o.data.thumbnail %}' alt='{%= o.data.altText %}'>
-                            <div class='clear'></div>
+                            <div class='clearfix'></div>
                         </a>"
 }
 
