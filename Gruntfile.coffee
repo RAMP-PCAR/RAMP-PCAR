@@ -161,7 +161,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'serve:build'
-        'INTERNAL: Create unminified docs'
+        'Creates an unminified development package, starts a node server the specified port, watches for modified JS, CSS and other files, and reloads HTML page on change.'
         [
             'build'
             'connect:build'
@@ -171,7 +171,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'serve:dist'
-        'INTERNAL: Create unminified docs'
+        'Creates a minified distribution package and starts a node server on the specified port.'
         [
             'dist'
             'connect:dist'
