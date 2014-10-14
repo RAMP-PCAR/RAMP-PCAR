@@ -12,6 +12,7 @@
 [Rr]elease/
 x64/
 build/
+_build/
 [Bb]in/
 [Oo]bj/
 
@@ -183,6 +184,7 @@ build/Release
 # Commenting this out is preferred by some people, see
 # https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
+/lib/
 
 # Users Environment Variables
 .lock-wscript
@@ -202,6 +204,11 @@ theme.less.pref.css
 jscs.txt
 
 dist
+_dist/
+
+_css/
+
+tarball/
 
 ### VIM temp files
 

@@ -1,0 +1,123 @@
+﻿.full-data-mode {
+    #panel-div {
+        .wb-tabs > ul li {
+            line-height: 20px;
+        }
+
+        .tabpanels {
+            border-top: 1px solid @light-border-color;
+        }
+
+        #gridpane {
+
+            #datagridGlobalToggles {
+                padding: 8px 0 7px 10px;
+            }
+
+            table {
+                table-layout: fixed;
+            }
+
+            .global-toggles {
+                //position: relative;
+                right: 0 !important;
+
+                #datasetSelectorSubmitButton {
+                    vertical-align: baseline;
+                }
+            }
+
+            .jqgrid_table_wrapper {
+                bottom: 36px;
+                padding-top: 0;
+            }
+
+            #jqgrid_wrapper {
+                top: 49px;
+                .animation-duration (300ms);
+
+                .dataTables_scrollHead {
+                    //display: block;
+                    //overflow: visible !important;
+                    .dataTables_scrollHeadInner table {
+                        //width: 100% !important;
+                        //width: inherit !important;
+                        thead th {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+                }
+
+                .dataTables_scrollBody {
+                    //overflow: visible !important;
+                    //position: absolute;
+                    //top: 92px;
+                    //bottom: 0px;
+                    border-bottom: 0;
+                }
+            }
+
+            #jqgrid {
+                margin-bottom: 0 !important;
+                position: relative;
+
+                &.dataTable.table-simplify {
+                    //width: inherit !important;
+                    thead {
+                        display: table-header-group;
+
+                        tr {
+                            height: 0px !important;
+                        }
+                    }
+
+                    td {
+                        padding: 5px 5px;
+                        vertical-align: middle;
+
+                        .point-image-box {
+                            .row-image-box;
+
+                            .point-image {
+                                vertical-align: middle;
+                                max-height: 30px;
+                                max-width: 30px;
+                                margin: 0;
+                                width: auto;
+                                height: auto;
+                            }
+                        }
+
+                        &.expand-cell {
+                            background-color: @info-color !important;
+                            //border: 1px solid @light-grey-color;
+                            outline: 1px solid @midnight-blue-color;
+                            color: #fff;
+                            display: block;
+                            position: absolute;
+                            max-width: 250px;
+                            font-weight: bold;
+
+                            .title-span {
+                                white-space: normal !important;
+                                text-overflow: inherit !important;
+                            }
+                        }
+
+                        .title-span {
+                            display: block;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .details {
+                            .link-button;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

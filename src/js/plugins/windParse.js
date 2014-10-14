@@ -1,4 +1,4 @@
-﻿/* global RAMP */
+﻿/* global RAMP, console */
 
 console.log('loading windParse');
 RAMP.plugins.featureInfoParser.windParse = function (data) {

@@ -1,0 +1,87 @@
+﻿.button-none {
+    background: 0;
+    border-color: transparent!important;
+    box-shadow: none;
+    outline-color: transparent;
+    text-decoration: underline;
+    text-shadow: none;
+}
+
+.button-close {
+    position: absolute;
+    cursor: pointer;
+    right: -7px;
+    top: -7px;
+
+    .css-icon-close(@light-grey-color, @attention-color, @attention-color);
+}
+
+.link-button() {
+
+    padding: 0 !important;
+
+    &:hover,
+    &:focus {
+        background: none repeat scroll 0 center rgba(0, 0, 0, 0) !important;
+        border-color: rgba(0, 0, 0, 0) !important;
+
+        .box-shadow (none);
+
+        outline-color: #124c86;
+        //outline-color: rgba(0, 0, 0, 0);
+
+        text-decoration: underline;
+        text-shadow: none;
+
+        color: @attention-color;
+    }
+}
+
+/* Toggle for sub-panel and details panel. */
+
+.side-toggle () {
+    border-bottom: 16px solid rgba(0, 0, 0, 0) !important;
+    border-right: 16px solid @accent-color !important;
+    border-top: none;
+    cursor: pointer;
+    display: block;
+
+    padding: 0;
+    margin: 0;
+
+    position: absolute;
+    right: 3px;
+    top: 32px;
+
+    height: 56px;
+    width: 0;
+
+    overflow: visible;
+
+    &:after {
+        border-bottom: 2px solid #FFFFFF;
+        border-right: 2px solid #FFFFFF;
+        content: "";
+        display: block;
+        height: 9px;
+        left: 6px;
+        position: absolute;
+        top: 23px;
+        width: 9px;
+
+        .rotation(-225deg);
+        .transition(400ms, ease);
+    }
+
+    &:focus,
+    &:hover {
+        border-right: 16px solid @attention-color !important;
+    }
+
+    &.state-expanded:after {
+        left: 1px;
+
+        .rotation(-45deg);
+        .transition(400ms, ease);
+    }
+}

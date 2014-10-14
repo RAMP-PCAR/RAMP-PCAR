@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n */
+﻿/*global require, window, esri, dojoConfig, i18n, document, $, console */
 
 /**
 * Ramp module
@@ -57,7 +57,7 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "themes/theme",
+    "ramp/theme",
 
 /* Utils */
     "utils/util",
@@ -67,6 +67,8 @@ require([
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
+
+    //"dojo/domReady!"],
 
     function (
     /* Dojo */

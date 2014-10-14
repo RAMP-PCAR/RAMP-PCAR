@@ -1,0 +1,8 @@
+{
+    "wms_meta_main":  "<div>
+                            <b>{%= i18n.t('filterManager.legend') %}</b><br>
+                            <img src='{%=o.legendUrl %}' alt='{%=o.legendUrl %}'><br>
+                            <b>{%= i18n.t('filterManager.linkToCap') %}</b><br>
+                            <a href='{%=o.getCapabilitiesUrl %}' target='_blank'>{%=o.getCapabilitiesUrl %}</a>
+                        </div>"
+}
