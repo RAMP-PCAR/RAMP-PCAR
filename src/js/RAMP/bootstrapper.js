@@ -223,6 +223,16 @@ require([
             handleAs: "json"
         });
 
+   
+        //TEST of Javascript merging
+        /*
+        var myRootConfig = { "myname": "james", "mylayers": [{ "id": "layer1" }] }, myAddConfig = { "mylayers": [{ "id": "layer2" }] };
+        UtilMisc.mergeRecursive(myRootConfig, myAddConfig);
+
+        console.log("JAMES: item 1 id is " + myRootConfig.mylayers[0].id);
+        console.log("JAMES: item 2 id is " + myRootConfig.mylayers[1].id);
+        */
+
         defJson.then(
             function (fileContent) {
                 var pluginConfig;
