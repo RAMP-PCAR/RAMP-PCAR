@@ -43,7 +43,7 @@
         "grunt-contrib-yuidoc": "~0.5.2",
         "grunt-docco": "~0.3.3",
         "grunt-hub": "~0.7.0",
-        "grunt-jscs-checker": "~0.4.3",
+        "grunt-jscs": "~0.7.1",
         "grunt-json-minify": "~0.4.0",
         "grunt-modernizr": "~0.4.0",
         "grunt-newer": "~0.7.0",

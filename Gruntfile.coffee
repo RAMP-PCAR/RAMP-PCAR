@@ -1127,7 +1127,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-hub'
-    @loadNpmTasks 'grunt-jscs-checker'
+    @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-modernizr'
     @loadNpmTasks 'grunt-newer'
