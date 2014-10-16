@@ -659,7 +659,7 @@ define([
                             d.resolve();
                         },
                         {
-                            handleSelector: ".full-table tr",
+                            handleSelector: ".full-table #jqgrid tbody tr",
                             activeClass: "bg-very-light",
                             useAria: false
                         }

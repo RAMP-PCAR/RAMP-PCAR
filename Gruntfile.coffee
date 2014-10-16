@@ -963,6 +963,7 @@ module.exports = (grunt) ->
         watch:
             options:
                 livereload: true
+                livereloadOnError: false
     
             pages:
                 files: [
