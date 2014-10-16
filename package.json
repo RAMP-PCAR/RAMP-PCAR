@@ -39,7 +39,7 @@
         "grunt-contrib-jshint": "~0.10.0",
         "grunt-contrib-less": "~0.11.0",
         "grunt-contrib-uglify": "~0.4.0",
-        "grunt-contrib-watch": "~0.5.3",
+        "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-yuidoc": "~0.5.2",
         "grunt-docco": "~0.3.3",
         "grunt-hub": "~0.7.0",

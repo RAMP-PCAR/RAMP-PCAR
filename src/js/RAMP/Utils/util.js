@@ -603,6 +603,79 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
+            * Recursively merge JSON objects into a target object.
+            * The merge will also merge array elements.
+            *
+            * @method mergeRecursive
+            * @static
+            */
+            mergeRecursive: function () {
+                function isDOMNode(v) {
+                    if (v === null) {
+                        return false;
+                    }
+                    if (typeof v !== 'object') {
+                        return false;
+                    }
+                    if (!('nodeName' in v)) {
+                        return false;
+                    }
+                    var nn = v.nodeName;
+                    try {
+                        v.nodeName = 'is readonly?';
+                    } catch (e) {
+                        return true;
+                    }
+                    if (v.nodeName === nn) {
+                        return true;
+                    }
+                    v.nodeName = nn;
+                    return false;
+                }
+
+                // _mergeRecursive does the actual job with two arguments.
+                // @param {Object} destination JSON object to have other objects merged into.  Parameter is modified by the function.
+                // @param {Object} sourceArray Param array of JSON objects to merge into the source
+                // @return {Ojbect} merged result object (points to destination variable)
+                var _mergeRecursive = function (dst, src) {
+                    if (isDOMNode(src) || typeof src !== 'object' || src === null) {
+                        return dst;
+                    }
+
+                    for (var p in src) {
+                        if (src.hasOwnProperty(p)) {
+                            if ($.isArray(src[p])) {
+                                $.merge(dst[p], src[p]);
+                                continue;
+                            }
+
+                            if (src[p] === undefined) {
+                                continue;
+                            }
+                            if (typeof src[p] !== 'object' || src[p] === null) {
+                                dst[p] = src[p];
+                            } else if (typeof dst[p] !== 'object' || dst[p] === null) {
+                                dst[p] = _mergeRecursive(src[p].constructor === Array ? [] : {}, src[p]);
+                            } else {
+                                _mergeRecursive(dst[p], src[p]);
+                            }
+                        }
+                    }
+                    return dst;
+                }, out;
+
+                // Loop through arguments and merge them into the first argument.
+                out = arguments[0];
+                if (typeof out !== 'object' || out === null) {
+                    return out;
+                }
+                for (var i = 1, il = arguments.length; i < il; i++) {
+                    _mergeRecursive(out, arguments[i]);
+                }
+                return out;
+            },
+
+            /**
             * Applies supplied xslt to supplied xml. IE always returns a String; others may return a documentFragment or a jObject.
             *
             * @method transformXML
@@ -616,7 +689,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 var xmld = new Deferred(),
                     xsld = new Deferred(),
                     xml, xsl,
-                    dlist = [xmld, xsld],  
+                    dlist = [xmld, xsld],
                     result,
                     error,
                     that = this;
@@ -686,9 +759,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     };
                     window.setTimeout(function () {
                         xdr.send();
-                    }, 0); 
-
-                   
+                    }, 0);
                }
                */
                 // IE10+
@@ -709,21 +780,19 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     xhttp.send("");
                 }
 
-                
-
                 if ('withCredentials' in new XMLHttpRequest() && "ActiveXObject" in window) { // IE10 and above
                     loadXMLFileIE(xmlurl);
                     loadXMLFileIE(xslurl);
                 } else if (window.XDomainRequest) { // IE9 and below
-                   /*
-                    loadXMLFileIE9(xmlurl);
-                    loadXMLFileIE9(xslurl);
-                   */
-                   // dataType need to be set to "text" for xml doc requests.                   
-                   $.ajax({
+                    /*
+                     loadXMLFileIE9(xmlurl);
+                     loadXMLFileIE9(xslurl);
+                    */
+                    // dataType need to be set to "text" for xml doc requests.
+                    $.ajax({
                         type: "GET",
                         url: xmlurl,
-                        dataType:  "text",
+                        dataType: "text",
                         cache: false,
                         success: function (data) {
                             xml = data;
@@ -749,10 +818,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                             xsld.resolve();
                         }
                     });
-                    
                 } else { // Good browsers (Chrome/FF)
-
-                   $.ajax({
+                    $.ajax({
                         type: "GET",
                         url: xmlurl,
                         dataType: "xml",
