@@ -138,11 +138,8 @@ require([
                 FilterManager.init();
 
                 // Initialize the advanced toolbar and tools.
-                //TODO idea: have the tools init only if they are included in the config?
                 if (globalStorage.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
-                } else {
-                    $("li.map-toolbar-item #advanced-toggle").remove();
                 }
 
                 Datagrid.init();
@@ -225,10 +222,20 @@ require([
 
         defJson.then(
             function (fileContent) {
-                var pluginConfig;
+                var pluginConfig,
+                    advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
                 //there is no need to convert the result to an object.  it comes through pre-parsed
 
+                console.log("Bootstrapper: config loaded");
+
                 globalStorage.config = fileContent;
+
+                // Show or remove advanced toolbar toggle based on the config value
+                if (globalStorage.config.advancedToolbar.enabled) {
+                    advancedToolbarToggle.removeClass("wb-invisible");
+                } else {
+                    advancedToolbarToggle.remove();
+                }
 
                 pluginConfig = globalStorage.config.plugins;
                 if (pluginConfig) {
