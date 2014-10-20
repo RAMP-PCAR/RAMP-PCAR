@@ -16,12 +16,8 @@
 */
 
 //required to get draw bar to show in french
-var //sPath = window.location.href,
-    //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
-    RAMP,
+var RAMP,
     jsFolderPath = "js/",
-    cssFolderPath = "css/",
-    state = "src/", // replace with "build" upon release,
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
     htmlNode = $("html"),
     dojoConfig;
@@ -40,8 +36,7 @@ RAMP = {
 
 dojoConfig = {
     parseOnLoad: false,
-    //locale: sPage.indexOf('lang=fr') > -1 ? "fr" : "en",
-    locale: htmlNode.attr("lang") === "fr" ? "fr" : "en",
+    locale: htmlNode.attr("lang"),
     async: true,
     packages: [
         {
@@ -57,11 +52,7 @@ dojoConfig = {
             location: pathname + jsFolderPath + "RAMP/Tools/"
         }
     ],
-    jsFolderPath: jsFolderPath,
-    cssFolderPath: cssFolderPath,
-    fullPluginPath: pathname + jsFolderPath + 'plugins/',
-    extensionPrefix: state === "build/" ? ".min" : "",
-    buildState: state
+    fullPluginPath: pathname + jsFolderPath + 'plugins/'
 };
 
 $(document).ready(function () {

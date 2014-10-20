@@ -1,4 +1,4 @@
-﻿/*global define, dojoConfig, $*/
+﻿/* global define, $ */
 
 /**
 * Navigation submodule
@@ -115,12 +115,6 @@ function (
         construct: function () {
             // Note: JKW added currentlevel
             //GlobalStorage.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
-
-            var cssPath = GlobalStorage.config.navWidget.cssPath;
-            // update cssPath of the widget so it points to the proper folder: build or src
-            GlobalStorage.config.navWidget.cssPath = dojoConfig.cssFolderPath + dojoConfig.buildState + cssPath;
-            GlobalStorage.config.navWidget.skin += dojoConfig.extensionPrefix;
-            //GlobalStorage.config.navWidget.locale = dojoConfig.locale;
 
             nav = $("#" + GlobalStorage.config.divNames.navigation).navigation(GlobalStorage.config.navWidget);
         }

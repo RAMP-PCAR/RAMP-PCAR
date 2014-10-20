@@ -170,8 +170,7 @@ require([
 
         //To hold values from RAMP service
 
-        var   //siteURL = new Url(require.toUrl(document.location)),
-            lang = $("html").attr("lang"), // window.location.href.split("/").last().substring(5, 7); // siteURL.queryObject.lang || window.navigator.userLanguage || window.navigator.language || "en";
+        var lang = $("html").attr("lang"),
             configFile,
             defJson;
 
@@ -180,37 +179,11 @@ require([
         }
 
         i18n.init(
-        {
-            lng: lang + "-CA",
-            load: "current",
-            fallbackLng: false
-        }/*,
-        function (t) {
-            // tests
-            // translate nav
-            $(".mb-menu").i18n();
-
-            var bname = "baseNrCan";
-
-            console.log(t("basemaps." + bname, { context: "name" }));
-            console.log(t("basemaps." + bname, { context: "description" }));
-
-            console.log(t("basemaps" + "." + bname + "." + "name"));
-            console.log(t("basemaps" + "." + bname + "." + "description"));
-
-            console.log("->", t("translation2.measure"));
-
-            i18n.loadNamespace('tools/translation2', function () {
-                console.log("--->", i18n.t("tools/translation2.measure"));
-                console.log("-->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
+            {
+                lng: lang + "-CA",
+                load: "current",
+                fallbackLng: false
             });
-
-            window.setTimeout(function () {
-                console.log("---->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
-            }, 1000);
-            
-        }*/
-        );
 
         //loading config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
