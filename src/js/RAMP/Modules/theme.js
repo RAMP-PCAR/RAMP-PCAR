@@ -183,6 +183,16 @@ define(["utils/util"],
                             });
                         break;
 
+                    case "destroy":
+                        target
+                            .find(".tooltipstered")
+                            .each(function (i, obj) {
+                                var node = $(obj);
+                                node
+                                    .tooltipster("destroy");
+                            });
+                        break;
+
                     default:
                         target.find('.tooltip, ._tooltip')
                             .tooltipster({
