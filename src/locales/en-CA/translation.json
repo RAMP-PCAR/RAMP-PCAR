@@ -123,7 +123,7 @@
 
         "ex": {
             "datasetSelectorButtonLoad": "Load",
-            "datasetSelectorButtonLoading": "Loading...",
+            "datasetSelectorButtonLoading": "Loading ...",
             "datasetSelectorButtonLoaded": "Loaded",
             "dataSummary": "Data Summary",
             "dataset": "Dataset"
@@ -137,8 +137,8 @@
             "sInfoPostFix": "",
             "sInfoThousands": ",",
             "sLengthMenu": "Show _MENU_ entries",
-            "sLoadingRecords": "Loading...",
-            "sProcessing": "Processing...",
+            "sLoadingRecords": "Loading ...",
+            "sProcessing": "Processing ...",
             "sSearch": "Search:",
             "sZeroRecords": "No matching records found",
             "oPaginate": {
