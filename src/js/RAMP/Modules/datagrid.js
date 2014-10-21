@@ -1200,7 +1200,8 @@ define([
                     q.geometry = RampMap.getMap().extent;
                 } else {
                     // Grab everything!
-                    q.where = "1 = 1";
+                    q.geometry = RampMap.getMaxExtent();
+                    //q.where = "1 = 1";
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
