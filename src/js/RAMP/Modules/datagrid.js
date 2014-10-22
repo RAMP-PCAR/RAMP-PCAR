@@ -618,7 +618,7 @@ define([
                             optionSelected = controlNode.find("option:selected"),
                             state = (optionSelected[0].value === selectedDatasetUrl);
 
-                        updateDatasetSelectorState(state);
+                        updateDatasetSelectorState(state, true);
                     });
 
                     sectionNode.on("click", "#datasetSelectorSubmitButton", function () {
@@ -806,14 +806,21 @@ define([
 
                     topic.subscribe(EventManager.Datagrid.DRAW_COMPLETE, updateDatasetSelectorToLoaded);
                 }
-
-                function updateDatasetSelectorState(state) {
+                /**
+                 * 
+                 * @param {Boolean} state indicates if button is disabled or not; true - disabled;
+                 * @param {Boolean} [loaded] indicates if the selected dataset is already loaded; it's assumed to be loading otherwise
+                 */
+                function updateDatasetSelectorState(state, loaded) {
                     var layer;
+                    loaded = loaded || false;
 
                     datasetSelectorSubmitButton
                         .attr("disabled", state)
                         .text(state ?
-                            i18n.t("datagrid.ex.datasetSelectorButtonLoading")
+                            (loaded ?
+                                i18n.t("datagrid.ex.datasetSelectorButtonLoaded")
+                                : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
                     layer = dojoArray.filter(GlobalStorage.config.featureLayers,
