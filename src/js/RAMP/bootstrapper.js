@@ -35,11 +35,6 @@
 * @uses GUI
 * @uses EventManager
 * @uses AdvancedToolbar
-* @uses PopulationTool
-* @uses MeasureTool
-* @uses BufferTool
-*
-
 * @uses Util
 * @uses Prototype
 * @uses FunctionMangler
@@ -62,28 +57,22 @@ require([
 /* Utils */
     "utils/util",
 
-/* Tools */
-    //"tools/populationTool", "tools/measureTool", "tools/bufferTool",
-
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
 
     //"dojo/domReady!"],
 
     function (
-    /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr, dojoArray,
+        /* Dojo */
+        parser, dojoOn, topic, requestScript, xhr, dojoArray,
 
-    /* RAMP */
-    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
-    BookmarkLink, Url, FeatureHighlighter,
-    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+        /* RAMP */
+        RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+        BookmarkLink, Url, FeatureHighlighter,
+        Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
-    /* Utils */
-    UtilMisc//,
-
-        /* Tools */
-        //PopulationTool, MeasureTool, BufferTool
+        /* Utils */
+        UtilMisc
     ) {
         "use strict";
 
@@ -241,41 +230,4 @@ require([
                 console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
-
-        //------------------------------
-
-        //loading config object from web service
-
-        /*
-        var serviceUrl = globalStorage.getConfigUrl() + "getConfig/" + $("html").attr("lang") + "/?keys=" + smallkeys;
-
-        // Request the JSON config file
-        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
-        //      we use request/script instead to get the config as jsonp
-
-        var defJson = requestScript.get(serviceUrl, { jsonp: "callback" });
-
-        defJson.then(
-        function (fileContent) {
-        //there is no need to convert the result to an object.  it comes through pre-parsed
-        // Global config object
-
-        gui.load(null, null, function () { });
-
-        //NOTE: ECDMP service has the json config file stored in an object property called "json" in string format.
-        //      This is to avoid strongly typing the JSON config in the VB.Net Service.
-
-        globalStorage.config = json.fromJson(fileContent.json);
-        initializeMap();
-        Ramp.loadStrings();
-
-        var handle = window.setTimeout(function () {
-        }, 2000);
-        },
-        function (error) {
-        //console.log("An error occurred: " + error);
-        }
-        );
-
-        */
     });

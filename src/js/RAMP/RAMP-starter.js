@@ -15,7 +15,7 @@
 * @static
 */
 
-//required to get draw bar to show in french
+//required to get draw bar to show in French
 var RAMP,
     jsFolderPath = "js/",
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
@@ -24,7 +24,7 @@ var RAMP,
 
 /**
 * RAMP global class.
-* A general globally available class to hold any RAMP global data.  Currently houses any plugins which are not loaded via AMD.
+* A general globally available class to hold any RAMP global data. Currently houses any plugins which are not loaded via AMD.
 *
 * @class RAMP
 */
@@ -57,13 +57,13 @@ dojoConfig = {
 
 $(document).ready(function () {
     "use strict";
-    // when loading js file that way, it will NOT show up in the debug panel in Firebug
+    // when loading js file this way, it will NOT show up in the debug panel in Firebug
     /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",
         function( data, textStatus, jqxhr ) {
             console.log( jqxhr.status ); // 200
     });*/
 
-    // when loading js file that way, it will show up in the debug panel in Firebug
+    // when loading js file this way, it will show up in the debug panel in Firebug
     var head = document.getElementsByTagName('head')[0],
         script = document.createElement('script');
     script.type = 'text/javascript';

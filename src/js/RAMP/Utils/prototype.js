@@ -67,7 +67,7 @@ define([
         * - `Array.isEmpty()` - Returns true if the length of the array is 0.
         * - `Array.last()` - Returns true if the length of the array is 0.
         * - `Array.contains(obj)` - Returns true if this Array contains the given object
-        * - `Array.flatter(arr)` - Array Flatten object extention: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
+        * - `Array.flatter(arr)` - Array Flatten object extension: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
         * - `Array.max()` - Returns the max value in the array
         * - `Array.min()` - Returns the min value in the array
         *
@@ -120,7 +120,7 @@ define([
                 return this.indexOf(obj) > -1;
             });
 
-            // Array Flatten object extention: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
+            // Array Flatten object extension: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
             addStaticFcn(Array, "flatten", function flatten(arr) {
                 var flat = [],
                     i, l, type;
