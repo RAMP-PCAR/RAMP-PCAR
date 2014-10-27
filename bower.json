@@ -1,15 +1,19 @@
 {
     "name": "ramp-pcar",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
     ],
-    "description": "RAMP GIS viewer - Bobcat; Sample of an implementation of RAMP",
+    "description": "RAMP GIS viewer - Canada Goose; Sample of an implementation of RAMP",
     "keywords": [
         "ramp",
         "gis",
-        "viewer"
+        "viewer",
+        "web",
+        "map",
+        "javascript",
+        "map"
     ],
     "license": "none",
     "ignore": [
