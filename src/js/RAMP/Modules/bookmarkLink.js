@@ -147,7 +147,7 @@ define([
             anchors = {},
 
             /**
-             * A dictionary containing layer id (String) as key and layer visiblility (boolean) as value
+             * A dictionary containing layer id (String) as key and layer visibility (boolean) as value
              *
              * @private
              * @property layerVisibility

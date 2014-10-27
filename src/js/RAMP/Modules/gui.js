@@ -738,12 +738,35 @@ define([
                     onComplete: function () {
                         adjustHeight();
                         layoutChange();
+
+                        mapToolbar
+                            .find(".map-toolbar-item-button")
+                            .map(function (i, node) {
+                                node = $(node);
+                                node
+                                    .addClass("_tooltip")
+                                    .attr(
+                                        "title",
+                                        node.find("span").text()
+                                    );
+                            });
+                            
+                        Theme.tooltipster(mapToolbar);
+
                         console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     },
                     onReverseComplete: function () {
                         adjustHeight();
                         layoutChange();
+
+                        Theme.tooltipster(mapToolbar, null, "destroy");
+
+                        mapToolbar
+                            .find(".map-toolbar-item-button")
+                            .removeClass("_tooltip")
+                            .removeAttr("title");
+
                         console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     }
@@ -914,8 +937,8 @@ define([
                 if (_isFullData) {
                     TweenLite
                         .fromTo(panelDiv, transitionDuration,
-                        { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                        { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
+                            { width: getPanelWidthDefault(), right: 0, left: "auto" },
+                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
 
                     fullDataTimeLine.play();
                 } else {

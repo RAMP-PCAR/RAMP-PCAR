@@ -201,7 +201,7 @@ function (
 
                     if (curr_id === selected_id) {
                         return false; //prevent the basemap from changing
-                    } else { //didnt select the same basemap
+                    } else { //didn't select the same basemap
                         basemapGallery.select(selected_id);
                     }
                 }

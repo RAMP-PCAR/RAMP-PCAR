@@ -15,20 +15,16 @@
 * @static
 */
 
-//required to get draw bar to show in french
-var //sPath = window.location.href,
-    //sPage = sPath.substring(sPath.lastIndexOf('/') + 1).toLowerCase(),
-    RAMP,
+//required to get draw bar to show in French
+var RAMP,
     jsFolderPath = "js/",
-    cssFolderPath = "css/",
-    state = "src/", // replace with "build" upon release,
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
     htmlNode = $("html"),
     dojoConfig;
 
 /**
 * RAMP global class.
-* A general globally available class to hold any RAMP global data.  Currently houses any plugins which are not loaded via AMD.
+* A general globally available class to hold any RAMP global data. Currently houses any plugins which are not loaded via AMD.
 *
 * @class RAMP
 */
@@ -40,8 +36,7 @@ RAMP = {
 
 dojoConfig = {
     parseOnLoad: false,
-    //locale: sPage.indexOf('lang=fr') > -1 ? "fr" : "en",
-    locale: htmlNode.attr("lang") === "fr" ? "fr" : "en",
+    locale: htmlNode.attr("lang"),
     async: true,
     packages: [
         {
@@ -57,22 +52,18 @@ dojoConfig = {
             location: pathname + jsFolderPath + "RAMP/Tools/"
         }
     ],
-    jsFolderPath: jsFolderPath,
-    cssFolderPath: cssFolderPath,
-    fullPluginPath: pathname + jsFolderPath + 'plugins/',
-    extensionPrefix: state === "build/" ? ".min" : "",
-    buildState: state
+    fullPluginPath: pathname + jsFolderPath + 'plugins/'
 };
 
 $(document).ready(function () {
     "use strict";
-    // when loading js file that way, it will NOT show up in the debug panel in Firebug
+    // when loading js file this way, it will NOT show up in the debug panel in Firebug
     /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",
         function( data, textStatus, jqxhr ) {
             console.log( jqxhr.status ); // 200
     });*/
 
-    // when loading js file that way, it will show up in the debug panel in Firebug
+    // when loading js file this way, it will show up in the debug panel in Firebug
     var head = document.getElementsByTagName('head')[0],
         script = document.createElement('script');
     script.type = 'text/javascript';

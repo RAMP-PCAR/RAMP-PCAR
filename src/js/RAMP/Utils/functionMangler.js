@@ -1,7 +1,7 @@
 ﻿/* global define, console */
 
 /**
-* Utility module containint useful static classes.
+* Utility module containing useful static classes.
 *
 * @module Utils
 */

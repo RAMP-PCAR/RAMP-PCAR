@@ -519,35 +519,35 @@ define([
         function setBoundingBoxVisibility(layerId, visibility) {
             var boxLayer = boundingBoxMapping[layerId];
 
-            if (boxLayer.graphics.isEmpty() && visibility) {
-                // Generate the bounding box if this is the first time we're viewing it
-                var featureLayer = map.getLayer(layerId),
-                boundingBoxExtent = esriGraphicUtils.graphicsExtent(featureLayer.graphics);
+            //if (boxLayer.graphics.isEmpty() && visibility) {
+                
+            //    // get bounding box info from config object
+            //    var boundingBoxExtent;
+            //    var layerConfig = dojoArray.find(config.featureLayers, function (layerConfig) {
+            //        return layerConfig.id === layerId;
+            //    });
 
-                // Make sure the boundingBoxExtent is within the max extent
-                // you want max for xmin, ymin and min for xmax, ymax because
-                // you want to make sure the extent is smaller than the maximum extent
-                boundingBoxExtent.xmin = Math.max(boundingBoxExtent.xmin, maxExtent.xmin);
-                boundingBoxExtent.ymin = Math.max(boundingBoxExtent.ymin, maxExtent.ymin);
-                boundingBoxExtent.xmax = Math.min(boundingBoxExtent.xmax, maxExtent.xmax);
-                boundingBoxExtent.ymax = Math.min(boundingBoxExtent.ymax, maxExtent.ymax);
+            //    boundingBoxExtent.xmin = layerConfig.boundingBox.extent.xmin;
+            //    boundingBoxExtent.ymin = layerConfig.boundingBox.extent.ymin;
+            //    boundingBoxExtent.xmax = layerConfig.boundingBox.extent.xmax;
+            //    boundingBoxExtent.ymax = layerConfig.boundingBox.extent.ymax;
 
-                var extentGraphic = new esri.Graphic({
-                    geometry: boundingBoxExtent,
-                    symbol: {
-                        color: [255, 0, 0, 64],
-                        outline: {
-                            color: [240, 128, 128, 255],
-                            width: 1,
-                            type: "esriSLS",
-                            style: "esriSLSSolid"
-                        },
-                        type: "esriSFS",
-                        style: "esriSFSSolid"
-                    }
-                });
-                boxLayer.add(extentGraphic);
-            }
+            //    var extentGraphic = new esri.Graphic({
+            //        geometry: boundingBoxExtent,
+            //        symbol: {
+            //            color: [255, 0, 0, 64],
+            //            outline: {
+            //                color: [240, 128, 128, 255],
+            //                width: 1,
+            //                type: "esriSLS",
+            //                style: "esriSLSSolid"
+            //            },
+            //            type: "esriSFS",
+            //            style: "esriSFSSolid"
+            //        }
+            //    });
+            //    boxLayer.add(extentGraphic);
+            //}
 
             boxLayer.setVisibility(visibility);
         }
@@ -875,6 +875,30 @@ define([
                     boundingBox.ramp = {
                         type: GlobalStorage.layerType.BoundingBox
                     };
+
+                    var boundingBoxExtent;
+                    if (typeof layer.boundingBox !== "undefined") {
+
+                        boundingBoxExtent = createExtent(layer.boundingBox.extent, spatialReference);
+
+                        var extentGraphic = new esri.Graphic({
+                            geometry: boundingBoxExtent,
+                            symbol: {
+                                color: [255, 0, 0, 64],
+                                outline: {
+                                    color: [240, 128, 128, 255],
+                                    width: 1,
+                                    type: "esriSLS",
+                                    style: "esriSLSSolid"
+                                },
+                                type: "esriSFS",
+                                style: "esriSFSSolid"
+                            }
+                        });
+
+                        boundingBox.add(extentGraphic);
+                    }
+                    
                     return boundingBox;
                 });
 
