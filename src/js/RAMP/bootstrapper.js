@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n */
+﻿/*global require, window, esri, dojoConfig, i18n, document, $, console */
 
 /**
 * Ramp module
@@ -35,11 +35,6 @@
 * @uses GUI
 * @uses EventManager
 * @uses AdvancedToolbar
-* @uses PopulationTool
-* @uses MeasureTool
-* @uses BufferTool
-*
-
 * @uses Util
 * @uses Prototype
 * @uses FunctionMangler
@@ -57,31 +52,27 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "themes/theme",
+    "ramp/theme",
 
 /* Utils */
     "utils/util",
 
-/* Tools */
-    //"tools/populationTool", "tools/measureTool", "tools/bufferTool",
-
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
 
+    //"dojo/domReady!"],
+
     function (
-    /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr, dojoArray,
+        /* Dojo */
+        parser, dojoOn, topic, requestScript, xhr, dojoArray,
 
-    /* RAMP */
-    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
-    BookmarkLink, Url, FeatureHighlighter,
-    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+        /* RAMP */
+        RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+        BookmarkLink, Url, FeatureHighlighter,
+        Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
-    /* Utils */
-    UtilMisc//,
-
-        /* Tools */
-        //PopulationTool, MeasureTool, BufferTool
+        /* Utils */
+        UtilMisc
     ) {
         "use strict";
 
@@ -136,11 +127,8 @@ require([
                 FilterManager.init();
 
                 // Initialize the advanced toolbar and tools.
-                //TODO idea: have the tools init only if they are included in the config?
                 if (globalStorage.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
-                } else {
-                    $("li.map-toolbar-item #advanced-toggle").remove();
                 }
 
                 Datagrid.init();
@@ -148,6 +136,7 @@ require([
                 theme.tooltipster();
             });
             RampMap.init();
+            NavWidget.construct();
 
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
             theme.tooltipster();            
@@ -170,8 +159,7 @@ require([
 
         //To hold values from RAMP service
 
-        var   //siteURL = new Url(require.toUrl(document.location)),
-            lang = $("html").attr("lang"), // window.location.href.split("/").last().substring(5, 7); // siteURL.queryObject.lang || window.navigator.userLanguage || window.navigator.language || "en";
+        var lang = $("html").attr("lang"),
             configFile,
             defJson;
 
@@ -180,37 +168,11 @@ require([
         }
 
         i18n.init(
-        {
-            lng: lang + "-CA",
-            load: "current",
-            fallbackLng: false
-        }/*,
-        function (t) {
-            // tests
-            // translate nav
-            $(".mb-menu").i18n();
-
-            var bname = "baseNrCan";
-
-            console.log(t("basemaps." + bname, { context: "name" }));
-            console.log(t("basemaps." + bname, { context: "description" }));
-
-            console.log(t("basemaps" + "." + bname + "." + "name"));
-            console.log(t("basemaps" + "." + bname + "." + "description"));
-
-            console.log("->", t("translation2.measure"));
-
-            i18n.loadNamespace('tools/translation2', function () {
-                console.log("--->", i18n.t("tools/translation2.measure"));
-                console.log("-->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
+            {
+                lng: lang + "-CA",
+                load: "current",
+                fallbackLng: false
             });
-
-            window.setTimeout(function () {
-                console.log("---->", i18n.t("tools/translation2:measure", { defaultValue: "my text" }));
-            }, 1000);
-            
-        }*/
-        );
 
         //loading config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
@@ -222,10 +184,20 @@ require([
 
         defJson.then(
             function (fileContent) {
-                var pluginConfig;
+                var pluginConfig,
+                    advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
                 //there is no need to convert the result to an object.  it comes through pre-parsed
 
+                console.log("Bootstrapper: config loaded");
+
                 globalStorage.config = fileContent;
+
+                // Show or remove advanced toolbar toggle based on the config value
+                if (globalStorage.config.advancedToolbar.enabled) {
+                    advancedToolbarToggle.removeClass("wb-invisible");
+                } else {
+                    advancedToolbarToggle.remove();
+                }
 
                 pluginConfig = globalStorage.config.plugins;
                 if (pluginConfig) {
@@ -258,41 +230,4 @@ require([
                 console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
-
-        //------------------------------
-
-        //loading config object from web service
-
-        /*
-        var serviceUrl = globalStorage.getConfigUrl() + "getConfig/" + $("html").attr("lang") + "/?keys=" + smallkeys;
-
-        // Request the JSON config file
-        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
-        //      we use request/script instead to get the config as jsonp
-
-        var defJson = requestScript.get(serviceUrl, { jsonp: "callback" });
-
-        defJson.then(
-        function (fileContent) {
-        //there is no need to convert the result to an object.  it comes through pre-parsed
-        // Global config object
-
-        gui.load(null, null, function () { });
-
-        //NOTE: ECDMP service has the json config file stored in an object property called "json" in string format.
-        //      This is to avoid strongly typing the JSON config in the VB.Net Service.
-
-        globalStorage.config = json.fromJson(fileContent.json);
-        initializeMap();
-        Ramp.loadStrings();
-
-        var handle = window.setTimeout(function () {
-        }, 2000);
-        },
-        function (error) {
-        //console.log("An error occurred: " + error);
-        }
-        );
-
-        */
     });

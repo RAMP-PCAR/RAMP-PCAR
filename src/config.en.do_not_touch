@@ -38,7 +38,7 @@ Developers of the Almighty JSON Config Editor
         {
             "name": "geometryService",
             "type": "String",
-            "value": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+            "value": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
             "description": "",
             "visibleText": false
         },

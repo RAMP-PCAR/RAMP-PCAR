@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl, i18n */
+﻿/*global define, window, tmpl, i18n, console, $ */
 
 /**
 * FilterManager submodule
@@ -55,13 +55,13 @@ define([
         "dojo/aspect", "dojo/promise/all",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
-        "dojo/text!./templates/filter_wms_meta_Template.html",
+        "dojo/text!./templates/filter_wms_meta_Template.json",
 
 /* Esri */
         "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "themes/theme",
+        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
@@ -188,7 +188,7 @@ define([
                             },
 
                             label: {
-                                check: i18n.t('filterManager.hideBounds'), 
+                                check: i18n.t('filterManager.hideBounds'),
                                 uncheck: i18n.t('filterManager.showBounds')
                             },
 
@@ -401,7 +401,7 @@ define([
                         {
                             handleSelector: "li.layerList1:not(.list-item-grabbed):not(.ui-sortable-helper)",
                             targetSelector: ":tabbable",
-                            activeClass: "background-light",
+                            activeClass: "bg-very-light",
                             useAria: false
                         }
                     );
@@ -445,14 +445,26 @@ define([
                             });
 
                             //only wms layers have this value
-                            if (layerConfig.layerInfo != null) {
+                            if (layerConfig.layerInfo) {
                                 if (layerConfig.legend.enable) {
                                     var legendUrl = layerConfig.legend.legendURL,
-                                        wmsmeta = String.format(filter_wms_meta_Template,
-                                            i18n.t('filterManager.legend'),
-                                            legendUrl,
-                                            i18n.t('filterManager.linkToCap'),
-                                            layerConfig.url + "&request=GetCapabilities");
+                                        wmsmeta;
+
+                                    //wmsmeta = String.format(filter_wms_meta_Template,
+                                    //        i18n.t('filterManager.legend'),
+                                    //    legendUrl,
+                                    //        i18n.t('filterManager.linkToCap'),
+                                    //    layerConfig.url + "&request=GetCapabilities");
+
+                                    tmpl.cache = {};
+                                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_wms_meta_Template));
+
+                                    wmsmeta = tmpl("wms_meta_main",
+                                        {
+                                            legendUrl: legendUrl,
+                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
+                                        }
+                                    );
 
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: $(wmsmeta),
@@ -559,7 +571,7 @@ define([
                             layerList
                                 .has(ui.item).addClass("sort-active")
                                 .end().filter(":not(.sort-active)").addClass("sort-disabled");
-                            ui.item.removeClass("background-light");
+                            ui.item.removeClass("bg-very-light");
 
                             layerGroupSeparator.addClass("active");
 

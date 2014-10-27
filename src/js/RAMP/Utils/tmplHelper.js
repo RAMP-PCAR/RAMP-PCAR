@@ -9,7 +9,7 @@
 */
 
 /**
-* A set of functions used to support and standardize the use of templating
+* A set of functions used to support and standardize the use of templating.
 *
 *
 * @class TmplHelper

@@ -1,4 +1,4 @@
-﻿/* global RAMP */
+﻿/* global RAMP, console */
 
 console.log('loading tempParse');
 RAMP.plugins.featureInfoParser.tempParse = function (data) {

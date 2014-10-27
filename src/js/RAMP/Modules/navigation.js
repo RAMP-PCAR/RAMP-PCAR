@@ -1,4 +1,4 @@
-﻿/*global define, dojoConfig */
+﻿/* global define, $ */
 
 /**
 * Navigation submodule
@@ -76,8 +76,8 @@ function (
     * @private
     */
     function initListeners() {
-        function toggleTransition() {
-            nav.navigation("toggleTransition");
+        function toggleTransition(inTransition) {
+            nav.navigation("toggleTransition", inTransition);
         }
 
         topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
@@ -86,35 +86,37 @@ function (
 
         /* Keep track of when the map is in transition, the slider will throw
         errors if the value is changed during a map transition. */
-        topic.subscribe(EventManager.Map.ZOOM_START, toggleTransition);
-        topic.subscribe(EventManager.Map.ZOOM_END, toggleTransition);
-        topic.subscribe(EventManager.Map.PAN_START, toggleTransition);
-        topic.subscribe(EventManager.Map.PAN_END, toggleTransition);
+        // explicitly set inTransition true on zoom and pan start
+        topic.subscribe(EventManager.Map.ZOOM_START, function () { toggleTransition(true); });
+        topic.subscribe(EventManager.Map.PAN_START, function () { toggleTransition(true); });
+
+        //topic.subscribe(EventManager.Map.PAN_END, toggleTransition);
+        //topic.subscribe(EventManager.Map.ZOOM_END, toggleTransition);
+
+        // only set inTransition false on extent change
+        topic.subscribe(EventManager.Map.EXTENT_CHANGE, function () { toggleTransition(false); });
     }
 
     return {
         /**
-        * Initialize navigaion widget for pan and zooming using global configuration object
+        * Initialize navigation widget for pan and zooming using global configuration object
         *
         * @method init
         * @param {Number} currentLevel
         */
         init: function (currentLevel) {
-            // Note: JKW added currentlevel
-            GlobalStorage.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            var cssPath = GlobalStorage.config.navWidget.cssPath;
-            // update cssPath of the widget so it points to the proper folder: build or src
-            GlobalStorage.config.navWidget.cssPath = dojoConfig.cssFolderPath + dojoConfig.buildState + cssPath;
-            GlobalStorage.config.navWidget.skin += dojoConfig.extensionPrefix;
-            //GlobalStorage.config.navWidget.locale = dojoConfig.locale;
-
-            nav = $("#" + GlobalStorage.config.divNames.navigation).navigation(GlobalStorage.config.navWidget);
             // NOTE: JKW Document the change. Refactor,
             nav.navigation("setSliderVal", currentLevel);
-
             initTopics();
             initListeners();
+        },
+
+        construct: function () {
+            // Note: JKW added currentlevel
+            //GlobalStorage.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
+
+            nav = $("#" + GlobalStorage.config.divNames.navigation).navigation(GlobalStorage.config.navWidget);
         }
     };
 });

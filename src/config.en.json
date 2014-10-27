@@ -4,7 +4,7 @@
     "spatialReference": {
         "wkid": 3978
     },
-    "geometryService": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,

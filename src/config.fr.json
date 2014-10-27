@@ -4,7 +4,7 @@
     "spatialReference": {
         "wkid": 3978
     },
-    "geometryService": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
@@ -734,7 +734,7 @@
     },
     "wmsLayers": [
         {
-            "displayName": "Air Temperature",
+            "displayName": "[fr] Air Temperature",
             "error": "",
             "extent": {
                 "spatialReference": {
@@ -794,7 +794,7 @@
             }
         },
         {
-            "displayName": "Winds",
+            "displayName": "[fr] Winds",
             "error": "",
             "extent": {
                 "spatialReference": {
@@ -844,20 +844,20 @@
                     "default": 0.2
                 }
             },
-            "featureInfo": {
-                "parser": "windParse",
-                "mimeType": "text/plain"
-            },
             "legend": {
                 "enable": false,
                 "legendURL": ""
             },
-            "layerVisible": false
+            "layerVisible": false,
+            "featureInfo": {
+                "parser": "windParse",
+                "mimeType": "text/plain"
+            }
         }
     ],
     "plugins": [
-        "tempParse.js",
-        "windParse.js"
+        "windParse.js",
+        "tempParse.js"
     ],
     "ui": {
         "fullscreen": false,

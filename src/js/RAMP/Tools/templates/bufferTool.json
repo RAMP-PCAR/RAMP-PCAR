@@ -1,11 +1,11 @@
 ﻿{
     "base_tool_output":  "<div class='buffer-info'>
-                            <p class='info-label margin-bottom-small margin-top-none'>{%= o.distanceLabel %}:</p>                
-                            <input type='text' class='distance-input margin-bottom-small' size='5' value='40'> km
+                            <p class='info-label mrgn-bttm-sm mrgn-tp-0'>{%= o.distanceLabel %}:</p>                
+                            <input type='text' class='distance-input mrgn-bttm-sm' size='5' value='40'> km
                         </div>",
 
     "base_tool_button": "<li class='map-toolbar-item'>
-                        <button class='button map-toolbar-item-button button-none' id='at-buffer-toggle'>
+                        <button class='btn btn-xs map-toolbar-item-button button-none' id='at-buffer-toggle'>
                             <i class='fa fa-wrench'></i><span class='on-right'>{%= i18n.t(o.ns + ':toolName') %}</span>
                         </button>
                     </li>"

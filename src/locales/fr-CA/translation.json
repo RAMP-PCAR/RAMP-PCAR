@@ -2,6 +2,7 @@
     "page": {
 
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
+        "siteTitle": "Plateforme de cartographie accessible et réutilisable",
 
         "lang": {
             "main": "fr",
@@ -47,8 +48,24 @@
             "link3Url": "http://ramp-racp.github.io/docs/index-fr.html",
 
             "link1Title": "Projet de PCAR",
+            
+            "link1sub1Title": "À propos de la PCAR",
+            "link1sub2Title": "Avantages",
+            "link1sub3Title": "Code source",
+            "link1sub4Title": "Avis",
+            
             "link2Title": "Utilisation de la PCAR",
-            "link3Title": "Documentation de la PCAR"
+            
+            "link2sub1Title": "Pour commencer",
+            "link2sub2Title": "Téléchargez la PCAR",
+            "link2sub3Title": "Exemples concrets",
+
+            "link3Title": "Documentation de la PCAR",
+            
+            "link3sub1Title": "Table des matières",
+            "link3sub2Title": "Références d'API",
+            "link3sub3Title": "Feuille de route",
+            "link3sub4Title": "À propos des normes Web"
         },
 
         "footer": {
@@ -106,6 +123,7 @@
 
         "ex": {
             "datasetSelectorButtonLoad": "Charger",
+            "datasetSelectorButtonLoading": "Chargement en cours ...",
             "datasetSelectorButtonLoaded": "Chargement terminé",
             "dataSummary": "Résumé des données",
             "dataset": "Ensemble de données"

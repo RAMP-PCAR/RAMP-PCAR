@@ -11,11 +11,11 @@
     "summary_sub_panel_container":
 
         "<div class='sub-panel-container summary-data-details'>
-            <div class='sub-panel background-white'>
+            <div class='sub-panel bg-white'>
                 
                 {% include('summary_sub_panel_content', o); %}
 
-                <button class='sub-panel-toggle button-none state-expanded tooltip' title='{%=o.closeTitle%}'>
+                <button class='sub-panel-toggle button-none state-expanded _tooltip' title='{%=o.closeTitle%}'>
                     <span class='wb-invisible'>{%=o.closeTitle%}</span>                        
                 </button>
                 <div class='guide'>
@@ -27,23 +27,23 @@
 
     "summary_sub_panel_content":
     
-        "<h3 class='margin-top-none background-accent panel-name'>
+        "<h3 class='bg-primary h5 panel-name'>
             {%=o.panelName%}</h3>
         <div class='sub-panel-content'>
-            <h4 class='margin-top-small panel-title'>
+            <h4 class='mrgn-tp-md mrgn-bttm-md mrgn-lft-md panel-title'>
                 {%=o.title%}</h4>
-            <div class='margin-left-medium margin-right-medium panel-content-div'>
+            <div class='mrgn-rght-sm mrgn-lft-md small panel-content-div'>
             </div>
         </div>",
     
     "full_sub_panel_container":
 
         "<div class='sub-panel-container full-data-details'>
-            <div class='sub-panel background-white'>
+            <div class='sub-panel bg-white'>
                 
                 {% include('full_sub_panel_content', o); %}
 
-                <button class='sub-panel-toggle button-none state-expanded tooltip' title='{%=o.closeTitle%}'>
+                <button class='sub-panel-toggle button-none state-expanded _tooltip' title='{%=o.closeTitle%}'>
                     <span class='wb-invisible'>{%=o.closeTitle%}/span>
                 </button>
                 <div class='guide'>
@@ -55,14 +55,14 @@
 
     "full_sub_panel_content":
         
-        "<div class='background-white panel-name-div'>
-            <h3 class='panel-name font-large'>
+        "<div class='bg-white panel-name-div'>
+            <h3 class='panel-name h5'>
                 {%=o.panelName%}</h3>
         </div>
         <div class='sub-panel-content'>
-            <h4 class='margin-top-small panel-title'>
+            <h4 class='mrgn-tp-md mrgn-bttm-md mrgn-lft-md panel-title'>
                 {%=o.title%}</h4>
-            <div class='margin-left-medium margin-right-medium panel-content-div'>
+            <div class='mrgn-rght-sm mrgn-lft-md small panel-content-div'>
             </div>
         </div>"
 }

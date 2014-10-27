@@ -1,0 +1,154 @@
+﻿.full-data-mode {
+    #panel-div {
+        .wb-tabs > ul li {
+            line-height: 20px;
+        }
+
+        .tabpanels {
+            border-top: 1px solid @light-border-color;
+        }
+
+        #gridpane {
+
+            #datagridGlobalToggles {
+                padding: 8px 0 7px 10px;
+            }
+
+            table {
+                table-layout: fixed;
+            }
+
+            .global-toggles {
+                //position: relative;
+                right: 0 !important;
+
+                #datasetSelectorSubmitButton {
+                    vertical-align: baseline;
+                }
+            }
+
+            .jqgrid_table_wrapper {
+                bottom: 36px;
+                padding-top: 0;
+            }
+
+            #jqgrid_wrapper {
+                top: 49px;
+                .animation-duration (300ms);
+
+                .dataTables_scrollHead {
+                    //display: block;
+                    //overflow: visible !important;
+                    .dataTables_scrollHeadInner table {
+                        //width: 100% !important;
+                        //width: inherit !important;
+                        thead th {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+
+                            &.sorting {
+                                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAC8SURBVHjaYvz//z8DtQALusDdu3eJ1qysrIzCZyJSXwgxiogxzACIl0Jpig3rBWI2IJ5AqWHeQOwEZdtD+WQZxgzEXWhiXVBxkg1LA2ItNDEtqDhJhvEAcTUOuTqoPOF0BgVfgFiG1ESLz2VPgPg/Fvwcl8uY8LisFYdcE1SepAiYBcTX0MSuQcVJjs2/QFyGJlYGFScr0W4F4oNQ9kEon6LsVIBGU2TYBSAOhdIUGwYCa4hRxEjNkhYgwADBxycRRXhrAgAAAABJRU5ErkJggg==');
+                                background-repeat: no-repeat;
+                                background-position: center right;
+                            }
+
+                            &.sorting_asc {
+                                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAB8SURBVHjaYvz//z8DtQALuoBweBvRmt+urELhMxGpL4QYRcQYZgDES6E0xYb1AjEbEE+g1DBvIHaCsu2hfLIMYwbiLjSxLqg4yYalAbEWmpgWVJwkw3iAuBqHXB1UnnA6g4IvQCxDaqJlYqAiYKRmdqKqy0YNG06GAQQYAKLhERFDocA2AAAAAElFTkSuQmCC');
+                                background-repeat: no-repeat;
+                                background-position: center right;
+                            }
+
+                            &.sorting_desc {
+                                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAB5SURBVHjaYvz//z8DtQATAxXBqGHDyTAWdAHh8DaiNb9dWUV/b/IA8RMg/o8FP4fKE23YFyBuxSHXBJUnKQJmAfE1NLFrUHGSY/MvEJehiZVBxclKGluB+CCUfRDKpyidFaDRFBl2AYhDoTRVcsAaYhQxUrOkBQgwAOOSHyEY+SXIAAAAAElFTkSuQmCC');
+                                background-repeat: no-repeat;
+                                background-position: center right;
+                            }
+
+                            &.sorting_asc_disabled {
+                                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAB8SURBVHjaYvz//z8DtQALusDdu3eJ1qysrIzCZyJSXwgxiogxzACIl0Jpig3rBWI2IJ5AqWHeQOwEZdtD+WQZxgzEXWhiXVBxkg1LA2ItNDEtqDhJhvEAcTUOuTqoPOF0BgVfgFiG1ETLxEBFwEjN7ERVl40aNpwMAwgwAOuVERE/H9IKAAAAAElFTkSuQmCC');
+                                background-repeat: no-repeat;
+                                background-position: center right;
+                            }
+
+                            &.sorting_desc_disabled {
+                                background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAB5SURBVHjaYvz//z8DtQATAxXBqGHDyTAWdIG7d+8SrVlZWZn+3uQB4idA/B8Lfg6VJ9qwL0DcikOuCSpPUgTMAuJraGLXoOIkx+ZfIC5DEyuDipOVNLYC8UEo+yCUT1E6K0CjKTLsAhCHQmmq5IA1xChipGZJCxBgACxVHyFtgIndAAAAAElFTkSuQmCC');
+                                background-repeat: no-repeat;
+                                background-position: center right;
+                            }
+                        }
+                    }
+                }
+
+                .dataTables_scrollBody {
+                    //overflow: visible !important;
+                    //position: absolute;
+                    //top: 92px;
+                    //bottom: 0px;
+                    border-bottom: 0;
+                }
+            }
+
+            #jqgrid {
+                margin-bottom: 0 !important;
+                position: relative;
+
+                &.dataTable.table-simplify {
+                    //width: inherit !important;
+                    thead {
+                        display: table-header-group;
+
+                        tr {
+                            height: 0px !important;
+                        }
+                    }
+
+                    td {
+                        padding: 5px 5px;
+                        vertical-align: middle;
+
+                        .point-image-box {
+                            .row-image-box;
+
+                            .point-image {
+                                vertical-align: middle;
+                                max-height: 30px;
+                                max-width: 30px;
+                                margin: 0;
+                                width: auto;
+                                height: auto;
+                            }
+                        }
+
+                        &.expand-cell {
+                            background-color: @info-color !important;
+                            //border: 1px solid @light-grey-color;
+                            outline: 1px solid @midnight-blue-color;
+                            color: #fff;
+                            display: block;
+                            position: absolute;
+                            max-width: 250px;
+                            font-weight: bold;
+
+                            .title-span {
+                                white-space: normal !important;
+                                text-overflow: inherit !important;
+                            }
+                        }
+
+                        .title-span {
+                            display: block;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+
+                        .details {
+                            .link-button;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

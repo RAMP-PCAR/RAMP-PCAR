@@ -1,0 +1,88 @@
+﻿@import (inline) "esri/esri-cleaned.css";
+
+@import "assets/nst-slider.less";
+
+@import "resources/elements.less";
+@import "resources/css-shapes.less";
+
+@import "variables.less";
+
+@import "effects/base.less";
+
+@import "toolbar/base.less";
+@import "tooltips/base.less";
+@import "navigation/base.less";
+@import "help/base.less";
+@import "layout/base.less";
+@import "map/base.less";
+
+@import "side-panel/base.less";
+@import "details-panel/base.less";
+
+
+/* SIZZLE */
+
+.box-shadow-section () {
+    background-color: #FFFFFF;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #DDDDDD;
+    border-radius: 0;
+
+    &:before{
+        content: "";
+        z-index: -1;
+        position: absolute;
+        width: 80%;
+        top: 30px;
+        bottom: 11px;
+        left: 10px;
+
+        .rotation(-1deg);
+        .box-shadow (0px 13px 8px #555);
+    }
+
+    &:after{
+        content: "";
+        z-index: -1;
+        position: absolute;
+        width: 80%;
+        top: 30px;
+        bottom: 11px;
+        right: 10px;
+
+        .rotation(1deg);
+        .box-shadow (0px 13px 8px #555);
+    }
+}
+
+.arrow_box (@arrow-color: #FFF, @z: 0) {
+    background: #fff;
+    border: 1px solid #000;
+
+    .common() {
+        top:100%;
+        left:50%;
+        border:solid transparent;
+        content:" ";
+        height:0;
+        width:0;
+        position:absolute;
+        pointer-events:none;
+        z-index: @z;
+    }
+
+    &:after {
+        .common;
+        margin-left: -5px;
+        border-color: @arrow-color rgba(255,255,255,0) rgba(255,255,255,0);
+        border-width: 5px;
+    }
+
+    &:before {
+        .common;
+        margin-left:-6px;
+        border-color: #000 rgba(0,0,0,0) rgba(0,0,0,0);
+        border-width:6px;
+    }
+}
