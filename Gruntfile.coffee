@@ -982,7 +982,7 @@ module.exports = (grunt) ->
                     'src/js/RAMP/**/*.json'
                 ]
                 tasks: [
-                    'copy:templates'
+                    'copy:templatesBuild'
                 ]
 
             js:
