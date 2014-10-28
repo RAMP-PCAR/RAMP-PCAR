@@ -3015,6 +3015,44 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": false,
                             "description": ""
+                        },
+                        {
+                            "name": "boundingBox",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "extent",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "xmin",
+                                            "type": "Integer",
+                                            "value": -2466001,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymin",
+                                            "type": "Integer",
+                                            "value": -695058,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "xmax",
+                                            "type": "Integer",
+                                            "value": 3009765,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymax",
+                                            "type": "Integer",
+                                            "value": 3832931,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -5261,6 +5299,44 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": false,
                             "description": ""
+                        },
+                        {
+                            "name": "boundingBox",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "extent",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "xmin",
+                                            "type": "Integer",
+                                            "value": -2317716,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymin",
+                                            "type": "Integer",
+                                            "value": -692095,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "xmax",
+                                            "type": "Integer",
+                                            "value": 3000105,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymax",
+                                            "type": "Integer",
+                                            "value": 2558710,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
@@ -5616,6 +5692,44 @@ Developers of the Almighty JSON Config Editor
                             "type": "Boolean",
                             "value": false,
                             "description": ""
+                        },
+                        {
+                            "name": "boundingBox",
+                            "type": "Object",
+                            "description": "",
+                            "fields": [
+                                {
+                                    "name": "extent",
+                                    "type": "Object",
+                                    "description": "",
+                                    "fields": [
+                                        {
+                                            "name": "xmin",
+                                            "type": "Integer",
+                                            "value": -2081728,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymin",
+                                            "type": "Integer",
+                                            "value": -616928,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "xmax",
+                                            "type": "Integer",
+                                            "value": 2970781,
+                                            "description": ""
+                                        },
+                                        {
+                                            "name": "ymax",
+                                            "type": "Integer",
+                                            "value": 2485914,
+                                            "description": ""
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },

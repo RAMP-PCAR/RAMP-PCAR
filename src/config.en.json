@@ -523,7 +523,15 @@
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": false
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2466001,
+                    "ymin": -695058,
+                    "xmax": 3009765,
+                    "ymax": 3832931
+                }
+            }
         },
         {
             "id": "layer_dd1m3",
@@ -899,7 +907,15 @@
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": false
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2317716,
+                    "ymin": -692095,
+                    "xmax": 3000105,
+                    "ymax": 2558710
+                }
+            }
         },
         {
             "id": "layer_w9v8u",
@@ -965,7 +981,15 @@
                 }
             },
             "layerVisible": true,
-            "boundingBoxVisible": false
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                }
+            }
         },
         {
             "id": "oilSandsRegions",
