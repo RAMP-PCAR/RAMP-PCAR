@@ -1374,6 +1374,1240 @@
                 "anchorTemplate": "anchored_map_tip"
             },
             "layerVisible": false
+        },
+        {
+            "id": "layer_w9v8a",
+            "displayName": "Copy Layer",
+            "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
+            "symbology": {
+                "field2": "",
+                "field3": "",
+                "field1": "siteRelatedDatasetID",
+                "type": "uniqueValue",
+                "valueMaps": [
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/fb61b2776264fc81aa35bdff3e3853b9",
+                        "value": "29df4910-c400-41c9-9f09-262f1d7b8525"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/311a85b477c6cccdce4ddbb292348694",
+                        "value": "2d845c22-3f64-4693-95ff-f261edbab69a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/d6028032b2ff934a0a42640bdf4a1c87",
+                        "value": "30855ae2-6e7c-4180-afca-5db6557d478a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/995ba62ede16aa46d151283b995a8e0c",
+                        "value": "3488b1c6-f64a-4c1d-a81c-6223088bbd13"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/e711627c1b095bcdebe16d9ac3fed7f9",
+                        "value": "40c71493-83dc-4df4-9a96-fc0da4a35d12"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/a7c8949da0cce768242c63f69492bac8",
+                        "value": "47d9f211-f1d7-4cd7-aec1-f4fc9b655038"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/bac64bc2b341a7143765bdbf79576637",
+                        "value": "48d2acb8-f5ed-4f8e-82eb-8c60f31e0682"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/9a21fdb1c69e0bf06c60fb96890da018",
+                        "value": "56fcb09c-3906-4e78-95e1-40801df41390"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/d51d875e8e224b80083efbf9f06815d9",
+                        "value": "63dd72be-33ce-440e-a069-1bad762bb6b8"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/0610236ff127d9a8a337865f93b425bf",
+                        "value": "a18b8821-6ddb-4fb1-92e4-f448dc96a87a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/8282cc7d39ecab80084d48fc9498dd17",
+                        "value": "a1e774e9-abd4-4c79-8206-05fc0662d5d3"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/f4a0a1726aa5be5563a09ea7fb3d6b78",
+                        "value": "ada015be-5e32-4815-9607-3edfb9f674bf"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/ca62af5ad460e8957ace0585d7db2977",
+                        "value": "c43a7e66-b5f6-402f-b6c7-e4030ecd27bc"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/8a4b763f949c3710afcbbb6a947d887b",
+                        "value": "cf5c81f3-fd58-4021-b91f-a4578bc141ef"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/6b98f329448cdcb66da411c31e11f967",
+                        "value": "d4ca0a42-80bc-4cb1-824d-d5c9b50550f3"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/e3f54101527628391226a1522bce9daf",
+                        "value": "e6315ea1-3319-4c46-9fc3-97e3cf577d33"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/5226b1e8770c36a5d40cc65828910a06",
+                        "value": "f7e60a2b-5598-4c0d-9855-c371306d23e5"
+                    }
+                ]
+            },
+            "datagrid": {
+                "rowsPerPage": 50,
+                "gridColumns": [
+                    {
+                        "id": "iconCol",
+                        "fieldName": "",
+                        "width": "50px",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Icon",
+                        "columnTemplate": "graphic_icon"
+                    },
+                    {
+                        "id": "nameCol",
+                        "fieldName": "NAME",
+                        "width": "",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Station Name",
+                        "columnTemplate": "unformatted_grid_value"
+                    }
+                ],
+                "summaryRowTemplate": "default_grid_summary_row"
+            },
+            "layerAttributes": "*",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538de",
+            "detailTemplate": "default_feature_details",
+            "nameField": "NAME",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                }
+            }
+        },
+        {
+            "datagrid": {
+                "summaryRowTemplate": "default_grid_summary_row",
+                "gridColumns": [
+                    {
+                        "sortType": "string",
+                        "title": "Icon",
+                        "width": "50px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "graphic_icon",
+                        "id": "iconCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Details",
+                        "width": "60px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "details_button",
+                        "id": "detailsCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "OBJECTID",
+                        "width": "400px",
+                        "fieldName": "OBJECTID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "OBJECTID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "latitude",
+                        "width": "400px",
+                        "fieldName": "latitude",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "latitude",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "longitude",
+                        "width": "400px",
+                        "fieldName": "longitude",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "longitude",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Shape",
+                        "width": "400px",
+                        "fieldName": "Shape",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "Shape",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "row_id",
+                        "width": "400px",
+                        "fieldName": "row_id",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "row_id",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteUUID",
+                        "width": "400px",
+                        "fieldName": "siteUUID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteUUID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteID",
+                        "width": "400px",
+                        "fieldName": "siteID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteFullName_en",
+                        "width": "400px",
+                        "fieldName": "siteFullName_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteFullName_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteFullName_fr",
+                        "width": "400px",
+                        "fieldName": "siteFullName_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteFullName_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteShortName_en",
+                        "width": "400px",
+                        "fieldName": "siteShortName_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteShortName_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteShortName_fr",
+                        "width": "400px",
+                        "fieldName": "siteShortName_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteShortName_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOrganizationName_en",
+                        "width": "400px",
+                        "fieldName": "siteOrganizationName_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOrganizationName_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOrganizationName_fr",
+                        "width": "400px",
+                        "fieldName": "siteOrganizationName_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOrganizationName_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "altitude",
+                        "width": "400px",
+                        "fieldName": "altitude",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "altitude",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteType_en",
+                        "width": "400px",
+                        "fieldName": "siteType_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteType_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteType_fr",
+                        "width": "400px",
+                        "fieldName": "siteType_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteType_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteRelatedDataset_en",
+                        "width": "400px",
+                        "fieldName": "siteRelatedDataset_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteRelatedDataset_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteRelatedDataset_fr",
+                        "width": "400px",
+                        "fieldName": "siteRelatedDataset_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteRelatedDataset_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteRelatedDatasetID",
+                        "width": "400px",
+                        "fieldName": "siteRelatedDatasetID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteRelatedDatasetID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteStatus_en",
+                        "width": "400px",
+                        "fieldName": "siteStatus_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteStatus_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteStatus_fr",
+                        "width": "400px",
+                        "fieldName": "siteStatus_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteStatus_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteEvents_en",
+                        "width": "400px",
+                        "fieldName": "siteEvents_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteEvents_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteEvents_fr",
+                        "width": "400px",
+                        "fieldName": "siteEvents_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteEvents_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResource_en",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResource_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResource_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResourceText_en",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResourceText_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResourceText_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResourceFormat_en",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResourceFormat_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResourceFormat_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResource_fr",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResource_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResource_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResourceText_fr",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResourceText_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResourceText_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteOnlineResourceFormat_fr",
+                        "width": "400px",
+                        "fieldName": "siteOnlineResourceFormat_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteOnlineResourceFormat_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteEventType_en",
+                        "width": "400px",
+                        "fieldName": "siteEventType_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteEventType_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteEventType_fr",
+                        "width": "400px",
+                        "fieldName": "siteEventType_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteEventType_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteNotes_en",
+                        "width": "400px",
+                        "fieldName": "siteNotes_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteNotes_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteNotes_fr",
+                        "width": "400px",
+                        "fieldName": "siteNotes_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteNotes_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteObservedPhenomenon_en",
+                        "width": "400px",
+                        "fieldName": "siteObservedPhenomenon_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteObservedPhenomenon_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "siteObservedPhenomenon_fr",
+                        "width": "400px",
+                        "fieldName": "siteObservedPhenomenon_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "siteObservedPhenomenon_fr",
+                        "isSortable": true
+                    }
+                ],
+                "rowsPerPage": 50
+            },
+            "nameField": "siteFullName_en",
+            "id": "OilsandsSites",
+            "symbology": {
+                "field2": "",
+                "field3": "",
+                "field1": "siteRelatedDatasetID",
+                "type": "uniqueValue",
+                "valueMaps": [
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/fb61b2776264fc81aa35bdff3e3853b9",
+                        "value": "29df4910-c400-41c9-9f09-262f1d7b8525"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/311a85b477c6cccdce4ddbb292348694",
+                        "value": "2d845c22-3f64-4693-95ff-f261edbab69a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/d6028032b2ff934a0a42640bdf4a1c87",
+                        "value": "30855ae2-6e7c-4180-afca-5db6557d478a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/995ba62ede16aa46d151283b995a8e0c",
+                        "value": "3488b1c6-f64a-4c1d-a81c-6223088bbd13"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/e711627c1b095bcdebe16d9ac3fed7f9",
+                        "value": "40c71493-83dc-4df4-9a96-fc0da4a35d12"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/a7c8949da0cce768242c63f69492bac8",
+                        "value": "47d9f211-f1d7-4cd7-aec1-f4fc9b655038"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/bac64bc2b341a7143765bdbf79576637",
+                        "value": "48d2acb8-f5ed-4f8e-82eb-8c60f31e0682"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/9a21fdb1c69e0bf06c60fb96890da018",
+                        "value": "56fcb09c-3906-4e78-95e1-40801df41390"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/d51d875e8e224b80083efbf9f06815d9",
+                        "value": "63dd72be-33ce-440e-a069-1bad762bb6b8"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/0610236ff127d9a8a337865f93b425bf",
+                        "value": "a18b8821-6ddb-4fb1-92e4-f448dc96a87a"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/8282cc7d39ecab80084d48fc9498dd17",
+                        "value": "a1e774e9-abd4-4c79-8206-05fc0662d5d3"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/f4a0a1726aa5be5563a09ea7fb3d6b78",
+                        "value": "ada015be-5e32-4815-9607-3edfb9f674bf"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/ca62af5ad460e8957ace0585d7db2977",
+                        "value": "c43a7e66-b5f6-402f-b6c7-e4030ecd27bc"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/8a4b763f949c3710afcbbb6a947d887b",
+                        "value": "cf5c81f3-fd58-4021-b91f-a4578bc141ef"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/6b98f329448cdcb66da411c31e11f967",
+                        "value": "d4ca0a42-80bc-4cb1-824d-d5c9b50550f3"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/e3f54101527628391226a1522bce9daf",
+                        "value": "e6315ea1-3319-4c46-9fc3-97e3cf577d33"
+                    },
+                    {
+                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0/images/5226b1e8770c36a5d40cc65828910a06",
+                        "value": "f7e60a2b-5598-4c0d-9855-c371306d23e5"
+                    }
+                ]
+            },
+            "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/JOSM/Oilsands/MapServer/0",
+            "layerAttributes": "*",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538de333",
+            "detailTemplate": "default_feature_details",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                }
+            },
+            "displayName": "Unique Value"
+        },
+        {
+            "datagrid": {
+                "summaryRowTemplate": "default_grid_summary_row",
+                "gridColumns": [
+                    {
+                        "sortType": "string",
+                        "title": "Icon",
+                        "width": "50px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "graphic_icon",
+                        "id": "iconCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Details",
+                        "width": "60px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "details_button",
+                        "id": "detailsCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "OBJECTID",
+                        "width": "400px",
+                        "fieldName": "OBJECTID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "OBJECTID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Shape",
+                        "width": "400px",
+                        "fieldName": "Shape",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "Shape",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "IDNumber",
+                        "width": "400px",
+                        "fieldName": "IDNumber",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "IDNumber",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "NAME_EN",
+                        "width": "400px",
+                        "fieldName": "NAME_EN",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "NAME_EN",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "NOM_FR",
+                        "width": "400px",
+                        "fieldName": "NOM_FR",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "NOM_FR",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PROV_EN",
+                        "width": "400px",
+                        "fieldName": "PROV_EN",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PROV_EN",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PROV_FR",
+                        "width": "400px",
+                        "fieldName": "PROV_FR",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PROV_FR",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "FID_CGNS",
+                        "width": "400px",
+                        "fieldName": "FID_CGNS",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "FID_CGNS",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "F_CODE",
+                        "width": "400px",
+                        "fieldName": "F_CODE",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "F_CODE",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "UID",
+                        "width": "400px",
+                        "fieldName": "UID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "UID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "TYPE",
+                        "width": "400px",
+                        "fieldName": "TYPE",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "TYPE",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "CLASS",
+                        "width": "400px",
+                        "fieldName": "CLASS",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "CLASS",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "UNIC_ID",
+                        "width": "400px",
+                        "fieldName": "UNIC_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "UNIC_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PRVNC",
+                        "width": "400px",
+                        "fieldName": "PRVNC",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PRVNC",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Shape_Length",
+                        "width": "400px",
+                        "fieldName": "Shape_Length",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "Shape_Length",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Shape_Area",
+                        "width": "400px",
+                        "fieldName": "Shape_Area",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "Shape_Area",
+                        "isSortable": true
+                    }
+                ],
+                "rowsPerPage": 50
+            },
+            "nameField": "NAME_EN",
+            "id": "SeaParks",
+            "symbology": {
+                "field": "Shape_Area",
+                "minValue": 67051.77,
+                "type": "classBreaks",
+                "valueMaps": [
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0/images/86F7118C",
+                        "maxValue": 1.432183E+09
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0/images/856321CE",
+                        "maxValue": 4.553729E+09
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0/images/F1D1243B",
+                        "maxValue": 1.238792E+10
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0/images/CE4CA5D7",
+                        "maxValue": 2.136145E+10
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0/images/3BF397F7",
+                        "maxValue": 5.878965E+10
+                    }
+                ]
+            },
+            "url": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0",
+            "layerAttributes": "*",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538de222",
+            "detailTemplate": "default_feature_details",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                }
+            },
+            "displayName": "Class Breaks"
+        },
+        {
+            "datagrid": {
+                "summaryRowTemplate": "default_grid_summary_row",
+                "gridColumns": [
+                    {
+                        "sortType": "string",
+                        "title": "Icon",
+                        "width": "50px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "graphic_icon",
+                        "id": "iconCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Details",
+                        "width": "60px",
+                        "fieldName": "",
+                        "alignment": 0,
+                        "columnTemplate": "details_button",
+                        "id": "detailsCol",
+                        "isSortable": false
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "OBJECTID",
+                        "width": "400px",
+                        "fieldName": "OBJECTID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "OBJECTID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PRJ_ID",
+                        "width": "400px",
+                        "fieldName": "PRJ_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PRJ_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "REGION_ID",
+                        "width": "400px",
+                        "fieldName": "REGION_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "REGION_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PROV_ID",
+                        "width": "400px",
+                        "fieldName": "PROV_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PROV_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "RESP_ID",
+                        "width": "400px",
+                        "fieldName": "RESP_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "RESP_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "RESP_NAM",
+                        "width": "400px",
+                        "fieldName": "RESP_NAM",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "RESP_NAM",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "CATEG_ID",
+                        "width": "400px",
+                        "fieldName": "CATEG_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "CATEG_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "CATEG_NAM_ENG",
+                        "width": "400px",
+                        "fieldName": "CATEG_NAM_ENG",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "CATEG_NAM_ENG",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "CATEG_NAM_FRN",
+                        "width": "400px",
+                        "fieldName": "CATEG_NAM_FRN",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "CATEG_NAM_FRN",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "org_id",
+                        "width": "400px",
+                        "fieldName": "org_id",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "org_id",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "ORG_NAM",
+                        "width": "400px",
+                        "fieldName": "ORG_NAM",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "ORG_NAM",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PRJ_TOT_VAL",
+                        "width": "400px",
+                        "fieldName": "PRJ_TOT_VAL",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PRJ_TOT_VAL",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PRJ_AMOUNT",
+                        "width": "400px",
+                        "fieldName": "PRJ_AMOUNT",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PRJ_AMOUNT",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "PRJ_REVENUE",
+                        "width": "400px",
+                        "fieldName": "PRJ_REVENUE",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "PRJ_REVENUE",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "REAL_START_DAT",
+                        "width": "400px",
+                        "fieldName": "REAL_START_DAT",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "REAL_START_DAT",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "REAL_END_DAT",
+                        "width": "400px",
+                        "fieldName": "REAL_END_DAT",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "REAL_END_DAT",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_nam_en",
+                        "width": "400px",
+                        "fieldName": "prj_nam_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_nam_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_nam_fr",
+                        "width": "400px",
+                        "fieldName": "prj_nam_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_nam_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_desc_en",
+                        "width": "400px",
+                        "fieldName": "prj_desc_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_desc_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_desc_fr",
+                        "width": "400px",
+                        "fieldName": "prj_desc_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_desc_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_desc_geo_en",
+                        "width": "400px",
+                        "fieldName": "prj_desc_geo_en",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_desc_geo_en",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_desc_geo_fr",
+                        "width": "400px",
+                        "fieldName": "prj_desc_geo_fr",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_desc_geo_fr",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_latitude",
+                        "width": "400px",
+                        "fieldName": "prj_latitude",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_latitude",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "prj_longitude",
+                        "width": "400px",
+                        "fieldName": "prj_longitude",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "prj_longitude",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "round_year",
+                        "width": "400px",
+                        "fieldName": "round_year",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "round_year",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "STATUS_ID",
+                        "width": "400px",
+                        "fieldName": "STATUS_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "STATUS_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "STEP_EV_ID",
+                        "width": "400px",
+                        "fieldName": "STEP_EV_ID",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "STEP_EV_ID",
+                        "isSortable": true
+                    },
+                    {
+                        "sortType": "string",
+                        "title": "Shape",
+                        "width": "400px",
+                        "fieldName": "Shape",
+                        "alignment": 1,
+                        "columnTemplate": "unformatted_grid_value",
+                        "id": "Shape",
+                        "isSortable": true
+                    }
+                ],
+                "rowsPerPage": 50
+            },
+            "nameField": "PRJ_ID",
+            "id": "ecny.ECNY.projects",
+            "symbology": {
+                "valueMaps": [
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0/images/1E144B26",
+                        "value": 1
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0/images/AF2E0A8E",
+                        "value": 2
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0/images/4BFEC5CE",
+                        "value": 4
+                    },
+                    {
+                        "imageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0/images/447E4F6",
+                        "value": 5
+                    }
+                ],
+                "field2": "",
+                "field3": "",
+                "field1": "CATEG_ID",
+                "defaultImageUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0/images/E5D03CC0",
+                "type": "uniqueValue"
+            },
+            "url": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
+            "layerAttributes": "*",
+            "filter": {
+                
+            },
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538de111",
+            "detailTemplate": "default_feature_details",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.3
+                }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false,
+            "boundingBox": {
+                "extent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                }
+            },
+            "displayName": "Unique Value With Default"
         }
     ],
     "datagrid": {
