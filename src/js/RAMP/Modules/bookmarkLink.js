@@ -296,7 +296,7 @@ define([
                 i18n.t("bookmarkLink.emailUrlSubject"),
                 i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
-            
+
             linkPaneTextbox.val(url);
             getlinkEmailButton.attr("href", mailToHref);
         }
@@ -442,7 +442,7 @@ define([
                 });
 
                 UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
-                    var layerConfig = UtilArray.find(config.featureLayers.concat(config.wmsLayers), function (layer) {
+                    var layerConfig = UtilArray.find(config.layers.featureLayers.concat(config.layers.wmsLayers), function (layer) {
                         return layer.id === key;
                     });
                     layerConfig.settings.opacity.default = value;
@@ -505,7 +505,6 @@ define([
                         layerConfig.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
@@ -523,7 +522,6 @@ define([
                         layerConfig.boundingBoxVisible = false;
                         boundingBoxVisibility[layerId] = false;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {

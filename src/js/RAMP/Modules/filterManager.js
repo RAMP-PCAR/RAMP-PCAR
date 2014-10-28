@@ -430,7 +430,7 @@ define([
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
                             var guid = button.data("layer-uuid"),
-                                layerConfig = Ramp.getLayerConfigwithGuid(guid),
+                                layerConfig = Ramp.getLayerConfigWithGuid(guid),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {

@@ -73,7 +73,7 @@ define([
                     GlobalStorage.urlCfg = {};
                 }
 
-                var res = UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers), function (layerConfig) {
+                var res = UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.layers.featureLayers), function (layerConfig) {
                     if (wmsName == null) {
                         return layerConfig.url === url;
                     } else {
@@ -86,15 +86,15 @@ define([
                 return GlobalStorage.urlCfg[url];
             },
 
-            getLayerConfigwithGuid: function (uuid) {
-                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
+            getLayerConfigWithGuid: function (uuid) {
+                return UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.layers.featureLayers),
                     function (layerConfig) {
                         return layerConfig.uuid === uuid;
                     });
             },
 
             getLayerConfigWithId: function (id) {
-                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
+                return UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.featureLayers),
                     function (layerConfig) {
                         return layerConfig.id === id;
                     });
@@ -116,11 +116,26 @@ define([
              * @method getSymbolForLayer
              * @param {Object} layer A feature layer
              * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-             * @returns {icon} The default icon from the layer's symbology
+             * @returns {icon} The appropriate icon from the layer's symbology
              */
             getSymbolForLayer: function (layer, wmsName) {
                 var symbolConfig = this._getSymbolConfig(layer.url, wmsName);
-                return symbolConfig.icons["default"];
+                switch (symbolConfig.type) {
+                    case "simple":
+                        return symbolConfig.imageUrl;
+                    case "uniqueValue":
+                        //TODO when we enhance to an "icon stack" we may want to return a set of images.  Alex to determine what is needed
+                        //for now, pick first image
+                        return symbolConfig.valueMaps[0].imageUrl;
+                    case "classBreaks":
+                        //TODO when we enhance to an "icon stack" we may want to return a set of images.  Alex to determine what is needed
+                        //for now, pick first image
+                        return symbolConfig.rangeMaps[0].imageUrl;
+                    default:
+                        //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
+                        console.log('unknown renderer encountered: ' + symbolConfig.type);
+                        return "";
+                }
             },
 
             /**

@@ -796,7 +796,7 @@ define([
                 esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;// "/proxy/proxy.ashx";
                 dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
-                wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
+                wmsLayers = dojoArray.map(config.layers.wmsLayers, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
@@ -814,7 +814,7 @@ define([
 
                     if (layer.featureInfo !== undefined) {
                         console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
-                        MapClickHandler.registerWMSClick({wmsLayer: wmsl, layerConfig: layer});
+                        MapClickHandler.registerWMSClick({ wmsLayer: wmsl, layerConfig: layer });
                     }
 
                     wmsl.setVisibleLayers(layer.layerInfo.name);
@@ -824,7 +824,7 @@ define([
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(config.featureLayers, function (layerConfig) {
+                featureLayers = dojoArray.map(config.layers.featureLayers, function (layerConfig) {
                     var fl;
 
                     if (layerConfig.isStatic) {
@@ -863,7 +863,7 @@ define([
                 * @type {array of esri/layer/GraphicsLayer}
                 */
 
-                var boundingBoxLayers = dojoArray.map(config.featureLayers, function (layer) {
+                var boundingBoxLayers = dojoArray.map(config.layers.featureLayers, function (layer) {
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
@@ -880,7 +880,7 @@ define([
 
                 // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
                 // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.featureLayers, function (layer) {
+                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.layers.featureLayers, function (layer) {
                     return layer.id;
                 }), boundingBoxLayers);
 
@@ -902,7 +902,7 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.forEach(config.featureLayers, function (layer) {
+                dojoArray.forEach(config.layers.featureLayers, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
                         var tempLayer = map.generateStaticLayer(staticLayer);

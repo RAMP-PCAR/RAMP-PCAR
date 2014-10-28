@@ -215,7 +215,7 @@ require([
         }*/
         );
 
-        //loading config object from JSON file
+        //loading base config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
 
         // Request the JSON config file
@@ -224,53 +224,99 @@ require([
         });
 
    
-        //TEST of Javascript merging
-        /*
-        var myRootConfig = { "myname": "james", "mylayers": [{ "id": "layer1" }] }, myAddConfig = { "mylayers": [{ "id": "layer2" }] };
-        UtilMisc.mergeRecursive(myRootConfig, myAddConfig);
-
-        console.log("JAMES: item 1 id is " + myRootConfig.mylayers[0].id);
-        console.log("JAMES: item 2 id is " + myRootConfig.mylayers[1].id);
-        */
+   
 
         defJson.then(
-            function (fileContent) {
-                var pluginConfig;
+            function (fileConfig) {
+                
                 //there is no need to convert the result to an object.  it comes through pre-parsed
+                if (globalStorage.getConfigUrl() === "") {
+                    //no config service.  we just use the file provided
+                    configReady(fileConfig);
+                } else {
+                    //get additional config stuff from the config service.  mash it into our primary object
 
-                globalStorage.config = fileContent;
+                    // pull smallkeys from URL
+                    var siteURL = new Url(require.toUrl(document.location)),                        
+                        smallkeys = siteURL.queryObject.keys;
+                    
 
-                pluginConfig = globalStorage.config.plugins;
-                if (pluginConfig) {
-                    dojoArray.map(pluginConfig, function (pName) {
-                        loadPlugin(pName);
-                    });
+                    if (!smallkeys || smallkeys === "") {
+                        //no keys.  no point hitting the service.  jump to next step
+                        configReady(fileConfig);
+                    } else {
+
+                        //TODO verify endpoint is correct
+                        var serviceUrl = globalStorage.getConfigUrl() + "docs/" + $("html").attr("lang") + "/" + smallkeys;
+
+                        //Request the JSON snippets from the RAMP Config Service
+
+                        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
+                        //      we use request/script instead to get the config as jsonp
+                        //      we may consider looking into ways to mitiate the cross domain issue (Aly had some ideas)
+
+                        var defService = requestScript.get(serviceUrl, { jsonp: "callback" });
+                        defService.then(
+                            function (serviceContent) {
+                                //we are expecting an array of JSON config fragments
+                                //merge each fragment into the file config
+
+                                dojoArray.forEach(serviceContent, function (configFragment) {
+                                    UtilMisc.mergeRecursive(fileConfig, configFragment);
+                                });
+
+                                //fragments are now in fileConfig.  carry on.
+                                configReady(fileConfig)
+                            },
+                            function (error) {
+                                //console.log("An error occurred: " + error);
+                            }
+                        );
+
+                    }
+                  
+
                 }
-                // Modify the config based on the url
-                // needs to do this before the gui loads because the gui module
-                // also reads from the config
-                BookmarkLink.updateConfig(window.location.pathname.split("/").last());
-
-                // Initialize the map only after the gui loads
-                // if we do it beforehand, the map extent may get messed up since
-                // the available screen size may still be changing (e.g. due to fullscreen
-                // or subpanel closing)
-                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
-                    initializeMap();
-                });
-
-                gui.load(null, null, function () { });
-
-                // Create the panel that the bookmark link sits in
-                // can only do this after the gui loads
-                BookmarkLink.createUI();
-
-                Ramp.loadStrings();
+               
             },
             function (error) {
                 console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
+
+        function configReady(configObject) {
+            var pluginConfig;
+
+            globalStorage.config = fileContent;
+
+            pluginConfig = globalStorage.config.plugins;
+            if (pluginConfig) {
+                dojoArray.map(pluginConfig, function (pName) {
+                    loadPlugin(pName);
+                });
+            }
+            // Modify the config based on the url
+            // needs to do this before the gui loads because the gui module
+            // also reads from the config
+            BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+
+            // Initialize the map only after the gui loads
+            // if we do it beforehand, the map extent may get messed up since
+            // the available screen size may still be changing (e.g. due to fullscreen
+            // or subpanel closing)
+            topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                initializeMap();
+            });
+
+            gui.load(null, null, function () { });
+
+            // Create the panel that the bookmark link sits in
+            // can only do this after the gui loads
+            BookmarkLink.createUI();
+
+            Ramp.loadStrings();
+        }
+
 
         //------------------------------
 
