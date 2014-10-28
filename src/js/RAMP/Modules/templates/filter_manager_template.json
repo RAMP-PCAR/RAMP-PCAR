@@ -18,7 +18,7 @@
                                         <fieldset>
                                             <legend>{% include('filter_row_template', o);%}</legend>																						
                                         </fieldset>
-                                        {% include('renderer_list_template', o.fn.generateSettingsToggle(o));%}
+                                        {% include('renderer_list_template', o);%}
                                         {% include('filter_row_settings_template', o.fn.generateSettingsToggle(o));%}
                                     </li>",
         // Level 2
@@ -88,9 +88,11 @@
 
         "renderer_list_template":   "<div class='renderer-list'>
                                         <ul>
-                                            {% include('renderer_template', o);%}
-                                            {% include('renderer_template', o);%}
-                                            {% include('renderer_template', o);%}
+                                            {%              
+                                                for (var i = 0; i <= Math.floor((Math.random() * 7) + 1); i ++) { 
+                                                    include('renderer_template', o);
+                                                }
+                                            %}
                                         </ul>
                                     </div>",
 
@@ -98,7 +100,7 @@
                                 <li>
                                    <div class='layer-details'>
                                       <div class='layer-image-box'>
-                                        <img alt='' src='http://lorempixel.com/30/30/nature/#{%=o.layerId%}' class='layer-image bg-white'>
+                                        <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
                                       </div>
                                       <span title='CESI Oil Area Overlay'>CESI Oil Area Overlay</span>
                                     </div>

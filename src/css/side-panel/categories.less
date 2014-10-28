@@ -251,6 +251,18 @@
 
             ul {
                 list-style: none;
+                padding: 0;
+                margin-left: 52px;
+                position: relative;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    border-right: 1px solid #000;
+                    top: 0;
+                    bottom: 15px;
+                    left: -18px;
+                }
 
                 > li {
                     padding: 4px 0;
@@ -259,8 +271,17 @@
                     margin: 0;
                     border: 0;
 
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        width: 16px;
+                        border-top: 1px solid #000;
+                        top: 50%;
+                        left: -17px;
+                    }
+
                     .layer-details {
-                        height: 26px;
+                        height: 24px;
 
                         > span {
                             vertical-align: bottom;
@@ -268,7 +289,7 @@
                     }
 
                     .layer-image-box {
-                        border: none;
+                        //border: none;
                         float: none;
                         width: 24px;
                         height: 24px;
@@ -312,8 +333,8 @@
                 position: absolute;
 
                 .layer-image {
-                    max-height: 24px;
-                    max-width: 24px;
+                    max-height: 22px;
+                    max-width: 22px;
                 }
 
                 &:nth-child(1) {
@@ -361,9 +382,8 @@
                     position: absolute;
                     right: -1px;
                     top: -2px;
+                    color: #000;
                 }
-
-                color: #000;
             }
         }
 
