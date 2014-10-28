@@ -341,10 +341,11 @@ define([
                     * @private
                     */
                     function adjustPaneWidth() {
-                        UtilMisc.adjustWidthForSrollbar(layerList, [filterGlobalToggles]);
+                        UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
                     }
+
                     /**
-                    *  Changes the state of the expand all control if all the nodes are expanded.
+                    * Changes the state of the expand all control if all the nodes are expanded.
                     * @method adjustExpandAllButtonState
                     * @private
                     */
@@ -409,6 +410,8 @@ define([
                     PopupManager.registerPopup(layerList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
+
+                                adjustPaneWidth();
                                 d.resolve();
                             });
                             this.target.find(".nstSlider").nstSlider("refresh");
@@ -509,6 +512,9 @@ define([
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                         }
                     });
+
+                    // adjust panel width on load
+                    adjustPaneWidth();
                 }
                 /**
                 * Adjusts filter style according to the scroll action on the layers.

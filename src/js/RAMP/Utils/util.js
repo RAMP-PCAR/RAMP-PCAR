@@ -318,7 +318,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @method createLazyVariable
             * @static
             * @param {function} initFunc A function to call to resolve the variable value
-            * @return {Object} The lazy varialbe
+            * @return {Object} The lazy variable
             */
             createLazyVariable: function (initFunc) {
                 var value = null;
@@ -425,7 +425,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
             /**
             * Checks if the height of the scrollable content of the body is taller than its height;
-            * if so, offset the content horizontally to accomodate for the scrollbar assuming target's width is
+            * if so, offset the content horizontally to accommodate for the scrollbar assuming target's width is
             * set to "100%".
             *
             * @method adjustWidthForSrollbar

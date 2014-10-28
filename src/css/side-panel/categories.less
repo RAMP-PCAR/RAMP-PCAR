@@ -133,7 +133,7 @@
         }
 
         legend {
-            padding: 8px 0 8px;
+            padding: 8px 0;
             position: relative;
             font-size: 100% !important;
             margin: 0;
@@ -245,6 +245,40 @@
                 }
             }
         }
+
+        .renderer-list {
+            ul {
+                list-style: none;
+
+                > li {
+                    padding: 4px 0;
+                    position: relative;
+                    font-size: 100% !important;
+                    margin: 0;
+                    border: 0;
+
+                    .layer-details {
+                        height: 26px;
+
+                        > span {
+                            vertical-align: bottom;
+                        }
+                    }
+
+                    .layer-image-box {
+                        border: none;
+                        float: none;
+                        width: 24px;
+                        height: 24px;
+
+                        .layer-image {
+                            max-height: 22px;
+                            max-width: 22px;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .layer-details {
@@ -261,6 +295,54 @@
                 margin: 0;
                 width: auto;
                 height: auto;
+            }
+        }
+
+        .layer-complex-image-box {
+            width: 42px;
+            height: 100%;
+            float: left;
+            position: relative;
+
+            .layer-image-box {
+                width: 26px;
+                height: 26px;
+                position: absolute;
+
+                .layer-image {
+                    max-height: 24px;
+                    max-width: 24px;
+                }
+
+                &:nth-child(1) {
+                    left: 6px;
+                    top: 6px;
+                }
+
+                &:nth-child(2) {
+                    left: 3px;
+                    top: 3px;
+                }
+            }
+
+            button {
+                position: absolute;
+                width: 32px;
+                height: 100%;
+                margin: 0 5px;
+                .link-button;
+
+                &:hover,
+                &:focus {
+                    color: #000;
+                }
+
+                i {
+                    position: absolute;
+                    right: -1px;
+                    top: -2px;
+                    background: white;
+                }
             }
         }
 

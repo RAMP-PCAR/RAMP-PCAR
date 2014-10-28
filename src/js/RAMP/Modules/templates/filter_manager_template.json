@@ -18,6 +18,7 @@
                                         <fieldset>
                                             <legend>{% include('filter_row_template', o);%}</legend>																						
                                         </fieldset>
+                                        {% include('renderer_list_template', o.fn.generateSettingsToggle(o));%}
                                         {% include('filter_row_settings_template', o.fn.generateSettingsToggle(o));%}
                                     </li>",
         // Level 2
@@ -25,9 +26,9 @@
         "filter_row_template":"<div class='filter-row'>
                                     <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
                                     <div class='layer-details'>
-                                        <div class='layer-image-box'>									
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
-                                        </div>
+                                       
+                                        {% include('complex_layer_image_box', o);%}
+
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
                                                 <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
@@ -62,6 +63,46 @@
                                     </div>
                                 </div>",
         
+        "layer_image_box": "<div class='layer-image-box'>                                  
+                                <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                            </div>",
+
+        "complex_layer_image_box": "<div class='layer-complex-image-box'>
+                                        <div class='layer-image-box'>                                  
+                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                        </div>
+                                        <div class='layer-image-box'>                                  
+                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                        </div>
+                                        <div class='layer-image-box'>                                  
+                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                        </div>
+                                        <button class='btn btn-xs button-none'>
+                                            <i class='fa fa-plus-square-o'></i>
+                                            <span class='wb-invisible'></span>
+                                        </button>
+                                        
+                                    </div>",
+
+        "renderer_list_template":   "<div class='renderer-list'>
+                                        <ul>
+                                            {% include('renderer_template', o);%}
+                                            {% include('renderer_template', o);%}
+                                            {% include('renderer_template', o);%}
+                                        </ul>
+                                    </div>",
+
+        "renderer_template": "
+                                <li>
+                                   <div class='layer-details'>
+                                      <div class='layer-image-box'>
+                                        <img alt='' src='http://lorempixel.com/30/30/nature/#{%=o.layerId%}' class='layer-image bg-white'>
+                                      </div>
+                                      <span title='CESI Oil Area Overlay'>CESI Oil Area Overlay</span>
+                                    </div>
+                                </li>
+        ",
+
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"{% if (o.settings.enabled) { %}
