@@ -77,8 +77,10 @@
                                         <div class='layer-image-box'>                                  
                                             <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
                                         </div>
-                                        <button class='btn btn-xs button-none'>
+                                        <button class='btn btn-xs button-none renderer-button'>
+                                            <i class='fa fa-square'></i>
                                             <i class='fa fa-plus-square-o'></i>
+                                            <i class='fa fa-minus-square-o'></i>                                            
                                             <span class='wb-invisible'></span>
                                         </button>
                                         

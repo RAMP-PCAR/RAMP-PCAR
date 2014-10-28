@@ -247,6 +247,8 @@
         }
 
         .renderer-list {
+            display: none;
+
             ul {
                 list-style: none;
 
@@ -337,12 +339,31 @@
                     color: #000;
                 }
 
+                .fa-minus-square-o {
+                    display: none;
+                }
+
+                .fa-square {
+                    color: #fff;
+                }
+
+                &.button-pressed {
+                    .fa-plus-square-o {
+                        display: none;
+                    }
+
+                    .fa-minus-square-o {
+                        display: block;
+                    }
+                }
+
                 i {
                     position: absolute;
                     right: -1px;
                     top: -2px;
-                    background: white;
                 }
+
+                color: #000;
             }
         }
 
