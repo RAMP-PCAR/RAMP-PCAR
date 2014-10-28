@@ -424,6 +424,23 @@ define([
                         }
                     );
 
+                    PopupManager.registerPopup(layerList, "click",
+                        function (d) {
+                            this.target.slideToggle("fast", function () {
+
+                                adjustPaneWidth();
+                                d.resolve();
+                            });
+                            //this.target.find(".nstSlider").nstSlider("refresh");
+                        },
+                        {
+                            handleSelector: ".renderer-button",
+                            targetContainerSelector: "li.layerList1",
+                            targetSelector: ".renderer-list",
+                            activeClass: "button-pressed"
+                        }
+                    );
+
                     // metadata buttons
                     // to be changed...
                     layerList.find("legend button.metadata-button").on("click", function () {
