@@ -5,74 +5,88 @@
     "title": "root",
     "description": "RAMP Configuration",
 
-    "properties": {
+    "definitions": {
+        "wmsNode": { "type": "object" },
 
-        "featureLayers": {
-            "id": "#featureLayers",
-            "type": "array",            
-            "title": "Feature Layers",
-            "description": "Specifies Feature Layers displayed on the map",
-            "minItems": 0,
+        "featureNode": {
+            "type": "object",
 
-            "items": {
-                "id": "#featureLayer",
-                "type": "object",
+            "properties": {
 
-                "properties": {
-
-                    "settings": {
-                        "id": "#settings",
-                        "type": "object",
-                        "description": "Specifies settings for the Feature Layer",
-
-                        "properties": {
-                            "enabled": {
-                                "id": "#enabled",
-                                "type": "boolean",
-                                "description": "Indicates whether the Settings panel is accessible to the users",
-                                "default": true
-                            },
-
-                            "opacity": {
-                                "id": "#opacity",
-                                "type": "object",
-                                "description": "Specifies the opacity setting for the Feature Layer",
-
-                                "properties": {
-                                    "enabled": {
-                                        "id": "#enabled",
-                                        "type": "boolean",
-                                        "description": "Indicates whether the Opacity control is accessible to the users",
-                                        "default": true
-                                    },
-                                    "default": {
-                                        "id": "#default",
-                                        "type": "number",
-                                        "description": "Specifies the default opacity level of the Feature Layer",
-                                        "minimum": 0,
-                                        "maximum": 1,
-                                        "default": 1
-                                    }
-                                },
-                                "required": [
-                                    "enabled",
-                                    "default"
-                                ]
-                            }
-                        },
-                        "required": [
-                            "enabled",
-                            "opacity"
-                        ]
-                    }
+                "id": {
+                    "type": "string"
                 },
 
-                "required": [
-                    "settings"
-                ]
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "nameField": { "type": "string" },
+                "layerAttributes": { "type": "string", "default": "*" },
+
+                "layerExtent": { "type": "object" },
+                "templates": { "type": "object" },
+                "symbology": { "type": "object" },
+                "datagrid": { "type": "object" },
+
+
+                "settings": {
+                    "id": "#settings",
+                    "type": "object",
+                    "description": "Specifies settings for the Feature Layer",
+
+                    "properties": {
+                        "panelEnabled": {
+                            "type": "boolean",
+                            "description": "Indicates whether the Settings panel is accessible to the users",
+                            "default": true
+                        },
+
+                        "opacity": {
+                            "type": "object",
+                            "description": "Specifies the opacity setting for the Feature Layer",
+
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Indicates whether the Opacity control is accessible to the users",
+                                    "default": true
+                                },
+                                "default": {
+                                    "id": "#default",
+                                    "type": "number",
+                                    "description": "Specifies the default opacity level of the Feature Layer",
+                                    "minimum": 0,
+                                    "maximum": 1,
+                                    "default": 1
+                                }
+                            },
+                            "required": [ "enabled", "default" ]
+                        }
+                    },
+                    "required": [ "enabled", "opacity" ]
+                }
             },
-            "required": [                
-            ]
+
+            "required": [ "id", "displayName", "url", "nameField", "layerExtent", "datagrid", "symbology" ]
+
+        }
+    },
+
+    "properties": {
+
+        "layers": {
+            "type": "object",
+            "properties": {
+                "feature": {
+                    "type": "array",
+                    "default": [ ],
+                    "items": { "$ref": "#/definitions/featureNode" }
+                },
+                "wms": {
+                    "type": "array",
+                    "default": [ ],
+                    "items": { "$ref": "#/definitions/wmsNode" }
+                }
+            }
         },
 
         "advancedToolbar": {
@@ -141,8 +155,5 @@
 
 
     },
-    "required": [
-        "featureLayers",
-        "advancedToolbar"
-    ]
+    "required": [ "advancedToolbar" ]
 }
