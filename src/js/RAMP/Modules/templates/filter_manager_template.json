@@ -18,7 +18,9 @@
                                         <fieldset>
                                             <legend>{% include('filter_row_template', o);%}</legend>																						
                                         </fieldset>
-                                        {% include('renderer_list_template', o);%}
+                                        
+                                       
+                                        
                                         {% include('filter_row_settings_template', o.fn.generateSettingsToggle(o));%}
                                     </li>",
         // Level 2
@@ -27,7 +29,7 @@
                                     <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
                                     <div class='layer-details'>
                                        
-                                        {% include('complex_layer_image_box', o);%}
+                                        
 
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
@@ -69,13 +71,13 @@
 
         "complex_layer_image_box": "<div class='layer-complex-image-box'>
                                         <div class='layer-image-box'>                                  
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                            <img alt='' src='{%=o.valueMaps[0].imageUrl%}' class='layer-image bg-white'>
                                         </div>
                                         <div class='layer-image-box'>                                  
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                            <img alt='' src='{%=o.valueMaps[0].imageUrl%}' class='layer-image bg-white'>
                                         </div>
                                         <div class='layer-image-box'>                                  
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                            <img alt='' src='{%=o.valueMaps[0].imageUrl%}' class='layer-image bg-white'>
                                         </div>
                                         <button class='btn btn-xs button-none renderer-button'>
                                             <i class='fa fa-square'></i>
@@ -89,8 +91,8 @@
         "renderer_list_template":   "<div class='renderer-list'>
                                         <ul>
                                             {%              
-                                                for (var i = 0; i <= Math.floor((Math.random() * 7) + 1); i ++) { 
-                                                    include('renderer_template', o);
+                                                for (var i = 0; i <= o.valueMaps.length - 1; i ++) { 
+                                                    include('renderer_template', o.valueMaps[0]);
                                                 }
                                             %}
                                         </ul>
@@ -100,9 +102,9 @@
                                 <li>
                                    <div class='layer-details'>
                                       <div class='layer-image-box'>
-                                        <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                        <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
                                       </div>
-                                      <span title='CESI Oil Area Overlay'>CESI Oil Area Overlay</span>
+                                      <span title='{%=o.value%}'>{%=o.value%}</span>
                                     </div>
                                 </li>
         ",
