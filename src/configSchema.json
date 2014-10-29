@@ -9,24 +9,41 @@
     "definitions": {
         "wmsNode": { "type": "object", "additionalProperties": true },
 
+        "gridColumn": { "type": "object", "additionalProperties": true },
+
         "featureNode": {
             "type": "object",
 
             "properties": {
 
-                "id": {
-                    "type": "string"
-                },
-
+                "id": { "type": "string" },
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
 
-                "layerExtent": { "type": "object" },
+                "layerExtent": {
+                    "type": "object",
+                    "properties": {
+                        "xmin": { "type": "number" },
+                        "ymin": { "type": "number" },
+                        "xmax": { "type": "number" },
+                        "ymax": { "type": "number" }
+                    },
+                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
+
+
+                },
                 "templates": { "type": "object" },
-                "symbology": { "type": "object" },
-                "datagrid": { "type": "object" },
+                "symbology": { "type": "object", "additionalProperties": true },
+                "datagrid": {
+                    "type": "object",
+                    "properties": {
+                        "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
+                        "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
+                    }
+
+                },
 
 
                 "settings": {
@@ -59,11 +76,12 @@
                                     "maximum": 1,
                                     "default": 1
                                 }
-                            },
-                            "required": [ "enabled", "default" ]
-                        }
-                    },
-                    "required": [ "enabled", "opacity" ]
+                            }
+                        },
+
+                        "visible": { "type": "boolean", "default": true },
+                        "boundingBoxVisible": { "type": "boolean", "default": false }
+                    }
                 }
             },
 

@@ -211,9 +211,10 @@
     "layers": {
         "feature": [
             {
-                "id": "layer_g5h6i",
+                "id": "708985e5-6408-4f7d-8363-bbe9c277bec2",
                 "displayName": "Water Regions",
                 "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1",
+                "nameField": "NAME",
                 "datagrid": {
                     "rowsPerPage": 50,
                     "gridColumns": [
@@ -487,56 +488,29 @@
                             "title": "USAGE",
                             "columnTemplate": "unformatted_grid_value"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
-                },
-                "layerAttributes": "*",
-                "filter": {
-
-                },
-                "mapTipSettings": {
-                    "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                    "hoverTemplate": "feature_hover_maptip_template",
-                    "anchorTemplate": "anchored_map_tip"
+                    ]
                 },
                 "symbology": {
-                    "renderer": {
-                        "type": "simple",
-                        "key1": "",
-                        "key2": "",
-                        "key3": ""
-                    },
-                    "icons": {
-                        "default": {
-                            "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1/images/37b5c6ec23acbc1b1760c6fcd1e8d607",
-                            "legendText": "Water Regions"
-                        }
-                    }
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1/images/37b5c6ec23acbc1b1760c6fcd1e8d607"
                 },
-                "uuid": "708985e5-6408-4f7d-8363-bbe9c277bec2",
-                "detailTemplate": "default_feature_details",
-                "nameField": "NAME",
                 "settings": {
-                    "enabled": true,
                     "opacity": {
                         "enabled": true,
                         "default": 0.8
                     }
                 },
-                "layerVisible": true,
-                "boundingBoxVisible": false,
-                "boundingBox": {
-                    "extent": {
-                        "xmin": -2466001,
-                        "ymin": -695058,
-                        "xmax": 3009765,
-                        "ymax": 3832931
-                    }
+                "layerExtent": {
+                    "xmin": -2466001,
+                    "ymin": -695058,
+                    "xmax": 3009765,
+                    "ymax": 3832931
                 }
             },
             {
-                "id": "layer_dd1m3",
+                "id": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
                 "displayName": "BBS Routes",
+                "nameField": "ROUTE_NAME",
                 "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0",
                 "datagrid": {
                     "rowsPerPage": 50,
@@ -871,51 +845,23 @@
                             "title": "Province",
                             "columnTemplate": "unformatted_grid_value"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
-                },
-                "layerAttributes": "*",
-                "filter": {
-
-                },
-                "mapTipSettings": {
-                    "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${ROUTE_NAME}</span></div>",
-                    "hoverTemplate": "feature_hover_maptip_template",
-                    "anchorTemplate": "anchored_map_tip"
+                    ]
                 },
                 "symbology": {
-                    "renderer": {
-                        "type": "simple",
-                        "key1": "",
-                        "key2": "",
-                        "key3": ""
-                    },
-                    "icons": {
-                        "default": {
-                            "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0/images/8c03a6f7bae30ba5fe760f626d545e23",
-                            "legendText": "BBS Routes"
-                        }
-                    }
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0/images/8c03a6f7bae30ba5fe760f626d545e23"
                 },
-                "uuid": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
-                "detailTemplate": "default_feature_details",
-                "nameField": "ROUTE_NAME",
                 "settings": {
-                    "enabled": false,
                     "opacity": {
                         "enabled": false,
                         "default": 0.1
                     }
                 },
-                "layerVisible": true,
-                "boundingBoxVisible": false,
-                "boundingBox": {
-                    "extent": {
-                        "xmin": -2317716,
-                        "ymin": -692095,
-                        "xmax": 3000105,
-                        "ymax": 2558710
-                    }
+                "layerExtent": {
+                    "xmin": -2317716,
+                    "ymin": -692095,
+                    "xmax": 3000105,
+                    "ymax": 2558710
                 }
             },
             {
