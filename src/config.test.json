@@ -865,11 +865,11 @@
                 }
             },
             {
-                "id": "layer_w9v8u",
+                "id": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
                 "displayName": "CESI Water Quality Indicators",
                 "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
+                "nameField": "NAME",
                 "datagrid": {
-                    "rowsPerPage": 50,
                     "gridColumns": [
                         {
                             "id": "iconCol",
@@ -891,436 +891,57 @@
                             "title": "Station Name",
                             "columnTemplate": "unformatted_grid_value"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
-                },
-                "layerAttributes": "*",
-                "filter": {
-
-                },
-                "mapTipSettings": {
-                    "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                    "hoverTemplate": "feature_hover_maptip_template",
-                    "anchorTemplate": "anchored_map_tip"
+                    ]
                 },
                 "symbology": {
-                    "renderer": {
-                        "type": "simple",
-                        "key1": "",
-                        "key2": "",
-                        "key3": ""
-                    },
-                    "icons": {
-                        "default": {
-                            "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10/images/8a6e1c05e509aaf13c4f7ad79f3cf37e",
-                            "legendText": "CESI Water Quality Indicators"
-                        }
-                    }
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10/images/8a6e1c05e509aaf13c4f7ad79f3cf37e"
                 },
-                "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
-                "detailTemplate": "default_feature_details",
-                "nameField": "NAME",
                 "settings": {
-                    "enabled": true,
                     "opacity": {
                         "enabled": true,
                         "default": 0.3
                     }
                 },
-                "layerVisible": true,
-                "boundingBoxVisible": false,
-                "boundingBox": {
-                    "extent": {
-                        "xmin": -2081728,
-                        "ymin": -616928,
-                        "xmax": 2970781,
-                        "ymax": 2485914
-                    }
+                "layerExtent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
                 }
             },
             {
                 "id": "oilSandsRegions",
                 "displayName": "Oil Sands Regions",
                 "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
-                "datagrid": {
-                    "rowsPerPage": 0,
-                    "gridColumns": [
-                        {
-                            "id": "iconCol",
-                            "fieldName": "",
-                            "width": "50px",
-                            "isSortable": false,
-                            "sortType": "string",
-                            "alignment": 1,
-                            "title": "Icon",
-                            "columnTemplate": "graphic_icon"
-                        },
-                        {
-                            "id": "nameCol",
-                            "fieldName": "NAME",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "string",
-                            "alignment": 1,
-                            "title": "Station Name",
-                            "columnTemplate": "unformatted_grid_value"
-                        }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
-                },
-                "layerAttributes": "*",
-                "filter": {
-
-                },
-                "mapTipSettings": {
-                    "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                    "hoverTemplate": "feature_hover_maptip_template",
-                    "anchorTemplate": "anchored_map_tip"
-                },
                 "symbology": {
-                    "renderer": {
-                        "type": "simple",
-                        "key1": "",
-                        "key2": "",
-                        "key3": ""
-                    },
-                    "icons": {
-                        "default": {
-                            "imageUrl": "assets/images/icons/oil-128-128.png",
-                            "legendText": "Oil Sands Regions"
-                        }
-                    }
+                    "type": "simple",
+                    "imageUrl": "assets/images/icons/oil-128-128.png"
                 },
-                "uuid": "xxxxxx-xxxxxx-xxxxx-xxxxxx",
-                "detailTemplate": "default_feature_details",
-                "nameField": "NAME",
                 "settings": {
-                    "enabled": true,
                     "opacity": {
                         "enabled": true,
                         "default": 0.8
                     }
                 },
-                "isStatic": true,
-                "layerType": "feature",
-                "layerVisible": true
+                "isStatic": true
             },
             {
                 "id": "oilAreaOverlay",
                 "displayName": "CESI Oil Area Overlay",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
-                "datagrid": {
-                    "rowsPerPage": 0,
-                    "gridColumns": [
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        },
-                        {
-                            "id": "",
-                            "fieldName": "",
-                            "width": "",
-                            "isSortable": false,
-                            "sortType": "",
-                            "alignment": 0,
-                            "title": "",
-                            "columnTemplate": ""
-                        }
-                    ],
-                    "summaryRowTemplate": ""
-                },
-                "layerAttributes": "",
-                "filter": {
-
-                },
                 "symbology": {
-                    "renderer": {
-                        "type": "",
-                        "key1": "",
-                        "key2": "",
-                        "key3": ""
-                    },
-                    "icons": {
-                        "default": {
-                            "imageUrl": "assets/images/icons/oil-128-128.png",
-                            "legendText": "Static Layer"
-                        }
-                    }
+                    "type": "simple",
+                    "imageUrl": "assets/images/icons/oil-128-128.png"
                 },
-                "uuid": "",
-                "detailTemplate": "",
-                "nameField": "",
                 "settings": {
-                    "enabled": true,
                     "opacity": {
                         "enabled": true,
                         "default": 0.7
-                    }
+                    },
+                    "visible": false
                 },
-                "layerType": "feature",
-                "isStatic": true,
-                "mapTipSettings": {
-                    "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                    "hoverTemplate": "feature_hover_maptip_template",
-                    "anchorTemplate": "anchored_map_tip"
-                },
-                "layerVisible": false
+                "isStatic": true
             }
         ],
         "wms": [
@@ -1340,14 +961,14 @@
                 "id": "layer_wms1",
                 "layerInfo": {
                     "allExtents": [
-                        
+
                     ],
                     "name": "RDPS.ETA_TT",
                     "spatialReferences": [
-                        
+
                     ],
                     "subLayers": [
-                        
+
                     ],
                     "title": "RDPS.ETA - Air Temperature (c)"
                 },
@@ -1400,15 +1021,15 @@
                 "id": "wms5",
                 "layerInfo": {
                     "allExtents": [
-                        
+
                     ],
                     "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
                     "name": "RDPS.ETA_UU",
                     "spatialReferences": [
-                        
+
                     ],
                     "subLayers": [
-                        
+
                     ],
                     "title": "RDPS.ETA - Winds (noeuds)"
                 },

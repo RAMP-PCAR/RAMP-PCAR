@@ -11,16 +11,12 @@
 
         "gridColumn": { "type": "object", "additionalProperties": true },
 
-        "featureNode": {
+        "basicNode": {
             "type": "object",
-
             "properties": {
-
                 "id": { "type": "string" },
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
-                "nameField": { "type": "string" },
-                "layerAttributes": { "type": "string", "default": "*" },
 
                 "layerExtent": {
                     "type": "object",
@@ -31,21 +27,8 @@
                         "ymax": { "type": "number" }
                     },
                     "required": [ "xmin", "ymin", "xmax", "ymax" ]
-
-
                 },
-                "templates": { "type": "object" },
                 "symbology": { "type": "object", "additionalProperties": true },
-                "datagrid": {
-                    "type": "object",
-                    "properties": {
-                        "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
-                        "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
-                    }
-
-                },
-
-
                 "settings": {
                     "id": "#settings",
                     "type": "object",
@@ -83,10 +66,52 @@
                         "boundingBoxVisible": { "type": "boolean", "default": false }
                     }
                 }
+
             },
+            "required": [ "id", "displayName", "url", "layerExtent", "symbology" ]
+        },
 
-            "required": [ "id", "displayName", "url", "nameField", "layerExtent", "datagrid", "symbology" ]
+        "staticNode": {
+            "allOf": [
+                { "$ref": "#/definitions/basicNode" },
+                {
+                    "properties": {
+                        "isStatic": { "type": "boolean", "enum": [ true ] }
+                    },
+                    "required": ["isStatic"]
 
+                }
+            ]
+
+
+        },
+
+        "featureNode": {
+            "allOf": [
+                { "$ref": "#/definitions/basicNode" },
+                {
+                    "type": "object",
+
+                    "properties": {
+
+                        "nameField": { "type": "string" },
+                        "layerAttributes": { "type": "string", "default": "*" },
+
+                        "templates": { "type": "object" },
+                        "datagrid": {
+                            "type": "object",
+                            "properties": {
+                                "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
+                                "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
+                            }
+
+                        }
+
+                    },
+                    "required": [ "nameField", "datagrid" ]
+                }
+
+            ]
         }
     },
 
@@ -98,7 +123,7 @@
                 "feature": {
                     "type": "array",
                     "default": [ ],
-                    "items": { "$ref": "#/definitions/featureNode" }
+                    "items": { "anyOf": [ { "$ref": "#/definitions/featureNode" }, { "$ref": "#/definitions/staticNode" } ] }
                 },
                 "wms": {
                     "type": "array",
