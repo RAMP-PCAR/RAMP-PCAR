@@ -1112,7 +1112,7 @@ module.exports = (grunt) ->
                 
             config:
                 src: [
-                    'src/config.en.json'
+                    'src/config.test.json'
                 ]           
 
     # These plugins provide necessary tasks.

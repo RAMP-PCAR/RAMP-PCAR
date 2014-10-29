@@ -4,9 +4,10 @@
     "type": "object",
     "title": "root",
     "description": "RAMP Configuration",
+    "additionalProperties": true,
 
     "definitions": {
-        "wmsNode": { "type": "object" },
+        "wmsNode": { "type": "object", "additionalProperties": true },
 
         "featureNode": {
             "type": "object",
