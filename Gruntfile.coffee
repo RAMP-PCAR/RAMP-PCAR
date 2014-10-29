@@ -1010,6 +1010,14 @@ module.exports = (grunt) ->
                     'notify:css'
                 ]
             
+            rampConfig:
+                files: [
+                    'src/config*.json'
+                ]
+                tasks: [
+                    'copy:configBuild'
+                ]
+            
             config:
                 files: [
                     'Gruntfile.coffee'
