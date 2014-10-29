@@ -38,7 +38,8 @@ module.exports = (grunt) ->
         'copy:build'
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
-            'copy:configBuild'
+            'generateConfig'
+            #'copy:configBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
@@ -322,6 +323,36 @@ module.exports = (grunt) ->
                     data = data.replace 'Done, without errors.', 'Done, thanks!'
                     fs.writeFileSync fileName, data
                     done()
+    )
+
+    @registerTask(
+        'generateConfig'
+        'INTERNAL'
+        () ->
+            languages = ['en', 'fr']
+            tasks = []
+            
+            languages.forEach(
+                ( lang ) ->
+                    json = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+                    
+                    grunt.config 'replace.config-' + lang,
+                        options:
+                            patterns: [
+                                json: json
+                            ]
+                        files: [
+                            src: 'src/config.json'
+                            dest: 'build/config.' + lang + '.json'
+                        ]
+                        
+                    tasks.push 'replace:config-' + lang
+            )       
+            
+            #console.log grunt.config 'replace'
+            #console.log tasks
+            grunt.task.run tasks  
+            
     )
 
     smartExpand = ( cwd, arr, extra ) ->    
@@ -1015,7 +1046,8 @@ module.exports = (grunt) ->
                     'src/config*.json'
                 ]
                 tasks: [
-                    'copy:configBuild'
+                    #'copy:configBuild'
+                    'generateConfig'
                 ]
             
             config:
