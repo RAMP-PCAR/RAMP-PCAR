@@ -39,7 +39,7 @@ define(["ramp/globalStorage"],
 
                     case "uniqueValue":
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
-                        var graphicKey = graphic.attributes[symbolConfig.renderer.field1];
+                        var graphicKey = graphic.attributes[symbolConfig.field1];
                         if (symbolConfig.field2 !== null) {
                             graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
                             if (symbolConfig.field3 !== null) {
