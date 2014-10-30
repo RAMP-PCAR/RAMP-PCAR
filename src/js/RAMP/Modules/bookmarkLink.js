@@ -505,7 +505,6 @@ define([
                         layerConfig.settings.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
@@ -523,7 +522,6 @@ define([
                         layerConfig.settings.boundingBoxVisible = false;
                         boundingBoxVisibility[layerId] = false;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {

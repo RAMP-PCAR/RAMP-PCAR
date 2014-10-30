@@ -63,15 +63,15 @@ require([
     //"dojo/domReady!"],
 
     function (
-        /* Dojo */
-        parser, dojoOn, topic, requestScript, xhr, dojoArray,
+    /* Dojo */
+    parser, dojoOn, topic, requestScript, xhr, dojoArray,
 
-        /* RAMP */
-        RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
-        BookmarkLink, Url, FeatureHighlighter,
-        Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+    /* RAMP */
+    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+    BookmarkLink, Url, FeatureHighlighter,
+    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
-        /* Utils */
+    /* Utils */
         UtilMisc
     ) {
         "use strict";
@@ -168,10 +168,10 @@ require([
         }
 
         i18n.init(
-            {
-                lng: lang + "-CA",
-                load: "current",
-                fallbackLng: false
+        {
+            lng: lang + "-CA",
+            load: "current",
+            fallbackLng: false
             });
 
         //loading config object from JSON file
@@ -182,11 +182,69 @@ require([
             handleAs: "json"
         });
 
+   
+   
+
         defJson.then(
-            function (fileContent) {
-                var pluginConfig,
-                    advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
+            function (fileConfig) {
+                
                 //there is no need to convert the result to an object.  it comes through pre-parsed
+                if (globalStorage.getConfigUrl() === "") {
+                    //no config service.  we just use the file provided
+                    configReady(fileConfig);
+                } else {
+                    //get additional config stuff from the config service.  mash it into our primary object
+
+                    // pull smallkeys from URL
+                    var siteURL = new Url(require.toUrl(document.location)),                        
+                        smallkeys = siteURL.queryObject.keys;
+                    
+
+                    if (!smallkeys || smallkeys === "") {
+                        //no keys.  no point hitting the service.  jump to next step
+                        configReady(fileConfig);
+                    } else {
+
+                        //TODO verify endpoint is correct
+                        var serviceUrl = globalStorage.getConfigUrl() + "docs/" + $("html").attr("lang") + "/" + smallkeys;
+
+                        //Request the JSON snippets from the RAMP Config Service
+
+                        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
+                        //      we use request/script instead to get the config as jsonp
+                        //      we may consider looking into ways to mitiate the cross domain issue (Aly had some ideas)
+
+                        var defService = requestScript.get(serviceUrl, { jsonp: "callback" });
+                        defService.then(
+                            function (serviceContent) {
+                                //we are expecting an array of JSON config fragments
+                                //merge each fragment into the file config
+
+                                dojoArray.forEach(serviceContent, function (configFragment) {
+                                    UtilMisc.mergeRecursive(fileConfig, configFragment);
+                                });
+
+                                //fragments are now in fileConfig.  carry on.
+                                configReady(fileConfig)
+                            },
+                            function (error) {
+                                //console.log("An error occurred: " + error);
+                            }
+                        );
+
+                    }
+                  
+
+                }
+               
+            },
+            function (error) {
+                console.log("An error occurred when retrieving the JSON Config: " + error);
+            }
+        );
+
+        function configReady(configObject) {
+            var pluginConfig;
 
                 console.log("Bootstrapper: config loaded");
 
@@ -225,9 +283,6 @@ require([
                 BookmarkLink.createUI();
 
                 Ramp.loadStrings();
-            },
-            function (error) {
-                console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
     });
