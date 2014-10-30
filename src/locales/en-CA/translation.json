@@ -1,4 +1,58 @@
 {
+    "config": {
+        "basemaps": {
+            "baseNrCan": {
+                "name": "Canada Atlas",
+                "altText": "Topographic Map",
+                "description": "NrCan CBCT3978"
+            },
+
+            "baseSimple": {
+                "name": "Water Bodies",
+                "altText": "Topographic Map",
+                "description": "NrCan Simple"
+            },
+            "baseCBME_CBCE_HS_RO_3978": {
+                "name": "Road Networks",
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_GEOM"
+            },
+            "baseE2M": {
+                "name": "Canada Topographic",
+                "altText": "Topographic Map",
+                "description": "Earth 2 Map"
+            }
+        },
+
+        "layers": {
+            "feature": {
+                "layer_g5h6i": {
+                    "displayName": "Water Regions"
+                },
+                "layer_dd1m3": {
+                    "displayName": "BBS Routes"
+                },
+                "layer_w9v8u": {
+                    "displayName": "CESI Water Quality Indicators"
+                },
+                "oilSandsRegions": {
+                    "displayName": "Oil Sands Regions"
+                },
+                "oilAreaOverlay": {
+                    "displayName": "CESI Oil Area Overlay"
+                }
+            },
+            "wms": { 
+                "layer_wms1": {
+                    "displayName": "Air Temperature"
+                },
+                "wms5": {
+                    "displayName": "Wind"
+                }
+            }
+        }
+    },
+
     "page": {
 
         "title": "Reusable Accessible Mapping Platform (RAMP)",
@@ -48,20 +102,20 @@
             "link3Url": "http://ramp-racp.github.io/docs/index-en.html",
 
             "link1Title": "RAMP Project",
-            
+
             "link1sub1Title": "About RAMP",
             "link1sub2Title": "Benefits",
             "link1sub3Title": "Source Code",
             "link1sub4Title": "Terms and Conditions",
-            
+
             "link2Title": "Using RAMP",
-            
+
             "link2sub1Title": "Getting Started",
             "link2sub2Title": "Download RAMP",
             "link2sub3Title": "Working Examples",
-            
+
             "link3Title": "RAMP Documentation",
-            
+
             "link3sub1Title": "Table of Contents",
             "link3sub2Title": "API Reference",
             "link3sub3Title": "Roadmap",
@@ -259,9 +313,9 @@
             "h2": "Layer Types",
             "p2": "There are three types of layers that can reside in the Dataset tab.",
             "ul2": {
-                "li1" : "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.",
-                "li2" : "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.",
-                "li3" : "WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid."
+                "li1": "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.",
+                "li2": "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.",
+                "li3": "WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid."
             },
             "img2": "Data Sets",
 
@@ -292,7 +346,7 @@
             "h2": "Sorting",
             "img2": "The Sort Button",
             "p2": "Select the Sort link at the top of the data grid to sort by field name, descending. Select the Sort link again to switch the sort to ascending mode.",
-            
+
             "h3": "Details",
             "img3": "The Details Button",
             "p3": "Select the Details link next to each data row to display its information in an Info Panel. This function replicates clicking directly on a map feature.",
@@ -311,7 +365,7 @@
             "p61": "There is also a record count next to the pagination buttons, which indicates the number of features currently in the map extent versus the total number of features in the map."
         },
 
-        "s8" : {
+        "s8": {
             "header": "Extended Grid",
             "p1": "The Extended Grid lists detailed information about all the features that in the current map extent.",
             "h1": "Usage",
@@ -320,7 +374,7 @@
             "h2": "Full Data Button",
             "img2": "The Extended Grid Button",
             "p2": "Select the \"Full Data\" button at the top right corner of the Summary Grid to show the Extended Grid.",
-            
+
             "h3": "Data Summary Button",
             "img3": "The Data Summary Button",
             "p3": "Select the \"Data Summary\" button at the top right corner of the Extended Grid to go back to the Summary Grid view.",
@@ -350,7 +404,7 @@
         "s10": {
             "header": "Accessibility",
             "p1": "This page is WCAG 2.0 AA compliant.",
-            
+
             "h2": "Keyboard Accessibility",
             "p2": "Keyboard functionality is provided as an alternative for users who are unable to use a mouse. Use the Tab key to navigate forward to links and controls on the page. Press Shift+Tab to go back one step. Use the Enter or Spacebar keys to activate links and controls.",
 
@@ -364,7 +418,7 @@
             "p5": "Within the Datasets tab, use the Up and Down arrow keys to navigate to different layers. With the layer handle (6 dots icon) highlighted, use Enter or Spacebar to grab the layer. Grabbed layers are indicated with a dark blue background. With the layer grabbed, use the Up or Down arrow keys to re-order the layers on the map interface. Press Enter or Spacebar again to release the layer."
         },
 
-        "s11" : {
+        "s11": {
             "header": "Advanced Toolbar",
             "p1": "The advanced toolbar provides utilities that can break accessibility, usually due to their dependance on a mouse-driven input.",
             "h1": "Usage",

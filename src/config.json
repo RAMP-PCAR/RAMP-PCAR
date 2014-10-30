@@ -1,6 +1,6 @@
 {
     "lang": "en",
-    "helpContent": "@@page.lang.main",
+    "helpContent": "Help Content",
     "spatialReference": {
         "wkid": 3978
     },
@@ -159,9 +159,9 @@
             "showOnInit": true,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "Canada Atlas",
-            "altText": "Topographic Map",
-            "description": "NrCan CBCT3978"
+            "name": "@@config.basemaps.baseNrCan.name",
+            "altText": "@@config.basemaps.baseNrCan.altText",
+            "description": "@@config.basemaps.baseNrCan.description"
         },
         {
             "id": "baseSimple",
@@ -170,9 +170,9 @@
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "Water Bodies",
-            "altText": "Topographic Map",
-            "description": "NrCan Simple"
+            "name": "@@config.basemaps.baseSimple.name",
+            "altText": "@@config.basemaps.baseSimple.altText",
+            "description": "@@config.basemaps.baseSimple.description"
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
@@ -181,9 +181,9 @@
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "Elevation",
-            "altText": "Topographic Map",
-            "description": "NrCan CBME_CBCE_HS_RO_3978"
+            "name": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
+            "altText": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
+            "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description"
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
@@ -192,9 +192,9 @@
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "Road Networks",
-            "altText": "Topographic Map",
-            "description": "NrCan CBMT_CBCT_GEOM"
+            "name": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
+            "altText": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
+            "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description"
         },
         {
             "id": "baseE2M",
@@ -203,15 +203,15 @@
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "Canada Topographic",
-            "altText": "Topographic Map",
-            "description": "Earth 2 Map"
+            "name": "@@config.basemaps.baseE2M.name",
+            "altText": "@@config.basemaps.baseE2M.altText",
+            "description": "@@config.basemaps.baseE2M.description"
         }
     ],
     "featureLayers": [
         {
             "id": "layer_g5h6i",
-            "displayName": "Water Regions",
+            "displayName": "@@config.layers.feature.layer_g5h6i",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -535,7 +535,7 @@
         },
         {
             "id": "layer_dd1m3",
-            "displayName": "BBS Routes",
+            "displayName": "@@config.layers.feature.layer_dd1m3",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -919,7 +919,7 @@
         },
         {
             "id": "layer_w9v8u",
-            "displayName": "CESI Water Quality Indicators",
+            "displayName": "@@config.layers.feature.layer_w9v8u",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -993,7 +993,7 @@
         },
         {
             "id": "oilSandsRegions",
-            "displayName": "Oil Sands Regions",
+            "displayName": "@@config.layers.feature.oilSandsRegions",
             "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
@@ -1060,7 +1060,7 @@
         },
         {
             "id": "oilAreaOverlay",
-            "displayName": "CESI Oil Area Overlay",
+            "displayName": "@@config.layers.feature.oilAreaOverlay",
             "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
@@ -1422,7 +1422,7 @@
     },
     "wmsLayers": [
         {
-            "displayName": "Air Temperature",
+            "displayName": "@@config.layers.wms.layer_wms1",
             "error": "",
             "extent": {
                 "spatialReference": {
@@ -1482,7 +1482,7 @@
             }
         },
         {
-            "displayName": "Winds",
+            "displayName": "@@config.layers.wms.wms5",
             "error": "",
             "extent": {
                 "spatialReference": {

@@ -1,4 +1,58 @@
 {
+    "config": {
+        "basemaps": {
+            "baseNrCan": {
+                "name": "[fr] Canada Atlas",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] NrCan CBCT3978"
+            },
+
+            "baseSimple": {
+                "name": "[fr] Water Bodies",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] NrCan Simple"
+            },
+            "baseCBME_CBCE_HS_RO_3978": {
+                "name": "[fr] Road Networks",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] NrCan CBMT_CBCT_GEOM"
+            },
+            "baseE2M": {
+                "name": "[fr] Canada Topographic",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] Earth 2 Map"
+            }
+        },
+
+        "layers": {
+            "feature": {
+                "layer_g5h6i": {
+                    "displayName": "[fr] Water Regions"
+                },
+                "layer_dd1m3": {
+                    "displayName": "[fr] BBS Routes"
+                },
+                "layer_w9v8u": {
+                    "displayName": "[fr] CESI Water Quality Indicators"
+                },
+                "oilSandsRegions": {
+                    "displayName": "[fr] Oil Sands Regions"
+                },
+                "oilAreaOverlay": {
+                    "displayName": "[fr] CESI Oil Area Overlay"
+                }
+            },
+            "wms": { 
+                "layer_wms1": {
+                    "displayName": "[fr] Air Temperature"
+                },
+                "wms5": {
+                    "displayName": "[fr] Wind"
+                }
+            }
+        }
+    },
+
     "page": {
 
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)",
@@ -48,20 +102,20 @@
             "link3Url": "http://ramp-racp.github.io/docs/index-fr.html",
 
             "link1Title": "Projet de PCAR",
-            
+
             "link1sub1Title": "À propos de la PCAR",
             "link1sub2Title": "Avantages",
             "link1sub3Title": "Code source",
             "link1sub4Title": "Avis",
-            
+
             "link2Title": "Utilisation de la PCAR",
-            
+
             "link2sub1Title": "Pour commencer",
             "link2sub2Title": "Téléchargez la PCAR",
             "link2sub3Title": "Exemples concrets",
 
             "link3Title": "Documentation de la PCAR",
-            
+
             "link3sub1Title": "Table des matières",
             "link3sub2Title": "Références d'API",
             "link3sub3Title": "Feuille de route",
@@ -259,9 +313,9 @@
             "h2": "Types de couche",
             "p2": "Trois types de couche peuvent être présentés sous l’onglet « Ensemble de données ».",
             "ul2": {
-                "li1" : "Les couches d’éléments interactifs affichent des données avec lesquelles on peut interagir sur la carte, et qui peuvent être affichées dans la grille de données.",
-                "li2" : "Les couches statiques ajoutent un contexte géographique au fond de carte. Elles ne sont pas interactives et ne sont pas affichées dans la grille de données.",
-                "li3" : "Les couches SCW sont des couches superposées de données fournies par un service de cartes Web. Ces données sont interactives sur la carte, mais ne sont pas affichées dans la grille de données."
+                "li1": "Les couches d’éléments interactifs affichent des données avec lesquelles on peut interagir sur la carte, et qui peuvent être affichées dans la grille de données.",
+                "li2": "Les couches statiques ajoutent un contexte géographique au fond de carte. Elles ne sont pas interactives et ne sont pas affichées dans la grille de données.",
+                "li3": "Les couches SCW sont des couches superposées de données fournies par un service de cartes Web. Ces données sont interactives sur la carte, mais ne sont pas affichées dans la grille de données."
             },
             "img2": "Ensembles de données",
 
@@ -292,7 +346,7 @@
             "h2": "Trier",
             "img2": "Bouton « Trier »",
             "p2": "Sélectionnez le lien « Trier » dans la partie supérieure de la grille de données pour effectuer un tri selon le nom du champ dans l’ordre décroissant. Sélectionnez le lien « Trier » à nouveau pour effectuer un tri dans l’ordre croissant.",
-            
+
             "h3": "Détails",
             "img3": "Bouton « Détails »",
             "p3": "Sélectionnez le lien « Détails » associé à chaque ensemble de données pour afficher les renseignements sur l’ensemble dans le panneau d’information. Cette fonction reproduit un clic direct sur l’un des éléments interactifs affichés sur la carte.",
@@ -311,7 +365,7 @@
             "p61": "Le compteur d’éléments près des boutons de pagination indique le nombre d’éléments qui apparaissent dans l’affichage de la carte en cours par rapport au nombre total d’éléments présents sur la carte."
         },
 
-        "s8" : {
+        "s8": {
             "header": "Grille étendue",
             "p1": "La grille étendue présente les renseignements détaillés de tous les éléments interactifs qui apparaissent dans l’étendue de la carte courante.",
             "h1": "Utilisation",
@@ -320,7 +374,7 @@
             "h2": "Bouton « Données complètes »",
             "img2": "Bouton « Grille étendue »",
             "p2": "Sélectionnez le bouton « Données complètes » situé dans le coin supérieur droit de la grille synthèse pour afficher la grille étendue.",
-            
+
             "h3": "Bouton « Résumé des données »",
             "img3": "Bouton « Résumé des données »",
             "p3": "Sélectionnez le bouton « Résumé des données » dans le coin supérieur droit de la grille étendue pour retourner à la grille synthèse.",
@@ -350,7 +404,7 @@
         "s10": {
             "header": "Accessibilité",
             "p1": "Cette page respecte les règles pour l’accessibilité des contenus Web WCAG 2.0 AA.",
-            
+
             "h2": "Accessibilité au clavier",
             "p2": "La fonctionnalité du clavier est offerte en tant qu’alternative pour les utilisateurs qui sont incapables d’utiliser une souris. Utilisez la touche de tabulation pour naviguer vers les liens et les contrôles sur la page. Appuyez simultanément sur les touches Majuscule+Tabulation pour revenir un pas en arrière. Utilisez la touche Entrée ou la barre d’espace pour activer les liens et les contrôles.",
 
@@ -364,7 +418,7 @@
             "p5": "Dans l’onglet « Ensembles de données », utilisez les flèches orientées vers le haut et vers le bas pour naviguer entre les différentes couches. Avec la poignée de couche (l’icône à six points) sélectionnée, utilisez la touche Entrée ou la barre d’espace pour saisir la couche. Les couches saisies sont identifiées par un fond bleu foncé. Avec la couche saisie, utilisez les flèches orientées vers le haut ou vers le bas pour réorganiser les couches sur l’interface cartographique. Appuyez sur la touche Entrée ou la barre d’espace pour libérer la couche."
         },
 
-        "s11" : {
+        "s11": {
             "header": "Barre d’outils avancée",
             "p1": "La barre d’outils avancée offre des utilitaires qui peuvent interrompre l’accès, habituellement parce que la saisie de données dans ces utilitaires se fait à l’aide de la souris.",
             "h1": "Utilisation",
