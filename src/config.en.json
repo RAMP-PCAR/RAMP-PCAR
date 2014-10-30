@@ -208,1174 +208,878 @@
             "description": "Earth 2 Map"
         }
     ],
-    "featureLayers": [
-        {
-            "id": "layer_g5h6i",
-            "displayName": "Water Regions",
-            "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1",
-            "datagrid": {
-                "rowsPerPage": 50,
-                "gridColumns": [
-                    {
-                        "id": "iconCol",
-                        "fieldName": "",
-                        "width": "50px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 0,
-                        "title": "Icon",
-                        "columnTemplate": "graphic_icon"
-                    },
-                    {
-                        "id": "detailsCol",
-                        "fieldName": "NAME",
-                        "width": "60px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 0,
-                        "title": "Details",
-                        "columnTemplate": "details_button"
-                    },
-                    {
-                        "id": "fidCol",
-                        "fieldName": "FID",
-                        "width": "25px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 0,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "NAME",
-                        "width": "50px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Region",
-                        "columnTemplate": "title_span"
-                    },
-                    {
-                        "id": "areaCol",
-                        "fieldName": "AREA_KM2",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 0,
-                        "title": "Area (km2)",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "latCol",
-                        "fieldName": "LAT_DD",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 0,
-                        "title": "LAT",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "fidCol",
-                        "fieldName": "LON_DD",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 0,
-                        "title": "LON",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "provCol",
-                        "fieldName": "PROVINCE_C",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 0,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "clcv4Col",
-                        "fieldName": "CLC_V4",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "CLC_V4",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "clcv5Col",
-                        "fieldName": "CLC_V5",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "CLC_V5",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "depictnCol",
-                        "fieldName": "DEPICTN",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "DEPICTN",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "kindCol",
-                        "fieldName": "KIND",
-                        "width": "70px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "KIND",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "waterbodyCol",
-                        "fieldName": "WATRBODY_C",
-                        "width": "90px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "WATRBODY_C",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "countryCol",
-                        "fieldName": "COUNTRY_C",
-                        "width": "80px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 0,
-                        "title": "COUNTRY_C",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "usageCol",
-                        "fieldName": "USAGE",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "USAGE",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "NAME",
-                        "width": "120px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Region Name",
-                        "columnTemplate": "title_span"
-                    },
-                    {
-                        "id": "areaCol",
-                        "fieldName": "AREA_KM2",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "Area (km2)",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "latCol",
-                        "fieldName": "LAT_DD",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "LAT",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "fidCol",
-                        "fieldName": "LON_DD",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "LON",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "provCol",
-                        "fieldName": "PROVINCE_C",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "clcv4Col",
-                        "fieldName": "CLC_V4",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "CLC_V4",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "clcv5Col",
-                        "fieldName": "CLC_V5",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "CLC_V5",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "depictnCol",
-                        "fieldName": "DEPICTN",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "DEPICTN",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "kindCol",
-                        "fieldName": "KIND",
-                        "width": "60px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "KIND",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "waterbodyCol",
-                        "fieldName": "WATRBODY_C",
-                        "width": "100px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "WATRBODY_C",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "countryCol",
-                        "fieldName": "COUNTRY_C",
-                        "width": "60px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 0,
-                        "title": "COUNTRY_C",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "usageCol",
-                        "fieldName": "USAGE",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "USAGE",
-                        "columnTemplate": "unformatted_grid_value"
-                    }
-                ],
-                "summaryRowTemplate": "default_grid_summary_row"
-            },
-            "layerAttributes": "*",
-            "filter": {
-                
-            },
-            "mapTipSettings": {
-                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                "hoverTemplate": "feature_hover_maptip_template",
-                "anchorTemplate": "anchored_map_tip"
-            },
-            "symbology": {
-                "renderer": {
-                    "type": "simple",
-                    "key1": "",
-                    "key2": "",
-                    "key3": ""
+    "layers": {
+        "feature": [
+            {
+                "id": "708985e5-6408-4f7d-8363-bbe9c277bec2",
+                "displayName": "Water Regions",
+                "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1",
+                "nameField": "NAME",
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 0,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "detailsCol",
+                            "fieldName": "NAME",
+                            "width": "60px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 0,
+                            "title": "Details",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "fidCol",
+                            "fieldName": "FID",
+                            "width": "25px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 0,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "NAME",
+                            "width": "50px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Region",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "areaCol",
+                            "fieldName": "AREA_KM2",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 0,
+                            "title": "Area (km2)",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "latCol",
+                            "fieldName": "LAT_DD",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 0,
+                            "title": "LAT",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "fidCol",
+                            "fieldName": "LON_DD",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 0,
+                            "title": "LON",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "provCol",
+                            "fieldName": "PROVINCE_C",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 0,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "clcv4Col",
+                            "fieldName": "CLC_V4",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "CLC_V4",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "clcv5Col",
+                            "fieldName": "CLC_V5",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "CLC_V5",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "depictnCol",
+                            "fieldName": "DEPICTN",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "DEPICTN",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "kindCol",
+                            "fieldName": "KIND",
+                            "width": "70px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "KIND",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "waterbodyCol",
+                            "fieldName": "WATRBODY_C",
+                            "width": "90px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "WATRBODY_C",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "countryCol",
+                            "fieldName": "COUNTRY_C",
+                            "width": "80px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 0,
+                            "title": "COUNTRY_C",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "usageCol",
+                            "fieldName": "USAGE",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "USAGE",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "NAME",
+                            "width": "120px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Region Name",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "areaCol",
+                            "fieldName": "AREA_KM2",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "Area (km2)",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "latCol",
+                            "fieldName": "LAT_DD",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "LAT",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "fidCol",
+                            "fieldName": "LON_DD",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "LON",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "provCol",
+                            "fieldName": "PROVINCE_C",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "clcv4Col",
+                            "fieldName": "CLC_V4",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "CLC_V4",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "clcv5Col",
+                            "fieldName": "CLC_V5",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "CLC_V5",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "depictnCol",
+                            "fieldName": "DEPICTN",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "DEPICTN",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "kindCol",
+                            "fieldName": "KIND",
+                            "width": "60px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "KIND",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "waterbodyCol",
+                            "fieldName": "WATRBODY_C",
+                            "width": "100px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "WATRBODY_C",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "countryCol",
+                            "fieldName": "COUNTRY_C",
+                            "width": "60px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 0,
+                            "title": "COUNTRY_C",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "usageCol",
+                            "fieldName": "USAGE",
+                            "width": "",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "USAGE",
+                            "columnTemplate": "unformatted_grid_value"
+                        }
+                    ]
                 },
-                "icons": {
-                    "default": {
-                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1/images/37b5c6ec23acbc1b1760c6fcd1e8d607",
-                        "legendText": "Water Regions"
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1/images/37b5c6ec23acbc1b1760c6fcd1e8d607"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.8
                     }
-                }
-            },
-            "uuid": "708985e5-6408-4f7d-8363-bbe9c277bec2",
-            "detailTemplate": "default_feature_details",
-            "nameField": "NAME",
-            "settings": {
-                "enabled": true,
-                "opacity": {
-                    "enabled": true,
-                    "default": 0.8
-                }
-            },
-            "layerVisible": true,
-            "boundingBoxVisible": false,
-            "boundingBox": {
-                "extent": {
+                },
+                "layerExtent": {
                     "xmin": -2466001,
                     "ymin": -695058,
                     "xmax": 3009765,
                     "ymax": 3832931
                 }
-            }
-        },
-        {
-            "id": "layer_dd1m3",
-            "displayName": "BBS Routes",
-            "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0",
-            "datagrid": {
-                "rowsPerPage": 50,
-                "gridColumns": [
-                    {
-                        "id": "iconCol",
-                        "fieldName": "",
-                        "width": "300px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Icon",
-                        "columnTemplate": "graphic_icon"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Detais",
-                        "columnTemplate": "details_button"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "statusCol",
-                        "fieldName": "Status",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Status",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "ROUTE_NAME",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Route Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "FID",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "numeric",
-                        "alignment": 1,
-                        "title": "FID",
-                        "columnTemplate": "unformatted_grid_value"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "PROV",
-                        "width": "500px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Province",
-                        "columnTemplate": "unformatted_grid_value"
-                    }
-                ],
-                "summaryRowTemplate": "default_grid_summary_row"
             },
-            "layerAttributes": "*",
-            "filter": {
-                
-            },
-            "mapTipSettings": {
-                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${ROUTE_NAME}</span></div>",
-                "hoverTemplate": "feature_hover_maptip_template",
-                "anchorTemplate": "anchored_map_tip"
-            },
-            "symbology": {
-                "renderer": {
-                    "type": "simple",
-                    "key1": "",
-                    "key2": "",
-                    "key3": ""
+            {
+                "id": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
+                "displayName": "BBS Routes",
+                "nameField": "ROUTE_NAME",
+                "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0",
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "300px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Detais",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "statusCol",
+                            "fieldName": "Status",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Status",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "ROUTE_NAME",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Route Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "FID",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "numeric",
+                            "alignment": 1,
+                            "title": "FID",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "PROV",
+                            "width": "500px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Province",
+                            "columnTemplate": "unformatted_grid_value"
+                        }
+                    ]
                 },
-                "icons": {
-                    "default": {
-                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0/images/8c03a6f7bae30ba5fe760f626d545e23",
-                        "legendText": "BBS Routes"
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0/images/8c03a6f7bae30ba5fe760f626d545e23"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": false,
+                        "default": 0.1
                     }
-                }
-            },
-            "uuid": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
-            "detailTemplate": "default_feature_details",
-            "nameField": "ROUTE_NAME",
-            "settings": {
-                "enabled": false,
-                "opacity": {
-                    "enabled": false,
-                    "default": 0.1
-                }
-            },
-            "layerVisible": true,
-            "boundingBoxVisible": false,
-            "boundingBox": {
-                "extent": {
+                },
+                "layerExtent": {
                     "xmin": -2317716,
                     "ymin": -692095,
                     "xmax": 3000105,
                     "ymax": 2558710
                 }
-            }
-        },
-        {
-            "id": "layer_w9v8u",
-            "displayName": "CESI Water Quality Indicators",
-            "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
-            "datagrid": {
-                "rowsPerPage": 50,
-                "gridColumns": [
-                    {
-                        "id": "iconCol",
-                        "fieldName": "",
-                        "width": "50px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Icon",
-                        "columnTemplate": "graphic_icon"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "NAME",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Station Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    }
-                ],
-                "summaryRowTemplate": "default_grid_summary_row"
             },
-            "layerAttributes": "*",
-            "filter": {
-                
-            },
-            "mapTipSettings": {
-                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                "hoverTemplate": "feature_hover_maptip_template",
-                "anchorTemplate": "anchored_map_tip"
-            },
-            "symbology": {
-                "renderer": {
-                    "type": "simple",
-                    "key1": "",
-                    "key2": "",
-                    "key3": ""
+            {
+                "id": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
+                "displayName": "CESI Water Quality Indicators",
+                "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
+                "nameField": "NAME",
+                "datagrid": {
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "NAME",
+                            "width": "",
+                            "isSortable": false,
+                            "sortType": "string",
+                            "alignment": 1,
+                            "title": "Station Name",
+                            "columnTemplate": "unformatted_grid_value"
+                        }
+                    ]
                 },
-                "icons": {
-                    "default": {
-                        "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10/images/8a6e1c05e509aaf13c4f7ad79f3cf37e",
-                        "legendText": "CESI Water Quality Indicators"
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10/images/8a6e1c05e509aaf13c4f7ad79f3cf37e"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.3
                     }
-                }
-            },
-            "uuid": "b6b6d5a6-bded-4b6e-9e8a-17f6e1b538dc",
-            "detailTemplate": "default_feature_details",
-            "nameField": "NAME",
-            "settings": {
-                "enabled": true,
-                "opacity": {
-                    "enabled": true,
-                    "default": 0.3
-                }
-            },
-            "layerVisible": true,
-            "boundingBoxVisible": false,
-            "boundingBox": {
-                "extent": {
+                },
+                "layerExtent": {
                     "xmin": -2081728,
                     "ymin": -616928,
                     "xmax": 2970781,
                     "ymax": 2485914
                 }
-            }
-        },
-        {
-            "id": "oilSandsRegions",
-            "displayName": "Oil Sands Regions",
-            "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
-            "datagrid": {
-                "rowsPerPage": 0,
-                "gridColumns": [
-                    {
-                        "id": "iconCol",
-                        "fieldName": "",
-                        "width": "50px",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Icon",
-                        "columnTemplate": "graphic_icon"
-                    },
-                    {
-                        "id": "nameCol",
-                        "fieldName": "NAME",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "string",
-                        "alignment": 1,
-                        "title": "Station Name",
-                        "columnTemplate": "unformatted_grid_value"
-                    }
-                ],
-                "summaryRowTemplate": "default_grid_summary_row"
             },
-            "layerAttributes": "*",
-            "filter": {
-                
-            },
-            "mapTipSettings": {
-                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                "hoverTemplate": "feature_hover_maptip_template",
-                "anchorTemplate": "anchored_map_tip"
-            },
-            "symbology": {
-                "renderer": {
+            {
+                "id": "oilSandsRegions",
+                "displayName": "Oil Sands Regions",
+                "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
+                "symbology": {
                     "type": "simple",
-                    "key1": "",
-                    "key2": "",
-                    "key3": ""
+                    "imageUrl": "assets/images/icons/oil-128-128.png"
                 },
-                "icons": {
-                    "default": {
-                        "imageUrl": "assets/images/icons/oil-128-128.png",
-                        "legendText": "Oil Sands Regions"
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.8
                     }
-                }
-            },
-            "uuid": "xxxxxx-xxxxxx-xxxxx-xxxxxx",
-            "detailTemplate": "default_feature_details",
-            "nameField": "NAME",
-            "settings": {
-                "enabled": true,
-                "opacity": {
-                    "enabled": true,
-                    "default": 0.8
-                }
-            },
-            "isStatic": true,
-            "layerType": "feature",
-            "layerVisible": true
-        },
-        {
-            "id": "oilAreaOverlay",
-            "displayName": "CESI Oil Area Overlay",
-            "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
-            "datagrid": {
-                "rowsPerPage": 0,
-                "gridColumns": [
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    },
-                    {
-                        "id": "",
-                        "fieldName": "",
-                        "width": "",
-                        "isSortable": false,
-                        "sortType": "",
-                        "alignment": 0,
-                        "title": "",
-                        "columnTemplate": ""
-                    }
-                ],
-                "summaryRowTemplate": ""
-            },
-            "layerAttributes": "",
-            "filter": {
-                
-            },
-            "symbology": {
-                "renderer": {
-                    "type": "",
-                    "key1": "",
-                    "key2": "",
-                    "key3": ""
                 },
-                "icons": {
-                    "default": {
-                        "imageUrl": "assets/images/icons/oil-128-128.png",
-                        "legendText": "Static Layer"
+                "layerExtent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                },
+                "isStatic": true
+            },
+            {
+                "id": "oilAreaOverlay",
+                "displayName": "CESI Oil Area Overlay",
+                "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "assets/images/icons/oil-128-128.png"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.7
+                    },
+                    "visible": false
+                },
+                "layerExtent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                },
+                "isStatic": true
+            }
+        ],
+        "wms": [
+            {
+                "displayName": "Air Temperature",
+                "error": "",
+                "extent": {
+                    "spatialReference": {
+                        "wkid": 3978
+                    },
+                    "xmax": 2.003751E+07,
+                    "xmin": -2.003751E+07,
+                    "ymax": 1.036533E+08,
+                    "ymin": -1.036533E+08
+                },
+                "format": "png",
+                "id": "layer_wms1",
+                "layerInfo": {
+                    "allExtents": [
+
+                    ],
+                    "name": "RDPS.ETA_TT",
+                    "spatialReferences": [
+
+                    ],
+                    "subLayers": [
+
+                    ],
+                    "title": "RDPS.ETA - Air Temperature (c)"
+                },
+                "symbology": {
+                    "icons": {
+                        "default": {
+                            "imageUrl": "assets/images/wms.png",
+                            "legendText": "Air Temperature"
+                        }
+                    },
+                    "renderer": {
+                        "key1": "",
+                        "key2": "",
+                        "key3": "",
+                        "type": "simple"
                     }
-                }
-            },
-            "uuid": "",
-            "detailTemplate": "",
-            "nameField": "",
-            "settings": {
-                "enabled": true,
-                "opacity": {
+                },
+                "url": "http://geo.weather.gc.ca/geomet/?lang=E\\u0026service=WMS",
+                "uuid": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
+                "settings": {
                     "enabled": true,
-                    "default": 0.7
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.2
+                    }
+                },
+                "layerVisible": true,
+                "featureInfo": {
+                    "parser": "tempParse",
+                    "mimeType": "text/plain"
+                },
+                "legend": {
+                    "enable": true,
+                    "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
                 }
             },
-            "layerType": "feature",
-            "isStatic": true,
-            "mapTipSettings": {
-                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
-                "hoverTemplate": "feature_hover_maptip_template",
-                "anchorTemplate": "anchored_map_tip"
-            },
-            "layerVisible": false
-        }
-    ],
+            {
+                "displayName": "Winds",
+                "error": "",
+                "extent": {
+                    "spatialReference": {
+                        "wkid": 3978
+                    },
+                    "xmax": 20037508.0,
+                    "xmin": -20037508.0,
+                    "ymax": 103653320.0,
+                    "ymin": -103653320.0
+                },
+                "format": "png",
+                "id": "wms5",
+                "layerInfo": {
+                    "allExtents": [
+
+                    ],
+                    "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
+                    "name": "RDPS.ETA_UU",
+                    "spatialReferences": [
+
+                    ],
+                    "subLayers": [
+
+                    ],
+                    "title": "RDPS.ETA - Winds (noeuds)"
+                },
+                "symbology": {
+                    "icons": {
+                        "default": {
+                            "imageUrl": "assets/images/wms.png",
+                            "legendText": "Winds"
+                        }
+                    },
+                    "renderer": {
+                        "key1": "",
+                        "key2": "",
+                        "key3": "",
+                        "type": "simple"
+                    }
+                },
+                "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
+                "uuid": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
+                "settings": {
+                    "enabled": true,
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.2
+                    }
+                },
+                "featureInfo": {
+                    "parser": "windParse",
+                    "mimeType": "text/plain"
+                },
+                "legend": {
+                    "enable": false,
+                    "legendURL": ""
+                },
+                "layerVisible": false
+            }
+        ]
+    },
     "datagrid": {
         "globalGridRowsPerPage": 0,
         "defaultState": "summary",
@@ -1420,129 +1124,6 @@
         "filter": "searchMapSectionBody",
         "datagrid": "gridpane"
     },
-    "wmsLayers": [
-        {
-            "displayName": "Air Temperature",
-            "error": "",
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3978
-                },
-                "xmax": 2.003751E+07,
-                "xmin": -2.003751E+07,
-                "ymax": 1.036533E+08,
-                "ymin": -1.036533E+08
-            },
-            "format": "png",
-            "id": "layer_wms1",
-            "layerInfo": {
-                "allExtents": [
-                    
-                ],
-                "name": "RDPS.ETA_TT",
-                "spatialReferences": [
-                    
-                ],
-                "subLayers": [
-                    
-                ],
-                "title": "RDPS.ETA - Air Temperature (c)"
-            },
-            "symbology": {
-                "icons": {
-                    "default": {
-                        "imageUrl": "assets/images/wms.png",
-                        "legendText": "Air Temperature"
-                    }
-                },
-                "renderer": {
-                    "key1": "",
-                    "key2": "",
-                    "key3": "",
-                    "type": "simple"
-                }
-            },
-            "url": "http://geo.weather.gc.ca/geomet/?lang=E\\u0026service=WMS",
-            "uuid": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
-            "settings": {
-                "enabled": true,
-                "opacity": {
-                    "enabled": true,
-                    "default": 0.2
-                }
-            },
-            "layerVisible": true,
-            "featureInfo": {
-                "parser": "tempParse",
-                "mimeType": "text/plain"
-            },
-            "legend": {
-                "enable": true,
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=TEMPERATURE%26LAYER=RDPS.ETA_TT%26format=image/png"
-            }
-        },
-        {
-            "displayName": "Winds",
-            "error": "",
-            "extent": {
-                "spatialReference": {
-                    "wkid": 3978
-                },
-                "xmax": 20037508.0,
-                "xmin": -20037508.0,
-                "ymax": 103653320.0,
-                "ymin": -103653320.0
-            },
-            "format": "png",
-            "id": "wms5",
-            "layerInfo": {
-                "allExtents": [
-                    
-                ],
-                "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
-                "name": "RDPS.ETA_UU",
-                "spatialReferences": [
-                    
-                ],
-                "subLayers": [
-                    
-                ],
-                "title": "RDPS.ETA - Winds (noeuds)"
-            },
-            "symbology": {
-                "icons": {
-                    "default": {
-                        "imageUrl": "assets/images/wms.png",
-                        "legendText": "Winds"
-                    }
-                },
-                "renderer": {
-                    "key1": "",
-                    "key2": "",
-                    "key3": "",
-                    "type": "simple"
-                }
-            },
-            "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
-            "uuid": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
-            "settings": {
-                "enabled": true,
-                "opacity": {
-                    "enabled": true,
-                    "default": 0.2
-                }
-            },
-            "featureInfo": {
-                "parser": "windParse",
-                "mimeType": "text/plain"
-            },
-            "legend": {
-                "enable": false,
-                "legendURL": ""
-            },
-            "layerVisible": false
-        }
-    ],
     "plugins": [
         "tempParse.js",
         "windParse.js"
