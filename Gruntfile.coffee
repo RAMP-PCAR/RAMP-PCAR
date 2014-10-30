@@ -26,7 +26,7 @@ module.exports = (grunt) ->
         'build'
         'Run full build to create an uminified development package.'
         [
-            'tv4'
+            'zs3'
             'clean:build'
             'copy:build'
             'assemble'
@@ -1051,7 +1051,7 @@ module.exports = (grunt) ->
                     'src/config*.json'
                 ]
                 tasks: [
-                    'tv4'
+                    'zs3'
                     'copy:configBuild'
                 ]
             
