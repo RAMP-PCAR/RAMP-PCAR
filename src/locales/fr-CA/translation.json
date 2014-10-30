@@ -17,6 +17,11 @@
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] NrCan CBMT_CBCT_GEOM"
             },
+            "baseCBMT_CBCT_GEOM_3978": {
+                "name": "Road Networks",
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_GEOM"
+            },
             "baseE2M": {
                 "name": "[fr] Canada Topographic",
                 "altText": "[fr] Topographic Map",

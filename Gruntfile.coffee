@@ -349,6 +349,8 @@ module.exports = (grunt) ->
                     tasks.push 'replace:config-' + lang
             )       
             
+            tasks.push 'notify:configGenerated'
+            
             #console.log grunt.config 'replace'
             #console.log tasks
             grunt.task.run tasks  
@@ -424,6 +426,10 @@ module.exports = (grunt) ->
             tarball:
                 options:
                     message: "Tarball is created!"
+            
+            configGenerated:
+                options:
+                    message: "Configs are generated!"
 
         copy:
             configBuild:

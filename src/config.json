@@ -211,7 +211,7 @@
     "featureLayers": [
         {
             "id": "layer_g5h6i",
-            "displayName": "@@config.layers.feature.layer_g5h6i",
+            "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/Test_Water/MapServer/1",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -535,7 +535,7 @@
         },
         {
             "id": "layer_dd1m3",
-            "displayName": "@@config.layers.feature.layer_dd1m3",
+            "displayName": "@@config.layers.feature.layer_dd1m3.displayName",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/BBS_Routes/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -919,7 +919,7 @@
         },
         {
             "id": "layer_w9v8u",
-            "displayName": "@@config.layers.feature.layer_w9v8u",
+            "displayName": "@@config.layers.feature.layer_w9v8u.displayName",
             "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/ECDMP/CESI_2010/MapServer/10",
             "datagrid": {
                 "rowsPerPage": 50,
@@ -993,7 +993,7 @@
         },
         {
             "id": "oilSandsRegions",
-            "displayName": "@@config.layers.feature.oilSandsRegions",
+            "displayName": "@@config.layers.feature.oilSandsRegions.displayName",
             "url": "http://pubmapstage.on.ec.gc.ca/ArcGIS/rest/services/OilSandsRegions/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
@@ -1060,7 +1060,7 @@
         },
         {
             "id": "oilAreaOverlay",
-            "displayName": "@@config.layers.feature.oilAreaOverlay",
+            "displayName": "@@config.layers.feature.oilAreaOverlay.displayName",
             "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
             "datagrid": {
                 "rowsPerPage": 0,
@@ -1422,7 +1422,7 @@
     },
     "wmsLayers": [
         {
-            "displayName": "@@config.layers.wms.layer_wms1",
+            "displayName": "@@config.layers.wms.layer_wms1.displayName",
             "error": "",
             "extent": {
                 "spatialReference": {
@@ -1482,7 +1482,7 @@
             }
         },
         {
-            "displayName": "@@config.layers.wms.wms5",
+            "displayName": "@@config.layers.wms.wms5.displayName",
             "error": "",
             "extent": {
                 "spatialReference": {
