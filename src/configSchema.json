@@ -1,4 +1,4 @@
-﻿{
+{
     "$schema": "http://json-schema.org/draft-04/schema#",
     "id": "http://jsonschema.net#",
     "type": "object",
@@ -123,7 +123,7 @@
                 "feature": {
                     "type": "array",
                     "default": [ ],
-                    "items": { "anyOf": [ { "$ref": "#/definitions/featureNode" }, { "$ref": "#/definitions/staticNode" } ] }
+                    "items": { "oneOf": [ { "$ref": "#/definitions/featureNode" }, { "$ref": "#/definitions/staticNode" } ] }
                 },
                 "wms": {
                     "type": "array",
