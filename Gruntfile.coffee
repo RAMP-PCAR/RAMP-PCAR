@@ -1050,6 +1050,19 @@ module.exports = (grunt) ->
                     'generateConfig'
                 ]
             
+            locales:
+                files: [
+                    'src/locales/**/*.json'
+                ]
+                
+                tasks: [
+                    #'build'
+                    'assemble' #for quicker build only run a subset of build
+                    'notify:page'
+                    'generateConfig'
+                    'copy:localesBuild'
+                ]
+            
             config:
                 files: [
                     'Gruntfile.coffee'
