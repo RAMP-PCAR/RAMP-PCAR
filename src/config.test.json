@@ -924,6 +924,12 @@
                         "default": 0.8
                     }
                 },
+                "layerExtent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
+                },
                 "isStatic": true
             },
             {
@@ -940,6 +946,12 @@
                         "default": 0.7
                     },
                     "visible": false
+                },
+                "layerExtent": {
+                    "xmin": -2081728,
+                    "ymin": -616928,
+                    "xmax": 2970781,
+                    "ymax": 2485914
                 },
                 "isStatic": true
             }
