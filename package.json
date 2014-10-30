@@ -53,7 +53,8 @@
         "fs-utils": "~0.5.0",
         "i18next": "~1.7.4",
         "request": "~2.34.0",
-        "time-grunt": "~1.0.0"
+        "time-grunt": "~1.0.0",
+        "z-schema": "~3.1.0"
     },
 
     "ramp": {
