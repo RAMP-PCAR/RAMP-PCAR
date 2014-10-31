@@ -7,9 +7,49 @@
     "additionalProperties": true,
 
     "definitions": {
-        "wmsNode": { "type": "object", "additionalProperties": true },
+        "wmsNode": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "imageUrl": { "type": "string", "format": "uri" },
+                "layerName": { "type": "string" },
+                "format": { "type": "string" },
+                "legendMimeType": { "type": "string" },
+
+                "settings": {
+                    "type": "object",
+                    "properties": {
+                        "panelEnabled": { "type": "boolean", "default": true },
+                        "visible": { "type": "boolean", "default": true },
+                        "opacity": {
+                            "type": "object",
+                            "properties": { 
+                                "enabled": { "type": "boolean", "default": true },
+                                "opacity": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+
+                "featureInfo": {
+                    "type": "object",
+                    "properties": {
+                        "mimeType": { "type": "string" },
+                        "parser": { "type": "string" }
+                    },
+                    "required": [ "mimeType", "parser" ]
+                }
+
+            },
+            "required": [ "id", "displayName", "url", "layerName", "format" ],
+            "additionalProperties": false
+        },
 
         "gridColumn": { "type": "object", "additionalProperties": true },
+        "symbolNode": { "type": "object", "additionalProperties": true },
 
         "basicNode": {
             "type": "object",
@@ -28,7 +68,7 @@
                     },
                     "required": [ "xmin", "ymin", "xmax", "ymax" ]
                 },
-                "symbology": { "type": "object", "additionalProperties": true },
+                "symbology": { "$ref": "#/definitions/symbolNode" },
                 "settings": {
                     "id": "#settings",
                     "type": "object",
@@ -78,7 +118,7 @@
                     "properties": {
                         "isStatic": { "type": "boolean", "enum": [ true ] }
                     },
-                    "required": ["isStatic"]
+                    "required": [ "isStatic" ]
 
                 }
             ]
