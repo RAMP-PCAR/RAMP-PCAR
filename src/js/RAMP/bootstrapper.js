@@ -206,7 +206,8 @@ require([
                     } else {
 
                         //TODO verify endpoint is correct
-                        var serviceUrl = globalStorage.getConfigUrl() + "docs/" + $("html").attr("lang") + "/" + smallkeys;
+                        var serviceUrl = globalStorage.getConfigUrl() + "docs/" + $("html").attr("lang") + "/" + smallkeys,
+                            defService = requestScript.get(serviceUrl, { jsonp: "callback" });
 
                         //Request the JSON snippets from the RAMP Config Service
 
@@ -214,7 +215,6 @@ require([
                         //      we use request/script instead to get the config as jsonp
                         //      we may consider looking into ways to mitiate the cross domain issue (Aly had some ideas)
 
-                        var defService = requestScript.get(serviceUrl, { jsonp: "callback" });
                         defService.then(
                             function (serviceContent) {
                                 //we are expecting an array of JSON config fragments
@@ -225,10 +225,10 @@ require([
                                 });
 
                                 //fragments are now in fileConfig.  carry on.
-                                configReady(fileConfig)
+                                configReady(fileConfig);
                             },
                             function (error) {
-                                //console.log("An error occurred: " + error);
+                                console.log("An error occurred: " + error);
                             }
                         );
 
@@ -244,11 +244,12 @@ require([
         );
 
         function configReady(configObject) {
-            var pluginConfig;
+            var pluginConfig,
+                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
 
                 console.log("Bootstrapper: config loaded");
 
-                globalStorage.config = fileContent;
+                globalStorage.config = configObject;
 
                 // Show or remove advanced toolbar toggle based on the config value
                 if (globalStorage.config.advancedToolbar.enabled) {
@@ -283,6 +284,5 @@ require([
                 BookmarkLink.createUI();
 
                 Ramp.loadStrings();
-            }
-        );
+        }
     });

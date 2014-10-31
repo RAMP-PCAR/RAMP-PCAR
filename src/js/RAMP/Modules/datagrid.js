@@ -1388,7 +1388,7 @@ define([
                 config = GlobalStorage.config;
 
                 // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(config.layers.featureLayers, function (layerConfig) {
+                var layerConfigs = dojoArray.filter(config.layers.feature, function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 
