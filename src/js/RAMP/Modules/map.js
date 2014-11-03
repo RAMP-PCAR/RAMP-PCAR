@@ -801,11 +801,11 @@ define([
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
-                        opacity: resolveLayerOpacity(layer.settings.opacity),
-                        resourceInfo: {
-                            //extent: new EsriExtent(layer.extent),
-                            layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
-                        }
+                        opacity: resolveLayerOpacity(layer.settings.opacity)
+                        //resourceInfo: {
+                        //    extent: new EsriExtent(layer.extent),
+                        //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
+                        //}
                     });
                     wmsl.ramp = {
                         type: GlobalStorage.layerType.WMS
