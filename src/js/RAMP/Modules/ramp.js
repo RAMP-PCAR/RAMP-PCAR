@@ -73,11 +73,11 @@ define([
                     GlobalStorage.urlCfg = {};
                 }
 
-                var res = UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.layers.featureLayers), function (layerConfig) {
+                var res = UtilArray.find(GlobalStorage.config.layers.wms.concat(GlobalStorage.config.layers.feature), function (layerConfig) {
                     if (wmsName == null) {
                         return layerConfig.url === url;
                     } else {
-                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerInfo.name === wmsName);
+                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerName === wmsName);
                     }
                 });
 
@@ -86,15 +86,8 @@ define([
                 return GlobalStorage.urlCfg[url];
             },
 
-            getLayerConfigWithGuid: function (uuid) {
-                return UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.layers.featureLayers),
-                    function (layerConfig) {
-                        return layerConfig.uuid === uuid;
-                    });
-            },
-
             getLayerConfigWithId: function (id) {
-                return UtilArray.find(GlobalStorage.config.layers.wmsLayers.concat(GlobalStorage.config.featureLayers),
+                return UtilArray.find(GlobalStorage.config.layers.wms.concat(GlobalStorage.config.feature),
                     function (layerConfig) {
                         return layerConfig.id === id;
                     });
@@ -153,7 +146,8 @@ define([
                 //as this function is used by templating, we piggyback the logic here
                 return UtilTmpl.getGraphicIcon(feature, layerConfig);
             },
-            /*
+
+            /**
              * This method builds a complete service URL callout for a map configuration. The URL is built using a base URL and map ID, and a language culture code.
              * @method getServiceURL
              * @param {String} rampService The base URL for a web service that provide's valid map JSON configuration data

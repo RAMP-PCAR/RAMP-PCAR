@@ -327,8 +327,7 @@ define([
                         if (utilMisc.isUndefined(obj[datagridMode])) {
                             var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
 
-                            tmpl.cache = {
-                            };
+                            tmpl.cache = {};
 
                             tmpl.templates = data_grid_template_json;
 
@@ -823,7 +822,7 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(GlobalStorage.config.layers.featureLayers,
+                    layer = dojoArray.filter(GlobalStorage.config.layers.feature,
                         function (layer) {
                             return layer.url === selectedDatasetUrl;
                         });
@@ -913,7 +912,7 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.layers.featureLayers, function (layerConfig) {
+                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.layers.feature, function (layerConfig) {
                             var layer = GlobalStorage.map.getLayer(layerConfig.id);
                             return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
@@ -1107,8 +1106,7 @@ define([
         */
         function cacheSortedData() {
             var elements = oTable.rows().data();
-            featureToPage = {
-            };
+            featureToPage = {};
             $.each(elements, function (idx, val) {
                 var layer = val.last().featureUrl,
                     fid = GraphicExtension.getOid(val.last().feature);
