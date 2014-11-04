@@ -118,16 +118,7 @@ define([
 
             fullExtent,
             maxExtent,
-            initExtent,
-            defaultFL = {
-                layerAttributes: '*',
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-                datagrid: { rowsPerPage: 50 },
-                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
-            },
-            defaultWMS = {
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
-            };
+            initExtent;
 
         /**
         * Shows the loading image.
@@ -807,11 +798,7 @@ define([
                 dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
-                    var wmsl,
-                        defaults = $.extend(true, {}, defaultWMS);
-                        
-                    layer = UtilMisc.mergeRecursive(defaults, layer);
-                    wmsl = new WMSLayer(layer.url, {
+                    var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
                         opacity: resolveLayerOpacity(layer.settings.opacity)
@@ -839,10 +826,7 @@ define([
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(config.layers.feature, function (layerConfig) {
-                    var fl,
-                        defaults = $.extend(true, {}, defaultFL);
-
-                    layerConfig = UtilMisc.mergeRecursive(defaults, layerConfig);
+                    var fl;
 
                     if (layerConfig.isStatic) {
                         fl = generateStaticLayer(layerConfig);
@@ -880,15 +864,12 @@ define([
                 */
 
                 var boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
-                    var defaults = $.extend(true, {}, defaultFL),
-                        boundingBox;
 
-                    layer = UtilMisc.mergeRecursive(defaults, layer);
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
-                    boundingBox = new GraphicsLayer({
+                    var boundingBox = new GraphicsLayer({
                         id: String.format("boundingBoxLayer_{0}", layer.id),
                         visible: layer.settings.boundingBoxVisible
                     });

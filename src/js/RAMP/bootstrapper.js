@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n, document, $, console */
+﻿/*global require, window, esri, dojoConfig, i18n, document, $, console, RAMP */
 
 /**
 * Ramp module
@@ -189,7 +189,7 @@ require([
             function (fileConfig) {
                 
                 //there is no need to convert the result to an object.  it comes through pre-parsed
-                if (globalStorage.getConfigUrl() === "") {
+                if (!RAMP.configServiceURL) {
                     //no config service.  we just use the file provided
                     configReady(fileConfig);
                 } else {
@@ -249,16 +249,16 @@ require([
 
                 console.log("Bootstrapper: config loaded");
 
-                globalStorage.config = configObject;
+                globalStorage.init(configObject);
 
                 // Show or remove advanced toolbar toggle based on the config value
-                if (globalStorage.config.advancedToolbar.enabled) {
+                if (RAMP.config.advancedToolbar.enabled) {
                     advancedToolbarToggle.removeClass("wb-invisible");
                 } else {
                     advancedToolbarToggle.remove();
                 }
 
-                pluginConfig = globalStorage.config.plugins;
+                pluginConfig = RAMP.config.plugins;
                 if (pluginConfig) {
                     dojoArray.map(pluginConfig, function (pName) {
                         loadPlugin(pName);
