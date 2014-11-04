@@ -119,7 +119,10 @@
                 <ul>
                     {% 
                         o.valueMaps.forEach(function(vm) {
-                            include('renderer_template', vm);
+                            include('renderer_template', {
+                                imageUrl: vm.imageUrl,
+                                label: vm.label || vm.value
+                            });
                         });
                      %}
                 </ul>
@@ -131,7 +134,10 @@
                 <ul>
                     {% 
                         o.rangeMaps.forEach(function(rm) {
-                            include('renderer_template', rm);
+                            include('renderer_template', {
+                                imageUrl: rm.imageUrl,
+                                label: rm.label || rm.maxValue
+                            });
                         });
                      %}
                 </ul>
