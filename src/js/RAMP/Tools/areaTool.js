@@ -1,4 +1,4 @@
-﻿/*global define, i18n */
+﻿/*global define, i18n, RAMP */
 
 /**
 * MeasureTool submodule.
@@ -62,7 +62,7 @@ define([
         function computeAreaAndLength(evtObj) {
             that.working(true);
 
-            geometryService = new GeometryService(GlobalStorage.config.geometryService);
+            geometryService = new GeometryService(RAMP.config.geometryService);
             geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
 
             var geometry = evtObj.geometry;

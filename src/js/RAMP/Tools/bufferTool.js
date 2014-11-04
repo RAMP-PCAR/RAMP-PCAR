@@ -1,4 +1,4 @@
-﻿/*global define, i18n */
+﻿/*global define, i18n, RAMP */
 
 /**
 * @module Tools
@@ -69,7 +69,7 @@ define([
       function computeBuffer(evtObj) {
           var geometry = evtObj.geometry,
               map = bufferApp.map,
-              geometryService = new GeometryService(GlobalStorage.config.geometryService),
+              geometryService = new GeometryService(RAMP.config.geometryService),
 
               symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
@@ -91,7 +91,7 @@ define([
               that.working(false);
           } else {
               params.distances = [distanceInput];
-              params.bufferSpatialReference = new SpatialReference({ wkid: GlobalStorage.config.spatialReference.wkid });
+              params.bufferSpatialReference = new SpatialReference({ wkid: RAMP.config.spatialReference.wkid });
               params.outSpatialReference = bufferApp.map.spatialReference;
               params.unit = 9036; // Kilometers
 

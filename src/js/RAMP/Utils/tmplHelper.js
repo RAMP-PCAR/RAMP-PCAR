@@ -1,4 +1,4 @@
-﻿/* global define */
+﻿/* global define, RAMP */
 /* jshint bitwise:false  */
 
 /**
@@ -57,7 +57,7 @@ define([
                     dataWrapper = Object.create(dataWrapperPrototype);
 
                 dataWrapper.data = data;
-                dataWrapper.config = GlobalStorage.config;
+                dataWrapper.config = RAMP.config;
 
                 if (layerUrl != null) {
                     //get configuration from the layer with layerIndex
@@ -89,7 +89,7 @@ define([
                     dataWrapper = Object.create(dataWrapperPrototype);
 
                 dataWrapper.data = data;
-                dataWrapper.config = GlobalStorage.config;
+                dataWrapper.config = RAMP.config;
 
                 dataWrapper.fn = TmplUtil;
                 return dataWrapper;
