@@ -1,4 +1,4 @@
-﻿/*global define, esri, window, Snap, $ */
+﻿/*global define, esri, window, Snap, $, RAMP */
 
 /**
 *

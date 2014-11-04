@@ -435,7 +435,7 @@ define([
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
                             var layer = map.getLayer(layerId);
-                            //console.log(layer.loaded, layerId, layer);
+                            console.log(layer.loaded, layerId, layer);
                             return layer.loaded;
                         }
                     );

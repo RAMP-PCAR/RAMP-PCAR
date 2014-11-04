@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl */
+/*global define, $, esri, tmpl, RAMP */
 /*jslint white: true */
 
 /**

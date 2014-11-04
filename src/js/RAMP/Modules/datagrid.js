@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP */
 /*jslint white: true */
 
 /**
