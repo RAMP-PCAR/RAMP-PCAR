@@ -1068,7 +1068,7 @@ module.exports = (grunt) ->
             tar:
                 options:
                     mode: 'tar'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.tar'
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tar'
                 files: [
                     expand: true
                     src: '**/*'
@@ -1078,7 +1078,7 @@ module.exports = (grunt) ->
             zip:
                 options:
                     mode: 'zip'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.zip',
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.zip',
                     level: 9
 
                 files: [
