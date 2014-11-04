@@ -325,14 +325,18 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (utilMisc.isUndefined(obj[datagridMode])) {
-                            var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
+
+                            //bundle feature into the template data object
+                            tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+
+                            var sumTemplate = tmplData.lyr.templates.summary;
 
                             tmpl.cache = {};
 
                             tmpl.templates = data_grid_template_json;
-
-                            //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+                           
+                            console.log('HOOP'); //JRJR
+                            console.log(tmplData);
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
                         }
