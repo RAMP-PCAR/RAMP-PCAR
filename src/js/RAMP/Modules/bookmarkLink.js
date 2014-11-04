@@ -1,4 +1,4 @@
-/* global define, i18n, jQuery, console, $, document */
+/* global define, i18n, jQuery, console, $, document, RAMP */
 
 /**
 * BookmarkLink submodule
@@ -371,7 +371,7 @@ define([
             var event,
                 urlObj = new Url(dojoRequire.toUrl(document.location));
 
-            config = GlobalStorage.config;
+            config = RAMP.config;
             baseUrl = urlObj.uri;
             queryObject = dojoQuery.queryToObject(urlObj.query);
 

@@ -217,7 +217,7 @@ define([
                         });
                     boxCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.boundingBoxVisible;
+                        return layerConfig.settings.boundingBoxVisible;
                     });
 
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -279,7 +279,7 @@ define([
 
                     eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.layerVisible;
+                        return layerConfig.settings.visible;
                     });
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
