@@ -78,7 +78,7 @@ define([
             * @return {Object} found graphic object
             */
             getTextContent: function (graphic) {
-                var templateName = Ramp.getLayerConfig(graphic.getLayer().url).detailTemplate;
+                var templateName = Ramp.getLayerConfig(graphic.getLayer().url).template.detail;
 
                 function fillTemplate(graphic) {
                     tmpl.cache = {};

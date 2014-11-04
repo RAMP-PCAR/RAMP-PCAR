@@ -854,7 +854,7 @@
                 "settings": {
                     "opacity": {
                         "enabled": false,
-                        "default": 0.1
+                        "default": 0.5
                     }
                 },
                 "layerExtent": {

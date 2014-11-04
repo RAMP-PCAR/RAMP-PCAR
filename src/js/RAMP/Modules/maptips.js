@@ -140,10 +140,10 @@ define([
             tmpl.cache = {};
 
             if (interactive === true) {
-                templateKey = Ramp.getLayerConfig(layerUrl).mapTipSettings.anchorTemplate;
+                templateKey = Ramp.getLayerConfig(layerUrl).templates.anchor;
                 tmpl.templates = anchortips_template_json;
             } else {
-                templateKey = Ramp.getLayerConfig(layerUrl).mapTipSettings.hoverTemplate;
+                templateKey = Ramp.getLayerConfig(layerUrl).templates.hover;
                 tmpl.templates = hovertips_template_json;
             }
 
