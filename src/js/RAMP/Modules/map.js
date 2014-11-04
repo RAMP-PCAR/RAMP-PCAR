@@ -118,7 +118,16 @@ define([
 
             fullExtent,
             maxExtent,
-            initExtent;
+            initExtent,
+            defaultFL = {
+                layerAttributes: '*',
+                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true },
+                datagrid: { rowsPerPage: 50 },
+                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
+            },
+            defaultWMS = {
+                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
+            };
 
         /**
         * Shows the loading image.
@@ -798,7 +807,11 @@ define([
                 dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
-                    var wmsl = new WMSLayer(layer.url, {
+                    var wmsl,
+                        defaults = $.extend(true, {}, defaultWMS);
+                        
+                    layer = UtilMisc.mergeRecursive(defaults, layer);
+                    wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
                         opacity: resolveLayerOpacity(layer.settings.opacity)
@@ -826,7 +839,11 @@ define([
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(config.layers.feature, function (layerConfig) {
-                    var fl;
+                    var fl,
+                        defaults = $.extend(true, {}, defaultFL);
+
+                    console.log(defaults);
+                    layerConfig = UtilMisc.mergeRecursive(defaults, layerConfig);
 
                     if (layerConfig.isStatic) {
                         fl = generateStaticLayer(layerConfig);

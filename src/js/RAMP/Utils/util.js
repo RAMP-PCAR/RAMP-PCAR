@@ -645,6 +645,9 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     for (var p in src) {
                         if (src.hasOwnProperty(p)) {
                             if ($.isArray(src[p])) {
+                                if (dst[p] === undefined) {
+                                    dst[p] = [];
+                                }
                                 $.merge(dst[p], src[p]);
                                 continue;
                             }
