@@ -334,9 +334,6 @@ define([
                             tmpl.cache = {};
 
                             tmpl.templates = data_grid_template_json;
-                           
-                            console.log('HOOP'); //JRJR
-                            console.log(tmplData);
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
                         }
