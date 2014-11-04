@@ -202,6 +202,20 @@ define(["ramp/globalStorage"],
                     };
 
                 return boundingLegendLabel;
+            },
+
+            generateComplexImage: function () {
+                return [
+                    {
+                        imageUrl: "http://lorempixel.com/22/22/technics/"
+                    },
+                    {
+                        imageUrl: "http://lorempixel.com/22/22/technics/"
+                    },
+                    {
+                        imageUrl: "http://lorempixel.com/22/22/technics/"
+                    }
+                ];
             }
         };
     });
