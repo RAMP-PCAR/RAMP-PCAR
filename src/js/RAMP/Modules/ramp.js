@@ -87,7 +87,7 @@ define([
             },
 
             getLayerConfigWithId: function (id) {
-                return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.feature),
+                return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature),
                     function (layerConfig) {
                         return layerConfig.id === id;
                     });

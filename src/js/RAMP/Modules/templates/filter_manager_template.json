@@ -26,7 +26,7 @@
                                     <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
                                     <div class='layer-details'>
                                         <div class='layer-image-box'>									
-                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.icons.default.imageUrl%}' class='layer-image bg-white'>
+                                            <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.imageUrl%}' class='layer-image bg-white'>
                                         </div>
                                         <div class='layer-controls'>
                                             <div class='layer-name'>
