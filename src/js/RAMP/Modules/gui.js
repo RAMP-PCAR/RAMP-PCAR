@@ -1510,7 +1510,10 @@ define([
 
                 // This should be the last thing that happens
                 if (waitList.isEmpty()) {
+
                     topic.publish(EventManager.GUI.UPDATE_COMPLETE);
+
+
                 } else {
                     // Wait for things such as fullscreen or panel collapse
                     // to finish before publishing the UPDATE_COMPLETE.

@@ -117,7 +117,7 @@ require([
 
                 NavWidget.init(currentLevel);
                 FeatureHighlighter.init();
-
+                
                 Maptips.init();
 
                 //Apply listeners for basemap gallery
@@ -127,11 +127,13 @@ require([
                 FilterManager.init();
 
                 // Initialize the advanced toolbar and tools.
-                if (globalStorage.config.advancedToolbar.enabled) {
+                if (RAMP.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
                 }
 
+
                 Datagrid.init();
+
 
                 theme.tooltipster();
             });
