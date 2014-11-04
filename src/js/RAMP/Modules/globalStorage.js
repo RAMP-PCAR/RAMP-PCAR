@@ -1,4 +1,4 @@
-﻿/*global define, $, console */
+﻿/*global define, $, console, RAMP */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -43,10 +43,10 @@ define(["dojo/_base/array","utils/util"],
             console.log(configObj);
             result = applyDefaults(configDefaults, configObj);
             result.layers.wms = dojoArray.map(result.layers.wms, function (wms) {
-                applyDefaults(wmsLayerDefaults,wms);
+                return applyDefaults(wmsLayerDefaults,wms);
             });
             result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
-                applyDefaults(featureLayerDefaults,fl);
+                return applyDefaults(featureLayerDefaults,fl);
             });
             console.log(result);
             return result;
@@ -54,7 +54,7 @@ define(["dojo/_base/array","utils/util"],
         }
 
         return {
-            init: function(configObj) {
+            init: function (configObj) {
                 var config = applyConfigDefaults(configObj);
                 RAMP.config = config;
             },
