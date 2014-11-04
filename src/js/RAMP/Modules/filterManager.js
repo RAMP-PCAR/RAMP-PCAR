@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl, i18n, console, $ */
+﻿/*global define, window, tmpl, i18n, console, $, RAMP */
 
 /**
 * FilterManager submodule
@@ -633,14 +633,14 @@ define([
 
                         // put layer in datawrapper to be used in template
                         data = {
-                            config: GlobalStorage.config,
+                            config: RAMP.config,
                             layerGroups: {
                                 feature: TmplHelper.dataBuilder(layerGroups.feature),
                                 wms: TmplHelper.dataBuilder(layerGroups.wms)
                             }
                         };
 
-                        sectionNode = $("#" + GlobalStorage.config.divNames.filter);
+                        sectionNode = $("#" + RAMP.config.divNames.filter);
                         // TODO: generate section using one template, need to refactoring the following fixed string
                         section = tmpl('filter_manager_template', data);
 
@@ -702,7 +702,7 @@ define([
             */
             init: function () {
                 // Convenience config objects
-                config = GlobalStorage.config;
+                config = RAMP.config;
 
                 initListeners();
 

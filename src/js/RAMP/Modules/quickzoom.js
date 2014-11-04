@@ -60,7 +60,7 @@ define([
              *
              */
             constructor: function () {
-                this.config = GlobalStorage.config;
+                this.config = RAMP.config;
 
                 this.form = new Form({
                     style: "overflow:hidden; clear:none;"

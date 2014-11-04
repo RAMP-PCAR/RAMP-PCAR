@@ -172,7 +172,7 @@ define([
 
                 ui.init();
 
-                tools = globalStorage.config.advancedToolbar.tools;
+                tools = RAMP.config.advancedToolbar.tools;
                 toolsRequire = tools
                     .filter(function (tool) { return tool.enabled; })
                     .map(function (tool) {

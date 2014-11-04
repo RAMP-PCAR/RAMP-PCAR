@@ -160,7 +160,7 @@ function (
          *
          */
         init: function () {
-            config = GlobalStorage.config;
+            config = RAMP.config;
 
             dojoArray.forEach(config.basemaps, function (basemap) {
                 var layerDijit, basemapDijit;
@@ -186,7 +186,7 @@ function (
 
             basemapGallery.startup();
 
-            var startId = UtilArray.find(GlobalStorage.config.basemaps, function (basemap) {
+            var startId = UtilArray.find(RAMP.config.basemaps, function (basemap) {
                 return basemap.showOnInit;
             }).id;
 

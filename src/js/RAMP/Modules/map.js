@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig, i18n, console, $ */
+﻿/*global define, esri, dojoConfig, i18n, console, $, RAMP */
 
 /**
 *
@@ -734,7 +734,7 @@ define([
             */
             init: function () {
                 //config object is loaded in bootstrapper.js
-                var config = GlobalStorage.config,
+                var config = RAMP.config,
 
                 /**
                 * The spatial reference of the map
@@ -794,7 +794,7 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
-                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;// "/proxy/proxy.ashx";
+                esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
                 dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.layers.wms, function (layer) {

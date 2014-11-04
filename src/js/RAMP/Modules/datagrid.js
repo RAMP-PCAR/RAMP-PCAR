@@ -822,7 +822,7 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(GlobalStorage.config.layers.feature,
+                    layer = dojoArray.filter(RAMP.config.layers.feature,
                         function (layer) {
                             return layer.url === selectedDatasetUrl;
                         });
@@ -912,7 +912,7 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.layers.feature, function (layerConfig) {
+                        var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                             var layer = GlobalStorage.map.getLayer(layerConfig.id);
                             return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
@@ -1044,7 +1044,7 @@ define([
                                 }
                                 );
 
-                            sectionNode = $("#" + GlobalStorage.config.divNames.datagrid);
+                            sectionNode = $("#" + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
                         }
                 ),
@@ -1058,7 +1058,7 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                var firstVisibleLayer = UtilArray.find(GlobalStorage.config.layers.featureLayers, function (layerConfig) {
+                                var firstVisibleLayer = UtilArray.find(RAMP.config.layers.featureLayers, function (layerConfig) {
                                     var layer = GlobalStorage.map.getLayer(layerConfig.id);
                                     return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
@@ -1383,7 +1383,7 @@ define([
             * @method init
             */
             init: function () {
-                config = GlobalStorage.config;
+                config = RAMP.config;
 
                 // Added to make sure the layer is not static
                 var layerConfigs = dojoArray.filter(config.layers.feature, function (layerConfig) {

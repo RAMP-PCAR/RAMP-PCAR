@@ -73,7 +73,7 @@ define([
                     GlobalStorage.urlCfg = {};
                 }
 
-                var res = UtilArray.find(GlobalStorage.config.layers.wms.concat(GlobalStorage.config.layers.feature), function (layerConfig) {
+                var res = UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature), function (layerConfig) {
                     if (wmsName == null) {
                         return layerConfig.url === url;
                     } else {
@@ -87,7 +87,7 @@ define([
             },
 
             getLayerConfigWithId: function (id) {
-                return UtilArray.find(GlobalStorage.config.layers.wms.concat(GlobalStorage.config.feature),
+                return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.feature),
                     function (layerConfig) {
                         return layerConfig.id === id;
                     });
