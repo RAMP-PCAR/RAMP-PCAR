@@ -131,12 +131,10 @@ require([
                     AdvancedToolbar.init();
                 }
 
-
                 Datagrid.init();
-
-
                 theme.tooltipster();
             });
+
             RampMap.init();
             NavWidget.construct();
 
