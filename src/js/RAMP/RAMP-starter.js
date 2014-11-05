@@ -29,6 +29,28 @@ var RAMP,
 * @class RAMP
 */
 RAMP = {
+    /**
+     * Contains a URL that points to the application configuration (JSON format) if it's hosted on a web service.
+     * This is not required if the application has a JSON config file in the website's folder
+     * @property configServiceURL
+     * @type String
+     */
+    configServiceURL: "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/ECDMP_Service/",
+
+    /**
+     * The RAMP application config, it should be treated as read only by all modules other than globalStorage and bootstrapper
+     *
+     * @property config
+     * @type Object
+     */
+    config: {},
+
+    /**
+     * A registry of plugins for RAMP code to reference, these should be loaded and registered by bootstrapper.js
+     *
+     * @property plugins
+     * @type Object
+     */
     plugins: {
         featureInfoParser: {}
     }

@@ -1,0 +1,203 @@
+﻿{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "http://jsonschema.net#",
+    "type": "object",
+    "title": "root",
+    "description": "RAMP Configuration",
+    "additionalProperties": true,
+
+    "definitions": {
+        "wmsNode": { "type": "object", "additionalProperties": true },
+
+        "gridColumn": { "type": "object", "additionalProperties": true },
+
+        "basicNode": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+
+                "layerExtent": {
+                    "type": "object",
+                    "properties": {
+                        "xmin": { "type": "number" },
+                        "ymin": { "type": "number" },
+                        "xmax": { "type": "number" },
+                        "ymax": { "type": "number" }
+                    },
+                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
+                },
+                "symbology": { "type": "object", "additionalProperties": true },
+                "settings": {
+                    "id": "#settings",
+                    "type": "object",
+                    "description": "Specifies settings for the Feature Layer",
+
+                    "properties": {
+                        "panelEnabled": {
+                            "type": "boolean",
+                            "description": "Indicates whether the Settings panel is accessible to the users",
+                            "default": true
+                        },
+
+                        "opacity": {
+                            "type": "object",
+                            "description": "Specifies the opacity setting for the Feature Layer",
+
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Indicates whether the Opacity control is accessible to the users",
+                                    "default": true
+                                },
+                                "default": {
+                                    "id": "#default",
+                                    "type": "number",
+                                    "description": "Specifies the default opacity level of the Feature Layer",
+                                    "minimum": 0,
+                                    "maximum": 1,
+                                    "default": 1
+                                }
+                            }
+                        },
+
+                        "visible": { "type": "boolean", "default": true },
+                        "boundingBoxVisible": { "type": "boolean", "default": false }
+                    }
+                }
+
+            },
+            "required": [ "id", "displayName", "url", "layerExtent", "symbology" ]
+        },
+
+        "staticNode": {
+            "allOf": [
+                { "$ref": "#/definitions/basicNode" },
+                {
+                    "properties": {
+                        "isStatic": { "type": "boolean", "enum": [ true ] }
+                    },
+                    "required": ["isStatic"]
+
+                }
+            ]
+
+
+        },
+
+        "featureNode": {
+            "allOf": [
+                { "$ref": "#/definitions/basicNode" },
+                {
+                    "type": "object",
+
+                    "properties": {
+
+                        "nameField": { "type": "string" },
+                        "layerAttributes": { "type": "string", "default": "*" },
+
+                        "templates": { "type": "object" },
+                        "datagrid": {
+                            "type": "object",
+                            "properties": {
+                                "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
+                                "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
+                            }
+
+                        }
+
+                    },
+                    "required": [ "nameField", "datagrid" ]
+                }
+
+            ]
+        }
+    },
+
+    "properties": {
+
+        "layers": {
+            "type": "object",
+            "properties": {
+                "feature": {
+                    "type": "array",
+                    "default": [ ],
+                    "items": { "oneOf": [ { "$ref": "#/definitions/featureNode" }, { "$ref": "#/definitions/staticNode" } ] }
+                },
+                "wms": {
+                    "type": "array",
+                    "default": [ ],
+                    "items": { "$ref": "#/definitions/wmsNode" }
+                }
+            }
+        },
+
+        "advancedToolbar": {
+            "id": "#advancedToolbar",
+            "type": "object",
+            "title": "Advanced Toolbar",
+            "description": "Specifies tools available for Advanced Toolbar",
+
+            "properties": {
+
+                "enabled": {
+                    "id": "#enabled",
+                    "type": "boolean",
+                    "description": "Specifies if Advanced Toolbar is active",
+                    "default": false
+                },
+
+                "tools": {
+                    "id": "#tools",
+                    "type": "array",
+                    "title": "Tools",
+                    "description": "",
+                    "minItems": 1,
+
+                    "items": {
+                        "id": "#tool",
+                        "type": "object",
+
+                        "properties": {
+                            "name": {
+                                "id": "#name",
+                                "type": "string",
+                                "description": "Name of the tool"
+                            },
+
+                            "selector": {
+                                "id": "#selector",
+                                "type": "string",
+                                "description": "CSS selector for the tool's activator"
+                            },
+
+                            "enabled": {
+                                "id": "#enabled",
+                                "type": "boolean",
+                                "description": "Specifies if the tool is active",
+                                "default": true
+                            }
+                        },
+
+                        "required": [
+                            "name",
+                            "selector",
+                            "enabled"
+                        ]
+                    },
+
+                    "required": [
+                        "0"
+                    ]
+                }
+            },
+            "required": [
+                "enabled"
+            ]
+        }
+
+
+    },
+    "required": [ "advancedToolbar" ]
+}

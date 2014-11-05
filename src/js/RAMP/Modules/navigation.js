@@ -1,4 +1,4 @@
-﻿/* global define, $ */
+﻿/* global define, $, RAMP */
 
 /**
 * Navigation submodule
@@ -114,9 +114,9 @@ function (
 
         construct: function () {
             // Note: JKW added currentlevel
-            //GlobalStorage.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
+            //RAMP.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            nav = $("#" + GlobalStorage.config.divNames.navigation).navigation(GlobalStorage.config.navWidget);
+            nav = $("#" + RAMP.config.divNames.navigation).navigation(RAMP.config.navWidget);
         }
     };
 });

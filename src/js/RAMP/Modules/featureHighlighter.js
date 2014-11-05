@@ -1,4 +1,4 @@
-﻿/*global define, esri, window, Snap, $ */
+﻿/*global define, esri, window, Snap, $, RAMP */
 
 /**
 *
@@ -339,7 +339,7 @@ define([
             * @method init
             */
             init: function () {
-                config = GlobalStorage.config;
+                config = RAMP.config;
                 map = RampMap.getMap();
 
                 //
