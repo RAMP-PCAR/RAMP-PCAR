@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig, i18n, console, $, RAMP */
+﻿/*global define, esri, i18n, console, $, RAMP */
 
 /**
 *
@@ -54,7 +54,7 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference", "esri/config",
+"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference",
 "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
 
 /* Ramp */
@@ -69,7 +69,7 @@ define([
 
     /* Esri */
     EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    GeometryService, ProjectParameters, Polygon, SpatialReference, esriConfig,
+    GeometryService, ProjectParameters, Polygon, SpatialReference,
     EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
 
     /* Ramp */
@@ -794,8 +794,6 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
-                esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
-                dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {

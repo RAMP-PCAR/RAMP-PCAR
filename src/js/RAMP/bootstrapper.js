@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n, document, $, console, RAMP */
+﻿/*global require, window, dojoConfig, i18n, document, $, console, RAMP */
 
 /**
 * Ramp module
@@ -45,6 +45,7 @@ require([
     "dojo/parser", "dojo/on", "dojo/topic",
     "dojo/request/script",
     "dojo/request/xhr", "dojo/_base/array",
+    "esri/config",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
@@ -65,6 +66,7 @@ require([
     function (
     /* Dojo */
     parser, dojoOn, topic, requestScript, xhr, dojoArray,
+    esriConfig,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
@@ -153,9 +155,6 @@ require([
 
         // call the parser to create the dijit layout dijits
         parser.parse();
-
-        //turn off cors detection to stop cross domain error from happening.
-        esri.config.defaults.io.corsDetection = false;
 
         //To hold values from RAMP service
 
@@ -247,42 +246,46 @@ require([
             var pluginConfig,
                 advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
 
-                console.log("Bootstrapper: config loaded");
+            console.log("Bootstrapper: config loaded");
 
-                globalStorage.init(configObject);
+            globalStorage.init(configObject);
 
-                // Show or remove advanced toolbar toggle based on the config value
-                if (RAMP.config.advancedToolbar.enabled) {
-                    advancedToolbarToggle.removeClass("wb-invisible");
-                } else {
-                    advancedToolbarToggle.remove();
-                }
+            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
+            // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
+            esriConfig.defaults.io.corsDetection = true;
 
-                pluginConfig = RAMP.config.plugins;
-                if (pluginConfig) {
-                    dojoArray.map(pluginConfig, function (pName) {
-                        loadPlugin(pName);
-                    });
-                }
-                // Modify the config based on the url
-                // needs to do this before the gui loads because the gui module
-                // also reads from the config
-                BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+            // Show or remove advanced toolbar toggle based on the config value
+            if (RAMP.config.advancedToolbar.enabled) {
+                advancedToolbarToggle.removeClass("wb-invisible");
+            } else {
+                advancedToolbarToggle.remove();
+            }
 
-                // Initialize the map only after the gui loads
-                // if we do it beforehand, the map extent may get messed up since
-                // the available screen size may still be changing (e.g. due to fullscreen
-                // or subpanel closing)
-                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
-                    initializeMap();
+            pluginConfig = RAMP.config.plugins;
+            if (pluginConfig) {
+                dojoArray.map(pluginConfig, function (pName) {
+                    loadPlugin(pName);
                 });
+            }
+            // Modify the config based on the url
+            // needs to do this before the gui loads because the gui module
+            // also reads from the config
+            BookmarkLink.updateConfig(window.location.pathname.split("/").last());
 
-                gui.load(null, null, function () { });
+            // Initialize the map only after the gui loads
+            // if we do it beforehand, the map extent may get messed up since
+            // the available screen size may still be changing (e.g. due to fullscreen
+            // or subpanel closing)
+            topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                initializeMap();
+            });
 
-                // Create the panel that the bookmark link sits in
-                // can only do this after the gui loads
-                BookmarkLink.createUI();
+            gui.load(null, null, function () { });
 
-                Ramp.loadStrings();
+            // Create the panel that the bookmark link sits in
+            // can only do this after the gui loads
+            BookmarkLink.createUI();
+
+            Ramp.loadStrings();
         }
     });
