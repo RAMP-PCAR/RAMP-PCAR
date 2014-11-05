@@ -393,6 +393,10 @@ module.exports = (grunt) ->
             tarball:
                 options:
                     message: "Tarball is created!"
+                    
+            templates:
+                options:
+                    message: "Templates are a Go."
 
         copy:
             configBuild:
@@ -983,6 +987,7 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     'copy:templatesBuild'
+                    'notify:templates'
                 ]
 
             js:
