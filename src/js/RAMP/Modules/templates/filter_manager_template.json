@@ -36,7 +36,7 @@
                                                 
                                                 {% if(!o.data[o.idx].layerConfig.isStatic) { %}
                                                 
-                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                                    
                                                 {% } %}
                                                     
@@ -48,7 +48,7 @@
                                                 
                                                 {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
                                                 
-                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
                                                   
                                                 {% } %}
                                             </div>
@@ -107,7 +107,7 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                 </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json

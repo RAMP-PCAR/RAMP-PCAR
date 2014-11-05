@@ -429,8 +429,8 @@ define([
 
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
-                            var guid = button.data("layer-uuid"),
-                                layerConfig = Ramp.getLayerConfigWithGuid(guid),
+                            var id = button.data("layer-id"),
+                                layerConfig = Ramp.getLayerConfigWithId(id),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -439,7 +439,7 @@ define([
                                 content: null,
                                 target: node.find(".layer-details"),
                                 origin: "filterManager",
-                                guid: guid,
+                                guid: id,
                                 doOnOpen: function () { node.addClass("selected-row"); },
                                 doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
                             });
@@ -470,21 +470,21 @@ define([
                                         content: $(wmsmeta),
                                         origin: "filterManager",
                                         update: true,
-                                        guid: guid
+                                        guid: id
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                         origin: "filterManager",
                                         update: true,
-                                        guid: guid
+                                        guid: id
                                     });
                                 }
                             } else {
                                 //for feature layer
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
 
-                                metadataUrl = "assets/metadata/" + guid + ".xml";
+                                metadataUrl = "assets/metadata/" + id + ".xml";
 
                                 UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
                                     function (error, data) {
@@ -493,14 +493,14 @@ define([
                                                 content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                                 origin: "filterManager",
                                                 update: true,
-                                                guid: guid
+                                                guid: id
                                             });
                                         } else {
                                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                                 content: $(data),
                                                 origin: "filterManager",
                                                 update: true,
-                                                guid: guid
+                                                guid: id
                                             });
                                         }
                                     });
