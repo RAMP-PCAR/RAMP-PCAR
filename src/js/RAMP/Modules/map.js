@@ -799,7 +799,8 @@ define([
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
-                        opacity: resolveLayerOpacity(layer.settings.opacity)
+                        opacity: resolveLayerOpacity(layer.settings.opacity),
+                        visibleLayers: [layer.layerName]
                         //resourceInfo: {
                         //    extent: new EsriExtent(layer.extent),
                         //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
@@ -816,9 +817,11 @@ define([
                         MapClickHandler.registerWMSClick({ wmsLayer: wmsl, layerConfig: layer });
                     }
 
-                    wmsl.setVisibleLayers(layer.layerName);
+                    //wmsl.setVisibleLayers(layer.layerName);
                     wmsl.setVisibility(layer.settings.visible);
 
+                    console.log("wms registered: " + layer.id);
+                    console.log(wmsl);
                     return wmsl;
                 });
 
@@ -943,6 +946,8 @@ define([
                     type: GlobalStorage.layerType.Basemap
                 };
                 // Combine all layer arrays then add them all at once (for efficiency)
+                console.log('adding wmses');
+                console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
 
                 /* Start - Show scalebar */

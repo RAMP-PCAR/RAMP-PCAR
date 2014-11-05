@@ -620,9 +620,8 @@ define([
                         dojoArray.forEach(layers, function (layer) {
                             var wmsLayerName = null;
                             if (layer.ramp.type === GlobalStorage.layerType.WMS) {
-                                wmsLayerName = layer.layerInfos[0].name;
-
-                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+//                                wmsLayerName = layer.layerName;
+                                layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
                                 layerGroups.wms.push(layer);
                             } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.ramp.type === GlobalStorage.layerType.Static) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
