@@ -1059,7 +1059,7 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                var firstVisibleLayer = UtilArray.find(RAMP.config.layers.featureLayers, function (layerConfig) {
+                                var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = GlobalStorage.map.getLayer(layerConfig.id);
                                     return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
