@@ -1,4 +1,4 @@
-﻿/* global define */
+﻿/* global define, console */
 
 /**
 * Utility module containing useful static classes.
@@ -202,6 +202,123 @@ define(["ramp/globalStorage"],
                     };
 
                 return boundingLegendLabel;
+            },
+
+            /**
+             * Gets an array of symbology images to display in the layer selector
+             * @method getSymbolForLayer
+             * @param {Object} layerConfig A layer's config object
+             * @returns {icon} The array of icon(s) to use in layer selector
+             */
+            getSymbolForLayer: function (layerConfig) {
+                //will take a symbol list that has 1 or more entries.  will return first 3.  if less than 3, will duplicate values
+                function pick3(symbolList) {
+                    var num = symbolList.length, indexes;
+
+                    if (num > 2) {
+                        //pick first 3
+                        indexes = [0, 1, 2];
+                    } else if (num === 2) {
+                        //duplicate the first
+                        indexes = [0, 1, 0];
+                    } else if (num === 1) {
+                        //triple whammy
+                        indexes = [0, 0, 0];
+                    } else {
+                        //something is ruined
+                        return ["", "", ""];
+                    }
+
+                    //return images in an array
+                    return [symbolList[indexes[0]].imageUrl, symbolList[indexes[1]].imageUrl, symbolList[indexes[2]].imageUrl];
+                }
+
+                if (layerConfig.symbology) {
+                    //feature layer.  make an array for the appropriate renderer
+
+                    var symbNode = layerConfig.symbology;
+                    switch (symbNode.type) {
+                        case "simple":
+                            return [symbNode.imageUrl];
+                        case "uniqueValue":
+                            return pick3(symbNode.valueMaps);
+                        case "classBreaks":
+                            return pick3(symbNode.rangeMaps);
+                        default:
+                            //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
+                            console.log('unknown renderer encountered: ' + symbNode.type);
+                            return [""];
+                    }
+                } else {
+                    //no symbology defined, assume a WMS
+
+                    if (layerConfig.imageUrl) {
+                        return [layerConfig.imageUrl];
+                    } else {
+                        //catch-all in the case that things are really messed up
+                        console.log('layer with no image info for layer selector');
+                        return [""];
+                    }
+                }               
+            },
+
+            //temporary work-around.  will be removed when Alex's stacked-symbology template is implemented
+            getSymbolForLayerHACK: function (xlayerConfig) {
+
+                function lazyJamesGetSymbolForLayer(layerConfig) {
+                    //will take a symbol list that has 1 or more entries.  will return first 3.  if less than 3, will duplicate values
+                    function pick3(symbolList) {
+                        var num = symbolList.length, indexes;
+
+                        if (num > 2) {
+                            //pick first 3
+                            indexes = [0, 1, 2];
+                        } else if (num === 2) {
+                            //duplicate the first
+                            indexes = [0, 1, 0];
+                        } else if (num === 1) {
+                            //triple whammy
+                            indexes = [0, 0, 0];
+                        } else {
+                            //something is ruined
+                            return ["", "", ""];
+                        }
+
+                        //return images in an array
+                        return [symbolList[indexes[0]].imageUrl, symbolList[indexes[1]].imageUrl, symbolList[indexes[2]].imageUrl];
+                    }
+
+                    if (layerConfig.symbology) {
+                        //feature layer.  make an array for the appropriate renderer
+
+                        var symbNode = layerConfig.symbology;
+                        switch (symbNode.type) {
+                            case "simple":
+                                return [symbNode.imageUrl];
+                            case "uniqueValue":
+                                return pick3(symbNode.valueMaps);
+                            case "classBreaks":
+                                return pick3(symbNode.rangeMaps);
+                            default:
+                                //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
+                                console.log('unknown renderer encountered: ' + symbNode.type);
+                                return [""];
+                        }
+                    } else {
+                        //no symbology defined, assume a WMS
+
+                        if (layerConfig.imageUrl) {
+                            return [layerConfig.imageUrl];
+                        } else {
+                            //catch-all in the case that things are really messed up
+                            console.log('layer with no image info for layer selector');
+                            return [""];
+                        }
+                    }               
+                }
+
+                var imgs = lazyJamesGetSymbolForLayer(xlayerConfig);
+                return imgs[0];
             }
         };
     });

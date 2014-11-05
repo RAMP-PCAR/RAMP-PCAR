@@ -1,4 +1,4 @@
-﻿/*global define, console, RAMP */
+﻿/*global define, RAMP */
 
 /**
 *
@@ -102,33 +102,6 @@ define([
              */
             _getSymbolConfig: function (layerUrl, wmsName) {
                 return this.getLayerConfig(layerUrl, wmsName).symbology;
-            },
-
-            /**
-             * Gets the default symbology icon from a layer's web service
-             * @method getSymbolForLayer
-             * @param {Object} layer A feature layer
-             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-             * @returns {icon} The appropriate icon from the layer's symbology
-             */
-            getSymbolForLayer: function (layer, wmsName) {
-                var symbolConfig = this._getSymbolConfig(layer.url, wmsName);
-                switch (symbolConfig.type) {
-                    case "simple":
-                        return symbolConfig.imageUrl;
-                    case "uniqueValue":
-                        //TODO when we enhance to an "icon stack" we may want to return a set of images.  Alex to determine what is needed
-                        //for now, pick first image
-                        return symbolConfig.valueMaps[0].imageUrl;
-                    case "classBreaks":
-                        //TODO when we enhance to an "icon stack" we may want to return a set of images.  Alex to determine what is needed
-                        //for now, pick first image
-                        return symbolConfig.rangeMaps[0].imageUrl;
-                    default:
-                        //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
-                        console.log('unknown renderer encountered: ' + symbolConfig.type);
-                        return "";
-                }
             },
 
             /**
