@@ -958,49 +958,21 @@
         ],
         "wms": [
             {
-                "id": "d221ca08-00c9-4011-aca6-b0a014fc90dc",
-                "displayName": "Air Temperature",
-                "format": "image/png",
-                "layerName": "RDPS.ETA_TT",
+                "id": "nasa_modis",
+                "displayName": "Arctic Airports",
+                "format": "image/jpeg",
+                "layerName": "36",
                 "imageUrl": "assets/images/wms.png",
-                "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
-                "legendMimeType":  "image/png",
-
-                "settings": {
-                    "visible": true,
-                    "panelEnabled": true,
-                    "opacity": {
-                        "enabled": true,
-                        "default": 0.2
-                    }
-                },
-
-                "featureInfo": {
-                    "parser": "tempParse",
-                    "mimeType": "text/plain"
-                }
-
+                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
+                "legendMimeType": "image/jpeg" 
             },
             {
-                "id": "d223ca08-00c9-4211-dca6-b0a414fc90dc",
-                "displayName": "Winds",
-                "layerName": "RDPS.ETA_UU",
-                "format": "png",
-                "legendMimeType":  "image/png",
-                "url": "http://geo.weather.gc.ca/geomet/?lang=E&service=WMS",
+                "id": "limits",
+                "displayName": "Limits",
+                "layerName": "limits",
+                "format": "image/jpeg",
                 "imageUrl": "assets/images/wms.png",
-
-                "settings": {
-                    "panelEnabled": true,
-                    "opacity": {
-                        "enabled": true,
-                        "default": 0.2
-                    }
-                },
-                "featureInfo": {
-                    "parser": "windParse",
-                    "mimeType": "text/plain"
-                }
+                "url": "http://wms.ess-ws.nrcan.gc.ca/wms/toporama_en"
             }
         ]
     },
