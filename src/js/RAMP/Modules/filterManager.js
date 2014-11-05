@@ -319,7 +319,7 @@ define([
                             }
                         },
                         {
-                            handleSelector: ".layer-name span",
+                            handleSelector: ".layer-name span, .layer-details span",
                             useAria: false,
                             timeout: 500
                         }
