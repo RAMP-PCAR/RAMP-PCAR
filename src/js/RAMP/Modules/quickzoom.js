@@ -1,4 +1,4 @@
-﻿/*global define, console, $ */
+﻿/*global define, console, $, RAMP */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -60,7 +60,7 @@ define([
              *
              */
             constructor: function () {
-                this.config = GlobalStorage.config;
+                this.config = RAMP.config;
 
                 this.form = new Form({
                     style: "overflow:hidden; clear:none;"

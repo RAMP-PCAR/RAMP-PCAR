@@ -1,4 +1,4 @@
-/* global define, i18n, jQuery, console, $, document */
+/* global define, i18n, jQuery, console, $, document, RAMP */
 
 /**
 * BookmarkLink submodule
@@ -371,7 +371,7 @@ define([
             var event,
                 urlObj = new Url(dojoRequire.toUrl(document.location));
 
-            config = GlobalStorage.config;
+            config = RAMP.config;
             baseUrl = urlObj.uri;
             queryObject = dojoQuery.queryToObject(urlObj.query);
 
@@ -442,7 +442,7 @@ define([
                 });
 
                 UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
-                    var layerConfig = UtilArray.find(config.featureLayers.concat(config.wmsLayers), function (layer) {
+                    var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
                     layerConfig.settings.opacity.default = value;
@@ -467,7 +467,7 @@ define([
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
                     // make sure not null
                     if (layerConfig !== null) {
-                        layerConfig.layerVisible = true;
+                        layerConfig.settings.visible = true;
 
                         layerVisibility[layerId] = true;
                     }
@@ -485,7 +485,7 @@ define([
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
 
                     if (layerConfig !== null) {
-                        layerConfig.layerVisible = false;
+                        layerConfig.settings.visible = false;
 
                         layerVisibility[layerId] = false;
                     }
@@ -502,10 +502,9 @@ define([
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
                     if (layerConfig !== null) {
-                        layerConfig.boundingBoxVisible = true;
+                        layerConfig.settings.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
@@ -520,10 +519,9 @@ define([
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
 
                     if (layerConfig !== null) {
-                        layerConfig.boundingBoxVisible = false;
+                        layerConfig.settings.boundingBoxVisible = false;
                         boundingBoxVisibility[layerId] = false;
                     }
-                    
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {
@@ -622,10 +620,10 @@ define([
 
                     // Only keep attributes that are different from the default config
                     var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
-                        return layerVisible && !Ramp.getLayerConfigWithId(key).layerVisible;
+                        return layerVisible && !Ramp.getLayerConfigWithId(key).settings.visible;
                     }),
                         hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
-                            return !boxVisible && Ramp.getLayerConfigWithId(key).layerVisible;
+                            return !boxVisible && Ramp.getLayerConfigWithId(key).settings.visible;
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
@@ -647,10 +645,10 @@ define([
 
                     // Only keep attributes that are different from the default config
                     var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
-                        return boxVisible && !Ramp.getLayerConfigWithId(key).boundingBoxVisible;
+                        return boxVisible && !Ramp.getLayerConfigWithId(key).settings.boundingBoxVisible;
                     }),
                         hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
-                            return !boxVisible && Ramp.getLayerConfigWithId(key).boundingBoxVisible;
+                            return !boxVisible && Ramp.getLayerConfigWithId(key).settings.boundingBoxVisible;
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {

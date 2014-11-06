@@ -31,46 +31,46 @@
             <fieldset>
                     <legend>
                         <div class='filter-row'>
-                        <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
-                        <div class='layer-details'>
+                                    <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
+                                    <div class='layer-details'>
                             
                             {%  
                                 var s = o.data[o.idx].layerConfig.symbology;
                                 include(s.type + '_layer_image_box', o);
                             %}                                       
 
-                            <div class='layer-controls'>
-                                <div class='layer-name'>
-                                    <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
-                                </div>
-                                <div class='btn-group margin-top-none'>												
-                                    
-                                    {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                    
-                                            <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
-                                       
-                                    {% } %}
-                                        
-                                    {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
-                                        
-                                        <span class='separator' role='presentation'></span>
-                                    
-                                    {% } %}
-                                    
-                                    {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
-                                    
-                                            <button class='btn btn-xs button-none xsmall settings-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.settings')%}</button>
-                                      
-                                    {% } %}
-                                </div>
-                            </div>
-                        </div>
-                        <div class='layer-checkboxes'>										
-                            {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
-                            {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
-                        </div>
-                        <div class='clearfix'>
-                        </div>
+                                        <div class='layer-controls'>
+                                            <div class='layer-name'>
+                                                <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
+                                            </div>
+                                            <div class='btn-group margin-top-none'>												
+                                                
+                                                {% if(!o.data[o.idx].layerConfig.isStatic) { %}
+                                                
+                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                                   
+                                                {% } %}
+                                                    
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
+                                                    
+                                                    <span class='separator' role='presentation'></span>
+                                                
+                                                {% } %}
+                                                
+                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
+                                                
+                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                                  
+                                                {% } %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='layer-checkboxes'>										
+                                        {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
+                                        {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+                                    </div>
+                                    <div class='clearfix'>
+                                    </div>
                     </div>
                 </legend>                                                                                       
             </fieldset>
@@ -153,7 +153,7 @@
                 </div>
             </li>
         ",
-
+        
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_settings_template":"{% if (o.settings.enabled) { %}
@@ -199,7 +199,7 @@
         
         // filter row button template
         "filter_button_template":"<li>
-                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-uuid='{%=o.data[o.idx].layerConfig.uuid%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                 </li>",
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json

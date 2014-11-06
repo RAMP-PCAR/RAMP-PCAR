@@ -1,4 +1,4 @@
-﻿/*global define, i18n */
+﻿/*global define, i18n, RAMP */
 
 /**
 * MeasureTool submodule.
@@ -62,7 +62,7 @@ define([
         function computeAreaAndLength(evtObj) {
             that.working(true);
 
-            geometryService = new GeometryService(GlobalStorage.config.geometryService);
+            geometryService = new GeometryService(RAMP.config.geometryService);
             geometryService.on("lengths-complete", outputAreaAndLength);
 
             var geometry = evtObj.geometry;
@@ -111,11 +111,6 @@ define([
                     map: map,
                     toolbar: toolbar
                 };
-
-                //identify proxy page to use if the toJson payload to the geometry service is greater than 2000 characters.
-                //If this null or not available the project and lengths operation will not work.  Otherwise it will do a http post to the proxy.
-                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;
-                esriConfig.defaults.io.alwaysUseProxy = false;
             }
         };
 
