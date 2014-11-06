@@ -51,13 +51,13 @@
                                                    
                                                 {% } %}
                                                     
-                                                {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
+                                                {% if (o.data[o.idx].layerConfig.settings.panelEnabled && !o.data[o.idx].layerConfig.isStatic) { %}
                                                     
                                                     <span class='separator' role='presentation'></span>
                                                 
                                                 {% } %}
                                                 
-                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
+                                                {% if (o.data[o.idx].layerConfig.settings.panelEnabled) { %}
                                                 
                                                         <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
                                                   
@@ -156,7 +156,7 @@
         
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_settings_template":"{% if (o.settings.enabled) { %}
+        "filter_row_settings_template":"{% if (o.settings.panelEnabled) { %}
                                             <div class='filter-row-settings bg-medium'>
                                             
                                                 <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
