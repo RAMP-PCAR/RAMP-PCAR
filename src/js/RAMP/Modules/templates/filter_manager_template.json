@@ -9,7 +9,7 @@
  */
 {				
         // Generates legend for each interactive layer on the map (non-basemap layers).
-        "filter_section_template":"
+        "filter_section_template": "
             {% include('filter_set_template',o); %}
         ",
         // layer level, layer is passed in as o.data. Level 1
@@ -31,46 +31,46 @@
             <fieldset>
                     <legend>
                         <div class='filter-row'>
-                                    <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
-                                    <div class='layer-details'>
-                            
-                            {%  
-                                var s = o.data[o.idx].layerConfig.symbology;
-                                include(s.type + '_layer_image_box', o);
-                            %}                                       
+                            <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
+                            <div class='layer-details'>
+                    
+                                {%  
+                                    var s = o.data[o.idx].layerConfig.symbology;
+                                    include(s.type + '_layer_image_box', o);
+                                %}                                       
 
-                                        <div class='layer-controls'>
-                                            <div class='layer-name'>
-                                                <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
-                                            </div>
-                                            <div class='btn-group margin-top-none'>												
-                                                
-                                                {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                                
-                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
-                                                   
-                                                {% } %}
-                                                    
-                                                {% if (o.data[o.idx].layerConfig.settings.panelEnabled && !o.data[o.idx].layerConfig.isStatic) { %}
-                                                    
-                                                    <span class='separator' role='presentation'></span>
-                                                
-                                                {% } %}
-                                                
-                                                {% if (o.data[o.idx].layerConfig.settings.panelEnabled) { %}
-                                                
-                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
-                                                  
-                                                {% } %}
-                                            </div>
-                                        </div>
+                                <div class='layer-controls'>
+                                    <div class='layer-name'>
+                                        <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
                                     </div>
-                                    <div class='layer-checkboxes'>										
-                                        {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
-                                        {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+                                    <div class='btn-group margin-top-none'>												
+                                        
+                                        {% if(!o.data[o.idx].layerConfig.isStatic) { %}
+                                        
+                                                <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                           
+                                        {% } %}
+                                            
+                                        {% if (o.data[o.idx].layerConfig.settings.panelEnabled && !o.data[o.idx].layerConfig.isStatic) { %}
+                                            
+                                            <span class='separator' role='presentation'></span>
+                                        
+                                        {% } %}
+                                        
+                                        {% if (o.data[o.idx].layerConfig.settings.panelEnabled) { %}
+                                        
+                                                <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                          
+                                        {% } %}
                                     </div>
-                                    <div class='clearfix'>
-                                    </div>
+                                </div>
+                            </div>
+                            <div class='layer-checkboxes'>										
+                                {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
+                                {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+                            </div>
+                            <div class='clearfix'>
+                            </div>
                     </div>
                 </legend>                                                                                       
             </fieldset>
@@ -78,28 +78,28 @@
         
         "simple_layer_image_box": "
             <div class='layer-image-box'>                                  
-                <img alt='' src='{%=o.data[o.idx].layerConfig.symbology.imageUrl%}' class='layer-image bg-white'>
+                <img alt='' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
             </div>
         ",
 
         "uniqueValue_layer_image_box": "
-            {% include('complex_layer_image_box', o.fn.generateComplexImage(o.data[o.idx].layerConfig.symbology)); %}
+            {% include('complex_layer_image_box', o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)); %}
         ",
 
         "classBreaks_layer_image_box": "
-            {% include('complex_layer_image_box', o.fn.generateComplexImage(o.data[o.idx].layerConfig.symbology)); %}
+            {% include('complex_layer_image_box', o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)); %}
         ",
 
         "complex_layer_image_box": "
             <div class='layer-complex-image-box'>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[0].imageUrl%}' class='layer-image bg-white'>
+                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[1].imageUrl%}' class='layer-image bg-white'>
+                    <img alt='' src='{%=o[1]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[2].imageUrl%}' class='layer-image bg-white'>
+                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
                 </div>
                 <button class='btn btn-xs button-none renderer-button'>
                     <i class='fa fa-square'></i>

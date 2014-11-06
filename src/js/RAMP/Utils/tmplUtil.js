@@ -211,7 +211,7 @@ define(["ramp/globalStorage"],
              * @returns {icon} The array of icon(s) to use in layer selector
              */
             getSymbolForLayer: function (layerConfig) {
-                //will take a symbol list that has 1 or more entries.  will return first 3.  if less than 3, will duplicate values
+                //will take a symbol list that has 1 or more entries.  will return first 3.  if fewer than 3, will duplicate values
                 function pick3(symbolList) {
                     var num = symbolList.length, indexes;
 
