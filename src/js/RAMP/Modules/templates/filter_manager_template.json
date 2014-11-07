@@ -9,62 +9,155 @@
  */
 {				
         // Generates legend for each interactive layer on the map (non-basemap layers).
-        "filter_section_template":"{% 	
-                                        include('filter_set_template',o);									
-                                    %}",
+        "filter_section_template": "
+            {% include('filter_set_template',o); %}
+        ",
         // layer level, layer is passed in as o.data. Level 1
         // Filter overall structure, contains 1 to many filter row for the available layers.
-        "filter_set_template":"<li id='{%=o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
-                                        <fieldset>
-                                            <legend>{% include('filter_row_template', o);%}</legend>																						
-                                        </fieldset>
-                                        {% include('filter_row_settings_template', o.fn.generateSettingsToggle(o));%}
-                                    </li>",
+        "filter_set_template":"
+            <li id='{%=o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+                {%  
+                    var s = o.data[o.idx].layerConfig.symbology || { type: 'simple' };
+
+                    include('filter_row_template', o);
+                    include(s.type + '_renderer_template', s);
+                    include('filter_row_settings_template', o.fn.generateSettingsToggle(o));
+                %}
+            </li>
+        ",
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_template":"<div class='filter-row'>
-                                    <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
-                                    <div class='layer-details'>
-                                        <div class='layer-image-box'>									
-                                            <img alt='' src='{%=o.fn.getSymbolForLayerHACK(o.data[o.idx].layerConfig)%}' class='layer-image bg-white'>
-                                        </div>
-                                        <div class='layer-controls'>
-                                            <div class='layer-name'>
-                                                <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
-                                            </div>
-                                            <div class='btn-group margin-top-none'>												
-                                                
-                                                {% if(!o.data[o.idx].layerConfig.isStatic) { %}
-                                                
-                                                        <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
-                                                   
-                                                {% } %}
-                                                    
-                                                {% if (o.data[o.idx].layerConfig.settings.enabled && !o.data[o.idx].layerConfig.isStatic) { %}
-                                                    
-                                                    <span class='separator' role='presentation'></span>
-                                                
-                                                {% } %}
-                                                
-                                                {% if (o.data[o.idx].layerConfig.settings.enabled) { %}
-                                                
-                                                        <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
-                                                  
-                                                {% } %}
-                                            </div>
-                                        </div>
+        "filter_row_template": "
+            <fieldset>
+                    <legend>
+                        <div class='filter-row'>
+                            <div class='sort-handle' tabindex='0' aria-label='{%=i18n.t('filterManager.layerHandleLabel', { layerName: o.data[o.idx].layerConfig.displayName })%}'></div>
+                            <div class='layer-details'>
+                    
+                                {%  
+                                    var s = o.data[o.idx].layerConfig.symbology || { type: 'simple' };
+
+                                    include(s.type + '_layer_image_box', o);
+                                %}                                       
+
+                                <div class='layer-controls'>
+                                    <div class='layer-name'>
+                                        <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
                                     </div>
-                                    <div class='layer-checkboxes'>										
-                                        {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
-                                        {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+                                    <div class='btn-group margin-top-none'>												
+                                        
+                                        {% if(!o.data[o.idx].layerConfig.isStatic) { %}
+                                        
+                                                <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                           
+                                        {% } %}
+                                            
+                                        {% if (o.data[o.idx].layerConfig.settings.panelEnabled && !o.data[o.idx].layerConfig.isStatic) { %}
+                                            
+                                            <span class='separator' role='presentation'></span>
+                                        
+                                        {% } %}
+                                        
+                                        {% if (o.data[o.idx].layerConfig.settings.panelEnabled) { %}
+                                        
+                                                <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                          
+                                        {% } %}
                                     </div>
-                                    <div class='clearfix'>
-                                    </div>
-                                </div>",
+                                </div>
+                            </div>
+                            <div class='layer-checkboxes'>										
+                                {% include('filter_legend_template', o.fn.generateVisibilityLegend(o));%}
+                                {% include('filter_legend_template', o.fn.generateBoundingBoxLegend(o));%}
+                            </div>
+                            <div class='clearfix'>
+                            </div>
+                    </div>
+                </legend>                                                                                       
+            </fieldset>
+        ",
+        
+        "simple_layer_image_box": "
+            <div class='layer-image-box'>                                  
+                <img alt='' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
+            </div>
+        ",
+
+        "uniqueValue_layer_image_box": "
+            {% include('complex_layer_image_box', o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)); %}
+        ",
+
+        "classBreaks_layer_image_box": "
+            {% include('complex_layer_image_box', o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)); %}
+        ",
+
+        "complex_layer_image_box": "
+            <div class='layer-complex-image-box'>
+                <div class='layer-image-box'>                                  
+                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
+                </div>
+                <div class='layer-image-box'>                                  
+                    <img alt='' src='{%=o[1]%}' class='layer-image bg-white'>
+                </div>
+                <div class='layer-image-box'>                                  
+                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
+                </div>
+                <button class='btn btn-xs button-none renderer-button'>
+                    <i class='fa fa-square'></i>
+                    <i class='fa fa-plus-square-o'></i>
+                    <i class='fa fa-minus-square-o'></i>                                            
+                    <span class='wb-invisible'></span>
+                </button>
+                
+            </div>
+        ",
+        
+        "simple_renderer_template": " ",
+
+        "uniqueValue_renderer_template": "
+            <div class='renderer-list'>
+                <ul>
+                    {% 
+                        o.valueMaps.forEach(function(vm) {
+                            include('renderer_template', {
+                                imageUrl: vm.imageUrl,
+                                label: vm.label || vm.value
+                            });
+                        });
+                     %}
+                </ul>
+            </div>
+        ",
+
+        "classBreaks_renderer_template": "
+            <div class='renderer-list'>
+                <ul>
+                    {% 
+                        o.rangeMaps.forEach(function(rm) {
+                            include('renderer_template', {
+                                imageUrl: rm.imageUrl,
+                                label: rm.label || rm.maxValue
+                            });
+                        });
+                     %}
+                </ul>
+            </div>
+        ",
+
+        "renderer_template": "
+            <li>
+               <div class='layer-details'>
+                  <div class='layer-image-box'>
+                    <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
+                  </div>
+                  <span title='{%=o.label%}'>{%=o.label%}</span>
+                </div>
+            </li>
+        ",
         
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_settings_template":"{% if (o.settings.enabled) { %}
+        "filter_row_settings_template":"{% if (o.settings.panelEnabled) { %}
                                             <div class='filter-row-settings bg-medium'>
                                             
                                                 <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>

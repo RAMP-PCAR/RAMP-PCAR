@@ -307,7 +307,7 @@ module.exports = (grunt) ->
             
             done()
     )
-    
+
     @registerTask(
         'zs3'
         'INTERNAL: Config validation'
@@ -351,7 +351,7 @@ module.exports = (grunt) ->
                     fs.writeFileSync fileName, data
                     done()
     )
-    
+
     smartExpand = ( cwd, arr, extra ) ->    
         # determine file order here and concat to arr
         extra = extra or []
@@ -412,7 +412,7 @@ module.exports = (grunt) ->
 
             min:
                 options:
-                    message: "Minification is complete."
+                    message: "Minification is complete."        
 
             clean:
                 options:
@@ -421,7 +421,7 @@ module.exports = (grunt) ->
             tarball:
                 options:
                     message: "Tarball is created!"
-                    
+
             configInvalid:
                 options:
                     message: "Config is invalid!"
@@ -429,6 +429,10 @@ module.exports = (grunt) ->
             configValid:
                 options:
                     message: "Config checks out!" 
+
+            templates:
+                options:
+                    message: "Templates are a Go."
 
         copy:
             configBuild:
@@ -1019,6 +1023,7 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     'copy:templatesBuild'
+                    'notify:templates'
                 ]
 
             js:
@@ -1131,7 +1136,7 @@ module.exports = (grunt) ->
             src: '<%= pkg.ramp.docco.path %>/**/*.js'
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
-        
+
         tv4:
             options:
                 root: grunt.file.readJSON 'src/configSchema.json'
@@ -1165,7 +1170,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-newer'
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
-    
+        
     @loadNpmTasks 'grunt-tv4'
     
     @task.run "notify_hooks"
