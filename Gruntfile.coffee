@@ -26,7 +26,6 @@ module.exports = (grunt) ->
         'build'
         'Run full build to create an uminified development package.'
         [
-            'zs3'
             'clean:build'
             'copy:build'
             'assemble'
@@ -355,6 +354,17 @@ module.exports = (grunt) ->
 
     @registerTask(
         'generateConfig'
+        'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
+        [   
+            'jsonlint:oneConfig'
+            'zs3'
+            'jsonlint:locales'
+            'assembleConfigs'
+        ]            
+    )
+    
+    @registerTask(
+        'assembleConfigs'
         'INTERNAL'
         () ->
             languages = ['en', 'fr']
@@ -378,11 +388,12 @@ module.exports = (grunt) ->
             )       
             
             tasks.push 'notify:configGenerated'
+            tasks.push 'jsonlint:generatedConfigs'
+            tasks.push 'notify:generatedConfigsLint'
             
             #console.log grunt.config 'replace'
             #console.log tasks
-            grunt.task.run tasks  
-            
+            grunt.task.run tasks
     )
 
     smartExpand = ( cwd, arr, extra ) ->    
@@ -470,6 +481,10 @@ module.exports = (grunt) ->
             configGenerated:
                 options:
                     message: "Configs are generated!"
+                    
+            generatedConfigsLint:
+                options:
+                    message: "Generated configs are lint free."
 
         copy:
             configBuild:
@@ -904,6 +919,24 @@ module.exports = (grunt) ->
                 validthis: false
                 noyield: false
 
+        jsonlint:
+            oneConfig:
+                src: [
+                    'src/config.json'
+                    'src/configSchema.json'
+                    'src/draft-04-schema.json'
+                ]
+        
+            generatedConfigs:
+                src: [
+                    'build/config.*.json'
+                ]
+                
+            locales:
+                src: [
+                    'src/locales/**/*.json'
+                ]
+
         jscs: 
             main:
                 options:
@@ -1094,7 +1127,6 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     #'copy:configBuild'
-                    'zs3'
                     'generateConfig'
                 ]
             
@@ -1105,10 +1137,9 @@ module.exports = (grunt) ->
                 
                 tasks: [
                     #'build'
+                    'generateConfig'
                     'assemble' #for quicker build only run a subset of build
                     'notify:page'
-                    'zs3'
-                    'generateConfig'
                     'copy:localesBuild'
                 ]
             
@@ -1189,6 +1220,7 @@ module.exports = (grunt) ->
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
 
+        ###
         tv4:
             options:
                 root: grunt.file.readJSON 'src/configSchema.json'
@@ -1198,6 +1230,7 @@ module.exports = (grunt) ->
                 src: [
                     'src/config.test.json'
                 ]           
+        ###
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1216,6 +1249,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-docco'
+    @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
