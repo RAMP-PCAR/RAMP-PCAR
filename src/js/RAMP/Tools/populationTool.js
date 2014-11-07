@@ -1,4 +1,4 @@
-﻿/*global define, i18n */
+﻿/*global define, i18n, RAMP */
 
 /**
 * @module Tools
@@ -118,7 +118,7 @@ define([
                 geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
 
                 geoprocessor.setOutputSpatialReference({
-                    wkid: GlobalStorage.config.spatialReference.wkid
+                    wkid: RAMP.config.spatialReference.wkid
                 });
                 geoprocessor.on("execute-complete", outputTotalPopulation);
 
@@ -128,11 +128,6 @@ define([
                     map: map,
                     toolbar: toolbar
                 };
-
-                //identify proxy page to use if the toJson payload to the geoprocessing service is greater than 2000 characters.
-                //If this null or not available the geoprocessor.execute operation will not work.  Otherwise it will do a http post to the proxy.
-                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;
-                esriConfig.defaults.io.alwaysUseProxy = false;
             }
         };
 

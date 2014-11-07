@@ -256,7 +256,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         lang.mixin(checkboxOptions, this.master)
                     );
 
-                    this.master.checkbox.on(checkbox.event.TOGGLE, function (evt) {
+                    this.master.checkbox.on(this.master.checkbox.event.TOGGLE, function (evt) {
                         // re-emit individual checkbox's toggle event as groups;
                         console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 

@@ -1,4 +1,4 @@
-﻿/*global define */
+﻿/*global define, RAMP */
 
 /**
 *
@@ -73,11 +73,11 @@ define([
                     GlobalStorage.urlCfg = {};
                 }
 
-                var res = UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers), function (layerConfig) {
+                var res = UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature), function (layerConfig) {
                     if (wmsName == null) {
                         return layerConfig.url === url;
                     } else {
-                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerInfo.name === wmsName);
+                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerName === wmsName);
                     }
                 });
 
@@ -86,15 +86,8 @@ define([
                 return GlobalStorage.urlCfg[url];
             },
 
-            getLayerConfigwithGuid: function (uuid) {
-                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
-                    function (layerConfig) {
-                        return layerConfig.uuid === uuid;
-                    });
-            },
-
             getLayerConfigWithId: function (id) {
-                return UtilArray.find(GlobalStorage.config.wmsLayers.concat(GlobalStorage.config.featureLayers),
+                return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature),
                     function (layerConfig) {
                         return layerConfig.id === id;
                     });
@@ -112,18 +105,6 @@ define([
             },
 
             /**
-             * Gets the default symbology icon from a layer's web service
-             * @method getSymbolForLayer
-             * @param {Object} layer A feature layer
-             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-             * @returns {icon} The default icon from the layer's symbology
-             */
-            getSymbolForLayer: function (layer, wmsName) {
-                var symbolConfig = this._getSymbolConfig(layer.url, wmsName);
-                return symbolConfig.icons["default"];
-            },
-
-            /**
             * Given a feature object or a graphic object (or any object that has a getLayer method and an
             * attributes field) return the object containing the image URL and legend text for that
             * feature/graphic object.
@@ -138,7 +119,8 @@ define([
                 //as this function is used by templating, we piggyback the logic here
                 return UtilTmpl.getGraphicIcon(feature, layerConfig);
             },
-            /*
+
+            /**
              * This method builds a complete service URL callout for a map configuration. The URL is built using a base URL and map ID, and a language culture code.
              * @method getServiceURL
              * @param {String} rampService The base URL for a web service that provide's valid map JSON configuration data

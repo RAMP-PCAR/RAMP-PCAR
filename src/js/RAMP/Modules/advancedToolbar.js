@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require, tmpl, console */
+﻿/*global define, $, TimelineLite, TweenLite, require, tmpl, console, RAMP */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.
@@ -172,7 +172,7 @@ define([
 
                 ui.init();
 
-                tools = globalStorage.config.advancedToolbar.tools;
+                tools = RAMP.config.advancedToolbar.tools;
                 toolsRequire = tools
                     .filter(function (tool) { return tool.enabled; })
                     .map(function (tool) {

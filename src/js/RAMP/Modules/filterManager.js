@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl, i18n, console, $ */
+﻿/*global define, window, tmpl, i18n, console, $, RAMP */
 
 /**
 * FilterManager submodule
@@ -217,7 +217,7 @@ define([
                         });
                     boxCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.boundingBoxVisible;
+                        return layerConfig.settings.boundingBoxVisible;
                     });
 
                     boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -279,7 +279,7 @@ define([
 
                     eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.layerVisible;
+                        return layerConfig.settings.visible;
                     });
 
                     eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -319,7 +319,7 @@ define([
                             }
                         },
                         {
-                            handleSelector: ".layer-name span",
+                            handleSelector: ".layer-name span, .layer-details span",
                             useAria: false,
                             timeout: 500
                         }
@@ -341,10 +341,11 @@ define([
                     * @private
                     */
                     function adjustPaneWidth() {
-                        UtilMisc.adjustWidthForSrollbar(layerList, [filterGlobalToggles]);
+                        UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
                     }
+
                     /**
-                    *  Changes the state of the expand all control if all the nodes are expanded.
+                    * Changes the state of the expand all control if all the nodes are expanded.
                     * @method adjustExpandAllButtonState
                     * @private
                     */
@@ -409,6 +410,8 @@ define([
                     PopupManager.registerPopup(layerList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
+
+                                adjustPaneWidth();
                                 d.resolve();
                             });
                             this.target.find(".nstSlider").nstSlider("refresh");
@@ -421,6 +424,23 @@ define([
                         }
                     );
 
+                    PopupManager.registerPopup(layerList, "click",
+                        function (d) {
+                            this.target.slideToggle("fast", function () {
+
+                                adjustPaneWidth();
+                                d.resolve();
+                            });
+                            //this.target.find(".nstSlider").nstSlider("refresh");
+                        },
+                        {
+                            handleSelector: ".renderer-button",
+                            targetContainerSelector: "li.layerList1",
+                            targetSelector: ".renderer-list",
+                            activeClass: "button-pressed"
+                        }
+                    );
+
                     // metadata buttons
                     // to be changed...
                     layerList.find("legend button.metadata-button").on("click", function () {
@@ -429,8 +449,8 @@ define([
 
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
-                            var guid = button.data("layer-uuid"),
-                                layerConfig = Ramp.getLayerConfigwithGuid(guid),
+                            var id = button.data("layer-id"),
+                                layerConfig = Ramp.getLayerConfigWithId(id),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -439,7 +459,7 @@ define([
                                 content: null,
                                 target: node.find(".layer-details"),
                                 origin: "filterManager",
-                                guid: guid,
+                                guid: id,
                                 doOnOpen: function () { node.addClass("selected-row"); },
                                 doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
                             });
@@ -470,21 +490,21 @@ define([
                                         content: $(wmsmeta),
                                         origin: "filterManager",
                                         update: true,
-                                        guid: guid
+                                        guid: id
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                         origin: "filterManager",
                                         update: true,
-                                        guid: guid
+                                        guid: id
                                     });
                                 }
                             } else {
                                 //for feature layer
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
 
-                                metadataUrl = "assets/metadata/" + guid + ".xml";
+                                metadataUrl = "assets/metadata/" + id + ".xml";
 
                                 UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
                                     function (error, data) {
@@ -493,14 +513,14 @@ define([
                                                 content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
                                                 origin: "filterManager",
                                                 update: true,
-                                                guid: guid
+                                                guid: id
                                             });
                                         } else {
                                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                                 content: $(data),
                                                 origin: "filterManager",
                                                 update: true,
-                                                guid: guid
+                                                guid: id
                                             });
                                         }
                                     });
@@ -509,6 +529,9 @@ define([
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                         }
                     });
+
+                    // adjust panel width on load
+                    adjustPaneWidth();
                 }
                 /**
                 * Adjusts filter style according to the scroll action on the layers.
@@ -620,9 +643,8 @@ define([
                         dojoArray.forEach(layers, function (layer) {
                             var wmsLayerName = null;
                             if (layer.ramp.type === GlobalStorage.layerType.WMS) {
-                                wmsLayerName = layer.layerInfos[0].name;
-
-                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
+//                                wmsLayerName = layer.layerName;
+                                layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
                                 layerGroups.wms.push(layer);
                             } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.ramp.type === GlobalStorage.layerType.Static) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
@@ -633,14 +655,14 @@ define([
 
                         // put layer in datawrapper to be used in template
                         data = {
-                            config: GlobalStorage.config,
+                            config: RAMP.config,
                             layerGroups: {
                                 feature: TmplHelper.dataBuilder(layerGroups.feature),
                                 wms: TmplHelper.dataBuilder(layerGroups.wms)
                             }
                         };
 
-                        sectionNode = $("#" + GlobalStorage.config.divNames.filter);
+                        sectionNode = $("#" + RAMP.config.divNames.filter);
                         // TODO: generate section using one template, need to refactoring the following fixed string
                         section = tmpl('filter_manager_template', data);
 
@@ -702,7 +724,7 @@ define([
             */
             init: function () {
                 // Convenience config objects
-                config = GlobalStorage.config;
+                config = RAMP.config;
 
                 initListeners();
 

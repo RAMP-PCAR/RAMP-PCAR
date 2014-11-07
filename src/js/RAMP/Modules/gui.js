@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
 /*jslint white: true */
 
 /**
@@ -1482,19 +1482,19 @@ define([
                 // then the map extent will change again.
                 var waitList = [];
 
-                if (!GlobalStorage.config.ui.sidePanelOpened) {
+                if (!RAMP.config.ui.sidePanelOpened) {
                     // NOTE: panel change not triggered here (see map extent change below)
                     waitList.push({
                         publishName: EventManager.GUI.PANEL_TOGGLE,
                         eventArg: {
                             origin: "bootstrapper",
-                            visible: GlobalStorage.config.ui.sidePanelOpened
+                            visible: RAMP.config.ui.sidePanelOpened
                         },
                         subscribeName: EventManager.GUI.PANEL_CHANGE
                     });
                 }
 
-                if (GlobalStorage.config.ui.fullscreen) {
+                if (RAMP.config.ui.fullscreen) {
                     // NOTE: fullscreen not triggered here (see map extent change below)
                     waitList.push({
                         publishName: EventManager.GUI.TOGGLE_FULLSCREEN,

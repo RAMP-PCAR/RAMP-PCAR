@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP */
 /*jslint white: true */
 
 /**
@@ -325,15 +325,15 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (utilMisc.isUndefined(obj[datagridMode])) {
-                            var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
-
-                            tmpl.cache = {
-                            };
-
-                            tmpl.templates = data_grid_template_json;
 
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+
+                            var sumTemplate = tmplData.lyr.templates.summary;
+
+                            tmpl.cache = {};
+
+                            tmpl.templates = data_grid_template_json;
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
                         }
@@ -823,7 +823,7 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(GlobalStorage.config.featureLayers,
+                    layer = dojoArray.filter(RAMP.config.layers.feature,
                         function (layer) {
                             return layer.url === selectedDatasetUrl;
                         });
@@ -833,9 +833,9 @@ define([
                     }
                 }
 
-                function updateDatasetSelectorToLoaded() {                    
-                    datasetSelectorSubmitButton                        
-                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));                    
+                function updateDatasetSelectorToLoaded() {
+                    datasetSelectorSubmitButton
+                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));
                 }
 
                 function refreshTable() {
@@ -913,7 +913,7 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.featureLayers, function (layerConfig) {
+                        var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                             var layer = GlobalStorage.map.getLayer(layerConfig.id);
                             return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
@@ -1008,7 +1008,7 @@ define([
                             consumeOrigin: origin,
                             origin: origin
                         });
-                    }                    
+                    }
                 }
 
                 function adjustPanelWidth() {
@@ -1045,7 +1045,7 @@ define([
                                 }
                                 );
 
-                            sectionNode = $("#" + GlobalStorage.config.divNames.datagrid);
+                            sectionNode = $("#" + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
                         }
                 ),
@@ -1059,7 +1059,7 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                var firstVisibleLayer = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                                var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = GlobalStorage.map.getLayer(layerConfig.id);
                                     return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
@@ -1107,8 +1107,7 @@ define([
         */
         function cacheSortedData() {
             var elements = oTable.rows().data();
-            featureToPage = {
-            };
+            featureToPage = {};
             $.each(elements, function (idx, val) {
                 var layer = val.last().featureUrl,
                     fid = GraphicExtension.getOid(val.last().feature);
@@ -1385,10 +1384,10 @@ define([
             * @method init
             */
             init: function () {
-                config = GlobalStorage.config;
+                config = RAMP.config;
 
                 // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(config.featureLayers, function (layerConfig) {
+                var layerConfigs = dojoArray.filter(config.layers.feature, function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 

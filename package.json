@@ -43,6 +43,7 @@
         "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-yuidoc": "~0.5.2",
         "grunt-replace": "~0.8.0",
+        "grunt-tv4": "~0.4.1",
         "grunt-docco": "~0.3.3",
         "grunt-hub": "~0.7.0",
         "grunt-jscs": "~0.7.1",
@@ -52,7 +53,8 @@
         "fs-utils": "~0.5.0",
         "i18next": "~1.7.4",
         "request": "~2.34.0",
-        "time-grunt": "~1.0.0"
+        "time-grunt": "~1.0.0",
+        "z-schema": "~3.1.0"
     },
 
     "ramp": {

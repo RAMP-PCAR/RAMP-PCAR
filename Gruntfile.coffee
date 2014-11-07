@@ -1,4 +1,6 @@
 fs = require("fs")
+ZSchema = require("z-schema")
+util = require('util')
 
 module.exports = (grunt) ->
 
@@ -24,6 +26,7 @@ module.exports = (grunt) ->
         'build'
         'Run full build to create an uminified development package.'
         [
+            'zs3'
             'clean:build'
             'copy:build'
             'assemble'
@@ -228,7 +231,7 @@ module.exports = (grunt) ->
                     contents = contents.replace 'js/lib/lib.js', 'js/lib/lib.min.js'
                     contents = contents.replace 'css/lib/lib.css', 'css/lib/lib.min.css'
                     contents = contents.replace 'css/theme.less.css', 'css/theme.less.min.css'
-                    contents = contents.replace /((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2'
+                    contents = contents.replace(/((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2')
 
                     grunt.file.write file, contents 
             )
@@ -304,6 +307,31 @@ module.exports = (grunt) ->
                 fs.writeFileSync builderFileName, data
             
             done()
+    )
+
+    @registerTask(
+        'zs3'
+        'INTERNAL: Config validation'
+        ->
+            validator = new ZSchema()
+        
+            config = grunt.file.readJSON 'src/config.en.json'
+            schema = grunt.file.readJSON 'src/configSchema.json'
+            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
+        
+            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
+        
+            if validator.validate config, schema 
+                grunt.task.run 'notify:configValid'
+            else
+                grunt.task.run 'notify:configInvalid'
+                # use inspector to get to the deeply burried properties
+                console.log util.inspect(validator.getLastErrors(),
+                        showHidden: false
+                        depth: 10
+                    )
+                                     
+                grunt.fail.warn 'Config validation failed!'
     )
 
     @registerTask(
@@ -426,7 +454,19 @@ module.exports = (grunt) ->
             tarball:
                 options:
                     message: "Tarball is created!"
-            
+
+            configInvalid:
+                options:
+                    message: "Config is invalid!"
+                    
+            configValid:
+                options:
+                    message: "Config checks out!" 
+
+            templates:
+                options:
+                    message: "Templates are a Go."
+
             configGenerated:
                 options:
                     message: "Configs are generated!"
@@ -1020,6 +1060,7 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     'copy:templatesBuild'
+                    'notify:templates'
                 ]
 
             js:
@@ -1053,6 +1094,7 @@ module.exports = (grunt) ->
                 ]
                 tasks: [
                     #'copy:configBuild'
+                    'zs3'
                     'generateConfig'
                 ]
             
@@ -1065,6 +1107,7 @@ module.exports = (grunt) ->
                     #'build'
                     'assemble' #for quicker build only run a subset of build
                     'notify:page'
+                    'zs3'
                     'generateConfig'
                     'copy:localesBuild'
                 ]
@@ -1119,7 +1162,7 @@ module.exports = (grunt) ->
             tar:
                 options:
                     mode: 'tar'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.tar'
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tar'
                 files: [
                     expand: true
                     src: '**/*'
@@ -1129,7 +1172,7 @@ module.exports = (grunt) ->
             zip:
                 options:
                     mode: 'zip'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.zip',
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.zip',
                     level: 9
 
                 files: [
@@ -1145,6 +1188,16 @@ module.exports = (grunt) ->
             src: '<%= pkg.ramp.docco.path %>/**/*.js'
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
+
+        tv4:
+            options:
+                root: grunt.file.readJSON 'src/configSchema.json'
+                multi: true
+                
+            config:
+                src: [
+                    'src/config.test.json'
+                ]           
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1170,6 +1223,8 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
         
+    @loadNpmTasks 'grunt-tv4'
+    
     @task.run "notify_hooks"
 
     #on watch events configure jshint:all to only run on changed file

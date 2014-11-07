@@ -1,4 +1,4 @@
-﻿/* global define */
+﻿/* global define, console */
 
 /**
 * Utility module containing useful static classes.
@@ -31,16 +31,71 @@ define(["ramp/globalStorage"],
             * @return {String} imageUrl Url to the features symbology image
             */
             getGraphicIcon: function (graphic, layerConfig) {
-                var symbolConfig = layerConfig.symbology;
+                var i, symbolConfig = layerConfig.symbology, img = "";
 
-                //TODO expand logic.  Need to handle up to 3 keys in unique renderer.  Need to handle Ranged renderer
-                switch (symbolConfig.renderer.type) {
-                    case "unique":
-                        var key = graphic.attributes[symbolConfig.renderer.key1];
-                        return symbolConfig.icons[key].imageUrl;
-
+                switch (symbolConfig.type) {
                     case "simple":
-                        return symbolConfig.icons["default"].imageUrl;
+                        return symbolConfig.imageUrl;
+
+                    case "uniqueValue":
+                        //make a key value for the graphic in question, using comma-space delimiter if multiple fields
+                        var graphicKey = graphic.attributes[symbolConfig.field1];
+                        if (symbolConfig.field2 !== null) {
+                            graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
+                            if (symbolConfig.field3 !== null) {
+                                graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field3];
+                            }
+                        }
+
+                        //search the value maps for a matching entry.  if no match found, use the default image
+
+                        for (i = 0; i < symbolConfig.valueMaps.length; i++) {
+                            if (symbolConfig.valueMaps[i].value === graphicKey) {
+                                img = symbolConfig.valueMaps[i].imageUrl;
+                                break;
+                            }
+                        }
+
+                        if (img === "") {
+                            img = symbolConfig.defaultImageUrl;
+                        }
+
+                        return img;
+
+                    case "classBreaks":
+
+                        var gVal, lower, upper;
+                        gVal = graphic.attributes[symbolConfig.field];
+
+                        //find where the value exists in the range
+                        lower = symbolConfig.minValue;
+
+                        if (gVal < lower) {
+                            img = symbolConfig.defaultImageUrl;
+                        } else {
+                            // a trick to prime the first loop iteration
+                            // the first low value is inclusive.  every other low value is exlusive.
+                            // if we have entered this else bracket, we know we are not below the first lower limit.
+                            // so we reduce lower by 1 to make the first exclusive test inclusive
+                            upper = lower - 1;
+
+                            for (i = 0; i < symbolConfig.rangeMaps.length; i++) {
+                                lower = upper;
+                                upper = symbolConfig.rangeMaps[i].maxValue;
+                                if ((gVal > lower) && (gVal <= upper)) {
+                                    img = symbolConfig.rangeMaps[i].imageUrl;
+                                    break;
+                                }
+                            }
+
+                            if (img === "") {
+                                //no match in defined ranges.
+                                img = symbolConfig.defaultImageUrl;
+                            }
+                        }
+
+                        return img;
+
                     default:
                         return symbolConfig.icons["default"].imageUrl;
                 }
@@ -147,6 +202,64 @@ define(["ramp/globalStorage"],
                     };
 
                 return boundingLegendLabel;
+            },
+
+            /**
+             * Gets an array of symbology images to display in the layer selector
+             * @method getSymbolForLayer
+             * @param {Object} layerConfig A layer's config object
+             * @returns {icon} The array of icon(s) to use in layer selector
+             */
+            getSymbolForLayer: function (layerConfig) {
+                //will take a symbol list that has 1 or more entries.  will return first 3.  if fewer than 3, will duplicate values
+                function pick3(symbolList) {
+                    var num = symbolList.length, indexes;
+
+                    if (num > 2) {
+                        //pick first 3
+                        indexes = [0, 1, 2];
+                    } else if (num === 2) {
+                        //duplicate the first
+                        indexes = [0, 1, 0];
+                    } else if (num === 1) {
+                        //triple whammy
+                        indexes = [0, 0, 0];
+                    } else {
+                        //something is ruined
+                        return ["", "", ""];
+                    }
+
+                    //return images in an array
+                    return [symbolList[indexes[0]].imageUrl, symbolList[indexes[1]].imageUrl, symbolList[indexes[2]].imageUrl];
+                }
+
+                if (layerConfig.symbology) {
+                    //feature layer.  make an array for the appropriate renderer
+
+                    var symbNode = layerConfig.symbology;
+                    switch (symbNode.type) {
+                        case "simple":
+                            return [symbNode.imageUrl];
+                        case "uniqueValue":
+                            return pick3(symbNode.valueMaps);
+                        case "classBreaks":
+                            return pick3(symbNode.rangeMaps);
+                        default:
+                            //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
+                            console.log('unknown renderer encountered: ' + symbNode.type);
+                            return [""];
+                    }
+                } else {
+                    //no symbology defined, assume a WMS
+
+                    if (layerConfig.imageUrl) {
+                        return [layerConfig.imageUrl];
+                    } else {
+                        //catch-all in the case that things are really messed up
+                        console.log('layer with no image info for layer selector');
+                        return [""];
+                    }
+                }               
             }
         };
     });

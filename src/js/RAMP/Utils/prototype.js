@@ -271,7 +271,8 @@ define([
                         .css({
                             display: 'inline',
                             width: 'auto',
-                            visibility: 'hidden'
+                            visibility: 'hidden',
+                            "font-size": span.css("font-size")
                         })
                         .appendTo('body');
 
