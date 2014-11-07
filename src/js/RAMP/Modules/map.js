@@ -18,11 +18,9 @@
 * @uses dojo/_base/declare
 * @uses dojo/_base/array
 * @uses dojo/dom
-* @uses dojo/dom-class
 * @uses dojo/dom-construct
 * @uses dojo/number
 * @uses dojo/query
-* @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses dojo/on
 * @uses esri/map
@@ -30,14 +28,9 @@
 * @uses esri/layers/ArcGISTiledMapServiceLayer
 * @uses esri/layers/ArcGISDynamicMapServiceLayer
 * @uses esri/layers/WMSLayer
-* @uses esri/layers/WMSLayerInfo
-* @uses esri/tasks/GeometryService
-* @uses esri/tasks/ProjectParameters
-* @uses esri/geometry/Polygon
 * @uses esri/SpatialReference
 * @uses esri/dijit/Scalebar
 * @uses esri/geometry/Extent
-* @uses esri/graphicsUtils
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
@@ -49,13 +42,12 @@
 
 define([
 /* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/dom", "dojo/dom-class",
-        "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/_base/lang", "dojo/topic", "dojo/on",
+"dojo/_base/declare", "dojo/_base/array", "dojo/dom", 
+        "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference",
-"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -65,12 +57,11 @@ define([
 
     function (
     /* Dojo */
-    declare, dojoArray, dom, domClass, domConstruct, number, query, dojoLang, topic, dojoOn,
+    declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
     EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    GeometryService, ProjectParameters, Polygon, SpatialReference,
-    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
+    SpatialReference, EsriScalebar, EsriExtent, WMSLayer,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
