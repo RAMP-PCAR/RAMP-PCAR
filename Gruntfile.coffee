@@ -315,7 +315,7 @@ module.exports = (grunt) ->
         ->
             validator = new ZSchema()
         
-            config = grunt.file.readJSON 'src/config.en.json'
+            config = grunt.file.readJSON 'src/config.json'
             schema = grunt.file.readJSON 'src/configSchema.json'
             draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
         
