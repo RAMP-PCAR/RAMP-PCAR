@@ -31,13 +31,13 @@
 
         "layers": {
             "feature": {
-                "layer_g5h6i": {
+                "_708985e5": {
                     "displayName": "Water Regions"
                 },
-                "layer_dd1m3": {
+                "_17e537a6": {
                     "displayName": "BBS Routes"
                 },
-                "layer_w9v8u": {
+                "_b6b6d5a6": {
                     "displayName": "CESI Water Quality Indicators"
                 },
                 "oilSandsRegions": {
@@ -48,11 +48,11 @@
                 }
             },
             "wms": { 
-                "layer_wms1": {
-                    "displayName": "Air Temperature"
+                "nasa_modis": {
+                    "displayName": "Arctic Airports"
                 },
-                "wms5": {
-                    "displayName": "Wind"
+                "limits": {
+                    "displayName": "Limits"
                 }
             }
         }
