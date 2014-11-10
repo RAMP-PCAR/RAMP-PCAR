@@ -197,7 +197,7 @@
             "sInfoThousands": ",",
             "sLengthMenu": "Afficher_MENU_entrées",
             "sLoadingRecords": "Chargement",
-            "sProcessing": "Traitement en cours...",
+            "sProcessing": "Traitement en cours ...",
             "sSearch": "Recherche",
             "sZeroRecords": "Aucun enregistrement correspondant trouvé",
             "oPaginate": {

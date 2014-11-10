@@ -473,6 +473,9 @@ define([
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {
+
+                        jqgridWrapper.addClass("fadedOut");
+
                         // explicitly set height of the scrollbody so the horizontal scrollbar is visible
                         dataTablesScrollBody.height(jqgridTableWrapper.height() - dataTablesScrollHead.height());
 
@@ -841,6 +844,7 @@ define([
                 function refreshTable() {
                     var duration = 0.2,
                         tl = new TimelineLite({ paused: true }),
+                        stl = new TimelineLite({ paused: true }),
                         newWrapper,
                         deffered = new Deferred();
 
@@ -850,7 +854,7 @@ define([
                         "datagrid_manager_table_Template",
                         {
                             tableId: "jqgrid",
-                            tableCss: "display table-condensed table-simplify animated fadeIn"
+                            tableCss: "display table-condensed table-simplify"// animated fadeIn"
                         }
                     );
 
@@ -872,15 +876,31 @@ define([
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
-                            tl.set(jqgrid, { className: "-=animated fadeIn" }, "+=" + duration);
-                            tl.resume();
+
+                            console.timeEnd('applyExtentFilter');
+
+                            console.log("I'm resuming");
+
+                            stl.set(jqgridWrapper, { className: "-=fadedOut" });
+                            stl.set(jqgridWrapper, { className: "+=animated fadeIn" });
+                            stl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=1");
+                            //stl.set(jqgridTableWrapper, { className: "-=animated fadeIn" }, "+=" + duration);
+
+                            stl.play();
+
+                            //tl.set(jqgrid, { className: "-=animated fadeIn" }, "+=" + duration);
+                            //tl.resume();
                         });
+
+                        console.time('applyExtentFilter');
+
                         applyExtentFilter(deffered);
+
                     }, null, this, duration + 0.05);
 
-                    tl.set(jqgridWrapper, { className: "-=fadeOut" });
+                    /*tl.set(jqgridWrapper, { className: "-=fadeOut" });
                     tl.set(jqgridWrapper, { className: "+=fadeIn" });
-                    tl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=" + duration);
+                    tl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=" + duration);*/
 
                     tl.play();
                 }
@@ -897,6 +917,7 @@ define([
                         templateKey,
                         duration = 0.5,
                         tl = new TimelineLite({ paused: true }),
+                        stl = new TimelineLite({ paused: true }),
                         deffered = new Deferred();
 
                     tmpl.cache = {};
@@ -954,11 +975,19 @@ define([
 
                         d.resolve();
 
+                        tl.resume();
+
                         // continue with transition when apply filter finished
                         deffered.then(function () {
                             //tl.call(function () { oTable.columns.adjust().draw(); console.log("!!!"); }, null, this, "+=2");
 
-                            tl.resume();
+                            //tl.resume();
+
+                            stl.set(jqgridWrapper, { className: "-=fadedOut" });
+                            stl.set(jqgridWrapper, { className: "+=animated fadeIn" });
+                            stl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=1");
+
+                            stl.play();
                         });
 
                         applyExtentFilter(deffered);
@@ -1160,6 +1189,9 @@ define([
                 dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
 
+            console.time('applyExtentFilter:part 1');
+            console.time('applyExtentFilter:part 1 - 1');
+
             // filter out static layers
             visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
@@ -1174,7 +1206,8 @@ define([
                     q.geometry = RampMap.getMap().extent;
                 } else {
                     // Grab everything!
-                    q.where = "1 = 1";
+                    q.geometry = RampMap.getMaxExtent();
+                    //q.where = "1 = 1";
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
@@ -1182,26 +1215,41 @@ define([
 
             q.outFields = ["*"];
 
+            console.timeEnd('applyExtentFilter:part 1 - 1');
+
             // Update total records
             totalRecords = 0;
             dojoArray.forEach(visibleGridLayers, function (layer) {
                 totalRecords += layer.graphics.length;
             });
 
+            console.time('applyExtentFilter:part 1 - 2');
+
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
+
+                    console.timeEnd('applyExtentFilter:part 1 - 2');
+
                     if (features.features.length > 0) {
                         var layer = features.features[0].getLayer();
                         visibleFeatures[layer.url] = features.features;
                     }
                 });
-            });
+            });            
 
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
+                
+                console.timeEnd('applyExtentFilter:part 1');
+
+                console.time('applyExtentFilter:part 2 - fetchRecords');
+
                 fetchRecords(visibleFeatures);
 
+                console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
+
                 if (d) {
+                    console.log("I'm calling reserve!!!");
                     d.resolve();
                 }
             });
@@ -1297,7 +1345,14 @@ define([
             });
 
             //add the data to the grid
+
+            console.time('fetchRecords: fnAddData');
+
             jqgrid.dataTable().fnAddData(data);
+
+            console.timeEnd('fetchRecords: fnAddData');
+
+            console.log("jqgrid.dataTable().fnAddData(data);");
 
             // NOTE: fnAddData should be the last thing that happens in this function
             // if you want to add something after this point, use the fnDrawCallback
