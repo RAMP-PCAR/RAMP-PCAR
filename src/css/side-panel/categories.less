@@ -249,6 +249,33 @@
         .renderer-list {
             display: none;
 
+            .wms-legend-box {
+                margin-left: 52px;
+                position: relative;
+                padding: 8px 0 8px 5px;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    border-right: 1px solid #000;
+                    top: 0;
+                    bottom: 50%;
+                    left: -18px;
+                }
+
+                .image-div {
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        width: 16px;
+                        border-top: 1px solid #000;
+                        top: 50%;
+                        left: -18px;
+                    }
+                }
+            }
+
+
             ul {
                 list-style: none;
                 padding: 0;
@@ -283,12 +310,11 @@
                     .layer-details {
                         height: 24px;
                         line-height: 24px;
-
                         overflow: hidden;
                         text-overflow: ellipsis;
                         /*width: 250px;*/
                         white-space: nowrap;
-                            
+
                         > span {
                             //vertical-align: bottom;
                         }
