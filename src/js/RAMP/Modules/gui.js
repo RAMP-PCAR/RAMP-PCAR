@@ -558,11 +558,8 @@ define([
                             },
                             onCompleteScope: this
                         })
-                        .to(this.panel, this._animatePanelDuration,
-                            {
-                                left: 0,
-                                ease: "easeOutCirc"
-                            });
+                        .to(this.panel, this._animatePanelDuration, { left: 0, ease: "easeOutCirc" })
+                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0);
 
                     Theme.tooltipster(this.container);
 
@@ -625,7 +622,7 @@ define([
                                 }, animateContentDuration, "easeOutCirc");*/
 
                                 TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
-                                    {scrollTop: 0, ease: "easeOutCirc"});
+                                    { scrollTop: 0, ease: "easeOutCirc" });
 
                                 setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
                                 setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);
@@ -750,7 +747,7 @@ define([
                                         node.find("span").text()
                                     );
                             });
-                            
+
                         Theme.tooltipster(mapToolbar);
 
                         console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
@@ -797,7 +794,7 @@ define([
             function onFullScreenComplete() {
                 adjustHeight();
                 layoutChange();
-                
+
                 topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
                     visible: Theme.isFullScreen()
                 });
@@ -853,7 +850,7 @@ define([
                     .fromTo(panelDiv, transitionDuration,
                         { right: "0px" },
                         { right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
-                    
+
             }
 
             function killTimelines() {
@@ -867,7 +864,7 @@ define([
                 killTimelines();
                 createTimelines();
             }
-            
+
             /**
             * Publishes `PANEL_CHANGE` event when the visibility of the SidePanel changes.
             *
@@ -946,7 +943,7 @@ define([
                         //.set(panelDiv, {  }, 0)
                         .fromTo(panelDiv, transitionDuration,
                             { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
-                            { right: 0,  width: getPanelWidthDefault(), ease: "easeInCirc" });
+                            { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
 
                     fullDataTimeLine.reverse();
                 }
@@ -959,12 +956,12 @@ define([
             }
 
             function optimizeLayout() {
-                if ((windowWidth < 1200 && jWindow.width() > 1200) || 
-                    (windowWidth > 1200 && jWindow.width() < 1200)) {                  
+                if ((windowWidth < 1200 && jWindow.width() > 1200) ||
+                    (windowWidth > 1200 && jWindow.width() < 1200)) {
                     recreateTimelines();
 
                     windowWidth = jWindow.width();
-                }                
+                }
             }
 
             return {
@@ -990,7 +987,7 @@ define([
                     topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
                         panelPopup.toggle(null, event.visible);
                     });
-                    
+
                     // set listener to the full-screen toggle
                     fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
                         function (d) {
@@ -1000,7 +997,7 @@ define([
                             activeClass: "button-pressed",
                             setClassBefore: true
                         }
-                    );                    
+                    );
 
                     // if the vertical space is too small, trigger the full-screen
                     if (mapContent.height() < jWindow.height() * 0.6) {
@@ -1170,7 +1167,7 @@ define([
                 subPanel.open();
                 subPanel.getPanel().find(".sub-panel-toggle")
                     .on("click", dojoLang.hitch(this, function () {
-                        
+
                         hideSubPanel(attr);
 
                         // reset focus back to link where the subpanel was created from
@@ -1178,10 +1175,6 @@ define([
                             $(attr.target).find(":tabbable").first().focus();
                         }
                     }));
-
-                loadIndicator.animate({
-                    right: subPanel.getPanel().width() + 6
-                }, "easeOutCirc");
             });
 
             // take over the panel spawned by other components
@@ -1243,10 +1236,6 @@ define([
 
             if (subPanels[attr.origin]) {
                 subPanels[attr.origin].destroy(speed, deferred);
-
-                loadIndicator.animate({
-                    right: 3
-                }, "easeOutCirc");
             }
         }
 
@@ -1458,11 +1447,11 @@ define([
 
                     sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
                         function () {
-                    topic.publish(EventManager.GUI.TAB_SELECTED, {
-                        id: this.id,
+                            topic.publish(EventManager.GUI.TAB_SELECTED, {
+                                id: this.id,
                                 tabName: $(this).data("panel-name")
                             });
-                    });
+                        });
 
                     // the panel currently open is being deselected
                     sidePanelTabPanels.find("details[aria-expanded=true]").each(
