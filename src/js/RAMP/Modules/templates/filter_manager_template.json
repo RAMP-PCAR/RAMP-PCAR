@@ -94,13 +94,13 @@
         "complex_layer_image_box": "
             <div class='layer-complex-image-box'>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
+                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
                     <img alt='' src='{%=o[1]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
+                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
                 </div>
                 <button class='btn btn-xs button-none renderer-button'>
                     <i class='fa fa-square'></i>
