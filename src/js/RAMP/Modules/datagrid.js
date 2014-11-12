@@ -273,6 +273,7 @@ define([
                     extendedTabTitle,
 
                     sectionNode,
+                    tabNode = $("details[data-panel-name=datagrid]"),
 
                     selectedDatasetUrl,
 
@@ -1022,6 +1023,10 @@ define([
                     capturePanel();
                 }
 
+                function isVisible() {
+                    return tabNode.attr("aria-expanded") === "true";
+                }
+
                 function capturePanel() {
                     var origin = "datagrid",
                         target = highlightRow.getNode().find(".record-controls");
@@ -1031,7 +1036,7 @@ define([
                         target = highlightRow.getNode().find(".button.details");
                     }
 
-                    if (highlightRow.isActive()) {
+                    if (highlightRow.isActive() && isVisible()) {
                         topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
                             target: target,
                             consumeOrigin: origin,
@@ -1077,7 +1082,7 @@ define([
                             sectionNode = $("#" + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
                         }
-                ),
+                    ),
 
                     getDatagridMode: function () {
                         return datagridMode;
