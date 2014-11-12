@@ -120,6 +120,7 @@
         "wms_renderer_template": "
              <div class='renderer-list'>
                 <div class='wms-legend-box'>
+                    <h4 class='mrgn-tp-0 h6'>{%=i18n.t('filterManager.legend')%}</h4>
                     <div class='image-div'>
                         <img class='wms-image bg-white' src='{%=o.imageUrl%}' alt=''>
                     </div>
