@@ -206,7 +206,7 @@ require([
 
                         //TODO verify endpoint is correct
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp: "callback" });
+                            defService = requestScript.get(serviceUrl, { jsonp:'callback', timeout: 2000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 
@@ -216,6 +216,8 @@ require([
 
                         defService.then(
                             function (serviceContent) {
+                                console.log(serviceContent);
+
                                 //we are expecting an array of JSON config fragments
                                 //merge each fragment into the file config
 
