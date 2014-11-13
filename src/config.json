@@ -964,7 +964,7 @@
                 "layerName": "36",
                 "imageUrl": "assets/images/wms.png",
                 "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
-                "legendMimeType": "image/jpeg" 
+                "legendMimeType": "image/jpeg"
             },
             {
                 "id": "limits",

@@ -205,7 +205,7 @@ require([
                     } else {
 
                         //TODO verify endpoint is correct
-                        var serviceUrl = globalStorage.getConfigUrl() + "docs/" + $("html").attr("lang") + "/" + smallkeys,
+                        var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
                             defService = requestScript.get(serviceUrl, { jsonp: "callback" });
 
                         //Request the JSON snippets from the RAMP Config Service
