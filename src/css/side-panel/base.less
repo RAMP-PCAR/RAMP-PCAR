@@ -246,25 +246,25 @@
         .layer-details,
         .record-row .record-details,
         .record-row .record-controls,
-        .sort-handle,
-        td {
+        .sort-handle {
+
             color: #FFFFFF !important;
 
-            a:link,
-            a:visited,
-            a.ui-link:link,
-            a.ui-link:visited {
-                color: #FFFFFF !important;
-            }
-
-            a:hover,
-            a:focus,
-            a.ui-link:hover,
-            a.ui-link:focus {
-                color: #E6E6E6 !important;
-            }
-
             button {
+                color: #FFFFFF !important;
+                outline-color: #fff !important;
+
+                &:hover,
+                &:focus {
+                    outline: 1px dotted #fff !important;
+                }
+            }
+        }
+
+        td {
+            color: #FFFFFF !important;
+            
+            > button {
                 color: #FFFFFF !important;
                 outline-color: #fff !important;
 
