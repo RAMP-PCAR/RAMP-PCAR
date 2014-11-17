@@ -309,31 +309,6 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        'zs3'
-        'INTERNAL: Config validation'
-        ->
-            validator = new ZSchema()
-        
-            config = grunt.file.readJSON 'src/config.json'
-            schema = grunt.file.readJSON 'src/configSchema.json'
-            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
-        
-            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
-        
-            if validator.validate config, schema 
-                grunt.task.run 'notify:configValid'
-            else
-                grunt.task.run 'notify:configInvalid'
-                # use inspector to get to the deeply burried properties
-                console.log util.inspect(validator.getLastErrors(),
-                        showHidden: false
-                        depth: 10
-                    )
-                                     
-                grunt.fail.warn 'Config validation failed!'
-    )
-
-    @registerTask(
         'thanks'
         'INTERNAL: Joke. Shawnfies grunt.'
         ->
@@ -361,6 +336,31 @@ module.exports = (grunt) ->
             'jsonlint:locales'
             'assembleConfigs'
         ]            
+    )
+    
+    @registerTask(
+        'zs3'
+        'INTERNAL: Config validation'
+        ->
+            validator = new ZSchema()
+        
+            config = grunt.file.readJSON 'src/config.json'
+            schema = grunt.file.readJSON 'src/configSchema.json'
+            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
+        
+            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
+        
+            if validator.validate config, schema 
+                grunt.task.run 'notify:configValid'
+            else
+                grunt.task.run 'notify:configInvalid'
+                # use inspector to get to the deeply buried properties
+                console.log util.inspect(validator.getLastErrors(),
+                        showHidden: false
+                        depth: 10
+                    )
+                                     
+                grunt.fail.warn 'Config validation failed!'
     )
     
     @registerTask(
@@ -1220,18 +1220,6 @@ module.exports = (grunt) ->
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
 
-        ###
-        tv4:
-            options:
-                root: grunt.file.readJSON 'src/configSchema.json'
-                multi: true
-                
-            config:
-                src: [
-                    'src/config.test.json'
-                ]           
-        ###
-
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
@@ -1256,19 +1244,17 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-newer'
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
-        
-    @loadNpmTasks 'grunt-tv4'
     
-    @task.run "notify_hooks"
+    @task.run 'notify_hooks'
 
     #on watch events configure jshint:all to only run on changed file
-    @event.on "watch", (action, filepath) ->
-        grunt.config "jshint.files", filepath
-        grunt.config "jscs.main.files.src", filepath
+    @event.on 'watch', (action, filepath) ->
+        grunt.config 'jshint.files', filepath
+        grunt.config 'jscs.main.files.src', filepath
 
         # update what the notify tell
-        grunt.config "notify.hint.options.title", filepath.replace(/^.*[\\\/]/, "")
-        grunt.config "notify.jscs.options.title", filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.hint.options.title', filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.jscs.options.title', filepath.replace(/^.*[\\\/]/, "")
 
-    require( "time-grunt" )( grunt )
+    require( 'time-grunt' )( grunt )
     @
