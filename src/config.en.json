@@ -5,7 +5,7 @@
         "wkid": 3978
     },
     "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "proxy/proxy.ashx",
+    "proxyUrl": "/cgi/proxy.cgi",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -199,6 +199,80 @@
     ],
     "featureLayers": [
         {
+            "id": "MW_E",
+            "displayName": "Smelters and refineries",
+            "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/MMS/MW_E/MapServer/0",
+            "datagrid": {
+                "rowsPerPage": 50,
+                "gridColumns": [
+                    {
+                        "id": "iconCol",
+                        "fieldName": "",
+                        "width": "300px",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Icon",
+                        "columnTemplate": "graphic_icon"
+                    },
+                    {
+                        "id": "nameCol",
+                        "fieldName": "OperationType",
+                        "width": "50px",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "OperationType",
+                        "columnTemplate": "unformatted_grid_value"
+                    },
+                    {
+                        "id": "nameCol",
+                        "fieldName": "Operation_E",
+                        "width": "500px",
+                        "isSortable": false,
+                        "sortType": "string",
+                        "alignment": 1,
+                        "title": "Operation",
+                        "columnTemplate": "unformatted_grid_value"
+                    }
+                ],
+                "summaryRowTemplate": "default_grid_summary_row"
+            },
+            "layerAttributes": "*",
+            "filter": {},
+            "mapTipSettings": {
+                "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>Aluminium</span></div>",
+                "hoverTemplate": "feature_hover_maptip_template",
+                "anchorTemplate": "anchored_map_tip"
+            },
+            "symbology": {
+                "renderer": {
+                    "type": "simple",
+                    "key1": "",
+                    "key2": "",
+                    "key3": ""
+                },
+                "icons": {
+                    "default": {
+                        "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZpJREFUSInt079LG2Ecx/H3c/dcLndJTfTSSiSDDlUJONgOQgWh0K1QqpP/hoOCdBEH6dzBWVBXJ3FzUgrdrGMLpepg7K9wltR43t3jEAiFJBqSy3XpB57heXi+z4vn+fJIYoqMHape/V4DZqIGFMFLy8q6f91IFUFMn/hlLkOva8DRLYb0PjRNGtDk6Xauv7DsXXQNbZjDzNvF+jz+HrUTE1iUDhnNqK99Dz02gzLnSnUOjQmNFXOEgp7G0Wwe6jYPhNmw743y2a9+Za76qTNoVs/yynqMjgbAR6+ET8iTRB5PhexWPzMhc4waOSYTg9Ap9Nb/xZl7wHPD4dh3eRe4AGwFLu9vfrIeXDIlTlm1Rjm8+XbXUff3aDussH1dqc+X5ABF6TCiZ1ivHLFmj9MvkqhuetQsec2kaDzij6r9tXHp4GgpPnilaKFO8++hvBAcpJ+BAEFtgCApaiWWMPiRfYEtjFZHtAclgILMtCwUCNIi0RZyJxR1/kPRQydKkSzv9R6KOg3QQuopC6kYoF6lDiWtvtexQL3OLYH8ZymZWtEIAAAAAElFTkSuQmCC",
+                        "legendText": "Smelters and refineries"
+                    }
+                }
+            },
+            "uuid": "17e537a6-4b69-4398-893c-858ea2a3f9f2",
+            "detailTemplate": "default_feature_details",
+            "nameField": "Operation_E",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 1
+                }
+            },
+            "layerVisible": true,
+            "boundingBoxVisible": false
+        },
+        {
             "id": "layer_g5h6i",
             "displayName": "EC Projects",
             "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
@@ -249,9 +323,7 @@
                 "summaryRowTemplate": "default_grid_summary_row"
             },
             "layerAttributes": "*",
-            "filter": {
-                
-            },
+            "filter": {},
             "mapTipSettings": {
                 "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${NAME}</span></div>",
                 "hoverTemplate": "feature_hover_maptip_template",
@@ -281,7 +353,7 @@
                     "default": 0.8
                 }
             },
-            "layerVisible": true,
+            "layerVisible": false,
             "boundingBoxVisible": false
         },
         {
@@ -335,9 +407,7 @@
                 "summaryRowTemplate": "default_grid_summary_row"
             },
             "layerAttributes": "*",
-            "filter": {
-                
-            },
+            "filter": {},
             "mapTipSettings": {
                 "template": "<div class='map-tip-content'><img class='map-tip-image pointIconDetails' src='${icon}' alt='Feature icon'><span class='map-tip-label'>${ROUTE_NAME}</span></div>",
                 "hoverTemplate": "feature_hover_maptip_template",
@@ -364,10 +434,10 @@
                 "enabled": true,
                 "opacity": {
                     "enabled": true,
-                    "default": 1.0
+                    "default": 1
                 }
             },
-            "layerVisible": true,
+            "layerVisible": false,
             "boundingBoxVisible": false
         },
         {
@@ -651,9 +721,7 @@
                 "summaryRowTemplate": ""
             },
             "layerAttributes": "",
-            "filter": {
-                
-            },
+            "filter": {},
             "symbology": {
                 "renderer": {
                     "type": "",
@@ -740,24 +808,18 @@
                 "spatialReference": {
                     "wkid": 3978
                 },
-                "xmax": 2.003751E+07,
-                "xmin": -2.003751E+07,
-                "ymax": 1.036533E+08,
-                "ymin": -1.036533E+08
+                "xmax": 20037510,
+                "xmin": -20037510,
+                "ymax": 103653300,
+                "ymin": -103653300
             },
             "format": "png",
             "id": "layer_wms1",
             "layerInfo": {
-                "allExtents": [
-                    
-                ],
+                "allExtents": [],
                 "name": "RDPS.ETA_TT",
-                "spatialReferences": [
-                    
-                ],
-                "subLayers": [
-                    
-                ],
+                "spatialReferences": [],
+                "subLayers": [],
                 "title": "RDPS.ETA - Air Temperature (c)"
             },
             "symbology": {
@@ -783,7 +845,7 @@
                     "default": 0.2
                 }
             },
-            "layerVisible": true,
+            "layerVisible": false,
             "featureInfo": {
                 "parser": "tempParse",
                 "mimeType": "text/plain"
@@ -800,25 +862,19 @@
                 "spatialReference": {
                     "wkid": 3978
                 },
-                "xmax": 20037508.0,
-                "xmin": -20037508.0,
-                "ymax": 103653320.0,
-                "ymin": -103653320.0
+                "xmax": 20037508,
+                "xmin": -20037508,
+                "ymax": 103653320,
+                "ymin": -103653320
             },
             "format": "png",
             "id": "wms5",
             "layerInfo": {
-                "allExtents": [
-                    
-                ],
+                "allExtents": [],
                 "legendURL": "http://geo.weather.gc.ca/geomet//?LANG=E%26SERVICE=WMS%26VERSION=1.1.1%26REQUEST=GetLegendGraphic%26STYLE=WINDSPEED%26LAYER=RDPS.ETA_UU%26format=image/png",
                 "name": "RDPS.ETA_UU",
-                "spatialReferences": [
-                    
-                ],
-                "subLayers": [
-                    
-                ],
+                "spatialReferences": [],
+                "subLayers": [],
                 "title": "RDPS.ETA - Winds (noeuds)"
             },
             "symbology": {
@@ -853,6 +909,61 @@
                 "legendURL": ""
             },
             "layerVisible": false
+        },
+        {
+            "displayName": "Railway Network",
+            "error": "",
+            "extent": {
+                "spatialReference": {
+                    "wkid": 3978
+                },
+                "xmax": 20037508,
+                "xmin": -20037508,
+                "ymax": 103653320,
+                "ymin": -103653320
+            },
+            "format": "png",
+            "id": "wms6",
+            "layerInfo": {
+                "allExtents": [],
+                "legendURL": "http://maps.geogratis.gc.ca/wms/railway_en?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&LAYER=railway.track&format=image/png",
+                "name": "railway.track",
+                "spatialReferences": [],
+                "subLayers": [],
+                "title": "Railway Track Segment"
+            },
+            "symbology": {
+                "icons": {
+                    "default": {
+                        "imageUrl": "assets/images/wms.png",
+                        "legendText": "Railway Track Segment"
+                    }
+                },
+                "renderer": {
+                    "key1": "",
+                    "key2": "",
+                    "key3": "",
+                    "type": "simple"
+                }
+            },
+            "url": "http://maps.geogratis.gc.ca/wms/railway_en?SERVICE=WMS",
+            "uuid": "d223ca08-00c9-4211-dca6-b0a414fc90de",
+            "settings": {
+                "enabled": true,
+                "opacity": {
+                    "enabled": true,
+                    "default": 0.8
+                }
+            },
+            "featureInfo": {
+                "parser": "tempParse",
+                "mimeType": "text/plain"
+            },
+            "legend": {
+                "enable": true,
+                "legendURL": ""
+            },
+            "layerVisible": true
         }
     ],
     "plugins": [
