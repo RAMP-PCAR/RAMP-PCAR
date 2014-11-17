@@ -1116,7 +1116,7 @@ module.exports = (grunt) ->
             
             rampConfig:
                 files: [
-                    'src/config*.json'
+                    'src/config.json'
                 ]
                 tasks: [
                     'generateConfig'
