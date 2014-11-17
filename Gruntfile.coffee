@@ -41,7 +41,6 @@ module.exports = (grunt) ->
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
             'generateConfig'
-            #'copy:configBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
@@ -487,50 +486,44 @@ module.exports = (grunt) ->
                     message: "Generated configs are lint free."
 
         copy:
-            configBuild:
-                expand: true
-                cwd: 'src'
-                src: 'config.*.json'
-                dest: 'build/'
-
             configDist:
                 expand: true
-                cwd: 'src'
+                cwd: 'build/'
                 src: 'config.*.json'
                 dest: 'dist/'
 
             wetboewBuild:
                 expand: true
-                cwd: "lib/wet-boew/dist/unmin"
+                cwd: 'lib/wet-boew/dist/unmin'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"                 
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!*.html'
                 ]
-                dest: "build/js/lib/wet-boew/"
+                dest: 'build/js/lib/wet-boew/'
 
             wetboewDist:
                 expand: true
-                cwd: "lib/wet-boew/dist"
+                cwd: 'lib/wet-boew/dist'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"
-                    "!unmin/**/*.*"
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!unmin/**/*.*'
+                    '!*.html'
                 ]
-                dest: "dist/js/lib/wet-boew/"
+                dest: 'dist/js/lib/wet-boew/'
 
             assetsBuild:
                 expand: true
@@ -1126,7 +1119,6 @@ module.exports = (grunt) ->
                     'src/config*.json'
                 ]
                 tasks: [
-                    #'copy:configBuild'
                     'generateConfig'
                 ]
             
@@ -1181,12 +1173,12 @@ module.exports = (grunt) ->
                 ]
 
         hub:
-            "wet-boew":
+            'wet-boew':
                 src: [
-                    "lib/wet-boew/Gruntfile.coffee"
+                    'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    "dist"
+                    'dist'
                 ]
 
         compress:
