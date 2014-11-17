@@ -171,7 +171,7 @@ require([
             lng: lang + "-CA",
             load: "current",
             fallbackLng: false
-            });
+        });
 
         //loading config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";

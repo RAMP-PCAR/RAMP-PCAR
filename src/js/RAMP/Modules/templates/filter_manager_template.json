@@ -17,7 +17,7 @@
         "filter_set_template":"
             <li id='{%=o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
                 {%  
-                    var s = o.data[o.idx].layerConfig.symbology || { type: 'simple' };
+                    var s = o.data[o.idx].layerConfig.symbology || o.data[o.idx].layerConfig.legend || { type: 'simple' };
 
                     include('filter_row_template', o);
                     include(s.type + '_renderer_template', s);
@@ -35,7 +35,8 @@
                             <div class='layer-details'>
                     
                                 {%  
-                                    var s = o.data[o.idx].layerConfig.symbology || { type: 'simple' };
+                                    var s = o.data[o.idx].layerConfig.symbology || o.data[o.idx].layerConfig.legend || { type: 'simple' };
+                                    console.log(s);
 
                                     include(s.type + '_layer_image_box', o);
                                 %}                                       
@@ -78,9 +79,13 @@
         ",
         
         "simple_layer_image_box": "
-            <div class='layer-image-box'>                                  
+            <div class='layer-image-box'>
                 <img alt='' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
             </div>
+        ",
+
+        "wms_layer_image_box": "
+            {% include('complex_layer_image_box', o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)); %}
         ",
 
         "uniqueValue_layer_image_box": "
@@ -112,6 +117,17 @@
             </div>
         ",
         
+        "wms_renderer_template": "
+             <div class='renderer-list'>
+                <div class='wms-legend-box'>
+                    <h4 class='mrgn-tp-0 h6'>{%=i18n.t('filterManager.legend')%}</h4>
+                    <div class='image-div'>
+                        <img class='wms-image bg-white' src='{%=o.imageUrl%}' alt=''>
+                    </div>
+                </div>       
+             </div>
+        ",
+
         "simple_renderer_template": " ",
 
         "uniqueValue_renderer_template": "
