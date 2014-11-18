@@ -76,21 +76,26 @@ define([
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
                     rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
+                        var req = {};
+                        if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
+                            req = { CRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid, I: evt.layerX, J: evt.layerY };
+                        } else {
+                            req = { SRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid, X: evt.layerX, Y: evt.layerY };
+                        }
+                        $.extend(req, {
+                            SERVICE: "WMS",
+                            REQUEST: "GetFeatureInfo",
+                            VERSION: wmsData.wmsLayer.version,
+                            BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
+                            WIDTH: esriMap.width,
+                            HEIGHT: esriMap.height,
+                            QUERY_LAYERS: wmsData.layerConfig.layerInfo.name,
+                            LAYERS: wmsData.layerConfig.layerInfo.name,
+                            INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
+                        });
                         return new EsriRequest({
                             url: wmsData.wmsLayer.url.split('?')[0],
-                            content: {
-                                SERVICE: "WMS",
-                                REQUEST: "GetFeatureInfo",
-                                VERSION: wmsData.wmsLayer.version,
-                                SRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid,
-                                BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
-                                WIDTH: esriMap.width,
-                                HEIGHT: esriMap.height,
-                                QUERY_LAYERS: wmsData.layerConfig.layerInfo.name,
-                                INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType,
-                                X: evt.layerX,
-                                Y: evt.layerY
-                            },
+                            content: req,
                             handleAs: "text"
                         });
 

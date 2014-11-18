@@ -5,7 +5,7 @@
         "wkid": 3978
     },
     "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "/cgi/proxy.cgi",
+    "proxyUrl": "/proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -956,17 +956,18 @@
                 }
             },
             "featureInfo": {
-                "parser": "tempParse",
+                "parser": "stringParse",
                 "mimeType": "text/plain"
             },
             "legend": {
                 "enable": true,
-                "legendURL": ""
+                "legendURL": "http://maps.geogratis.gc.ca/wms/railway_en?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetLegendGraphic&LAYER=railway.track&format=image/png"
             },
             "layerVisible": true
         }
     ],
     "plugins": [
+        "stringParse.js",
         "tempParse.js",
         "windParse.js"
     ],
