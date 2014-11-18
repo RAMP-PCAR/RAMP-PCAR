@@ -1212,6 +1212,17 @@ module.exports = (grunt) ->
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
 
+        bump:
+            options:
+                files: [
+                    'package.json'
+                    'bower.json'
+                    'yuidoc.json'
+                ]
+                commit: false
+                createTag: false
+                push: false                
+
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
@@ -1231,6 +1242,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
+    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-newer'
