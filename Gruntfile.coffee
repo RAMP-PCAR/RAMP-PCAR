@@ -41,7 +41,6 @@ module.exports = (grunt) ->
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
             'generateConfig'
-            #'copy:configBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
@@ -309,31 +308,6 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        'zs3'
-        'INTERNAL: Config validation'
-        ->
-            validator = new ZSchema()
-        
-            config = grunt.file.readJSON 'src/config.json'
-            schema = grunt.file.readJSON 'src/configSchema.json'
-            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
-        
-            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
-        
-            if validator.validate config, schema 
-                grunt.task.run 'notify:configValid'
-            else
-                grunt.task.run 'notify:configInvalid'
-                # use inspector to get to the deeply burried properties
-                console.log util.inspect(validator.getLastErrors(),
-                        showHidden: false
-                        depth: 10
-                    )
-                                     
-                grunt.fail.warn 'Config validation failed!'
-    )
-
-    @registerTask(
         'thanks'
         'INTERNAL: Joke. Shawnfies grunt.'
         ->
@@ -361,6 +335,31 @@ module.exports = (grunt) ->
             'jsonlint:locales'
             'assembleConfigs'
         ]            
+    )
+    
+    @registerTask(
+        'zs3'
+        'INTERNAL: Config validation'
+        ->
+            validator = new ZSchema()
+        
+            config = grunt.file.readJSON 'src/config.json'
+            schema = grunt.file.readJSON 'src/configSchema.json'
+            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
+        
+            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
+        
+            if validator.validate config, schema 
+                grunt.task.run 'notify:configValid'
+            else
+                grunt.task.run 'notify:configInvalid'
+                # use inspector to get to the deeply buried properties
+                console.log util.inspect(validator.getLastErrors(),
+                        showHidden: false
+                        depth: 10
+                    )
+                                     
+                grunt.fail.warn 'Config validation failed!'
     )
     
     @registerTask(
@@ -487,50 +486,44 @@ module.exports = (grunt) ->
                     message: "Generated configs are lint free."
 
         copy:
-            configBuild:
-                expand: true
-                cwd: 'src'
-                src: 'config.*.json'
-                dest: 'build/'
-
             configDist:
                 expand: true
-                cwd: 'src'
+                cwd: 'build/'
                 src: 'config.*.json'
                 dest: 'dist/'
 
             wetboewBuild:
                 expand: true
-                cwd: "lib/wet-boew/dist/unmin"
+                cwd: 'lib/wet-boew/dist/unmin'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"                 
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!*.html'
                 ]
-                dest: "build/js/lib/wet-boew/"
+                dest: 'build/js/lib/wet-boew/'
 
             wetboewDist:
                 expand: true
-                cwd: "lib/wet-boew/dist"
+                cwd: 'lib/wet-boew/dist'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"
-                    "!unmin/**/*.*"
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!unmin/**/*.*'
+                    '!*.html'
                 ]
-                dest: "dist/js/lib/wet-boew/"
+                dest: 'dist/js/lib/wet-boew/'
 
             assetsBuild:
                 expand: true
@@ -1123,10 +1116,9 @@ module.exports = (grunt) ->
             
             rampConfig:
                 files: [
-                    'src/config*.json'
+                    'src/config.json'
                 ]
                 tasks: [
-                    #'copy:configBuild'
                     'generateConfig'
                 ]
             
@@ -1181,12 +1173,12 @@ module.exports = (grunt) ->
                 ]
 
         hub:
-            "wet-boew":
+            'wet-boew':
                 src: [
-                    "lib/wet-boew/Gruntfile.coffee"
+                    'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    "dist"
+                    'dist'
                 ]
 
         compress:
@@ -1220,17 +1212,16 @@ module.exports = (grunt) ->
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
 
-        ###
-        tv4:
+        bump:
             options:
-                root: grunt.file.readJSON 'src/configSchema.json'
-                multi: true
-                
-            config:
-                src: [
-                    'src/config.test.json'
-                ]           
-        ###
+                files: [
+                    'package.json'
+                    'bower.json'
+                    'yuidoc.json'
+                ]
+                commit: false
+                createTag: false
+                push: false                
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1251,24 +1242,23 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
+    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-newer'
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
-        
-    @loadNpmTasks 'grunt-tv4'
     
-    @task.run "notify_hooks"
+    @task.run 'notify_hooks'
 
     #on watch events configure jshint:all to only run on changed file
-    @event.on "watch", (action, filepath) ->
-        grunt.config "jshint.files", filepath
-        grunt.config "jscs.main.files.src", filepath
+    @event.on 'watch', (action, filepath) ->
+        grunt.config 'jshint.files', filepath
+        grunt.config 'jscs.main.files.src', filepath
 
         # update what the notify tell
-        grunt.config "notify.hint.options.title", filepath.replace(/^.*[\\\/]/, "")
-        grunt.config "notify.jscs.options.title", filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.hint.options.title', filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.jscs.options.title', filepath.replace(/^.*[\\\/]/, "")
 
-    require( "time-grunt" )( grunt )
+    require( 'time-grunt' )( grunt )
     @

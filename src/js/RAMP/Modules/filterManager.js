@@ -643,8 +643,21 @@ define([
                         dojoArray.forEach(layers, function (layer) {
                             var wmsLayerName = null;
                             if (layer.ramp.type === GlobalStorage.layerType.WMS) {
-//                                wmsLayerName = layer.layerName;
+                                // wmsLayerName = layer.layerName;
                                 layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
+
+                                if (layer.layerConfig.legendMimeType) {
+                                    layer.layerConfig.legend = {
+                                        type: "wms",
+                                        imageUrl: String.format("{0}?REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.0.0&LANG={1}&FORMAT={2}&WIDTH=0&HEIGHT=0&LAYER={3}",
+                                            layer.layerConfig.url,
+                                            i18n.lng().substr(0,1),
+                                            layer.layerConfig.legendMimeType,
+                                            layer.layerConfig.layerName
+                                        )
+                                    };
+                                }
+
                                 layerGroups.wms.push(layer);
                             } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.ramp.type === GlobalStorage.layerType.Static) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
