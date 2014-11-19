@@ -51,6 +51,9 @@
                 "nasa_modis": {
                     "displayName": "Arctic Airports"
                 },
+                "aglands": {
+                    "displayName": "Pastures - 2000"
+                },
                 "limits": {
                     "displayName": "Limits"
                 }

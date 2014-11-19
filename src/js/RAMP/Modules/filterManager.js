@@ -466,22 +466,15 @@ define([
 
                             //only wms layers have this value
                             if (layerConfig.layerInfo) {
-                                if (layerConfig.legend.enable) {
-                                    var legendUrl = layerConfig.legend.legendURL,
-                                        wmsmeta;
-
-                                    //wmsmeta = String.format(filter_wms_meta_Template,
-                                    //        i18n.t('filterManager.legend'),
-                                    //    legendUrl,
-                                    //        i18n.t('filterManager.linkToCap'),
-                                    //    layerConfig.url + "&request=GetCapabilities");
+                                if (layerConfig.legend) {
+                                    var wmsmeta;
 
                                     tmpl.cache = {};
                                     tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_wms_meta_Template));
 
                                     wmsmeta = tmpl("wms_meta_main",
                                         {
-                                            legendUrl: legendUrl,
+                                            legendUrl: layerConfig.legend.imageUrl,
                                             getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
                                         }
                                     );
@@ -649,9 +642,9 @@ define([
                                 if (layer.layerConfig.legendMimeType) {
                                     layer.layerConfig.legend = {
                                         type: "wms",
-                                        imageUrl: String.format("{0}?REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.0.0&LANG={1}&FORMAT={2}&WIDTH=0&HEIGHT=0&LAYER={3}",
+                                        imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION={1}&FORMAT={2}&LAYER={3}",
                                             layer.layerConfig.url,
-                                            i18n.lng().substr(0,1),
+                                            layer.version,
                                             layer.layerConfig.legendMimeType,
                                             layer.layerConfig.layerName
                                         )
