@@ -967,12 +967,13 @@
                 "legendMimeType": "image/jpeg" 
             },
             {
-                "id": "limits",
-                "displayName": "@@config.layers.wms.limits.displayName",
-                "layerName": "limits",
+                "legendMimeType": "image/jpeg",
+                "id": "aglands",
+                "displayName": "@@config.layers.wms.aglands.displayName",
+                "layerName": "aglands:aglands-pastures-2000",
                 "format": "image/jpeg",
                 "imageUrl": "assets/images/wms.png",
-                "url": "http://wms.ess-ws.nrcan.gc.ca/wms/toporama_en"
+                "url": "http://sedac.ciesin.org/geoserver/ows"
             }
         ]
     },
