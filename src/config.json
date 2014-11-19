@@ -1022,7 +1022,7 @@
         "datagrid": "gridpane"
     },
     "plugins": [
-        "tempParse.js",
+        "stringParse.js",
         "windParse.js"
     ],
     "ui": {

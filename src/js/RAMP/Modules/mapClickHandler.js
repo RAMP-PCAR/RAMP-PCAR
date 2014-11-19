@@ -83,14 +83,14 @@ define([
                             req = { SRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid, X: evt.layerX, Y: evt.layerY };
                         }
                         $.extend(req, {
-                                SERVICE: "WMS",
-                                REQUEST: "GetFeatureInfo",
-                                VERSION: wmsData.wmsLayer.version,
-                                BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
-                                WIDTH: esriMap.width,
-                                HEIGHT: esriMap.height,
-                            QUERY_LAYERS: wmsData.layerConfig.layerInfo.name,
-                            LAYERS: wmsData.layerConfig.layerInfo.name,
+                            SERVICE: "WMS",
+                            REQUEST: "GetFeatureInfo",
+                            VERSION: wmsData.wmsLayer.version,
+                            BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
+                            WIDTH: esriMap.width,
+                            HEIGHT: esriMap.height,
+                            QUERY_LAYERS: wmsData.layerConfig.layerName,
+                            LAYERS: wmsData.layerConfig.layerName,
                             INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
                         });
                         return new EsriRequest({
