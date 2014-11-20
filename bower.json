@@ -1,11 +1,11 @@
 {
     "name": "ramp-pcar",
-    "version": "3.0.2",
+    "version": "4.0.0",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
     ],
-    "description": "RAMP GIS viewer - Canada Goose; Sample of an implementation of RAMP",
+    "description": "RAMP GIS viewer - Dragonfly; Sample of an implementation of RAMP",
     "keywords": [
         "ramp",
         "gis",
