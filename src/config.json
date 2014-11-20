@@ -211,87 +211,6 @@
     "layers": {
         "feature": [
             {
-                "id": "MW_E",
-                "displayName": "@@config.layers.feature.MW_E.displayName",
-                "nameField": "Operation_E",
-                "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/MMS/MW_E/MapServer/0",
-                "datagrid": {
-                    "rowsPerPage": 50,
-                    "gridColumns": [
-                        {
-                            "id": "iconCol",
-                            "fieldName": "",
-                            "width": "50px",
-                            "isSortable": false,
-                            "sortType": "string",
-                            "alignment": 1,
-                            "title": "Icon",
-                            "columnTemplate": "graphic_icon"
-                        },
-                        {
-                            "id": "nameCol",
-                            "fieldName": "OperationType",
-                            "width": "50px",
-                            "isSortable": false,
-                            "sortType": "string",
-                            "alignment": 1,
-                            "title": "OperationType",
-                            "columnTemplate": "unformatted_grid_value"
-                        },
-                        {
-                            "id": "nameCol",
-                            "fieldName": "Operation_E",
-                            "width": "500px",
-                            "isSortable": false,
-                            "sortType": "string",
-                            "alignment": 1,
-                            "title": "Operation",
-                            "columnTemplate": "unformatted_grid_value"
-                        }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
-                },
-                "symbology": {
-                    "valueMaps": [
-                        {
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZhJREFUSInt090rQ3Ecx/H372znbGfHHpgzMRfKylPLnZSiXCjcKP+BOynij+CP8Ce4UZJcSMmVhwtJJFLKEDZrD4Ztx4UsNY/b2XHjc/d7fP1+v28/OxbFbjmUeUjMAr1mAwa5YVX1xd/dyGgH0XMeTZB8ypYNVKsK9V4NSbLL8MHTLZ9csxC5LxuaaA4wGtYKbetr9JPYgEHdjVuxFfruMlk2oikyhlE65JUkxkI6QY9KjctBreakyiEXzZvO5tg4vWbuMFIa1F3jYqgtiE1IAOxfRsnlDTqDfp5zeVaOLugIeAjpXsL1PigVWr1NcrV2QHfAzXHsgfVYCoCpWJrdmwSb8TT62S2T7Q1sXcW/2ur7Gu0lH9lLPhbaA/4qWnQ3TdUuNrfPmAk34nXKGOXU6KPUqQqtdT7Sz69/LaR78Lsc7EZi5kKl5u8hpxDM97UCBkIIxFu/8rpEle0sDXWiyj8766ezbAiCPu2zYQSgKcV/6teQ2fmHzIdSRp7+xZ3KQ2anCBrvCjFuBVSpFCCn6hmxBKp0XgBjxmpLZEN8mAAAAABJRU5ErkJggg==",
-                            "value": "Aluminum"
-                        },
-                        {
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZpJREFUSInt079LG2Ecx/H3c/dcLndJTfTSSiSDDlUJONgOQgWh0K1QqpP/hoOCdBEH6dzBWVBXJ3FzUgrdrGMLpepg7K9wltR43t3jEAiFJBqSy3XpB57heXi+z4vn+fJIYoqMHape/V4DZqIGFMFLy8q6f91IFUFMn/hlLkOva8DRLYb0PjRNGtDk6Xauv7DsXXQNbZjDzNvF+jz+HrUTE1iUDhnNqK99Dz02gzLnSnUOjQmNFXOEgp7G0Wwe6jYPhNmw743y2a9+Za76qTNoVs/yynqMjgbAR6+ET8iTRB5PhexWPzMhc4waOSYTg9Ap9Nb/xZl7wHPD4dh3eRe4AGwFLu9vfrIeXDIlTlm1Rjm8+XbXUff3aDussH1dqc+X5ABF6TCiZ1ivHLFmj9MvkqhuetQsec2kaDzij6r9tXHp4GgpPnilaKFO8++hvBAcpJ+BAEFtgCApaiWWMPiRfYEtjFZHtAclgILMtCwUCNIi0RZyJxR1/kPRQydKkSzv9R6KOg3QQuopC6kYoF6lDiWtvtexQL3OLYH8ZymZWtEIAAAAAElFTkSuQmCC",
-                            "value": "Base metals"
-                        },
-                        {
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAbNJREFUSInt071LW1EYx/HvuUnMvTEmeq+KUaFKiS8pDslgB1HQVRAVpO3/IIhDhLYg4iCdOwhughU6FIVSAw66pPjSrTq4KL4hohVt4ns0iYMQBDXGeHNd/G3ncM7z4ZznHDMGxWw4dHZ6OAA06A3EiTYrSm7oxoniHhB16xv/CR9Gngxoqkyxy4EkmS1wx9WN/Vzl49Duk6Hh3le873Akxsb3KJVYTQL/BxWn05KY+7d3zshEiO2jWPpQZaFEX1cZpSXZaJpCQb6NHLv11rrPPVGmptdo9y+nB7U1OWlpfo3JJAHwd3GHy4sYPl8RkUiMX4EVat5oVLg1vN5CIE3oy/cDNrdmaKxXWVgK83U8BMC3/jAzc/sMBsK8Ld+k3+/m92zyB/Rgj0aDx4wGjxPjnnd5eKpVysscDAYWGPhUSV6ulXg8eZ1HvzpXkYynqoCT0wsAqtwqmmZj/s+OvlC6eX7IZZcI/qgFQAgQQgAgK9d/SFHM7M01YrNZ7iuRGpRlgtIS570bBQJ7dlZKSFJI77xA+kProRhyzWTmIb1zC+ru9NLdaQCUqSQgWXG0GgJlOle9oWdJLU3zVQAAAABJRU5ErkJggg==",
-                            "contentType": "image/png",
-                            "value": "Precious metals"
-                        },
-                        {
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAbFJREFUSInt0TtIW1EAgOH/XGNyr3pjYmogUaNB+0ootBIsqPiYBAu+cFDcpatDBduldJBC6eLgLKjt1slVFAxSQRCfmEWNj/qqFCsaiYm3WxDfJDdx6b+dwznn45xjIEUZUg6dho56gSq9AY3oG0WxHF64keYBURHc2+Jv6DhhwKZacObYkSRDOlzzdD9mxukJTCQMDfgaaCuvj41T/0f3ySQk3hWWkq2osbn94z8Mbi6yfX4WP/TUYOSjr5H8HDs21UKu2YqqZF1Z9+EszOj8T1r83+KDmvO8NPhqSJPSAJhdXSYSjVBa4iUciTAyPcYL12OeON28cj8Hf5w3+hycYeP7F2pdXuZ2g/T9WgBgqKyZyfUl+ncCvJ4186myFf/K/G1H3f1HwwdrDB+sxcbdrpd48opx2wvoHwnQW92ONVNF07TEoMs5VBueghJOwiEAnjmLsJmtTK0s6AvF28NDDimdibb3AAghEAgQAtlkAkAxyvzu/EqGSUkMMgpB/iPHjRsFgiw5817IrZDe/Yf0h4LRMHLf2+RDencF6qrroKuuI/lQsopBsmJuSgmU7P4B8ktn0WaY/NIAAAAASUVORK5CYII=",
-                            "value": "Uranium"
-                        }
-                    ],
-                    "field2": "",
-                    "field3": "",
-                    "field1": "Commodity_Group_E_Spelt ",
-                    "_defaultImageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAZhJREFUSInt090rQ3Ecx/H372znbGfHHpgzMRfKylPLnZSiXCjcKP+BOynij+CP8Ce4UZJcSMmVhwtJJFLKEDZrD4Ztx4UsNY/b2XHjc/d7fP1+v28/OxbFbjmUeUjMAr1mAwa5YVX1xd/dyGgH0XMeTZB8ypYNVKsK9V4NSbLL8MHTLZ9csxC5LxuaaA4wGtYKbetr9JPYgEHdjVuxFfruMlk2oikyhlE65JUkxkI6QY9KjctBreakyiEXzZvO5tg4vWbuMFIa1F3jYqgtiE1IAOxfRsnlDTqDfp5zeVaOLugIeAjpXsL1PigVWr1NcrV2QHfAzXHsgfVYCoCpWJrdmwSb8TT62S2T7Q1sXcW/2ur7Gu0lH9lLPhbaA/4qWnQ3TdUuNrfPmAk34nXKGOXU6KPUqQqtdT7Sz69/LaR78Lsc7EZi5kKl5u8hpxDM97UCBkIIxFu/8rpEle0sDXWiyj8766ezbAiCPu2zYQSgKcV/6teQ2fmHzIdSRp7+xZ3KQ2anCBrvCjFuBVSpFCCn6hmxBKp0XgBjxmpLZEN8mAAAAABJRU5ErkJggg==",
-                    "type": "uniqueValue"
-
-                },
-                "settings": {
-                    "opacity": {
-                        "enabled": true,
-                        "default": 0.9
-                    }
-                },
-                "layerExtent": {
-                    "xmin": -2317716,
-                    "ymin": -692095,
-                    "xmax": 3000105,
-                    "ymax": 2558710
-                }
-            },
-            {
                 "id": "layer_g5h6i",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
@@ -364,7 +283,7 @@
                     "field2": "",
                     "field3": "",
                     "field1": "CATEG_ID",
-                    "_defaultImageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//AAAAACehEj6cBQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAACVJREFUKJFjYBgFOAAjIyMuGSYmJuxyIBkccuRJ4bELnwtHCAAATxgAO4yg4nkAAAAASUVORK5CYII=",
+                    "defaultImageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//AAAAACehEj6cBQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAACVJREFUKJFjYBgFOAAjIyMuGSYmJuxyIBkccuRJ4bELnwtHCAAATxgAO4yg4nkAAAAASUVORK5CYII=",
                     "type": "uniqueValue"
                 },
                 "settings": {
@@ -545,15 +464,7 @@
             }
         ],
         "wms": [
-            {
-                "id": "nasa_modis",
-                "displayName": "@@config.layers.wms.nasa_modis.displayName",
-                "format": "image/jpeg",
-                "layerName": "36",
-                "imageUrl": "assets/images/wms.png",
-                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
-                "legendMimeType": "image/jpeg"
-            }
+            
         ]
     },
     "datagrid": {
