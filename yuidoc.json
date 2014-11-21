@@ -1,8 +1,8 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "3.0.2",
-    "description": "RAMP GIS viewer - Canada Goose; Sample of an implementation of RAMP",
+    "version": "4.0.0",
+    "description": "RAMP GIS viewer - Dragonfly; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {
         "paths": [

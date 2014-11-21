@@ -45,6 +45,15 @@
                 },
                 "oilAreaOverlay": {
                     "displayName": "CESI Oil Area Overlay"
+                },
+                "MW_E": {
+                    "displayName": "Smelters and refineries"
+                },
+                "layer_dd1m3": {
+                    "displayName": "Monitoring Sites"
+                },
+                "layer_g5h6i": {
+                    "displayName": "EC Projects"
                 }
             },
             "wms": { 
@@ -56,6 +65,9 @@
                 },
                 "limits": {
                     "displayName": "Limits"
+                },
+                "wms6": { 
+                    "displayName": "Railway Network"
                 }
             }
         }

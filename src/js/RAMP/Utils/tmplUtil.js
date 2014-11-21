@@ -40,15 +40,14 @@ define(["ramp/globalStorage"],
                     case "uniqueValue":
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
                         var graphicKey = graphic.attributes[symbolConfig.field1];
-                        if (symbolConfig.field2 !== null) {
+                        if (symbolConfig.field2) {
                             graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
-                            if (symbolConfig.field3 !== null) {
+                            if (symbolConfig.field3) {
                                 graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field3];
                             }
                         }
 
                         //search the value maps for a matching entry.  if no match found, use the default image
-
                         for (i = 0; i < symbolConfig.valueMaps.length; i++) {
                             if (symbolConfig.valueMaps[i].value === graphicKey) {
                                 img = symbolConfig.valueMaps[i].imageUrl;
@@ -74,7 +73,7 @@ define(["ramp/globalStorage"],
                             img = symbolConfig.defaultImageUrl;
                         } else {
                             // a trick to prime the first loop iteration
-                            // the first low value is inclusive.  every other low value is exlusive.
+                            // the first low value is inclusive.  every other low value is exclusive.
                             // if we have entered this else bracket, we know we are not below the first lower limit.
                             // so we reduce lower by 1 to make the first exclusive test inclusive
                             upper = lower - 1;

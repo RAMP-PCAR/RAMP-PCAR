@@ -45,9 +45,18 @@
                 },
                 "oilAreaOverlay": {
                     "displayName": "[fr] CESI Oil Area Overlay"
+                },
+                "MW_E": {
+                    "displayName": "[fr] Smelters and refineries"
+                },
+                "layer_dd1m3": {
+                    "displayName": "[fr] Monitoring Sites"
+                },
+                "layer_g5h6i": {
+                    "displayName": "[fr] EC Projects"
                 }
             },
-            "wms": { 
+            "wms": {
                 "nasa_modis": {
                     "displayName": "[fr] Arctic Airports"
                 },
@@ -56,6 +65,9 @@
                 },
                 "limits": {
                     "displayName": "[fr] Limits"
+                },
+                "wms6": { 
+                    "displayName": "[fr] Railway Network"
                 }
             }
         }
