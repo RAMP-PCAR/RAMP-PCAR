@@ -642,7 +642,7 @@ define([
                                 if (layer.layerConfig.legendMimeType) {
                                     layer.layerConfig.legend = {
                                         type: "wms",
-                                        imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION={1}&FORMAT={2}&LAYER={3}",
+                                        imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
                                             layer.layerConfig.url,
                                             layer.version,
                                             layer.layerConfig.legendMimeType,
