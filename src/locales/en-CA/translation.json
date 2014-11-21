@@ -65,6 +65,9 @@
                 },
                 "limits": {
                     "displayName": "Limits"
+                },
+                "wms6": { 
+                    "displayName": "Railway Network"
                 }
             }
         }
