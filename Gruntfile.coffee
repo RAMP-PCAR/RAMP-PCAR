@@ -1,4 +1,6 @@
 fs = require("fs")
+ZSchema = require("z-schema")
+util = require('util')
 
 module.exports = (grunt) ->
 
@@ -38,7 +40,7 @@ module.exports = (grunt) ->
         'copy:build'
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
-            'copy:configBuild'
+            'generateConfig'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
@@ -227,7 +229,7 @@ module.exports = (grunt) ->
                     contents = contents.replace 'js/lib/lib.js', 'js/lib/lib.min.js'
                     contents = contents.replace 'css/lib/lib.css', 'css/lib/lib.min.css'
                     contents = contents.replace 'css/theme.less.css', 'css/theme.less.min.css'
-                    contents = contents.replace /((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2'
+                    contents = contents.replace(/((?=\/wet-boew\/)[^\"]+?\.)(js|css)/g, '$1min.$2')
 
                     grunt.file.write file, contents 
             )
@@ -324,6 +326,75 @@ module.exports = (grunt) ->
                     done()
     )
 
+    @registerTask(
+        'generateConfig'
+        'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
+        [   
+            'jsonlint:oneConfig'
+            'zs3'
+            'jsonlint:locales'
+            'assembleConfigs'
+        ]            
+    )
+    
+    @registerTask(
+        'zs3'
+        'INTERNAL: Config validation'
+        ->
+            validator = new ZSchema()
+        
+            config = grunt.file.readJSON 'src/config.json'
+            schema = grunt.file.readJSON 'src/configSchema.json'
+            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
+        
+            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
+        
+            if validator.validate config, schema 
+                grunt.task.run 'notify:configValid'
+            else
+                grunt.task.run 'notify:configInvalid'
+                # use inspector to get to the deeply buried properties
+                console.log util.inspect(validator.getLastErrors(),
+                        showHidden: false
+                        depth: 10
+                    )
+                                     
+                grunt.fail.warn 'Config validation failed!'
+    )
+    
+    @registerTask(
+        'assembleConfigs'
+        'INTERNAL'
+        () ->
+            languages = ['en', 'fr']
+            tasks = []
+            
+            languages.forEach(
+                ( lang ) ->
+                    json = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+                    
+                    grunt.config 'replace.config-' + lang,
+                        options:
+                            patterns: [
+                                json: json
+                            ]
+                        files: [
+                            src: 'src/config.json'
+                            dest: 'build/config.' + lang + '.json'
+                        ]
+                        
+                    tasks.push 'replace:config-' + lang
+            )       
+            
+            tasks.push 'notify:configGenerated'
+            tasks.push 'jsonlint:generatedConfigs'
+            tasks.push 'notify:generatedConfigsLint'
+            
+            #console.log grunt.config 'replace'
+            #console.log tasks
+            grunt.task.run tasks
+    )
+
     smartExpand = ( cwd, arr, extra ) ->    
         # determine file order here and concat to arr
         extra = extra or []
@@ -394,51 +465,65 @@ module.exports = (grunt) ->
                 options:
                     message: "Tarball is created!"
 
-        copy:
-            configBuild:
-                expand: true
-                cwd: 'src'
-                src: 'config.*.json'
-                dest: 'build/'
+            configInvalid:
+                options:
+                    message: "Config is invalid!"
+                    
+            configValid:
+                options:
+                    message: "Config checks out!" 
 
+            templates:
+                options:
+                    message: "Templates are a Go."
+
+            configGenerated:
+                options:
+                    message: "Configs are generated!"
+                    
+            generatedConfigsLint:
+                options:
+                    message: "Generated configs are lint free."
+
+        copy:
             configDist:
                 expand: true
-                cwd: 'src'
+                cwd: 'build/'
                 src: 'config.*.json'
                 dest: 'dist/'
 
             wetboewBuild:
                 expand: true
-                cwd: "lib/wet-boew/dist/unmin"
+                cwd: 'lib/wet-boew/dist/unmin'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"                 
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!*.html'
                 ]
-                dest: "build/js/lib/wet-boew/"
+                dest: 'build/js/lib/wet-boew/'
 
             wetboewDist:
                 expand: true
-                cwd: "lib/wet-boew/dist"
+                cwd: 'lib/wet-boew/dist'
                 src: [
-                    "**/*.*"
-                    "!ajax/**/*.*"
-                    "!**/logo.*"
-                    "!**/favicon*.*"
-                    "!demos/**/*.*"
-                    "!docs/**/*.*"
-                    "!test/**/*.*"
-                    "!theme/**/*.*"
-                    "!unmin/**/*.*"
-                    "!*.html"
+                    '**/*.*'
+                    '!ajax/**/*.*'
+                    '!**/logo.*'
+                    '!**/favicon*.*'
+                    '!demos/**/*.*'
+                    '!docs/**/*.*'
+                    '!test/**/*.*'
+                    '!theme/**/*.*'
+                    '!unmin/**/*.*'
+                    '!*.html'
                 ]
-                dest: "dist/js/lib/wet-boew/"
+                dest: 'dist/js/lib/wet-boew/'
 
             assetsBuild:
                 expand: true
@@ -827,6 +912,24 @@ module.exports = (grunt) ->
                 validthis: false
                 noyield: false
 
+        jsonlint:
+            oneConfig:
+                src: [
+                    'src/config.json'
+                    'src/configSchema.json'
+                    'src/draft-04-schema.json'
+                ]
+        
+            generatedConfigs:
+                src: [
+                    'build/config.*.json'
+                ]
+                
+            locales:
+                src: [
+                    'src/locales/**/*.json'
+                ]
+
         jscs: 
             main:
                 options:
@@ -982,7 +1085,8 @@ module.exports = (grunt) ->
                     'src/js/RAMP/**/*.json'
                 ]
                 tasks: [
-                    'copy:templates'
+                    'copy:templatesBuild'
+                    'notify:templates'
                 ]
 
             js:
@@ -1008,6 +1112,27 @@ module.exports = (grunt) ->
                     'less'
                     'autoprefixer'
                     'notify:css'
+                ]
+            
+            rampConfig:
+                files: [
+                    'src/config.json'
+                ]
+                tasks: [
+                    'generateConfig'
+                ]
+            
+            locales:
+                files: [
+                    'src/locales/**/*.json'
+                ]
+                
+                tasks: [
+                    #'build'
+                    'generateConfig'
+                    'assemble' #for quicker build only run a subset of build
+                    'notify:page'
+                    'copy:localesBuild'
                 ]
             
             config:
@@ -1048,19 +1173,19 @@ module.exports = (grunt) ->
                 ]
 
         hub:
-            "wet-boew":
+            'wet-boew':
                 src: [
-                    "lib/wet-boew/Gruntfile.coffee"
+                    'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    "dist"
+                    'dist'
                 ]
 
         compress:
             tar:
                 options:
                     mode: 'tar'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.tar'
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tar'
                 files: [
                     expand: true
                     src: '**/*'
@@ -1070,7 +1195,7 @@ module.exports = (grunt) ->
             zip:
                 options:
                     mode: 'zip'
-                    archive: 'tarball/<%= pkg.name %> <%= pkg.version %>.zip',
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.zip',
                     level: 9
 
                 files: [
@@ -1086,6 +1211,17 @@ module.exports = (grunt) ->
             src: '<%= pkg.ramp.docco.path %>/**/*.js'
             options:
                 output: '<%= pkg.ramp.docco.outdir %>'
+
+        bump:
+            options:
+                files: [
+                    'package.json'
+                    'bower.json'
+                    'yuidoc.json'
+                ]
+                commit: false
+                createTag: false
+                push: false                
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1104,23 +1240,25 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-docco'
+    @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
+    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-newer'
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
-        
-    @task.run "notify_hooks"
+    
+    @task.run 'notify_hooks'
 
     #on watch events configure jshint:all to only run on changed file
-    @event.on "watch", (action, filepath) ->
-        grunt.config "jshint.files", filepath
-        grunt.config "jscs.main.files.src", filepath
+    @event.on 'watch', (action, filepath) ->
+        grunt.config 'jshint.files', filepath
+        grunt.config 'jscs.main.files.src', filepath
 
         # update what the notify tell
-        grunt.config "notify.hint.options.title", filepath.replace(/^.*[\\\/]/, "")
-        grunt.config "notify.jscs.options.title", filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.hint.options.title', filepath.replace(/^.*[\\\/]/, "")
+        grunt.config 'notify.jscs.options.title', filepath.replace(/^.*[\\\/]/, "")
 
-    require( "time-grunt" )( grunt )
+    require( 'time-grunt' )( grunt )
     @

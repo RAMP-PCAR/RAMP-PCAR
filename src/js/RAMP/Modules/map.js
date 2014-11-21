@@ -1,4 +1,4 @@
-﻿/*global define, esri, dojoConfig, i18n, console, $ */
+﻿/*global define, esri, i18n, console, $, RAMP */
 
 /**
 *
@@ -18,11 +18,9 @@
 * @uses dojo/_base/declare
 * @uses dojo/_base/array
 * @uses dojo/dom
-* @uses dojo/dom-class
 * @uses dojo/dom-construct
 * @uses dojo/number
 * @uses dojo/query
-* @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses dojo/on
 * @uses esri/map
@@ -30,14 +28,9 @@
 * @uses esri/layers/ArcGISTiledMapServiceLayer
 * @uses esri/layers/ArcGISDynamicMapServiceLayer
 * @uses esri/layers/WMSLayer
-* @uses esri/layers/WMSLayerInfo
-* @uses esri/tasks/GeometryService
-* @uses esri/tasks/ProjectParameters
-* @uses esri/geometry/Polygon
 * @uses esri/SpatialReference
 * @uses esri/dijit/Scalebar
 * @uses esri/geometry/Extent
-* @uses esri/graphicsUtils
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
@@ -49,13 +42,12 @@
 
 define([
 /* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/dom", "dojo/dom-class",
-        "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/_base/lang", "dojo/topic", "dojo/on",
+"dojo/_base/declare", "dojo/_base/array", "dojo/dom", 
+        "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Polygon", "esri/SpatialReference", "esri/config",
-"esri/dijit/Scalebar", "esri/geometry/Extent", "esri/graphicsUtils", "esri/layers/WMSLayer", "esri/layers/WMSLayerInfo", "esri/request",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -65,12 +57,11 @@ define([
 
     function (
     /* Dojo */
-    declare, dojoArray, dom, domClass, domConstruct, number, query, dojoLang, topic, dojoOn,
+    declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
     EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    GeometryService, ProjectParameters, Polygon, SpatialReference, esriConfig,
-    EsriScalebar, EsriExtent, esriGraphicUtils, WMSLayer, WMSLayerInfo, EsriRequest,
+    SpatialReference, EsriScalebar, EsriExtent, WMSLayer,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
@@ -435,7 +426,7 @@ define([
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
                             var layer = map.getLayer(layerId);
-                            //console.log(layer.loaded, layerId, layer);
+                            console.log(layer.loaded, layerId, layer);
                             return layer.loaded;
                         }
                     );
@@ -557,9 +548,10 @@ define([
         }
 
         function generateStaticLayer(staticLayer) {
-            var tempLayer;
+            var tempLayer,
+                layerType = staticLayer.layerType || "feature";
             //determine layer type and process
-            switch (staticLayer.layerType) {
+            switch (layerType) {
                 case "feature":
                     tempLayer = new FeatureLayer(staticLayer.url, {
                         opacity: resolveLayerOpacity(staticLayer.settings.opacity),
@@ -733,7 +725,7 @@ define([
             */
             init: function () {
                 //config object is loaded in bootstrapper.js
-                var config = GlobalStorage.config,
+                var config = RAMP.config,
 
                 /**
                 * The spatial reference of the map
@@ -793,18 +785,17 @@ define([
                 */
                 fullExtent = createExtent(config.extents.fullExtent, spatialReference);
 
-                esriConfig.defaults.io.proxyUrl = GlobalStorage.config.proxyUrl;// "/proxy/proxy.ashx";
-                dojoConfig.ecfg = esriConfig;
                 //generate WMS layers array
-                wmsLayers = dojoArray.map(config.wmsLayers, function (layer) {
+                wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
                         opacity: resolveLayerOpacity(layer.settings.opacity),
-                        resourceInfo: {
-                            extent: new EsriExtent(layer.extent),
-                            layerInfos: [new WMSLayerInfo(layer.layerInfo)]
-                        }
+                        visibleLayers: [layer.layerName]
+                        //resourceInfo: {
+                        //    extent: new EsriExtent(layer.extent),
+                        //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
+                        //}
                     });
                     wmsl.ramp = {
                         type: GlobalStorage.layerType.WMS
@@ -814,17 +805,19 @@ define([
 
                     if (layer.featureInfo !== undefined) {
                         console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
-                        MapClickHandler.registerWMSClick({wmsLayer: wmsl, layerConfig: layer});
+                        MapClickHandler.registerWMSClick({ wmsLayer: wmsl, layerConfig: layer });
                     }
 
-                    wmsl.setVisibleLayers(layer.layerInfo.name);
-                    wmsl.setVisibility(layer.layerVisible);
+                    //wmsl.setVisibleLayers(layer.layerName);
+                    wmsl.setVisibility(layer.settings.visible);
 
+                    console.log("wms registered: " + layer.id);
+                    console.log(wmsl);
                     return wmsl;
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(config.featureLayers, function (layerConfig) {
+                featureLayers = dojoArray.map(config.layers.feature, function (layerConfig) {
                     var fl;
 
                     if (layerConfig.isStatic) {
@@ -834,19 +827,18 @@ define([
                             id: layerConfig.id,
                             mode: FeatureLayer.MODE_SNAPSHOT,
                             outFields: [layerConfig.layerAttributes],
-                            visible: layerConfig.layerVisible,
+                            visible: layerConfig.settings.visible,
                             opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                         });
-                        fl.ramp = {
-                            type: GlobalStorage.layerType.Feature
-                        };
-                        if (layerConfig.boundingBoxVisible === true) {
+                        fl.ramp = { type: GlobalStorage.layerType.Feature };
+                        if (layerConfig.settings.boundingBoxVisible === true) {
                             dojoOn.once(fl, "update-end", function () {
                                 setBoundingBoxVisibility(layerConfig.id, true);
                             });
                         }
                     }
-                    if (layerConfig.layerVisible === false) {
+
+                    if (layerConfig.settings.visible === false) {
                         dojoOn.once(fl, "update-end", function () {
                             fl.setVisibility(false);
                         });
@@ -863,23 +855,22 @@ define([
                 * @type {array of esri/layer/GraphicsLayer}
                 */
 
-                var boundingBoxLayers = dojoArray.map(config.featureLayers, function (layer) {
+                var boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
+
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
                     // will be generated the first time the user toggles it on.
                     var boundingBox = new GraphicsLayer({
                         id: String.format("boundingBoxLayer_{0}", layer.id),
-                        visible: layer.boundingBoxVisible
+                        visible: layer.settings.boundingBoxVisible
                     });
-                    boundingBox.ramp = {
-                        type: GlobalStorage.layerType.BoundingBox
-                    };
+                    boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                     var boundingBoxExtent;
-                    if (typeof layer.boundingBox !== "undefined") {
+                    if (typeof layer.layerExtent !== "undefined") {
 
-                        boundingBoxExtent = createExtent(layer.boundingBox.extent, spatialReference);
+                        boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
 
                         var extentGraphic = new esri.Graphic({
                             geometry: boundingBoxExtent,
@@ -904,7 +895,7 @@ define([
 
                 // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
                 // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.featureLayers, function (layer) {
+                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.layers.feature, function (layer) {
                     return layer.id;
                 }), boundingBoxLayers);
 
@@ -926,7 +917,7 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.forEach(config.featureLayers, function (layer) {
+                dojoArray.forEach(config.layers.feature, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
                         var tempLayer = map.generateStaticLayer(staticLayer);
@@ -946,6 +937,8 @@ define([
                     type: GlobalStorage.layerType.Basemap
                 };
                 // Combine all layer arrays then add them all at once (for efficiency)
+                console.log('adding wmses');
+                console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
 
                 /* Start - Show scalebar */

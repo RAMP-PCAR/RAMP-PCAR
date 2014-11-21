@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP */
 /*jslint white: true */
 
 /**
@@ -273,6 +273,7 @@ define([
                     extendedTabTitle,
 
                     sectionNode,
+                    tabNode = $("details[data-panel-name=datagrid]"),
 
                     selectedDatasetUrl,
 
@@ -325,15 +326,15 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (utilMisc.isUndefined(obj[datagridMode])) {
-                            var sumTemplate = getGridConfig(obj.featureUrl).summaryRowTemplate;
-
-                            tmpl.cache = {
-                            };
-
-                            tmpl.templates = data_grid_template_json;
 
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+
+                            var sumTemplate = tmplData.lyr.templates.summary;
+
+                            tmpl.cache = {};
+
+                            tmpl.templates = data_grid_template_json;
 
                             obj[datagridMode] = tmpl(sumTemplate, tmplData);
                         }
@@ -473,6 +474,9 @@ define([
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {
+
+                        jqgridWrapper.addClass("fadedOut");
+
                         // explicitly set height of the scrollbody so the horizontal scrollbar is visible
                         dataTablesScrollBody.height(jqgridTableWrapper.height() - dataTablesScrollHead.height());
 
@@ -823,7 +827,7 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(GlobalStorage.config.featureLayers,
+                    layer = dojoArray.filter(RAMP.config.layers.feature,
                         function (layer) {
                             return layer.url === selectedDatasetUrl;
                         });
@@ -833,14 +837,15 @@ define([
                     }
                 }
 
-                function updateDatasetSelectorToLoaded() {                    
-                    datasetSelectorSubmitButton                        
-                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));                    
+                function updateDatasetSelectorToLoaded() {
+                    datasetSelectorSubmitButton
+                        .text(i18n.t("datagrid.ex.datasetSelectorButtonLoaded"));
                 }
 
                 function refreshTable() {
                     var duration = 0.2,
                         tl = new TimelineLite({ paused: true }),
+                        stl = new TimelineLite({ paused: true }),
                         newWrapper,
                         deffered = new Deferred();
 
@@ -850,7 +855,7 @@ define([
                         "datagrid_manager_table_Template",
                         {
                             tableId: "jqgrid",
-                            tableCss: "display table-condensed table-simplify animated fadeIn"
+                            tableCss: "display table-condensed table-simplify"// animated fadeIn"
                         }
                     );
 
@@ -872,15 +877,31 @@ define([
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
-                            tl.set(jqgrid, { className: "-=animated fadeIn" }, "+=" + duration);
-                            tl.resume();
+
+                            console.timeEnd('applyExtentFilter');
+
+                            console.log("I'm resuming");
+
+                            stl.set(jqgridWrapper, { className: "-=fadedOut" });
+                            stl.set(jqgridWrapper, { className: "+=animated fadeIn" });
+                            stl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=1");
+                            //stl.set(jqgridTableWrapper, { className: "-=animated fadeIn" }, "+=" + duration);
+
+                            stl.play();
+
+                            //tl.set(jqgrid, { className: "-=animated fadeIn" }, "+=" + duration);
+                            //tl.resume();
                         });
+
+                        console.time('applyExtentFilter');
+
                         applyExtentFilter(deffered);
+
                     }, null, this, duration + 0.05);
 
-                    tl.set(jqgridWrapper, { className: "-=fadeOut" });
+                    /*tl.set(jqgridWrapper, { className: "-=fadeOut" });
                     tl.set(jqgridWrapper, { className: "+=fadeIn" });
-                    tl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=" + duration);
+                    tl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=" + duration);*/
 
                     tl.play();
                 }
@@ -897,6 +918,7 @@ define([
                         templateKey,
                         duration = 0.5,
                         tl = new TimelineLite({ paused: true }),
+                        stl = new TimelineLite({ paused: true }),
                         deffered = new Deferred();
 
                     tmpl.cache = {};
@@ -913,7 +935,7 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(GlobalStorage.config.featureLayers, function (layerConfig) {
+                        var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                             var layer = GlobalStorage.map.getLayer(layerConfig.id);
                             return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
@@ -954,11 +976,19 @@ define([
 
                         d.resolve();
 
+                        tl.resume();
+
                         // continue with transition when apply filter finished
                         deffered.then(function () {
                             //tl.call(function () { oTable.columns.adjust().draw(); console.log("!!!"); }, null, this, "+=2");
 
-                            tl.resume();
+                            //tl.resume();
+
+                            stl.set(jqgridWrapper, { className: "-=fadedOut" });
+                            stl.set(jqgridWrapper, { className: "+=animated fadeIn" });
+                            stl.set(jqgridWrapper, { className: "-=animated fadeIn" }, "+=1");
+
+                            stl.play();
                         });
 
                         applyExtentFilter(deffered);
@@ -993,6 +1023,10 @@ define([
                     capturePanel();
                 }
 
+                function isVisible() {
+                    return tabNode.attr("aria-expanded") === "true";
+                }
+
                 function capturePanel() {
                     var origin = "datagrid",
                         target = highlightRow.getNode().find(".record-controls");
@@ -1002,13 +1036,13 @@ define([
                         target = highlightRow.getNode().find(".button.details");
                     }
 
-                    if (highlightRow.isActive()) {
+                    if (highlightRow.isActive() && isVisible()) {
                         topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
                             target: target,
                             consumeOrigin: origin,
                             origin: origin
                         });
-                    }                    
+                    }
                 }
 
                 function adjustPanelWidth() {
@@ -1045,10 +1079,10 @@ define([
                                 }
                                 );
 
-                            sectionNode = $("#" + GlobalStorage.config.divNames.datagrid);
+                            sectionNode = $("#" + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
                         }
-                ),
+                    ),
 
                     getDatagridMode: function () {
                         return datagridMode;
@@ -1059,7 +1093,7 @@ define([
                             if (datasetSelector.find("option:selected").length > 0) {
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
-                                var firstVisibleLayer = UtilArray.find(GlobalStorage.config.featureLayers, function (layerConfig) {
+                                var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = GlobalStorage.map.getLayer(layerConfig.id);
                                     return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
@@ -1107,8 +1141,7 @@ define([
         */
         function cacheSortedData() {
             var elements = oTable.rows().data();
-            featureToPage = {
-            };
+            featureToPage = {};
             $.each(elements, function (idx, val) {
                 var layer = val.last().featureUrl,
                     fid = GraphicExtension.getOid(val.last().feature);
@@ -1161,6 +1194,9 @@ define([
                 dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
 
+            console.time('applyExtentFilter:part 1');
+            console.time('applyExtentFilter:part 1 - 1');
+
             // filter out static layers
             visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
@@ -1175,7 +1211,8 @@ define([
                     q.geometry = RampMap.getMap().extent;
                 } else {
                     // Grab everything!
-                    q.where = "1 = 1";
+                    q.geometry = RampMap.getMaxExtent();
+                    //q.where = "1 = 1";
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
@@ -1183,26 +1220,41 @@ define([
 
             q.outFields = ["*"];
 
+            console.timeEnd('applyExtentFilter:part 1 - 1');
+
             // Update total records
             totalRecords = 0;
             dojoArray.forEach(visibleGridLayers, function (layer) {
                 totalRecords += layer.graphics.length;
             });
 
+            console.time('applyExtentFilter:part 1 - 2');
+
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
+
+                    console.timeEnd('applyExtentFilter:part 1 - 2');
+
                     if (features.features.length > 0) {
                         var layer = features.features[0].getLayer();
                         visibleFeatures[layer.url] = features.features;
                     }
                 });
-            });
+            });            
 
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
+                
+                console.timeEnd('applyExtentFilter:part 1');
+
+                console.time('applyExtentFilter:part 2 - fetchRecords');
+
                 fetchRecords(visibleFeatures);
 
+                console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
+
                 if (d) {
+                    console.log("I'm calling reserve!!!");
                     d.resolve();
                 }
             });
@@ -1298,7 +1350,14 @@ define([
             });
 
             //add the data to the grid
+
+            console.time('fetchRecords: fnAddData');
+
             jqgrid.dataTable().fnAddData(data);
+
+            console.timeEnd('fetchRecords: fnAddData');
+
+            console.log("jqgrid.dataTable().fnAddData(data);");
 
             // NOTE: fnAddData should be the last thing that happens in this function
             // if you want to add something after this point, use the fnDrawCallback
@@ -1385,10 +1444,10 @@ define([
             * @method init
             */
             init: function () {
-                config = GlobalStorage.config;
+                config = RAMP.config;
 
                 // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(config.featureLayers, function (layerConfig) {
+                var layerConfigs = dojoArray.filter(config.layers.feature, function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 

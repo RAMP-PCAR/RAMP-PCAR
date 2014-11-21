@@ -1,4 +1,4 @@
-﻿/*global require, window, esri, dojoConfig, i18n, document, $, console */
+﻿/*global require, window, dojoConfig, i18n, document, $, console, RAMP */
 
 /**
 * Ramp module
@@ -45,6 +45,7 @@ require([
     "dojo/parser", "dojo/on", "dojo/topic",
     "dojo/request/script",
     "dojo/request/xhr", "dojo/_base/array",
+    "esri/config",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
@@ -63,15 +64,16 @@ require([
     //"dojo/domReady!"],
 
     function (
-        /* Dojo */
-        parser, dojoOn, topic, requestScript, xhr, dojoArray,
+    /* Dojo */
+    parser, dojoOn, topic, requestScript, xhr, dojoArray,
+    esriConfig,
 
-        /* RAMP */
-        RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
-        BookmarkLink, Url, FeatureHighlighter,
-        Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+    /* RAMP */
+    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+    BookmarkLink, Url, FeatureHighlighter,
+    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
 
-        /* Utils */
+    /* Utils */
         UtilMisc
     ) {
         "use strict";
@@ -117,7 +119,7 @@ require([
 
                 NavWidget.init(currentLevel);
                 FeatureHighlighter.init();
-
+                
                 Maptips.init();
 
                 //Apply listeners for basemap gallery
@@ -127,14 +129,14 @@ require([
                 FilterManager.init();
 
                 // Initialize the advanced toolbar and tools.
-                if (globalStorage.config.advancedToolbar.enabled) {
+                if (RAMP.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
                 }
 
                 Datagrid.init();
-
                 theme.tooltipster();
             });
+
             RampMap.init();
             NavWidget.construct();
 
@@ -154,9 +156,6 @@ require([
         // call the parser to create the dijit layout dijits
         parser.parse();
 
-        //turn off cors detection to stop cross domain error from happening.
-        esri.config.defaults.io.corsDetection = false;
-
         //To hold values from RAMP service
 
         var lang = $("html").attr("lang"),
@@ -168,11 +167,11 @@ require([
         }
 
         i18n.init(
-            {
-                lng: lang + "-CA",
-                load: "current",
-                fallbackLng: false
-            });
+        {
+            lng: lang + "-CA",
+            load: "current",
+            fallbackLng: false
+        });
 
         //loading config object from JSON file
         configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
@@ -182,52 +181,113 @@ require([
             handleAs: "json"
         });
 
+   
+   
+
         defJson.then(
-            function (fileContent) {
-                var pluginConfig,
-                    advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
+            function (fileConfig) {
+                
                 //there is no need to convert the result to an object.  it comes through pre-parsed
-
-                console.log("Bootstrapper: config loaded");
-
-                globalStorage.config = fileContent;
-
-                // Show or remove advanced toolbar toggle based on the config value
-                if (globalStorage.config.advancedToolbar.enabled) {
-                    advancedToolbarToggle.removeClass("wb-invisible");
+                if (!RAMP.configServiceURL) {
+                    //no config service.  we just use the file provided
+                    configReady(fileConfig);
                 } else {
-                    advancedToolbarToggle.remove();
+                    //get additional config stuff from the config service.  mash it into our primary object
+
+                    // pull smallkeys from URL
+                    var siteURL = new Url(require.toUrl(document.location)),                        
+                        smallkeys = siteURL.queryObject.keys;
+                    
+
+                    if (!smallkeys || smallkeys === "") {
+                        //no keys.  no point hitting the service.  jump to next step
+                        configReady(fileConfig);
+                    } else {
+
+                        //TODO verify endpoint is correct
+                        var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
+                            defService = requestScript.get(serviceUrl, { jsonp:'callback', timeout: 2000 });
+
+                        //Request the JSON snippets from the RAMP Config Service
+
+                        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
+                        //      we use request/script instead to get the config as jsonp
+                        //      we may consider looking into ways to mitiate the cross domain issue (Aly had some ideas)
+
+                        defService.then(
+                            function (serviceContent) {
+                                console.log(serviceContent);
+
+                                //we are expecting an array of JSON config fragments
+                                //merge each fragment into the file config
+
+                                dojoArray.forEach(serviceContent, function (configFragment) {
+                                    UtilMisc.mergeRecursive(fileConfig, configFragment);
+                                });
+
+                                //fragments are now in fileConfig.  carry on.
+                                configReady(fileConfig);
+                            },
+                            function (error) {
+                                console.log("An error occurred: " + error);
+                            }
+                        );
+
+                    }
+                  
+
                 }
-
-                pluginConfig = globalStorage.config.plugins;
-                if (pluginConfig) {
-                    dojoArray.map(pluginConfig, function (pName) {
-                        loadPlugin(pName);
-                    });
-                }
-                // Modify the config based on the url
-                // needs to do this before the gui loads because the gui module
-                // also reads from the config
-                BookmarkLink.updateConfig(window.location.pathname.split("/").last());
-
-                // Initialize the map only after the gui loads
-                // if we do it beforehand, the map extent may get messed up since
-                // the available screen size may still be changing (e.g. due to fullscreen
-                // or subpanel closing)
-                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
-                    initializeMap();
-                });
-
-                gui.load(null, null, function () { });
-
-                // Create the panel that the bookmark link sits in
-                // can only do this after the gui loads
-                BookmarkLink.createUI();
-
-                Ramp.loadStrings();
+               
             },
             function (error) {
                 console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
+
+        function configReady(configObject) {
+            var pluginConfig,
+                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
+
+            console.log("Bootstrapper: config loaded");
+
+            globalStorage.init(configObject);
+
+            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
+            // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
+            esriConfig.defaults.io.corsDetection = true;
+
+            // Show or remove advanced toolbar toggle based on the config value
+            if (RAMP.config.advancedToolbar.enabled) {
+                advancedToolbarToggle.removeClass("wb-invisible");
+            } else {
+                advancedToolbarToggle.remove();
+            }
+
+            pluginConfig = RAMP.config.plugins;
+            if (pluginConfig) {
+                dojoArray.map(pluginConfig, function (pName) {
+                    loadPlugin(pName);
+                });
+            }
+            // Modify the config based on the url
+            // needs to do this before the gui loads because the gui module
+            // also reads from the config
+            BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+
+            // Initialize the map only after the gui loads
+            // if we do it beforehand, the map extent may get messed up since
+            // the available screen size may still be changing (e.g. due to fullscreen
+            // or subpanel closing)
+            topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                initializeMap();
+            });
+
+            gui.load(null, null, function () { });
+
+            // Create the panel that the bookmark link sits in
+            // can only do this after the gui loads
+            BookmarkLink.createUI();
+
+            Ramp.loadStrings();
+        }
     });

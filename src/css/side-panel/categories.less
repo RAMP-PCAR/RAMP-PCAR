@@ -133,7 +133,7 @@
         }
 
         legend {
-            padding: 8px 0 8px;
+            padding: 8px 0;
             position: relative;
             font-size: 100% !important;
             margin: 0;
@@ -245,6 +245,101 @@
                 }
             }
         }
+
+        .renderer-list {
+            display: none;
+
+            .wms-legend-box {
+                margin-left: 52px;
+                position: relative;
+                padding: 8px 0 8px 5px;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    border-right: 1px solid #000;
+                    top: 0;
+                    height: 15px;
+                    left: -18px;
+                }
+
+                .image-div {
+                    margin-right: 25px;
+
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        width: 16px;
+                        border-top: 1px solid #000;
+                        top: 15px;
+                        left: -18px;
+                    }
+
+                    .wms-image {
+                        max-width: 100%;
+                    }
+                }
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin-left: 52px;
+                position: relative;
+
+                &:before {
+                    content: "";
+                    position: absolute;
+                    border-right: 1px solid #000;
+                    top: 0;
+                    bottom: 15px;
+                    left: -18px;
+                }
+
+                > li {
+                    padding: 4px 0;
+                    position: relative;
+                    font-size: 100% !important;
+                    margin: 0;
+                    border: 0;
+
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        width: 16px;
+                        border-top: 1px solid #000;
+                        top: 50%;
+                        left: -17px;
+                    }
+
+                    .layer-details {
+                        height: 24px;
+                        line-height: 24px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        /*width: 250px;*/
+                        white-space: nowrap;
+
+                        > span {
+                            //vertical-align: bottom;
+                        }
+                    }
+
+                    .layer-image-box {
+                        //border: none;
+                        float: none;
+                        width: 24px;
+                        height: 24px;
+                        line-height: normal;
+
+                        .layer-image {
+                            max-height: 22px;
+                            max-width: 22px;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .layer-details {
@@ -261,6 +356,72 @@
                 margin: 0;
                 width: auto;
                 height: auto;
+            }
+        }
+
+        .layer-complex-image-box {
+            width: 42px;
+            height: 100%;
+            float: left;
+            position: relative;
+
+            .layer-image-box {
+                width: 26px;
+                height: 26px;
+                position: absolute;
+
+                .layer-image {
+                    max-height: 22px;
+                    max-width: 22px;
+                }
+
+                &:nth-child(1) {
+                    left: 6px;
+                    top: 6px;
+                }
+
+                &:nth-child(2) {
+                    left: 3px;
+                    top: 3px;
+                }
+            }
+
+            button {
+                position: absolute;
+                width: 32px;
+                height: 100%;
+                margin: 0 5px;
+                .link-button;
+
+                &:hover,
+                &:focus {
+                    color: #000;
+                }
+
+                .fa-minus-square-o {
+                    display: none;
+                }
+
+                .fa-square {
+                    color: #fff;
+                }
+
+                &.button-pressed {
+                    .fa-plus-square-o {
+                        display: none;
+                    }
+
+                    .fa-minus-square-o {
+                        display: block;
+                    }
+                }
+
+                i {
+                    position: absolute;
+                    right: -1px;
+                    top: -2px;
+                    color: #000;
+                }
             }
         }
 
