@@ -375,7 +375,7 @@ if (!String.prototype.format) {
             /* Slider rail ends */
                             .append($("<li>", {
                                 "title": this._getString(this._getLinkTitle("zoomOut")),
-                                "class": this._getClassName("zoomOut") + "-disabled _tooltip"
+                                "class": this._getClassName("zoomOut") + " _tooltip"
                             })
                             .data("direction", "zoomOut")
                                 .append($("<a>", { "role": "button", "href": "" })
