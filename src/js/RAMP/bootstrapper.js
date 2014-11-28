@@ -166,6 +166,8 @@ require([
             lang = "en";
         }
 
+        RAMP.locale = lang;
+
         i18n.init(
         {
             lng: lang + "-CA",

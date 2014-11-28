@@ -56,7 +56,6 @@
         "sliderMaxVal": 15,
         "debug": 0,
         "animate": "fast",
-        "locale": "en",
         "cssPath": "ramp-theme/navigation",
         "skin": "white"
     },

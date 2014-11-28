@@ -26,7 +26,7 @@
 
 define([
 //Dojo
-    "dojo/_base/declare", "dojo/topic",
+    "dojo/_base/declare", "dojo/topic", "dojo/_base/lang",
 
 //RAMP
     "ramp/globalStorage", "ramp/eventManager"
@@ -34,7 +34,7 @@ define([
 
 function (
 // Dojo
-    declare, topic,
+    declare, topic, lang,
 // RAMP
     GlobalStorage, EventManager) {
     "use strict";
@@ -116,7 +116,12 @@ function (
             // Note: JKW added currentlevel
             //RAMP.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            nav = $("#" + RAMP.config.divNames.navigation).navigation(RAMP.config.navWidget);
+            var options = lang.mixin({}, 
+                RAMP.config.navWidget,
+                {locale: RAMP.locale}
+            );
+
+            nav = $("#" + RAMP.config.divNames.navigation).navigation(options);
         }
     };
 });
