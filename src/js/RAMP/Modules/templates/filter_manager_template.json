@@ -80,7 +80,7 @@
         
         "simple_layer_image_box": "
             <div class='layer-image-box'>
-                <img alt='' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
+                <img alt='' role='presentation' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
             </div>
         ",
 
@@ -99,13 +99,13 @@
         "complex_layer_image_box": "
             <div class='layer-complex-image-box'>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[2]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[1]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[1]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[0]%}' class='layer-image bg-white'>
                 </div>
                 <button class='btn btn-xs button-none renderer-button'>
                     <i class='fa fa-square'></i>
@@ -122,7 +122,7 @@
                 <div class='wms-legend-box'>
                     <h4 class='mrgn-tp-0 h6'>{%=i18n.t('filterManager.legend')%}</h4>
                     <div class='image-div'>
-                        <img class='wms-image bg-white' src='{%=o.imageUrl%}' alt=''>
+                        <img class='wms-image bg-white' src='{%=o.imageUrl%}' role='presentation' alt=''>
                     </div>
                 </div>       
              </div>
