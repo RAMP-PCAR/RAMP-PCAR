@@ -19,7 +19,7 @@
     "default_grid_summary_row": "<div class='record-row'>
                                     <div class='record-details'>
                                         <div class='point-image-box'>											
-                                            <img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
+                                            <img alt='' role='presentation' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
                                         </div>
                                         <div class='record-names'>
                                             <span class='point-name' title='{%=o.fn.getFeatureName(o.data, o.lyr)%}'>{%=o.fn.getFeatureName(o.data, o.lyr)%}</span>
