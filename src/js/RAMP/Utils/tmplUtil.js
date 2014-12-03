@@ -40,6 +40,12 @@ define(["ramp/globalStorage"],
                     case "uniqueValue":
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
                         var graphicKey = graphic.attributes[symbolConfig.field1];
+
+                        //all key values are stored as strings.  if the attribute is in a numeric column, we must convert it to a string to ensure the === operator still works.
+                        if (typeof graphicKey !== "string") {
+                            graphicKey = graphicKey.toString();
+                        }
+
                         if (symbolConfig.field2) {
                             graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
                             if (symbolConfig.field3) {
@@ -258,7 +264,7 @@ define(["ramp/globalStorage"],
                         console.log('layer with no image info for layer selector');
                         return [""];
                     }
-                }               
+                }
             }
         };
     });
