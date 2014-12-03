@@ -532,7 +532,7 @@ define([
                             }
                         )
                     );
-                    
+
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
@@ -722,8 +722,6 @@ define([
 
                 windowWidth,
 
-                duration = 0.5,
-
                 layoutChange,
 
                 _isFullData = false,
@@ -769,7 +767,14 @@ define([
                 }),
 
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
-                fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true });
+                fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true }),
+
+                // timeline generating functions
+                createFullDataTL,
+                createPanelToggleTL,
+                createFullDataSubpanelChangeTL,
+
+                timeLines;
 
             /**
             * Fires an event when the layout of the page changes.
@@ -786,7 +791,7 @@ define([
 
             function adjustHeight() {
                 helpSection.css({
-                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
+                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
                 });
             }
 
@@ -799,11 +804,9 @@ define([
                 });
             }
 
-            function createTimelines() {
-                // fullDataTransition
+            createFullDataTL = function () {
                 fullDataTimeLine
-                    //.set(viewport, { className: "+=full-data-mode" })
-                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
+                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { width: 35, ease: "easeOutCirc" }, 0)
 
                     .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
                     .set(mapContent, { top: "500px" })
@@ -815,7 +818,7 @@ define([
                     .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
                     .fromTo(mapToolbar, transitionDuration / 2,
                         { width: "100%", height: "32px" },
-                        { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
+                        { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, transitionDuration / 2)
 
                     .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
                     .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
@@ -826,43 +829,51 @@ define([
                     .fromTo(panelDiv, transitionDuration,
                         { width: panelWidthDefault, left: "auto" },
                         { left: 35, width: "auto", ease: "easeOutCirc" }, 0);
+            };
 
-                // panelToggleTransition
+            createPanelToggleTL = function () {
                 panelToggleTimeLine
-                    //.set(viewport, { className: "+=no-sidepanel-mode" })
                     .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -panelWidthDefault, ease: "easeOutCirc" }, 0)
                     .set(panelDiv, { display: "none" }, transitionDuration)
-                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, { right: 0, ease: "easeOutCirc" }, 0);
 
+                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, { right: 0, ease: "easeOutCirc" }, 0);
+            };
+
+            createFullDataSubpanelChangeTL = function () {
                 fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration,
                         { right: 0 },
                         { right: panelWidthDefault, ease: "easeOutCirc" });
+            };
 
-            }
+            timeLines = [
+                {
+                    timeLine: fullDataTimeLine,
+                    generator: createFullDataTL
+                },
+                {
+                    timeLine: panelToggleTimeLine,
+                    generator: createPanelToggleTL
+                },
+                {
+                    timeLine: fullDataSubpanelChangeTimeLine,
+                    generator: createFullDataSubpanelChangeTL
+                }
+            ];
 
-            function killTimelines() {
-                var a, b, c;
+            function resetTimelines(tls, keepPosition) {
+                var position;
 
-                a = fullDataSubpanelChangeTimeLine.time();
-                b = panelToggleTimeLine.time();
-                c = fullDataTimeLine.time();
+                tls.forEach(function (tl) {
+                    position = tl.timeLine.time();
+                    tl.timeLine.seek(0).clear();
 
-                fullDataSubpanelChangeTimeLine.seek(0).clear();
-                panelToggleTimeLine.seek(0).clear();
-                fullDataTimeLine.seek(0).clear();
+                    tl.generator.call();
 
-                createTimelines();
-
-                console.log(a, b, c);
-
-                fullDataSubpanelChangeTimeLine.seek(a);
-                panelToggleTimeLine.seek(b);
-                fullDataTimeLine.seek(c);
-            }
-
-            function recreateTimelines() {
-                killTimelines();                
+                    if (keepPosition) {
+                        tl.timeLine.seek(position);
+                    }
+                });
             }
 
             /**
@@ -893,6 +904,7 @@ define([
                             layoutChange();
                             panelChange(true);
 
+                            // update close button tooltips
                             panelToggle
                                 .tooltipster("content", i18n.t("gui.actions.close"))
                                 .find("span.wb-invisible").text(i18n.t("gui.actions.close"));
@@ -919,6 +931,7 @@ define([
                             layoutChange();
                             panelChange(false);
 
+                            // update open button tooltips
                             panelToggle
                                 .tooltipster("content", i18n.t("gui.actions.open"))
                                 .find("span.wb-invisible").text(i18n.t("gui.actions.open"));
@@ -933,35 +946,16 @@ define([
 
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
-                
-                //fullDataTimeLine
-                    //.add(
-
-                    //TweenLite.fromTo(panelDiv, transitionDuration,
-                    //    { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                    //    { left: 35, width: "auto", ease: "easeOutCirc", paused: true }, 0)
-                    //);
 
                 if (_isFullData) {
-                    /*TweenLite
-                        .fromTo(panelDiv, transitionDuration,
-                            { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });*/
-
-                    //.set(viewport, { className: "+=full-data-mode" })
-                    viewport.addClass("full-data-mode");
-
+                    viewport.addClass("full-data-mode"); // set full-data-mode css class BEFORE animation; remove it after it finishes - on onReverseComplete callback
                     fullDataTimeLine.play();
                 } else {
-                    /*TweenLite
-                        .fromTo(panelDiv, transitionDuration,
-                            { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
-                            { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });*/
-
-                    fullDataSubpanelChangeTimeLine.reverse();
+                    fullDataSubpanelChangeTimeLine.reverse(); // play this animation to readjust the sidepanel if the details panel was opened and not closed in full data mode
                     fullDataTimeLine.reverse();
                 }
 
+                // close subpanels
                 utilDict.forEachEntry(subPanels, function (key) {
                     hideSubPanel({
                         origin: key
@@ -980,7 +974,7 @@ define([
                     windowWidth = jWindow.width();
                     updatePanelWidth();
 
-                    recreateTimelines();
+                    resetTimelines(timeLines, true);
                 }
             }
 
@@ -990,7 +984,7 @@ define([
                     jWindow.on("resize", optimizeLayout);
                     updatePanelWidth();
 
-                    createTimelines();
+                    resetTimelines(timeLines);
 
                     Theme
                         .fullScreenCallback("onComplete", onFullScreenComplete)
@@ -1125,7 +1119,7 @@ define([
 
             return subPanel;
         }
-        
+
         /**
         * Creates and opens a new SubPanel with given settings.
         * If the SubPanel with the requested `origin` is already present, updates its content.
