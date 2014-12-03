@@ -717,7 +717,8 @@ define([
                 panelDiv = $("#panel-div"),
                 panelToggle = $("#panel-toggle"),
                 panelPopup,
-                panelWidthDefault,
+                panelWidthDefault, // default width of the SidePanel. 
+                layoutWidthThreshold = 1200, // minimum width of the wide layout
 
                 windowWidth,
 
@@ -746,10 +747,12 @@ define([
 
                         Theme.tooltipster(mapToolbar);
 
-                        console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     },
                     onReverseComplete: function () {
+                        viewport.removeClass("full-data-mode");
+
                         adjustHeight();
                         layoutChange();
 
@@ -760,7 +763,7 @@ define([
                             .removeClass("_tooltip")
                             .removeAttr("title");
 
-                        console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     }
                 }),
@@ -796,25 +799,10 @@ define([
                 });
             }
 
-            /**
-            * Return the default width of the SidePanel.
-            *
-            * @method getPanelWidthDefault
-            * @private
-            * @return {Number} The default width of the SidePanel
-            */
-            function getPanelWidthDefault() {
-                if (!panelWidthDefault) {
-                    panelWidthDefault = panelDiv.width();
-                }
-
-                return panelWidthDefault;
-            }
-
             function createTimelines() {
                 // fullDataTransition
                 fullDataTimeLine
-                    .set(viewport, { className: "+=full-data-mode" })
+                    //.set(viewport, { className: "+=full-data-mode" })
                     .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
 
                     .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
@@ -833,32 +821,48 @@ define([
                     .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
                     .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
+
+                    .fromTo(panelDiv, transitionDuration,
+                        { width: panelWidthDefault, left: "auto" },
+                        { left: 35, width: "auto", ease: "easeOutCirc" }, 0);
 
                 // panelToggleTransition
                 panelToggleTimeLine
                     //.set(viewport, { className: "+=no-sidepanel-mode" })
-                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -panelWidthDefault, ease: "easeOutCirc" }, 0)
                     .set(panelDiv, { display: "none" }, transitionDuration)
-                    .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
+                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, { right: 0, ease: "easeOutCirc" }, 0);
 
                 fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration,
-                        { right: "0px" },
-                        { right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
+                        { right: 0 },
+                        { right: panelWidthDefault, ease: "easeOutCirc" });
 
             }
 
             function killTimelines() {
-                fullDataSubpanelChangeTimeLine.kill();
-                panelToggleTimeLine.kill();
-                fullDataTimeLine.kill();
+                var a, b, c;
+
+                a = fullDataSubpanelChangeTimeLine.time();
+                b = panelToggleTimeLine.time();
+                c = fullDataTimeLine.time();
+
+                fullDataSubpanelChangeTimeLine.seek(0).clear();
+                panelToggleTimeLine.seek(0).clear();
+                fullDataTimeLine.seek(0).clear();
+
+                createTimelines();
+
+                console.log(a, b, c);
+
+                fullDataSubpanelChangeTimeLine.seek(a);
+                panelToggleTimeLine.seek(b);
+                fullDataTimeLine.seek(c);
             }
 
             function recreateTimelines() {
-                panelWidthDefault = null;
-                killTimelines();
-                createTimelines();
+                killTimelines();                
             }
 
             /**
@@ -929,20 +933,32 @@ define([
 
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
+                
+                //fullDataTimeLine
+                    //.add(
+
+                    //TweenLite.fromTo(panelDiv, transitionDuration,
+                    //    { width: getPanelWidthDefault(), right: 0, left: "auto" },
+                    //    { left: 35, width: "auto", ease: "easeOutCirc", paused: true }, 0)
+                    //);
 
                 if (_isFullData) {
-                    TweenLite
+                    /*TweenLite
                         .fromTo(panelDiv, transitionDuration,
                             { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
+                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });*/
+
+                    //.set(viewport, { className: "+=full-data-mode" })
+                    viewport.addClass("full-data-mode");
 
                     fullDataTimeLine.play();
                 } else {
-                    TweenLite
+                    /*TweenLite
                         .fromTo(panelDiv, transitionDuration,
                             { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
-                            { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
+                            { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });*/
 
+                    fullDataSubpanelChangeTimeLine.reverse();
                     fullDataTimeLine.reverse();
                 }
 
@@ -953,21 +969,28 @@ define([
                 });
             }
 
+            function updatePanelWidth() {
+                panelWidthDefault = windowWidth < layoutWidthThreshold ? 340 : 430;
+            }
+
             function optimizeLayout() {
-                if ((windowWidth < 1200 && jWindow.width() > 1200) ||
-                    (windowWidth > 1200 && jWindow.width() < 1200)) {
-                    recreateTimelines();
+                if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
+                    (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
 
                     windowWidth = jWindow.width();
+                    updatePanelWidth();
+
+                    recreateTimelines();
                 }
             }
 
             return {
                 init: function () {
-                    createTimelines();
-
                     windowWidth = jWindow.width();
                     jWindow.on("resize", optimizeLayout);
+                    updatePanelWidth();
+
+                    createTimelines();
 
                     Theme
                         .fullScreenCallback("onComplete", onFullScreenComplete)
@@ -1029,7 +1052,7 @@ define([
                 *
                 * @method subPanelChange
                 * @private
-                * @param {Boolean} visible indicates whether the panel is visible or not
+                * @param {Boolean} visible indicates whether the subpanel is visible or not (the panel is considered invisible when it's being destroyed, starts closing)
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
                 * @param {Boolean} isComplete indicates if subPanel transition has completed or just started
@@ -1039,7 +1062,7 @@ define([
                     if (!fullDataTimeLine.isActive() && _isFullData && !isComplete) {
                         // adjust the sidePanel position shifting the right edge to the left, making space for the subpanel to open at
                         if (visible) {
-                            fullDataSubpanelChangeTimeLine.play(0);
+                            fullDataSubpanelChangeTimeLine.play();
                         } else if (!visible) {
                             fullDataSubpanelChangeTimeLine.reverse();
                         }
