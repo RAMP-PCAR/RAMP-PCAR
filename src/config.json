@@ -208,7 +208,10 @@
                     "xmin": -2317716,
                     "ymin": -692095,
                     "xmax": 3000105,
-                    "ymax": 2558710
+                    "ymax": 2558710,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
                 }
             },
             {
@@ -348,7 +351,10 @@
                     "xmin": -2317716,
                     "ymin": -692095,
                     "xmax": 3000105,
-                    "ymax": 2558710
+                    "ymax": 2558710,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
                 }
             },
             {
@@ -370,14 +376,15 @@
                     "xmin": -2081728,
                     "ymin": -616928,
                     "xmax": 2970781,
-                    "ymax": 2485914
+                    "ymax": 2485914,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
                 },
                 "isStatic": true
             }
         ],
-        "wms": [
-            
-        ]
+        "wms": []
     },
     "datagrid": {
         "globalGridRowsPerPage": 0,

@@ -64,9 +64,19 @@
                         "xmin": { "type": "number" },
                         "ymin": { "type": "number" },
                         "xmax": { "type": "number" },
-                        "ymax": { "type": "number" }
+                        "ymax": { "type": "number" },
+                        "spatialReference": {
+                            "type": "object",
+                            "properties": {
+                                "wkid": { "type": "number" },
+                                "vcsWkid": { "type": "number" },
+                                "latestWkid": { "type": "number" },
+                                "latestVcsWkid": { "type": "number" },
+                                "wkt": { "type": "string" }
+                            }
+                        }
                     },
-                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
+                    "required": [ "xmin", "ymin", "xmax", "ymax", "spatialReference" ]
                 },
                 "symbology": { "$ref": "#/definitions/symbolNode" },
                 "settings": {
@@ -108,7 +118,7 @@
                 }
 
             },
-            "required": [ "id", "displayName", "url", "layerExtent", "symbology" ]
+            "required": [ "id", "displayName", "url", "symbology" ]
         },
 
         "staticNode": {
