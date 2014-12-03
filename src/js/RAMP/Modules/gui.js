@@ -425,6 +425,7 @@ define([
 
                     layoutController.subPanelChange(false, this._attr.origin, this.container, false);
 
+                    // do after closing animation completes
                     this.timeLine.eventCallback("onReverseComplete",
                         function () {
                             if (this._attr.doAfterHide) {
@@ -531,10 +532,7 @@ define([
                             }
                         )
                     );
-
-                    //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
-                    //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
-
+                    
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
@@ -542,7 +540,7 @@ define([
                     this._panelTitle = this.panel.find(".panel-title");
                     this._panelContentDiv = this.panel.find(".panel-content-div");
 
-                    // set content
+                    // set panel content
                     parsedContent = this.parseContent(this._attr.content);
                     this._panelContentDiv.empty().append(parsedContent);
 
@@ -559,7 +557,7 @@ define([
                             onCompleteScope: this
                         })
                         .to(this.panel, this._animatePanelDuration, { left: 0, ease: "easeOutCirc" })
-                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0);
+                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0); // 6 is double border width
 
                     Theme.tooltipster(this.container);
 
@@ -617,10 +615,8 @@ define([
 
                         updateContent = dojoLang.hitch(this,
                             function (a) {
-                                /*this._subPanelContentDiv.animate({
-                                    scrollTop: 0
-                                }, animateContentDuration, "easeOutCirc");*/
 
+                                // if the content in the subpanel is scrolled down, scroll back to the top
                                 TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
                                     { scrollTop: 0, ease: "easeOutCirc" });
 
@@ -940,7 +936,6 @@ define([
                     fullDataTimeLine.play();
                 } else {
                     TweenLite
-                        //.set(panelDiv, {  }, 0)
                         .fromTo(panelDiv, transitionDuration,
                             { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
                             { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
@@ -1104,50 +1099,7 @@ define([
 
             return subPanel;
         }
-
-        /**
-        * Adjusts dimensions of the help panel relative to the mapContent `div`.
-        *
-        * @method adjustHelpDimensions
-        * @private
-        */
-        /*function adjustHelpDimensions() {
-        helpSection.css({
-        "max-height": mapContent.height() - 56 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
-        });
-        }*/
-
-        /**
-        * Adjusts the dimensions and position of the SubPanel when layout of the page is changing.
-        *
-        * @method adjutSubPanelDimensions
-        * @private
-        * @param  {SubPanel} subPanel SubPanel whose dimensions and position need to be adjusted
-        */
-        /*function adjutSubPanelDimensions(subPanel) {
-        function adjust(p, d) {
-        if (p) {
-        p.getContainer()
-        .height(viewPortHeight - $("#map-toolbar").height()); //mapToolbar.height());
-
-        //.position({
-        //my: "right top",
-        //at: "right top+32",
-        //of: "#map-div" // mapContent
-        //});
-        if (d) {
-        d.resolve(true);
-        }
-        }
-        }
-
-        if (subPanel) {
-        adjust(subPanel);
-        } else {
-        UtilMisc.executeOnDone(subPanels, adjust);
-        }
-        }*/
-
+        
         /**
         * Creates and opens a new SubPanel with given settings.
         * If the SubPanel with the requested `origin` is already present, updates its content.
@@ -1287,8 +1239,8 @@ define([
             *
             * @method load
             * @param  {Number} id   ID of this module
-            * @param  {?} req  ???
-            * @param  {Function} load The callback function
+            * @param  {Object} req  dojo required, can be used to require additional modules, etc.
+            * @param  {Function} load The callback function to be called as the very last thing in load
             */
             load: function (id, req, load) {
                 // measure available space on every page resize
