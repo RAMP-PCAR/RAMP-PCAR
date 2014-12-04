@@ -793,6 +793,7 @@ define([
 
                 /**
                 * Registers event handlers for following events:
+                * 
                 * datagrid/highlightrow-show
                 * datagrid/zoomlightrow-show
                 * datagrid/zoomlightrow-hide
@@ -1023,11 +1024,25 @@ define([
                     capturePanel();
                 }
 
+                /**
+                * Checks if the datagrid currently visible, i.e., the data tab is selected on the side panel
+                *
+                * @method isVisible
+                * @private
+                * @return {Boolean} indicating if the datagrid is currently visible
+                */
                 function isVisible() {
                     return tabNode.attr("aria-expanded") === "true";
                 }
 
-                function capturePanel() {
+                /**
+                * Captures a subpanel that was opened and docked by the datagrid module previously.
+                *
+                * @method capturePanel
+                * @param {Boolean} force if truthy - capture the panel even if the datagrid is not visible; use when switching to datagrid tab and the datagrid is not fully rendered yet by the browser
+                * @private
+                */
+                function capturePanel(force) {
                     var origin = "datagrid",
                         target = highlightRow.getNode().find(".record-controls");
 
@@ -1036,7 +1051,9 @@ define([
                         target = highlightRow.getNode().find(".button.details");
                     }
 
-                    if (highlightRow.isActive() && isVisible()) {
+                    // capture subpanel only if a row is active and the datagrid itself is visible
+                    // if the subpanel is captured while the datagrid is not visible, the subpanel will also disappear since it's inserted in the datagrid structure
+                    if (highlightRow.isActive() && (isVisible() || force)) {
                         topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
                             target: target,
                             consumeOrigin: origin,
@@ -1109,7 +1126,7 @@ define([
                     /**
                     * Indicates that the Data grid is fully rendered
                     * @method isReady
-                    * @returns {Boolean} _isReady flag indicating the render status of the data grid
+                    * @return {Boolean} _isReady flag indicating the render status of the data grid
                     */
                     isReady: function () {
                         return _isReady;
@@ -1407,7 +1424,7 @@ define([
                         extentFilterExpired = false;
                         applyExtentFilter();
                     } else {
-                        ui.capturePanel();
+                        ui.capturePanel(true);
                     }
 
                     ui.adjustPanelWidth();
