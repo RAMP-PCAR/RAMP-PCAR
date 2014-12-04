@@ -70,38 +70,39 @@ define([
                     viewport = $(".viewport"),
                     panelToggle = viewport.find("#panel-toggle"),
 
-                    advancedToolbarTimeLine,
-                    subpanelTween = null,
+                    advancedToolbarTimeline,
+                    subpanelTween = null;
 
-                    isToolbarOpen = false;
-
-                function toggleToolbar(d) {
+                /**
+                 * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the height of the details panel to accommodate the expanded toolbar.
+                 * 
+                 * @method toggleToolbar
+                 * @param {Deferred} a deferred to be resolved upon completion of the animation
+                 * @param {Boolean} doOpen if true - the toolbar show open; if false - the toolbar should close
+                 * @private
+                 */
+                function toggleToolbar(d, doOpen) {
                     var subPanelContainer = viewport.find(".sub-panel-container");
 
-                    advancedToolbarTimeLine
-                        // remove old subpanelTween
-                        .remove(subpanelTween)
-                        // recreate subpanelTween in case the subpanel was recreated and is a new dom object now
-                        .add(subpanelTween =
-                                TweenLite.fromTo(subPanelContainer, transitionDuration,
-                                    { "margin-top": 0, paused: true },
-                                    { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }),
-                            0);
+                    UtilMisc.updateTween(advancedToolbarTimeline, subpanelTween,
+                        TweenLite.fromTo(subPanelContainer, transitionDuration,
+                                { "margin-top": 0, paused: true },
+                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }),
+                        { position: 0 }
+                    );
 
-                    if (isToolbarOpen) {
-                        advancedToolbarTimeLine.eventCallback("onReverseComplete", function () {
+                    if (!doOpen) {
+                        advancedToolbarTimeline.eventCallback("onReverseComplete", function () {
                             d.resolve();
-                            isToolbarOpen = false;
                             viewport.removeClass("advanced-toolbar-mode");
                         });
-                        advancedToolbarTimeLine.reverse();
+                        advancedToolbarTimeline.reverse();
                     } else {
                         viewport.addClass("advanced-toolbar-mode");
-                        advancedToolbarTimeLine.eventCallback("onComplete", function () {
+                        advancedToolbarTimeline.eventCallback("onComplete", function () {
                             d.resolve();
-                            isToolbarOpen = true;
                         });
-                        advancedToolbarTimeLine.play();
+                        advancedToolbarTimeline.play();
                     }
                 }
 
@@ -113,10 +114,8 @@ define([
                     * @private
                     */
                     init: function () {
-                        advancedToolbarTimeLine = new TimelineLite({
-                            paused: true,
-                            onComplete: function () { },
-                            onReverseComplete: function () { }
+                        advancedToolbarTimeline = new TimelineLite({
+                            paused: true
                         });
 
                         advancedToggle = viewport.find("#advanced-toggle");
@@ -129,7 +128,7 @@ define([
                         advancedToolbarList = advancedSectionContainer.find("#advanced-toolbar-list");
 
                         // create a timeline to animate toggling of the advanced toolbar
-                        advancedToolbarTimeLine
+                        advancedToolbarTimeline
                             .set(advancedSectionContainer, { display: "block" })
                             .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta }, { top: 0, ease: "easeOutCirc" }, 0)
                             .to(panelToggle, transitionDuration, { top: "+=" + subPanelMarginDelta, ease: "easeOutCirc" }, 0);
@@ -148,7 +147,7 @@ define([
                                     })
                                 );
 
-                                toggleToolbar(d);
+                                toggleToolbar(d, true);
                             },
                             {
                                 activeClass: cssButtonPressedClass,
@@ -157,10 +156,8 @@ define([
                                 closeHandler: function (d) {
                                     topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
 
-                                    // deactivate all the tools
-                                    deactivateAll();
-
-                                    toggleToolbar(d);
+                                    deactivateAll(); // deactivate all the tools
+                                    toggleToolbar(d, false);
                                 }
                             }
                         );
