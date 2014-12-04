@@ -1024,6 +1024,37 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 if (options.updateOldTween) {
                     oldTween = newTween;
                 }
+            },
+            
+            /**
+             * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
+             * ####Example of tls parameter
+             * 
+             *      [
+             *          {
+             *              timeline: {timeline},
+             *              generator: {function}
+             *          }
+             *      ]
+             *      
+             * 
+             * @method resetTimelines
+             * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
+             * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
+             */
+            resetTimelines: function (tls, keepPosition) {
+                var position;
+
+                tls.forEach(function (tl) {
+                    position = tl.timeLine.time(); // preserve timeline position
+                    tl.timeLine.seek(0).clear();
+
+                    tl.generator.call();
+
+                    if (keepPosition) {
+                        tl.timeLine.seek(position);
+                    }
+                });
             }
         };
     });
