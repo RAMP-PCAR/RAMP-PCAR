@@ -859,22 +859,7 @@ define([
                     timeLine: fullDataSubpanelChangeTimeLine,
                     generator: createFullDataSubpanelChangeTL
                 }
-            ];
-
-            function resetTimelines(tls, keepPosition) {
-                var position;
-
-                tls.forEach(function (tl) {
-                    position = tl.timeLine.time();
-                    tl.timeLine.seek(0).clear();
-
-                    tl.generator.call();
-
-                    if (keepPosition) {
-                        tl.timeLine.seek(position);
-                    }
-                });
-            }
+            ];            
 
             /**
             * Publishes `PANEL_CHANGE` event when the visibility of the SidePanel changes.
@@ -974,7 +959,7 @@ define([
                     windowWidth = jWindow.width();
                     updatePanelWidth();
 
-                    resetTimelines(timeLines, true);
+                    UtilMisc.resetTimelines(timeLines, true);
                 }
             }
 
@@ -984,7 +969,7 @@ define([
                     jWindow.on("resize", optimizeLayout);
                     updatePanelWidth();
 
-                    resetTimelines(timeLines);
+                    UtilMisc.resetTimelines(timeLines);
 
                     Theme
                         .fullScreenCallback("onComplete", onFullScreenComplete)
