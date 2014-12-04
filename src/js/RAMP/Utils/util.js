@@ -991,6 +991,39 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                             }
                         });
                 });
+            },
+
+            /**
+            * Replaces the supplied Tween in the given timeline with another Tween object.
+            *
+            * @method updateTween
+            * @param {Object} timeline A TimelineLite or TimelineMax object where you want a Tween updated
+            * @param {Object} oldTween A TweenLite or TweenMax object to be removed from the timeline
+            * @param {Object} newTween A TweenLite or TweenMax object to be inserted into the timeline
+            * @param {Object} [options] Additional options
+            * @param {*} [options.position] Where on the timeline the tween should be placed
+            * @param {String} [options.align] only relevant when the first parameter, value, is an array. Determines how the tweens/timelines/callbacks/labels in the array that is being added will be aligned in relation to each other before getting inserted.
+            * @param {Number} [options.stagger] only relevant when the first parameter, value, is an array. Staggers the inserted objects from the array the is being added by a set amount of time
+            * @param {Boolean} [options.updateOldTween] if true, the oldTween object will be replaced with the supplied newTween
+            * @static
+            */
+            updateTween: function (timeline, oldTween, newTween, options) {
+                options = dojoLang.mixin({
+                        position: "+=0",
+                        align: "normal",
+                        stagger: "0",
+                        updateOldTween: true
+                    },
+                    options
+                );
+
+                timeline
+                    .remove(oldTween)
+                    .add(newTween, options.position, options.align, options.stagger);
+
+                if (options.updateOldTween) {
+                    oldTween = newTween;
+                }
             }
         };
     });
