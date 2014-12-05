@@ -855,7 +855,16 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * [settings.linkLists]: false
+            * Augments lists of items to be sortable using keyboard.
+            * 
+            * @method keyboardSortable
+            * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
+            * @param {Object} [settings] Additional settings
+            * @param {Object} [settings.linkLists] Indicates if the supplied lists (if more than one) should be linked - items could be moved from one to another
+            * @param {Object} [settings.onStart] A callback function to be called when the user initiates sorting process
+            * @param {Object} [settings.onUpdate] A callback function to be called when the user moves the item around
+            * @param {Object} [settings.onStop] A callback function to be called when the user commits the item to its new place ending the sorting process
+            * @static
             */
             keyboardSortable: function (ulNodes, settings) {
                 settings = dojoLang.mixin({

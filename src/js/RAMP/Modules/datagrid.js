@@ -811,7 +811,9 @@ define([
                     topic.subscribe(EventManager.Datagrid.DRAW_COMPLETE, updateDatasetSelectorToLoaded);
                 }
                 /**
+                 * Updates the state of the dataset selector based on whether the dataset has been loaded and what dataset is currently selected.
                  * 
+                 * @method updateDatasetSelectorState
                  * @param {Boolean} state indicates if button is disabled or not; true - disabled;
                  * @param {Boolean} [loaded] indicates if the selected dataset is already loaded; it's assumed to be loading otherwise
                  */
