@@ -1468,19 +1468,22 @@ define([
                     return !layerConfig.isStatic;
                 });
 
-                // layerConfig = config.featureLayers;
-                gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
+                if (layerConfigs.length !== 0) {
 
-                /*
-                $.fn.dataTable.ext.search.push(
-                    function (settings, data, dataIndex) {
-                        return data[0].indexOf("Water Regions") > -1;
-                    }
-                );*/
+                    // layerConfig = config.featureLayers;
+                    gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
 
-                initListeners();
+                    /*
+                    $.fn.dataTable.ext.search.push(
+                        function (settings, data, dataIndex) {
+                            return data[0].indexOf("Water Regions") > -1;
+                        }
+                    );*/
 
-                ui.init();
+                    initListeners();
+
+                    ui.init();
+                }
             } //InitDataGrid
         };
     });
