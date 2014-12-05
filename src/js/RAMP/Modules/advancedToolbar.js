@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require, tmpl, console, RAMP */
+﻿/*global define, $, TimelineLite, require, tmpl, console, RAMP */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.
@@ -70,26 +70,26 @@ define([
                     viewport = $(".viewport"),
                     panelToggle = viewport.find("#panel-toggle"),
 
-                    advancedToolbarTimeline,
-                    subpanelTween = null;
+                    advancedToolbarTimeline = new TimelineLite({ paused: true }),
+                    subpanelTimeLine = new TimelineLite();
 
                 /**
                  * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the height of the details panel to accommodate the expanded toolbar.
                  * 
                  * @method toggleToolbar
-                 * @param {Deferred} a deferred to be resolved upon completion of the animation
+                 * @param {Deferred} d a deferred to be resolved upon completion of the animation
                  * @param {Boolean} doOpen if true - the toolbar show open; if false - the toolbar should close
                  * @private
                  */
                 function toggleToolbar(d, doOpen) {
                     var subPanelContainer = viewport.find(".sub-panel-container");
 
-                    UtilMisc.updateTween(advancedToolbarTimeline, subpanelTween,
-                        TweenLite.fromTo(subPanelContainer, transitionDuration,
+                    // clear and recreate tween to capture newly created subpanels
+                    subpanelTimeLine
+                        .clear()
+                        .fromTo(subPanelContainer, transitionDuration,
                                 { "margin-top": 0, paused: true },
-                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }),
-                        { position: 0 }
-                    );
+                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }, 0);
 
                     if (!doOpen) {
                         advancedToolbarTimeline.eventCallback("onReverseComplete", function () {
@@ -114,10 +114,6 @@ define([
                     * @private
                     */
                     init: function () {
-                        advancedToolbarTimeline = new TimelineLite({
-                            paused: true
-                        });
-
                         advancedToggle = viewport.find("#advanced-toggle");
                         advancedSectionContainer = viewport.find("#advanced-toolbar");
 
@@ -131,7 +127,9 @@ define([
                         advancedToolbarTimeline
                             .set(advancedSectionContainer, { display: "block" })
                             .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta }, { top: 0, ease: "easeOutCirc" }, 0)
-                            .to(panelToggle, transitionDuration, { top: "+=" + subPanelMarginDelta, ease: "easeOutCirc" }, 0);
+                            .to(panelToggle, transitionDuration, { top: "+=" + subPanelMarginDelta, ease: "easeOutCirc" }, 0)
+
+                            .add(subpanelTimeLine, 0);
 
                         // register the popup for the advanced toolbar
                         PopupManager.registerPopup(advancedToggle, "click",
