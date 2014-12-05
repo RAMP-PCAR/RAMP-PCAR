@@ -690,9 +690,7 @@ define([
 
             addLayerToggle = $("#addLayer-toggle"),
             addLayerSectionContainer = $("#addLayer-section-container"),
-        //AddLayerSection = $("#addLayer-section"),
-
-        //viewPortHeight,
+            //AddLayerSection = $("#addLayer-section"),
 
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
@@ -704,7 +702,14 @@ define([
 
             layoutController;
 
-        layoutController = (function () {
+        /**
+        * Controls layout transition such as full-data and full-screen modes, opening and closing of the side panel, adjusts layout when resizing the browser window.
+        *
+        * @class LayoutController
+        * @static
+        * @for GUI
+        */
+        layoutController = (function () {            
             var viewport = $(".viewport"),
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
@@ -731,6 +736,7 @@ define([
                         adjustHeight();
                         layoutChange();
 
+                        // set tooltips on the collapsed toolbar
                         mapToolbar
                             .find(".map-toolbar-item-button")
                             .map(function (i, node) {
@@ -754,6 +760,7 @@ define([
                         adjustHeight();
                         layoutChange();
 
+                        // remove tooltips from the restored toolbar
                         Theme.tooltipster(mapToolbar, null, "destroy");
 
                         mapToolbar
@@ -765,7 +772,6 @@ define([
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     }
                 }),
-
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
                 fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true }),
 
@@ -775,34 +781,6 @@ define([
                 createFullDataSubpanelChangeTL,
 
                 timeLines;
-
-            /**
-            * Fires an event when the layout of the page changes.
-            *
-            * @method layoutChange
-            * @private
-            */
-            layoutChange = function () {
-                if (!_isFullData) {
-                    console.log("GUI --> EventManager.GUI.LAYOUT_CHANGE");
-                    topic.publish(EventManager.GUI.LAYOUT_CHANGE);
-                }
-            };
-
-            function adjustHeight() {
-                helpSection.css({
-                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
-                });
-            }
-
-            function onFullScreenComplete() {
-                adjustHeight();
-                layoutChange();
-
-                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
-                    visible: Theme.isFullScreen()
-                });
-            }
 
             createFullDataTL = function () {
                 fullDataTimeLine
@@ -862,11 +840,51 @@ define([
             ];            
 
             /**
+            * Fires an event when the layout of the page changes.
+            *
+            * @method layoutChange
+            * @private
+            * @for LayoutController
+            */
+            layoutChange = function () {
+                if (!_isFullData) {
+                    console.log("GUI --> EventManager.GUI.LAYOUT_CHANGE");
+                    topic.publish(EventManager.GUI.LAYOUT_CHANGE);
+                }
+            };
+
+            /**
+            * Adjusts the height of the help section based on the height of the window.
+            *
+            * @method adjustHeight
+            * @private
+            */
+            function adjustHeight() {
+                helpSection.css({
+                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
+                });
+            }
+
+            /**
+            * Executed after full-screen mode transition is complete.
+            *
+            * @method onFullScreenComplete
+            * @private
+            */
+            function onFullScreenComplete() {
+                adjustHeight();
+                layoutChange();
+
+                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
+                    visible: Theme.isFullScreen()
+                });
+            }
+
+            /**
             * Publishes `PANEL_CHANGE` event when the visibility of the SidePanel changes.
             *
             * @method panelChange
             * @param  {Boolean} visible Indicates whether the SidePanel is visible or not
-            * @for SidePanel
             * @private
             */
             function panelChange(visible) {
@@ -929,6 +947,13 @@ define([
                 panelToggleTimeLine.play();
             }
 
+            /**
+            * Toggles the full-data mode on and off.
+            *
+            * @method _toggleFullDataMode
+            * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+            * @private
+            */
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
@@ -948,10 +973,22 @@ define([
                 });
             }
 
+            /**
+            * Changes internal panel width reference based on the window width.
+            *
+            * @method updatePanelWidth
+            * @private
+            */
             function updatePanelWidth() {
                 panelWidthDefault = windowWidth < layoutWidthThreshold ? 340 : 430;
             }
 
+            /**
+            * Optimizes layout based on the window width
+            *
+            * @method optimizeLayout
+            * @private
+            */
             function optimizeLayout() {
                 if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
                     (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
@@ -964,6 +1001,11 @@ define([
             }
 
             return {
+                /**
+                * Initializes layout controller.
+                *
+                * @method init
+                */
                 init: function () {
                     windowWidth = jWindow.width();
                     jWindow.on("resize", optimizeLayout);
@@ -1011,17 +1053,28 @@ define([
                 * Toggles the FullScreen mode of the application
                 *
                 * @method toggleFullScreenMode
-                * @private
-                * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+                * @param  {Boolean} fullscreen true - expand; false - collapse; undefined - toggle;
                 */
                 toggleFullScreenMode: function (fullscreen) {
                     fullScreenPopup.toggle(null, fullscreen);
                 },
 
+                /**
+                * Returns the state of the full-data mode.
+                *
+                * @method isFullData
+                * @return {Boolean} True is full-data mode on; false otherwise
+                */
                 isFullData: function () {
                     return _isFullData;
                 },
 
+                /**
+                * Toggles the full-data mode on and off.
+                *
+                * @method toggleFullDataMode
+                * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+                */
                 toggleFullDataMode: function (fullData) {
                     _toggleFullDataMode(fullData);
                 },
@@ -1030,7 +1083,6 @@ define([
                 * Fires an event when the subpanel closes or opens.
                 *
                 * @method subPanelChange
-                * @private
                 * @param {Boolean} visible indicates whether the subpanel is visible or not (the panel is considered invisible when it's being destroyed, starts closing)
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
@@ -1080,6 +1132,7 @@ define([
                 *
                 * @method width
                 * @return {Number} The width of this SidePanel
+                * @for LayoutController
                 */
                 getPanelWidth: function () {
                     return panelDiv.filter(":visible").width();

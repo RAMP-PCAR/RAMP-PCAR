@@ -69,7 +69,7 @@ define(["utils/util"],
          */
         function _toggleFullScreenMode(fullscreen) {
             subpanelTimeline
-                .clear() // need to recreated this timeline every time to capture newly created subpanels
+                .clear() // need to recreate this timeline every time to capture newly created subpanels
                 .fromTo(".sub-panel-container.summary-data-details", transitionDuration,
                     { top: layout.headerHeight + layout.toolbarHeight, bottom: layout.footerHeight },
                     { top: layout.headerHeightCollapsed + layout.toolbarHeight, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
