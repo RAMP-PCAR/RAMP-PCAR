@@ -58,9 +58,9 @@
         "cssPath": "ramp-theme/navigation",
         "skin": "white"
     },
-    "levelOfDetails": {
-        "minLevel": 1,
-        "maxLevel": 17
+    "zoomLevels": {
+        "min": 1,
+        "max": 17
     },
     "basemaps": [
         {
@@ -385,43 +385,10 @@
         ],
         "wms": []
     },
-    "datagrid": {
-        "globalGridRowsPerPage": 0,
-        "defaultState": "summary",
-        "summaryEnabled": true,
-        "extendedEnabled": true,
-        "extendedColumns": [
-            "column1",
-            "column2",
-            "column3",
-            "column4"
-        ],
-        "extendedExtentFilterEnabled": false
-    },
-    "siteTemplate": {
-        "basemapTemplate": "default_basemap",
-        "filterGlobalRowTemplate": "filter_global_row_template",
-        "filterRowTemplate": "filter_section_template"
-    },
-    "globalFilter": {
-        "toggleLabels": [
-            {
-                "id": "globalVisibility",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "eye checked"
-            },
-            {
-                "id": "globalBox",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "box checked"
-            }
-        ]
+    "rowsPerPage": 40,
+    "extendedDatagridExtentFilterEnabled": false,
+    "templates": {
+        "basemap": "default_basemap"
     },
     "divNames": {
         "map": "mainMap",
@@ -434,9 +401,5 @@
         "htmlRawParse.js",
         "jsonRawParse.js",
         "windParse.js"
-    ],
-    "ui": {
-        "fullscreen": false,
-        "sidePanelOpened": true
-    }
+    ]
 }

@@ -4,7 +4,7 @@
     "type": "object",
     "title": "root",
     "description": "RAMP Configuration",
-    "additionalProperties": true,
+    "additionalProperties": false,
 
     "definitions": {
         "spatialReference": {
@@ -179,11 +179,44 @@
 
     "properties": {
 
-        "version": { "type": "string", "enum": ["1.0"]},
+        "version": { "type": "string", "enum": [ "1.0" ] },
         "proxyUrl": { "type": "string" },
         "geometryServiceUrl": { "type": "string" },
+        "initialBasemapIndex": { "type": "number", "default": 0 },
+        "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
+        "rowsPerPage": { "type": "number", "default": 50 },
 
         "spatialReference": { "$ref": "#/definitions/spatialReference" },
+
+        "extents": { "type": "object" },
+        "navWidget": { "type": "object" },
+        "zoomLevels": {
+            "type": "object",
+            "properties": {
+                "min": { "type": "number", "default": 1 },
+                "max": { "type": "number", "default": 17 }
+            }
+        },
+
+        "basemaps": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": { "type": "string" },
+                    "url": { "type": "string", "format": "uri" }
+                },
+                "required": [ "id", "url" ]
+            }
+        },
+
+        "templates": {
+            "type": "object",
+            "properties": {
+                "basemap": { "type": "string", "default": "default_basemap" },
+                "globalSelectorToggles": { "type": "string", "default": "default_selector_toggles" }
+            }
+        },
 
         "layers": {
             "type": "object",
@@ -200,9 +233,22 @@
                 }
             }
         },
+        "plugins": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [ ]
+        },
+        "divNames": {
+            "type": "object",
+            "properties": {
+                "map": { "type": "string", "default": "mainMap" },
+                "navigation": { "type": "string", "default": "map-navigation" },
+                "filter": { "type": "string", "default": "searchMapSectionBody" },
+                "datagrid": { "type": "string", "default": "gridpane" }
+            }
+        },
 
         "advancedToolbar": {
-            "id": "#advancedToolbar",
             "type": "object",
             "title": "Advanced Toolbar",
             "description": "Specifies tools available for Advanced Toolbar",
@@ -210,38 +256,31 @@
             "properties": {
 
                 "enabled": {
-                    "id": "#enabled",
                     "type": "boolean",
                     "description": "Specifies if Advanced Toolbar is active",
                     "default": false
                 },
 
                 "tools": {
-                    "id": "#tools",
                     "type": "array",
                     "title": "Tools",
                     "description": "",
-                    "minItems": 1,
 
                     "items": {
-                        "id": "#tool",
                         "type": "object",
 
                         "properties": {
                             "name": {
-                                "id": "#name",
                                 "type": "string",
                                 "description": "Name of the tool"
                             },
 
                             "selector": {
-                                "id": "#selector",
                                 "type": "string",
                                 "description": "CSS selector for the tool's activator"
                             },
 
                             "enabled": {
-                                "id": "#enabled",
                                 "type": "boolean",
                                 "description": "Specifies if the tool is active",
                                 "default": true
@@ -254,19 +293,12 @@
                             "enabled"
                         ]
                     },
-
-                    "required": [
-                        "0"
-                    ]
+                    "default": [ ]
                 }
-            },
-            "required": [
-                "enabled"
-            ]
+            }
         }
 
 
     },
-    "required": [ "version", "spatialReference", "advancedToolbar" ],
-    "additionalItems": false
+    "required": [ "version", "spatialReference", "extents", "basemaps" ]
 }
