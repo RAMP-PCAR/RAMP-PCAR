@@ -7,44 +7,22 @@
     "additionalProperties": true,
 
     "definitions": {
-        "wmsNode": {
+        "spatialReference": {
             "type": "object",
             "properties": {
-                "id": { "type": "string" },
-                "displayName": { "type": "string" },
-                "url": { "type": "string", "format": "uri" },
-                "imageUrl": { "type": "string", "format": "uri" },
-                "layerName": { "type": "string" },
-                "format": { "type": "string" },
-                "legendMimeType": { "type": "string" },
-
-                "settings": {
-                    "type": "object",
-                    "properties": {
-                        "panelEnabled": { "type": "boolean", "default": true },
-                        "visible": { "type": "boolean", "default": true },
-                        "opacity": {
-                            "type": "object",
-                            "properties": { 
-                                "enabled": { "type": "boolean", "default": true },
-                                "opacity": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
-                            }
-                        }
-                    },
-                    "additionalProperties": false
-                },
-
-                "featureInfo": {
-                    "type": "object",
-                    "properties": {
-                        "mimeType": { "type": "string" },
-                        "parser": { "type": "string" }
-                    },
-                    "required": [ "mimeType", "parser" ]
-                }
-
+                "wkid": { "type": "number" },
+                "vcsWkid": { "type": "number" },
+                "latestWkid": { "type": "number" },
+                "latestVcsWkid": { "type": "number" },
+                "wkt": { "type": "string" }
             },
-            "required": [ "id", "displayName", "url", "layerName", "format" ],
+            "anyOf": [
+                { "required": [ "wkid" ] },
+                { "required": [ "vcsWkid" ] },
+                { "required": [ "latestWkid" ] },
+                { "required": [ "latestVcsWkid" ] },
+                { "required": [ "wkt" ] }
+            ],
             "additionalProperties": false
         },
 
@@ -65,20 +43,13 @@
                         "ymin": { "type": "number" },
                         "xmax": { "type": "number" },
                         "ymax": { "type": "number" },
-                        "spatialReference": {
-                            "type": "object",
-                            "properties": {
-                                "wkid": { "type": "number" },
-                                "vcsWkid": { "type": "number" },
-                                "latestWkid": { "type": "number" },
-                                "latestVcsWkid": { "type": "number" },
-                                "wkt": { "type": "string" }
-                            }
-                        }
+                        "spatialReference": { "$ref": "#/definitions/spatialReference" }
                     },
-                    "required": [ "xmin", "ymin", "xmax", "ymax", "spatialReference" ]
+                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
                 },
+
                 "symbology": { "$ref": "#/definitions/symbolNode" },
+
                 "settings": {
                     "id": "#settings",
                     "type": "object",
@@ -116,8 +87,8 @@
                         "boundingBoxVisible": { "type": "boolean", "default": false }
                     }
                 }
-
             },
+
             "required": [ "id", "displayName", "url", "symbology" ]
         },
 
@@ -162,10 +133,57 @@
                 }
 
             ]
+        },
+
+        "wmsNode": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "imageUrl": { "type": "string", "format": "uri" },
+                "layerName": { "type": "string" },
+                "format": { "type": "string" },
+                "legendMimeType": { "type": "string" },
+
+                "settings": {
+                    "type": "object",
+                    "properties": {
+                        "panelEnabled": { "type": "boolean", "default": true },
+                        "visible": { "type": "boolean", "default": true },
+                        "opacity": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": { "type": "boolean", "default": true },
+                                "opacity": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+
+                "featureInfo": {
+                    "type": "object",
+                    "properties": {
+                        "mimeType": { "type": "string" },
+                        "parser": { "type": "string" }
+                    },
+                    "required": [ "mimeType", "parser" ]
+                }
+
+            },
+            "required": [ "id", "displayName", "url", "layerName", "format" ],
+            "additionalProperties": false
         }
     },
 
     "properties": {
+
+        "version": { "type": "string", "enum": ["1.0"]},
+        "proxyUrl": { "type": "string" },
+        "geometryServiceUrl": { "type": "string" },
+
+        "spatialReference": { "$ref": "#/definitions/spatialReference" },
 
         "layers": {
             "type": "object",
@@ -249,5 +267,6 @@
 
 
     },
-    "required": [ "advancedToolbar" ]
+    "required": [ "version", "spatialReference", "advancedToolbar" ],
+    "additionalItems": false
 }

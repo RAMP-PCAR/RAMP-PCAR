@@ -1,10 +1,9 @@
 {
-    "lang": "en",
-    "helpContent": "Help Content",
+    "version": "1.0",
     "spatialReference": {
         "wkid": 3978
     },
-    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
