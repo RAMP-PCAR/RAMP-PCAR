@@ -499,7 +499,7 @@ define([
 
                                 metadataUrl = "assets/metadata/" + id + ".xml";
 
-                                UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + config.lang + ".xsl",
+                                UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + RAMP.locale + ".xsl",
                                     function (error, data) {
                                         if (error) {
                                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
