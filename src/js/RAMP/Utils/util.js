@@ -855,7 +855,16 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * [settings.linkLists]: false
+            * Augments lists of items to be sortable using keyboard.
+            * 
+            * @method keyboardSortable
+            * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
+            * @param {Object} [settings] Additional settings
+            * @param {Object} [settings.linkLists] Indicates if the supplied lists (if more than one) should be linked - items could be moved from one to another
+            * @param {Object} [settings.onStart] A callback function to be called when the user initiates sorting process
+            * @param {Object} [settings.onUpdate] A callback function to be called when the user moves the item around
+            * @param {Object} [settings.onStop] A callback function to be called when the user commits the item to its new place ending the sorting process
+            * @static
             */
             keyboardSortable: function (ulNodes, settings) {
                 settings = dojoLang.mixin({
@@ -990,6 +999,37 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 }
                             }
                         });
+                });
+            },
+                        
+            /**
+             * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
+             * ####Example of tls parameter
+             * 
+             *      [
+             *          {
+             *              timeline: {timeline},
+             *              generator: {function}
+             *          }
+             *      ]
+             *      
+             * 
+             * @method resetTimelines
+             * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
+             * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
+             */
+            resetTimelines: function (tls, keepPosition) {
+                var position;
+
+                tls.forEach(function (tl) {
+                    position = tl.timeLine.time(); // preserve timeline position
+                    tl.timeLine.seek(0).clear();
+
+                    tl.generator.call();
+
+                    if (keepPosition) {
+                        tl.timeLine.seek(position);
+                    }
                 });
             }
         };

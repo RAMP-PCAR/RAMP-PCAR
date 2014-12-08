@@ -270,6 +270,9 @@ define([],
                 /**
                 * Published when the gui module has completely finished rendering the UI.
                 * The bootstrapper should wait for this event to fire before initializing map.
+                * 
+                * @event gui/toolbar-section-closegui/update-complete
+                * @for GUI
                 */
                 UPDATE_COMPLETE: "gui/update-complete"
             },
