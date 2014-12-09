@@ -120,6 +120,7 @@
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
+                "templates": { "summary": "default_grid_summary_row" },
                 "datagrid": {
                     "rowsPerPage": 50,
                     "gridColumns": [
@@ -163,8 +164,7 @@
                             "title": "Category",
                             "columnTemplate": "title_span"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
+                    ]
                 },
                 "symbology": {
                     "valueMaps": [
@@ -255,8 +255,7 @@
                             "title": "Type",
                             "columnTemplate": "unformatted_grid_value"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
+                    ]
                 },
                 "symbology": {
                     "field2": "",
