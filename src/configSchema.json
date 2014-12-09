@@ -111,7 +111,22 @@
             }
         },
 
-        "gridColumn": { "type": "object", "additionalProperties": true },
+        "gridColumn": {
+            "type": "object",
+            "properties": { 
+                "id": { "type": "string" },
+                "fieldName": { "type": "string" },
+                "width": { "type": "string" },
+                "sortable": { "type": "boolean", "default": true },
+                "sortType": { "type": "string", "enum": ["string","integer"], "default": "string" },
+                "alignment": { "type": "integer", "enum": [0,1], "default": 1 },
+                "title": { "type": "string" },
+                "columnTemplate": { "type": "string" }
+            },
+            "required": ["id", "fieldName", "width", "title", "columnTemplate"],
+            "additionalProperties": false
+
+        },
         "symbolNode": { "type": "object", "additionalProperties": true },
 
         "staticNode": {
