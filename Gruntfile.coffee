@@ -1141,7 +1141,7 @@ module.exports = (grunt) ->
                 ]
 
         clean:
-            optiosn:
+            options:
                 force: true
             
             build:[
