@@ -117,8 +117,8 @@
                 "id": { "type": "string" },
                 "fieldName": { "type": "string" },
                 "width": { "type": "string" },
-                "sortable": { "type": "boolean", "default": true },
-                "sortType": { "type": "string", "enum": [ "string", "integer" ], "default": "string" },
+                "orderable": { "type": "boolean", "default": true, "description": "passthrough option for datatables" },
+                "type": { "type": "string", "enum": [ "date", "num", "num-fmt", "html-num", "html-num-fmt", "string" ], "default": "string", "description": "passthrough option for datatables" },
                 "alignment": { "type": "integer", "enum": [ 0, 1 ], "default": 1 },
                 "title": { "type": "string" },
                 "columnTemplate": { "type": "string" }
