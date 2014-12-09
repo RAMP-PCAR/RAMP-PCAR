@@ -113,21 +113,83 @@
 
         "gridColumn": {
             "type": "object",
-            "properties": { 
+            "properties": {
                 "id": { "type": "string" },
                 "fieldName": { "type": "string" },
                 "width": { "type": "string" },
                 "sortable": { "type": "boolean", "default": true },
-                "sortType": { "type": "string", "enum": ["string","integer"], "default": "string" },
-                "alignment": { "type": "integer", "enum": [0,1], "default": 1 },
+                "sortType": { "type": "string", "enum": [ "string", "integer" ], "default": "string" },
+                "alignment": { "type": "integer", "enum": [ 0, 1 ], "default": 1 },
                 "title": { "type": "string" },
                 "columnTemplate": { "type": "string" }
             },
-            "required": ["id", "fieldName", "width", "title", "columnTemplate"],
+            "required": [ "id", "fieldName", "width", "title", "columnTemplate" ],
             "additionalProperties": false
 
         },
-        "symbolNode": { "type": "object", "additionalProperties": true },
+
+        "simpleRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "simple" ] },
+                "label": { "type": "string" },
+                "imageUrl": { "type": "string" }
+            },
+            "required": [ "type", "imageUrl" ],
+            "additionalProperties": false
+        },
+        "uniqueValueRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "uniqueValue" ] },
+                "defaultImageUrl": { "type": "string" },
+                "field1": { "type": "string" },
+                "field2": { "type": "string" },
+                "field3": { "type": "string" },
+                "valueMaps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": { "type": "string" },
+                            "value": { "type": "string" },
+                            "imageUrl": { "type": "string" }
+                        },
+                        "required": [ "value", "imageUrl" ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": [ "type", "field1", "valueMaps" ],
+            "additionalProperties": false
+        },
+        "classBreaksRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "classBreaks" ] },
+                "defaultImageUrl": { "type": "string" },
+                "field": { "type": "string" },
+                "minValue": { "type": "number" },
+                "rangeMaps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": { "type": "string" },
+                            "maxValue": { "type": "number" },
+                            "imageUrl": { "type": "string" }
+                        },
+                        "required": [ "maxValue", "imageUrl" ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": [ "type", "field", "minValue", "rangeMaps" ],
+            "additionalProperties": false
+        },
+        "symbolNode": {
+            "oneOf": [ { "$ref": "#/definitions/simpleRendererNode" }, { "$ref": "#/definitions/uniqueValueRendererNode" }, { "$ref": "#/definitions/classBreaksRendererNode" } ]
+        },
 
         "staticNode": {
             "type": "object",
