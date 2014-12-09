@@ -539,13 +539,13 @@ module.exports = (grunt) ->
 
             proxyBuild:
                 expand: true
-                cwd: 'src/proxy'
+                cwd: 'proxy'
                 src: '**/*.*'
                 dest: 'build/proxy'
             
             proxyDist:
                 expand: true
-                cwd: 'src/proxy'
+                cwd: 'proxy'
                 src: '**/*.*'
                 dest: 'dist/proxy'
                 
