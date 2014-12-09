@@ -187,9 +187,7 @@
             "required": [ "type", "field", "minValue", "rangeMaps" ],
             "additionalProperties": false
         },
-        "symbolNode": {
-            "oneOf": [ { "$ref": "#/definitions/simpleRendererNode" }, { "$ref": "#/definitions/uniqueValueRendererNode" }, { "$ref": "#/definitions/classBreaksRendererNode" } ]
-        },
+        "symbolNode": { "oneOf": [ { "$ref": "#/definitions/simpleRendererNode" }, { "$ref": "#/definitions/uniqueValueRendererNode" }, { "$ref": "#/definitions/classBreaksRendererNode" } ] },
 
         "staticNode": {
             "type": "object",
@@ -205,7 +203,8 @@
                 "settings": { "$ref": "#/definitions/settingsNode" },
                 "isStatic": { "type": "boolean", "enum": [ true ] }
             },
-            "required": [ "id", "displayName", "url", "symbology", "isStatic" ]
+            "required": [ "id", "displayName", "url", "symbology", "isStatic" ],
+            "additionalProperties": false
         },
 
         "featureNode": {
@@ -245,7 +244,8 @@
                 }
 
             },
-            "required": [ "id", "displayName", "url", "symbology", "nameField", "datagrid" ]
+            "required": [ "id", "displayName", "url", "symbology", "nameField", "datagrid" ],
+            "additionalProperties": false
         },
 
         "wmsNode": {
@@ -258,6 +258,7 @@
                 "layerName": { "type": "string" },
                 "format": { "type": "string" },
                 "legendMimeType": { "type": "string" },
+                "extent": { "$ref": "#/definitions/extentNode" },
 
                 "settings": {
                     "type": "object",
@@ -294,7 +295,7 @@
 
     "properties": {
 
-        "version": { "type": "string", "enum": [ "1.0" ] },
+        "version": { "type": "string", "enum": [ "1.0.0" ] },
         "proxyUrl": { "type": "string" },
         "geometryServiceUrl": { "type": "string" },
         "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },
@@ -376,7 +377,8 @@
                     "default": [ ],
                     "items": { "$ref": "#/definitions/wmsNode" }
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "plugins": {
             "type": "array",
