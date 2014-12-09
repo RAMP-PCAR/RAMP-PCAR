@@ -22,7 +22,55 @@
                 { "required": [ "latestWkid" ] },
                 { "required": [ "latestVcsWkid" ] },
                 { "required": [ "wkt" ] }
+            ]
+        },
+        "spatialReferenceNode": {
+            "type": "object",
+            "properties": {
+                "wkid": { "type": "number" },
+                "vcsWkid": { "type": "number" },
+                "latestWkid": { "type": "number" },
+                "latestVcsWkid": { "type": "number" },
+                "wkt": { "type": "string" }
+            },
+            "anyOf": [
+                { "required": [ "wkid" ] },
+                { "required": [ "vcsWkid" ] },
+                { "required": [ "latestWkid" ] },
+                { "required": [ "latestVcsWkid" ] },
+                { "required": [ "wkt" ] }
             ],
+            "additionalProperties": false
+        },
+        "extent": { 
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ]
+        },
+        "extentNode": { 
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ],
+            "additionalProperties": false
+        },
+        "extentWithReferenceNode": {
+            "type": "object",
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" },
+                "spatialReference": { "$ref": "#/definitions/spatialReferenceNode" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ],
             "additionalProperties": false
         },
 
@@ -36,22 +84,11 @@
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
 
-                "layerExtent": {
-                    "type": "object",
-                    "properties": {
-                        "xmin": { "type": "number" },
-                        "ymin": { "type": "number" },
-                        "xmax": { "type": "number" },
-                        "ymax": { "type": "number" },
-                        "spatialReference": { "$ref": "#/definitions/spatialReference" }
-                    },
-                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
-                },
+                "layerExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
 
                 "symbology": { "$ref": "#/definitions/symbolNode" },
 
                 "settings": {
-                    "id": "#settings",
                     "type": "object",
                     "description": "Specifies settings for the Feature Layer",
 
@@ -73,7 +110,6 @@
                                     "default": true
                                 },
                                 "default": {
-                                    "id": "#default",
                                     "type": "number",
                                     "description": "Specifies the default opacity level of the Feature Layer",
                                     "minimum": 0,
@@ -88,7 +124,6 @@
                     }
                 }
             },
-
             "required": [ "id", "displayName", "url", "symbology" ]
         },
 
@@ -186,9 +221,19 @@
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50 },
 
-        "spatialReference": { "$ref": "#/definitions/spatialReference" },
+        "spatialReference": { "$ref": "#/definitions/spatialReferenceNode", "additionalProperties": false },
 
-        "extents": { "type": "object" },
+        "extents": {
+            "type": "object",
+            "properties": {
+                "defaultExtent": { "$ref": "#/definitions/extentNode" },
+                "fullExtent": { "$ref": "#/definitions/extentNode" },
+                "maximumExtent": { "$ref": "#/definitions/extentNode" }
+            },
+            "required": [ "defaultExtent" ],
+            "additionalProperties": false
+
+        },
         "navWidget": { "type": "object" },
         "zoomLevels": {
             "type": "object",
