@@ -53,9 +53,8 @@
     "navWidget": {
         "sliderMinVal": 3,
         "sliderMaxVal": 15,
-        "debug": 0,
+        "debug": false,
         "animate": "fast",
-        "cssPath": "ramp-theme/navigation",
         "skin": "white"
     },
     "zoomLevels": {

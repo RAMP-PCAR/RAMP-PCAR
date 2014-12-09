@@ -42,7 +42,7 @@
             ],
             "additionalProperties": false
         },
-        "extent": { 
+        "extent": {
             "properties": {
                 "xmin": { "type": "number" },
                 "ymin": { "type": "number" },
@@ -51,7 +51,7 @@
             },
             "required": [ "xmin", "ymin", "xmax", "ymax" ]
         },
-        "extentNode": { 
+        "extentNode": {
             "properties": {
                 "xmin": { "type": "number" },
                 "ymin": { "type": "number" },
@@ -234,13 +234,25 @@
             "additionalProperties": false
 
         },
-        "navWidget": { "type": "object" },
+        "navWidget": {
+            "type": "object",
+            "properties": {
+                "sliderMinVal": { "type": "number", "default": 3 },
+                "sliderMaxVal": { "type": "number", "default": 15 },
+                "debug": { "type": "boolean", "default": false },
+                "animate": { "type": "string", "enum": [ "fast" ], "default": "fast" },
+                "cssPath": { "type": "string", "default": "ramp-theme/navigation" },
+                "skin": { "type": "string", "enum": [ "white" ], "default": "white" }
+            },
+            "additionalProperties": false
+        },
         "zoomLevels": {
             "type": "object",
             "properties": {
                 "min": { "type": "number", "default": 1 },
                 "max": { "type": "number", "default": 17 }
-            }
+            },
+            "additionalProperties": false
         },
 
         "basemaps": {
