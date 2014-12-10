@@ -70,6 +70,7 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseNrCan.name",
             "altText": "@@config.basemaps.baseNrCan.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseNrCan.description"
         },
         {
@@ -80,6 +81,7 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseSimple.name",
             "altText": "@@config.basemaps.baseSimple.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseSimple.description"
         },
         {
@@ -90,6 +92,7 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
             "altText": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description"
         },
         {
@@ -100,6 +103,7 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
             "altText": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description"
         },
         {
@@ -110,6 +114,7 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseE2M.name",
             "altText": "@@config.basemaps.baseE2M.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseE2M.description"
         }
     ],

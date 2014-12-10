@@ -348,9 +348,10 @@
                     "type": { "type": "string", "default": "Topographic" },
                     "name": { "type": "string" },
                     "altText": { "type": "string" },
-                    "description": { "type": "string" }
+                    "tileSchema": { "type": "string", "description": "should define a combination of the projection and tiling format (ex: NRCAN_Lambert_3978, ESRI_World_AuxMerc_3857 )" },
+                    "description": { "type": "string", "description": "description" }
                 },
-                "required": [ "id", "url" ],
+                "required": [ "id", "url", "tileSchema" ],
                 "additionalProperties": false
             }
         },
