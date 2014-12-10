@@ -342,7 +342,19 @@
                 "type": "object",
                 "properties": {
                     "id": { "type": "string" },
-                    "url": { "type": "string", "format": "uri" },
+
+                    "layers": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": { "type": "string", "format": "uri" }
+                            },
+                            "required": [ "url" ],
+                            "additionalProperties": true
+                        }
+                    },
+
                     "thumbnail": { "type": "string" },
                     "scaleCssClass": { "type": "string", "default": "map-scale-dark" },
                     "type": { "type": "string", "default": "Topographic" },
@@ -351,7 +363,7 @@
                     "tileSchema": { "type": "string", "description": "should define a combination of the projection and tiling format (ex: NRCAN_Lambert_3978, ESRI_World_AuxMerc_3857 )" },
                     "description": { "type": "string", "description": "description" }
                 },
-                "required": [ "id", "url", "tileSchema" ],
+                "required": [ "id", "layers", "tileSchema" ],
                 "additionalProperties": false
             }
         },
