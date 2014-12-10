@@ -42,7 +42,7 @@
 
 define([
 /* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/dom", 
+"dojo/_base/declare", "dojo/_base/array", "dojo/dom",
         "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
@@ -511,7 +511,7 @@ define([
             var boxLayer = boundingBoxMapping[layerId];
 
             //if (boxLayer.graphics.isEmpty() && visibility) {
-                
+
             //    // get bounding box info from config object
             //    var boundingBoxExtent;
             //    var layerConfig = dojoArray.find(config.featureLayers, function (layerConfig) {
@@ -734,18 +734,18 @@ define([
                 * @private
                 * @type {esri/SpatialReference}
                 */
-                    spatialReference = new esri.SpatialReference(config.spatialReference),
+                spatialReference = new esri.SpatialReference(config.spatialReference),
 
                 /**
-                * The URL of the basemap that is on by default
+                * The URL of the first layer of the basemap that is on by default.
                 *
                 * @property url
                 * @private
                 * @type {String}
                 */
-                    url = UtilArray.find(config.basemaps, function (basemap) {
-                        return basemap.showOnInit;
-                    }).url,
+                url = UtilArray.find(config.basemaps, function (basemap) {
+                    return basemap.showOnInit;
+                }).layers[0].url,
 
                 /**
                 * The basemap layer
@@ -754,10 +754,10 @@ define([
                 * @private
                 * @type {Esri/layers/ArcGISTiledMapServiceLayer}
                 */
-                    baseLayer = new ArcGISTiledMapServiceLayer(url, {
-                        id: "basemapLayer"
-                    });
-
+                baseLayer = new ArcGISTiledMapServiceLayer(url, {
+                    id: "basemapLayer"
+                });
+                
                 /**
                 * The maximum extent of the map
                 *
@@ -889,7 +889,7 @@ define([
 
                         boundingBox.add(extentGraphic);
                     }
-                    
+
                     return boundingBox;
                 });
 
@@ -933,14 +933,17 @@ define([
                 GlobalStorage.LayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
+                
+                //This was intended to be used to distinguish layers from each other when crawling; Looks like we are not using it. Commenting out for now. SZ
                 baseLayer.ramp = {
                     type: GlobalStorage.layerType.Basemap
                 };
+
                 // Combine all layer arrays then add them all at once (for efficiency)
                 console.log('adding wmses');
                 console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
-
+                
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
                     map: map,

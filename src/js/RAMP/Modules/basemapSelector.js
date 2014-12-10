@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl, RAMP */
+/*global define, $, esri, tmpl, RAMP, console */
 /*jslint white: true */
 
 /**
@@ -163,12 +163,21 @@ function (
             config = RAMP.config;
 
             dojoArray.forEach(config.basemaps, function (basemap) {
-                var layerDijit, basemapDijit;
+                var basemapDijit,
+                    baseampLayers = [];
 
-                layerDijit = new esri.dijit.BasemapLayer({ url: basemap.url });
+                // iterate over basemap layers and create layer objects for each;
+                // these objects can have any of the properties of the Basemap param constructor object here: https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
+                basemap.layers.forEach(function (layer) {
+                    console.log(layer);
+                    baseampLayers.push(
+                        new esri.dijit.BasemapLayer(layer)
+                    );
+                });
+
                 basemapDijit = new esri.dijit.Basemap({
                     id: basemap.id,
-                    layers: [layerDijit],
+                    layers: baseampLayers, // shovel all the layers into the basemap
                     title: String.format("{0} ({1})", basemap.name, basemap.type),
                     thumbnailUrl: basemap.thumbnail
                 });

@@ -66,7 +66,11 @@
     "basemaps": [
         {
             "id": "baseNrCan",
-            "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer",
+            "layers": [
+                {
+                    "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer"
+                }
+            ],
             "thumbnail": "assets/images/basemap/baseToponrcan.jpg",
             "showOnInit": true,
             "scaleCssClass": "map-scale-dark",
@@ -77,7 +81,18 @@
         },
         {
             "id": "baseSimple",
-            "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer",
+            "layers": [
+                {
+                    "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer"
+                },
+                {
+                    "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer"
+                },
+                {
+                    "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer",
+                    "visibleLayers": [ 0 ]
+                }
+            ],
             "thumbnail": "assets/images/basemap/baseSimple.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
@@ -88,7 +103,11 @@
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
-            "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer",
+            "layers": [
+                {
+                    "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer"
+                }
+            ],
             "thumbnail": "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
@@ -99,7 +118,11 @@
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
-            "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer",
+            "layers": [
+                {
+                    "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer"
+                }
+            ],
             "thumbnail": "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
@@ -110,7 +133,11 @@
         },
         {
             "id": "baseE2M",
-            "url": "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer",
+            "layers": [
+                {
+                    "url": "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                }
+            ],
             "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
             "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
@@ -376,7 +403,7 @@
             }
         ],
         "wms": [
-            
+
         ]
     },
     "datagrid": {
