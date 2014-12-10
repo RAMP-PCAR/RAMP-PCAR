@@ -214,6 +214,7 @@
                 "id": { "type": "string" },
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
+                "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
 
@@ -254,6 +255,7 @@
                 "id": { "type": "string" },
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
+                "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
                 "imageUrl": { "type": "string", "format": "uri" },
                 "layerName": { "type": "string" },
                 "format": { "type": "string" },

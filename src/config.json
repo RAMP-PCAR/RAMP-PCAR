@@ -4,7 +4,7 @@
         "wkid": 3978
     },
     "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "proxy/proxy.ashx",
+    "proxyUrl": "proxy/dotNet/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -153,6 +153,7 @@
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
+                "metadataUrl": "http://metadata.example.com/?uuid=7",
                 "templates": { "summary": "default_grid_summary_row" },
                 "datagrid": {
                     "rowsPerPage": 50,
