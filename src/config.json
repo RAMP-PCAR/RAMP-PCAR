@@ -154,6 +154,7 @@
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
+                "metadataUrl": "http://intranet.ecdmp-stage.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id=1c0eb1b2-93ae-49ae-a3ce-e495d8fd767b&_=1417717957845",
                 "datagrid": {
                     "rowsPerPage": 50,
                     "gridColumns": [
