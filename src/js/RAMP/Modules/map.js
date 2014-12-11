@@ -724,9 +724,8 @@ define([
             *
             */
             init: function () {
-                //config object is loaded in bootstrapper.js
-                var
 
+                var
                 /**
                 * The spatial reference of the map
                 *
@@ -754,16 +753,14 @@ define([
                 */
                 baseLayer = new ArcGISTiledMapServiceLayer(url, {
                     id: "basemapLayer"
-                });
+                }),
+                initExtentSettings,
+                maxExtentSettings,
+                fullExtentSettings;
                 
-                /**
-                * The maximum extent of the map
-                *
-                * @property maxExtent
-                * @private
-                * @type {esri/geometry/Extent}
-                */
-                maxExtent = createExtent(RAMP.config.extents.maximumExtent, spatialReference);
+                initExtentSettings = RAMP.config.extents.defaultExtent;
+                fullExtentSettings = RAMP.config.extents.fullExtent || initExtentSettings;
+                maxExtentSettings = RAMP.config.extents.maximumExtent || fullExtentSettings;
 
                 /**
                 * The initial extent of the map
@@ -772,7 +769,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(RAMP.config.extents.defaultExtent, spatialReference);
+                initExtent = createExtent(initExtentSettings, spatialReference);
 
                 /**
                 * Used for full extent in nav widget
@@ -781,7 +778,16 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(RAMP.config.extents.fullExtent, spatialReference);
+                fullExtent = createExtent(fullExtentSettings, spatialReference);
+
+                /**
+                * The maximum extent of the map
+                *
+                * @property maxExtent
+                * @private
+                * @type {esri/geometry/Extent}
+                */
+                maxExtent = createExtent(maxExtentSettings, spatialReference);
 
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {

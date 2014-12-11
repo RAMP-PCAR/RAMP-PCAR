@@ -32,10 +32,10 @@
     },
     "extents": {
         "defaultExtent": {
-            "xmin": -2681457,
-            "ymin": -883440,
-            "xmax": 3549492,
-            "ymax": 3482193
+            "xmin": -1681457,
+            "ymin": -483440,
+            "xmax": 2549492,
+            "ymax": 2482193
         },
         "fullExtent": {
             "xmin": -2681457,
