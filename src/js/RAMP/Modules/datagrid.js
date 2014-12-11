@@ -938,7 +938,7 @@ define([
 
                         // filter out static layers
                         var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
-                            var layer = GlobalStorage.map.getLayer(layerConfig.id);
+                            var layer = RAMP.map.getLayer(layerConfig.id);
                             return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
                         });
 
@@ -1112,7 +1112,7 @@ define([
                                 selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
                             } else {
                                 var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
-                                    var layer = GlobalStorage.map.getLayer(layerConfig.id);
+                                    var layer = RAMP.map.getLayer(layerConfig.id);
                                     return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
                                 });
                                 selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
