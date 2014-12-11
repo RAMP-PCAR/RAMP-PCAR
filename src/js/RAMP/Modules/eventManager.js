@@ -110,7 +110,7 @@ define([],
                 /**
                 * Fires whenever a tab has been deselected in the main panel
                 *
-                * @event gui.TAB_DESELECTED
+                * @event GUI.TAB_DESELECTED
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {String} evt.id  the id of the deselected tab
@@ -121,7 +121,7 @@ define([],
                 /**
                 * Fires whenever a tab has been selected in the main panel
                 *
-                * @event gui.TAB_SELECTED
+                * @event GUI.TAB_SELECTED
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {String} evt.id the id of the selected tab
@@ -132,7 +132,7 @@ define([],
                 /**
                 * Published each time the subpanel opens/closes
                 *
-                * @event gui.SUBPANEL_CHANGE
+                * @event GUI.SUBPANEL_CHANGE
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.visible true if the subpanel is opened, false otherwise
@@ -144,7 +144,7 @@ define([],
                 /**
                 * Published each time the panel opens/closes
                 *
-                * @event gui.PANEL_CHANGE
+                * @event GUI.PANEL_CHANGE
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.visible true if the panel is opened, false otherwise
@@ -154,7 +154,7 @@ define([],
                 /**
                 * Published each time the help panel opens or closes.
                 *
-                * @event gui.HELP_PANEL_CHANGE
+                * @event GUI.HELP_PANEL_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
                 * @param evt.visible {boolean} true if the help panel is opened, false if the help panel is closed
@@ -164,7 +164,7 @@ define([],
                 /**
                 * Published each time fullscreen is toggled
                 *
-                * @event gui.FULLSCREEN_CHANGE
+                * @event GUI.FULLSCREEN_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
                 * @param evt.fullscreen {boolean} true if fullscreen is on, false if fullscreen is off.
@@ -174,7 +174,7 @@ define([],
                 /**
                 * Published each time the layout changes.
                 *
-                * @event gui.LAYOUT_CHANGE
+                * @event GUI.LAYOUT_CHANGE
                 * @for GUI
                 */
                 LAYOUT_CHANGE: "gui/layout-change",
@@ -183,7 +183,7 @@ define([],
                 /**
                 * Toggles the main panel (i.e. collapses it if was expanded, and expands it if it was collapsed)
                 *
-                * @event gui.PANEL_TOGGLE [subscribed]
+                * @event GUI.PANEL_TOGGLE [subscribed]
                 * @for GUI
                 */
                 PANEL_TOGGLE: "gui/panel-toggle",
@@ -191,7 +191,7 @@ define([],
                 /**
                 * Opens the subpanel
                 *
-                * @event gui.SUBPANEL_OPEN [subscribed]
+                * @event GUI.SUBPANEL_OPEN [subscribed]
                 * @for GUI
                 * @param {SubPanelSettings} attr Settings for the SubPanel
                 */
@@ -200,7 +200,7 @@ define([],
                 /**
                 * Closes the sub panel
                 *
-                * @event gui.SUBPANEL_CLOSE [subscribed]
+                * @event GUI.SUBPANEL_CLOSE [subscribed]
                 * @for GUI
                 * @param origin {String} the name of the module that requested to close the subPanel (e.g. "filterManager")
                 */
@@ -209,7 +209,7 @@ define([],
                 /**
                 * Moves the panel up DOM hierarchy next to the sidePanel, or to other target
                 *
-                * @event gui.SUBPANEL_DOCK [subscribed]
+                * @event GUI.SUBPANEL_DOCK [subscribed]
                 * @for GUI
                 * @param origin {String} the name of the module that requested to dock the subPanel (e.g. "filterManager")
                 * @param target {jNode} where to move the subPanel; if not supplied; sidePanel is used
@@ -219,7 +219,7 @@ define([],
                 /**
                 * Attaches subPanel node to the module that calls it in the DOM hierarchy
                 *
-                * @event gui.SUBPANEL_CAPTURE [subscribed]
+                * @event GUI.SUBPANEL_CAPTURE [subscribed]
                 * @for GUI
                 * @param consumeOrigin {}
                 */
@@ -228,7 +228,7 @@ define([],
                 /**
                 * Toggles the fullscreen
                 *
-                * @event gui.TOGGLE_FULLSCREEN [subscribed]
+                * @event GUI.TOGGLE_FULLSCREEN [subscribed]
                 * @for GUI
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.expand true if we should go into fullscreen mode, false if we wish to
@@ -240,7 +240,7 @@ define([],
                 /**
                 * Published each time the Add Layer panel opens or closes.
                 *
-                * @event gui/add-layer-panel-change
+                * @event GUI.ADD_LAYER_PANEL_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
                 * @param evt.visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
@@ -250,7 +250,7 @@ define([],
                 /**
                  * Published each time a toolbar section / widget is opened. Used to close other toolbar sections / widgets.
                  *
-                 * @event gui/toolbar-section-open
+                 * @event GUI.TOOLBAR_SECTION_OPEN
                  * @for GUI
                  * @param evt {Object} the event Object
                  * @param evt.id {String} id of the source section / widget
@@ -260,7 +260,7 @@ define([],
                 /**
                  * Published each time a toolbar section / widget is closed.
                  *
-                 * @event gui/toolbar-section-close
+                 * @event GUI.TOOLBAR_SECTION_CLOSE
                  * @for GUI
                  * @param evt {Object} the event Object
                  * @param evt.id {String} id of the source section / widget
@@ -270,6 +270,9 @@ define([],
                 /**
                 * Published when the gui module has completely finished rendering the UI.
                 * The bootstrapper should wait for this event to fire before initializing map.
+                * 
+                * @event GUI.UPDATE_COMPLETE
+                * @for GUI
                 */
                 UPDATE_COMPLETE: "gui/update-complete"
             },
@@ -280,7 +283,7 @@ define([],
                 * Even when the user moves the cursor away, the feature stays highlighted; tooltip stays put.
                 * Only one feature can be highlighted like this at a time.
                 *
-                * @event featureHighlighter.HIGHLIGHT_SHOW [subscribed]
+                * @event FeatureHighlighter.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -290,7 +293,7 @@ define([],
                 * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the layers;
                 * hides the interactive tooltip.
                 *
-                * @event featureHighlighter.HIGHLIGHT_HIDE [subscribed]
+                * @event FeatureHighlighter.HIGHLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 HIGHLIGHT_HIDE: "highlighter/highlight-hide",
@@ -300,7 +303,7 @@ define([],
                 * Effect is only visible when another feature is already permanently highlighted.
                 * Only one feature can be highlighted like this at a time.
                 *
-                * @event featureHighlighter.HOVERLIGHT_SHOW [subscribed]
+                * @event FeatureHighlighter.HOVERLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -309,7 +312,7 @@ define([],
                 /**
                 * Dehighlights a currently highlighted (hoverlighted) feature on the map without restoring opacity of the rest of the layers;
                 *
-                * @event featureHighlighter.HOVERLIGHT_HIDE [subscribed]
+                * @event FeatureHighlighter.HOVERLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 HOVERLIGHT_HIDE: "highlighter/hoverlight-hide",
@@ -320,7 +323,7 @@ define([],
                 * Displays a temporary tooltip for this feature;
                 * Only one feature can be highlighted (zoomlighted) like this at a time.
                 *
-                * @event featureHighlighter.ZOOMLIGHT_SHOW [subscribed]
+                * @event FeatureHighlighter.ZOOMLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
@@ -331,7 +334,7 @@ define([],
                 * Removes the tooltip.
                 * Restores the opacity of the graphicGroup layers if no feature is highlighted at present.
                 *
-                * @event featureHighlighter.ZOOMLIGHT_HIDE [subscribed]
+                * @event FeatureHighlighter.ZOOMLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
                 ZOOMLIGHT_HIDE: "highlighter/zoomlight-hide"
@@ -342,7 +345,7 @@ define([],
                 * Displays a simple, temporary maptip, positioning it over the `target` jObject; the content of the maptip is build from the
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 *
-                * @event maptips.SHOW [subscribed]
+                * @event Maptips.SHOW [subscribed]
                 * @for Maptips
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
@@ -354,7 +357,7 @@ define([],
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 * The maptip will not be shown if it's covered by the open {{#crossLink "SubPanel"}}{{/crossLink}}.
                 *
-                * @event maptips.SHOW_INTERACTIVE [subscribed]
+                * @event Maptips.SHOW_INTERACTIVE [subscribed]
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
                 */
@@ -365,7 +368,7 @@ define([],
                 * {{#crossLink "SubPanel"}}{{/crossLink}} and extent change is needed. Sets the `scroll` payload attribute to true if the extent change is not needed
                 * and the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row.
                 *
-                * @event maptips.EXTENT_CHANGE [subscribed]
+                * @event Maptips.EXTENT_CHANGE [subscribed]
                 * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row
                 */
                 EXTENT_CHANGE: "maptip/extent-change",
@@ -375,7 +378,7 @@ define([],
                 * adjusted. If the tooltip is hidden from the view by the {{#crossLink "SubPanel"}}{{/crossLink}} or the edge of the map container,
                 * it is hidden from the page.
                 *
-                * @event maptips.REPOSITION_INTERACTIVE [subscribed]
+                * @event Maptips.REPOSITION_INTERACTIVE [subscribed]
                 * @for Maptips
                 * @param {Number} offset New tooltip offset relative to the shape it's attached too; when zooming, the shape changes its size and the
                 * offset needs to be recalculated to keep the tooltip in relative center
@@ -521,7 +524,7 @@ define([],
                 /**
                 * Fires whenever the basemap changes
                 *
-                * @event baseMapSelector/basemap-changed
+                * @event BaseMapSelector.BASEMAP_CHANGED
                 * @for BaseMapSelector
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the selected basemap
@@ -533,7 +536,7 @@ define([],
                 /**
                 * Fires after the basemap selector finished updating its UI (on page load)
                 *
-                * @event baseMapSelector/UIComplete
+                * @event BaseMapSelector.UI_COMPLETE
                 * @for BaseMapSelector
                 * @param {Object} evt the event object
                 * @param {String} evt.title the title of the basemap that is selected
@@ -544,7 +547,7 @@ define([],
                 /**
                 * Changes the selected basemap
                 *
-                * @event baseMapSelector/toggle [subscribed]
+                * @event BaseMapSelector.TOGGLE [subscribed]
                 * @for BaseMapSelector
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the basemap that is to be selected
@@ -557,7 +560,7 @@ define([],
                 * Applies a spatial filter to the datagrid (i.e. only visible points in the current
                 * extent will be displayed in the datagrid)
                 *
-                * @event datagrid.APPLY_EXTENT_FILTER [subscribed]
+                * @event Datagrid.APPLY_EXTENT_FILTER [subscribed]
                 * @for Datagrid
                 */
                 APPLY_EXTENT_FILTER: "datagrid/applyExtentFilter",
@@ -565,21 +568,21 @@ define([],
                 /**
                 * Fires when the table has finished drawing
                 *
-                * @event datagrid.DRAW_COMPLETE
+                * @event Datagrid.DRAW_COMPLETE
                 */
                 DRAW_COMPLETE: "datagrid/draw-complete",
 
                 /**
                 * Fires when the extent-filter has finished updating
                 *
-                * @event datagrid.EXTENT_FILTER_END
+                * @event Datagrid.EXTENT_FILTER_END
                 */
                 EXTENT_FILTER_END: "datagrid/extent-filter-end",
 
                 /**
                 * Highlights the row corresponding to the given `graphic` object of the selected feature.
                 *
-                * @event datagrid.HIGHLIGHTROW_SHOW
+                * @event Datagrid.HIGHLIGHTROW_SHOW
                 * @param event {Object}
                 * @param event.graphic {Object} ESRI graphic object corresponding to the selected feature
                 */
@@ -588,13 +591,13 @@ define([],
                 /**
                 * Dehighlights the currently highlighted row.
                 *
-                * @event datagrid.HIGHLIGHTROW_HIDE
+                * @event Datagrid.HIGHLIGHTROW_HIDE
                 */
                 HIGHLIGHTROW_HIDE: "datagrid/highlightrow-hide",
                 /**
                 * Zoomlights the row corresponding to the given `graphic` object of the zoomed to feature.
                 *
-                * @event datagrid.ZOOMLIGHTROW_SHOW
+                * @event Datagrid.ZOOMLIGHTROW_SHOW
                 * @param event {Object}
                 * @param event.graphic {Object} ESRI graphic object corresponding to the zoomed to feature
                 */
@@ -603,7 +606,7 @@ define([],
                 /**
                 * Dehighlights the currently zoomlighted row.
                 *
-                * @event datagrid.ZOOMLIGHTROW_HIDE
+                * @event Datagrid.ZOOMLIGHTROW_HIDE
                 *
                 * @for Datagrid
                 */
@@ -614,6 +617,7 @@ define([],
                 /**
                 * Published whenever the user clicks on the pan buttons.
                 *
+                * @for Navigation
                 * @event Navigation.PAN
                 */
                 PAN: "navigation/pan",
@@ -636,6 +640,7 @@ define([],
                 * Published whenever the user clicks on the full extent button in the
                 * navigation widget.
                 *
+                * @for Navigation
                 * @event Navigation.FULL_EXTENT
                 */
                 FULL_EXTENT: "navigation/full-extent"
@@ -646,17 +651,18 @@ define([],
                * Published whenever the user clicks on the get link button in the
                * map toolbar.
                *
+               * @for BookmarkLink
                * @event bookmark.GETLINK_PANEL_CHANGED
                */
                 GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
             },
 
-            Advanced: {
+            AdvancedToolbar: {
                 /**
-                * Published whenever the user clicks on the get link button in the
-                * map toolbar.
+                * [Not Used]
                 *
-                * @event advanced.ADVANCED_PANEL_CHANGED
+                * @for AdvancedToolbar
+                * @event advancedToolbar.ADVANCED_PANEL_CHANGED
                 */
                 ADVANCED_PANEL_CHANGED: "advanced/advancedpanel-changed"
             }

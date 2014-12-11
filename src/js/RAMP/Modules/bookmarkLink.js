@@ -380,7 +380,7 @@ define([
             if (baseUrl.indexOf(homePage) === -1) {
                 baseUrl += homePage;
             }
-            baseUrl += "?lang=" + config.lang;
+            baseUrl += "?lang=" + RAMP.locale;
 
             // Move the API key to config.json??
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';

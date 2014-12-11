@@ -79,7 +79,7 @@
         },
         {
             "id": "baseSimple",
-                     "layers": [
+            "layers": [
                 {
                     "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer"
                 },
@@ -91,7 +91,6 @@
                     "visibleLayers": [ 0 ]
                 }
             ],
-
             "thumbnail": "assets/images/basemap/baseSimple.jpg",
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
@@ -102,7 +101,7 @@
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
-                   "layers": [
+            "layers": [
                 {
                     "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer"
                 }
@@ -117,7 +116,7 @@
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
-             "layers": [
+            "layers": [
                 {
                     "url": "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer"
                 }
@@ -411,7 +410,7 @@
             }
         ],
         "wms": []
-    },
+            },
     "rowsPerPage": 40,
     "extendedDatagridExtentFilterEnabled": false,
     "templates": {

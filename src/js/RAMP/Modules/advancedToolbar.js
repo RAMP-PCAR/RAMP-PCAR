@@ -1,4 +1,4 @@
-﻿/*global define, $, TimelineLite, TweenLite, require, tmpl, console, RAMP */
+﻿/*global define, $, TimelineLite, require, tmpl, console, RAMP */
 
 /**
 * Tools module. Contains tools accessible through Advanced Toolbar.
@@ -47,15 +47,7 @@ define([
         advanced_toolbar_template_json) {
         "use strict";
 
-        var advancedToggle,
-            advancedSectionContainer,
-            advancedToolbarList,
-
-            cssButtonPressedClass = "button-pressed",
-
-            transitionDuration = 0.4,
-
-            map,
+        var map,
 
             tools = [
                 // name,
@@ -64,91 +56,118 @@ define([
                 // module
             ],
 
-            ui = {
+            ui = (function () {
+
+                var advancedToggle,
+                    advancedSectionContainer,
+                    advancedToolbarList,
+
+                    cssButtonPressedClass = "button-pressed",
+
+                    transitionDuration = 0.4,
+                    subPanelMarginDelta = 32,
+
+                    viewport = $(".viewport"),
+                    panelToggle = viewport.find("#panel-toggle"),
+
+                    advancedToolbarTimeline = new TimelineLite({ paused: true }),
+                    subpanelTimeLine = new TimelineLite();
+
                 /**
-                * Initiates additional UI components of the widget, setting listeners and other stuff.
-                *
-                * @method ui.init
-                * @private
-                */
-                init: function () {
-                    var viewport = $(".viewport"),
-                        subPanelContainer,
-                        panelToggle = viewport.find("#panel-toggle"),
+                 * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the height of the details panel to accommodate the expanded toolbar.
+                 * 
+                 * @method toggleToolbar
+                 * @param {Deferred} d a deferred to be resolved upon completion of the animation
+                 * @param {Boolean} doOpen if true - the toolbar show open; if false - the toolbar should close
+                 * @private
+                 */
+                function toggleToolbar(d, doOpen) {
+                    var subPanelContainer = viewport.find(".sub-panel-container");
 
-                        advancedToolbarTimeLine = new TimelineLite({
-                            paused: true,
-                            onComplete: function () { },
-                            onReverseComplete: function () { }
+                    // clear and recreate tween to capture newly created subpanels
+                    subpanelTimeLine
+                        .clear()
+                        .fromTo(subPanelContainer, transitionDuration,
+                                { "margin-top": 0, paused: true },
+                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }, 0);
+
+                    if (!doOpen) {
+                        advancedToolbarTimeline.eventCallback("onReverseComplete", function () {
+                            d.resolve();
+                            viewport.removeClass("advanced-toolbar-mode");
                         });
-
-                    advancedToggle = viewport.find("#advanced-toggle");
-                    advancedSectionContainer = viewport.find("#advanced-toolbar");
-
-                    // create html code for advancedToolbar
-                    tmpl.cache = {};
-                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
-                    advancedSectionContainer.append(tmpl("at_main"));
-                    advancedToolbarList = advancedSectionContainer.find("#advanced-toolbar-list");
-
-                    advancedToolbarTimeLine
-                        .set(advancedSectionContainer, { display: "block" }, 0)
-                        .set(viewport, { className: "+=advanced-toolbar-mode" }, 0)
-                        .fromTo(advancedToolbarList, transitionDuration, { top: -32 }, { top: 0, ease: "easeOutCirc" }, 0)
-                        .to(panelToggle, transitionDuration, { top: "+=32", ease: "easeOutCirc" }, 0);
-
-                    // register the popup for the advanced toolbar
-                    PopupManager.registerPopup(advancedToggle, "click",
-                        function (d) {
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
-
-                            // close this panel if any other panel is opened
-                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
-                                function (evt) {
-                                    if (evt.id !== "advanced-toolbar" && this.isOpen()) {
-                                        this.close();
-                                    }
-                                })
-                            );
-
-                            // perform transitions
-                            subPanelContainer = viewport.find(".sub-panel-container");
-                            TweenLite.fromTo(subPanelContainer, transitionDuration,
-                                    { "margin-top": 0 },
-                                    { "margin-top": 32, ease: "easeOutCirc" });
-
-                            advancedToolbarTimeLine.eventCallback("onComplete", d.resolve, [], this);
-                            advancedToolbarTimeLine.play();
-                        },
-                        {
-                            activeClass: cssButtonPressedClass,
-                            setClassBefore: true,
-                            target: advancedSectionContainer,
-                            closeHandler: function (d) {
-                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
-
-                                // deactivate all the tools
-                                deactivateAll();
-
-                                // perform transitions
-                                subPanelContainer = viewport.find(".sub-panel-container");
-                                TweenLite.fromTo(subPanelContainer, transitionDuration,
-                                    { "margin-top": 32 },
-                                    { "margin-top": 0, ease: "easeInCirc" });
-
-                                advancedToolbarTimeLine.eventCallback("onReverseComplete", d.resolve, [], this);
-                                advancedToolbarTimeLine.reverse();
-                            }
-                        }
-                    );
-
-                    map = RampMap.getMap();
-                },
-
-                addTool: function (tool) {
-                    advancedToolbarList.append(tool.module.node);
+                        advancedToolbarTimeline.reverse();
+                    } else {
+                        viewport.addClass("advanced-toolbar-mode");
+                        advancedToolbarTimeline.eventCallback("onComplete", function () {
+                            d.resolve();
+                        });
+                        advancedToolbarTimeline.play();
+                    }
                 }
-            };
+
+                return {
+                    /**
+                    * Initiates additional UI components of the widget, setting listeners and other stuff.
+                    *
+                    * @method ui.init
+                    * @private
+                    */
+                    init: function () {
+                        advancedToggle = viewport.find("#advanced-toggle");
+                        advancedSectionContainer = viewport.find("#advanced-toolbar");
+
+                        // create html code for advancedToolbar
+                        tmpl.cache = {};
+                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
+                        advancedSectionContainer.append(tmpl("at_main"));
+                        advancedToolbarList = advancedSectionContainer.find("#advanced-toolbar-list");
+
+                        // create a timeline to animate toggling of the advanced toolbar
+                        advancedToolbarTimeline
+                            .set(advancedSectionContainer, { display: "block" })
+                            .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta }, { top: 0, ease: "easeOutCirc" }, 0)
+                            .to(panelToggle, transitionDuration, { top: "+=" + subPanelMarginDelta, ease: "easeOutCirc" }, 0)
+
+                            .add(subpanelTimeLine, 0);
+
+                        // register the popup for the advanced toolbar
+                        PopupManager.registerPopup(advancedToggle, "click",
+                            function (d) {
+                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "advanced-toolbar" });
+
+                                // close this panel if any other panel is opened
+                                UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                                    function (evt) {
+                                        if (evt.id !== "advanced-toolbar" && this.isOpen()) {
+                                            this.close();
+                                        }
+                                    })
+                                );
+
+                                toggleToolbar(d, true);
+                            },
+                            {
+                                activeClass: cssButtonPressedClass,
+                                setClassBefore: true,
+                                target: advancedSectionContainer,
+                                closeHandler: function (d) {
+                                    topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "advanced-toolbar" });
+
+                                    deactivateAll(); // deactivate all the tools
+                                    toggleToolbar(d, false);
+                                }
+                            }
+                        );
+
+                        map = RampMap.getMap();
+                    },
+
+                    addTool: function (tool) {
+                        advancedToolbarList.append(tool.module.node);
+                    }
+                };
+            }());
 
         /**
         * Deactivates all the tools. Used when closing the Advanced toolbar or when another tool is being activated.

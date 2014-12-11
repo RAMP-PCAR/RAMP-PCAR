@@ -425,6 +425,7 @@ define([
 
                     layoutController.subPanelChange(false, this._attr.origin, this.container, false);
 
+                    // do after closing animation completes
                     this.timeLine.eventCallback("onReverseComplete",
                         function () {
                             if (this._attr.doAfterHide) {
@@ -532,9 +533,6 @@ define([
                         )
                     );
 
-                    //subPanelContent = String.format(subPanelContentTemplate, this._attr.panelName, this._attr.title);
-                    //subPanelString = String.format(subPanelTemplate2, this._attr.containerClass, subPanelContent);
-
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
 
@@ -542,7 +540,7 @@ define([
                     this._panelTitle = this.panel.find(".panel-title");
                     this._panelContentDiv = this.panel.find(".panel-content-div");
 
-                    // set content
+                    // set panel content
                     parsedContent = this.parseContent(this._attr.content);
                     this._panelContentDiv.empty().append(parsedContent);
 
@@ -559,7 +557,7 @@ define([
                             onCompleteScope: this
                         })
                         .to(this.panel, this._animatePanelDuration, { left: 0, ease: "easeOutCirc" })
-                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0);
+                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0); // 6 is double border width
 
                     Theme.tooltipster(this.container);
 
@@ -617,10 +615,8 @@ define([
 
                         updateContent = dojoLang.hitch(this,
                             function (a) {
-                                /*this._subPanelContentDiv.animate({
-                                    scrollTop: 0
-                                }, animateContentDuration, "easeOutCirc");*/
 
+                                // if the content in the subpanel is scrolled down, scroll back to the top
                                 TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
                                     { scrollTop: 0, ease: "easeOutCirc" });
 
@@ -694,9 +690,7 @@ define([
 
             addLayerToggle = $("#addLayer-toggle"),
             addLayerSectionContainer = $("#addLayer-section-container"),
-        //AddLayerSection = $("#addLayer-section"),
-
-        //viewPortHeight,
+            //AddLayerSection = $("#addLayer-section"),
 
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
@@ -708,7 +702,14 @@ define([
 
             layoutController;
 
-        layoutController = (function () {
+        /**
+        * Controls layout transition such as full-data and full-screen modes, opening and closing of the side panel, adjusts layout when resizing the browser window.
+        *
+        * @class LayoutController
+        * @static
+        * @for GUI
+        */
+        layoutController = (function () {            
             var viewport = $(".viewport"),
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
@@ -721,11 +722,10 @@ define([
                 panelDiv = $("#panel-div"),
                 panelToggle = $("#panel-toggle"),
                 panelPopup,
-                panelWidthDefault,
+                panelWidthDefault, // default width of the SidePanel. 
+                layoutWidthThreshold = 1200, // minimum width of the wide layout
 
                 windowWidth,
-
-                duration = 0.5,
 
                 layoutChange,
 
@@ -736,6 +736,7 @@ define([
                         adjustHeight();
                         layoutChange();
 
+                        // set tooltips on the collapsed toolbar
                         mapToolbar
                             .find(".map-toolbar-item-button")
                             .map(function (i, node) {
@@ -750,13 +751,16 @@ define([
 
                         Theme.tooltipster(mapToolbar);
 
-                        console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     },
                     onReverseComplete: function () {
+                        viewport.removeClass("full-data-mode");
+
                         adjustHeight();
                         layoutChange();
 
+                        // remove tooltips from the restored toolbar
                         Theme.tooltipster(mapToolbar, null, "destroy");
 
                         mapToolbar
@@ -764,62 +768,23 @@ define([
                             .removeClass("_tooltip")
                             .removeAttr("title");
 
-                        console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                     }
                 }),
-
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
-                fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true });
+                fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true }),
 
-            /**
-            * Fires an event when the layout of the page changes.
-            *
-            * @method layoutChange
-            * @private
-            */
-            layoutChange = function () {
-                if (!_isFullData) {
-                    console.log("GUI --> EventManager.GUI.LAYOUT_CHANGE");
-                    topic.publish(EventManager.GUI.LAYOUT_CHANGE);
-                }
-            };
+                // timeline generating functions
+                createFullDataTL,
+                createPanelToggleTL,
+                createFullDataSubpanelChangeTL,
 
-            function adjustHeight() {
-                helpSection.css({
-                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
-                });
-            }
+                timeLines;
 
-            function onFullScreenComplete() {
-                adjustHeight();
-                layoutChange();
-
-                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
-                    visible: Theme.isFullScreen()
-                });
-            }
-
-            /**
-            * Return the default width of the SidePanel.
-            *
-            * @method getPanelWidthDefault
-            * @private
-            * @return {Number} The default width of the SidePanel
-            */
-            function getPanelWidthDefault() {
-                if (!panelWidthDefault) {
-                    panelWidthDefault = panelDiv.width();
-                }
-
-                return panelWidthDefault;
-            }
-
-            function createTimelines() {
-                // fullDataTransition
+            createFullDataTL = function () {
                 fullDataTimeLine
-                    .set(viewport, { className: "+=full-data-mode" })
-                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { right: "auto", width: 35, ease: "easeOutCirc" }, 0)
+                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { width: 35, ease: "easeOutCirc" }, 0)
 
                     .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
                     .set(mapContent, { top: "500px" })
@@ -831,38 +796,88 @@ define([
                     .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
                     .fromTo(mapToolbar, transitionDuration / 2,
                         { width: "100%", height: "32px" },
-                        { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, duration / 2)
+                        { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, transitionDuration / 2)
 
                     .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
                     .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
 
                     .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0);
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
 
-                // panelToggleTransition
+                    .fromTo(panelDiv, transitionDuration,
+                        { width: panelWidthDefault, left: "auto" },
+                        { left: 35, width: "auto", ease: "easeOutCirc" }, 0);
+            };
+
+            createPanelToggleTL = function () {
                 panelToggleTimeLine
-                    .set(viewport, { className: "+=no-sidepanel-mode" })
-                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -getPanelWidthDefault(), ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -panelWidthDefault, ease: "easeOutCirc" }, 0)
                     .set(panelDiv, { display: "none" }, transitionDuration)
-                    .fromTo(mapDiv, transitionDuration, { right: getPanelWidthDefault() }, { right: 0, ease: "easeOutCirc" }, 0);
 
+                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, { right: 0, ease: "easeOutCirc" }, 0);
+            };
+
+            createFullDataSubpanelChangeTL = function () {
                 fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration,
-                        { right: "0px" },
-                        { right: getPanelWidthDefault(), ease: "easeOutCirc", immediateRender: false });
+                        { right: 0 },
+                        { right: panelWidthDefault, ease: "easeOutCirc" });
+            };
 
+            timeLines = [
+                {
+                    timeLine: fullDataTimeLine,
+                    generator: createFullDataTL
+                },
+                {
+                    timeLine: panelToggleTimeLine,
+                    generator: createPanelToggleTL
+                },
+                {
+                    timeLine: fullDataSubpanelChangeTimeLine,
+                    generator: createFullDataSubpanelChangeTL
+                }
+            ];            
+
+            /**
+            * Fires an event when the layout of the page changes.
+            *
+            * @method layoutChange
+            * @private
+            * @for LayoutController
+            */
+            layoutChange = function () {
+                if (!_isFullData) {
+                    console.log("GUI --> EventManager.GUI.LAYOUT_CHANGE");
+                    topic.publish(EventManager.GUI.LAYOUT_CHANGE);
+                }
+            };
+
+            /**
+            * Adjusts the height of the help section based on the height of the window.
+            *
+            * @method adjustHeight
+            * @private
+            */
+            function adjustHeight() {
+                helpSection.css({
+                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
+                });
             }
 
-            function killTimelines() {
-                fullDataSubpanelChangeTimeLine.kill();
-                panelToggleTimeLine.kill();
-                fullDataTimeLine.kill();
-            }
+            /**
+            * Executed after full-screen mode transition is complete.
+            *
+            * @method onFullScreenComplete
+            * @private
+            */
+            function onFullScreenComplete() {
+                adjustHeight();
+                layoutChange();
 
-            function recreateTimelines() {
-                panelWidthDefault = null;
-                killTimelines();
-                createTimelines();
+                topic.publish(EventManager.GUI.FULLSCREEN_CHANGE, {
+                    visible: Theme.isFullScreen()
+                });
             }
 
             /**
@@ -870,7 +885,6 @@ define([
             *
             * @method panelChange
             * @param  {Boolean} visible Indicates whether the SidePanel is visible or not
-            * @for SidePanel
             * @private
             */
             function panelChange(visible) {
@@ -893,6 +907,7 @@ define([
                             layoutChange();
                             panelChange(true);
 
+                            // update close button tooltips
                             panelToggle
                                 .tooltipster("content", i18n.t("gui.actions.close"))
                                 .find("span.wb-invisible").text(i18n.t("gui.actions.close"));
@@ -900,6 +915,7 @@ define([
                             d.resolve();
                         }, [], this);
 
+                viewport.removeClass("no-sidepanel-mode");
                 panelToggleTimeLine.reverse();
             }
 
@@ -918,9 +934,12 @@ define([
                             layoutChange();
                             panelChange(false);
 
+                            // update open button tooltips
                             panelToggle
                                 .tooltipster("content", i18n.t("gui.actions.open"))
                                 .find("span.wb-invisible").text(i18n.t("gui.actions.open"));
+
+                            viewport.addClass("no-sidepanel-mode");
 
                             d.resolve();
                         }, [], this);
@@ -928,26 +947,25 @@ define([
                 panelToggleTimeLine.play();
             }
 
+            /**
+            * Toggles the full-data mode on and off.
+            *
+            * @method _toggleFullDataMode
+            * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+            * @private
+            */
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
                 if (_isFullData) {
-                    TweenLite
-                        .fromTo(panelDiv, transitionDuration,
-                            { width: getPanelWidthDefault(), right: 0, left: "auto" },
-                            { left: 35, right: 0, width: "auto", ease: "easeOutCirc" });
-
+                    viewport.addClass("full-data-mode"); // set full-data-mode css class BEFORE animation; remove it after it finishes - on onReverseComplete callback
                     fullDataTimeLine.play();
                 } else {
-                    TweenLite
-                        //.set(panelDiv, {  }, 0)
-                        .fromTo(panelDiv, transitionDuration,
-                            { width: panelDiv.css("width"), clearProps: "left", right: panelDiv.css("right") },
-                            { right: 0, width: getPanelWidthDefault(), ease: "easeInCirc" });
-
+                    fullDataSubpanelChangeTimeLine.reverse(); // play this animation to readjust the sidepanel if the details panel was opened and not closed in full data mode
                     fullDataTimeLine.reverse();
                 }
 
+                // close subpanels
                 utilDict.forEachEntry(subPanels, function (key) {
                     hideSubPanel({
                         origin: key
@@ -955,21 +973,45 @@ define([
                 });
             }
 
+            /**
+            * Changes internal panel width reference based on the window width.
+            *
+            * @method updatePanelWidth
+            * @private
+            */
+            function updatePanelWidth() {
+                panelWidthDefault = windowWidth < layoutWidthThreshold ? 340 : 430;
+            }
+
+            /**
+            * Optimizes layout based on the window width
+            *
+            * @method optimizeLayout
+            * @private
+            */
             function optimizeLayout() {
-                if ((windowWidth < 1200 && jWindow.width() > 1200) ||
-                    (windowWidth > 1200 && jWindow.width() < 1200)) {
-                    recreateTimelines();
+                if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
+                    (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
 
                     windowWidth = jWindow.width();
+                    updatePanelWidth();
+
+                    UtilMisc.resetTimelines(timeLines, true);
                 }
             }
 
             return {
+                /**
+                * Initializes layout controller.
+                *
+                * @method init
+                */
                 init: function () {
-                    createTimelines();
-
                     windowWidth = jWindow.width();
                     jWindow.on("resize", optimizeLayout);
+                    updatePanelWidth();
+
+                    UtilMisc.resetTimelines(timeLines);
 
                     Theme
                         .fullScreenCallback("onComplete", onFullScreenComplete)
@@ -1011,17 +1053,28 @@ define([
                 * Toggles the FullScreen mode of the application
                 *
                 * @method toggleFullScreenMode
-                * @private
-                * @param  {boolean} fullscreen true - expand; false - collapse; undefined - toggle;
+                * @param  {Boolean} fullscreen true - expand; false - collapse; undefined - toggle;
                 */
                 toggleFullScreenMode: function (fullscreen) {
                     fullScreenPopup.toggle(null, fullscreen);
                 },
 
+                /**
+                * Returns the state of the full-data mode.
+                *
+                * @method isFullData
+                * @return {Boolean} True is full-data mode on; false otherwise
+                */
                 isFullData: function () {
                     return _isFullData;
                 },
 
+                /**
+                * Toggles the full-data mode on and off.
+                *
+                * @method toggleFullDataMode
+                * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+                */
                 toggleFullDataMode: function (fullData) {
                     _toggleFullDataMode(fullData);
                 },
@@ -1030,8 +1083,7 @@ define([
                 * Fires an event when the subpanel closes or opens.
                 *
                 * @method subPanelChange
-                * @private
-                * @param {Boolean} visible indicates whether the panel is visible or not
+                * @param {Boolean} visible indicates whether the subpanel is visible or not (the panel is considered invisible when it's being destroyed, starts closing)
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
                 * @param {Boolean} isComplete indicates if subPanel transition has completed or just started
@@ -1041,7 +1093,7 @@ define([
                     if (!fullDataTimeLine.isActive() && _isFullData && !isComplete) {
                         // adjust the sidePanel position shifting the right edge to the left, making space for the subpanel to open at
                         if (visible) {
-                            fullDataSubpanelChangeTimeLine.play(0);
+                            fullDataSubpanelChangeTimeLine.play();
                         } else if (!visible) {
                             fullDataSubpanelChangeTimeLine.reverse();
                         }
@@ -1080,6 +1132,7 @@ define([
                 *
                 * @method width
                 * @return {Number} The width of this SidePanel
+                * @for LayoutController
                 */
                 getPanelWidth: function () {
                     return panelDiv.filter(":visible").width();
@@ -1104,49 +1157,6 @@ define([
 
             return subPanel;
         }
-
-        /**
-        * Adjusts dimensions of the help panel relative to the mapContent `div`.
-        *
-        * @method adjustHelpDimensions
-        * @private
-        */
-        /*function adjustHelpDimensions() {
-        helpSection.css({
-        "max-height": mapContent.height() - 56 // 56 is an arbitrary-wide gap between the help panel and the upper toolbar
-        });
-        }*/
-
-        /**
-        * Adjusts the dimensions and position of the SubPanel when layout of the page is changing.
-        *
-        * @method adjutSubPanelDimensions
-        * @private
-        * @param  {SubPanel} subPanel SubPanel whose dimensions and position need to be adjusted
-        */
-        /*function adjutSubPanelDimensions(subPanel) {
-        function adjust(p, d) {
-        if (p) {
-        p.getContainer()
-        .height(viewPortHeight - $("#map-toolbar").height()); //mapToolbar.height());
-
-        //.position({
-        //my: "right top",
-        //at: "right top+32",
-        //of: "#map-div" // mapContent
-        //});
-        if (d) {
-        d.resolve(true);
-        }
-        }
-        }
-
-        if (subPanel) {
-        adjust(subPanel);
-        } else {
-        UtilMisc.executeOnDone(subPanels, adjust);
-        }
-        }*/
 
         /**
         * Creates and opens a new SubPanel with given settings.
@@ -1287,8 +1297,8 @@ define([
             *
             * @method load
             * @param  {Number} id   ID of this module
-            * @param  {?} req  ???
-            * @param  {Function} load The callback function
+            * @param  {Object} req  dojo required, can be used to require additional modules, etc.
+            * @param  {Function} load The callback function to be called as the very last thing in load
             */
             load: function (id, req, load) {
                 // measure available space on every page resize
