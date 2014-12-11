@@ -434,24 +434,8 @@
         "filterRowTemplate": "filter_section_template"
     },
     "globalFilter": {
-        "toggleLabels": [
-            {
-                "id": "globalVisibility",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "eye checked"
-            },
-            {
-                "id": "globalBox",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "box checked"
-            }
-        ]
+        "globalLayerVisibilityTemplate":"filter_global_label_template_eye",
+        "globalBoundingBoxVisibiltiyTemplate":"filter_global_label_template_box"
     },
     "divNames": {
         "map": "mainMap",
