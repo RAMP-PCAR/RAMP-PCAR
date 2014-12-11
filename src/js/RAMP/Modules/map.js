@@ -47,7 +47,7 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService","esri/tasks/ProjectParameters",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -61,7 +61,7 @@ define([
 
     /* Esri */
     EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    SpatialReference, EsriScalebar, EsriExtent, WMSLayer,
+    SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
@@ -453,6 +453,29 @@ define([
         function createExtent(extentConfig, sr) {
             return new EsriExtent(
                 extentConfig.xmin, extentConfig.ymin, extentConfig.xmax, extentConfig.ymax, sr);
+        }
+
+        /**
+         * Create boudingbox graphic for a bounding box extent
+         * 
+         * @param  {esri/geometry/Extent} extent of a bounding box 
+         * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
+         */
+        function createGraphic(extent) {
+           return new esri.Graphic({
+                geometry: extent,
+                symbol: {
+                    color: [255, 0, 0, 64],
+                    outline: {
+                        color: [240, 128, 128, 255],
+                        width: 1,
+                        type: "esriSLS",
+                        style: "esriSLSSolid"
+                    },
+                    type: "esriSFS",
+                    style: "esriSFSSolid"
+                }
+            });
         }
 
         /**
@@ -855,7 +878,11 @@ define([
                 * @type {array of esri/layer/GraphicsLayer}
                 */
 
-                var boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
+                // geometry service to reproject any extent that does not have
+                // same spatialReference as the map
+                var gsvc = new GeometryService(RAMP.config.geometryService),
+
+                boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
 
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
@@ -870,24 +897,26 @@ define([
                     var boundingBoxExtent;
                     if (typeof layer.layerExtent !== "undefined") {
 
-                        boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
+                        // TODO: JKW, check to see if createExtent is used anywhere else, do a clean up
+                        // boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
+                        boundingBoxExtent = new EsriExtent(layer.layerExtent);
 
-                        var extentGraphic = new esri.Graphic({
-                            geometry: boundingBoxExtent,
-                            symbol: {
-                                color: [255, 0, 0, 64],
-                                outline: {
-                                    color: [240, 128, 128, 255],
-                                    width: 1,
-                                    type: "esriSLS",
-                                    style: "esriSLSSolid"
-                                },
-                                type: "esriSFS",
-                                style: "esriSFSSolid"
-                            }
-                        });
+                        if (boundingBoxExtent.spatialReference.wkid !== spatialReference.wkid) {
+                            var params = new ProjectParameters();
+                            params.geometries = [boundingBoxExtent];
+                            params.outSR = spatialReference ;
 
-                        boundingBox.add(extentGraphic);
+                            gsvc.project(params, function (projectedExtents) {
+                                console.log("re-project");
+                                var extentGraphic = createGraphic(projectedExtents[0]);
+                                boundingBox.add(extentGraphic);
+                            });
+                        } else {
+                            var extentGraphic = createGraphic(boundingBoxExtent);
+                            boundingBox.add(extentGraphic);
+
+                        }
+                        
                     }
 
                     return boundingBox;
