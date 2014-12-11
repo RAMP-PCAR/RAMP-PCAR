@@ -414,7 +414,9 @@
     "rowsPerPage": 40,
     "extendedDatagridExtentFilterEnabled": false,
     "templates": {
-        "basemap": "default_basemap"
+        "basemap": "default_basemap",
+        "globalSelectorToggles": "layerGlobalToggles"
+
     },
     "divNames": {
         "map": "mainMap",
