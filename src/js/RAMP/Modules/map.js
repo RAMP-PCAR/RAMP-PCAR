@@ -725,7 +725,7 @@ define([
             */
             init: function () {
                 //config object is loaded in bootstrapper.js
-                var config = RAMP.config,
+                var
 
                 /**
                 * The spatial reference of the map
@@ -734,7 +734,7 @@ define([
                 * @private
                 * @type {esri/SpatialReference}
                 */
-                spatialReference = new esri.SpatialReference(config.spatialReference),
+                spatialReference = new esri.SpatialReference(RAMP.config.spatialReference),
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -743,9 +743,7 @@ define([
                 * @private
                 * @type {String}
                 */
-                url = UtilArray.find(config.basemaps, function (basemap) {
-                    return basemap.showOnInit;
-                }).layers[0].url,
+                url = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].layers[0].url,
 
                 /**
                 * The basemap layer
@@ -765,7 +763,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                maxExtent = createExtent(config.extents.maximumExtent, spatialReference);
+                maxExtent = createExtent(RAMP.config.extents.maximumExtent, spatialReference);
 
                 /**
                 * The initial extent of the map
@@ -774,7 +772,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(config.extents.defaultExtent, spatialReference);
+                initExtent = createExtent(RAMP.config.extents.defaultExtent, spatialReference);
 
                 /**
                 * Used for full extent in nav widget
@@ -783,10 +781,10 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(config.extents.fullExtent, spatialReference);
+                fullExtent = createExtent(RAMP.config.extents.fullExtent, spatialReference);
 
                 //generate WMS layers array
-                wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
+                wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
@@ -817,7 +815,7 @@ define([
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(config.layers.feature, function (layerConfig) {
+                featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {
                     var fl;
 
                     if (layerConfig.isStatic) {
@@ -855,7 +853,7 @@ define([
                 * @type {array of esri/layer/GraphicsLayer}
                 */
 
-                var boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
+                var boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
 
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
@@ -895,20 +893,20 @@ define([
 
                 // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
                 // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.layers.feature, function (layer) {
+                boundingBoxMapping = UtilDict.zip(dojoArray.map(RAMP.config.layers.feature, function (layer) {
                     return layer.id;
                 }), boundingBoxLayers);
 
                 //the map!
-                map = new EsriMap(config.divNames.map, {
+                map = new EsriMap(RAMP.config.divNames.map, {
                     extent: initExtent,
                     logo: false,
-                    minZoom: config.levelOfDetails.minLevel,
-                    maxZoom: config.levelOfDetails.maxLevel,
+                    minZoom: RAMP.config.zoomLevels.min,
+                    maxZoom: RAMP.config.zoomLevels.max,
                     slider: false
                 });
 
-                GlobalStorage.map = map;
+                RAMP.map = map;
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
@@ -917,7 +915,7 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.forEach(config.layers.feature, function (layer) {
+                dojoArray.forEach(RAMP.config.layers.feature, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
                         var tempLayer = map.generateStaticLayer(staticLayer);
@@ -930,7 +928,7 @@ define([
                     staticLayerMap[layer.id] = perLayerStaticMaps;
                 });
 
-                GlobalStorage.LayerMap = staticLayerMap;
+                RAMP.staticLayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
                 

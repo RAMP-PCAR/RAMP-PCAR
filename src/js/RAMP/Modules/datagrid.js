@@ -102,7 +102,6 @@ define([
 
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
-            config,
             //layerConfig,
             gridConfig,
 
@@ -425,7 +424,7 @@ define([
                                 }),
                                 dom: '<"jqgrid_table_wrapper full-table"t><"status-line"p>',
                                 scrollY: "500px", // just a placeholder; it will be dynamically updated later
-                                searching: config.datagrid.extendedExtentFilterEnabled
+                                searching: RAMP.config.extendedDatagridExtentFilterEnabled
                             }
                         );
                     }
@@ -1226,7 +1225,7 @@ define([
                     return layer.url === ui.getSelectedDatasetUrl();
                 });
 
-                if (config.datagrid.extendedExtentFilterEnabled) {
+                if (RAMP.config.extendedDatagridExtentFilterEnabled) {
                     q.geometry = RampMap.getMap().extent;
                 } else {
                     // Grab everything!
@@ -1463,10 +1462,9 @@ define([
             * @method init
             */
             init: function () {
-                config = RAMP.config;
 
                 // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(config.layers.feature, function (layerConfig) {
+                var layerConfigs = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 
