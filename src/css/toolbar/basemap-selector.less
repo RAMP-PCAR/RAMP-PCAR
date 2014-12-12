@@ -7,10 +7,9 @@
     top: 32px;
 
     width: 500px;
-    
+
     .basemapselector-section {
         height: 280px;
-        
         .box-shadow-section;
 
         .projection-list,
@@ -43,24 +42,33 @@
                     border-color: @medium-dark-grey-color !important;
                     background-color: #545454 !important;
                     color: #FFF !important;
-                    box-shadow: @button-active-shadow;                    
+                    box-shadow: @button-active-shadow;
                 }
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                width: 5px;
+                background: #545454;
+                left: 148px;
+                top: 0;
+                bottom: 0;
             }
         }
 
         .basemap-list-pane {
             position: absolute;
-            top: 0;
-            right: 0;
-
+            top: 1px;
+            right: 1px;
+            bottom: 1px;
             width: 350px;
-            border-left: 5px solid #545454;
-            height: 280px;
-
+            //border-left: 5px solid #545454;
+            
             .basemap-button {
                 border-radius: 0 0 0 0;
                 margin: 0;
-                padding: 8px 12px 8px !important;
+                padding: 6px 5px 6px 14px !important;
                 text-decoration: none;
                 width: 100%;
                 text-align: left;
@@ -90,7 +98,7 @@
 
                     .basemap-name {
                         font-weight: bold;
-                        margin-bottom: 4px;
+                        //margin-bottom: 4px;
                     }
 
                     .basemap-description {
