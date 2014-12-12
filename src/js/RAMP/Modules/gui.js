@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery */
 /*jslint white: true */
 
 /**
@@ -1481,6 +1481,7 @@ define([
                 // then the map extent will change again.
                 var waitList = [];
 
+                /* FIXME remove deadcode once RAMP works with the new config
                 if (!RAMP.config.ui.sidePanelOpened) {
                     // NOTE: panel change not triggered here (see map extent change below)
                     waitList.push({
@@ -1492,7 +1493,9 @@ define([
                         subscribeName: EventManager.GUI.PANEL_CHANGE
                     });
                 }
+                */
 
+                /* FIXME remove deadcode once RAMP works with the new config
                 if (RAMP.config.ui.fullscreen) {
                     // NOTE: fullscreen not triggered here (see map extent change below)
                     waitList.push({
@@ -1502,7 +1505,7 @@ define([
                         },
                         subscribeName: EventManager.GUI.FULLSCREEN_CHANGE
                     });
-                }
+                }*/
 
                 // return the callback
                 load();

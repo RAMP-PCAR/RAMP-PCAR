@@ -29,8 +29,18 @@ define(["dojo/_base/array","utils/util"],
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
             },
+            gridColumnDefaults = { orderable: true, type: "string", alignment: 1 },
+            basemapDefaults = { scaleCssClass: "map-scale-dark", type: "Topographic" },
             configDefaults = {
-                layers: { feature: [], wms: [] }
+                initialBasemapIndex: 0,
+                extendedDatagridExtentFilterEnabled: false,
+                rowsPerPage: 50,
+                navWidget: { sliderMinVal: 3, sliderMaxVal: 15, debug: false, animate: "fast", cssPath: "ramp-theme/navigation", skin: "white" },
+                zoomLevels: { min: 1, max: 17 },
+                templates: { basemap: "default_basemap", globalSelectorToggles: "default_selector_toggles" },
+                layers: { feature: [], wms: [] },
+                divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
+                advancedToolbar: { enabled: false, tools: [] }
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -45,8 +55,15 @@ define(["dojo/_base/array","utils/util"],
             result.layers.wms = dojoArray.map(result.layers.wms, function (wms) {
                 return applyDefaults(wmsLayerDefaults,wms);
             });
+            result.basemaps = dojoArray.map(result.basemaps, function (b) {
+                return applyDefaults(basemapDefaults,b);
+            });
             result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
-                return applyDefaults(featureLayerDefaults,fl);
+                var layer = applyDefaults(featureLayerDefaults, fl);
+                layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
+                    return applyDefaults(gridColumnDefaults, gc);
+                });
+                return layer;
             });
             console.log(result);
             return result;
