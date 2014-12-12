@@ -212,7 +212,7 @@
                                         </div>
                                     {% } else{ %}
                                         <div class='checkbox-custom placeholder' role='presentation'></div>
-                                    {% } %}",        
+                                    {% } %}",
         // filter row button template
         "filter_button_template":"<li>
                                     <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
@@ -229,14 +229,16 @@
                                             </div>
                                         </div>
                                         <div class='global-checkboxes'>
-                                            {% include( o.globalLayerVisibilityTemplate,o); %}
-                                            {% include( o.globalBoundingBoxVisibiltiyTemplate,o); %}
+                                           {% include(o.globalSelectorToggles, o);%}
                                         </div>
                                         <div class='clearfix'>
                                         </div>
                                     </div>",
+        "layerGlobalToggles":"{% include( 'filter_global_label_template_eye',o); %}
+                                        {% include( 'filter_global_label_template_box',o); %}
+                                        ",
         // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
-        //	custom template for global visibility
+        //  custom template for global visibility
         "filter_global_label_template_eye": "<div class='checkbox-custom'>
                                             <label for='globalVisibility' class='form-checkbox _tooltip eye checked' title=''>
                                                 <span class='wb-invisible'></span>
@@ -269,7 +271,7 @@
         // o is the datawrapper object contains layers stored in o.data
         "filter_manager_template":"<div id='categories'>
                                         <div id='filterGlobalToggles' class='global-toggles'>
-                                            {% include('filter_global_row_template', o.config.globalFilter);%}
+                                            {% include('filter_global_row_template', o.config.templates);%}
                                         </div>
                                         <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
                                         <ul id='layerList' role='listbox' aria-label='{%=i18n.t('filterManager.layerListLabel')%}'>

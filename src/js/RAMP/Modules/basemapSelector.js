@@ -37,7 +37,7 @@ define([
 // Esri
     "esri/dijit/BasemapGallery",
 // Util
-    "utils/popupManager", "utils/tmplHelper", "utils/array"],
+    "utils/popupManager", "utils/tmplHelper"],
 
 function (
         // Dojo
@@ -49,12 +49,11 @@ function (
         // Esri
         BasemapGallery,
         // Util
-        PopupManager, TmplHelper, UtilArray) {
+        PopupManager, TmplHelper) {
     "use strict";
 
     var basemapGallery,
         basemaps = [],
-        config,
 
         placementAnchorId = "basemapGallery",
 
@@ -79,14 +78,14 @@ function (
                 basemapGalleryNode = $("#basemapGallery").attr("role", "listbox");
 
                 // Set alt text for selector thumbnails
-                dojoArray.forEach(config.basemaps, function (basemap) {
+                dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
                     domAttr.set(query(String.format("#galleryNode_{0} img", basemap.id))[0], "alt", basemap.altText);
                 });
 
                 // load JSON templates for basemap and skin every node under the basemap selector
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
                 dojoArray.forEach($(".esriBasemapGalleryNode"), function (node, i) {
-                    $(node).html(tmpl(config.siteTemplate.basemapTemplate, TmplHelper.dataBuilder(config.basemaps[i])));
+                    $(node).html(tmpl(RAMP.config.templates.basemap, TmplHelper.dataBuilder(RAMP.config.basemaps[i])));
                 });
 
                 // turn on the opening and closing of the basemap selector section
@@ -160,9 +159,8 @@ function (
          *
          */
         init: function () {
-            config = RAMP.config;
 
-            dojoArray.forEach(config.basemaps, function (basemap) {
+            dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
                 var basemapDijit,
                     baseampLayers = [];
 
@@ -195,9 +193,7 @@ function (
 
             basemapGallery.startup();
 
-            var startId = UtilArray.find(RAMP.config.basemaps, function (basemap) {
-                return basemap.showOnInit;
-            }).id;
+            var startId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
 
             basemapGallery.select(startId);
 
