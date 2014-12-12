@@ -47,7 +47,7 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService","esri/tasks/ProjectParameters",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -61,7 +61,7 @@ define([
 
     /* Esri */
     EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    SpatialReference, EsriScalebar, EsriExtent, WMSLayer,
+    SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
@@ -456,6 +456,29 @@ define([
         }
 
         /**
+         * Create boudingbox graphic for a bounding box extent
+         * 
+         * @param  {esri/geometry/Extent} extent of a bounding box 
+         * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
+         */
+        function createGraphic(extent) {
+           return new esri.Graphic({
+                geometry: extent,
+                symbol: {
+                    color: [255, 0, 0, 64],
+                    outline: {
+                        color: [240, 128, 128, 255],
+                        width: 1,
+                        type: "esriSLS",
+                        style: "esriSLSSolid"
+                    },
+                    type: "esriSFS",
+                    style: "esriSFSSolid"
+                }
+            });
+        }
+
+        /**
         * Add a static, non-interactive Layer to the map
         *
         * @private
@@ -724,9 +747,8 @@ define([
             *
             */
             init: function () {
-                //config object is loaded in bootstrapper.js
-                var config = RAMP.config,
 
+                var
                 /**
                 * The spatial reference of the map
                 *
@@ -734,7 +756,7 @@ define([
                 * @private
                 * @type {esri/SpatialReference}
                 */
-                spatialReference = new esri.SpatialReference(config.spatialReference),
+                spatialReference = new esri.SpatialReference(RAMP.config.spatialReference),
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -743,9 +765,7 @@ define([
                 * @private
                 * @type {String}
                 */
-                url = UtilArray.find(config.basemaps, function (basemap) {
-                    return basemap.showOnInit;
-                }).layers[0].url,
+                url = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].layers[0].url,
 
                 /**
                 * The basemap layer
@@ -756,16 +776,14 @@ define([
                 */
                 baseLayer = new ArcGISTiledMapServiceLayer(url, {
                     id: "basemapLayer"
-                });
+                }),
+                initExtentSettings,
+                maxExtentSettings,
+                fullExtentSettings;
                 
-                /**
-                * The maximum extent of the map
-                *
-                * @property maxExtent
-                * @private
-                * @type {esri/geometry/Extent}
-                */
-                maxExtent = createExtent(config.extents.maximumExtent, spatialReference);
+                initExtentSettings = RAMP.config.extents.defaultExtent;
+                fullExtentSettings = RAMP.config.extents.fullExtent || initExtentSettings;
+                maxExtentSettings = RAMP.config.extents.maximumExtent || fullExtentSettings;
 
                 /**
                 * The initial extent of the map
@@ -774,7 +792,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(config.extents.defaultExtent, spatialReference);
+                initExtent = createExtent(initExtentSettings, spatialReference);
 
                 /**
                 * Used for full extent in nav widget
@@ -783,10 +801,19 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(config.extents.fullExtent, spatialReference);
+                fullExtent = createExtent(fullExtentSettings, spatialReference);
+
+                /**
+                * The maximum extent of the map
+                *
+                * @property maxExtent
+                * @private
+                * @type {esri/geometry/Extent}
+                */
+                maxExtent = createExtent(maxExtentSettings, spatialReference);
 
                 //generate WMS layers array
-                wmsLayers = dojoArray.map(config.layers.wms, function (layer) {
+                wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
                     var wmsl = new WMSLayer(layer.url, {
                         id: layer.id,
                         format: layer.format,
@@ -817,7 +844,7 @@ define([
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(config.layers.feature, function (layerConfig) {
+                featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {
                     var fl;
 
                     if (layerConfig.isStatic) {
@@ -855,7 +882,11 @@ define([
                 * @type {array of esri/layer/GraphicsLayer}
                 */
 
-                var boundingBoxLayers = dojoArray.map(config.layers.feature, function (layer) {
+                // geometry service to reproject any extent that does not have
+                // same spatialReference as the map
+                var gsvc = new GeometryService(RAMP.config.geometryService),
+
+                boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
 
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
@@ -870,24 +901,26 @@ define([
                     var boundingBoxExtent;
                     if (typeof layer.layerExtent !== "undefined") {
 
-                        boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
+                        // TODO: JKW, check to see if createExtent is used anywhere else, do a clean up
+                        // boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
+                        boundingBoxExtent = new EsriExtent(layer.layerExtent);
 
-                        var extentGraphic = new esri.Graphic({
-                            geometry: boundingBoxExtent,
-                            symbol: {
-                                color: [255, 0, 0, 64],
-                                outline: {
-                                    color: [240, 128, 128, 255],
-                                    width: 1,
-                                    type: "esriSLS",
-                                    style: "esriSLSSolid"
-                                },
-                                type: "esriSFS",
-                                style: "esriSFSSolid"
+                        if (boundingBoxExtent.spatialReference.wkid !== spatialReference.wkid) {
+                            var params = new ProjectParameters();
+                            params.geometries = [boundingBoxExtent];
+                            params.outSR = spatialReference ;
+
+                            gsvc.project(params, function (projectedExtents) {
+                                console.log("re-project");
+                                var extentGraphic = createGraphic(projectedExtents[0]);
+                                boundingBox.add(extentGraphic);
+                            });
+                        } else {
+                            var extentGraphic = createGraphic(boundingBoxExtent);
+                            boundingBox.add(extentGraphic);
+
                             }
-                        });
 
-                        boundingBox.add(extentGraphic);
                     }
 
                     return boundingBox;
@@ -895,20 +928,20 @@ define([
 
                 // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
                 // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(config.layers.feature, function (layer) {
+                boundingBoxMapping = UtilDict.zip(dojoArray.map(RAMP.config.layers.feature, function (layer) {
                     return layer.id;
                 }), boundingBoxLayers);
 
                 //the map!
-                map = new EsriMap(config.divNames.map, {
+                map = new EsriMap(RAMP.config.divNames.map, {
                     extent: initExtent,
                     logo: false,
-                    minZoom: config.levelOfDetails.minLevel,
-                    maxZoom: config.levelOfDetails.maxLevel,
+                    minZoom: RAMP.config.zoomLevels.min,
+                    maxZoom: RAMP.config.zoomLevels.max,
                     slider: false
                 });
 
-                GlobalStorage.map = map;
+                RAMP.map = map;
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
@@ -917,7 +950,7 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.forEach(config.layers.feature, function (layer) {
+                dojoArray.forEach(RAMP.config.layers.feature, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
                         var tempLayer = map.generateStaticLayer(staticLayer);
@@ -930,7 +963,7 @@ define([
                     staticLayerMap[layer.id] = perLayerStaticMaps;
                 });
 
-                GlobalStorage.LayerMap = staticLayerMap;
+                RAMP.staticLayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
                 

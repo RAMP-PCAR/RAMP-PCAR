@@ -1,11 +1,10 @@
 {
-    "lang": "en",
-    "helpContent": "Help Content",
+    "version": "1.0.0",
     "spatialReference": {
         "wkid": 3978
     },
-    "geometryService": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
-    "proxyUrl": "proxy/proxy.ashx",
+    "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "proxyUrl": "proxy/dotNet/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -33,10 +32,10 @@
     },
     "extents": {
         "defaultExtent": {
-            "xmin": -2681457,
-            "ymin": -883440,
-            "xmax": 3549492,
-            "ymax": 3482193
+            "xmin": -1681457,
+            "ymin": -483440,
+            "xmax": 2549492,
+            "ymax": 2482193
         },
         "fullExtent": {
             "xmin": -2681457,
@@ -54,14 +53,13 @@
     "navWidget": {
         "sliderMinVal": 3,
         "sliderMaxVal": 15,
-        "debug": 0,
+        "debug": false,
         "animate": "fast",
-        "cssPath": "ramp-theme/navigation",
         "skin": "white"
     },
-    "levelOfDetails": {
-        "minLevel": 1,
-        "maxLevel": 17
+    "zoomLevels": {
+        "min": 1,
+        "max": 17
     },
     "basemaps": [
         {
@@ -72,11 +70,11 @@
                 }
             ],
             "thumbnail": "assets/images/basemap/baseToponrcan.jpg",
-            "showOnInit": true,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
             "name": "@@config.basemaps.baseNrCan.name",
             "altText": "@@config.basemaps.baseNrCan.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseNrCan.description"
         },
         {
@@ -94,11 +92,11 @@
                 }
             ],
             "thumbnail": "assets/images/basemap/baseSimple.jpg",
-            "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
             "name": "@@config.basemaps.baseSimple.name",
             "altText": "@@config.basemaps.baseSimple.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseSimple.description"
         },
         {
@@ -109,11 +107,11 @@
                 }
             ],
             "thumbnail": "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
-            "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
             "name": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
             "altText": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description"
         },
         {
@@ -124,11 +122,11 @@
                 }
             ],
             "thumbnail": "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
-            "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
             "name": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
             "altText": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description"
         },
         {
@@ -139,11 +137,11 @@
                 }
             ],
             "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
-            "showOnInit": false,
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
             "name": "@@config.basemaps.baseE2M.name",
             "altText": "@@config.basemaps.baseE2M.altText",
+            "tileSchema": "NRCAN_Lambert_3978",
             "description": "@@config.basemaps.baseE2M.description"
         }
     ],
@@ -162,8 +160,8 @@
                             "id": "iconCol",
                             "fieldName": "",
                             "width": "50px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 0,
                             "title": "Icon",
                             "columnTemplate": "graphic_icon"
@@ -172,8 +170,8 @@
                             "id": "detailsCol",
                             "fieldName": "prj_nam_en",
                             "width": "60px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 0,
                             "title": "Details",
                             "columnTemplate": "details_button"
@@ -182,8 +180,8 @@
                             "id": "nameCol",
                             "fieldName": "prj_nam_en",
                             "width": "250px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 1,
                             "title": "Project Name",
                             "columnTemplate": "title_span"
@@ -192,14 +190,13 @@
                             "id": "areaCol",
                             "fieldName": "CATEG_NAM_ENG",
                             "width": "300px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 0,
                             "title": "Category",
                             "columnTemplate": "title_span"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
+                    ]
                 },
                 "symbology": {
                     "valueMaps": [
@@ -236,7 +233,10 @@
                     "xmin": -2317716,
                     "ymin": -692095,
                     "xmax": 3000105,
-                    "ymax": 2558710
+                    "ymax": 2558710,
+                    "spatialReference": {
+                        "wkid": 3978
+                }
                 }
             },
             {
@@ -251,8 +251,8 @@
                             "id": "iconCol",
                             "fieldName": "",
                             "width": "300px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 1,
                             "title": "Icon",
                             "columnTemplate": "graphic_icon"
@@ -261,8 +261,8 @@
                             "id": "nameCol",
                             "fieldName": "OBJECTID",
                             "width": "500px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 1,
                             "title": "Detais",
                             "columnTemplate": "details_button"
@@ -271,8 +271,8 @@
                             "id": "nameCol",
                             "fieldName": "siteShortName_en",
                             "width": "500px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 1,
                             "title": "Station Name",
                             "columnTemplate": "unformatted_grid_value"
@@ -281,14 +281,13 @@
                             "id": "nameColx",
                             "fieldName": "siteType_en",
                             "width": "500px",
-                            "isSortable": false,
-                            "sortType": "string",
+                            "orderable": false,
+                            "type": "string",
                             "alignment": 1,
                             "title": "Type",
                             "columnTemplate": "unformatted_grid_value"
                         }
-                    ],
-                    "summaryRowTemplate": "default_grid_summary_row"
+                    ]
                 },
                 "symbology": {
                     "field2": "",
@@ -376,7 +375,10 @@
                     "xmin": -2317716,
                     "ymin": -692095,
                     "xmax": 3000105,
-                    "ymax": 2558710
+                    "ymax": 2558710,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
                 }
             },
             {
@@ -398,52 +400,22 @@
                     "xmin": -2081728,
                     "ymin": -616928,
                     "xmax": 2970781,
-                    "ymax": 2485914
+                    "ymax": 2485914,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
                 },
                 "isStatic": true
             }
         ],
-        "wms": [
-
-        ]
-    },
-    "datagrid": {
-        "globalGridRowsPerPage": 0,
-        "defaultState": "summary",
-        "summaryEnabled": true,
-        "extendedEnabled": true,
-        "extendedColumns": [
-            "column1",
-            "column2",
-            "column3",
-            "column4"
-        ],
-        "extendedExtentFilterEnabled": false
-    },
-    "siteTemplate": {
-        "basemapTemplate": "default_basemap",
-        "filterGlobalRowTemplate": "filter_global_row_template",
-        "filterRowTemplate": "filter_section_template"
-    },
-    "globalFilter": {
-        "toggleLabels": [
-            {
-                "id": "globalVisibility",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "eye checked"
+        "wms": []
             },
-            {
-                "id": "globalBox",
-                "dataAttribute": "***",
-                "value": "value",
-                "checked": "checked",
-                "title": "",
-                "classAddition": "box checked"
-            }
-        ]
+    "rowsPerPage": 40,
+    "extendedDatagridExtentFilterEnabled": false,
+    "templates": {
+        "basemap": "default_basemap",
+        "globalSelectorToggles": "layerGlobalToggles"
+
     },
     "divNames": {
         "map": "mainMap",
@@ -456,9 +428,5 @@
         "htmlRawParse.js",
         "jsonRawParse.js",
         "windParse.js"
-    ],
-    "ui": {
-        "fullscreen": false,
-        "sidePanelOpened": true
-    }
+    ]
 }

@@ -4,19 +4,263 @@
     "type": "object",
     "title": "root",
     "description": "RAMP Configuration",
-    "additionalProperties": true,
+    "additionalProperties": false,
+    "comments": "FIXME: when draft 05 is release redo schema inheritance with patching / merging if they are accepted",
 
     "definitions": {
+        "spatialReference": {
+            "type": "object",
+            "properties": {
+                "wkid": { "type": "number" },
+                "vcsWkid": { "type": "number" },
+                "latestWkid": { "type": "number" },
+                "latestVcsWkid": { "type": "number" },
+                "wkt": { "type": "string" }
+            },
+            "anyOf": [
+                { "required": [ "wkid" ] },
+                { "required": [ "vcsWkid" ] },
+                { "required": [ "latestWkid" ] },
+                { "required": [ "latestVcsWkid" ] },
+                { "required": [ "wkt" ] }
+            ]
+        },
+        "spatialReferenceNode": {
+            "type": "object",
+            "properties": {
+                "wkid": { "type": "number" },
+                "vcsWkid": { "type": "number" },
+                "latestWkid": { "type": "number" },
+                "latestVcsWkid": { "type": "number" },
+                "wkt": { "type": "string" }
+            },
+            "anyOf": [
+                { "required": [ "wkid" ] },
+                { "required": [ "vcsWkid" ] },
+                { "required": [ "latestWkid" ] },
+                { "required": [ "latestVcsWkid" ] },
+                { "required": [ "wkt" ] }
+            ],
+            "additionalProperties": false
+        },
+        "extent": {
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ]
+        },
+        "extentNode": {
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ],
+            "additionalProperties": false
+        },
+        "extentWithReferenceNode": {
+            "type": "object",
+            "properties": {
+                "xmin": { "type": "number" },
+                "ymin": { "type": "number" },
+                "xmax": { "type": "number" },
+                "ymax": { "type": "number" },
+                "spatialReference": { "$ref": "#/definitions/spatialReferenceNode" }
+            },
+            "required": [ "xmin", "ymin", "xmax", "ymax" ],
+            "additionalProperties": false
+        },
+        "settingsNode": {
+            "type": "object",
+            "description": "Specifies settings for layers",
+
+            "properties": {
+                "panelEnabled": {
+                    "type": "boolean",
+                    "description": "Indicates whether the Settings panel is accessible to the users",
+                    "default": true
+                },
+
+                "opacity": {
+                    "type": "object",
+                    "description": "Specifies the opacity setting for the Feature Layer",
+
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean",
+                            "description": "Indicates whether the Opacity control is accessible to the users",
+                            "default": true
+                        },
+                        "default": {
+                            "type": "number",
+                            "description": "Specifies the default opacity level of the Feature Layer",
+                            "minimum": 0,
+                            "maximum": 1,
+                            "default": 1
+                        }
+                    },
+                    "additionalProperties": false
+                },
+
+                "visible": { "type": "boolean", "default": true },
+                "boundingBoxVisible": { "type": "boolean", "default": false }
+            }
+        },
+
+        "gridColumn": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "fieldName": { "type": "string" },
+                "width": { "type": "string" },
+                "orderable": { "type": "boolean", "default": true, "description": "passthrough option for datatables" },
+                "type": { "type": "string", "enum": [ "date", "num", "num-fmt", "html-num", "html-num-fmt", "string" ], "default": "string", "description": "passthrough option for datatables" },
+                "alignment": { "type": "integer", "enum": [ 0, 1 ], "default": 1 },
+                "title": { "type": "string" },
+                "columnTemplate": { "type": "string" }
+            },
+            "required": [ "id", "fieldName", "width", "title", "columnTemplate" ],
+            "additionalProperties": false
+
+        },
+
+        "simpleRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "simple" ] },
+                "label": { "type": "string" },
+                "imageUrl": { "type": "string" }
+            },
+            "required": [ "type", "imageUrl" ],
+            "additionalProperties": false
+        },
+        "uniqueValueRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "uniqueValue" ] },
+                "defaultImageUrl": { "type": "string" },
+                "field1": { "type": "string" },
+                "field2": { "type": "string" },
+                "field3": { "type": "string" },
+                "valueMaps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": { "type": "string" },
+                            "value": { "type": "string" },
+                            "imageUrl": { "type": "string" }
+                        },
+                        "required": [ "value", "imageUrl" ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": [ "type", "field1", "valueMaps" ],
+            "additionalProperties": false
+        },
+        "classBreaksRendererNode": {
+            "type": "object",
+            "properties": {
+                "type": { "type": "string", "enum": [ "classBreaks" ] },
+                "defaultImageUrl": { "type": "string" },
+                "field": { "type": "string" },
+                "minValue": { "type": "number" },
+                "rangeMaps": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "label": { "type": "string" },
+                            "maxValue": { "type": "number" },
+                            "imageUrl": { "type": "string" }
+                        },
+                        "required": [ "maxValue", "imageUrl" ],
+                        "additionalProperties": false
+                    }
+                }
+            },
+            "required": [ "type", "field", "minValue", "rangeMaps" ],
+            "additionalProperties": false
+        },
+        "symbolNode": { "oneOf": [ { "$ref": "#/definitions/simpleRendererNode" }, { "$ref": "#/definitions/uniqueValueRendererNode" }, { "$ref": "#/definitions/classBreaksRendererNode" } ] },
+
+        "staticNode": {
+            "type": "object",
+            "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+
+                "layerExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
+
+                "symbology": { "$ref": "#/definitions/symbolNode" },
+
+                "settings": { "$ref": "#/definitions/settingsNode" },
+                "isStatic": { "type": "boolean", "enum": [ true ] }
+            },
+            "required": [ "id", "displayName", "url", "symbology", "isStatic" ],
+            "additionalProperties": false
+        },
+
+        "featureNode": {
+            "type": "object",
+
+            "properties": {
+                "id": { "type": "string" },
+                "displayName": { "type": "string" },
+                "url": { "type": "string", "format": "uri" },
+                "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
+                "nameField": { "type": "string" },
+                "layerAttributes": { "type": "string", "default": "*" },
+
+                "layerExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
+
+                "symbology": { "$ref": "#/definitions/symbolNode" },
+
+                "settings": { "$ref": "#/definitions/settingsNode" },
+
+                "templates": {
+                    "type": "object",
+                    "properties": {
+                        "detail": { "type": "string", "default": "default_feature_details" },
+                        "hover": { "type": "string", "default": "feature_hover_maptip_template" },
+                        "anchor": { "type": "string", "default": "anchored_map_tip" },
+                        "summary": { "type": "string", "default": "default_grid_summary_row" }
+                    },
+                    "additionalProperties": false
+
+                },
+                "datagrid": {
+                    "type": "object",
+                    "properties": {
+                        "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
+                        "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
+                    },
+                    "additionalProperties": false
+                }
+
+            },
+            "required": [ "id", "displayName", "url", "symbology", "nameField", "datagrid" ],
+            "additionalProperties": false
+        },
+
         "wmsNode": {
             "type": "object",
             "properties": {
                 "id": { "type": "string" },
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
+                "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
                 "imageUrl": { "type": "string", "format": "uri" },
                 "layerName": { "type": "string" },
                 "format": { "type": "string" },
                 "legendMimeType": { "type": "string" },
+                "extent": { "$ref": "#/definitions/extentNode" },
 
                 "settings": {
                     "type": "object",
@@ -25,10 +269,11 @@
                         "visible": { "type": "boolean", "default": true },
                         "opacity": {
                             "type": "object",
-                            "properties": { 
+                            "properties": {
                                 "enabled": { "type": "boolean", "default": true },
                                 "opacity": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
-                            }
+                            },
+                            "additionalProperties": false
                         }
                     },
                     "additionalProperties": false
@@ -40,122 +285,101 @@
                         "mimeType": { "type": "string" },
                         "parser": { "type": "string" }
                     },
-                    "required": [ "mimeType", "parser" ]
+                    "required": [ "mimeType", "parser" ],
+                    "additionalProperties": false
                 }
 
             },
             "required": [ "id", "displayName", "url", "layerName", "format" ],
             "additionalProperties": false
-        },
-
-        "gridColumn": { "type": "object", "additionalProperties": true },
-        "symbolNode": { "type": "object", "additionalProperties": true },
-
-        "basicNode": {
-            "type": "object",
-            "properties": {
-                "id": { "type": "string" },
-                "displayName": { "type": "string" },
-                "url": { "type": "string", "format": "uri" },
-
-                "layerExtent": {
-                    "type": "object",
-                    "properties": {
-                        "xmin": { "type": "number" },
-                        "ymin": { "type": "number" },
-                        "xmax": { "type": "number" },
-                        "ymax": { "type": "number" }
-                    },
-                    "required": [ "xmin", "ymin", "xmax", "ymax" ]
-                },
-                "symbology": { "$ref": "#/definitions/symbolNode" },
-                "settings": {
-                    "id": "#settings",
-                    "type": "object",
-                    "description": "Specifies settings for the Feature Layer",
-
-                    "properties": {
-                        "panelEnabled": {
-                            "type": "boolean",
-                            "description": "Indicates whether the Settings panel is accessible to the users",
-                            "default": true
-                        },
-
-                        "opacity": {
-                            "type": "object",
-                            "description": "Specifies the opacity setting for the Feature Layer",
-
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean",
-                                    "description": "Indicates whether the Opacity control is accessible to the users",
-                                    "default": true
-                                },
-                                "default": {
-                                    "id": "#default",
-                                    "type": "number",
-                                    "description": "Specifies the default opacity level of the Feature Layer",
-                                    "minimum": 0,
-                                    "maximum": 1,
-                                    "default": 1
-                                }
-                            }
-                        },
-
-                        "visible": { "type": "boolean", "default": true },
-                        "boundingBoxVisible": { "type": "boolean", "default": false }
-                    }
-                }
-
-            },
-            "required": [ "id", "displayName", "url", "layerExtent", "symbology" ]
-        },
-
-        "staticNode": {
-            "allOf": [
-                { "$ref": "#/definitions/basicNode" },
-                {
-                    "properties": {
-                        "isStatic": { "type": "boolean", "enum": [ true ] }
-                    },
-                    "required": [ "isStatic" ]
-
-                }
-            ]
-
-
-        },
-
-        "featureNode": {
-            "allOf": [
-                { "$ref": "#/definitions/basicNode" },
-                {
-                    "type": "object",
-
-                    "properties": {
-
-                        "nameField": { "type": "string" },
-                        "layerAttributes": { "type": "string", "default": "*" },
-
-                        "templates": { "type": "object" },
-                        "datagrid": {
-                            "type": "object",
-                            "properties": {
-                                "rowsPerPage": { "type": "integer", "minimum": 1, "default": 50 },
-                                "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
-                            }
-
-                        }
-
-                    },
-                    "required": [ "nameField", "datagrid" ]
-                }
-
-            ]
         }
     },
 
     "properties": {
+
+        "version": { "type": "string", "enum": [ "1.0.0" ] },
+        "proxyUrl": { "type": "string" },
+        "geometryServiceUrl": { "type": "string" },
+        "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },
+        "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
+        "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },
+
+        "spatialReference": { "$ref": "#/definitions/spatialReferenceNode", "additionalProperties": false },
+
+        "extents": {
+            "type": "object",
+            "properties": {
+                "defaultExtent": { "$ref": "#/definitions/extentNode" },
+                "fullExtent": { "$ref": "#/definitions/extentNode" },
+                "maximumExtent": { "$ref": "#/definitions/extentNode" }
+            },
+            "required": [ "defaultExtent" ],
+            "additionalProperties": false
+
+        },
+        "navWidget": {
+            "type": "object",
+            "properties": {
+                "sliderMinVal": { "type": "number", "default": 3 },
+                "sliderMaxVal": { "type": "number", "default": 15 },
+                "debug": { "type": "boolean", "default": false },
+                "animate": { "type": "string", "enum": [ "fast" ], "default": "fast" },
+                "cssPath": { "type": "string", "default": "ramp-theme/navigation" },
+                "skin": { "type": "string", "enum": [ "white" ], "default": "white" }
+            },
+            "additionalProperties": false
+        },
+        "zoomLevels": {
+            "type": "object",
+            "properties": {
+                "min": { "type": "number", "default": 1 },
+                "max": { "type": "number", "default": 17 }
+            },
+            "additionalProperties": false
+        },
+
+        "basemaps": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+                "type": "object",                
+                "properties": {
+                    "id": { "type": "string" },
+
+                    "layers": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "url": { "type": "string", "format": "uri" }
+                            },
+                            "required": [ "url" ],
+                            "additionalProperties": true
+                        }
+                    },
+
+                    "thumbnail": { "type": "string" },
+                    "scaleCssClass": { "type": "string", "default": "map-scale-dark" },
+                    "type": { "type": "string", "default": "Topographic" },
+                    "name": { "type": "string" },
+                    "altText": { "type": "string" },
+                    "tileSchema": { "type": "string", "description": "should define a combination of the projection and tiling format (ex: NRCAN_Lambert_3978, ESRI_World_AuxMerc_3857 )" },
+                    "description": { "type": "string", "description": "description" }
+                },
+                "required": [ "id", "layers", "tileSchema" ],
+                "additionalProperties": false
+            }
+        },
+
+        "templates": {
+            "type": "object",
+            "properties": {
+                "basemap": { "type": "string", "default": "default_basemap" },
+                "globalSelectorToggles": { "type": "string", "default": "default_selector_toggles" }
+            },
+            "additionalProperties": false
+        },
 
         "layers": {
             "type": "object",
@@ -170,11 +394,26 @@
                     "default": [ ],
                     "items": { "$ref": "#/definitions/wmsNode" }
                 }
-            }
+            },
+            "additionalProperties": false
+        },
+        "plugins": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": [ ]
+        },
+        "divNames": {
+            "type": "object",
+            "properties": {
+                "map": { "type": "string", "default": "mainMap" },
+                "navigation": { "type": "string", "default": "map-navigation" },
+                "filter": { "type": "string", "default": "searchMapSectionBody" },
+                "datagrid": { "type": "string", "default": "gridpane" }
+            },
+            "additionalProperties": false
         },
 
         "advancedToolbar": {
-            "id": "#advancedToolbar",
             "type": "object",
             "title": "Advanced Toolbar",
             "description": "Specifies tools available for Advanced Toolbar",
@@ -182,62 +421,46 @@
             "properties": {
 
                 "enabled": {
-                    "id": "#enabled",
                     "type": "boolean",
                     "description": "Specifies if Advanced Toolbar is active",
                     "default": false
                 },
 
                 "tools": {
-                    "id": "#tools",
                     "type": "array",
                     "title": "Tools",
                     "description": "",
-                    "minItems": 1,
 
                     "items": {
-                        "id": "#tool",
                         "type": "object",
 
                         "properties": {
                             "name": {
-                                "id": "#name",
                                 "type": "string",
                                 "description": "Name of the tool"
                             },
 
                             "selector": {
-                                "id": "#selector",
                                 "type": "string",
                                 "description": "CSS selector for the tool's activator"
                             },
 
                             "enabled": {
-                                "id": "#enabled",
                                 "type": "boolean",
                                 "description": "Specifies if the tool is active",
                                 "default": true
                             }
                         },
 
-                        "required": [
-                            "name",
-                            "selector",
-                            "enabled"
-                        ]
+                        "required": [ "name", "selector", "enabled" ]
                     },
-
-                    "required": [
-                        "0"
-                    ]
+                    "default": [ ]
                 }
             },
-            "required": [
-                "enabled"
-            ]
+            "additionalProperties": false
         }
 
 
     },
-    "required": [ "advancedToolbar" ]
+    "required": [ "version", "spatialReference", "extents", "basemaps" ]
 }

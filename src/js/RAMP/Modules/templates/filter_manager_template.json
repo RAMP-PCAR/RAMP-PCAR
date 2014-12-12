@@ -213,7 +213,6 @@
                                     {% } else{ %}
                                         <div class='checkbox-custom placeholder' role='presentation'></div>
                                     {% } %}",
-        
         // filter row button template
         "filter_button_template":"<li>
                                     <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
@@ -230,21 +229,28 @@
                                             </div>
                                         </div>
                                         <div class='global-checkboxes'>
-                                            {% o.toggleLabels.forEach(function(item){
-                                                    include('filter_global_label_template',item); 
-                                                });											
-                                            %}										
+                                           {% include(o.globalSelectorToggles, o);%}
                                         </div>
                                         <div class='clearfix'>
                                         </div>
                                     </div>",
+        "layerGlobalToggles":"{% include( 'filter_global_label_template_eye',o); %}
+                                        {% include( 'filter_global_label_template_box',o); %}
+                                        ",
         // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
-        //			This template is used to generate 'eye' and 'boundingbox' for All Data
-        "filter_global_label_template":	"<div class='checkbox-custom'>
-                                            <label for='{%=o.id%}' class='form-checkbox _tooltip {%=o.classAddition%}' title='{%=o.title%}'>
-                                                <span class='wb-invisible'>{%=o.title%}</span>
+        //  custom template for global visibility
+        "filter_global_label_template_eye": "<div class='checkbox-custom'>
+                                            <label for='globalVisibility' class='form-checkbox _tooltip eye checked' title=''>
+                                                <span class='wb-invisible'></span>
                                             </label>
-                                            <input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>
+                                            <input id='globalVisibility' data-***='***' checked='checked' class='layerList_legend' type='checkbox' ></input>
+                                        </div>",
+        // custom template for global bounding box visibility
+        "filter_global_label_template_box": "<div class='checkbox-custom'>
+                                            <label for='globalBox' class='form-checkbox _tooltip box checked' title=''>
+                                                <span class='wb-invisible'></span>
+                                            </label>
+                                            <input id='globalBox' data-***='***' checked='checked' class='layerList_legend' type='checkbox' ></input>
                                         </div>",
 
         "layerGroup":   "<ul>
@@ -265,7 +271,7 @@
         // o is the datawrapper object contains layers stored in o.data
         "filter_manager_template":"<div id='categories'>
                                         <div id='filterGlobalToggles' class='global-toggles'>
-                                            {% include('filter_global_row_template', o.config.globalFilter);%}
+                                            {% include('filter_global_row_template', o.config.templates);%}
                                         </div>
                                         <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
                                         <ul id='layerList' role='listbox' aria-label='{%=i18n.t('filterManager.layerListLabel')%}'>
