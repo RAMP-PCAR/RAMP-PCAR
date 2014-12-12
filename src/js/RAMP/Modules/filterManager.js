@@ -522,7 +522,7 @@ define([
                                                     guid: id
                                                 });
                                             }
-                                    });
+                                        }, null, [{ key: "catalogue_url", value: layerConfig.catalogueUrl }]);
                                 }
                             }
                         } else {
