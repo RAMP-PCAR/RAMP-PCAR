@@ -11,6 +11,8 @@
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xsi:schemaLocation="http://www.ec.gc.ca/data_donnees/standards/schemas/napec/schema.xsd">
 
+  <xsl:param name="catalogue_url" />
+
   <xsl:decimal-format NaN=""/>
 
   <xsl:template match="/">
@@ -97,10 +99,10 @@
         </p>
       </xsl:if>
 
-      <xsl:if test="//gmd:fileIdentifier/gco:CharacterString/text() != ''">
-        <h5 class="margin-bottom-none margin-top-small">Data Catalogue Page</h5>
+      <xsl:if test="$catalogue_url != ''">
+        <h5 class="margin-bottom-none margin-top-small">Page du catalogue de données</h5>
         <p class="shorten-candidate margin-top-none margin-bottom-medium">
-          <a href="http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/rest.detail?uuid={//gmd:fileIdentifier/gco:CharacterString/text()}" 
+          <a href="{$catalogue_url}"
              rel="external" target="_blank" class="ui-link">
             Métadonnées
           </a>
