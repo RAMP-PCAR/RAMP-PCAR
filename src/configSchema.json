@@ -215,6 +215,7 @@
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
                 "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
+                "catalogueUrl": { "type": "string", "format": "uri", "description": "Link back to the catalogue page for the layer" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
 
@@ -256,6 +257,7 @@
                 "displayName": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
                 "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
+                "catalogueUrl": { "type": "string", "format": "uri", "description": "Link back to the catalogue page for the layer" },
                 "imageUrl": { "type": "string", "format": "uri" },
                 "layerName": { "type": "string" },
                 "format": { "type": "string" },
