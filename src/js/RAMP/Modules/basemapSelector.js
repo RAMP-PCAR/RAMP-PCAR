@@ -74,6 +74,8 @@ function (
             *
             */
             init: function () {
+                var b;
+
                 baseMapControls = $("#basemapControls");
                 baseMapToggle = $("#baseMapToggle");
                 basemapGalleryNode = $("#basemapGallery").attr("role", "listbox");
@@ -90,7 +92,7 @@ function (
                 });
 
                 // turn on the opening and closing of the basemap selector section
-                PopupManager.registerPopup(baseMapControls, "hoverIntent",
+                PopupManager.registerPopup(baseMapControls, "_hoverIntent_",
                     function (d) {
                         basemapGalleryNode.slideDown("fast", function () { d.resolve(); });
                     },
@@ -105,6 +107,45 @@ function (
                 );
 
                 topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
+
+                b = [
+                        {
+                            name: "Lambert",
+                            maps: [
+                                //{
+                                //    name: "Lambert 1"
+                                //},
+                                //{
+                                //    name: "Lambert 2"
+                                //},
+                                //{
+                                //    name: "Lambert 3"
+                                //}
+                            ]
+                        },
+                        {
+                            name: "Mercator",
+                            maps: [
+                                {
+                                    name: "Mercator 1"
+                                },
+                                {
+                                    name: "Mercator 2"
+                                },
+                                {
+                                    name: "Mercator 3"
+                                },
+                                {
+                                    name: "Mercator 4"
+                                }
+                            ]
+                        }
+                ];
+
+                $("#basemapGallery").after(
+                    tmpl("basemapselector", b)
+
+                );
 
                 return this;
             },
