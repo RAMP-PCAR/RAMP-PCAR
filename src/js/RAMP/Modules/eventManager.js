@@ -270,7 +270,7 @@ define([],
                 /**
                 * Published when the gui module has completely finished rendering the UI.
                 * The bootstrapper should wait for this event to fire before initializing map.
-                * 
+                *
                 * @event GUI.UPDATE_COMPLETE
                 * @for GUI
                 */
@@ -438,6 +438,20 @@ define([],
                 * @param event.callback {function} the function to call after the extent change is complete
                 */
                 SET_EXTENT: "rampMap/set-extent",
+
+                /**
+                * Changes the current extent of the map.
+                *
+                * @event RampMap.SET_EXTENT [subscribed]
+                * @for RampMap
+                * @param event {Object}
+                * @param event.extent.xmin {number}
+                * @param event.extent.ymin {number}
+                * @param event.extent.xmax {number}
+                * @param event.extent.ymax {number}
+                * @param event.callback {function} the function to call after the extent change is complete
+                */
+                EXTENTS_REPROJECTED: "rampMap/extents-reprojected",
 
                 /**
                 * Republishes a standard ESRI map click event 'click'.

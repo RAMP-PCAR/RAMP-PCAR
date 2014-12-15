@@ -47,7 +47,7 @@ define([
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService","esri/tasks/ProjectParameters",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -442,27 +442,109 @@ define([
         }
 
         /**
-        * Instantiates an extent from a JSON config object and spatial reference
+        * Instantiates an extent from a JSON config object.
+        * The ojbect should contain 4 bounding co-ordiantes and a spatial reference
         *
         * @private
         * @method createExtent
         * @param {Object} extentConfig the JSON config object
-        * @param {Esri/SpatialReference} sr the {{#crossLink "Esri/SpatialReference"}}{{/crossLink}}
         * @return {esri/geometry/Extent} An ESRI extent object based on the config data
         */
-        function createExtent(extentConfig, sr) {
-            return new EsriExtent(
-                extentConfig.xmin, extentConfig.ymin, extentConfig.xmax, extentConfig.ymax, sr);
+        function createExtent(extentConfig) {
+            return new EsriExtent(extentConfig);
+        }
+
+        /**
+        * project an extent to a new spatial reference, if required
+        * when projection is finished, call another function and pass the result to it.
+        *
+        * @method projectExtent
+        * @private
+        * @param {Object} extent an extent object from the configuration
+        * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+        * @param {Function} callWhenDone function to call when extent is projected.  expects geometry parameter
+        */
+        function projectExtent(extent, sr, callWhenDone) {
+            var geomSrv, geomParams, realExtent;
+
+            //convert configuration extent to proper esri extent object
+            realExtent = createExtent(extent);
+
+            if (UtilMisc.isSpatialRefEqual(realExtent.spatialReference, sr)) {
+                //the extent is already in the correct projection.
+                //go to the next step
+                callWhenDone([realExtent]);
+            } else {
+                //need to re-project the extent
+
+                geomSrv = new GeometryService(RAMP.config.geometryServiceUrl);
+                geomParams = new ProjectParameters();
+                geomParams.geometries = [realExtent];
+                geomParams.outSR = sr;
+
+                geomSrv.project(geomParams, function (projectedExtents) {
+                    //after service returns, continue to next step
+                    callWhenDone(projectedExtents);
+                });
+            }
+        }
+
+        /**
+        * process the projected default extent, begin projection of full extent.
+        * used as an asynchronous gate for the projection.
+        *
+        * @method projectFullExtent
+        * @private
+        * @param {Array} projectedDefaultExtent an array containing the default extent object in the map's projection
+        */
+        function projectFullExtent(projectedDefaultExtent) {
+            //store projected result
+            RAMP.config.extents.defaultExtent = projectedDefaultExtent[0];
+
+            //project the full extent.  when finished, process max extent
+            projectExtent(RAMP.config.extents.fullExtent, projectedDefaultExtent[0].spatialReference, projectMaxExtent);
+        }
+
+        /**
+        * process the projected full extent, begin projection of maximum extent.
+        * used as an asynchronous gate for the projection.
+        *
+        * @method projectMaxExtent
+        * @private
+        * @param {Array} projectedFullExtent an array containing the full extent object in the map's projection
+        */
+        function projectMaxExtent(projectedFullExtent) {
+            //store projected result
+            RAMP.config.extents.fullExtent = projectedFullExtent[0];
+
+            //project the max extent.  when finished, tell map to continue loading
+            projectExtent(RAMP.config.extents.maximumExtent, projectedFullExtent[0].spatialReference, finishExtentProjection);
+        }
+
+        /**
+        * process the projected maximum extent, then alert app to continue loading the map.
+        * used as an asynchronous gate for the projection.
+        *
+        * @method finishExtentProjection
+        * @private
+        * @param {Array} projectedMaxExtent an array containing the maximum extent object in the map's projection
+        */
+        function finishExtentProjection(projectedMaxExtent) {
+            //store projected result
+            RAMP.config.extents.maximumExtent = projectedMaxExtent[0];
+
+            //throw event
+            topic.publish(EventManager.Map.EXTENTS_REPROJECTED);
         }
 
         /**
          * Create boudingbox graphic for a bounding box extent
-         * 
-         * @param  {esri/geometry/Extent} extent of a bounding box 
+         *
+         * @param  {esri/geometry/Extent} extent of a bounding box
          * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
          */
         function createGraphic(extent) {
-           return new esri.Graphic({
+            return new esri.Graphic({
                 geometry: extent,
                 symbol: {
                     color: [255, 0, 0, 64],
@@ -534,7 +616,6 @@ define([
             var boxLayer = boundingBoxMapping[layerId];
 
             //if (boxLayer.graphics.isEmpty() && visibility) {
-
             //    // get bounding box info from config object
             //    var boundingBoxExtent;
             //    var layerConfig = dojoArray.find(config.featureLayers, function (layerConfig) {
@@ -662,6 +743,38 @@ define([
             },
 
             /**
+            * Apply extent defaulting prior to URL overrides.
+            *
+            * @method applyExtentDefaulting
+            * @private
+            */
+            applyExtentDefaulting: function () {
+                //if full extent is missing, set to default extent.
+                if (!(RAMP.config.extents.fullExtent)) {
+                    //need to deserialize/reserialize to avoid pointing to actual defaultExtent, which may be changed later by the Bookmark Link module
+                    RAMP.config.extents.fullExtent = JSON.parse(JSON.stringify(RAMP.config.extents.defaultExtent));
+                }
+
+                //if maximum extent is missing, set to full extent.
+                if (!(RAMP.config.extents.maximumExtent)) {
+                    RAMP.config.extents.maximumExtent = JSON.parse(JSON.stringify(RAMP.config.extents.fullExtent));
+                }
+            },
+
+            /**
+            * initiate the projection of the config extents to basemap extents
+            *
+            * @method projectConfigExtents
+            */
+            projectConfigExtents: function () {
+                //extract default basemap projection
+                var mapSR = new SpatialReference(RAMP.config.basemaps[RAMP.config.initialBasemapIndex].spatialReference);
+
+                //project the default extent.  when finished, process full extent
+                projectExtent(RAMP.config.extents.defaultExtent, mapSR, projectFullExtent);
+            },
+
+            /**
             * Given an ESRI Extent Object, returns a new ESRI Extent Object that
             * contains the extent adjusted according to this map's maximum extent
             *
@@ -732,7 +845,6 @@ define([
             *
             * Note: Not sure if we want to include all the config requirements here.
             * Map control is initialized with div id provided. The following config file entries are used:
-            * config.spatialReference
             * config.extents.defaultExtent xmin, ymin, xmax, ymax
             * config.levelOfDetails.minLevel
             * config.levelOfDetails.maxLevel
@@ -747,8 +859,10 @@ define([
             *
             */
             init: function () {
-
                 var
+
+                schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
+
                 /**
                 * The spatial reference of the map
                 *
@@ -756,7 +870,7 @@ define([
                 * @private
                 * @type {esri/SpatialReference}
                 */
-                spatialReference = new esri.SpatialReference(RAMP.config.spatialReference),
+                spatialReference = new SpatialReference(schemaBasemap.spatialReference),
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -765,7 +879,7 @@ define([
                 * @private
                 * @type {String}
                 */
-                url = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].layers[0].url,
+                url = schemaBasemap.layers[0].url,
 
                 /**
                 * The basemap layer
@@ -776,14 +890,7 @@ define([
                 */
                 baseLayer = new ArcGISTiledMapServiceLayer(url, {
                     id: "basemapLayer"
-                }),
-                initExtentSettings,
-                maxExtentSettings,
-                fullExtentSettings;
-                
-                initExtentSettings = RAMP.config.extents.defaultExtent;
-                fullExtentSettings = RAMP.config.extents.fullExtent || initExtentSettings;
-                maxExtentSettings = RAMP.config.extents.maximumExtent || fullExtentSettings;
+                });
 
                 /**
                 * The initial extent of the map
@@ -792,7 +899,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(initExtentSettings, spatialReference);
+                initExtent = createExtent(RAMP.config.extents.defaultExtent);
 
                 /**
                 * Used for full extent in nav widget
@@ -801,7 +908,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(fullExtentSettings, spatialReference);
+                fullExtent = createExtent(RAMP.config.extents.fullExtent);
 
                 /**
                 * The maximum extent of the map
@@ -810,7 +917,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                maxExtent = createExtent(maxExtentSettings, spatialReference);
+                maxExtent = createExtent(RAMP.config.extents.maximumExtent);
 
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
@@ -887,7 +994,6 @@ define([
                 var gsvc = new GeometryService(RAMP.config.geometryServiceUrl),
 
                 boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
-
                     // Map a list of featurelayers into a list of GraphicsLayer representing
                     // the extent bounding box of the feature layer. Note each bounding box layer
                     // at this point are empty, the actual graphic that represent the bounding box
@@ -900,27 +1006,25 @@ define([
 
                     var boundingBoxExtent;
                     if (typeof layer.layerExtent !== "undefined") {
+                        boundingBoxExtent = createExtent(layer.layerExtent);
 
-                        // TODO: JKW, check to see if createExtent is used anywhere else, do a clean up
-                        // boundingBoxExtent = createExtent(layer.layerExtent, spatialReference);
-                        boundingBoxExtent = new EsriExtent(layer.layerExtent);
+                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, spatialReference)) {
+                            //layer is in same projection as basemap.  can directly use the extent
+                            var extentGraphic = createGraphic(boundingBoxExtent);
+                            boundingBox.add(extentGraphic);
+                        } else {
+                            //layer is in different projection.  reproject to basemap
 
-                        if (boundingBoxExtent.spatialReference.wkid !== spatialReference.wkid) {
                             var params = new ProjectParameters();
                             params.geometries = [boundingBoxExtent];
-                            params.outSR = spatialReference ;
+                            params.outSR = spatialReference;
 
                             gsvc.project(params, function (projectedExtents) {
                                 console.log("re-project");
                                 var extentGraphic = createGraphic(projectedExtents[0]);
                                 boundingBox.add(extentGraphic);
                             });
-                        } else {
-                            var extentGraphic = createGraphic(boundingBoxExtent);
-                            boundingBox.add(extentGraphic);
-
-                            }
-
+                        }
                     }
 
                     return boundingBox;
@@ -966,7 +1070,6 @@ define([
                 RAMP.staticLayerMap = staticLayerMap;
                 /*  End - Add static layers   */
 
-                
                 //This was intended to be used to distinguish layers from each other when crawling; Looks like we are not using it. Commenting out for now. SZ
                 baseLayer.ramp = {
                     type: GlobalStorage.layerType.Basemap
@@ -976,7 +1079,7 @@ define([
                 console.log('adding wmses');
                 console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
-                
+
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
                     map: map,

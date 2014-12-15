@@ -62,7 +62,7 @@ define([
         function computeAreaAndLength(evtObj) {
             that.working(true);
 
-            geometryService = new GeometryService(RAMP.config.geometryService);
+            geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
             geometryService.on("lengths-complete", outputAreaAndLength);
 
             var geometry = evtObj.geometry;
@@ -161,7 +161,7 @@ define([
                 {
                     lengthLabel: i18n.t(that.ns + ":length"),
                     lengthOutput: length,
-                    lengthUnits: lengthUnits                    
+                    lengthUnits: lengthUnits
                 }
             );
         }

@@ -1,8 +1,5 @@
 {
     "version": "1.0.0",
-    "spatialReference": {
-        "wkid": 3978
-    },
     "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "proxy/dotNet/proxy.ashx",
     "advancedToolbar": {
@@ -35,19 +32,28 @@
             "xmin": -1681457,
             "ymin": -483440,
             "xmax": 2549492,
-            "ymax": 2482193
+            "ymax": 2482193,
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         "fullExtent": {
             "xmin": -2681457,
             "ymin": -883440,
             "xmax": 3549492,
-            "ymax": 3482193
+            "ymax": 3482193,
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         "maximumExtent": {
             "xmin": -3977918,
             "ymin": -883440,
             "xmax": 4621056,
-            "ymax": 4884488
+            "ymax": 4884488,
+            "spatialReference": {
+                "wkid": 3978
+            }
         }
     },
     "navWidget": {
@@ -75,7 +81,10 @@
             "name": "@@config.basemaps.baseNrCan.name",
             "altText": "@@config.basemaps.baseNrCan.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseNrCan.description"
+            "description": "@@config.basemaps.baseNrCan.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseSimple",
@@ -97,7 +106,10 @@
             "name": "@@config.basemaps.baseSimple.name",
             "altText": "@@config.basemaps.baseSimple.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseSimple.description"
+            "description": "@@config.basemaps.baseSimple.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
@@ -112,7 +124,10 @@
             "name": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
             "altText": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description"
+            "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
@@ -127,7 +142,10 @@
             "name": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
             "altText": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description"
+            "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseE2M",
@@ -142,7 +160,10 @@
             "name": "@@config.basemaps.baseE2M.name",
             "altText": "@@config.basemaps.baseE2M.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseE2M.description"
+            "description": "@@config.basemaps.baseE2M.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         }
     ],
     "layers": {
@@ -232,12 +253,12 @@
                     }
                 },
                 "layerExtent": {
-                    "xmin": -2317716,
-                    "ymin": -692095,
-                    "xmax": 3000105,
-                    "ymax": 2558710,
+                    "xmin": -15561507.4653,
+                    "ymin": 5099812.9776,
+                    "xmax": 13733118.2248,
+                    "ymax": 10530239.1434,
                     "spatialReference": {
-                        "wkid": 3978
+                        "wkid": 54004
                     }
                 }
             },
@@ -375,14 +396,14 @@
                     }
                 },
                 "layerExtent": {
-                    "xmin": -2317716,
-                    "ymin": -692095,
-                    "xmax": 3000105,
-                    "ymax": 2558710,
+                    "xmin": -13316443.76,
+                    "ymin": 6388804.5583,
+                    "xmax": -10471824.465,
+                    "ymax": 9225974.5022,
                     "spatialReference": {
-                        "wkid": 3978
+                        "wkid": 102100
                     }
-                }
+                 }
             },
             {
                 "id": "oilAreaOverlay",
@@ -400,10 +421,10 @@
                     "visible": false
                 },
                 "layerExtent": {
-                    "xmin": -2081728,
-                    "ymin": -616928,
-                    "xmax": 2970781,
-                    "ymax": 2485914,
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
                     "spatialReference": {
                         "wkid": 3978
                     }
