@@ -115,15 +115,18 @@ function (
                         {
                             name: "Lambert",
                             maps: [
-                                //{
-                                //    name: "Lambert 1"
-                                //},
-                                //{
-                                //    name: "Lambert 2"
-                                //},
-                                //{
-                                //    name: "Lambert 3"
-                                //}
+                                {
+                                    name: "Lambert 1",
+                                    id: "l1"
+                                },
+                                {
+                                    name: "Lambert 2",
+                                    id: "l2"
+                                },
+                                {
+                                    name: "Lambert 3",
+                                    id: "l3"
+                                }
                             ]
                         },
                         {
@@ -179,9 +182,31 @@ function (
                     }
                 );
 
-                console.log("sa", projectionPopup._spawnPopups());
+                basemapPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
+                    function (d) {
+                        console.log(this.target, this.handle);
 
-                projectionPopup.open($(".projection-button:first"));
+                        if (!this.isOpen()) {
+                            basemapPopup.close();                            
+                        }
+
+                        d.resolve();
+                    },
+                    {
+                        closeHandler: function (d) {
+                            d.resolve();
+                        },
+                        oneWay: true,
+                        handleSelector: ".basemap-button",
+                        activeClass: cssButtonPressedClass
+                    }
+                );
+
+                //console.log("sa", projectionPopup._spawnPopups());
+                //projectionPopup.open($(".projection-button:first"));
+
+                basemapPopup.open($("#m2"));
+                projectionPopup.open($("#m2").parents(".projection-list-item").find(".projection-button"));
 
                 return this;
             },
