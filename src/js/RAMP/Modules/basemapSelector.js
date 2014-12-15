@@ -55,7 +55,7 @@ function (
     var basemapGallery,
 
         currentBasemapId,
-        //basemaps,
+        basemaps,
 
         placementAnchorId = "basemapGallery",
 
@@ -83,178 +83,15 @@ function (
                 *
                 */
                 init: function (basemapId, tileSchema) {
-                    var b,
-                        data, pj, maps,
+                    var data = [],
+                        pj = {},
                         basemapControl,
                         projectionControl;
 
                     baseMapControls = $("#basemapControls");
                     baseMapToggle = $("#baseMapToggle");
 
-                    b = [
-                            {
-                                name: "Lambert",
-                                maps: [
-                                    {
-                                        name: "Lambert 1",
-                                        id: "l1"
-                                    },
-                                    {
-                                        name: "Lambert 2",
-                                        id: "l2"
-                                    },
-                                    {
-                                        name: "Lambert 3",
-                                        id: "l3"
-                                    }
-                                ]
-                            },
-                            {
-                                name: "Mercator",
-                                isActive: true,
-                                maps: [
-                                    {
-                                        name: "Mercator 1",
-                                        id: "m1"
-                                    },
-                                    {
-                                        name: "Mercator 2",
-                                        id: "m2"
-                                    },
-                                    {
-                                        name: "Mercator 3",
-                                        id: "m3"
-                                    },
-                                    {
-                                        name: "Mercator 4",
-                                        id: "m4"
-                                    }
-                                ]
-                            }
-                    ];
-
-                    maps = [
-                            {
-                                id: "baseNrCan",
-                                layers: [
-                                    {
-                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer"
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseToponrcan.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseNrCan.name",
-                                altText: "@@config.basemaps.baseNrCan.altText",
-                                tileSchema: "NRCAN_Lambert_3978",
-                                description: "@@config.basemaps.baseNrCan.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            },
-                            {
-                                id: "baseSimple",
-                                layers: [
-                                    {
-                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer"
-                                    },
-                                    {
-                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer"
-                                    },
-                                    {
-                                        url: "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer",
-                                        visibleLayers: [0]
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseSimple.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseSimple.name",
-                                altText: "@@config.basemaps.baseSimple.altText",
-                                tileSchema: "NRCAN_Lambert_3978",
-                                description: "@@config.basemaps.baseSimple.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            },
-                            {
-                                id: "baseCBME_CBCE_HS_RO_3978",
-                                layers: [
-                                    {
-                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer"
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
-                                altText: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
-                                tileSchema: "NRCAN_Lambert_3978",
-                                description: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            },
-                            {
-                                id: "baseCBMT_CBCT_GEOM_3978",
-                                layers: [
-                                    {
-                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer"
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
-                                altText: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
-                                tileSchema: "NRCAN_Lambert_3978",
-                                description: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            },
-                            {
-                                id: "baseE2M",
-                                layers: [
-                                    {
-                                        url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseE2M.name",
-                                altText: "@@config.basemaps.baseE2M.altText",
-                                tileSchema: "NRCAN_Lambert_3978",
-                                description: "@@config.basemaps.baseE2M.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            },
-                            {
-                                id: "baseE2M2",
-                                layers: [
-                                    {
-                                        url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
-                                    }
-                                ],
-                                thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
-                                scaleCssClass: "map-scale-dark",
-                                type: "Topographic",
-                                name: "@@config.basemaps.baseE2M.name",
-                                altText: "@@config.basemaps.baseE2M.altText",
-                                tileSchema: "NRCAN_Lambert_3979",
-                                description: "@@config.basemaps.baseE2M.description",
-                                spatialReference: {
-                                    wkid: 3978
-                                }
-                            }
-                    ];
-
-                    data = [];
-                    pj = {};
-
-                    maps.forEach(function (m) {
+                    basemaps.forEach(function (m) {
                         if (!pj[m.tileSchema]) {
                             pj[m.tileSchema] = [];
                         }
@@ -270,8 +107,6 @@ function (
                             }
                         );
                     });
-
-                    console.log(data);
 
                     // load JSON templates for basemap and skin every node under the basemap selector
                     tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
@@ -412,7 +247,7 @@ function (
                 esriBasemaps = [],
                 basemapId, tileSchema;
 
-            //basemaps = RAMP.config.basemaps;
+            basemaps = RAMP.config.basemaps;
 
             dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
                 var basemapDijit,
@@ -454,6 +289,124 @@ function (
 
             basemapId = "baseSimple";
             tileSchema = "NRCAN_Lambert_3978";
+
+            /*basemaps = [
+                {
+                    id: "baseNrCan",
+                    layers: [
+                        {
+                            url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer"
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseToponrcan.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "baseNrCan.name",
+                    altText: "@@config.basemaps.baseNrCan.altText",
+                    tileSchema: "NRCAN_Lambert_3978",
+                    description: "@@config.basemaps.baseNrCan.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                {
+                    id: "baseSimple",
+                    layers: [
+                        {
+                            url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer"
+                        },
+                        {
+                            url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer"
+                        },
+                        {
+                            url: "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer",
+                            visibleLayers: [0]
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseSimple.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "baseSimple.name",
+                    altText: "@@config.basemaps.baseSimple.altText",
+                    tileSchema: "NRCAN_Lambert_3978",
+                    description: "@@config.basemaps.baseSimple.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                {
+                    id: "baseCBME_CBCE_HS_RO_3978",
+                    layers: [
+                        {
+                            url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer"
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "E_HS_RO_3978.name",
+                    altText: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
+                    tileSchema: "NRCAN_Lambert_3978",
+                    description: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                {
+                    id: "baseCBMT_CBCT_GEOM_3978",
+                    layers: [
+                        {
+                            url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer"
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "GEOM_3978.name",
+                    altText: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
+                    tileSchema: "NRCAN_Lambert_3978",
+                    description: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                {
+                    id: "baseE2M",
+                    layers: [
+                        {
+                            url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "baseE2M.name",
+                    altText: "@@config.basemaps.baseE2M.altText",
+                    tileSchema: "NRCAN_Lambert_3978",
+                    description: "@@config.basemaps.baseE2M.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                {
+                    id: "baseE2M2",
+                    layers: [
+                        {
+                            url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                        }
+                    ],
+                    thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
+                    scaleCssClass: "map-scale-dark",
+                    type: "Topographic",
+                    name: "baseE2M.name",
+                    altText: "@@config.basemaps.baseE2M.altText",
+                    tileSchema: "NRCAN_Lambert_3979",
+                    description: "@@config.basemaps.baseE2M.description",
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                }
+            ];*/
 
             //basemapGallery.select(startId);
 

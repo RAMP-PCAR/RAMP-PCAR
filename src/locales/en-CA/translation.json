@@ -1,5 +1,9 @@
 {
     "config": {
+        "tileSchema": {
+            "NRCAN_Lambert_3978": "Lamber 78",
+            "NRCAN_Lambert_3979": "Lamber 79"
+        },
         "basemaps": {
             "baseNrCan": {
                 "name": "Canada Atlas",
@@ -56,7 +60,7 @@
                     "displayName": "EC Projects"
                 }
             },
-            "wms": { 
+            "wms": {
                 "nasa_modis": {
                     "displayName": "Arctic Airports"
                 },
@@ -66,7 +70,7 @@
                 "limits": {
                     "displayName": "Limits"
                 },
-                "wms6": { 
+                "wms6": {
                     "displayName": "Railway Network"
                 }
             }

@@ -125,17 +125,33 @@
 
                     span {
                         display: block;
+
+                        width: 230px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                 }
 
-                .basemap-image {
+                .basemap-image-container {
                     border: 2px solid #FFF;
                     height: 48px;
                     width: 96px;
-                    margin: 0;
                     float: right;
                     vertical-align: bottom;
-                }
+                    overflow: hidden;
+                    
+                    .basemap-image {
+                        //border: 2px solid #FFF;
+                        //height: 48px;
+                        width: 96px;
+                        position: relative;
+                        top: -50%;
+                        //margin: 0;
+                        //float: right;
+                        //vertical-align: bottom;
+                    }
+                }                
             }
         }
     }
