@@ -76,40 +76,15 @@ function (
                 var b,
                     //projectionButtons,
                     //basemapButtons,
+                    selectorContainer,
+
+                    selectorPopup,
                     projectionPopup,
                     basemapPopup;
 
                 baseMapControls = $("#basemapControls");
                 baseMapToggle = $("#baseMapToggle");
                 basemapGalleryNode = $("#basemapGallery").attr("role", "listbox");
-
-                // Set alt text for selector thumbnails
-                dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
-                    domAttr.set(query(String.format("#galleryNode_{0} img", basemap.id))[0], "alt", basemap.altText);
-                });
-
-                // load JSON templates for basemap and skin every node under the basemap selector
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
-                dojoArray.forEach($(".esriBasemapGalleryNode"), function (node, i) {
-                    $(node).html(tmpl(RAMP.config.templates.basemap, TmplHelper.dataBuilder(RAMP.config.basemaps[i])));
-                });
-
-                // turn on the opening and closing of the basemap selector section
-                PopupManager.registerPopup(baseMapControls, "_hoverIntent_",
-                    function (d) {
-                        basemapGalleryNode.slideDown("fast", function () { d.resolve(); });
-                    },
-                    {
-                        activeClass: cssButtonPressedClass,
-                        target: basemapGalleryNode,
-                        closeHandler: function (d) {
-                            basemapGalleryNode.slideUp("fast", function () { d.resolve(); });
-                        },
-                        timeout: 500
-                    }
-                );
-
-                topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
 
                 b = [
                         {
@@ -153,18 +128,47 @@ function (
                         }
                 ];
 
-                $("#basemapGallery").after(
-                    tmpl("basemapselector", b)
+                // load JSON templates for basemap and skin every node under the basemap selector
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
 
+                baseMapControls.append(tmpl("basemapselector", b));
+                selectorContainer = baseMapControls.find("#basemapselector-section-container");
+
+                /*
+                // Set alt text for selector thumbnails
+                dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
+                    domAttr.set(query(String.format("#galleryNode_{0} img", basemap.id))[0], "alt", basemap.altText);
+                });
+
+                // load JSON templates for basemap and skin every node under the basemap selector
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
+                dojoArray.forEach($(".esriBasemapGalleryNode"), function (node, i) {
+                    $(node).html(tmpl(RAMP.config.templates.basemap, TmplHelper.dataBuilder(RAMP.config.basemaps[i])));
+                });
+                */
+
+                // turn on the opening and closing of the basemap selector section
+                selectorPopup = PopupManager.registerPopup(baseMapControls, "hoverIntent",
+                    function (d) {
+                        this.target.slideDown("fast", function () { d.resolve(); });
+                    },
+                    {
+                        activeClass: cssButtonPressedClass,
+                        target: selectorContainer,
+                        closeHandler: function (d) {
+                            this.target.slideUp("fast", function () { d.resolve(); });
+                        },
+                        timeout: 500
+                    }
                 );
 
                 projectionPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
                     function (d) {
-                        console.log(this.target, this.handle);
-
                         if (!this.isOpen()) {
                             projectionPopup.close();
                             this.target.show();
+
+                            $(".basemapselector-section").height(this.target.height());
                         }
 
                         d.resolve();
@@ -174,7 +178,7 @@ function (
                             this.target.hide();
                             d.resolve();
                         },
-                        oneWay: true,
+                        openOnly: true,
                         activeClass: cssButtonPressedClass,
                         handleSelector: ".projection-button",
                         targetContainerSelector: ".projection-list-item",
@@ -184,10 +188,9 @@ function (
 
                 basemapPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
                     function (d) {
-                        console.log(this.target, this.handle);
-
                         if (!this.isOpen()) {
-                            basemapPopup.close();                            
+                            basemapPopup.close();
+                            // toggle basemap here!
                         }
 
                         d.resolve();
@@ -196,17 +199,16 @@ function (
                         closeHandler: function (d) {
                             d.resolve();
                         },
-                        oneWay: true,
+                        openOnly: true,
                         handleSelector: ".basemap-button",
                         activeClass: cssButtonPressedClass
                     }
                 );
 
-                //console.log("sa", projectionPopup._spawnPopups());
-                //projectionPopup.open($(".projection-button:first"));
-
                 basemapPopup.open($("#m2"));
                 projectionPopup.open($("#m2").parents(".projection-list-item").find(".projection-button"));
+
+                topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
 
                 return this;
             },
