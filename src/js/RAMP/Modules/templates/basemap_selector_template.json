@@ -28,9 +28,12 @@
         <li class='projection-list-item'>
             <button class='btn projection-button button-none'>{%= o.name %}</button>
             <div class='basemap-list-pane'>
-                <div class='basemap-warning'>
-                    <p>Page refresh required</p>
-                </div>
+                {% if(!o.isActive) { %}
+                    <div class='basemap-warning'>
+                        <p>Page refresh required</p>
+                    </div>
+                {% } %}
+
                 <ul class='basemap-list'>
                     {%              
                         o.maps.forEach(function (bm) {
@@ -44,7 +47,7 @@
 
     "basemap": "
         <li class='basemap-list-item'>                
-            <button class='btn basemap-button button-none'>
+            <button id='{%= o.id %}' class='btn basemap-button button-none'>
                 <div class='basemap-info'>
                     <span class='basemap-name'>{%= o.name %}</span>
                     <span class='basemap-description small'>6378, Topographic</span>

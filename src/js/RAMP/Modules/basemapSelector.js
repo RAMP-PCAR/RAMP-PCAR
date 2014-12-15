@@ -73,7 +73,11 @@ function (
             *
             */
             init: function () {
-                var b;
+                var b,
+                    //projectionButtons,
+                    //basemapButtons,
+                    projectionPopup,
+                    basemapPopup;
 
                 baseMapControls = $("#basemapControls");
                 baseMapToggle = $("#baseMapToggle");
@@ -124,18 +128,23 @@ function (
                         },
                         {
                             name: "Mercator",
+                            isActive: true,
                             maps: [
                                 {
-                                    name: "Mercator 1"
+                                    name: "Mercator 1",
+                                    id: "m1"
                                 },
                                 {
-                                    name: "Mercator 2"
+                                    name: "Mercator 2",
+                                    id: "m2"
                                 },
                                 {
-                                    name: "Mercator 3"
+                                    name: "Mercator 3",
+                                    id: "m3"
                                 },
                                 {
-                                    name: "Mercator 4"
+                                    name: "Mercator 4",
+                                    id: "m4"
                                 }
                             ]
                         }
@@ -145,6 +154,34 @@ function (
                     tmpl("basemapselector", b)
 
                 );
+
+                projectionPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
+                    function (d) {
+                        console.log(this.target, this.handle);
+
+                        if (!this.isOpen()) {
+                            projectionPopup.close();
+                            this.target.show();
+                        }
+
+                        d.resolve();
+                    },
+                    {
+                        closeHandler: function (d) {
+                            this.target.hide();
+                            d.resolve();
+                        },
+                        oneWay: true,
+                        activeClass: cssButtonPressedClass,
+                        handleSelector: ".projection-button",
+                        targetContainerSelector: ".projection-list-item",
+                        targetSelector: ".basemap-list-pane"
+                    }
+                );
+
+                console.log("sa", projectionPopup._spawnPopups());
+
+                projectionPopup.open($(".projection-button:first"));
 
                 return this;
             },
