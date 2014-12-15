@@ -26,7 +26,9 @@
 
     "projection": "
         <li class='projection-list-item'>
-            <button data-projection-id='{%= o.id %}' class='btn projection-button button-none'>{%= i18n.t('config.tileSchema.' + o.name)%}</button>
+            <button data-projection-id='{%= o.id %}' class='btn projection-button button-none'>
+                <span class='projection-name' title='{%= i18n.t('config.tileSchema.' + o.name)%}'>{%= i18n.t('config.tileSchema.' + o.name)%}</span>
+            </button>
             <div class='basemap-list-pane'>
                 {% if(!o.isActive) { %}
                     <div class='basemap-warning'>

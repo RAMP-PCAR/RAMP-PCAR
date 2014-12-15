@@ -44,6 +44,10 @@
                     color: #FFF !important;
                     box-shadow: @button-active-shadow;
                 }
+
+                .projection-name {
+                    .overflow-span-block;
+                }
             }
 
             &:after {
@@ -128,12 +132,8 @@
                     }
 
                     span {
-                        display: block;
-
                         width: 230px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
+                        .overflow-span-block;
                     }
                 }
 

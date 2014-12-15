@@ -179,7 +179,7 @@ function (
                     projectionPopup.open(projectionControl);
 
                     selectorContainer
-                        .find(".basemap-info span")
+                        .find(".basemap-info span, .projection-name")
                         .each(function () {
                             var node = $(this);
                             if (node.attr("title")) {
