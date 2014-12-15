@@ -313,7 +313,7 @@ function (
                             openOnly: true,
                             activeClass: cssButtonPressedClass,
                             handleSelector: ".projection-button",
-                            targetContainerSelector: ".projection-list-item",
+                            containerSelector: ".projection-list-item",
                             targetSelector: ".basemap-list-pane"
                         }
                     );

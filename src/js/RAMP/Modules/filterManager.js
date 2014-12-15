@@ -418,7 +418,7 @@ define([
                         },
                         {
                             handleSelector: ".settings-button",
-                            targetContainerSelector: "li.layerList1",
+                            containerSelector: "li.layerList1",
                             targetSelector: ".filter-row-settings",
                             activeClass: "button-pressed"
                         }
@@ -435,7 +435,7 @@ define([
                         },
                         {
                             handleSelector: ".renderer-button",
-                            targetContainerSelector: "li.layerList1",
+                            containerSelector: "li.layerList1",
                             targetSelector: ".renderer-list",
                             activeClass: "button-pressed"
                         }
