@@ -37,7 +37,7 @@ define([
 // Esri
     "esri/dijit/BasemapGallery",
 // Util
-    "utils/popupManager", "utils/tmplHelper"],
+    "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
 
 function (
         // Dojo
@@ -49,179 +49,316 @@ function (
         // Esri
         BasemapGallery,
         // Util
-        PopupManager, TmplHelper) {
+        Dictionary, PopupManager, TmplHelper) {
     "use strict";
 
     var basemapGallery,
-        basemaps = [],
+
+        currentBasemapId,
+        //basemaps,
 
         placementAnchorId = "basemapGallery",
 
-        baseMapControls,
-        baseMapToggle,
-        basemapGalleryNode,
+        ui = (function () {
+            var baseMapControls,
+                baseMapToggle,
 
-        cssButtonPressedClass = "button-pressed",
+                selectorContainer,
 
-        ui = {
-            /**
-            * Initiates additional UI components of the widget, setting listeners and registering the popup functionality
-            *
-            * @method init
-            * @private
-            * @return {object} itself
-            *
-            */
-            init: function () {
-                var b,
-                    //projectionButtons,
-                    //basemapButtons,
-                    selectorContainer,
+                selectorPopup,
+                projectionPopup,
+                basemapPopup,
 
-                    selectorPopup,
-                    projectionPopup,
-                    basemapPopup;
+                //basemaps,
 
-                baseMapControls = $("#basemapControls");
-                baseMapToggle = $("#baseMapToggle");
-                basemapGalleryNode = $("#basemapGallery").attr("role", "listbox");
+                cssButtonPressedClass = "button-pressed";
 
-                b = [
-                        {
-                            name: "Lambert",
-                            maps: [
-                                {
-                                    name: "Lambert 1",
-                                    id: "l1"
-                                },
-                                {
-                                    name: "Lambert 2",
-                                    id: "l2"
-                                },
-                                {
-                                    name: "Lambert 3",
-                                    id: "l3"
-                                }
-                            ]
-                        },
-                        {
-                            name: "Mercator",
-                            isActive: true,
-                            maps: [
-                                {
-                                    name: "Mercator 1",
-                                    id: "m1"
-                                },
-                                {
-                                    name: "Mercator 2",
-                                    id: "m2"
-                                },
-                                {
-                                    name: "Mercator 3",
-                                    id: "m3"
-                                },
-                                {
-                                    name: "Mercator 4",
-                                    id: "m4"
-                                }
-                            ]
-                        }
-                ];
-
-                // load JSON templates for basemap and skin every node under the basemap selector
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
-
-                baseMapControls.append(tmpl("basemapselector", b));
-                selectorContainer = baseMapControls.find("#basemapselector-section-container");
-
-                /*
-                // Set alt text for selector thumbnails
-                dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
-                    domAttr.set(query(String.format("#galleryNode_{0} img", basemap.id))[0], "alt", basemap.altText);
-                });
-
-                // load JSON templates for basemap and skin every node under the basemap selector
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
-                dojoArray.forEach($(".esriBasemapGalleryNode"), function (node, i) {
-                    $(node).html(tmpl(RAMP.config.templates.basemap, TmplHelper.dataBuilder(RAMP.config.basemaps[i])));
-                });
+            return {
+                /**
+                * Initiates additional UI components of the widget, setting listeners and registering the popup functionality
+                *
+                * @method init
+                * @private
+                * @return {object} itself
+                *
                 */
+                init: function (basemapId, tileSchema) {
+                    var b,
+                        data, pj, maps,
+                        basemapControl,
+                        projectionControl;
 
-                // turn on the opening and closing of the basemap selector section
-                selectorPopup = PopupManager.registerPopup(baseMapControls, "hoverIntent",
-                    function (d) {
-                        this.target.slideDown("fast", function () { d.resolve(); });
-                    },
-                    {
-                        activeClass: cssButtonPressedClass,
-                        target: selectorContainer,
-                        closeHandler: function (d) {
-                            this.target.slideUp("fast", function () { d.resolve(); });
-                        },
-                        timeout: 500
-                    }
-                );
+                    baseMapControls = $("#basemapControls");
+                    baseMapToggle = $("#baseMapToggle");
 
-                projectionPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
-                    function (d) {
-                        if (!this.isOpen()) {
-                            projectionPopup.close();
-                            this.target.show();
+                    b = [
+                            {
+                                name: "Lambert",
+                                maps: [
+                                    {
+                                        name: "Lambert 1",
+                                        id: "l1"
+                                    },
+                                    {
+                                        name: "Lambert 2",
+                                        id: "l2"
+                                    },
+                                    {
+                                        name: "Lambert 3",
+                                        id: "l3"
+                                    }
+                                ]
+                            },
+                            {
+                                name: "Mercator",
+                                isActive: true,
+                                maps: [
+                                    {
+                                        name: "Mercator 1",
+                                        id: "m1"
+                                    },
+                                    {
+                                        name: "Mercator 2",
+                                        id: "m2"
+                                    },
+                                    {
+                                        name: "Mercator 3",
+                                        id: "m3"
+                                    },
+                                    {
+                                        name: "Mercator 4",
+                                        id: "m4"
+                                    }
+                                ]
+                            }
+                    ];
 
-                            $(".basemapselector-section").height(this.target.height());
+                    maps = [
+                            {
+                                id: "baseNrCan",
+                                layers: [
+                                    {
+                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT3978/MapServer"
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseToponrcan.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseNrCan.name",
+                                altText: "@@config.basemaps.baseNrCan.altText",
+                                tileSchema: "NRCAN_Lambert_3978",
+                                description: "@@config.basemaps.baseNrCan.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            },
+                            {
+                                id: "baseSimple",
+                                layers: [
+                                    {
+                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/Simple/MapServer"
+                                    },
+                                    {
+                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_TXT_3978/MapServer"
+                                    },
+                                    {
+                                        url: "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer",
+                                        visibleLayers: [0]
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseSimple.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseSimple.name",
+                                altText: "@@config.basemaps.baseSimple.altText",
+                                tileSchema: "NRCAN_Lambert_3978",
+                                description: "@@config.basemaps.baseSimple.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            },
+                            {
+                                id: "baseCBME_CBCE_HS_RO_3978",
+                                layers: [
+                                    {
+                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBME_CBCE_HS_RO_3978/MapServer"
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseCBMT_CBCT_GEOM_3978.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
+                                altText: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
+                                tileSchema: "NRCAN_Lambert_3978",
+                                description: "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            },
+                            {
+                                id: "baseCBMT_CBCT_GEOM_3978",
+                                layers: [
+                                    {
+                                        url: "http://geoappext.nrcan.gc.ca/arcgis/rest/services/BaseMaps/CBMT_CBCT_GEOM_3978/MapServer"
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseCBME_CBCE_HS_RO_3978.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
+                                altText: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
+                                tileSchema: "NRCAN_Lambert_3978",
+                                description: "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            },
+                            {
+                                id: "baseE2M",
+                                layers: [
+                                    {
+                                        url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseE2M.name",
+                                altText: "@@config.basemaps.baseE2M.altText",
+                                tileSchema: "NRCAN_Lambert_3978",
+                                description: "@@config.basemaps.baseE2M.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            },
+                            {
+                                id: "baseE2M2",
+                                layers: [
+                                    {
+                                        url: "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                                    }
+                                ],
+                                thumbnail: "assets/images/basemap/baseTopoE2M.jpg",
+                                scaleCssClass: "map-scale-dark",
+                                type: "Topographic",
+                                name: "@@config.basemaps.baseE2M.name",
+                                altText: "@@config.basemaps.baseE2M.altText",
+                                tileSchema: "NRCAN_Lambert_3979",
+                                description: "@@config.basemaps.baseE2M.description",
+                                spatialReference: {
+                                    wkid: 3978
+                                }
+                            }
+                    ];
+
+                    data = [];
+                    pj = {};
+
+                    maps.forEach(function (m) {
+                        if (!pj[m.tileSchema]) {
+                            pj[m.tileSchema] = [];
                         }
+                        pj[m.tileSchema].push(m);
+                    });
+                    Dictionary.forEachEntry(pj, function (k, p) {
+                        data.push(
+                            {
+                                isActive: k === tileSchema,
+                                id: k,
+                                name: k,
+                                maps: p
+                            }
+                        );
+                    });
 
-                        d.resolve();
-                    },
-                    {
-                        closeHandler: function (d) {
-                            this.target.hide();
+                    console.log(data);
+
+                    // load JSON templates for basemap and skin every node under the basemap selector
+                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(basemapselectorTemplate));
+
+                    baseMapControls.append(tmpl("basemapselector", data));
+                    selectorContainer = baseMapControls.find("#basemapselector-section-container");
+
+                    // turn on the opening and closing of the basemap selector section
+                    selectorPopup = PopupManager.registerPopup(baseMapControls, "hoverIntent",
+                        function (d) {
+                            this.target.slideDown("fast", function () { d.resolve(); });
+                        },
+                        {
+                            activeClass: cssButtonPressedClass,
+                            target: selectorContainer,
+                            closeHandler: function (d) {
+                                this.target.slideUp("fast", function () { d.resolve(); });
+                            },
+                            timeout: 500
+                        }
+                    );
+
+                    projectionPopup = PopupManager.registerPopup(selectorContainer, "click",
+                        function (d) {
+                            if (!this.isOpen()) {
+                                projectionPopup.close();
+                                this.target.show();
+
+                                $(".basemapselector-section").height(this.target.height());
+                            }
+
                             d.resolve();
                         },
-                        openOnly: true,
-                        activeClass: cssButtonPressedClass,
-                        handleSelector: ".projection-button",
-                        targetContainerSelector: ".projection-list-item",
-                        targetSelector: ".basemap-list-pane"
-                    }
-                );
-
-                basemapPopup = PopupManager.registerPopup($("#basemapselector-section-container"), "click",
-                    function (d) {
-                        if (!this.isOpen()) {
-                            basemapPopup.close();
-                            // toggle basemap here!
+                        {
+                            closeHandler: function (d) {
+                                this.target.hide();
+                                d.resolve();
+                            },
+                            openOnly: true,
+                            activeClass: cssButtonPressedClass,
+                            handleSelector: ".projection-button",
+                            targetContainerSelector: ".projection-list-item",
+                            targetSelector: ".basemap-list-pane"
                         }
+                    );
 
-                        d.resolve();
-                    },
-                    {
-                        closeHandler: function (d) {
+                    basemapPopup = PopupManager.registerPopup(selectorContainer, "click",
+                        function (d) {
+                            if (!this.isOpen()) {
+                                basemapPopup.close();
+                                selectBasemap(this.target.data("basemap-id"));
+                            }
+
                             d.resolve();
                         },
-                        openOnly: true,
-                        handleSelector: ".basemap-button",
-                        activeClass: cssButtonPressedClass
-                    }
-                );
+                        {
+                            closeHandler: function (d) {
+                                d.resolve();
+                            },
+                            openOnly: true,
+                            handleSelector: ".basemap-button",
+                            activeClass: cssButtonPressedClass
+                        }
+                    );
 
-                basemapPopup.open($("#m2"));
-                projectionPopup.open($("#m2").parents(".projection-list-item").find(".projection-button"));
+                    basemapControl = selectorContainer.find("button[data-basemap-id='" + basemapId + "']");
+                    projectionControl = selectorContainer.find("button[data-projection-id='" + tileSchema + "']");
 
-                topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
+                    basemapPopup.open(basemapControl);
+                    projectionPopup.open(projectionControl);
 
-                return this;
-            },
-            /*
-             * Changes the text shown on the toolbar to match the currently selected basemap's title
-             * @method updateToggleLabel
-             * @private
-             *
-             */
-            updateToggleLabel: function () {
-                baseMapToggle.find("span:first").text(basemapGallery.getSelected().title);
-            }
-        };
+                    // TODO: update
+                    //topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
+
+                    return this;
+                },
+                /*
+                 * Changes the text shown on the toolbar to match the currently selected basemap's title
+                 * @method updateToggleLabel
+                 * @private
+                 *
+                 */
+                updateToggleLabel: function () {
+                    baseMapToggle.find("span:first").text(basemapGallery.getSelected().title);
+                }
+            };
+        }());
 
     /**
     * Initializes functions that publish events.
@@ -256,6 +393,13 @@ function (
         });
     }
 
+    function selectBasemap(basemapId) {
+        if (currentBasemapId !== basemapId) {
+            currentBasemapId = basemapId;
+            basemapGallery.select(currentBasemapId);
+        }
+    }
+
     return {
         /*
          * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then calls function to initializes event handling
@@ -264,6 +408,11 @@ function (
          *
          */
         init: function () {
+            var //startId,
+                esriBasemaps = [],
+                basemapId, tileSchema;
+
+            //basemaps = RAMP.config.basemaps;
 
             dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
                 var basemapDijit,
@@ -286,24 +435,30 @@ function (
                 });
                 basemapDijit.scaleCssClass = basemap.scaleCssClass;
 
-                basemaps.push(basemapDijit);
+                esriBasemaps.push(basemapDijit);
             });
 
             //Create and start the selector
             basemapGallery = new BasemapGallery({
                 showArcGISBasemaps: false,
-                basemaps: basemaps,
+                basemaps: esriBasemaps,
                 map: RampMap.getMap()
             }, placementAnchorId);
 
             basemapGallery.startup();
 
-            var startId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
+            //startId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
 
-            basemapGallery.select(startId);
+            //currentBasemapId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
+            //currentTileSchema = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].tileSchema;
+
+            basemapId = "baseSimple";
+            tileSchema = "NRCAN_Lambert_3978";
+
+            //basemapGallery.select(startId);
 
             //take over the click
-            $(".esriBasemapGalleryNode").on("mousedown keyup", function (evt) {
+            /*$(".esriBasemapGalleryNode").on("mousedown keyup", function (evt) {
                 if (evt.which === 1 || evt.which === 13 || evt.which === 32) {
                     var curr_id = basemapGallery.getSelected().id,
                         selected_node = evt.currentTarget.id,
@@ -315,13 +470,13 @@ function (
                         basemapGallery.select(selected_id);
                     }
                 }
-            });
+            });*/
 
             initTopics();
             initListeners();
 
             ui
-                .init()
+                .init(basemapId, tileSchema)
                 .updateToggleLabel();
         }
     };
