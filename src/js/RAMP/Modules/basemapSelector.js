@@ -178,6 +178,19 @@ function (
                     basemapPopup.open(basemapControl);
                     projectionPopup.open(projectionControl);
 
+                    selectorContainer
+                        .find(".basemap-info span")
+                        .each(function () {
+                            var node = $(this);
+                            if (node.attr("title")) {
+                                if (node.isOverflowed()) {
+                                    node.tooltipster({ theme: '.tooltipster-shadow' });
+                                } else {
+                                    node.removeAttr("title");
+                                }
+                            }
+                        });
+
                     // TODO: update
                     //topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
 

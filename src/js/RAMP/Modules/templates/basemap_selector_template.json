@@ -49,8 +49,8 @@
         <li class='basemap-list-item'>                
             <button data-basemap-id='{%= o.id %}' class='btn basemap-button button-none'>
                 <div class='basemap-info'>
-                    <span class='basemap-name'>{%= o.name %}</span>
-                    <span class='basemap-description small'>{%= o.description %}, {%= o.type %}</span>
+                    <span class='basemap-name' title='{%= o.name %}'>{%= o.name %}</span>
+                    <span class='basemap-description small' title='{%= o.description %}, {%= o.type %}'>{%= o.description %}, {%= o.type %}</span>
                 </div>
                 <div class='basemap-image-container'>
                     <img class='basemap-image' src='{%= o.thumbnail %}' />
