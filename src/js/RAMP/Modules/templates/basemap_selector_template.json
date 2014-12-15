@@ -28,6 +28,9 @@
         <li class='projection-list-item'>
             <button class='btn projection-button button-none'>{%= o.name %}</button>
             <div class='basemap-list-pane'>
+                <div class='basemap-warning'>
+                    <p>Page refresh required</p>
+                </div>
                 <ul class='basemap-list'>
                     {%              
                         o.maps.forEach(function (bm) {

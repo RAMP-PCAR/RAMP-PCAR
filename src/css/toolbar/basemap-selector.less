@@ -52,8 +52,8 @@
                 width: 5px;
                 background: #545454;
                 left: 148px;
-                top: 0;
-                bottom: 0;
+                top: 1px;
+                bottom: 1px;
             }
         }
 
@@ -65,6 +65,24 @@
             width: 350px;
             //border-left: 5px solid #545454;
             
+            .basemap-warning {
+                background: @very-light-blue-color;
+                border-left: 10px solid @info-color;
+
+                p {
+                    margin: 0 0 0 21px;
+                    padding: 5px;
+
+                    &:before {
+                        color: @info-color;
+                        content: "\e086";
+                        font-family: "Glyphicons Halflings";
+                        margin-left: -20px;
+                        position: absolute;
+                    }
+                }
+            }
+
             .basemap-button {
                 border-radius: 0 0 0 0;
                 margin: 0;
