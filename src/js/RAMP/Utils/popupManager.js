@@ -214,7 +214,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                         useAria: this._attr.useAria,
                                         resetFocusOnClose: this._attr.resetFocusOnClose,
 
-                                        handle: actualHandle,
+                                        //handle: actualHandle,
+                                        handle: ah, // one actual handle per spawned popup
                                         target: actualTarget
                                     })
                                 );
