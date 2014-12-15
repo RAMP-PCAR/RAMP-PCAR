@@ -496,27 +496,34 @@ define([
                             } else {
                                 //for feature layer
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
-
-                                metadataUrl = "assets/metadata/" + id + ".xml";
-
-                                UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + RAMP.locale + ".xsl",
-                                    function (error, data) {
-                                        if (error) {
-                                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
-                                                origin: "filterManager",
-                                                update: true,
-                                                guid: id
-                                            });
-                                        } else {
-                                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                content: $(data),
-                                                origin: "filterManager",
-                                                update: true,
-                                                guid: id
-                                            });
-                                        }
+                                var metadataError = function () {
+                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        origin: "filterManager",
+                                        update: true,
+                                        guid: id
                                     });
+                                };
+
+                                metadataUrl = layerConfig.metadataUrl;
+
+                                if (!metadataUrl) {
+                                    metadataError();
+                                } else {
+                                    UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + RAMP.locale + ".xsl",
+                                        function (error, data) {
+                                            if (error) {
+                                                metadataError();
+                                            } else {
+                                                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                                                    content: $(data),
+                                                    origin: "filterManager",
+                                                    update: true,
+                                                    guid: id
+                                                });
+                                            }
+                                        }, null, [{ key: "catalogue_url", value: layerConfig.catalogueUrl }]);
+                                }
                             }
                         } else {
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });

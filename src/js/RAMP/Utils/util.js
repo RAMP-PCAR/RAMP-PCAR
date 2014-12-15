@@ -688,7 +688,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {Function} callback The callback to be executed
             * @param {Boolean} returnFragment True if you want a document fragment returned (doesn't work in IE)}
             */
-            transformXML: function (xmlurl, xslurl, callback, returnFragment) {
+            transformXML: function (xmlurl, xslurl, callback, returnFragment, params) {
                 var xmld = new Deferred(),
                     xsld = new Deferred(),
                     xml, xsl,
@@ -706,7 +706,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 // Transform XML using XSLT
                 function applyXSLT(xmlString, xslString) {
-                    var output;
+                    var output, i;
                     if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) { // IE
                         var xslt = new ActiveXObject("Msxml2.XSLTemplate"),
                             xmlDoc = new ActiveXObject("Msxml2.DOMDocument"),
@@ -718,11 +718,23 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         xslt.stylesheet = xslDoc;
                         xslProc = xslt.createProcessor();
                         xslProc.input = xmlDoc;
+                        // [patched from ECDMP] Add parameters to xsl document (addParameter = ie only)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xslProc.addParameter(params[i].key, params[i].value, "");
+                            }
+                        }
                         xslProc.transform();
                         output = xslProc.output;
                     } else { // Chrome/FF/Others
                         var xsltProcessor = new XSLTProcessor();
                         xsltProcessor.importStylesheet(xslString);
+                        // [patched from ECDMP] Add parameters to xsl document (setParameter = Chrome/FF/Others)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xsltProcessor.setParameter(null, params[i].key, params[i].value);
+                            }
+                        }
                         output = xsltProcessor.transformToFragment(xmlString, document);
 
                         // turn a document fragment into a proper jQuery object

@@ -884,7 +884,7 @@ define([
 
                 // geometry service to reproject any extent that does not have
                 // same spatialReference as the map
-                var gsvc = new GeometryService(RAMP.config.geometryService),
+                var gsvc = new GeometryService(RAMP.config.geometryServiceUrl),
 
                 boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
 
