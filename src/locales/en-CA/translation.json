@@ -1,8 +1,9 @@
 {
     "config": {
         "tileSchema": {
-            "NRCAN_Lambert_3978": "Lamber 78", 
-            "NRCAN_Lambert_3979": "Lamber 79"
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "NRCAN_Lambert_3979": "Lambert 79",
+            "ESRI_World_AuxMerc_3857":  "Auxilliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -30,6 +31,11 @@
                 "name": "Canada Topographic",
                 "altText": "Topographic Map",
                 "description": "Earth 2 Map"
+            },
+            "baseEsriWorld":  {
+                "name": "World Imagery",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Imagery"
             }
         },
 

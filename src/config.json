@@ -148,19 +148,19 @@
             }
         },
         {
-            "id": "baseE2M",
+            "id": "baseEsriWorld",
             "layers": [
                 {
                     "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer"
                 }
             ],
-            "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
-            "scaleCssClass": "map-scale-dark",
-            "type": "Topographic",
-            "name": "@@config.basemaps.baseE2M.name",
-            "altText": "@@config.basemaps.baseE2M.altText",
-            "tileSchema": "ESRI",
-            "description": "@@config.basemaps.baseE2M.description",
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-light",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriWorld.name",
+            "altText": "@@config.basemaps.baseEsriWorld.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriWorld.description",
             "spatialReference": {
                 "wkid": 102100
             }
