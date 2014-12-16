@@ -354,6 +354,11 @@ define([
             } else {
                 setNewUrl(link);
             }
+
+            //trigger event indicating bookmark is complete.  pass bookmark as arg
+            topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
+                link: link
+            });
         }
 
         /**
@@ -392,7 +397,7 @@ define([
             if (baseUrl.indexOf(homePage) === -1) {
                 baseUrl += homePage;
             }
-          
+
             // Move the API key to config.json??
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
@@ -450,9 +455,7 @@ define([
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
-                dojoArray.forEach(config.basemaps, function (basemap) {
-                    basemap.showOnInit = (basemap.id === event.baseMap);
-                });
+                config.initialBasemapIndex = parseInt(queryObject.baseMap);
             }
 
             // Modify the layer transparency
@@ -628,8 +631,10 @@ define([
                 });
 
                 topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (event) {
+                    //lookup index from config. don't store id
+
                     addParameter(EVENT_BASEMAP_CHANGED, {
-                        baseMap: event.id
+                        baseMap: RAMP.basemapIndex[event.id]
                     });
                     updateURL();
                 });

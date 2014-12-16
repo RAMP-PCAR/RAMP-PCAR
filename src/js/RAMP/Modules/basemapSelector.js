@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite */
+/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite, console */
 /*jslint white: true */
 
 /**
@@ -267,7 +267,6 @@ function (
             ui.updateToggleLabel();
             topic.publish(EventManager.BasemapSelector.BASEMAP_CHANGED, {
                 id: basemap.id,
-                title: basemap.title,
                 cssStyle: basemap.scaleCssClass
             });
         });
@@ -294,11 +293,24 @@ function (
     * @param {String} tileSchema a tileShema of the selected basemap
     * @private
     */
-    function selectBasemap(basemapId, tileShema) {
+    function selectBasemap(basemapId, tileSchema) {
         if (currentBasemapId !== basemapId) {
-            if (currentTileSchema === tileShema) {
+            if (currentTileSchema === tileSchema) {
                 currentBasemapId = basemapId;
                 basemapGallery.select(currentBasemapId);
+            } else {
+                //we need to generate a bookmark and reload the page
+
+                //set listner for bookmark complete
+                topic.subscribe(EventManager.BookmarkLink.BOOKMARK_GENERATED, function (eventArg) {
+                    console.log("REBOOT! - " + eventArg.link);
+                });
+
+                // trigger bookmark generation.  don't care about cssStyle as we are going to reload the site anyways
+                topic.publish(EventManager.BasemapSelector.BASEMAP_CHANGED, {
+                    id: basemapId,
+                    cssStyle: ""
+                });
             }
         }
     }
@@ -317,28 +329,33 @@ function (
 
             basemaps = RAMP.config.basemaps;
 
-            dojoArray.forEach(basemaps, function (basemap) {
+            RAMP.basemapIndex = {};
+
+            dojoArray.forEach(basemaps, function (basemap, i) {
                 var basemapDijit,
-                    baseampLayers = [];
+                    basemapLayers = [];
 
                 // iterate over basemap layers and create layer objects for each;
                 // these objects can have any of the properties of the Basemap param constructor object here: https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
                 basemap.layers.forEach(function (layer) {
                     //console.log(layer);
-                    baseampLayers.push(
+                    basemapLayers.push(
                         new esri.dijit.BasemapLayer(layer)
                     );
                 });
 
                 basemapDijit = new esri.dijit.Basemap({
                     id: basemap.id,
-                    layers: baseampLayers, // shovel all the layers into the basemap
+                    layers: basemapLayers, // shovel all the layers into the basemap
                     title: String.format("{0}, {1}", basemap.name, i18n.t('config.tileSchema.' + basemap.tileSchema)),
                     thumbnailUrl: basemap.thumbnail
                 });
                 basemapDijit.scaleCssClass = basemap.scaleCssClass;
 
                 esriBasemaps.push(basemapDijit);
+
+                //store index in lookup for bookmark module
+                RAMP.basemapIndex[basemap.id] = i;
             });
 
             //Create and start the selector

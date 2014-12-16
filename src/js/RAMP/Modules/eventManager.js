@@ -542,7 +542,6 @@ define([],
                 * @for BaseMapSelector
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the selected basemap
-                * @param {String} evt.title the title of the selected basemap
                 * @param {String} evt.cssStyle
                 */
                 BASEMAP_CHANGED: "basemapSelector/basemap-changed",
@@ -666,9 +665,18 @@ define([],
                * map toolbar.
                *
                * @for BookmarkLink
-               * @event bookmark.GETLINK_PANEL_CHANGED
+               * @event BookmarkLink.GETLINK_PANEL_CHANGED
                */
-                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
+                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed",
+
+                /**
+                * Published when a new link has been generated.
+                *
+                * @event BookmarkLink.BOOKMARK_GENERATED
+                * @param event {Object}
+                * @param event.link {String} The bookmark URL that was generated
+                */
+                BOOKMARK_GENERATED: "bookmark/bookmark-generated"
             },
 
             AdvancedToolbar: {
