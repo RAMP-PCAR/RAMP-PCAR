@@ -309,13 +309,18 @@ define([
         * @private
         */
         function updateURL() {
-            var link = baseUrl;
+            var link = baseUrl,
+                delim = "?";
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
             UtilDict.forEachEntry(parameters, function (key, value) {
                 if (value) { // Value cannot be null or the empty String
-                    link += "&" + value;
+                    link += delim + value;
+                    if (delim === "?") {
+                        //first param has a question mark in front of it.  all others have an &
+                        delim = "&";
+                    }
                 }
             });
 
@@ -387,8 +392,7 @@ define([
             if (baseUrl.indexOf(homePage) === -1) {
                 baseUrl += homePage;
             }
-            baseUrl += "?lang=" + RAMP.locale;
-
+          
             // Move the API key to config.json??
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
