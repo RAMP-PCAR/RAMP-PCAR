@@ -151,7 +151,7 @@
             "id": "baseE2M",
             "layers": [
                 {
-                    "url": "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer"
                 }
             ],
             "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
@@ -159,10 +159,10 @@
             "type": "Topographic",
             "name": "@@config.basemaps.baseE2M.name",
             "altText": "@@config.basemaps.baseE2M.altText",
-            "tileSchema": "NRCAN_Lambert_3978",
+            "tileSchema": "ESRI",
             "description": "@@config.basemaps.baseE2M.description",
             "spatialReference": {
-                "wkid": 3978
+                "wkid": 102100
             }
         }
     ],

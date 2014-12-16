@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite, console */
+/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite, window */
 /*jslint white: true */
 
 /**
@@ -303,7 +303,8 @@ function (
 
                 //set listner for bookmark complete
                 topic.subscribe(EventManager.BookmarkLink.BOOKMARK_GENERATED, function (eventArg) {
-                    console.log("REBOOT! - " + eventArg.link);
+                    //run away, load new page
+                    window.location.href = eventArg.link;
                 });
 
                 // trigger bookmark generation.  don't care about cssStyle as we are going to reload the site anyways
