@@ -193,8 +193,7 @@ function (
                             }
                         });
 
-                    // TODO: update
-                    //topic.publish(EventManager.BasemapSelector.UI_COMPLETE, { title: basemaps[0].title });
+                    topic.publish(EventManager.BasemapSelector.UI_COMPLETE);
 
                     return this;
                 },
