@@ -1,7 +1,8 @@
 ﻿#basemapselector-section-container {
     position: absolute;
     z-index: 199;
-    background-color: #FFF !important;
+    overflow: hidden;
+    padding: 0 0 20px 0; // needed to accommodate the shadow from the section
     margin: 0;
     text-align: left;
     top: 32px;
@@ -9,7 +10,10 @@
     width: 500px;
 
     .basemapselector-section {
-        height: 280px;
+        top: -1000px;
+        min-height: 150px;
+        position: relative;
+        
         .box-shadow-section;
 
         .projection-list,
@@ -55,19 +59,17 @@
                 position: absolute;
                 width: 5px;
                 background: #545454;
-                left: 148px;
-                top: 1px;
-                bottom: 1px;
+                left: 146px;
+                top: 0;
+                bottom: 0;
             }
         }
 
         .basemap-list-pane {
             position: absolute;
-            top: 1px;
+            top: 0;
             right: 1px;
-            //bottom: 1px;
             width: 350px;
-            //border-left: 5px solid #545454;
             
             .basemap-warning {
                 background: @very-light-blue-color;

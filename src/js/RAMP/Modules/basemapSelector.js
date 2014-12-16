@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl, RAMP, console */
+/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite */
 /*jslint white: true */
 
 /**
@@ -37,7 +37,7 @@ define([
 // Esri
     "esri/dijit/BasemapGallery",
 // Util
-    "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
+    "utils/dictionary", "utils/popupManager", "utils/util", "utils/tmplHelper"],
 
 function (
         // Dojo
@@ -49,7 +49,7 @@ function (
         // Esri
         BasemapGallery,
         // Util
-        Dictionary, PopupManager, TmplHelper) {
+        Dictionary, PopupManager, UtilMisc, TmplHelper) {
     "use strict";
 
     var basemapGallery,
@@ -71,7 +71,17 @@ function (
 
                 //basemaps,
 
+                selectorTimeline = new TimelineLite({ paused: true }),
+                selectorOpenTimeline = new TimelineLite(),
+
                 cssButtonPressedClass = "button-pressed";
+
+            function createT() {
+                selectorOpenTimeline
+                    .clear()
+                    .fromTo(selectorContainer.find(".basemapselector-section"), 0.4, { top: -selectorContainer.find(".basemapselector-section").outerHeight() - 20 }, { top: 0, ease: "easeOutCirc" }, 0)
+                    .seek(selectorTimeline.time());
+            }
 
             return {
                 /**
@@ -114,18 +124,42 @@ function (
                     baseMapControls.append(tmpl("basemapselector", data));
                     selectorContainer = baseMapControls.find("#basemapselector-section-container");
 
+                    selectorTimeline
+                        .set(selectorContainer, { display: "block" }, 0)
+                        //.to($("#getlink-toggle"), 0.4, { width: "+=10" }, 0)
+
+                        .add(selectorOpenTimeline, 0);
+
+                    //createT();
+
                     // turn on the opening and closing of the basemap selector section
                     selectorPopup = PopupManager.registerPopup(baseMapControls, "hoverIntent",
-                        function (d) {
+                        function (d) {                            
                             baseMapToggle.addClass("button-pressed");
-                            this.target.slideDown("fast", function () { d.resolve(); });
+                            createT();
+
+                            selectorTimeline.eventCallback("onComplete", function () {
+                                d.resolve();
+                            });
+
+                            selectorTimeline.play();
+
+                            //this.target.slideDown("fast", function () { d.resolve(); });
                         },
                         {
                             activeClass: cssButtonPressedClass,
                             target: selectorContainer,
                             closeHandler: function (d) {
                                 baseMapToggle.removeClass("button-pressed");
-                                this.target.slideUp("fast", function () { d.resolve(); });
+                                //this.target.slideUp("fast", function () { d.resolve(); });
+
+                                createT();
+
+                                selectorTimeline.eventCallback("onReverseComplete", function () {
+                                    d.resolve();
+                                });
+
+                                selectorTimeline.reverse();
                             },
                             timeout: 500
                         }
@@ -138,6 +172,7 @@ function (
                                 this.target.show();
 
                                 $(".basemapselector-section").height(this.target.height());
+                                //UtilMisc.resetTimelines([selectorTimeline], createT);
                             }
 
                             d.resolve();
@@ -191,10 +226,11 @@ function (
                                     node.removeAttr("title");
                                 }
                             }
-                        });
+                        })
+                        .end().hide();
 
                     topic.publish(EventManager.BasemapSelector.UI_COMPLETE);
-
+                    
                     return this;
                 },
                 /*
@@ -238,7 +274,7 @@ function (
     function initListeners() {
         /* SUBSCRIBE */
         topic.subscribe(EventManager.BasemapSelector.TOGGLE, function (eventArg) {
-            basemapGallery.select(eventArg.id);
+            selectBasemap(eventArg.id);
         });
     }
 
@@ -270,7 +306,7 @@ function (
                 // iterate over basemap layers and create layer objects for each;
                 // these objects can have any of the properties of the Basemap param constructor object here: https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
                 basemap.layers.forEach(function (layer) {
-                    console.log(layer);
+                    //console.log(layer);
                     baseampLayers.push(
                         new esri.dijit.BasemapLayer(layer)
                     );
@@ -279,7 +315,7 @@ function (
                 basemapDijit = new esri.dijit.Basemap({
                     id: basemap.id,
                     layers: baseampLayers, // shovel all the layers into the basemap
-                    title: String.format("{0} ({1})", basemap.name, basemap.type),
+                    title: String.format("{0}, {1}", basemap.name, i18n.t('config.tileSchema.' + basemap.tileSchema)),
                     thumbnailUrl: basemap.thumbnail
                 });
                 basemapDijit.scaleCssClass = basemap.scaleCssClass;
@@ -303,23 +339,6 @@ function (
 
             basemapId = "baseSimple";
             tileSchema = "NRCAN_Lambert_3978";
-            
-            //basemapGallery.select(startId);
-
-            //take over the click
-            /*$(".esriBasemapGalleryNode").on("mousedown keyup", function (evt) {
-                if (evt.which === 1 || evt.which === 13 || evt.which === 32) {
-                    var curr_id = basemapGallery.getSelected().id,
-                        selected_node = evt.currentTarget.id,
-                        selected_id = selected_node.slice(selected_node.indexOf("_") + 1);
-
-                    if (curr_id === selected_id) {
-                        return false; //prevent the basemap from changing
-                    } else { //didn't select the same basemap
-                        basemapGallery.select(selected_id);
-                    }
-                }
-            });*/
 
             initTopics();
             initListeners();
