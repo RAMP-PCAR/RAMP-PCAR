@@ -55,6 +55,7 @@ function (
     var basemapGallery,
 
         currentBasemapId,
+        currentTileSchema,
         basemaps,
 
         placementAnchorId = "basemapGallery",
@@ -118,6 +119,7 @@ function (
                             {
                                 isActive: k === tileSchema,
                                 id: k,
+                                tileShema: tileSchema,
                                 name: k,
                                 maps: p
                             }
@@ -171,7 +173,7 @@ function (
                                     heightTimeline = new TimelineLite();
 
                                 projectionPopup.close();
-                                
+
                                 // animate resizing of the selector when switching between projection groups
                                 heightTimeline
                                     .set(this.target, { display: "block" }, 0)
@@ -199,7 +201,7 @@ function (
                         function (d) {
                             if (!this.isOpen()) {
                                 basemapPopup.close();
-                                selectBasemap(this.target.data("basemap-id"));
+                                selectBasemap(this.target.data("basemap-id"), this.target.data("tileshema"));
                             }
 
                             d.resolve();
@@ -284,10 +286,20 @@ function (
         });
     }
 
-    function selectBasemap(basemapId) {
+    /**
+    * Selects a basemap in the basemapgallery based on the supplied basemap id. If the tileShema is different from the current one, reload the page.
+    *
+    * @method selectBasemap
+    * @param {String} basemapId a basemap id used to select a basemap in the basemapgallery
+    * @param {String} tileSchema a tileShema of the selected basemap
+    * @private
+    */
+    function selectBasemap(basemapId, tileShema) {
         if (currentBasemapId !== basemapId) {
-            currentBasemapId = basemapId;
-            basemapGallery.select(currentBasemapId);
+            if (currentTileSchema === tileShema) {
+                currentBasemapId = basemapId;
+                basemapGallery.select(currentBasemapId);
+            }
         }
     }
 
@@ -299,13 +311,13 @@ function (
          *
          */
         init: function () {
-            var //startId,
+            var initialBasemap,
                 esriBasemaps = [],
-                basemapId, tileSchema;
+                basemapId;
 
             basemaps = RAMP.config.basemaps;
 
-            dojoArray.forEach(RAMP.config.basemaps, function (basemap) {
+            dojoArray.forEach(basemaps, function (basemap) {
                 var basemapDijit,
                     baseampLayers = [];
 
@@ -338,19 +350,16 @@ function (
 
             basemapGallery.startup();
 
-            //startId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
-
-            //currentBasemapId = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].id;
-            //currentTileSchema = RAMP.config.basemaps[RAMP.config.initialBasemapIndex].tileSchema;
-
-            basemapId = "baseSimple";
-            tileSchema = "NRCAN_Lambert_3978";
+            initialBasemap = basemaps[RAMP.config.initialBasemapIndex];
+            // currentBasemapId is not specified from the start because the basemap hasn't been selected yet through the basemapgallery
+            basemapId = initialBasemap.id;
+            currentTileSchema = initialBasemap.tileSchema;
 
             initTopics();
             initListeners();
 
             ui
-                .init(basemapId, tileSchema)
+                .init(basemapId, currentTileSchema)
                 .updateToggleLabel();
         }
     };

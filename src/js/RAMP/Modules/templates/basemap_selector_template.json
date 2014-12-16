@@ -49,7 +49,7 @@
 
     "basemap": "
         <li class='basemap-list-item'>                
-            <button data-basemap-id='{%= o.id %}' class='btn basemap-button button-none'>
+            <button data-basemap-id='{%= o.id %}' data-tileshema='{%= o.tileSchema %}' class='btn basemap-button button-none'>
                 <div class='basemap-info'>
                     <span class='basemap-name' title='{%= o.name %}'>{%= o.name %}</span>
                     <span class='basemap-description small' title='{%= o.description %}, {%= o.type %}'>{%= o.description %}, {%= o.type %}</span>
