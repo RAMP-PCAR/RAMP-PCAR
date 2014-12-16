@@ -296,7 +296,7 @@ define([
                 i18n.t("bookmarkLink.emailUrlSubject"),
                 i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
-            
+
             linkPaneTextbox.val(url);
             getlinkEmailButton.attr("href", mailToHref);
         }
@@ -367,6 +367,13 @@ define([
             updateURL();
         }
 
+        /**
+        * Process the URL.  If there are any parameters that came from a short-link, apply them to the config or the RAMP application
+        *
+        * @method updateConfig
+        * @param {String} homePage the page name of the ramp site (e.g. index.html, map.html)
+        * @private
+        */
         function updateConfig(homePage) {
             var event,
                 urlObj = new Url(dojoRequire.toUrl(document.location));
@@ -416,8 +423,17 @@ define([
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                config.extents.defaultExtent = event;
-                config.spatialReference = JSON.parse(queryObject.sr);
+                //we call the spatial refernce "sr" in the url to save on characters.  However, the internal config object uses the ESRI standard
+                //name of "spatialReference" (so we can serialize to a valid esri SR object)
+                var configExtent = {
+                    xmin: event.xmin,
+                    ymin: event.ymin,
+                    xmax: event.xmax,
+                    ymax: event.ymax,
+                    spatialReference: JSON.parse(event.sr)
+                };
+
+                config.extents.defaultExtent = configExtent;
 
                 // Wait for things such as fullscreen or panel collapse
                 // to finish before doing an extent change.

@@ -119,7 +119,7 @@ require([
 
                 NavWidget.init(currentLevel);
                 FeatureHighlighter.init();
-                
+
                 Maptips.init();
 
                 //Apply listeners for basemap gallery
@@ -141,7 +141,7 @@ require([
             NavWidget.construct();
 
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
-            theme.tooltipster();            
+            theme.tooltipster();
 
             /* End - RAMP Events */
         }
@@ -183,12 +183,8 @@ require([
             handleAs: "json"
         });
 
-   
-   
-
         defJson.then(
             function (fileConfig) {
-                
                 //there is no need to convert the result to an object.  it comes through pre-parsed
                 if (!RAMP.configServiceURL) {
                     //no config service.  we just use the file provided
@@ -197,18 +193,16 @@ require([
                     //get additional config stuff from the config service.  mash it into our primary object
 
                     // pull smallkeys from URL
-                    var siteURL = new Url(require.toUrl(document.location)),                        
+                    var siteURL = new Url(require.toUrl(document.location)),
                         smallkeys = siteURL.queryObject.keys;
-                    
 
                     if (!smallkeys || smallkeys === "") {
                         //no keys.  no point hitting the service.  jump to next step
                         configReady(fileConfig);
                     } else {
-
                         //TODO verify endpoint is correct
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp:'callback', timeout: 2000 });
+                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 2000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 
@@ -234,17 +228,21 @@ require([
                                 console.log("An error occurred: " + error);
                             }
                         );
-
                     }
-
                 }
-               
             },
             function (error) {
                 console.log("An error occurred when retrieving the JSON Config: " + error);
             }
         );
 
+        /**
+        * once the config file has been retrieved, proceed with the loading of the site
+        *
+        * @method configReady
+        * @private
+        * @param {Object} configObject the configuration object
+        */
         function configReady(configObject) {
             var pluginConfig,
                 advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
@@ -270,25 +268,35 @@ require([
                     loadPlugin(pName);
                 });
             }
+
+            // apply defaulting of extents (must be done prior to bookmark link updates)
+            RampMap.applyExtentDefaulting();
+
             // Modify the config based on the url
             // needs to do this before the gui loads because the gui module
             // also reads from the config
             BookmarkLink.updateConfig(window.location.pathname.split("/").last());
 
-            // Initialize the map only after the gui loads
-            // if we do it beforehand, the map extent may get messed up since
-            // the available screen size may still be changing (e.g. due to fullscreen
-            // or subpanel closing)
-            topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
-                initializeMap();
+            //other initilizations must wait until our extents have been projected to our active basemap
+            topic.subscribe(EventManager.Map.EXTENTS_REPROJECTED, function () {
+                // Initialize the map only after the gui loads
+                // if we do it beforehand, the map extent may get messed up since
+                // the available screen size may still be changing (e.g. due to fullscreen
+                // or subpanel closing)
+                topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    initializeMap();
+                });
+
+                gui.load(null, null, function () { });
+
+                // Create the panel that the bookmark link sits in
+                // can only do this after the gui loads
+                BookmarkLink.createUI();
+
+                Ramp.loadStrings();
             });
 
-            gui.load(null, null, function () { });
-
-            // Create the panel that the bookmark link sits in
-            // can only do this after the gui loads
-            BookmarkLink.createUI();
-
-            Ramp.loadStrings();
+            //project extents to basemap
+            RampMap.projectConfigExtents();
         }
     });

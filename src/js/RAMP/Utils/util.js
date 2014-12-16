@@ -688,7 +688,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {Function} callback The callback to be executed
             * @param {Boolean} returnFragment True if you want a document fragment returned (doesn't work in IE)}
             */
-            transformXML: function (xmlurl, xslurl, callback, returnFragment) {
+            transformXML: function (xmlurl, xslurl, callback, returnFragment, params) {
                 var xmld = new Deferred(),
                     xsld = new Deferred(),
                     xml, xsl,
@@ -706,7 +706,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 // Transform XML using XSLT
                 function applyXSLT(xmlString, xslString) {
-                    var output;
+                    var output, i;
                     if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) { // IE
                         var xslt = new ActiveXObject("Msxml2.XSLTemplate"),
                             xmlDoc = new ActiveXObject("Msxml2.DOMDocument"),
@@ -718,11 +718,23 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         xslt.stylesheet = xslDoc;
                         xslProc = xslt.createProcessor();
                         xslProc.input = xmlDoc;
+                        // [patched from ECDMP] Add parameters to xsl document (addParameter = ie only)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xslProc.addParameter(params[i].key, params[i].value, "");
+                            }
+                        }
                         xslProc.transform();
                         output = xslProc.output;
                     } else { // Chrome/FF/Others
                         var xsltProcessor = new XSLTProcessor();
                         xsltProcessor.importStylesheet(xslString);
+                        // [patched from ECDMP] Add parameters to xsl document (setParameter = Chrome/FF/Others)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xsltProcessor.setParameter(null, params[i].key, params[i].value);
+                            }
+                        }
                         output = xsltProcessor.transformToFragment(xmlString, document);
 
                         // turn a document fragment into a proper jQuery object
@@ -1031,6 +1043,27 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         tl.timeLine.seek(position);
                     }
                 });
-            }
+            },
+
+            /**
+            * Checks if two spatial reference objects are equivalent.  Handles both wkid and wkt definitions
+            *
+            * @method isSpatialRefEqual
+            * @param {Esri/SpatialReference} sr1 First {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @param {Esri/SpatialReference} sr2 Second {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @return {Boolean} true if the two spatial references are equivalent.  False otherwise.
+            */
+            isSpatialRefEqual: function (sr1, sr2) {
+                if ((sr1.wkid) && (sr2.wkid)) {
+                    //both SRs have wkids
+                    return sr1.wkid === sr2.wkid;
+                } else if ((sr1.wkt) && (sr2.wkt)) {
+                    //both SRs have wkt's
+                    return sr1.wkt === sr2.wkt;
+                } else {
+                    //not enough info provided or mismatch between wkid and wkt.
+                    return false;
+                }
+            }			
         };
     });

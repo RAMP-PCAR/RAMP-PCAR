@@ -16,7 +16,6 @@
 * @uses dojo/_base/Color
 * @uses esri/config
 * @uses esri/graphic
-* @uses esri/SpatialReference
 * @uses esri/symbols/SimpleLineSymbol
 * @uses esri/symbols/SimpleFillSymbol
 * @uses esri/tasks/GeometryService
@@ -41,7 +40,6 @@ define([
     "esri/toolbars/draw",
     "esri/symbols/SimpleLineSymbol",
     "esri/symbols/SimpleFillSymbol",
-    "esri/SpatialReference",
 // Ramp
     "ramp/map", "ramp/globalStorage", "tools/baseTool"
 ],
@@ -50,7 +48,7 @@ define([
 // Dojo
       dom, array, Color, dojoLang,
 // Esri
-      esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol, SpatialReference,
+      esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
       "use strict";
@@ -69,7 +67,7 @@ define([
       function computeBuffer(evtObj) {
           var geometry = evtObj.geometry,
               map = bufferApp.map,
-              geometryService = new GeometryService(RAMP.config.geometryService),
+              geometryService = new GeometryService(RAMP.config.geometryServiceUrl),
 
               symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
@@ -91,7 +89,7 @@ define([
               that.working(false);
           } else {
               params.distances = [distanceInput];
-              params.bufferSpatialReference = new SpatialReference({ wkid: RAMP.config.spatialReference.wkid });
+              params.bufferSpatialReference = bufferApp.map.spatialReference;
               params.outSpatialReference = bufferApp.map.spatialReference;
               params.unit = 9036; // Kilometers
 
