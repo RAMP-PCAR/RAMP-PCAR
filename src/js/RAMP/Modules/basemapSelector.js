@@ -70,20 +70,22 @@ function (
                 projectionPopup,
                 basemapPopup,
 
-                selectorTimeline = new TimelineLite({ paused: true }),
-                selectorOpenTimeline = new TimelineLite(),
+                selectorOpenTimeline = new TimelineLite({ paused: true }),
 
                 transitionDuration = 0.4,
 
                 cssButtonPressedClass = "button-pressed";
 
             function createSelectorOpenTL() {
+                var time = selectorOpenTimeline.time();
+
                 selectorOpenTimeline
                     .clear()
+                    //.set(selectorSectionContainer, { display: "block" }, 0)
                     .fromTo(selectorSection, transitionDuration,
                         { top: -selectorSectionContainer.find(".basemapselector-section").outerHeight() - 20 },
                         { top: 0, ease: "easeOutCirc" }, 0)
-                    .seek(selectorTimeline.time());
+                    .seek(time);
             }
 
             return {
@@ -129,39 +131,38 @@ function (
                     selectorSectionContainer = baseMapControls.find("#basemapselector-section-container");
                     selectorSection = selectorSectionContainer.find(".basemapselector-section");
 
-                    selectorTimeline
-                        .set(selectorSectionContainer, { display: "block" }, 0)
-                        .add(selectorOpenTimeline, 0);
-
                     // turn on the opening and closing of the basemap selector section
                     selectorPopup = PopupManager.registerPopup(baseMapControls, "hoverIntent",
                         function (d) {
                             baseMapToggle.addClass("button-pressed");
                             createSelectorOpenTL();
 
-                            selectorTimeline.eventCallback("onComplete", function () {
+                            selectorOpenTimeline.eventCallback("onComplete", function () {
                                 d.resolve();
                             });
 
-                            selectorTimeline.play();
+                            selectorSectionContainer.show();
+                            selectorOpenTimeline.play();
                         },
                         {
                             activeClass: cssButtonPressedClass,
                             target: selectorSectionContainer,
                             closeHandler: function (d) {
-                                baseMapToggle.removeClass("button-pressed");
                                 createSelectorOpenTL();
 
-                                selectorTimeline.eventCallback("onReverseComplete", function () {
+                                selectorOpenTimeline.eventCallback("onReverseComplete", function () {
+                                    baseMapToggle.removeClass("button-pressed");
+                                    selectorSectionContainer.hide();
                                     d.resolve();
                                 });
 
-                                selectorTimeline.reverse();
+                                selectorOpenTimeline.reverse();
                             },
                             timeout: 500
                         }
                     );
 
+                    // show/hide basemap lists based on what projection group is active
                     projectionPopup = PopupManager.registerPopup(selectorSectionContainer, "click",
                         function (d) {
                             if (!this.isOpen()) {
@@ -171,6 +172,7 @@ function (
 
                                 projectionPopup.close();
                                 
+                                // animate resizing of the selector when switching between projection groups
                                 heightTimeline
                                     .set(this.target, { display: "block" }, 0)
                                     .fromTo(this.target, transitionDuration, { height: fromHeight }, { height: toHeight }, 0)
@@ -192,6 +194,7 @@ function (
                         }
                     );
 
+                    // listen to clicks on basemap list and switch basemap accordingly
                     basemapPopup = PopupManager.registerPopup(selectorSectionContainer, "click",
                         function (d) {
                             if (!this.isOpen()) {
@@ -217,6 +220,7 @@ function (
                     basemapPopup.open(basemapControl);
                     projectionPopup.open(projectionControl);
 
+                    // set tooltips on the overflowing spans with basemap/projection names
                     selectorSectionContainer
                         .find(".basemap-info span, .projection-name")
                         .each(function () {
