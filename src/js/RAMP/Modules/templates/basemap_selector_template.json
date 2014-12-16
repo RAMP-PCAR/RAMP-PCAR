@@ -55,7 +55,7 @@
                     <span class='basemap-description small' title='{%= o.description %}, {%= o.type %}'>{%= o.description %}, {%= o.type %}</span>
                 </div>
                 <div class='basemap-image-container'>
-                    <img class='basemap-image' src='{%= o.thumbnail %}' />
+                    <img alt='' role='presentation' class='basemap-image' src='{%= o.thumbnail %}' />
                 </div>
             </button>
         </li>
