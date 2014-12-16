@@ -362,6 +362,33 @@ define([
         }
 
         /**
+       * If a co-ordinate has a big value before the decimal point, drop the precision after the decimal
+       *
+       * @method slimCoord
+       * @param {Object} value co-ordinate to potentially slim down
+       * @private
+       */
+        function slimCoord(value) {
+            var sVal = value.toString(),
+                decIndex = sVal.indexOf("."),
+                cutSize;
+
+            if (sVal.substring(0, 1) === "-") {
+                cutSize = 7;
+            } else {
+                cutSize = 6;
+            }
+
+            if (decIndex < cutSize) {
+                //number has 5 or less numbers before the decimal, or no decimal point.  return input as is
+                return sVal;
+            } else {
+                //trim that decimal!
+                return sVal.substring(0, decIndex);
+            }
+        }
+
+        /**
         * Toggle the short/long link mode and change the label accordingly
         *
         * @method toggleShortLinkMode
@@ -599,10 +626,10 @@ define([
                 topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
                     // Event fields: extent, delta, levelChange, lod;
                     addParameter(EVENT_EXTENT_CHANGE, {
-                        xmin: event.extent.xmin,
-                        ymin: event.extent.ymin,
-                        xmax: event.extent.xmax,
-                        ymax: event.extent.ymax,
+                        xmin: slimCoord(event.extent.xmin),
+                        ymin: slimCoord(event.extent.ymin),
+                        xmax: slimCoord(event.extent.xmax),
+                        ymax: slimCoord(event.extent.ymax),
                         sr: JSON.stringify(event.extent.spatialReference)
                     });
                     updateURL();
