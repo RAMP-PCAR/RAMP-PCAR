@@ -100,6 +100,25 @@ define([
                     HIDDEN_BOXES: "hiddenBoxes"
                 }
             },
+
+            // defines any standard url param keys we are expecting
+            URL_KEYS = {
+                PANEL_VISIBLE: "pv",
+                FULL_SCREEN: "fs",
+                XMIN: "xmin",
+                YMIN: "ymin",
+                XMAX: "xmax",
+                YMAX: "ymax",
+                SPATIAL_REF: "sr",
+                BASEMAP: "bm",
+                LAYER_TRANSPARENCY: "lt",
+                SELECT_TAB: "st",
+                VISIBLE_LAYERS: "vl",
+                HIDDEN_LAYERS: "hl",
+                VISIBLE_BOXES: "vb",
+                HIDDEN_BOXES: "hb"
+            },
+
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
 
             config,
@@ -429,32 +448,33 @@ define([
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
             // Toggle the main panel
-            if (queryObject.panelVisible) {
+            if (queryObject[URL_KEYS.PANEL_VISIBLE]) {
                 event = {
-                    panelVisible: UtilMisc.parseBool(queryObject.panelVisible)
+                    pv: UtilMisc.parseBool(queryObject[URL_KEYS.PANEL_VISIBLE])
                 };
 
                 addParameter(EVENT_PANEL_CHANGE, event);
-                RAMP.state.ui.sidePanelOpened = event.visible;
+                RAMP.state.ui.sidePanelOpened = event.pv;
             }
 
             // Toggle fullscreen mode
-            if (queryObject.fullscreen) {
+            if (queryObject[URL_KEYS.FULL_SCREEN]) {
                 event = {
-                    fullscreen: UtilMisc.parseBool(queryObject.fullscreen)
+                    fs: UtilMisc.parseBool(queryObject[URL_KEYS.FULL_SCREEN])
                 };
                 addParameter(EVENT_FULLSCREEN, event);
-                RAMP.state.ui.fullscreen = event.fullscreen;
+                RAMP.state.ui.fullscreen = event.fs;
             }
 
             // Check for map extent queries
-            if (queryObject.xmin) {
+
+            if (queryObject[URL_KEYS.XMIN]) {
                 event = {
-                    xmin: parseFloat(queryObject.xmin.replace(/,/g, "")),
-                    ymin: parseFloat(queryObject.ymin.replace(/,/g, "")),
-                    xmax: parseFloat(queryObject.xmax.replace(/,/g, "")),
-                    ymax: parseFloat(queryObject.ymax.replace(/,/g, "")),
-                    sr: queryObject.sr
+                    xmin: parseFloat(queryObject[URL_KEYS.XMIN].replace(/,/g, "")),
+                    ymin: parseFloat(queryObject[URL_KEYS.YMIN].replace(/,/g, "")),
+                    xmax: parseFloat(queryObject[URL_KEYS.XMAX].replace(/,/g, "")),
+                    ymax: parseFloat(queryObject[URL_KEYS.YMAX].replace(/,/g, "")),
+                    sr: queryObject[URL_KEYS.SPATIAL_REF]
                 };
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
@@ -476,22 +496,22 @@ define([
             }
 
             // Select the correct basemap
-            if (queryObject.baseMap) {
+            if (queryObject[URL_KEYS.BASEMAP]) {
                 event = {
-                    baseMap: queryObject.baseMap
+                    bm: queryObject[URL_KEYS.BASEMAP]
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
-                config.initialBasemapIndex = parseInt(queryObject.baseMap);
+                config.initialBasemapIndex = parseInt(queryObject[URL_KEYS.BASEMAP]);
             }
 
             // Modify the layer transparency
-            if (queryObject.layerTransparency) {
+            if (queryObject[URL_KEYS.LAYER_TRANSPARENCY]) {
                 addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                    layerTransparency: queryObject.layerTransparency
+                    lt: queryObject[URL_KEYS.LAYER_TRANSPARENCY]
                 });
 
-                UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
+                UtilDict.forEachEntry(JSON.parse(queryObject[URL_KEYS.LAYER_TRANSPARENCY]), function (key, value) {
                     var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
@@ -500,18 +520,18 @@ define([
             }
 
             // check for selected tab queries
-            if (queryObject.selectedTab) {
+            if (queryObject[URL_KEYS.SELECT_TAB]) {
                 // Just add the parameter, no need to do anything else
                 // since we're using anchor tags
                 addParameter(EVENT_TAB_CHANGE, {
-                    index: queryObject.selectedTab
+                    index: queryObject[URL_KEYS.SELECT_TAB]
                 });
             }
 
             var layerIds;
 
-            if (queryObject.visibleLayers) {
-                layerIds = queryObject.visibleLayers.split("+");
+            if (queryObject[URL_KEYS.VISIBLE_LAYERS]) {
+                layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -524,12 +544,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
-                    visibleLayers: queryObject.visibleLayers
+                    vl: queryObject[URL_KEYS.VISIBLE_LAYERS]
                 });
             }
 
-            if (queryObject.hiddenLayers) {
-                layerIds = queryObject.hiddenLayers.split("+");
+            if (queryObject[URL_KEYS.HIDDEN_LAYERS]) {
+                layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -542,12 +562,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
-                    hiddenLayers: queryObject.hiddenLayers
+                    hl: queryObject[URL_KEYS.HIDDEN_LAYERS]
                 });
             }
 
-            if (queryObject.visibleBoxes) {
-                layerIds = queryObject.visibleBoxes.split("+");
+            if (queryObject[URL_KEYS.VISIBLE_BOXES]) {
+                layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -558,12 +578,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
-                    visibleBoxes: queryObject.visibleBoxes
+                    vb: queryObject[URL_KEYS.VISIBLE_BOXES]
                 });
             }
 
-            if (queryObject.hiddenBoxes) {
-                layerIds = queryObject.hiddenBoxes.split("+");
+            if (queryObject[URL_KEYS.HIDDEN_BOXES]) {
+                layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -575,8 +595,27 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {
-                    hiddenBoxes: queryObject.hiddenBoxes
+                    hb: queryObject[URL_KEYS.HIDDEN_BOXES]
                 });
+            }
+
+            //check for any additional unknown parameters that were on the url.  add them to our URL
+            var paramName, paramObj, knownNames = [];
+            //get list of known keys in a searchable list
+            for (paramName in URL_KEYS) {
+                if (URL_KEYS.hasOwnProperty(paramName)) {
+                    knownNames.push(URL_KEYS[paramName]);
+                }
+            }
+            for (paramName in queryObject) {
+                if (queryObject.hasOwnProperty(paramName)) {
+                    if (knownNames.indexOf(paramName) === -1) {
+                        //found a param that is not known.  add it to the collection
+                        paramObj = {};
+                        paramObj[paramName] = queryObject[paramName];
+                        addParameter(paramName, paramObj);
+                    }
+                }
             }
         }
 
@@ -637,7 +676,7 @@ define([
 
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, {
-                        fullscreen: event.visible
+                        fs: event.visible
                     });
                     updateURL();
                 });
@@ -652,7 +691,7 @@ define([
 
                 topic.subscribe(EventManager.GUI.PANEL_CHANGE, function (event) {
                     addParameter(EVENT_PANEL_CHANGE, {
-                        panelVisible: event.visible
+                        pv: event.visible
                     });
                     updateURL();
                 });
@@ -661,7 +700,7 @@ define([
                     //lookup index from config. don't store id
 
                     addParameter(EVENT_BASEMAP_CHANGED, {
-                        baseMap: RAMP.basemapIndex[event.id]
+                        bm: RAMP.basemapIndex[event.id]
                     });
                     updateURL();
                 });
@@ -680,12 +719,12 @@ define([
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        hiddenLayers: Object.keys(hiddenLayers).join("+")
+                        hl: Object.keys(hiddenLayers).join("+")
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        visibleLayers: Object.keys(visibleLayers).join("+")
+                        vl: Object.keys(visibleLayers).join("+")
                     });
 
                     updateURL();
@@ -705,12 +744,12 @@ define([
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        hiddenBoxes: Object.keys(hiddenBoxes).join("+")
+                        hb: Object.keys(hiddenBoxes).join("+")
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        visibleBoxes: Object.keys(visibleBoxes).join("+")
+                        vb: Object.keys(visibleBoxes).join("+")
                     });
 
                     updateURL();
@@ -721,7 +760,7 @@ define([
                     layerTransparency[event.layerId] = event.value;
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                        layerTransparency: JSON.stringify(layerTransparency)
+                        lt: JSON.stringify(layerTransparency)
                     });
 
                     updateURL();
