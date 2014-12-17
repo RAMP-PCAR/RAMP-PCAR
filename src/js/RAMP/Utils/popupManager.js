@@ -38,6 +38,15 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             reverseEvent: null,
 
             /**
+             * Indicates whether the popup should react on the closing event as well. The closing event is considered an event on the handle of the popup which is open.
+             *
+             * @property openOnly
+             * @type {Boolean}
+             * @default false
+             */
+            openOnly: false,
+
+            /**
             * The initially supplied handle to the PopupManager; a {{#crossLink "jQuery"}}{{/crossLink}} to listen to events on.
             *
             * @property handle
@@ -74,7 +83,14 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             */
             targetSelector: null,
 
-            targetContainerSelector: null,
+            /**
+            * Selector for the container housing both actual handle and actual target for one popup instance. Used to select the actual target that is relative to currently active handle. 
+            *
+            * @property containerSelector
+            * @type {String}
+            * @default null
+            */
+            containerSelector: null,
 
             /**
             * The function to execute when the popup opens.
@@ -196,8 +212,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
                             if (this._attr.target) {
                                 actualTarget = this._attr.targetSelector ? this._attr.target.find(this._attr.targetSelector) : this._attr.target;
-                            } else if (this._attr.targetContainerSelector && this._attr.targetSelector) {
-                                actualTarget = ah.parents(this._attr.targetContainerSelector).find(this._attr.targetSelector);
+                            } else if (this._attr.containerSelector && this._attr.targetSelector) {
+                                actualTarget = ah.parents(this._attr.containerSelector).find(this._attr.targetSelector);
                             } else {
                                 // if the target cannot be found, a handle its returned
                                 actualTarget = this._attr.targetSelector ? ah.find(this._attr.targetSelector) : ah;
@@ -214,7 +230,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                         useAria: this._attr.useAria,
                                         resetFocusOnClose: this._attr.resetFocusOnClose,
 
-                                        handle: actualHandle,
+                                        //handle: actualHandle,
+                                        handle: ah, // one actual handle per spawned popup
                                         target: actualTarget
                                     })
                                 );
@@ -341,7 +358,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Indicates whether activeClass should be applied before openHandler function completes or after.
                 *
                 * @property setClassBefore
-                * @type {String}
+                * @type {Boolean}
                 * @default null
                 */
                 setClassBefore: null,
@@ -490,7 +507,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                 "aria-expanded": visible,
                                 "aria-hidden": !visible
                             });
-                        }                       
+                        }
                     }
                 }
             };
@@ -673,6 +690,10 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                     .on(popup._attr.reverseEvent, popup._attr.handleSelector, function (event) {
                                         popup.close(event.currentTarget);
                                     });
+                            } else if (popup._attr.openOnly) {
+                                handle.on(e, popup._attr.handleSelector, function (event) {
+                                    popup.open(event.currentTarget);
+                                });
                             } else {
                                 handle.on(e, popup._attr.handleSelector, function (event) {
                                     popup.toggle(event.currentTarget);

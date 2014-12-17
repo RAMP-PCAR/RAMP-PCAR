@@ -1,11 +1,63 @@
 {
-	"default_basemap":	"<a href='javascript:void(0);'>
+    "default_basemap":	"<a href='javascript:void(0);'>
                             <div class='esriBasemapGalleryLabelContainer'>
                                 <span alt='{%= o.data.name %} ({%= o.data.type %})' title='{%= o.data.name %} ({%= o.data.type %})'>{%= o.data.name %} ({%= o.data.type %})</span>
                                 <span class='font-xsmall extra'>{%= o.data.description %}</span>
                             </div>
                             <img class='esriBasemapGalleryThumbnail' src='{%= o.data.thumbnail %}' alt='{%= o.data.altText %}'>
                             <div class='clearfix'></div>
-                        </a>"
-}
+                        </a>",
+    
+    "basemapselector": "
+        <div id='basemapselector-section-container'>
+            <div class='basemapselector-section'>
+                <div class='projection-list-pane'>
+                    <ul class='projection-list'>
+                        {%              
+                            o.forEach(function (pr) {
+                                include('projection', pr);
+                            });
+                        %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    ",
 
+    "projection": "
+        <li class='projection-list-item'>
+            <button data-projection-id='{%= o.id %}' class='btn projection-button button-none'>
+                <span class='projection-name' title='{%= i18n.t('config.tileSchema.' + o.name)%}'>{%= i18n.t('config.tileSchema.' + o.name)%}</span>
+            </button>
+            <div class='basemap-list-pane'>
+                {% if(!o.isActive) { %}
+                    <div class='basemap-warning'>
+                        <p>Page refresh required</p>
+                    </div>
+                {% } %}
+
+                <ul class='basemap-list'>
+                    {%              
+                        o.maps.forEach(function (bm) {
+                            include('basemap', bm);
+                        });
+                    %}
+                </ul>
+            </div>
+        </li>
+    ",
+
+    "basemap": "
+        <li class='basemap-list-item'>                
+            <button data-basemap-id='{%= o.id %}' data-tileshema='{%= o.tileSchema %}' class='btn basemap-button button-none'>
+                <div class='basemap-info'>
+                    <span class='basemap-name' title='{%= o.name %}'>{%= o.name %}</span>
+                    <span class='basemap-description small' title='{%= o.description %}, {%= o.type %}'>{%= o.description %}, {%= o.type %}</span>
+                </div>
+                <div class='basemap-image-container'>
+                    <img alt='' role='presentation' class='basemap-image' src='{%= o.thumbnail %}' />
+                </div>
+            </button>
+        </li>
+    "
+}

@@ -270,7 +270,7 @@ define([],
                 /**
                 * Published when the gui module has completely finished rendering the UI.
                 * The bootstrapper should wait for this event to fire before initializing map.
-                * 
+                *
                 * @event GUI.UPDATE_COMPLETE
                 * @for GUI
                 */
@@ -440,6 +440,20 @@ define([],
                 SET_EXTENT: "rampMap/set-extent",
 
                 /**
+                * Changes the current extent of the map.
+                *
+                * @event RampMap.SET_EXTENT [subscribed]
+                * @for RampMap
+                * @param event {Object}
+                * @param event.extent.xmin {number}
+                * @param event.extent.ymin {number}
+                * @param event.extent.xmax {number}
+                * @param event.extent.ymax {number}
+                * @param event.callback {function} the function to call after the extent change is complete
+                */
+                EXTENTS_REPROJECTED: "rampMap/extents-reprojected",
+
+                /**
                 * Republishes a standard ESRI map click event 'click'.
                 *
                 * @event RampMap.CLICK
@@ -528,7 +542,6 @@ define([],
                 * @for BaseMapSelector
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the selected basemap
-                * @param {String} evt.title the title of the selected basemap
                 * @param {String} evt.cssStyle
                 */
                 BASEMAP_CHANGED: "basemapSelector/basemap-changed",
@@ -652,9 +665,18 @@ define([],
                * map toolbar.
                *
                * @for BookmarkLink
-               * @event bookmark.GETLINK_PANEL_CHANGED
+               * @event BookmarkLink.GETLINK_PANEL_CHANGED
                */
-                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed"
+                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed",
+
+                /**
+                * Published when a new link has been generated.
+                *
+                * @event BookmarkLink.BOOKMARK_GENERATED
+                * @param event {Object}
+                * @param event.link {String} The bookmark URL that was generated
+                */
+                BOOKMARK_GENERATED: "bookmark/bookmark-generated"
             },
 
             AdvancedToolbar: {

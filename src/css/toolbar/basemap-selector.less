@@ -1,0 +1,164 @@
+﻿#basemapselector-section-container {
+    position: absolute;
+    z-index: 199;
+    overflow: hidden;
+    padding: 0 0 20px 0; // needed to accommodate the shadow from the section
+    margin: 0;
+    text-align: left;
+    top: 32px;
+
+    width: 500px;
+
+    .basemapselector-section {
+        min-height: 150px;
+        position: relative;
+        
+        .box-shadow-section;
+
+        .projection-list,
+        .basemap-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .projection-list-pane {
+            width: 150px;
+
+            .projection-button {
+                border-radius: 0 0 0 0;
+                margin: 0;
+                padding: 10px 15px 10px !important;
+                text-decoration: none;
+                width: 100%;
+                text-align: left;
+                border-right: none;
+
+                &.focused,
+                &:focus, &:hover {
+                    background-color: #D4D4D4 !important;
+                    color: inherit !important;
+                }
+
+                &.button-pressed {
+                    //background-color: #D4D4D4 !important;
+                    //color: #D73D38 !important;
+                    border-color: @medium-dark-grey-color !important;
+                    background-color: #545454 !important;
+                    color: #FFF !important;
+                    box-shadow: @button-active-shadow;
+                }
+
+                .projection-name {
+                    .overflow-span-block;
+                }
+            }
+
+            &:after {
+                content: "";
+                position: absolute;
+                width: 5px;
+                background: #545454;
+                left: 146px;
+                top: 0;
+                bottom: 0;
+            }
+        }
+
+        .basemap-list-pane {
+            position: absolute;
+            top: 0;
+            right: 1px;
+            width: 350px;
+            overflow: hidden;
+            
+            .basemap-warning {
+                background: @very-light-blue-color;
+                border-left: 10px solid @info-color;
+
+                p {
+                    margin: 0 0 0 21px;
+                    padding: 5px;
+
+                    &:before {
+                        color: @info-color;
+                        content: "\e086";
+                        font-family: "Glyphicons Halflings";
+                        margin-left: -20px;
+                        position: absolute;
+                    }
+                }
+            }
+
+            .basemap-button {
+                border-radius: 0 0 0 0;
+                margin: 0;
+                padding: 6px 5px 6px 14px !important;
+                text-decoration: none;
+                width: 100%;
+                text-align: left;
+                border-left: none;
+
+                &.focused,
+                &:focus, &:hover {
+                    background-color: #D4D4D4 !important;
+                    color: inherit !important;
+
+                    span {
+                        color: #000 !important;
+                    }
+                }
+
+                &.button-pressed {
+                    //background-color: #D4D4D4 !important;
+                    //color: #D73D38 !important;
+                    border-color: @medium-dark-grey-color !important;
+                    background-color: #545454 !important;
+                    color: #FFF !important;
+                    box-shadow: @button-active-shadow;
+
+                    span {
+                        color: #FFF !important;
+                    }
+                }
+
+                .basemap-info {
+                    display: inline-block;
+
+                    .basemap-name {
+                        font-weight: bold;
+                        //margin-bottom: 4px;
+                    }
+
+                    .basemap-description {
+                        color: #767676;
+                    }
+
+                    span {
+                        width: 230px;
+                        .overflow-span-block;
+                    }
+                }
+
+                .basemap-image-container {
+                    border: 2px solid #FFF;
+                    height: 48px;
+                    width: 96px;
+                    float: right;
+                    vertical-align: bottom;
+                    overflow: hidden;
+                    
+                    .basemap-image {
+                        //border: 2px solid #FFF;
+                        //height: 48px;
+                        width: 96px;
+                        position: relative;
+                        top: -50%;
+                        //margin: 0;
+                        //float: right;
+                        //vertical-align: bottom;
+                    }
+                }                
+            }
+        }
+    }
+}

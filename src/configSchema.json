@@ -216,6 +216,8 @@
                 "url": { "type": "string", "format": "uri" },
                 "metadataUrl": { "type": "string", "format": "uri", "description": "Metadata for the layer in XML format" },
                 "catalogueUrl": { "type": "string", "format": "uri", "description": "Link back to the catalogue page for the layer" },
+                "minScale": { "type": "integer", "default": 0, "description": "Minimum zoom scale at which this layer is visible" },
+                "maxScale": { "type": "integer", "default": 0, "description": "Maximum zoom scale at which this layer is visible" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
 
@@ -306,14 +308,12 @@
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },
 
-        "spatialReference": { "$ref": "#/definitions/spatialReferenceNode", "additionalProperties": false },
-
         "extents": {
             "type": "object",
             "properties": {
-                "defaultExtent": { "$ref": "#/definitions/extentNode" },
-                "fullExtent": { "$ref": "#/definitions/extentNode" },
-                "maximumExtent": { "$ref": "#/definitions/extentNode" }
+                "defaultExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
+                "fullExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
+                "maximumExtent": { "$ref": "#/definitions/extentWithReferenceNode" }
             },
             "required": [ "defaultExtent" ],
             "additionalProperties": false
@@ -367,9 +367,10 @@
                     "name": { "type": "string" },
                     "altText": { "type": "string" },
                     "tileSchema": { "type": "string", "description": "should define a combination of the projection and tiling format (ex: NRCAN_Lambert_3978, ESRI_World_AuxMerc_3857 )" },
-                    "description": { "type": "string", "description": "description" }
+                    "description": { "type": "string", "description": "description" },
+                    "spatialReference":  { "$ref": "#/definitions/spatialReferenceNode" }
                 },
-                "required": [ "id", "layers", "tileSchema" ],
+                "required": [ "id", "layers", "tileSchema", "spatialReference" ],
                 "additionalProperties": false
             }
         },
@@ -464,5 +465,5 @@
 
 
     },
-    "required": [ "version", "spatialReference", "extents", "basemaps" ]
+    "required": [ "version", "extents", "basemaps" ]
 }

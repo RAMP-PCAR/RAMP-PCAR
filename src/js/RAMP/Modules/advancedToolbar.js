@@ -89,7 +89,8 @@ define([
                         .clear()
                         .fromTo(subPanelContainer, transitionDuration,
                                 { "margin-top": 0, paused: true },
-                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }, 0);
+                                { "margin-top": subPanelMarginDelta, ease: "easeOutCirc" }, 0)
+                        .seek(advancedToolbarTimeline.time());
 
                     if (!doOpen) {
                         advancedToolbarTimeline.eventCallback("onReverseComplete", function () {

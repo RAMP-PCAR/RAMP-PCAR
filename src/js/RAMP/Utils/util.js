@@ -1043,6 +1043,27 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         tl.timeLine.seek(position);
                     }
                 });
-            }
+            },
+
+            /**
+            * Checks if two spatial reference objects are equivalent.  Handles both wkid and wkt definitions
+            *
+            * @method isSpatialRefEqual
+            * @param {Esri/SpatialReference} sr1 First {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @param {Esri/SpatialReference} sr2 Second {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @return {Boolean} true if the two spatial references are equivalent.  False otherwise.
+            */
+            isSpatialRefEqual: function (sr1, sr2) {
+                if ((sr1.wkid) && (sr2.wkid)) {
+                    //both SRs have wkids
+                    return sr1.wkid === sr2.wkid;
+                } else if ((sr1.wkt) && (sr2.wkt)) {
+                    //both SRs have wkt's
+                    return sr1.wkt === sr2.wkt;
+                } else {
+                    //not enough info provided or mismatch between wkid and wkt.
+                    return false;
+                }
+            }			
         };
     });

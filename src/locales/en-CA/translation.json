@@ -1,5 +1,10 @@
 {
     "config": {
+        "tileSchema": {
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "NRCAN_Lambert_3979": "Lambert 79",
+            "ESRI_World_AuxMerc_3857":  "Auxilliary Mercator"
+        },
         "basemaps": {
             "baseNrCan": {
                 "name": "Canada Atlas",
@@ -26,6 +31,36 @@
                 "name": "Canada Topographic",
                 "altText": "Topographic Map",
                 "description": "Earth 2 Map"
+            },
+            "baseEsriWorld":  {
+                "name": "Satellite Imagery",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Imagery"
+            },
+            "baseEsriPhysical":  {
+                "name": "Physical Earth",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Physical_Map"
+            },
+            "baseEsriRelief":  {
+                "name": "Shaded Relief",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Shaded_Relief"
+            },
+            "baseEsriStreet":  {
+                "name": "Streets",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Street_Map"
+            },
+            "baseEsriTerrain":  {
+                "name": "Terrain",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Terrain_Base"
+            },
+            "baseEsriTopo":  {
+                "name": "Topographic",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Topo_Map"
             }
         },
 
@@ -56,7 +91,7 @@
                     "displayName": "EC Projects"
                 }
             },
-            "wms": { 
+            "wms": {
                 "nasa_modis": {
                     "displayName": "Arctic Airports"
                 },
@@ -66,7 +101,7 @@
                 "limits": {
                     "displayName": "Limits"
                 },
-                "wms6": { 
+                "wms6": {
                     "displayName": "Railway Network"
                 }
             }

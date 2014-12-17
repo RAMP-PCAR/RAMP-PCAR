@@ -48,7 +48,7 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             * @param {Function} predicate a function that takes one argument and returns true if the
             * argument satisfies some condition, and false otherwise.</param>
             * @param {Object} scope ???
-            * @return {Object} first elemtn that satisfies the given preidcate; `null` if no such element is found
+            * @return {Object} first element that satisfies the given predicate; `null` if no such element is found
             */
             find: function (arr, predicate, scope) {
                 var index = this.indexOf(arr, predicate, scope);

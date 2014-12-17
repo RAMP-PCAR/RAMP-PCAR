@@ -296,7 +296,7 @@ define([
                 i18n.t("bookmarkLink.emailUrlSubject"),
                 i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
-            
+
             linkPaneTextbox.val(url);
             getlinkEmailButton.attr("href", mailToHref);
         }
@@ -309,13 +309,18 @@ define([
         * @private
         */
         function updateURL() {
-            var link = baseUrl;
+            var link = baseUrl,
+                delim = "?";
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
             UtilDict.forEachEntry(parameters, function (key, value) {
                 if (value) { // Value cannot be null or the empty String
-                    link += "&" + value;
+                    link += delim + value;
+                    if (delim === "?") {
+                        //first param has a question mark in front of it.  all others have an &
+                        delim = "&";
+                    }
                 }
             });
 
@@ -349,6 +354,38 @@ define([
             } else {
                 setNewUrl(link);
             }
+
+            //trigger event indicating bookmark is complete.  pass bookmark as arg
+            topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
+                link: link
+            });
+        }
+
+        /**
+       * If a co-ordinate has a big value before the decimal point, drop the precision after the decimal
+       *
+       * @method slimCoord
+       * @param {Object} value co-ordinate to potentially slim down
+       * @private
+       */
+        function slimCoord(value) {
+            var sVal = value.toString(),
+                decIndex = sVal.indexOf("."),
+                cutSize;
+
+            if (sVal.substring(0, 1) === "-") {
+                cutSize = 7;
+            } else {
+                cutSize = 6;
+            }
+
+            if (decIndex < cutSize) {
+                //number has 5 or less numbers before the decimal, or no decimal point.  return input as is
+                return sVal;
+            } else {
+                //trim that decimal!
+                return sVal.substring(0, decIndex);
+            }
         }
 
         /**
@@ -367,6 +404,13 @@ define([
             updateURL();
         }
 
+        /**
+        * Process the URL.  If there are any parameters that came from a short-link, apply them to the config or the RAMP application
+        *
+        * @method updateConfig
+        * @param {String} homePage the page name of the ramp site (e.g. index.html, map.html)
+        * @private
+        */
         function updateConfig(homePage) {
             var event,
                 urlObj = new Url(dojoRequire.toUrl(document.location));
@@ -380,7 +424,6 @@ define([
             if (baseUrl.indexOf(homePage) === -1) {
                 baseUrl += homePage;
             }
-            baseUrl += "?lang=" + RAMP.locale;
 
             // Move the API key to config.json??
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
@@ -388,11 +431,11 @@ define([
             // Toggle the main panel
             if (queryObject.panelVisible) {
                 event = {
-                    visible: UtilMisc.parseBool(queryObject.panelVisible)
+                    panelVisible: UtilMisc.parseBool(queryObject.panelVisible)
                 };
 
                 addParameter(EVENT_PANEL_CHANGE, event);
-                config.ui.sidePanelOpened = event.visible;
+                RAMP.state.ui.sidePanelOpened = event.visible;
             }
 
             // Toggle fullscreen mode
@@ -401,7 +444,7 @@ define([
                     fullscreen: UtilMisc.parseBool(queryObject.fullscreen)
                 };
                 addParameter(EVENT_FULLSCREEN, event);
-                config.ui.fullscreen = event.fullscreen;
+                RAMP.state.ui.fullscreen = event.fullscreen;
             }
 
             // Check for map extent queries
@@ -416,8 +459,17 @@ define([
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                config.extents.defaultExtent = event;
-                config.spatialReference = JSON.parse(queryObject.sr);
+                //we call the spatial refernce "sr" in the url to save on characters.  However, the internal config object uses the ESRI standard
+                //name of "spatialReference" (so we can serialize to a valid esri SR object)
+                var configExtent = {
+                    xmin: event.xmin,
+                    ymin: event.ymin,
+                    xmax: event.xmax,
+                    ymax: event.ymax,
+                    spatialReference: JSON.parse(event.sr)
+                };
+
+                config.extents.defaultExtent = configExtent;
 
                 // Wait for things such as fullscreen or panel collapse
                 // to finish before doing an extent change.
@@ -430,9 +482,7 @@ define([
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
-                dojoArray.forEach(config.basemaps, function (basemap) {
-                    basemap.showOnInit = (basemap.id === event.baseMap);
-                });
+                config.initialBasemapIndex = parseInt(queryObject.baseMap);
             }
 
             // Modify the layer transparency
@@ -576,10 +626,10 @@ define([
                 topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
                     // Event fields: extent, delta, levelChange, lod;
                     addParameter(EVENT_EXTENT_CHANGE, {
-                        xmin: event.extent.xmin,
-                        ymin: event.extent.ymin,
-                        xmax: event.extent.xmax,
-                        ymax: event.extent.ymax,
+                        xmin: slimCoord(event.extent.xmin),
+                        ymin: slimCoord(event.extent.ymin),
+                        xmax: slimCoord(event.extent.xmax),
+                        ymax: slimCoord(event.extent.ymax),
                         sr: JSON.stringify(event.extent.spatialReference)
                     });
                     updateURL();
@@ -608,8 +658,10 @@ define([
                 });
 
                 topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (event) {
+                    //lookup index from config. don't store id
+
                     addParameter(EVENT_BASEMAP_CHANGED, {
-                        baseMap: event.id
+                        baseMap: RAMP.basemapIndex[event.id]
                     });
                     updateURL();
                 });

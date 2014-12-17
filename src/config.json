@@ -1,8 +1,5 @@
 {
     "version": "1.0.0",
-    "spatialReference": {
-        "wkid": 3978
-    },
     "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
     "proxyUrl": "proxy/dotNet/proxy.ashx",
     "advancedToolbar": {
@@ -35,19 +32,28 @@
             "xmin": -1681457,
             "ymin": -483440,
             "xmax": 2549492,
-            "ymax": 2482193
+            "ymax": 2482193,
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         "fullExtent": {
             "xmin": -2681457,
             "ymin": -883440,
             "xmax": 3549492,
-            "ymax": 3482193
+            "ymax": 3482193,
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         "maximumExtent": {
             "xmin": -3977918,
             "ymin": -883440,
             "xmax": 4621056,
-            "ymax": 4884488
+            "ymax": 4884488,
+            "spatialReference": {
+                "wkid": 3978
+            }
         }
     },
     "navWidget": {
@@ -75,7 +81,10 @@
             "name": "@@config.basemaps.baseNrCan.name",
             "altText": "@@config.basemaps.baseNrCan.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseNrCan.description"
+            "description": "@@config.basemaps.baseNrCan.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseSimple",
@@ -97,7 +106,10 @@
             "name": "@@config.basemaps.baseSimple.name",
             "altText": "@@config.basemaps.baseSimple.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseSimple.description"
+            "description": "@@config.basemaps.baseSimple.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseCBME_CBCE_HS_RO_3978",
@@ -112,7 +124,10 @@
             "name": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.name",
             "altText": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description"
+            "description": "@@config.basemaps.baseCBME_CBCE_HS_RO_3978.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
             "id": "baseCBMT_CBCT_GEOM_3978",
@@ -127,22 +142,118 @@
             "name": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.name",
             "altText": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.altText",
             "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description"
+            "description": "@@config.basemaps.baseCBMT_CBCT_GEOM_3978.description",
+            "spatialReference": {
+                "wkid": 3978
+            }
         },
         {
-            "id": "baseE2M",
+            "id": "baseEsriWorld",
             "layers": [
                 {
-                    "url": "http://wbur01dttrain9.ontario.int.ec.gc.ca/arcgis/rest/services/Basemap/AtlasLambertBasemap/MapServer"
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer"
                 }
             ],
-            "thumbnail": "assets/images/basemap/baseTopoE2M.jpg",
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-light",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriWorld.name",
+            "altText": "@@config.basemaps.baseEsriWorld.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriWorld.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriPhysical",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriPhysical.name",
+            "altText": "@@config.basemaps.baseEsriPhysical.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriPhysical.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriRelief",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriRelief.name",
+            "altText": "@@config.basemaps.baseEsriRelief.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriRelief.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriStreet",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
             "scaleCssClass": "map-scale-dark",
             "type": "Topographic",
-            "name": "@@config.basemaps.baseE2M.name",
-            "altText": "@@config.basemaps.baseE2M.altText",
-            "tileSchema": "NRCAN_Lambert_3978",
-            "description": "@@config.basemaps.baseE2M.description"
+            "name": "@@config.basemaps.baseEsriStreet.name",
+            "altText": "@@config.basemaps.baseEsriStreet.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriStreet.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriTerrain",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Topographic",
+            "name": "@@config.basemaps.baseEsriTerrain.name",
+            "altText": "@@config.basemaps.baseEsriTerrain.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriTerrain.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriTopo",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Topographic",
+            "name": "@@config.basemaps.baseEsriTopo.name",
+            "altText": "@@config.basemaps.baseEsriTopo.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriTopo.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
         }
     ],
     "layers": {
@@ -154,6 +265,7 @@
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
                 "metadataUrl": "http://intranet.ecdmp-stage.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id=1c0eb1b2-93ae-49ae-a3ce-e495d8fd767b&_=1417717957845",
                 "catalogueUrl": "http://www.google.ca",
+                "minScale": 0,
                 "datagrid": {
                     "rowsPerPage": 50,
                     "gridColumns": [
@@ -231,13 +343,13 @@
                     }
                 },
                 "layerExtent": {
-                    "xmin": -2317716,
-                    "ymin": -692095,
-                    "xmax": 3000105,
-                    "ymax": 2558710,
+                    "xmin": -15561507.4653,
+                    "ymin": 5099812.9776,
+                    "xmax": 13733118.2248,
+                    "ymax": 10530239.1434,
                     "spatialReference": {
-                        "wkid": 3978
-                }
+                        "wkid": 54004
+                    }
                 }
             },
             {
@@ -374,14 +486,14 @@
                     }
                 },
                 "layerExtent": {
-                    "xmin": -2317716,
-                    "ymin": -692095,
-                    "xmax": 3000105,
-                    "ymax": 2558710,
+                    "xmin": -13316443.76,
+                    "ymin": 6388804.5583,
+                    "xmax": -10471824.465,
+                    "ymax": 9225974.5022,
                     "spatialReference": {
-                        "wkid": 3978
+                        "wkid": 102100
                     }
-                }
+                 }
             },
             {
                 "id": "oilAreaOverlay",
@@ -399,10 +511,10 @@
                     "visible": false
                 },
                 "layerExtent": {
-                    "xmin": -2081728,
-                    "ymin": -616928,
-                    "xmax": 2970781,
-                    "ymax": 2485914,
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
                     "spatialReference": {
                         "wkid": 3978
                     }
@@ -410,8 +522,8 @@
                 "isStatic": true
             }
         ],
-        "wms": []
-            },
+        "wms": [ ]
+    },
     "rowsPerPage": 40,
     "extendedDatagridExtentFilterEnabled": false,
     "templates": {
