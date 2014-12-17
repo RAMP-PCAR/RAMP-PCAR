@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery */
+﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
 /*jslint white: true */
 
 /**
@@ -71,7 +71,7 @@ define([
             sidePanelWbTabs = $("#panel-div > .wb-tabs"),
             sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
             sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
-            //panelTabs = 
+            //panelTabs =
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
@@ -615,7 +615,6 @@ define([
 
                         updateContent = dojoLang.hitch(this,
                             function (a) {
-
                                 // if the content in the subpanel is scrolled down, scroll back to the top
                                 TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
                                     { scrollTop: 0, ease: "easeOutCirc" });
@@ -709,7 +708,7 @@ define([
         * @static
         * @for GUI
         */
-        layoutController = (function () {            
+        layoutController = (function () {
             var viewport = $(".viewport"),
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
@@ -722,7 +721,7 @@ define([
                 panelDiv = $("#panel-div"),
                 panelToggle = $("#panel-toggle"),
                 panelPopup,
-                panelWidthDefault, // default width of the SidePanel. 
+                panelWidthDefault, // default width of the SidePanel.
                 layoutWidthThreshold = 1200, // minimum width of the wide layout
 
                 windowWidth,
@@ -837,7 +836,7 @@ define([
                     timeLine: fullDataSubpanelChangeTimeLine,
                     generator: createFullDataSubpanelChangeTL
                 }
-            ];            
+            ];
 
             /**
             * Fires an event when the layout of the page changes.
@@ -992,7 +991,6 @@ define([
             function optimizeLayout() {
                 if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
                     (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
-
                     windowWidth = jWindow.width();
                     updatePanelWidth();
 
@@ -1177,7 +1175,6 @@ define([
                 subPanel.open();
                 subPanel.getPanel().find(".sub-panel-toggle")
                     .on("click", dojoLang.hitch(this, function () {
-
                         hideSubPanel(attr);
 
                         // reset focus back to link where the subpanel was created from
@@ -1471,7 +1468,6 @@ define([
                                 tabName: $(this).data("panel-name")
                             });
                         });
-
                 });
 
                 // List of objects containing an event name and an event argument. The events should
@@ -1481,22 +1477,19 @@ define([
                 // then the map extent will change again.
                 var waitList = [];
 
-                /* FIXME remove deadcode once RAMP works with the new config
-                if (!RAMP.config.ui.sidePanelOpened) {
+                if (!RAMP.state.ui.sidePanelOpened) {
                     // NOTE: panel change not triggered here (see map extent change below)
                     waitList.push({
                         publishName: EventManager.GUI.PANEL_TOGGLE,
                         eventArg: {
                             origin: "bootstrapper",
-                            visible: RAMP.config.ui.sidePanelOpened
+                            visible: RAMP.state.ui.sidePanelOpened
                         },
                         subscribeName: EventManager.GUI.PANEL_CHANGE
                     });
                 }
-                */
 
-                /* FIXME remove deadcode once RAMP works with the new config
-                if (RAMP.config.ui.fullscreen) {
+                if (RAMP.state.ui.fullscreen) {
                     // NOTE: fullscreen not triggered here (see map extent change below)
                     waitList.push({
                         publishName: EventManager.GUI.TOGGLE_FULLSCREEN,
@@ -1505,7 +1498,7 @@ define([
                         },
                         subscribeName: EventManager.GUI.FULLSCREEN_CHANGE
                     });
-                }*/
+                }
 
                 // return the callback
                 load();

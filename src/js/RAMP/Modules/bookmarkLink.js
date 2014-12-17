@@ -431,11 +431,11 @@ define([
             // Toggle the main panel
             if (queryObject.panelVisible) {
                 event = {
-                    visible: UtilMisc.parseBool(queryObject.panelVisible)
+                    panelVisible: UtilMisc.parseBool(queryObject.panelVisible)
                 };
 
                 addParameter(EVENT_PANEL_CHANGE, event);
-                config.ui.sidePanelOpened = event.visible;
+                RAMP.state.ui.sidePanelOpened = event.visible;
             }
 
             // Toggle fullscreen mode
@@ -444,7 +444,7 @@ define([
                     fullscreen: UtilMisc.parseBool(queryObject.fullscreen)
                 };
                 addParameter(EVENT_FULLSCREEN, event);
-                config.ui.fullscreen = event.fullscreen;
+                RAMP.state.ui.fullscreen = event.fullscreen;
             }
 
             // Check for map extent queries
