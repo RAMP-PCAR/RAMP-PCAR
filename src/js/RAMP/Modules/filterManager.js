@@ -181,11 +181,11 @@ define([
                         {
                             nodeIdAttr: layerIdField,
 
-                            cssClass: {
+                            /*cssClass: {
                                 active: "active",
                                 focus: "focused",
                                 check: "checked"
-                            },
+                            },*/
 
                             label: {
                                 check: i18n.t('filterManager.hideBounds'),
@@ -242,11 +242,11 @@ define([
                         {
                             nodeIdAttr: layerIdField,
 
-                            cssClass: {
+                            /*cssClass: {
                                 active: "active",
                                 focus: "focused",
                                 check: "checked"
-                            },
+                            },*/
 
                             label: {
                                 check: i18n.t('filterManager.hideFeatures'),
@@ -299,6 +299,7 @@ define([
                         eyeCheckboxGroup.setState(evt.state, evt.layerId);
                     });
                 }
+
                 /**
                 * initialize a tooltip for each layer, using the layer name.
                 * @method initTooltips
@@ -325,30 +326,29 @@ define([
                         }
                     );
                 }
+
+                /**
+                * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
+                * 
+                * @method adjustPaneWidth
+                * @private
+                */
+                function adjustPaneWidth() {
+                    UtilMisc.adjustWidthForSrollbar($("#layerList"), [filterGlobalToggles]);
+                }
+
                 /**
                 * Adjusts UI layout according to a layer event.
                 * @method setButtonEvents
                 * @private
                 */
                 function setButtonEvents() {
+                    /*
                     var expandAllButton = filterGlobalToggles.find(".global-button"),
                         expandAllPopupHandle,
                         expandNodes = layerList.find(".layerList-container:hidden"),
                         expandButtons = layerList.find("button.legend-button");
-                    /**
-                    * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
-                    * @method adjustPaneWidth
-                    * @private
-                    */
-                    function adjustPaneWidth() {
-                        UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
-                    }
-
-                    /**
-                    * Changes the state of the expand all control if all the nodes are expanded.
-                    * @method adjustExpandAllButtonState
-                    * @private
-                    */
+                                        
                     function adjustExpandAllButtonState() {
                         var count = expandNodes.length,
                             hiddenCount = expandNodes.filter(":hidden").length;
@@ -394,6 +394,7 @@ define([
                                 d.resolve();
                             });
                         });
+                    */
 
                     PopupManager.registerPopup(layerList, "hover, focus",
                         function (d) {
@@ -533,6 +534,7 @@ define([
                     // adjust panel width on load
                     adjustPaneWidth();
                 }
+
                 /**
                 * Adjusts filter style according to the scroll action on the layers.
                 * @method initScrollListeners
@@ -556,7 +558,7 @@ define([
                 */
                 function setLayerReorderingEvents() {
                     // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList > ul");
+                    layerList = $("#layerList > li > ul");
 
                     var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
                         reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
@@ -722,10 +724,24 @@ define([
         * @private
         */
         function initListeners() {
+            var visibleLayers;
+
             topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
                 if (arg.tabName === "filterManager") {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                 }
+            });
+
+            topic.subscribe(EventManager.Map.ZOOM_END, function () {
+                visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
+
+                visibleLayers.forEach(function (vl) {
+                    if (vl.ramp) {
+                        console.log(vl.ramp.type, vl.id);
+                    }
+                });
+
+                //console.log(RampMap.getMap().getLayersVisibleAtScale());
             });
         }
 

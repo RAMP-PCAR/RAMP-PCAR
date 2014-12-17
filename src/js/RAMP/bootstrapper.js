@@ -113,6 +113,8 @@ require([
                         EventManager.FilterManager.UI_COMPLETE
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
+
+                        //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
@@ -134,7 +136,7 @@ require([
                 }
 
                 Datagrid.init();
-                theme.tooltipster();
+                theme.tooltipster();                
             });
 
             RampMap.init();

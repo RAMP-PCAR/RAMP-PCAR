@@ -470,7 +470,7 @@ define([],
                 REORDER_END: "map/reorder-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `update-end`.
+                * Republishes a standard ESRI map component event `update-end`.
                 *
                 * @event RampMap.UPDATE_END
                 * @for RampMap
@@ -478,7 +478,7 @@ define([],
                 UPDATE_END: "map/update-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `extent-change`.
+                * Republishes a standard ESRI map component event `extent-change`.
                 *
                 * @event RampMap.EXTENT_CHANGE
                 * @for RampMap
@@ -486,7 +486,7 @@ define([],
                 EXTENT_CHANGE: "map/extent-change",
 
                 /**
-                * Republishes a standard ESRI map compnent event `zoom-start`.
+                * Republishes a standard ESRI map component event `zoom-start`.
                 *
                 * @event RampMap.ZOOM_START
                 * @for RampMap
@@ -494,7 +494,7 @@ define([],
                 ZOOM_START: "map/zoom-start",
 
                 /**
-                * Republishes a standard ESRI map compnent event `zoom-end`.
+                * Republishes a standard ESRI map component event `zoom-end`.
                 *
                 * @event RampMap.ZOOM_END
                 * @for RampMap
@@ -502,7 +502,7 @@ define([],
                 ZOOM_END: "map/zoom-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `pan-start`.
+                * Republishes a standard ESRI map component event `pan-start`.
                 *
                 * @event RampMap.PAN_START
                 * @for RampMap
@@ -510,7 +510,7 @@ define([],
                 PAN_START: "map/pan-start",
 
                 /**
-                * Republishes a standard ESRI map compnent event `pan-end`.
+                * Republishes a standard ESRI map component event `pan-end`.
                 *
                 * @event RampMap.PAN_END
                 * @for RampMap
