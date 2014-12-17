@@ -724,10 +724,24 @@ define([
         * @private
         */
         function initListeners() {
+            var visibleLayers;
+
             topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
                 if (arg.tabName === "filterManager") {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                 }
+            });
+
+            topic.subscribe(EventManager.Map.ZOOM_END, function () {
+                visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
+
+                visibleLayers.forEach(function (vl) {
+                    if (vl.ramp) {
+                        console.log(vl.ramp.type, vl.id);
+                    }
+                });
+
+                //console.log(RampMap.getMap().getLayersVisibleAtScale());
             });
         }
 
