@@ -325,30 +325,28 @@ define([
                         }
                     );
                 }
+
+                /**
+                * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
+                * @method adjustPaneWidth
+                * @private
+                */
+                function adjustPaneWidth() {
+                    UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
+                }
+
                 /**
                 * Adjusts UI layout according to a layer event.
                 * @method setButtonEvents
                 * @private
                 */
                 function setButtonEvents() {
+                    /*
                     var expandAllButton = filterGlobalToggles.find(".global-button"),
                         expandAllPopupHandle,
                         expandNodes = layerList.find(".layerList-container:hidden"),
                         expandButtons = layerList.find("button.legend-button");
-                    /**
-                    * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
-                    * @method adjustPaneWidth
-                    * @private
-                    */
-                    function adjustPaneWidth() {
-                        UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
-                    }
-
-                    /**
-                    * Changes the state of the expand all control if all the nodes are expanded.
-                    * @method adjustExpandAllButtonState
-                    * @private
-                    */
+                                        
                     function adjustExpandAllButtonState() {
                         var count = expandNodes.length,
                             hiddenCount = expandNodes.filter(":hidden").length;
@@ -394,6 +392,7 @@ define([
                                 d.resolve();
                             });
                         });
+                    */
 
                     PopupManager.registerPopup(layerList, "hover, focus",
                         function (d) {
