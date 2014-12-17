@@ -36,6 +36,31 @@
                 "name": "[fr] World Imagery",
                 "altText": "[fr] Satellite Map",
                 "description": "[fr] ESRI World_Imagery"
+            },
+            "baseEsriPhysical":  {
+                "name": "[fr] Physical Earth",
+                "altText": "[fr] Satellite Map",
+                "description": "[fr] ESRI World_Physical_Map"
+            },
+            "baseEsriRelief":  {
+                "name": "[fr] Shaded Relief",
+                "altText": "[fr] Satellite Map",
+                "description": "[fr] ESRI World_Shaded_Relief"
+            },
+            "baseEsriStreet":  {
+                "name": "[fr] Streets",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Street_Map"
+            },
+            "baseEsriTerrain":  {
+                "name": "[fr] Terrain",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Terrain_Base"
+            },
+            "baseEsriTopo":  {
+                "name": "[fr] Topographic",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Topo_Map"
             }
         },
 

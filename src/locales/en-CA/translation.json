@@ -33,9 +33,34 @@
                 "description": "Earth 2 Map"
             },
             "baseEsriWorld":  {
-                "name": "World Imagery",
+                "name": "Satellite Imagery",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Imagery"
+            },
+            "baseEsriPhysical":  {
+                "name": "Physical Earth",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Physical_Map"
+            },
+            "baseEsriRelief":  {
+                "name": "Shaded Relief",
+                "altText": "Satellite Map",
+                "description": "ESRI World_Shaded_Relief"
+            },
+            "baseEsriStreet":  {
+                "name": "Streets",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Street_Map"
+            },
+            "baseEsriTerrain":  {
+                "name": "Terrain",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Terrain_Base"
+            },
+            "baseEsriTopo":  {
+                "name": "Topographic",
+                "altText": "Topographic Map",
+                "description": "ESRI World_Topo_Map"
             }
         },
 

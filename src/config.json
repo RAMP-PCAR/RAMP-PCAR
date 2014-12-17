@@ -164,6 +164,96 @@
             "spatialReference": {
                 "wkid": 102100
             }
+        },
+        {
+            "id": "baseEsriPhysical",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Physical_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriPhysical.name",
+            "altText": "@@config.basemaps.baseEsriPhysical.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriPhysical.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriRelief",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Shaded_Relief/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Imagery",
+            "name": "@@config.basemaps.baseEsriRelief.name",
+            "altText": "@@config.basemaps.baseEsriRelief.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriRelief.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriStreet",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Topographic",
+            "name": "@@config.basemaps.baseEsriStreet.name",
+            "altText": "@@config.basemaps.baseEsriStreet.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriStreet.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriTerrain",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Terrain_Base/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Topographic",
+            "name": "@@config.basemaps.baseEsriTerrain.name",
+            "altText": "@@config.basemaps.baseEsriTerrain.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriTerrain.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
+        },
+        {
+            "id": "baseEsriTopo",
+            "layers": [
+                {
+                    "url": "http://services.arcgisonline.com/arcgis/rest/services/World_Topo_Map/MapServer"
+                }
+            ],
+            "thumbnail": "assets/images/basemap/imagery.jpg",
+            "scaleCssClass": "map-scale-dark",
+            "type": "Topographic",
+            "name": "@@config.basemaps.baseEsriTopo.name",
+            "altText": "@@config.basemaps.baseEsriTopo.altText",
+            "tileSchema": "ESRI_World_AuxMerc_3857",
+            "description": "@@config.basemaps.baseEsriTopo.description",
+            "spatialReference": {
+                "wkid": 102100
+            }
         }
     ],
     "layers": {
