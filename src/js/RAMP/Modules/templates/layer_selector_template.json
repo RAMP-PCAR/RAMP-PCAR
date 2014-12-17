@@ -1,0 +1,123 @@
+﻿{
+    // layer level, layer is passed in as o.data. Level 1
+    // Filter overall structure, contains 1 to many filter row for the available layers.
+    "feature_layer_item":"
+        <li id='{%= o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+            {%  
+                var s = o.data[o.idx].layerConfig.symbology || o.data[o.idx].layerConfig.legend || { type: 'simple' };
+
+                include('filter_row_template', o);
+                include(s.type + '_renderer_template', s);
+
+
+                
+            %}
+
+            {% include('layer_body', o.fn.generateSettingsToggle(o)); %}
+
+            {% include('layer_settings', o.fn.generateSettingsToggle(o)); %}
+        </li>
+    ",
+
+    "wms_layer_item":"
+        <li id='{%= o.id %}_wms_layer' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+            <fieldset>
+                <legend>
+                    <div class='filter-row'>
+                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                        <div class='layer-details'>
+
+                            {% include('wms_layer_image', o); %}
+
+                            {% include('layer_controls', o); %}
+
+                        </div>
+
+                        <div class='layer-checkboxes'>
+                            {% include('wms_layer_checkboxes', o); %}
+                        </div>
+
+                        <div class='clearfix'></div>
+                    </div>
+                </legend>                                                                                       
+            </fieldset>
+
+            {% include('wms_layer_renderer', o); %}
+
+            {% include('layer_settings', o); %}
+        </li>
+    ",
+
+    "wms_layer_checkboxes": "
+        {% include('layer_visibility_toggle', o); %}
+        <div class='checkbox-custom placeholder' role='presentation'></div>
+    ",
+
+    "wms_layer_renderer": "
+        {% if (o.legendMimeType) { %}
+            
+            <div class='renderer-list'>
+                <div class='wms-legend-box'>
+                    <h4 class='mrgn-tp-0 h6'>{%= i18n.t('filterManager.legend') %}</h4>
+                    <div class='image-div'>
+                        <img class='wms-image bg-white' src='{%= o.imageUrl %}' role='presentation' alt=''>
+                    </div>
+                </div>       
+            </div>
+
+        {% } %}
+    ",
+
+    // Level 2
+    // Filter row overall layout for a given layer
+    "layer_settings":"
+        {% if (o.settings.panelEnabled) { %}
+
+            <div class='filter-row-settings bg-medium'>            
+                <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
+
+                {% if (o.settings.opacity.enabled) { %}
+            
+                    <div class='transparency-setting'>
+                        <span class='pull-left'>{%= i18n.t('filterManager.settingsOpacity') %}</span>                
+                    
+                        <div class='nstSlider' data-aria_enabled='true'
+                            data-range_min='0' data-range_max='1' 
+                            data-cur_min='{%= o.settings.opacity.default %}'
+
+                            data-layer-id='{%= o.id %}' >                                                      
+                    
+                            <div class='highlightPanel'></div>
+                            <div class='leftGrip'></div>              
+                        </div>
+                        <span class='leftLabel'></span>                
+                    </div>
+
+                {% } %}
+            </div>
+
+        {% } %}
+    ",
+
+    "layer_visibility_toggle": "
+         <div class='checkbox-custom'>
+            <label for='{%= o.id %}_visibility_toggle' class='form-checkbox _tooltip eye' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='{%= o.id %}_visibility_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_bounding_box_toggle": "
+         <div class='checkbox-custom'>
+            <label for='{%= o.id %}_bounding_box_toggle' class='form-checkbox _tooltip box' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='{%= o.id %}_bounding_box_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+}
