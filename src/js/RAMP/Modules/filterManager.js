@@ -181,11 +181,11 @@ define([
                         {
                             nodeIdAttr: layerIdField,
 
-                            cssClass: {
+                            /*cssClass: {
                                 active: "active",
                                 focus: "focused",
                                 check: "checked"
-                            },
+                            },*/
 
                             label: {
                                 check: i18n.t('filterManager.hideBounds'),
@@ -242,11 +242,11 @@ define([
                         {
                             nodeIdAttr: layerIdField,
 
-                            cssClass: {
+                            /*cssClass: {
                                 active: "active",
                                 focus: "focused",
                                 check: "checked"
-                            },
+                            },*/
 
                             label: {
                                 check: i18n.t('filterManager.hideFeatures'),
@@ -299,6 +299,7 @@ define([
                         eyeCheckboxGroup.setState(evt.state, evt.layerId);
                     });
                 }
+
                 /**
                 * initialize a tooltip for each layer, using the layer name.
                 * @method initTooltips
@@ -328,11 +329,12 @@ define([
 
                 /**
                 * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
+                * 
                 * @method adjustPaneWidth
                 * @private
                 */
                 function adjustPaneWidth() {
-                    UtilMisc.adjustWidthForSrollbar(layerList.parent(), [filterGlobalToggles]);
+                    UtilMisc.adjustWidthForSrollbar($("#layerList"), [filterGlobalToggles]);
                 }
 
                 /**
@@ -532,6 +534,7 @@ define([
                     // adjust panel width on load
                     adjustPaneWidth();
                 }
+
                 /**
                 * Adjusts filter style according to the scroll action on the layers.
                 * @method initScrollListeners
@@ -555,7 +558,7 @@ define([
                 */
                 function setLayerReorderingEvents() {
                     // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList > ul");
+                    layerList = $("#layerList > li > ul");
 
                     var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
                         reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
