@@ -78,31 +78,31 @@ define([
         */
         var featureLayers,
 
-        /**
-        * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
-        *
-        * @private
-        * @property wmsLayers {Array}
-        */
+            /**
+            * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
+            *
+            * @private
+            * @property wmsLayers {Array}
+            */
             wmsLayers = [],
 
-        /**
-        * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
-        * A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
-        *
-        * @private
-        * @property boundingBoxMapping {Object}
-        */
+            /**
+            * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
+            * A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
+            *
+            * @private
+            * @property boundingBoxMapping {Object}
+            */
             boundingBoxMapping,
 
-        /**
-        * The map not only contains feature layers, but also other layers such as the
-        * basemap layer, highlight layer, bounding box layer, etc. This variable is
-        * used to store the starting index of the feature layers in the map.
-        *
-        * @private
-        * @property featureLayerStartIndex {Integer}
-        */
+            /**
+            * The map not only contains feature layers, but also other layers such as the
+            * basemap layer, highlight layer, bounding box layer, etc. This variable is
+            * used to store the starting index of the feature layers in the map.
+            *
+            * @private
+            * @property featureLayerStartIndex {Integer}
+            */
             featureLayerStartIndex,
 
             map,
@@ -691,6 +691,24 @@ define([
         }
 
         return {
+            zoomToLayerScale: function (layerId) {
+                var layer = map.getLayer("layer_dd1m3"),
+                    lods = map._params.lods,
+                    lod,
+                    i;
+
+                for (i = 0; i < lods.length; i += 1) {
+                    lod = lods[i];
+                    console.log("lod", lod, lod.scale > layer.minScale);
+                    if (lod.scale <= layer.minScale) {
+                        break;
+                    }
+                }
+                
+                console.log(map.getBasemap(), layerId, layer.maxScale, layer.minScale, lod, map.getZoom());
+                map.setZoom(lod.level);
+            },
+
             /**
             * The maximum extent of the map control is allowed to go to
             * @property getMaxExtent
