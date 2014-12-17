@@ -89,6 +89,25 @@ function (
                     .seek(time);
             }
 
+            function setTooltips() {
+                // set tooltips on the overflowing spans with basemap/projection names
+
+                if (selectorPopup.isOpen()) {
+                    selectorSection
+                        .find("span[title]:visible")
+                        .each(function () {
+                            var node = $(this);
+                            if (node.attr("title")) {
+                                if (node.isOverflowed()) {
+                                    node.tooltipster({ theme: '.tooltipster-shadow' });
+                                } else {
+                                    node.removeAttr("title");
+                                }
+                            }
+                        });
+                }
+            }
+
             return {
                 /**
                 * Initiates additional UI components of the widget, setting listeners and registering the popup functionality
@@ -141,6 +160,7 @@ function (
 
                             selectorOpenTimeline.eventCallback("onComplete", function () {
                                 d.resolve();
+                                setTooltips();
                             });
 
                             selectorSectionContainer.show();
@@ -167,10 +187,17 @@ function (
                     // show/hide basemap lists based on what projection group is active
                     projectionPopup = PopupManager.registerPopup(selectorSectionContainer, "click",
                         function (d) {
+                            var fromHeight,
+                                toHeight,
+                                heightTimeline;
+
                             if (!this.isOpen()) {
-                                var fromHeight = selectorSection.height(),
-                                    toHeight = this.target.height(),
-                                    heightTimeline = new TimelineLite();
+
+                                fromHeight = selectorSection.height();
+                                toHeight = this.target.height();
+                                heightTimeline = new TimelineLite({
+                                    onComplete: setTooltips
+                                });
 
                                 projectionPopup.close();
 
@@ -222,20 +249,7 @@ function (
                     basemapPopup.open(basemapControl);
                     projectionPopup.open(projectionControl);
 
-                    // set tooltips on the overflowing spans with basemap/projection names
-                    selectorSectionContainer
-                        .find(".basemap-info span, .projection-name")
-                        .each(function () {
-                            var node = $(this);
-                            if (node.attr("title")) {
-                                if (node.isOverflowed()) {
-                                    node.tooltipster({ theme: '.tooltipster-shadow' });
-                                } else {
-                                    node.removeAttr("title");
-                                }
-                            }
-                        })
-                        .end().hide(); // hide baseselector after it's initiated
+                    selectorSectionContainer.hide(); // hide baseselector after it's initiated
 
                     topic.publish(EventManager.BasemapSelector.UI_COMPLETE);
 
