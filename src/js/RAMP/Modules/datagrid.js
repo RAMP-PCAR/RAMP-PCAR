@@ -880,7 +880,7 @@ define([
                         // continue with transition when apply filter finished
                         deffered.then(function () {
 
-                            console.timeEnd('applyExtentFilter');
+                            //console.timeEnd('applyExtentFilter');
 
                             console.log("I'm resuming");
 
@@ -895,7 +895,7 @@ define([
                             //tl.resume();
                         });
 
-                        console.time('applyExtentFilter');
+                        //console.time('applyExtentFilter');
 
                         applyExtentFilter(deffered);
 
@@ -1212,8 +1212,8 @@ define([
                 dataGridMode = ui.getDatagridMode(),
                 q = new EsriQuery();
 
-            console.time('applyExtentFilter:part 1');
-            console.time('applyExtentFilter:part 1 - 1');
+            //console.time('applyExtentFilter:part 1');
+            //console.time('applyExtentFilter:part 1 - 1');
 
             // filter out static layers
             visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
@@ -1238,7 +1238,7 @@ define([
 
             q.outFields = ["*"];
 
-            console.timeEnd('applyExtentFilter:part 1 - 1');
+            //console.timeEnd('applyExtentFilter:part 1 - 1');
 
             // Update total records
             totalRecords = 0;
@@ -1246,12 +1246,12 @@ define([
                 totalRecords += layer.graphics.length;
             });
 
-            console.time('applyExtentFilter:part 1 - 2');
+            //console.time('applyExtentFilter:part 1 - 2');
 
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
 
-                    console.timeEnd('applyExtentFilter:part 1 - 2');
+                    //console.timeEnd('applyExtentFilter:part 1 - 2');
 
                     if (features.features.length > 0) {
                         var layer = features.features[0].getLayer();
@@ -1263,13 +1263,13 @@ define([
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
                 
-                console.timeEnd('applyExtentFilter:part 1');
+                //console.timeEnd('applyExtentFilter:part 1');
 
-                console.time('applyExtentFilter:part 2 - fetchRecords');
+                //console.time('applyExtentFilter:part 2 - fetchRecords');
 
                 fetchRecords(visibleFeatures);
 
-                console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
+                //console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
 
                 if (d) {
                     console.log("I'm calling reserve!!!");
@@ -1369,11 +1369,11 @@ define([
 
             //add the data to the grid
 
-            console.time('fetchRecords: fnAddData');
+            //console.time('fetchRecords: fnAddData');
 
             jqgrid.dataTable().fnAddData(data);
 
-            console.timeEnd('fetchRecords: fnAddData');
+            //console.timeEnd('fetchRecords: fnAddData');
 
             console.log("jqgrid.dataTable().fnAddData(data);");
 
