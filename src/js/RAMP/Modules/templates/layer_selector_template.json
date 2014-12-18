@@ -1,11 +1,51 @@
 ﻿{
-    // layer level, layer is passed in as o.data. Level 1
-    // Filter overall structure, contains 1 to many filter row for the available layers.
-    "feature_layer_item":"
-        
+    "layer_group": "
+        <li>
+            <ul class='layer-group-container' role='listbox'>                
+            </ul>
+        </li>
+        <li class='layer-group-separator' role='presentation'></li>
     ",
 
-    "wms_layer_item":"
+    // layer level, layer is passed in as o.data. Level 1
+    // Filter overall structure, contains 1 to many filter row for the available layers.
+    "feature_layer":"
+        <li id='feature_layer_{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+            <fieldset>
+                <legend>
+                    <div class='filter-row'>
+                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                        <div class='layer-details'>
+
+                            {% include('wms_layer_image', o); %}
+
+                            <div class='layer-controls'>
+                                <div class='layer-name'>
+                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
+                                </div>
+
+                                <div class='btn-group margin-top-none'> 
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class='layer-checkboxes'>                            
+                        </div>
+
+                        <div class='clearfix'></div>
+                    </div>
+                </legend>                                                                                       
+            </fieldset>
+
+            {% include('wms_layer_renderer', o); %}
+
+            {% include('layer_settings', o); %}
+        </li>
+    ",
+
+    "wms_layer":"
         <li id='wms_layer_{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
             <fieldset>
                 <legend>
@@ -15,12 +55,19 @@
 
                             {% include('wms_layer_image', o); %}
 
-                            {% include('layer_controls', o); %}
+                            <div class='layer-controls'>
+                                <div class='layer-name'>
+                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
+                                </div>
+
+                                <div class='btn-group margin-top-none'> 
+                                </div>
+
+                            </div>
 
                         </div>
 
-                        <div class='layer-checkboxes'>
-                            {% include('wms_layer_checkboxes', o); %}
+                        <div class='layer-checkboxes'>                            
                         </div>
 
                         <div class='clearfix'></div>
@@ -37,21 +84,20 @@
     "wms_layer_image": "
         {% if (o.legendMimeType) { %}
 
-            {% include('complex_layer_image', o); %}
+            {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
 
         {% } else { %}
 
             {% include('simple_layer_image', o); %}
 
-            <div class='layer-image-box'>
-                <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0] %}' class='layer-image bg-white'>
-            </div>
-
         {% } %}
     ",
 
     "layer_controls": "
-        
+        {% if (o) { %}
+
+
+        {% } %}
     ",
 
     "wms_layer_checkboxes": "
@@ -76,7 +122,7 @@
 
     "simple_layer_image": "
         <div class='layer-image-box'>
-            <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0] %}' class='layer-image bg-white'>
+            <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o)[0] %}' class='layer-image bg-white'>
         </div>
     ",
 

@@ -1,4 +1,4 @@
-﻿/* global define, console, $ */
+﻿/* global define, tmpl, $, console */
 
 /**
 * @module 
@@ -41,301 +41,80 @@
 * @return {CheckboxGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
-        "ramp/layerItem"],
-    function (Evented, declare, lang, dojoArray,
-            Checkbox) {
+define([
+    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
+
+    /* Text */
+    "dojo/text!./templates/layer_selector_template.json",
+
+    /* Util */
+    "utils/tmplHelper",
+
+    /* RAMP */
+    "ramp/layerItem"
+],
+    function (
+        Evented, declare, lang, dojoArray,
+        layer_selector_template,
+        TmplHelper,
+        LayerItem) {
         "use strict";
 
         return declare([Evented], {
-            constructor: function (nodes, options) {
+            constructor: function (layers, options) {
                 var that = this,
-                    checkbox,
-                    checkboxOptions;
+                    layerItem,
+                    layerItemOptions;
 
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
-                        /**
-                         * Nodes of the checkbox nodes originally supplied to the CheckboxGroup.
-                         *
-                         * @property nodes
-                         * @type JArray
-                         * @default []
-                         */
-                        nodes: [],
+                        node: null,
+                        listNode: null,
 
-                        /**
-                         * Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id.
-                         *
-                         * @property nodeIdAttr
-                         * @type String
-                         * @default "id"
-                         */
-                        nodeIdAttr: "id",
+                        templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
-                        /**
-                         * An array of the Checkbox object belonging to the body of the group.
-                         *
-                         * @property nodes
-                         * @type Array
-                         * @default []
-                         */
-                        checkboxes: [],
+                        groupType: "layer_group",
 
-                        /**
-                         * `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
-                         *
-                         * @property cssClass
-                         * @type {Object}
-                         * @default
-                         * @example
-                         *      cssClass: {
-                         *          active: "active",
-                         *          focus: "focused",
-                         *          check: "checked"
-                         *      }
-                         */
-                        cssClass: {
-                            active: "active",
-                            focus: "focused",
-                            check: "checked"
-                        },
+                        layerType: null,
 
-                        /**
-                         * `check` and `uncheck` label texts to be applied to the Checkbox labels.
-                         *
-                         * @property label
-                         * @type {Object}
-                         * @default
-                         * @example
-                         *      label: {
-                         *          check: "check",
-                         *          uncheck: "unchecked"
-                         *      }
-                         */
-                        label: {
-                            check: "checked",
-                            uncheck: "unchecked"
-                        },
+                        layerState: null,
 
-                        /**
-                         * A function to be called when the state of the Checkbox changes.
-                         *
-                         * @property onChnage
-                         * @type Function
-                         * @default
-                         * @example     function () { }
-                         */
-                        onChange: function () { },
+                        layers: [],
 
-                        /**
-                         * Options for the master Checkbox.
-                         *
-                         * @property master
-                         * @type Object
-                         * @default
-                         * @example
-                         *      master: {
-                         *          node: null,
-                         *          checkbox: null,
-                         *          nodeIdAttr: null,
-                         *
-                         *          cssClass: {
-                         *              active: "active",
-                         *              focus: "focused",
-                         *              check: "checked"
-                         *          },
-                         *
-                         *          label: {
-                         *              check: "checked",
-                         *              uncheck: "unchecked"
-                         *          },
-                         *
-                         *          onChange: function () { }
-                         *      }
-                         *
-                         */
-                        master: {
-                            node: null,
-                            checkbox: null,
-                            nodeIdAttr: null,
-
-                            cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
-                            },
-                            label: {
-                                check: "checked",
-                                uncheck: "unchecked"
-                            },
-
-                            onChange: function () { }
-                        },
-
-                        /**
-                        * Event names published by the Checkbox
-                        *
-                        * @private
-                        * @property event
-                        * @type Object
-                        * @default null
-                        * @example
-                        *      {
-                        *          MEMBER_TOGGLE: "checkbox/toggled",
-                        *          MASTER_TOGGLE: "checkbox/toggled"
-                        *      }
-                        */
-                        event: {
-                            /**
-                            * This event is not published by CheckboxGroup. __Ignore this.__
-                            *
-                            * @event TOGGLE
-                            * @private
-                            */
-
-                            /**
-                            * Published whenever a Checkbox get toggled.
-                            *
-                            * @event MEMBER_TOGGLE
-                            * @param event {Object}
-                            * @param event.checkbox {Checkbox} Checkbox object that has been toggled
-                            * @param event.agency {String} Agency that toggled the Checkbox
-                            */
-                            MEMBER_TOGGLE: "checkbox/member-toggle",
-
-                            /**
-                            * Published whenever the master Checkbox get toggled.
-                            *
-                            * @event MASTER_TOGGLE
-                            * @param event {Object}
-                            * @param event.checkbox {Checkbox} master Checkbox object that has been toggled
-                            * @param event.agency {String} Agency that toggled the Checkbox
-                            */
-                            MASTER_TOGGLE: "checkbox/master-toggle"
-                        }
+                        layerItems: []
                     },
                     options,
                     {
-                        nodes: nodes
+                        layers: layers
                     }
                 );
 
-                checkboxOptions = {
-                    nodeIdAttr: this.nodeIdAttr,
-                    cssClass: this.cssClass,
-                    label: this.label,
-                    onChange: this.onChange
+                layerItemOptions = {
+                    type: this.layerType,
+                    state: this.layerState
                 };
 
-                // Create individual Checkboxes
-                this.nodes.each(function (index, node) {
-                    node = $(node);
-                    checkbox = new Checkbox(node, checkboxOptions);
-                    that.checkboxes.push(checkbox);
+                this.node = $(this._template(this.groupType));
+                this.listNode = this.node.find("ul");
 
-                    checkbox.on(checkbox.event.TOGGLE, function (evt) {
-                        // re-emit individual checkbox's toggle event as groups;
-                        //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                console.log(LayerItem.state);
 
-                        that.emit(that.event.MEMBER_TOGGLE, evt);
+                this.layers.forEach(function (layer) {
+                    layerItem = new LayerItem(layer, layerItemOptions);
+                    that.layerItems.push(layerItem);
 
-                        if (evt.agency === evt.checkbox.agency.USER) {
-                            that._checkMaster();
-                        }
-                    });
+                    that.listNode.append(layerItem.node);
                 });
-
-                if (this.master.node) {
-                    this.master.checkbox = new Checkbox(
-                        this.master.node,
-                        lang.mixin(checkboxOptions, this.master)
-                    );
-
-                    this.master.checkbox.on(this.master.checkbox.event.TOGGLE, function (evt) {
-                        // re-emit individual checkbox's toggle event as groups;
-                        console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        that.emit(that.event.MASTER_TOGGLE, evt);
-
-                        if (evt.agency === evt.checkbox.agency.USER) {
-                            that.setState(evt.checkbox.state);
-                        }
-                    });
-                } else {
-                    this.master = null;
-                }
             },
 
-            /**
-             * Synchronizes the state of the master Checkbox with the state of the group.
-             * All group members checked -> master checked
-             * Any of the group members unchecked -> master unchecked
-             *
-             * @method _checkMaster
-             * @private
-             */
-            _checkMaster: function () {
-                var allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
-                    //return checkbox.isChecked();
-                    return checkbox.state;
-                });
+            _template: function (key, data) {
+                tmpl.cache = {};
+                tmpl.templates = this.templates;
 
-                if (this.master) {
-                    this.master.checkbox.setState(allChecked);
-                }
-            },
+                data = data || {};
 
-            /**
-            * Toggles the state of the specified Checkbox. If checkboxId is not supplied, toggles the whole group.
-            *
-            * @method setState
-            * @param {Boolean} state Specifies the state of the checkbox: true, false
-            * @param {String} [checkboxId] Specifies the checkbox to toggle.
-            * @return CheckboxGroup
-            * @chainable
-            */
-            setState: function (state, checkboxId) {
-                var checkbox,
-                    masterCheckboxId = this.master.checkbox ? this.master.checkbox.id : undefined;
-
-                if (!checkboxId || masterCheckboxId === checkboxId) {
-                    this.master.checkbox.setState(state);
-
-                    this.checkboxes.forEach(function (checkbox) {
-                        checkbox.setState(state);
-                    });
-                } else {
-                    for (var i = 0; i < this.checkboxes.length; i++) {
-                        checkbox = this.checkboxes[i];
-                        if (checkbox.id === checkboxId) {
-                            break;
-                        }
-                    }
-
-                    checkbox.setState(state);
-
-                    this._checkMaster();
-                }
-
-                return this;
-            },
-
-            /**
-            * Toggle all the checkboxes based on the return value of the given function.
-            *
-            * @param {Function} fcn a function that takes a checkbox as an argument and returns
-            * true if the given checkbox should be toggled on, false if it should be toggled off
-            * @method setEachState
-            * @chainable
-            */
-            setEachState: function (fcn) {
-                this.checkboxes.forEach(function (checkbox) {
-                    checkbox.setState(fcn(checkbox));
-                });
-                this._checkMaster();
-                return this;
+                return tmpl(key, data);
             }
         });
     });
