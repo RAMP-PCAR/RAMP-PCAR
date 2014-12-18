@@ -17,7 +17,7 @@
                         <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
                         <div class='layer-details'>
 
-                            {% include('wms_layer_image', o); %}
+                            {% include('feature_' + o.symbology.type + '_layer_image', o); %}
 
                             <div class='layer-controls'>
                                 <div class='layer-name'>
@@ -39,9 +39,64 @@
                 </legend>                                                                                       
             </fieldset>
 
-            {% include('wms_layer_renderer', o); %}
+            {% include('feature_' + o.symbology.type + '_renderer', o.symbology); %}
 
             {% include('layer_settings', o); %}
+        </li>
+    ",
+
+    "feature_simple_layer_image": "
+        {% include('simple_layer_image', o); %}
+    ",
+
+    "feature_uniqueValue_layer_image": "
+        {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
+    ",
+
+    "feature_classBreaks_layer_image": "
+        {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
+    ",
+
+    "feature_simple_renderer": " ",
+
+    "feature_uniqueValue_renderer": "
+        <div class='renderer-list'>
+            <ul>
+                {% 
+                    o.valueMaps.forEach(function(vm) {
+                        include('feature_renderer', {
+                            imageUrl: vm.imageUrl,
+                            label: vm.label || vm.value
+                        });
+                    });
+                 %}
+            </ul>
+        </div>
+    ",
+
+    "feature_classBreaks_renderer": "
+        <div class='renderer-list'>
+            <ul>
+                {% 
+                    o.rangeMaps.forEach(function(rm) {
+                        include('feature_renderer', {
+                            imageUrl: rm.imageUrl,
+                            label: rm.label || rm.maxValue
+                        });
+                    });
+                 %}
+            </ul>
+        </div>
+    ",
+
+    "feature_renderer": "
+        <li>
+           <div class='layer-details'>
+              <div class='layer-image-box'>
+                <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
+              </div>
+              <span title='{%=o.label%}'>{%=o.label%}</span>
+            </div>
         </li>
     ",
 
@@ -93,13 +148,6 @@
         {% } %}
     ",
 
-    "layer_controls": "
-        {% if (o) { %}
-
-
-        {% } %}
-    ",
-
     "wms_layer_checkboxes": "
         {% include('layer_visibility_toggle', o); %}
         <div class='checkbox-custom placeholder' role='presentation'></div>
@@ -145,6 +193,13 @@
             </button>
             
         </div>
+    ",
+
+    "layer_controls": "
+        {% if (o) { %}
+
+
+        {% } %}
     ",
 
     "layer_visibility_toggle": "
