@@ -61,7 +61,7 @@ define([
         "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme",
+        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
@@ -78,7 +78,7 @@ define([
         EsriQuery, FeatureLayer, WMSLayer,
 
     /* Ramp */
-        Ramp, GlobalStorage, RampMap, EventManager, Theme,
+        Ramp, GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
 
     /* Util */
         TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
@@ -710,6 +710,13 @@ define([
                                 // ui initialization completes
                                 console.log(EventManager.FilterManager.UI_COMPLETE);
                                 topic.publish(EventManager.FilterManager.UI_COMPLETE);
+
+                                var a;
+                                a = new LayerGroup(RAMP.config.layers.feature, {
+                                    layerType: GlobalStorage.layerType.Feature
+                                });
+
+                                $("#layerList").append(a.node);
                             },
                             300
                         );
