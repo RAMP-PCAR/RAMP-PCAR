@@ -2,25 +2,11 @@
     // layer level, layer is passed in as o.data. Level 1
     // Filter overall structure, contains 1 to many filter row for the available layers.
     "feature_layer_item":"
-        <li id='{%= o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
-            {%  
-                var s = o.data[o.idx].layerConfig.symbology || o.data[o.idx].layerConfig.legend || { type: 'simple' };
-
-                include('filter_row_template', o);
-                include(s.type + '_renderer_template', s);
-
-
-                
-            %}
-
-            {% include('layer_body', o.fn.generateSettingsToggle(o)); %}
-
-            {% include('layer_settings', o.fn.generateSettingsToggle(o)); %}
-        </li>
+        
     ",
 
     "wms_layer_item":"
-        <li id='{%= o.id %}_wms_layer' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+        <li id='wms_layer_{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
             <fieldset>
                 <legend>
                     <div class='filter-row'>
@@ -48,6 +34,26 @@
         </li>
     ",
 
+    "wms_layer_image": "
+        {% if (o.legendMimeType) { %}
+
+            {% include('complex_layer_image', o); %}
+
+        {% } else { %}
+
+            {% include('simple_layer_image', o); %}
+
+            <div class='layer-image-box'>
+                <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0] %}' class='layer-image bg-white'>
+            </div>
+
+        {% } %}
+    ",
+
+    "layer_controls": "
+        
+    ",
+
     "wms_layer_checkboxes": "
         {% include('layer_visibility_toggle', o); %}
         <div class='checkbox-custom placeholder' role='presentation'></div>
@@ -66,6 +72,55 @@
             </div>
 
         {% } %}
+    ",
+
+    "simple_layer_image": "
+        <div class='layer-image-box'>
+            <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0] %}' class='layer-image bg-white'>
+        </div>
+    ",
+
+    "complex_layer_image": "
+        <div class='layer-complex-image-box'>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[2] %}' class='layer-image bg-white'>
+            </div>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[1] %}' class='layer-image bg-white'>
+            </div>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[0] %}' class='layer-image bg-white'>
+            </div>
+            <button class='btn btn-xs button-none renderer-button'>
+                <i class='fa fa-square'></i>
+                <i class='fa fa-plus-square-o'></i>
+                <i class='fa fa-minus-square-o'></i>                                            
+                <span class='wb-invisible'></span>
+            </button>
+            
+        </div>
+    ",
+
+    "layer_visibility_toggle": "
+         <div class='checkbox-custom'>
+            <label for='visibility_toggle_{%= o.id %}' class='form-checkbox _tooltip eye' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='{%= o.id %}_visibility_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_bounding_box_toggle": "
+         <div class='checkbox-custom'>
+            <label for='bounding_box_toggle_{%= o.id %}' class='form-checkbox _tooltip box' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='{%= o.id %}_bounding_box_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
     ",
 
     // Level 2
@@ -97,27 +152,5 @@
             </div>
 
         {% } %}
-    ",
-
-    "layer_visibility_toggle": "
-         <div class='checkbox-custom'>
-            <label for='{%= o.id %}_visibility_toggle' class='form-checkbox _tooltip eye' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.displayName %}'>
-                <span class='wb-invisible'>{%= o.displayName %}</span>
-            </label>
-            <input id='{%= o.id %}_visibility_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
-                class='layerList_legend' type='checkbox'></input>
-        </div>
-    ",
-
-    "layer_bounding_box_toggle": "
-         <div class='checkbox-custom'>
-            <label for='{%= o.id %}_bounding_box_toggle' class='form-checkbox _tooltip box' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.displayName %}'>
-                <span class='wb-invisible'>{%= o.displayName %}</span>
-            </label>
-            <input id='{%= o.id %}_bounding_box_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
-                class='layerList_legend' type='checkbox'></input>
-        </div>
-    ",
+    "
 }
