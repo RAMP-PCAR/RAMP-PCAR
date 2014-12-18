@@ -93,11 +93,15 @@ define([
             }
         });
         
-        LayerItem.state = {
-            LOADING: "loading",
-            ERROR: "load_error",
-            SCALE: "wrong_scale"
-        };
+        lang.mixin(LayerItem,
+            {
+                state: {
+                    LOADING: "loading",
+                    ERROR: "load_error",
+                    SCALE: "wrong_scale"
+                }
+            }
+        );
         
         return LayerItem;
     });
