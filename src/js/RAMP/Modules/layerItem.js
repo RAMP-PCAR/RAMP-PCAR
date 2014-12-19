@@ -1,4 +1,4 @@
-﻿/* global define, tmpl, console */
+﻿/* global define, tmpl, $, console */
 
 /**
 * @module Utils
@@ -60,6 +60,10 @@ define([
                         config: null,
 
                         node: null,
+                        _imageContainerNode: null,
+                        _displayNameNode: null,
+                        _controlsNode: null,
+                        _checkboxesNode: null,
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
@@ -73,10 +77,12 @@ define([
                     }
                 );
 
-                this.node = this._template(this.type, this.config);
-
-                console.debug(temp++);
-
+                this.node = $(this._template(this.type, this.config));
+                this._imageBoxNode = this.node.find(".layer-details > div:first");
+                this._displayNameNode = this.node.find(".layer-name > span");
+                this._controlsNode = this.node.find(".layer-controls-group");
+                this._checkboxesNode = this.node.find(".layer-checkboxes");
+                
                 this.setState(this.state);
             },
 

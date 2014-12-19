@@ -70,15 +70,13 @@ define([
                 lang.mixin(this,
                     {
                         node: null,
-                        listNode: null,
+                        _listNode: null,
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
                         groupType: "layer_group",
 
                         layerType: null,
-
-                        layerState: null,
 
                         layers: [],
 
@@ -91,20 +89,21 @@ define([
                 );
 
                 layerItemOptions = {
-                    type: this.layerType,
-                    state: this.layerState
+                    type: this.layerType
                 };
 
                 this.node = $(this._template(this.groupType));
-                this.listNode = this.node.find("ul");
+                this._listNode = this.node.find("ul");
 
                 console.log(LayerItem.state);
 
                 this.layers.forEach(function (layer) {
                     layerItem = new LayerItem(layer, layerItemOptions);
                     that.layerItems.push(layerItem);
+                    
+                    that._listNode.append(layerItem.node);
 
-                    that.listNode.append(layerItem.node);
+                    layerItem.setState(LayerItem.state.ERROR);
                 });
             },
 

@@ -36,8 +36,8 @@
                                     console.log(s);
 
                                     include(s.type + '_layer_image_box', o);
-                                %}                                       
-
+                                %}   
+                                
                                 <div class='layer-controls'>
                                     <div class='layer-name'>
                                         <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>

@@ -17,17 +17,15 @@
                         <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
                         <div class='layer-details'>
 
-                            <div>
-                                {% include('feature_' + o.symbology.type + '_layer_image', o); %}
-                            </div>
-
+                            {% include('feature_' + o.symbology.type + '_layer_image', o); %}
+                            
                             <div class='layer-controls'>
                                 <div class='layer-name'>
                                     <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
                                 </div>
 
-                                <div class='btn-group margin-top-none'> 
-                                </div>
+                                <div class='layer-controls-group'>
+                                </div>                                
 
                             </div>
 
@@ -117,7 +115,7 @@
                                     <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
                                 </div>
 
-                                <div class='btn-group margin-top-none'> 
+                                <div class='layer-controls-group'>
                                 </div>
 
                             </div>
@@ -198,8 +196,11 @@
     ",
 
     "layer_controls": "
-        {% if (o) { %}
+        <div class='btn-group margin-top-none'> 
+            </div>
 
+        {% if (o) { %}
+            
 
         {% } %}
     ",
