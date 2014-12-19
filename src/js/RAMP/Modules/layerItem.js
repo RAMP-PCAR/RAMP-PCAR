@@ -48,7 +48,8 @@ define([
     ) {
         "use strict";
 
-        var LayerItem;
+        var LayerItem,
+            ALL_STATES_CLASS;
 
         LayerItem = declare([Evented], {
             constructor: function (config, options) {
@@ -84,6 +85,8 @@ define([
                 this._checkboxesNode = this.node.find(".layer-checkboxes");
                 
                 this.setState(this.state);
+
+                console.debug("-->", this.state, options);
             },
 
             _template: function (key, data) {
@@ -96,7 +99,12 @@ define([
                 return tmpl(key, data);
             },
 
-            setState: function (state) {
+            setState: function (state, options) {
+                // set state class on the layerItem root node
+                this.node
+                    .removeClass(ALL_STATES_CLASS)
+                    .addClass(state);
+
                 switch (state) {
                     case LayerItem.state.LOADING: 
                         console.log("load");
@@ -119,13 +127,19 @@ define([
         lang.mixin(LayerItem,
             {
                 state: {
-                    DEFAULT: "default",
-                    LOADING: "loading",
-                    ERROR: "load_error",
-                    SCALE: "wrong_scale"
+                    DEFAULT: "layer-state-default",
+                    LOADING: "layer-state-loading",
+                    ERROR: "layer-state-load-error",
+                    SCALE: "layer-state-wrong-scale"
                 }
             }
         );
+
+        ALL_STATES_CLASS =
+            Object
+                .getOwnPropertyNames(LayerItem.state)
+                .map(function (key) { return LayerItem.state[key]; })
+                .join(" ");
         
         return LayerItem;
     });

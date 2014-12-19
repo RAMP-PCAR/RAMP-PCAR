@@ -62,9 +62,8 @@ define([
 
         return declare([Evented], {
             constructor: function (layers, options) {
-                var that = this,
-                    layerItem,
-                    layerItemOptions;
+                var that = this;//,
+                //layerItem;
 
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
@@ -78,6 +77,8 @@ define([
 
                         layerType: null,
 
+                        layerState: LayerItem.state.DEFAULT,
+
                         layers: [],
 
                         layerItems: []
@@ -88,23 +89,41 @@ define([
                     }
                 );
 
-                layerItemOptions = {
-                    type: this.layerType
-                };
-
                 this.node = $(this._template(this.groupType));
                 this._listNode = this.node.find("ul");
 
-                console.log(LayerItem.state);
+                console.debug(LayerItem.state);
 
                 this.layers.forEach(function (layer) {
-                    layerItem = new LayerItem(layer, layerItemOptions);
-                    that.layerItems.push(layerItem);
-                    
-                    that._listNode.append(layerItem.node);
+                    that.addLayer(layer);
 
-                    layerItem.setState(LayerItem.state.ERROR);
+                    //layerItem = new LayerItem(layer, layerItemOptions);
+                    //that.layerItems.push(layerItem);
+
+                    //that._listNode.append(layerItem.node);
+
+                    //layerItem.setState(LayerItem.state.ERROR);
                 });
+            },
+
+            addLayer: function (layer, options) {
+                var layerItem,
+                    layerItemOptions = {};
+                
+                lang.mixin(layerItemOptions,
+                    {
+                        state: this.layerState
+                    },
+                    options,
+                    {
+                        type: this.layerType
+                    }
+                );
+
+                layerItem = new LayerItem(layer,layerItemOptions);
+
+                this.layerItems.push(layerItem);
+                this._listNode.append(layerItem.node);
             },
 
             _template: function (key, data) {
