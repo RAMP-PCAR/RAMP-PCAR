@@ -1,9 +1,9 @@
 {
     "config": {
         "tileSchema": {
-            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "Lambert 79",
-            "ESRI_World_AuxMerc_3857":  "Auxilliary Mercator"
+            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -32,32 +32,32 @@
                 "altText": "Topographic Map",
                 "description": "Earth 2 Map"
             },
-            "baseEsriWorld":  {
+            "baseEsriWorld": {
                 "name": "Satellite Imagery",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Imagery"
             },
-            "baseEsriPhysical":  {
+            "baseEsriPhysical": {
                 "name": "Physical Earth",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Physical_Map"
             },
-            "baseEsriRelief":  {
+            "baseEsriRelief": {
                 "name": "Shaded Relief",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Shaded_Relief"
             },
-            "baseEsriStreet":  {
+            "baseEsriStreet": {
                 "name": "Streets",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Street_Map"
             },
-            "baseEsriTerrain":  {
+            "baseEsriTerrain": {
                 "name": "Terrain",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Terrain_Base"
             },
-            "baseEsriTopo":  {
+            "baseEsriTopo": {
                 "name": "Topographic",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Topo_Map"
@@ -264,7 +264,7 @@
             }
         }
     },
-    
+
     "filterManager": {
         "datasetsTabTitle": "Datasets",
 
@@ -295,7 +295,12 @@
 
         "layerHandle": "Layer Handle",
         "layerHandleLabel": "Layer handle for __layerName__",
-        "layerListLabel": "Sortable layer list"
+        "layerListLabel": "Sortable layer list",
+
+        "controlsMatrix": {
+            "metadata": "Metadata",
+            "settings": "Settings"
+        }
     },
 
     "gui": {

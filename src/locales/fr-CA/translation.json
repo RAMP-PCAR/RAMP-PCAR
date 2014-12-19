@@ -295,7 +295,12 @@
 
         "layerHandle": "Descripteur de couche",
         "layerHandleLabel": "Descripteur de couche pour __layerName__",
-        "layerListLabel": "Liste des couches sortable"
+        "layerListLabel": "Liste des couches sortable",
+
+        "controlsMatrix": {
+            "metadata": "Métadonnées",
+            "settings": "Paramètres"
+        }
     },
 
     "gui": {

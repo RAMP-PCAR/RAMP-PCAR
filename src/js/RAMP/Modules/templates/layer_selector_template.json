@@ -196,13 +196,25 @@
     ",
 
     "layer_controls": "
-        <div class='btn-group margin-top-none'> 
-            </div>
+        {% 
+            o.controls.forEach(function(c) {
+                include('layer_control_' + c, {
+                    id: o.id,
+                    nameKey: c    
+                });
+            });
+         %}
+    ",
 
-        {% if (o) { %}
-            
+    "layer_control_metadata": "{% include('layer_control_generic', o); %}",
 
-        {% } %}
+    "layer_control_settings": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_generic": "
+        <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 
+            data-layer-id='{%= o.id %}'>
+                {%=i18n.t('filterManager.controlsMatrix.' + o.nameKey)%}
+        </button>
     ",
 
     "layer_visibility_toggle": "

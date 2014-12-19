@@ -55,12 +55,21 @@ define([
             constructor: function (config, options) {
                 //var that = this;
 
+                this.controlsMatrix = {};
+                this.controlsMatrix[LayerItem.state.DEFAULT] = ["metadata", "settings"];
+                this.controlsMatrix[LayerItem.state.LOADING] = ["loading"];
+                this.controlsMatrix[LayerItem.state.ERROR] = ["error"];
+                this.controlsMatrix[LayerItem.state.INFO] = ["metadata", "settings"];
+
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
-                        config: null,
+                        id: null,
 
                         node: null,
+
+                        _config: null,
+
                         _imageContainerNode: null,
                         _displayNameNode: null,
                         _controlsNode: null,
@@ -70,23 +79,70 @@ define([
 
                         state: LayerItem.state.DEFAULT,
 
-                        type: null                       
+                        type: null
                     },
                     options,
                     {
-                        config: config
+                        id: config.id,
+
+                        _config: config
                     }
                 );
 
-                this.node = $(this._template(this.type, this.config));
+                this.node = $(this._template(this.type, this._config));
                 this._imageBoxNode = this.node.find(".layer-details > div:first");
                 this._displayNameNode = this.node.find(".layer-name > span");
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._checkboxesNode = this.node.find(".layer-checkboxes");
-                
+
                 this.setState(this.state);
 
                 console.debug("-->", this.state, options);
+            },
+
+            setState: function (state) {
+                // set state class on the layerItem root node
+                this.node
+                    .removeClass(ALL_STATES_CLASS)
+                    .addClass(state);
+
+                this._setControlsGroup(state);
+
+                switch (state) {
+                    case LayerItem.state.DEFAULT:
+                        console.log("default");
+                        break;
+
+                    case LayerItem.state.LOADING:
+                        console.log("load");
+                        break;
+
+                    case LayerItem.state.ERROR:
+                        console.log("error");
+                        break;
+
+                    case LayerItem.state.INFO:
+                        console.log("scale");
+                        break;
+
+                    default:
+                        break;
+                }
+            },
+
+            _setControlsGroup: function (state) {
+                var that = this;
+
+                this._controlsNode
+                    .empty()
+                    .append(
+                        this._template("layer_controls",
+                            {
+                                id: that.id,
+                                controls: that.controlsMatrix[state]
+                            }
+                        )
+                );
             },
 
             _template: function (key, data) {
@@ -97,40 +153,16 @@ define([
                 data.fn = TmplUtil;
 
                 return tmpl(key, data);
-            },
-
-            setState: function (state, options) {
-                // set state class on the layerItem root node
-                this.node
-                    .removeClass(ALL_STATES_CLASS)
-                    .addClass(state);
-
-                switch (state) {
-                    case LayerItem.state.LOADING: 
-                        console.log("load");
-                        break;
-
-                    case LayerItem.state.ERROR:
-                        console.log("error");
-                        break;
-
-                    case LayerItem.state.SCALE:
-                        console.log("scale");
-                        break;
-
-                    default:
-                        break;
-                }
             }
         });
-        
+
         lang.mixin(LayerItem,
             {
                 state: {
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     ERROR: "layer-state-load-error",
-                    SCALE: "layer-state-wrong-scale"
+                    INFO: "layer-state-info"
                 }
             }
         );
@@ -140,6 +172,6 @@ define([
                 .getOwnPropertyNames(LayerItem.state)
                 .map(function (key) { return LayerItem.state[key]; })
                 .join(" ");
-        
+
         return LayerItem;
     });

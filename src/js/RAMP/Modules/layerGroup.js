@@ -101,8 +101,6 @@ define([
                     //that.layerItems.push(layerItem);
 
                     //that._listNode.append(layerItem.node);
-
-                    //layerItem.setState(LayerItem.state.ERROR);
                 });
             },
 
@@ -124,6 +122,8 @@ define([
 
                 this.layerItems.push(layerItem);
                 this._listNode.append(layerItem.node);
+
+                //layerItem.setState(LayerItem.state.ERROR);
             },
 
             _template: function (key, data) {
