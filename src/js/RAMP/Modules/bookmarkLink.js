@@ -757,7 +757,7 @@ define([
 
                 topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (event) {
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, event);
-                    layerTransparency[event.layerId] = event.value;
+                    layerTransparency[event.layerId] = Math.round(event.value * 100) / 100;
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
                         lt: JSON.stringify(layerTransparency)
