@@ -1,4 +1,4 @@
-﻿/* global define, tmpl */
+﻿/* global define, tmpl, console */
 
 /**
 * @module Utils
@@ -63,7 +63,7 @@ define([
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
-                        state: null,
+                        state: LayerItem.state.DEFAULT,
 
                         type: null                       
                     },
@@ -74,6 +74,8 @@ define([
                 );
 
                 this.node = this._template(this.type, this.config);
+
+                console.debug(temp++);
 
                 this.setState(this.state);
             },
@@ -88,14 +90,30 @@ define([
                 return tmpl(key, data);
             },
 
-            setState: function () {
+            setState: function (state) {
+                switch (state) {
+                    case LayerItem.state.LOADING: 
+                        console.log("load");
+                        break;
 
+                    case LayerItem.state.ERROR:
+                        console.log("error");
+                        break;
+
+                    case LayerItem.state.SCALE:
+                        console.log("scale");
+                        break;
+
+                    default:
+                        break;
+                }
             }
         });
         
         lang.mixin(LayerItem,
             {
                 state: {
+                    DEFAULT: "default",
                     LOADING: "loading",
                     ERROR: "load_error",
                     SCALE: "wrong_scale"
