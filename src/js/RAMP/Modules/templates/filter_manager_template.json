@@ -116,10 +116,10 @@
         
         "wms_renderer_template": "
              <div class='renderer-list'>
-                <div class='wms-legend-box'>
+                <div class='wms-legend-image-box'>
                     <h4 class='mrgn-tp-0 h6'>{%=i18n.t('filterManager.legend')%}</h4>
                     <div class='image-div'>
-                        <img class='wms-image bg-white' src='{%=o.imageUrl%}' role='presentation' alt=''>
+                        <img class='wms-legend-image bg-white' src='{%=o.imageUrl%}' role='presentation' alt=''>
                     </div>
                 </div>       
              </div>
@@ -159,9 +159,9 @@
 
         "renderer_template": "
             <li>
-               <div class='layer-details'>
-                  <div class='layer-image-box'>
-                    <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
+               <div class='layer-renderer'>
+                  <div class='layer-renderer-image-box'>
+                    <img alt='' src='{%=o.imageUrl%}' class='layer-renderer-image bg-white'>
                   </div>
                   <span title='{%=o.label%}'>{%=o.label%}</span>
                 </div>

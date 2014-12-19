@@ -17,7 +17,9 @@
                         <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
                         <div class='layer-details'>
 
-                            {% include('feature_' + o.symbology.type + '_layer_image', o); %}
+                            <div>
+                                {% include('feature_' + o.symbology.type + '_layer_image', o); %}
+                            </div>
 
                             <div class='layer-controls'>
                                 <div class='layer-name'>
@@ -91,9 +93,9 @@
 
     "feature_renderer": "
         <li>
-           <div class='layer-details'>
-              <div class='layer-image-box'>
-                <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
+           <div class='layer-renderer'>
+              <div class='layer-renderer-image-box'>
+                <img alt='' src='{%=o.imageUrl%}' class='layer-renderer-image bg-white'>
               </div>
               <span title='{%=o.label%}'>{%=o.label%}</span>
             </div>
@@ -157,10 +159,10 @@
         {% if (o.legendMimeType) { %}
             
             <div class='renderer-list'>
-                <div class='wms-legend-box'>
+                <div class='wms-legend-image-box'>
                     <h4 class='mrgn-tp-0 h6'>{%= i18n.t('filterManager.legend') %}</h4>
                     <div class='image-div'>
-                        <img class='wms-image bg-white' src='{%= o.imageUrl %}' role='presentation' alt=''>
+                        <img class='wms-legend-image bg-white' src='{%= o.imageUrl %}' role='presentation' alt=''>
                     </div>
                 </div>       
             </div>
