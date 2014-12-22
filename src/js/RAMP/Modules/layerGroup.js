@@ -48,7 +48,7 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper",
+    "utils/tmplHelper", "utils/array",
 
     /* RAMP */
     "ramp/layerItem"
@@ -56,7 +56,7 @@ define([
     function (
         Evented, declare, lang, dojoArray,
         layer_selector_template,
-        TmplHelper,
+        TmplHelper, Array,
         LayerItem) {
         "use strict";
 
@@ -107,7 +107,7 @@ define([
             addLayer: function (layer, options) {
                 var layerItem,
                     layerItemOptions = {};
-                
+
                 lang.mixin(layerItemOptions,
                     {
                         state: this.layerState
@@ -118,12 +118,24 @@ define([
                     }
                 );
 
-                layerItem = new LayerItem(layer,layerItemOptions);
+                layerItem = new LayerItem(layer, layerItemOptions);
 
                 this.layerItems.push(layerItem);
                 this._listNode.append(layerItem.node);
 
                 //layerItem.setState(LayerItem.state.ERROR);
+            },
+
+            setState: function (layerId, state) {
+                var layerItem;
+
+                layerItem = Array.find(this.layerItems, function (li) {
+                    return li.id === layerId;
+                });
+
+                if (layerItem) {
+                    layerItem.setState(state);
+                }
             },
 
             _template: function (key, data) {
