@@ -89,6 +89,7 @@ define([
 
             ui = (function () {
                 var sectionNode,
+                    _mainList,
                     layerList,
                     filterGlobalToggles,
                     layerSettings;
@@ -442,10 +443,21 @@ define([
                         }
                     );
 
-                    // metadata buttons
-                    // to be changed...
-                    layerList.find("legend button.metadata-button").on("click", function () {
-                        var button = $(this),
+                    //PopupManager.registerPopup(_mainList, "click",
+                    //    function (d) {
+
+                    //        md(this.handle);
+
+                    //        d.resolve();
+                    //    },
+                    //    {
+                    //        handleSelector: ".metadata-button",
+                    //        activeClass: "button-pressed"
+                    //    }
+                    //);
+
+                    function md(target) {
+                        var button = $(target),
                             node = button.parents("legend");
 
                         if (!node.hasClass("selected-row")) {
@@ -462,7 +474,7 @@ define([
                                 origin: "filterManager",
                                 guid: id,
                                 doOnOpen: function () { node.addClass("selected-row"); },
-                                doOnHide: function () { layerList.find(".selected-row").removeClass("selected-row"); }
+                                doOnHide: function () { _mainList.find(".selected-row").removeClass("selected-row"); }
                             });
 
                             //only wms layers have this value
@@ -529,6 +541,12 @@ define([
                         } else {
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                         }
+                    }
+
+                    // metadata buttons
+                    // to be changed...
+                    _mainList.on("click", "legend button.metadata-button", function () {
+                        md(this);
                     });
 
                     // adjust panel width on load
@@ -694,6 +712,7 @@ define([
                                 window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
                                 filterGlobalToggles = $('#filterGlobalToggles');
+                                _mainList = $("#layerList");
 
                                 setLayerReorderingEvents();
 
@@ -716,7 +735,7 @@ define([
                                     layerType: GlobalStorage.layerType.Feature
                                 });
 
-                                $("#layerList").append(a.node);
+                                $("#layerList").append(a.node);                                
                             },
                             300
                         );
