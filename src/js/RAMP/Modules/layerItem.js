@@ -115,36 +115,38 @@ define([
                 console.debug("-->", this.state, options);
             },
 
-            setState: function (state) {
-                this.state = state;
+            setState: function (state, options, force) {
+                if (this.state !== state || force) {
+                    this.state = state;
 
-                // set state class on the layerItem root node
-                this.node
-                    .removeClass(ALL_STATES_CLASS)
-                    .addClass(this.state);
+                    // set state class on the layerItem root node
+                    this.node
+                        .removeClass(ALL_STATES_CLASS)
+                        .addClass(this.state);
 
-                this._setControlsGroup();
-                this._setTogglesGroup();
+                    this._setControlsGroup();
+                    this._setTogglesGroup();
 
-                switch (this.state) {
-                    case LayerItem.state.DEFAULT:
-                        console.log("default");
-                        break;
+                    switch (this.state) {
+                        case LayerItem.state.DEFAULT:
+                            console.log("default");
+                            break;
 
-                    case LayerItem.state.LOADING:
-                        console.log("load");
-                        break;
+                        case LayerItem.state.LOADING:
+                            console.log("load");
+                            break;
 
-                    case LayerItem.state.ERROR:
-                        console.log("error");
-                        break;
+                        case LayerItem.state.ERROR:
+                            console.log("error");
+                            break;
 
-                    case LayerItem.state.OFF_SCALE:
-                        console.log("scale");
-                        break;
+                        case LayerItem.state.OFF_SCALE:
+                            console.log("scale");
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
             },
 
