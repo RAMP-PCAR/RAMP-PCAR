@@ -55,12 +55,27 @@ define([
             constructor: function (config, options) {
                 //var that = this;
 
-                this.controlsMatrix = {};
-                this.controlsMatrix[LayerItem.state.DEFAULT] = ["metadata", "settings"];
-                this.controlsMatrix[LayerItem.state.LOADING] = ["loading"];
-                this.controlsMatrix[LayerItem.state.ERROR] = ["error"];
-                this.controlsMatrix[LayerItem.state.INFO] = ["metadata", "settings"];
+                this.stateMatrix = {};
+                this.stateMatrix[LayerItem.state.DEFAULT] = {
+                    controls: ["metadata", "settings"],
+                    toggles: ["eye", "box"]
+                };
 
+                this.stateMatrix[LayerItem.state.LOADING] = {
+                    controls: ["loading"],
+                    toggles: []
+                };
+
+                this.stateMatrix[LayerItem.state.ERROR] = {
+                    controls: ["error"],
+                    toggles: ["reload", "hide"]
+                };
+
+                this.stateMatrix[LayerItem.state.INFO] = {
+                    controls: ["metadata", "settings"],
+                    toggles: ["zoom", "eye", "box"]
+                };
+                
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -73,7 +88,7 @@ define([
                         _imageContainerNode: null,
                         _displayNameNode: null,
                         _controlsNode: null,
-                        _checkboxesNode: null,
+                        _togglesNode: null,
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
@@ -93,7 +108,7 @@ define([
                 this._imageBoxNode = this.node.find(".layer-details > div:first");
                 this._displayNameNode = this.node.find(".layer-name > span");
                 this._controlsNode = this.node.find(".layer-controls-group");
-                this._checkboxesNode = this.node.find(".layer-checkboxes");
+                this._togglesNode = this.node.find(".layer-checkboxes");
 
                 this.setState(this.state);
 
@@ -101,14 +116,17 @@ define([
             },
 
             setState: function (state) {
+                this.state = state;
+
                 // set state class on the layerItem root node
                 this.node
                     .removeClass(ALL_STATES_CLASS)
-                    .addClass(state);
+                    .addClass(this.state);
 
-                this._setControlsGroup(state);
+                this._setControlsGroup();
+                this._setTogglesGroup();
 
-                switch (state) {
+                switch (this.state) {
                     case LayerItem.state.DEFAULT:
                         console.log("default");
                         break;
@@ -130,7 +148,7 @@ define([
                 }
             },
 
-            _setControlsGroup: function (state) {
+            _setControlsGroup: function () {
                 var that = this;
 
                 this._controlsNode
@@ -139,7 +157,22 @@ define([
                         this._template("layer_controls",
                             {
                                 id: that.id,
-                                controls: that.controlsMatrix[state]
+                                controls: that.stateMatrix[that.state].controls
+                            }
+                        )
+                );
+            },
+
+            _setTogglesGroup: function () {
+                var that = this;
+
+                this._togglesNode
+                    .empty()
+                    .append(
+                        this._template("layer_toggles",
+                            {
+                                id: that.id,
+                                toggles: that.stateMatrix[that.state].toggles
                             }
                         )
                 );

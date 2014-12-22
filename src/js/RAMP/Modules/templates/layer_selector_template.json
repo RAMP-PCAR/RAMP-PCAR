@@ -213,8 +213,36 @@
     "layer_control_generic": "
         <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 
             data-layer-id='{%= o.id %}'>
-                {%=i18n.t('filterManager.controlsMatrix.' + o.nameKey)%}
+                {%= i18n.t('filterManager.controlsMatrix.' + o.nameKey) %}
         </button>
+    ",
+
+    "layer_toggles": "
+        {% 
+            o.toggles.forEach(function(c) {
+                include('layer_toggle_' + c, {
+                    id: o.id,
+                    nameKey: c    
+                });
+            });
+         %}
+    ",
+
+    "layer_toggle_reload": " ",
+
+    "layer_toggle_eye": "{% include('layer_toggle_generic', o); %}",
+
+    "layer_toggle_box": "{% include('layer_toggle_generic', o); %}",
+
+    "layer_toggle_generic": "
+        <div class='checkbox-custom'>
+            <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
     ",
 
     "layer_visibility_toggle": "
