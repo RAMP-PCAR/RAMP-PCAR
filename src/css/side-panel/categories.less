@@ -430,15 +430,7 @@
 
         .layer-controls {
             .block-control-group;
-            // what is legend-button?
-            /*ul button.legend-button {
-                    .global-toggle-button-icon;
-                    padding: 0 0 0 10px !important;
 
-                    &:before {
-                        left: 2px;
-                    }
-                }*/
             > div.btn-group {
                 margin: -6px 0 0 -3px !important;
                 padding: 0 !important;
@@ -472,6 +464,54 @@
                 }
             }
 
+            .layer-controls-group {
+                margin-top: -2px;
+
+                button.button-none {
+                    .link-button2;
+
+                    position: relative;
+                    //outline: none;
+                    border: 0;
+                    padding: 1px 3px;
+                    margin-right: 3px;
+                    margin-left: 2px;
+                    top: -1px;
+
+                    &.button-pressed {
+                        &:before {
+                            content: "";
+                            position: absolute;
+                            border-bottom: 2px solid #000;
+                            right: 0;
+                            left: 0;
+                            bottom: 0;
+                        }
+                    }
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        border-right: 1px solid #000;
+                        right: -5px;
+                        top: 2px;
+                        bottom: 2px;
+                    }
+
+                    &:last-child {
+                        margin-right: 0;
+
+                        &:after {
+                            display: none;
+                        }
+                    }
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+
             .separator {
                 border-right: 1px solid black;
                 float: left;
@@ -487,6 +527,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             margin-top: -3px;
+            margin-left: 2px;
             line-height: 1.5em;
         }
     }
