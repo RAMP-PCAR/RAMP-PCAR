@@ -84,9 +84,9 @@ define(["dojo/_base/array","utils/util"],
 
             layerType: {
                 Basemap: "basemap",
-                WMS: "wms_layer",
+                wms: "wms_layer",
                 BoundingBox: "bounding_box",
-                Feature: "feature_layer",
+                feature: "feature_layer",
                 Static: "static_layer",
                 Highlight: "highlight_layer",
                 Hoverlight: "hoverlight_layer",

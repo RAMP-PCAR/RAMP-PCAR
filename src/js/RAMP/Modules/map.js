@@ -950,7 +950,7 @@ define([
                         //}
                     });
                     wmsl.ramp = {
-                        type: GlobalStorage.layerType.WMS
+                        type: GlobalStorage.layerType.wms
                     };
 
                     // WMS binding for getFeatureInfo calls
@@ -982,7 +982,7 @@ define([
                             visible: layerConfig.settings.visible,
                             opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                         });
-                        fl.ramp = { type: GlobalStorage.layerType.Feature };
+                        fl.ramp = { type: GlobalStorage.layerType.feature };
                         if (layerConfig.settings.boundingBoxVisible === true) {
                             dojoOn.once(fl, "update-end", function () {
                                 setBoundingBoxVisibility(layerConfig.id, true);

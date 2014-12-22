@@ -645,6 +645,7 @@ define([
                         tmpl.cache = {};
                         tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
+                        /*
                         // get visible layers reversing their order; that's important
                         var layers = RampMap.getMap().getLayersVisibleAtScale().reverse(),
                             layerGroups = {
@@ -662,7 +663,7 @@ define([
                         // limit only to visible layer that is not basemap
                         dojoArray.forEach(layers, function (layer) {
                             var wmsLayerName = null;
-                            if (layer.ramp.type === GlobalStorage.layerType.WMS) {
+                            if (layer.ramp.type === GlobalStorage.layerType.wms) {
                                 // wmsLayerName = layer.layerName;
                                 layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
 
@@ -679,7 +680,7 @@ define([
                                 }
 
                                 layerGroups.wms.push(layer);
-                            } else if (layer.ramp.type === GlobalStorage.layerType.Feature || layer.ramp.type === GlobalStorage.layerType.Static) {
+                            } else if (layer.ramp.type === GlobalStorage.layerType.feature || layer.ramp.type === GlobalStorage.layerType.Static) {
                                 layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
 
                                 layerGroups.feature.push(layer);
@@ -698,21 +699,46 @@ define([
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         // TODO: generate section using one template, need to refactoring the following fixed string
                         section = tmpl('filter_manager_template', data);
+                        */
+
+                        var layers = RAMP.config.layers,
+                            section,
+                            layerGroup,
+                            layerGroups = {};
+
+                        sectionNode = $("#" + RAMP.config.divNames.filter);
+                        section = tmpl('filter_manager_template2', { config: RAMP.config });
+                        
+                        sectionNode.empty().append(section);
+
+                        _mainList = sectionNode.find("#layerList");
+                        
+                        UtilDict.forEachEntry(layers, function (key, value) {
+                            layerGroup = new LayerGroup(value, {
+                                layerType: GlobalStorage.layerType[key]
+                            });
+
+                            layerGroups[key] = layerGroup;
+                            _mainList.append(layerGroup.node);
+
+                        });
+
+                        layerGroups.feature
+                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
 
                         // fade out the loading animation
-                        sectionNode.addClass('animated fadeOut');
+                        //sectionNode.addClass('animated fadeOut');
                         window.setTimeout(
                             function () {
-                                sectionNode
+                                /*sectionNode
                                     .empty().append(section)
                                     .removeClass("fadeOut")
-                                    .addClass('animated fadeIn');
+                                    .addClass('animated fadeIn');*/
 
                                 // remove the animating css class
                                 window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
                                 filterGlobalToggles = $('#filterGlobalToggles');
-                                _mainList = $("#layerList");
 
                                 setLayerReorderingEvents();
 
@@ -729,13 +755,6 @@ define([
                                 // ui initialization completes
                                 console.log(EventManager.FilterManager.UI_COMPLETE);
                                 topic.publish(EventManager.FilterManager.UI_COMPLETE);
-
-                                var a;
-                                a = new LayerGroup(RAMP.config.layers.feature, {
-                                    layerType: GlobalStorage.layerType.Feature
-                                });
-
-                                $("#layerList").append(a.node);                                
                             },
                             300
                         );

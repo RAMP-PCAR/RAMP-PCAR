@@ -176,7 +176,7 @@ define(["ramp/globalStorage"],
 
                 // determine if given layer is static or WMS
                 checkboxDisabled = Boolean(o.data[o.idx].ramp.type === GlobalStorage.layerType.Static ||
-                    o.data[o.idx].ramp.type === GlobalStorage.layerType.WMS);
+                    o.data[o.idx].ramp.type === GlobalStorage.layerType.wms);
 
                 boundingLegendLabel = {
                     for: "filterGroup_" + o.data[o.idx].id + "1",
