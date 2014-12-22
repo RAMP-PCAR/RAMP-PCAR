@@ -71,7 +71,7 @@ define([
                     toggles: ["reload", "hide"]
                 };
 
-                this.stateMatrix[LayerItem.state.INFO] = {
+                this.stateMatrix[LayerItem.state.OFF_SCALE] = {
                     controls: ["metadata", "settings"],
                     toggles: ["zoom", "eye", "box"]
                 };
@@ -139,7 +139,7 @@ define([
                         console.log("error");
                         break;
 
-                    case LayerItem.state.INFO:
+                    case LayerItem.state.OFF_SCALE:
                         console.log("scale");
                         break;
 
@@ -195,7 +195,8 @@ define([
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     ERROR: "layer-state-load-error",
-                    INFO: "layer-state-info"
+                    INFO: "layer-state-info",
+                    OFF_SCALE: "layer-state-off-scale"
                 }
             }
         );

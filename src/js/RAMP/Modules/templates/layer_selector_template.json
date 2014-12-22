@@ -230,6 +230,15 @@
 
     "layer_toggle_reload": " ",
 
+    "layer_toggle_zoom": "
+        <div class='checkbox-custom'>
+            <button class='btn btn-xs button-none _tooltip {%= o.nameKey %}' id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' data-layer-id='{%= o.id %}'>
+                <i class='fa fa-search-plus'></i>
+                <span class='wb-invisible'>{%= i18n.t('filterManager.controlsMatrix.' + o.nameKey) %}</span>
+            </button>
+        </div>
+    ",
+
     "layer_toggle_eye": "{% include('layer_toggle_generic', o); %}",
 
     "layer_toggle_box": "{% include('layer_toggle_generic', o); %}",
