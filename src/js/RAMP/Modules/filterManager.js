@@ -397,7 +397,7 @@ define([
                         });
                     */
 
-                    PopupManager.registerPopup(layerList, "hover, focus",
+                    PopupManager.registerPopup(_mainList, "hover, focus",
                         function (d) {
                             d.resolve();
                         },
@@ -409,7 +409,7 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(layerList, "click",
+                    PopupManager.registerPopup(_mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
@@ -426,7 +426,7 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(layerList, "click",
+                    PopupManager.registerPopup(_mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
