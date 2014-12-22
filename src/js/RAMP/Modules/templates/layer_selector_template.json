@@ -10,7 +10,7 @@
     // layer level, layer is passed in as o.data. Level 1
     // Filter overall structure, contains 1 to many filter row for the available layers.
     "feature_layer":"
-        <li id='feature_layer_{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+        <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
             <fieldset>
                 <legend>
                     <div class='filter-row'>
@@ -101,7 +101,7 @@
     ",
 
     "wms_layer":"
-        <li id='wms_layer_{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+        <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
             <fieldset>
                 <legend>
                     <div class='filter-row'>
