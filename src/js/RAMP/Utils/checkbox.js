@@ -221,7 +221,9 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
             * @chainable
             */
             setState: function (state) {
-                if (this.node && Util.containsInDom(this.node[0])) {
+                this.validate();
+
+                if (this.state !== Checkbox.state.INVALID) {
 
                     // change state only if it's different from the current one
                     if (this.state !== state) {
@@ -230,9 +232,16 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
 
                         this._emit(Checkbox.agency.CODE);
                     }
-                } else {
+                }
 
+                return this;
+            },
+
+            validate: function () {
+                if (!this.node || !Util.containsInDom(this.node[0])) {
                     this.state = Checkbox.state.INVALID;
+                } else {
+                    this.state = this.node.is(':checked');
                 }
 
                 return this;

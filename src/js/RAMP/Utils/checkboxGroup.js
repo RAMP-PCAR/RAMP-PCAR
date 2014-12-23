@@ -246,7 +246,9 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
 
                 allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
                     //return checkbox.isChecked();
-                    return checkbox.state;
+                    return checkbox
+                            .validate()
+                            .state;
                 });
 
                 if (this.master) {
