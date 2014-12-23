@@ -1013,7 +1013,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         });
                 });
             },
-                        
+
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter

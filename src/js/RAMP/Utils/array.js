@@ -13,8 +13,8 @@
 * @uses dojo/_base/array
 * @uses dojo/_base/lang
 */
-define(["dojo/_base/array", "dojo/_base/lang"],
-    function (dojoArray, dojoLang) {
+define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
+    function (dojoArray, dojoLang, Util) {
         "use strict";
         return {
             /**
@@ -46,7 +46,7 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             * @static
             * @param {Array} arr Array to be searched
             * @param {Function} predicate a function that takes one argument and returns true if the
-            * argument satisfies some condition, and false otherwise.</param>
+            * argument satisfies some condition, and false otherwise.
             * @param {Object} scope ???
             * @return {Object} first element that satisfies the given predicate; `null` if no such element is found
             */
@@ -68,6 +68,7 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             * @static
             * @param {Array} arr Array to be searched
             * @param {Function} predicate a function that takes one argument and returns true if the
+            * argument satisfies some condition, and false otherwise.
             * @param {Object} scope ???
             * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element is found
             */
@@ -131,7 +132,17 @@ define(["dojo/_base/array", "dojo/_base/lang"],
                 return arr[index];
             },
 
-            removeFromArray: function (array, index) {
+            removeFromArray: function (array, obj, predicate) {
+                var index;
+
+                if (!Util.isNumber(obj)) {
+                    if (predicate) {
+                        index = this.indexOf(array, predicate);
+                    } else {
+                        index = array.indexOf(obj);
+                    }
+                }
+
                 if (index !== -1) {
                     array.splice(index, 1);
                 }
