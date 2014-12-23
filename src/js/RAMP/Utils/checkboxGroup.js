@@ -212,6 +212,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 } else {
                     this.master = null;
                 }
+
+                this._checkMaster();
             },
 
             _addCheckbox: function (nodes) {
@@ -241,7 +243,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         }
                     });
                 });
-
             },
 
             /**
