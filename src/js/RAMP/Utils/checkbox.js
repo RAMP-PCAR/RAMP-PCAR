@@ -32,11 +32,13 @@
 * @return {Checkbox} A control objects allowing to toggle checkbox.
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
-    function (Evented, declare, lang) {
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
+    function (Evented, declare, lang, Util) {
         "use strict";
 
-        return declare([Evented], {
+        var Checkbox;
+
+        Checkbox = declare([Evented], {
             constructor: function (node, options) {
                 var that = this;
 
@@ -118,10 +120,10 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
                         onChange: function () { },
 
                         /**
-                         * State of the Checkbox: true | false
+                         * State of the Checkbox: true | false or INVALID
                          *
                          * @property state
-                         * @type Boolean
+                         * @type Boolean | String
                          * @default null
                          */
                         state: null,
@@ -133,49 +135,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
                          * @type String
                          * @default null
                          */
-                        id: null,
-
-                        /**
-                         * An object specifying possible agencies that can affect the Checkbox.
-                         *
-                         * @property agency
-                         * @type Object
-                         * @private
-                         * @default
-                         * @example
-                         *      agency: {
-                         *           USER: "USER",
-                         *           CODE: "CODE"
-                         *       }
-                         */
-                        agency: {
-                            USER: "USER",
-                            CODE: "CODE"
-                        },
-
-                        /**
-                         * Event names published by the Checkbox
-                         *
-                         * @private
-                         * @property event
-                         * @type Object
-                         * @default null
-                         * @example
-                         *      {
-                         *          TOGGLE: "checkbox/toggle"
-                         *      }
-                         */
-                        event: {
-                            /**
-                            * Published whenever a Checkbox get toggled.
-                            *
-                            * @event TOGGLE
-                            * @param event {Object}
-                            * @param event.checkbox {Checkbox} Checkbox object that has been toggled
-                            * @param event.agency {String} Agency that toggled the Checkbox
-                            */
-                            TOGGLE: "checkbox/toggle"
-                        }
+                        id: null
                     },
                     options,
                     {
@@ -187,7 +147,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
                     .on("change", function () {
                         that._toggleLabel();
 
-                        that._emit(that.agency.USER);
+                        that._emit(Checkbox.agency.USER);
                     })
                     .on("focus", function () {
                         that.node.findInputLabel().addClass(that.cssClass.focus);
@@ -246,7 +206,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
             _emit: function (agency) {
                 //console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
 
-                this.emit(this.event.TOGGLE, {
+                this.emit(Checkbox.event.TOGGLE, {
                     agency: agency,
                     checkbox: this
                 });
@@ -261,15 +221,73 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang"],
             * @chainable
             */
             setState: function (state) {
-                // change state only if it's different from the current one
-                if (this.state !== state) {
-                    this.node.prop('checked', state);
-                    this._toggleLabel();
+                if (this.node && Util.containsInDom(this.node[0])) {
 
-                    this._emit(this.agency.CODE);
+                    // change state only if it's different from the current one
+                    if (this.state !== state) {
+                        this.node.prop('checked', state);
+                        this._toggleLabel();
+
+                        this._emit(Checkbox.agency.CODE);
+                    }
+                } else {
+
+                    this.state = Checkbox.state.INVALID;
                 }
 
                 return this;
             }
         });
+
+        lang.mixin(Checkbox,
+            {
+                state: {
+                    INVALID: "checkbox-invalid"
+                },
+
+                /**
+                * An object specifying possible agencies that can affect the Checkbox.
+                *
+                * @property agency
+                * @type Object
+                * @private
+                * @default
+                * @example
+                *      agency: {
+                *           USER: "USER",
+                *           CODE: "CODE"
+                *       }
+                */
+                agency: {
+                    USER: "USER",
+                    CODE: "CODE"
+                },
+
+                /**
+                 * Event names published by the Checkbox
+                 *
+                 * @private
+                 * @property event
+                 * @type Object
+                 * @default null
+                 * @example
+                 *      {
+                 *          TOGGLE: "checkbox/toggle"
+                 *      }
+                 */
+                event: {
+                    /**
+                    * Published whenever a Checkbox get toggled.
+                    *
+                    * @event TOGGLE
+                    * @param event {Object}
+                    * @param event.checkbox {Checkbox} Checkbox object that has been toggled
+                    * @param event.agency {String} Agency that toggled the Checkbox
+                    */
+                    TOGGLE: "checkbox/toggle"
+                }
+            }
+        );
+
+        return Checkbox;
     });
