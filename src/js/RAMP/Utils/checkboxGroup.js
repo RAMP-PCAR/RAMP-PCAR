@@ -184,7 +184,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                     }
                 );
 
-                this._addCheckbox(this.nodes);
+                this.addCheckbox(this.nodes);
 
                 masterCheckboxOptions = {
                     nodeIdAttr: this.nodeIdAttr,
@@ -216,7 +216,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 this._checkMaster();
             },
 
-            _addCheckbox: function (nodes) {
+            addCheckbox: function (nodes) {
                 var that = this,
                     checkbox,
                     checkboxOptions = {
@@ -224,24 +224,33 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         cssClass: this.cssClass,
                         label: this.label,
                         onChange: this.onChange
-                    };
+                    },
+                    cbIndex;
 
                 // Create individual Checkboxes
                 nodes.each(function (index, node) {
                     node = $(node);
-                    checkbox = new Checkbox(node, checkboxOptions);
-                    that.checkboxes.push(checkbox);
 
-                    checkbox.on(Checkbox.event.TOGGLE, function (evt) {
-                        // re-emit individual checkbox's toggle event as groups;
-                        //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        that.emit(CheckboxGroup.event.MEMBER_TOGGLE, evt);
-
-                        if (evt.agency === Checkbox.agency.USER) {
-                            that._checkMaster();
-                        }
+                    cbIndex = Array.indexOf(that.checkboxes, function (cb) {
+                        return cb.node.is(node);
                     });
+
+                    if (cbIndex === -1) {
+
+                        checkbox = new Checkbox(node, checkboxOptions);
+                        that.checkboxes.push(checkbox);
+
+                        checkbox.on(Checkbox.event.TOGGLE, function (evt) {
+                            // re-emit individual checkbox's toggle event as groups;
+                            //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                            that.emit(CheckboxGroup.event.MEMBER_TOGGLE, evt);
+
+                            if (evt.agency === Checkbox.agency.USER) {
+                                that._checkMaster();
+                            }
+                        });
+                    }
                 });
             },
 
