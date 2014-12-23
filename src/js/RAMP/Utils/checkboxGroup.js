@@ -55,8 +55,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
         CheckboxGroup = declare([Evented], {
             constructor: function (nodes, options) {
                 var that = this,
-                    checkbox,
-                    checkboxOptions;
+                    masterCheckboxOptions;
 
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
@@ -185,15 +184,48 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                     }
                 );
 
-                checkboxOptions = {
+                this._addCheckbox(this.nodes);
+
+                masterCheckboxOptions = {
                     nodeIdAttr: this.nodeIdAttr,
                     cssClass: this.cssClass,
                     label: this.label,
                     onChange: this.onChange
                 };
+                
+                if (this.master.node) {
+                    this.master.checkbox = new Checkbox(
+                        this.master.node,
+                        lang.mixin(masterCheckboxOptions, this.master)
+                    );
+
+                    this.master.checkbox.on(Checkbox.event.TOGGLE, function (evt) {
+                        // re-emit individual checkbox's toggle event as groups;
+                        console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                        that.emit(CheckboxGroup.event.MASTER_TOGGLE, evt);
+
+                        if (evt.agency === Checkbox.agency.USER) {
+                            that.setState(evt.checkbox.state);
+                        }
+                    });
+                } else {
+                    this.master = null;
+                }
+            },
+
+            _addCheckbox: function (nodes) {
+                var that = this,
+                    checkbox,
+                    checkboxOptions = {
+                        nodeIdAttr: this.nodeIdAttr,
+                        cssClass: this.cssClass,
+                        label: this.label,
+                        onChange: this.onChange
+                    };
 
                 // Create individual Checkboxes
-                this.nodes.each(function (index, node) {
+                nodes.each(function (index, node) {
                     node = $(node);
                     checkbox = new Checkbox(node, checkboxOptions);
                     that.checkboxes.push(checkbox);
@@ -210,25 +242,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                     });
                 });
 
-                if (this.master.node) {
-                    this.master.checkbox = new Checkbox(
-                        this.master.node,
-                        lang.mixin(checkboxOptions, this.master)
-                    );
-
-                    this.master.checkbox.on(Checkbox.event.TOGGLE, function (evt) {
-                        // re-emit individual checkbox's toggle event as groups;
-                        console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        that.emit(CheckboxGroup.event.MASTER_TOGGLE, evt);
-
-                        if (evt.agency === Checkbox.agency.USER) {
-                            that.setState(evt.checkbox.state);
-                        }
-                    });
-                } else {
-                    this.master = null;
-                }
             },
 
             /**
