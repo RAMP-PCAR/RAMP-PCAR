@@ -45,9 +45,9 @@
 
 define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
 
-        "utils/checkbox"],
+        "utils/checkbox", "utils/array"],
     function (Evented, declare, lang, dojoArray,
-            Checkbox) {
+            Checkbox, Array) {
         "use strict";
 
         return declare([Evented], {
@@ -238,16 +238,21 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                     checkbox = new Checkbox(node, checkboxOptions);
                     that.checkboxes.push(checkbox);
 
-                    checkbox.on(checkbox.event.TOGGLE, function (evt) {
+                    checkbox.on(Checkbox.event.TOGGLE, function (evt) {
                         // re-emit individual checkbox's toggle event as groups;
                         //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         that.emit(that.event.MEMBER_TOGGLE, evt);
 
-                        if (evt.agency === evt.checkbox.agency.USER) {
+                        if (evt.agency === Checkbox.agency.USER) {
                             that._checkMaster();
                         }
                     });
+
+                    //checkbox.on(checkbox.event.INVALID, function (evt) {
+                    //    // remove the checkbox from the collection if it's invalid
+                    //    that.removeCheckbox(evt.checkbox);
+                    //});
                 });
 
                 if (this.master.node) {
@@ -256,13 +261,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         lang.mixin(checkboxOptions, this.master)
                     );
 
-                    this.master.checkbox.on(this.master.checkbox.event.TOGGLE, function (evt) {
+                    this.master.checkbox.on(Checkbox.event.TOGGLE, function (evt) {
                         // re-emit individual checkbox's toggle event as groups;
                         console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         that.emit(that.event.MASTER_TOGGLE, evt);
 
-                        if (evt.agency === evt.checkbox.agency.USER) {
+                        if (evt.agency === Checkbox.agency.USER) {
                             that.setState(evt.checkbox.state);
                         }
                     });
@@ -280,7 +285,11 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
              * @private
              */
             _checkMaster: function () {
-                var allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
+                var allChecked;
+
+                this._purgeInvalid();
+
+                allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
                     //return checkbox.isChecked();
                     return checkbox.state;
                 });
@@ -310,6 +319,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         checkbox.setState(state);
                     });
                 } else {
+                    // use for loop because you can't break out of forEach loop
                     for (var i = 0; i < this.checkboxes.length; i++) {
                         checkbox = this.checkboxes[i];
                         if (checkbox.id === checkboxId) {
@@ -339,6 +349,18 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 });
                 this._checkMaster();
                 return this;
+            },
+
+            _purgeInvalid: function () {
+                var i,
+                    checkbox;
+
+                for (i = this.checkboxes.length - 1; i >= 0; i--) {
+                    checkbox = this.checkboxes[i];
+                    if (checkbox.state === Checkbox.state.INVALID) {
+                        Array.removeFromArray(this.checkboxes, i);
+                    }
+                }
             }
         });
     });
