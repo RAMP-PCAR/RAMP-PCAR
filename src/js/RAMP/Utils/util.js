@@ -1064,6 +1064,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     //not enough info provided or mismatch between wkid and wkt.
                     return false;
                 }
-            }			
+            },
+
+            containsInDom: function (el) {
+                return $.contains(document.documentElement, el);
+            }
         };
     });
