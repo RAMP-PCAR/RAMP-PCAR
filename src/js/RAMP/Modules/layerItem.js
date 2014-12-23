@@ -55,27 +55,6 @@ define([
             constructor: function (config, options) {
                 //var that = this;
 
-                this.stateMatrix = {};
-                this.stateMatrix[LayerItem.state.DEFAULT] = {
-                    controls: ["metadata", "settings"],
-                    toggles: ["eye", "box"]
-                };
-
-                this.stateMatrix[LayerItem.state.LOADING] = {
-                    controls: ["loading"],
-                    toggles: []
-                };
-
-                this.stateMatrix[LayerItem.state.ERROR] = {
-                    controls: ["error"],
-                    toggles: ["reload", "hide"]
-                };
-
-                this.stateMatrix[LayerItem.state.OFF_SCALE] = {
-                    controls: ["metadata", "settings"],
-                    toggles: ["zoom", "eye", "box"]
-                };
-                
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -100,7 +79,12 @@ define([
                     {
                         id: config.id,
 
-                        _config: config
+                        _config: config,
+
+                        stateMatrix: lang.mixin(
+                            lang.clone(LayerItem.stateMatrix),
+                            options.stateMatrix
+                        )
                     }
                 );
 
@@ -200,9 +184,31 @@ define([
                     ERROR: "layer-state-load-error",
                     INFO: "layer-state-info",
                     OFF_SCALE: "layer-state-off-scale"
-                }
+                },
+
+                stateMatrix: {}
             }
         );
+
+        LayerItem.stateMatrix[LayerItem.state.DEFAULT] = {
+            controls: ["metadata", "settings"],
+            toggles: ["eye", "box"]
+        };
+
+        LayerItem.stateMatrix[LayerItem.state.LOADING] = {
+            controls: ["loading"],
+            toggles: []
+        };
+
+        LayerItem.stateMatrix[LayerItem.state.ERROR] = {
+            controls: ["error"],
+            toggles: ["reload", "hide"]
+        };
+
+        LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
+            controls: ["metadata", "settings"],
+            toggles: ["zoom", "eye", "box"]
+        };
 
         ALL_STATES_CLASS =
             Object
