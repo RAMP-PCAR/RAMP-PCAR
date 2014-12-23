@@ -92,7 +92,9 @@ define([
                     _mainList,
                     layerList,
                     filterGlobalToggles,
-                    layerSettings;
+                    layerSettings,
+                        
+                    layerGroups = {};
 
                 layerSettings = (function () {
                     function initTransparencySliders() {
@@ -703,8 +705,7 @@ define([
 
                         var layers = RAMP.config.layers,
                             section,
-                            layerGroup,
-                            layerGroups = {};
+                            layerGroup;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -714,29 +715,31 @@ define([
                         _mainList = sectionNode.find("#layerList");
                         
                         UtilDict.forEachEntry(layers, function (key, value) {
+                            var layerType = GlobalStorage.layerType[key];
+
                             layerGroup = new LayerGroup(value, {
-                                layerType: GlobalStorage.layerType[key]
+                                layerType: layerType
                             });
 
-                            layerGroups[key] = layerGroup;
+                            layerGroups[layerType] = layerGroup;
                             _mainList.append(layerGroup.node);
 
                         });
 
-                        layerGroups.feature
-                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
+                        /*layerGroups.feature
+                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);*/
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
-                        window.setTimeout(
-                            function () {
+                        /*window.setTimeout(
+                            function () {*/
                                 /*sectionNode
                                     .empty().append(section)
                                     .removeClass("fadeOut")
                                     .addClass('animated fadeIn');*/
 
                                 // remove the animating css class
-                                window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
+                                //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
                                 filterGlobalToggles = $('#filterGlobalToggles');
 
@@ -755,9 +758,14 @@ define([
                                 // ui initialization completes
                                 console.log(EventManager.FilterManager.UI_COMPLETE);
                                 topic.publish(EventManager.FilterManager.UI_COMPLETE);
-                            },
+                            /*},
                             300
-                        );
+                        );*/
+                    },
+
+                    setState: function (layerId) {
+                        layerGroups.feature
+                            .setState(layerId, LayerItem.state.OFF_SCALE);
                     }
                 };
             }());
@@ -783,6 +791,7 @@ define([
                 visibleLayers.forEach(function (vl) {
                     if (vl.ramp) {
                         console.log(vl.ramp.type, vl.id);
+                        //ui.setState(vl.id);
                     }
                 });
 

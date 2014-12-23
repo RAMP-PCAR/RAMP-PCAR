@@ -110,7 +110,7 @@ define([
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
 
-                this.setState(this.state);
+                this.setState(this.state, null, true);
 
                 console.debug("-->", this.state, options);
             },
