@@ -886,9 +886,12 @@ define([
                         layerToggles.update();
                     },
 
-                    setState: function (layerId) {
-                        layerGroups.feature
-                            .setState(layerId, LayerItem.state.OFF_SCALE);
+                    setState: function (layerType, layerId) {
+                        UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
+                            layerGroup.setState(layerId, LayerItem.state.OFF_SCALE);
+                        });
+
+                        layerToggles.update();
                     }
                 };
             }());
@@ -914,7 +917,7 @@ define([
                 visibleLayers.forEach(function (vl) {
                     if (vl.ramp) {
                         console.log(vl.ramp.type, vl.id);
-                        //ui.setState(vl.id);
+                        ui.setState(vl.ramp.type, vl.id);
                     }
                 });
 
