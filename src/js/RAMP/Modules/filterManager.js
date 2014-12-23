@@ -91,7 +91,7 @@ define([
                 var sectionNode,
                     _mainList,
                     layerList,
-                    filterGlobalToggles,
+                    _filterGlobalToggles_to_remove,
 
                     layerSettings,
                     layerToggles,
@@ -187,7 +187,7 @@ define([
                                 },
 
                                 master: {
-                                    node: filterGlobalToggles.find(".checkbox-custom .box + input"),
+                                    node: globalToggleSection.find(".checkbox-custom .box + input"),
 
                                     nodeIdAttr: "id",
 
@@ -226,7 +226,7 @@ define([
                                 },
 
                                 master: {
-                                    node: filterGlobalToggles.find(".checkbox-custom .eye + input"),
+                                    node: globalToggleSection.find(".checkbox-custom .eye + input"),
 
                                     nodeIdAttr: "id",
 
@@ -316,7 +316,7 @@ define([
                             },
 
                             master: {
-                                node: filterGlobalToggles.find(".checkbox-custom .box + input"),
+                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .box + input"),
 
                                 nodeIdAttr: "id",/*
 
@@ -378,7 +378,7 @@ define([
                             },
 
                             master: {
-                                node: filterGlobalToggles.find(".checkbox-custom .eye + input"),
+                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .eye + input"),
 
                                 nodeIdAttr: "id",/*
 
@@ -426,7 +426,7 @@ define([
                 * @private
                 */
                 function initTooltips() {
-                    //Theme.tooltipster(filterGlobalToggles);
+                    //Theme.tooltipster(_filterGlobalToggles_to_remove);
                     Theme.tooltipster(layerList);
 
                     PopupManager.registerPopup(layerList, "hoverIntent",
@@ -454,7 +454,7 @@ define([
                 * @private
                 */
                 function adjustPaneWidth() {
-                    UtilMisc.adjustWidthForSrollbar($("#layerList"), [filterGlobalToggles]);
+                    UtilMisc.adjustWidthForSrollbar($("#layerList"), [layerToggles.globalToggleSection()]);
                 }
 
                 /**
@@ -464,7 +464,7 @@ define([
                 */
                 function setButtonEvents() {
                     /*
-                    var expandAllButton = filterGlobalToggles.find(".global-button"),
+                    var expandAllButton = _filterGlobalToggles_to_remove.find(".global-button"),
                         expandAllPopupHandle,
                         expandNodes = layerList.find(".layerList-container:hidden"),
                         expandButtons = layerList.find("button.legend-button");
@@ -678,12 +678,14 @@ define([
                 * @private
                 */
                 function initScrollListeners() {
+                    var globalToggleSection = layerToggles.globalToggleSection();
+
                     layerList.scroll(function () {
                         var currentScroll = layerList.scrollTop();
                         if (currentScroll === 0) {
-                            filterGlobalToggles.removeClass("scroll");
+                            globalToggleSection.removeClass("scroll");
                         } else {
-                            filterGlobalToggles.addClass("scroll");
+                            globalToggleSection.addClass("scroll");
                         }
                     });
                 }
@@ -854,7 +856,7 @@ define([
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
-                        filterGlobalToggles = $('#filterGlobalToggles');
+                        //_filterGlobalToggles_to_remove = $('#filterGlobalToggles');
 
                         setLayerReorderingEvents();
 
