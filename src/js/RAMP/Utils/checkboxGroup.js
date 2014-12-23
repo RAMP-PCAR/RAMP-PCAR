@@ -338,7 +338,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 for (i = this.checkboxes.length - 1; i >= 0; i--) {
                     checkbox = this.checkboxes[i];
                     if (checkbox.state === Checkbox.state.INVALID) {
-                        Array.removeFromArray(this.checkboxes, i);
+                        Array.remove(this.checkboxes, i);
                     }
                 }
             }

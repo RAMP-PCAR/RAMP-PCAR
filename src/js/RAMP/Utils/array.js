@@ -132,7 +132,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
                 return arr[index];
             },
 
-            removeFromArray: function (array, obj, predicate) {
+            remove: function (array, obj, predicate) {
                 var index;
 
                 if (!Util.isNumber(obj)) {

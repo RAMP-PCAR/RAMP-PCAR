@@ -135,15 +135,15 @@ define([
                     placeholderKey = "placeholder";
                                 
                 if (!layerConfig.settings.panelEnabled) {
-                    Array.removeFromArray(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
-                    Array.removeFromArray(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
                 }
 
                 if (!layerConfig.layerExtent) {
-                    Array.removeFromArray(stateMatrix[LayerItem.state.DEFAULT].toggles, boxKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, boxKey);
                     stateMatrix[LayerItem.state.DEFAULT].toggles.push(placeholderKey);
 
-                    Array.removeFromArray(stateMatrix[LayerItem.state.OFF_SCALE].toggles, boxKey);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, boxKey);
                     stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(placeholderKey);
                 }
 
