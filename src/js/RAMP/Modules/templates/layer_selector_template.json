@@ -222,7 +222,8 @@
             o.toggles.forEach(function(c) {
                 include('layer_toggle_' + c, {
                     id: o.id,
-                    nameKey: c    
+                    displayName: o.displayName,
+                    nameKey: c 
                 });
             });
          %}

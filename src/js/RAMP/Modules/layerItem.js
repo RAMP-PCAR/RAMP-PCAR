@@ -174,6 +174,7 @@ define([
                         this._template("layer_toggles",
                             {
                                 id: that.id,
+                                displayName: that._config.displayName,
                                 toggles: that.stateMatrix[that.state].toggles
                             }
                         )
