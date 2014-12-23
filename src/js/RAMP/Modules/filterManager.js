@@ -92,8 +92,10 @@ define([
                     _mainList,
                     layerList,
                     filterGlobalToggles,
+
                     layerSettings,
-                        
+                    layerToggles,
+
                     layerGroups = {};
 
                 layerSettings = (function () {
@@ -164,6 +166,26 @@ define([
                     };
                 }());
 
+                layerToggles = (function () {
+                    var globalToggleSection,
+                        boxCheckboxGroup,
+                        eyeCheckboxGroup;
+
+                    return {
+                        init: function () {
+                            globalToggleSection = sectionNode.find("#filterGlobalToggles");
+                        },
+
+                        addLayerItems: function (layerItems) {
+                            layerItems = boxCheckboxGroup = eyeCheckboxGroup;
+                        },
+
+                        globalToggleSection: function () {
+                            return globalToggleSection;
+                        }
+                    };
+                }());
+
                 /**
                 * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
                 * publishes event "filterManager/box-visibility-toggled" every time a layer status changed.
@@ -218,10 +240,11 @@ define([
                                 onChange: Theme.tooltipster*/
                             }
                         });
-                    boxCheckboxGroup.setEachState(function (checkbox) {
+
+                    /*boxCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
                         return layerConfig.settings.boundingBoxVisible;
-                    });
+                    });*/
 
                     boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
@@ -280,10 +303,10 @@ define([
                             }
                         });
 
-                    eyeCheckboxGroup.setEachState(function (checkbox) {
+                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
                         var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
                         return layerConfig.settings.visible;
-                    });
+                    });*/
 
                     eyeCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
@@ -309,7 +332,7 @@ define([
                 * @private
                 */
                 function initTooltips() {
-                    Theme.tooltipster(filterGlobalToggles);
+                    //Theme.tooltipster(filterGlobalToggles);
                     Theme.tooltipster(layerList);
 
                     PopupManager.registerPopup(layerList, "hoverIntent",
@@ -709,11 +732,11 @@ define([
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
-                        
+
                         sectionNode.empty().append(section);
 
                         _mainList = sectionNode.find("#layerList");
-                        
+
                         UtilDict.forEachEntry(layers, function (key, value) {
                             var layerType = GlobalStorage.layerType[key];
 
@@ -724,39 +747,39 @@ define([
                             layerGroups[layerType] = layerGroup;
                             _mainList.append(layerGroup.node);
                         });
-                        
+
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
                         /*window.setTimeout(
                             function () {*/
-                                /*sectionNode
-                                    .empty().append(section)
-                                    .removeClass("fadeOut")
-                                    .addClass('animated fadeIn');*/
+                        /*sectionNode
+                            .empty().append(section)
+                            .removeClass("fadeOut")
+                            .addClass('animated fadeIn');*/
 
-                                // remove the animating css class
-                                //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
+                        // remove the animating css class
+                        //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
-                                filterGlobalToggles = $('#filterGlobalToggles');
+                        filterGlobalToggles = $('#filterGlobalToggles');
 
-                                setLayerReorderingEvents();
+                        setLayerReorderingEvents();
 
-                                setCheckboxEvents();
+                        setCheckboxEvents();
 
-                                initTooltips();
+                        initTooltips();
 
-                                setButtonEvents();
+                        setButtonEvents();
 
-                                initScrollListeners();
+                        initScrollListeners();
 
-                                layerSettings.init();
+                        layerSettings.init();
 
-                                // ui initialization completes
-                                console.log(EventManager.FilterManager.UI_COMPLETE);
-                                topic.publish(EventManager.FilterManager.UI_COMPLETE);
-                            /*},
-                            300
-                        );*/
+                        // ui initialization completes
+                        console.log(EventManager.FilterManager.UI_COMPLETE);
+                        topic.publish(EventManager.FilterManager.UI_COMPLETE);
+                        /*},
+                        300
+                    );*/
 
                         layerGroups[GlobalStorage.layerType.feature]
                             .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
