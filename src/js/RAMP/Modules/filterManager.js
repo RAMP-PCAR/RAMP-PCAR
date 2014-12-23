@@ -171,9 +171,104 @@ define([
                         boxCheckboxGroup,
                         eyeCheckboxGroup;
 
+                    function createGroups() {
+                        boxCheckboxGroup = new CheckboxGroup(
+                            _mainList.find(".checkbox-custom .box + input"),
+                            {
+                                nodeIdAttr: layerIdField,
+
+                                label: {
+                                    check: i18n.t('filterManager.hideBounds'),
+                                    uncheck: i18n.t('filterManager.showBounds')
+                                },
+
+                                onChange: function () {
+                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                },
+
+                                master: {
+                                    node: filterGlobalToggles.find(".checkbox-custom .box + input"),
+
+                                    nodeIdAttr: "id",
+
+                                    label: {
+                                        check: i18n.t('filterManager.hideAllBounds'),
+                                        uncheck: i18n.t('filterManager.showAllBounds')
+                                    }
+                                }
+                            });
+                        
+                        boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                            topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
+                                id: evt.checkbox.id,
+                                state: evt.checkbox.state
+                            });
+                        });
+
+                        boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        });
+                        
+                        eyeCheckboxGroup = new CheckboxGroup(
+                            _mainList.find(".checkbox-custom .eye + input"),
+                            {
+                                nodeIdAttr: layerIdField,
+
+                                label: {
+                                    check: i18n.t('filterManager.hideFeatures'),
+                                    uncheck: i18n.t('filterManager.showFeatures')
+                                },
+
+                                onChange: function () {
+                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                },
+
+                                master: {
+                                    node: filterGlobalToggles.find(".checkbox-custom .eye + input"),
+
+                                    nodeIdAttr: "id",
+
+                                    label: {
+                                        check: i18n.t('filterManager.hideAllFeatures'),
+                                        uncheck: i18n.t('filterManager.showAllFeatures')
+                                    }
+                                }
+                            });
+
+                        eyeCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                            topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
+                                id: evt.checkbox.id,
+                                state: evt.checkbox.state
+                            });
+                        });
+
+                        eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        });
+                    }
+
+                    function initListeners() {
+                        topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
+                            boxCheckboxGroup.setState(evt.state, evt.layerId);
+                        });
+
+                        topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
+                            eyeCheckboxGroup.setState(evt.state, evt.layerId);
+                        });
+                    }
+
                     return {
                         init: function () {
                             globalToggleSection = sectionNode.find("#filterGlobalToggles");
+
+                            createGroups();
+                            initListeners();
+
+                            boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
                         },
 
                         addLayerItems: function (layerItems) {
@@ -764,7 +859,10 @@ define([
 
                         setLayerReorderingEvents();
 
-                        setCheckboxEvents();
+                        if (false) {
+                            setCheckboxEvents();
+                        }
+                        layerToggles.init();
 
                         initTooltips();
 
