@@ -197,7 +197,7 @@ define([
                                     }
                                 }
                             });
-                        
+
                         boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
@@ -210,7 +210,7 @@ define([
                         boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                         });
-                        
+
                         eyeCheckboxGroup = new CheckboxGroup(
                             _mainList.find(".checkbox-custom .eye + input"),
                             {
@@ -267,12 +267,11 @@ define([
 
                             createGroups();
                             initListeners();
-
-                            boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
                         },
 
-                        addLayerItems: function (layerItems) {
-                            layerItems = boxCheckboxGroup = eyeCheckboxGroup;
+                        update: function () {
+                            boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
+                            eyeCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .eye + input"));
                         },
 
                         globalToggleSection: function () {
@@ -882,6 +881,7 @@ define([
                         layerGroups[GlobalStorage.layerType.feature]
                             .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
 
+                        layerToggles.update();
                     },
 
                     setState: function (layerId) {
