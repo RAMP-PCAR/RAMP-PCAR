@@ -148,11 +148,6 @@
         {% } %}
     ",
 
-    "wms_layer_checkboxes": "
-        {% include('layer_visibility_toggle', o); %}
-        <div class='checkbox-custom placeholder' role='presentation'></div>
-    ",
-
     "wms_layer_renderer": "
         {% if (o.legendMimeType) { %}
             
@@ -230,6 +225,8 @@
     ",
 
     "layer_toggle_reload": " ",
+
+    "layer_toggle_placeholder": "<div class='checkbox-custom placeholder' role='presentation'></div>",
 
     "layer_toggle_zoom": "
         <div class='checkbox-custom'>
