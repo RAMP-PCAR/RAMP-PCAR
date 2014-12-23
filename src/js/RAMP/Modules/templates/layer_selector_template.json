@@ -222,7 +222,7 @@
             o.toggles.forEach(function(c) {
                 include('layer_toggle_' + c, {
                     id: o.id,
-                    displayName: o.displayName,
+                    config: o.config,
                     nameKey: c 
                 });
             });
@@ -247,8 +247,8 @@
     "layer_toggle_generic": "
         <div class='checkbox-custom'>
             <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.displayName %}'>
-                <span class='wb-invisible'>{%= o.displayName %}</span>
+                data-label-name='{%= o.config.displayName %}'>
+                <span class='wb-invisible'>{%= o.config.displayName %}</span>
             </label>
             <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
                 class='layerList_legend' type='checkbox'></input>
@@ -258,8 +258,8 @@
     "layer_visibility_toggle": "
          <div class='checkbox-custom'>
             <label for='visibility_toggle_{%= o.id %}' class='form-checkbox _tooltip eye' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.displayName %}'>
-                <span class='wb-invisible'>{%= o.displayName %}</span>
+                data-label-name='{%= o.config.displayName %}'>
+                <span class='wb-invisible'>{%= o.config.displayName %}</span>
             </label>
             <input id='{%= o.id %}_visibility_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
                 class='layerList_legend' type='checkbox'></input>
