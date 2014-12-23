@@ -67,7 +67,7 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             * @method indexOf
             * @static
             * @param {Array} arr Array to be searched
-            * @param {Function} predicate predicate a function that takes one argument and returns true if the
+            * @param {Function} predicate a function that takes one argument and returns true if the
             * @param {Object} scope ???
             * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element is found
             */
@@ -129,6 +129,12 @@ define(["dojo/_base/array", "dojo/_base/lang"],
             binaryFind: function (arr, compareFcn) {
                 var index = this.binaryIndexOf(arr, compareFcn);
                 return arr[index];
+            },
+
+            removeFromArray: function (array, index) {
+                if (index !== -1) {
+                    array.splice(index, 1);
+                }
             }
         };
     });
