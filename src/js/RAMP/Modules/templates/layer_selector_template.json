@@ -240,39 +240,29 @@
         </div>
     ",
 
-    "layer_toggle_eye": "{% include('layer_toggle_generic', o); %}",
+    "layer_toggle_eye": "{% include('layer_toggle_generic', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                checked: o.config.settings.visible,
+                                nameKey: o.nameKey
+                            }); %}
+    ",
 
-    "layer_toggle_box": "{% include('layer_toggle_generic', o); %}",
+    "layer_toggle_box": "{% include('layer_toggle_generic', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                checked: o.config.settings.boundingBoxVisible,
+                                nameKey: o.nameKey
+                            }); %}
+    ",
 
     "layer_toggle_generic": "
         <div class='checkbox-custom'>
             <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.config.displayName %}'>
-                <span class='wb-invisible'>{%= o.config.displayName %}</span>
-            </label>
-            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
-                class='layerList_legend' type='checkbox'></input>
-        </div>
-    ",
-
-    "layer_visibility_toggle": "
-         <div class='checkbox-custom'>
-            <label for='visibility_toggle_{%= o.id %}' class='form-checkbox _tooltip eye' data-layer-id='{%= o.id %}' 
-                data-label-name='{%= o.config.displayName %}'>
-                <span class='wb-invisible'>{%= o.config.displayName %}</span>
-            </label>
-            <input id='{%= o.id %}_visibility_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
-                class='layerList_legend' type='checkbox'></input>
-        </div>
-    ",
-
-    "layer_bounding_box_toggle": "
-         <div class='checkbox-custom'>
-            <label for='bounding_box_toggle_{%= o.id %}' class='form-checkbox _tooltip box' data-layer-id='{%= o.id %}' 
                 data-label-name='{%= o.displayName %}'>
                 <span class='wb-invisible'>{%= o.displayName %}</span>
             </label>
-            <input id='{%= o.id %}_bounding_box_toggle' value='{%= o.id %}' data-layer-id='{%= o.id %}' 
+            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
                 class='layerList_legend' type='checkbox'></input>
         </div>
     ",
