@@ -50,7 +50,9 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
             Checkbox, Array) {
         "use strict";
 
-        return declare([Evented], {
+        var CheckboxGroup;
+
+        CheckboxGroup = declare([Evented], {
             constructor: function (nodes, options) {
                 var that = this,
                     checkbox,
@@ -175,48 +177,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                             },
 
                             onChange: function () { }
-                        },
-
-                        /**
-                        * Event names published by the Checkbox
-                        *
-                        * @private
-                        * @property event
-                        * @type Object
-                        * @default null
-                        * @example
-                        *      {
-                        *          MEMBER_TOGGLE: "checkbox/toggled",
-                        *          MASTER_TOGGLE: "checkbox/toggled"
-                        *      }
-                        */
-                        event: {
-                            /**
-                            * This event is not published by CheckboxGroup. __Ignore this.__
-                            *
-                            * @event TOGGLE
-                            * @private
-                            */
-
-                            /**
-                            * Published whenever a Checkbox get toggled.
-                            *
-                            * @event MEMBER_TOGGLE
-                            * @param event {Object}
-                            * @param event.checkbox {Checkbox} Checkbox object that has been toggled
-                            * @param event.agency {String} Agency that toggled the Checkbox
-                            */
-                            MEMBER_TOGGLE: "checkbox/member-toggle",
-
-                            /**
-                            * Published whenever the master Checkbox get toggled.
-                            *
-                            * @event MASTER_TOGGLE
-                            * @param event {Object}
-                            * @param event.checkbox {Checkbox} master Checkbox object that has been toggled
-                            * @param event.agency {String} Agency that toggled the Checkbox
-                            */
-                            MASTER_TOGGLE: "checkbox/master-toggle"
                         }
                     },
                     options,
@@ -242,17 +202,12 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         // re-emit individual checkbox's toggle event as groups;
                         //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
-                        that.emit(that.event.MEMBER_TOGGLE, evt);
+                        that.emit(CheckboxGroup.event.MEMBER_TOGGLE, evt);
 
                         if (evt.agency === Checkbox.agency.USER) {
                             that._checkMaster();
                         }
                     });
-
-                    //checkbox.on(checkbox.event.INVALID, function (evt) {
-                    //    // remove the checkbox from the collection if it's invalid
-                    //    that.removeCheckbox(evt.checkbox);
-                    //});
                 });
 
                 if (this.master.node) {
@@ -265,7 +220,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         // re-emit individual checkbox's toggle event as groups;
                         console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
-                        that.emit(that.event.MASTER_TOGGLE, evt);
+                        that.emit(CheckboxGroup.event.MASTER_TOGGLE, evt);
 
                         if (evt.agency === Checkbox.agency.USER) {
                             that.setState(evt.checkbox.state);
@@ -363,4 +318,52 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                 }
             }
         });
+
+        lang.mixin(CheckboxGroup,
+            {
+                /**
+                * Event names published by the Checkbox
+                *
+                * @private
+                * @property event
+                * @type Object
+                * @default null
+                * @example
+                *      {
+                *          MEMBER_TOGGLE: "checkbox/toggled",
+                *          MASTER_TOGGLE: "checkbox/toggled"
+                *      }
+                */
+                event: {
+                    /**
+                    * This event is not published by CheckboxGroup. __Ignore this.__
+                    *
+                    * @event TOGGLE
+                    * @private
+                    */
+
+                    /**
+                    * Published whenever a Checkbox get toggled.
+                    *
+                    * @event MEMBER_TOGGLE
+                    * @param event {Object}
+                    * @param event.checkbox {Checkbox} Checkbox object that has been toggled
+                    * @param event.agency {String} Agency that toggled the Checkbox
+                    */
+                    MEMBER_TOGGLE: "checkbox/member-toggle",
+
+                    /**
+                    * Published whenever the master Checkbox get toggled.
+                    *
+                    * @event MASTER_TOGGLE
+                    * @param event {Object}
+                    * @param event.checkbox {Checkbox} master Checkbox object that has been toggled
+                    * @param event.agency {String} Agency that toggled the Checkbox
+                    */
+                    MASTER_TOGGLE: "checkbox/master-toggle"
+                }
+            }
+        );
+
+        return CheckboxGroup;
     });

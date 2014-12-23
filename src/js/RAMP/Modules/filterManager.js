@@ -1,4 +1,4 @@
-﻿/*global define, window, tmpl, i18n, console, $, RAMP */
+﻿/*global define, tmpl, i18n, console, $, RAMP */
 
 /**
 * FilterManager submodule
@@ -223,7 +223,7 @@ define([
                         return layerConfig.settings.boundingBoxVisible;
                     });
 
-                    boxCheckboxGroup.on(boxCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                    boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
@@ -232,7 +232,7 @@ define([
                         });
                     });
 
-                    boxCheckboxGroup.on(boxCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                    boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
@@ -285,7 +285,7 @@ define([
                         return layerConfig.settings.visible;
                     });
 
-                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                    eyeCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
                         topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
@@ -294,7 +294,7 @@ define([
                         });
                     });
 
-                    eyeCheckboxGroup.on(eyeCheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                    eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                         console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                     });
 
@@ -723,12 +723,8 @@ define([
 
                             layerGroups[layerType] = layerGroup;
                             _mainList.append(layerGroup.node);
-
                         });
-
-                        /*layerGroups.feature
-                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);*/
-
+                        
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
                         /*window.setTimeout(
@@ -761,6 +757,10 @@ define([
                             /*},
                             300
                         );*/
+
+                        layerGroups[GlobalStorage.layerType.feature]
+                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
+
                     },
 
                     setState: function (layerId) {
