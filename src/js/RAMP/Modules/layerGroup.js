@@ -106,8 +106,10 @@ define([
 
             addLayer: function (layer, options) {
                 var layerItem,
-                    layerItemOptions = {};
-
+                    layerItemOptions = {
+                        stateMatrix: this._constructStateMatrix(layer)
+                    };
+                
                 lang.mixin(layerItemOptions,
                     {
                         state: this.layerState
@@ -124,6 +126,28 @@ define([
                 this._listNode.append(layerItem.node);
 
                 //layerItem.setState(LayerItem.state.ERROR);
+            },
+
+            _constructStateMatrix: function (layerConfig) {
+                var stateMatrix = lang.clone(LayerItem.stateMatrix),
+                    settingsKey = "settings",
+                    boxKey = "box",
+                    placeholderKey = "placeholder";
+                                
+                if (!layerConfig.settings.panelEnabled) {
+                    Array.removeFromArray(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
+                    Array.removeFromArray(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
+                }
+
+                if (!layerConfig.layerExtent) {
+                    Array.removeFromArray(stateMatrix[LayerItem.state.DEFAULT].toggles, boxKey);
+                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(placeholderKey);
+
+                    Array.removeFromArray(stateMatrix[LayerItem.state.OFF_SCALE].toggles, boxKey);
+                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(placeholderKey);
+                }
+
+                return stateMatrix;
             },
 
             setState: function (layerId, state) {
