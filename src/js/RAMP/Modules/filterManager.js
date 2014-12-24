@@ -264,12 +264,16 @@ define([
                     return {
                         init: function () {
                             globalToggleSection = sectionNode.find("#filterGlobalToggles");
+                            Theme.tooltipster(_mainList);
 
                             createGroups();
                             initListeners();
+
                         },
 
                         update: function () {
+                            Theme.tooltipster(_mainList);
+
                             boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
                             eyeCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .eye + input"));
                         },
