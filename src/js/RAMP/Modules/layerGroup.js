@@ -150,7 +150,7 @@ define([
                 return stateMatrix;
             },
 
-            setState: function (layerId, state) {
+            setState: function (layerId, state, options) {
                 var layerItem;
 
                 layerItem = Array.find(this.layerItems, function (li) {
@@ -158,7 +158,7 @@ define([
                 });
 
                 if (layerItem) {
-                    layerItem.setState(state);
+                    layerItem.setState(state, options);
                 }
             },
 

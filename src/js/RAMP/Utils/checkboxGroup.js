@@ -250,6 +250,9 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                                 that._checkMaster();
                             }
                         });
+                    } else {
+                        // reset the checkbox, just in case
+                        that.checkboxes[cbIndex].reset();
                     }
                 });
             },
@@ -265,10 +268,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
             _checkMaster: function () {
                 var allChecked;
 
-                this._purgeInvalid();
-
                 allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
-                    //return checkbox.isChecked();
+                    // "INVALID" state is parsed as "true" so it's counted in, but is ignored otherwise
                     return checkbox
                             .validate()
                             .state;

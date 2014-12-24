@@ -40,8 +40,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
 
         Checkbox = declare([Evented], {
             constructor: function (node, options) {
-                var that = this;
-
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -143,6 +141,17 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                     }
                 );
 
+                this._initListeners();
+
+                this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
+                this.labelNode = this.node.findInputLabel();
+
+                this._toggleLabel();
+            },
+
+            _initListeners: function () {
+                var that = this;
+
                 this.node
                     .on("change", function () {
                         that._toggleLabel();
@@ -155,11 +164,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                     .on("focusout", function () {
                         that.node.findInputLabel().removeClass(that.cssClass.focus);
                     });
-
-                this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
-                this.labelNode = this.node.findInputLabel();
-
-                this._toggleLabel();
             },
 
             /*
@@ -240,11 +244,17 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
             validate: function () {
                 if (!this.node || !Util.containsInDom(this.node[0])) {
                     this.state = Checkbox.state.INVALID;
-                } else {
-                    this.state = this.node.is(':checked');
+                } else if (this.state === Checkbox.state.INVALID) {
+                    this.reset();
                 }
 
                 return this;
+            },
+
+            reset: function () {
+                this.node.off("change", "focus", "focusout");
+                this._initListeners();
+                this._toggleLabel();
             }
         });
 
