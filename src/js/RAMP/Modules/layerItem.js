@@ -97,37 +97,29 @@ define([
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
 
-                this._generateParts_();
+                this._generateParts("controls", "layer_control_", this._controlStore);
+                this._generateParts("toggles", "layer_toggle_", this._toggleStore);
 
                 this.setState(this.state, null, true);
 
                 console.debug("-->", this.state, options);
             },
 
-            _generateParts_: function () {
-                var controlKeys = [],
-                    toggleKeys = [],
-                    stateKey;
+            _generateParts: function (partType, templateKey, partStore) {
+                var that = this,
+
+                    stateKey,
+                    partKeys = [],
+                    control;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
                     .forEach(function (s) {
                         stateKey = LayerItem.state[s];
-                        controlKeys = controlKeys.concat(LayerItem.stateMatrix[stateKey].controls);
-                        toggleKeys = toggleKeys.concat(LayerItem.stateMatrix[stateKey].toggles);
+                        partKeys = partKeys.concat(LayerItem.stateMatrix[stateKey][partType]);
                     });
 
-                controlKeys = Array.unique(controlKeys);
-                toggleKeys = Array.unique(toggleKeys);
-
-                this._generateParts(controlKeys, "layer_control_", this._controlStore);
-                this._generateParts(toggleKeys, "layer_toggle_", this._toggleStore);
-
-            },
-
-            _generateParts: function (partKeys, templateKey, partStore) {
-                var that = this,
-                    control;
+                partKeys = Array.unique(partKeys);
 
                 partKeys.forEach(function (pKey) {
                     control = $(that._template(templateKey + pKey,
