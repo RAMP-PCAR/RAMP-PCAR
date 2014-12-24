@@ -39,12 +39,12 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/tmplUtil"
+    "utils/tmplHelper", "utils/tmplUtil", "utils/array"
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, TmplUtil
+        TmplHelper, TmplUtil, Array
     ) {
         "use strict";
 
@@ -68,6 +68,9 @@ define([
                         _displayNameNode: null,
                         _controlsNode: null,
                         _togglesNode: null,
+
+                        _controlStore: {},
+                        _toggleStore: {},
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
@@ -94,14 +97,56 @@ define([
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
 
+                this._generateParts_();
+
                 this.setState(this.state, null, true);
 
                 console.debug("-->", this.state, options);
             },
 
+            _generateParts_: function () {
+                var controlKeys = [],
+                    toggleKeys = [],
+                    stateKey;
+
+                Object
+                    .getOwnPropertyNames(LayerItem.state)
+                    .forEach(function (s) {
+                        stateKey = LayerItem.state[s];
+                        controlKeys = controlKeys.concat(LayerItem.stateMatrix[stateKey].controls);
+                        toggleKeys = toggleKeys.concat(LayerItem.stateMatrix[stateKey].toggles);
+                    });
+
+                controlKeys = Array.unique(controlKeys);
+                toggleKeys = Array.unique(toggleKeys);
+
+                this._generateParts(controlKeys, "layer_control_", this._controlStore);
+                this._generateParts(toggleKeys, "layer_toggle_", this._toggleStore);
+
+            },
+
+            _generateParts: function (partKeys, templateKey, partStore) {
+                var that = this,
+                    control;
+
+                partKeys.forEach(function (pKey) {
+                    control = $(that._template(templateKey + pKey,
+                        {
+                            id: that.id,
+                            config: that._config,
+                            nameKey: pKey
+                        }
+                    ));
+
+                    partStore[pKey] = (control);
+                });
+            },
+
             setState: function (state, options, force) {
                 if (this.state !== state || force) {
                     this.state = state;
+
+                    lang.mixin(this, options);
 
                     // set state class on the layerItem root node
                     this.node
@@ -182,7 +227,6 @@ define([
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     ERROR: "layer-state-load-error",
-                    INFO: "layer-state-info",
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
