@@ -692,7 +692,7 @@ define([
 
         return {
             zoomToLayerScale: function (layerId) {
-                var layer = map.getLayer("layer_dd1m3"),
+                var layer = map.getLayer(layerId),
                     lods = map._params.lods,
                     lod,
                     i;

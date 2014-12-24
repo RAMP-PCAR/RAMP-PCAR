@@ -672,6 +672,20 @@ define([
                         md(this);
                     });
 
+                    PopupManager.registerPopup(_mainList, "click",
+                        function (d) {
+                            var layerId = this.target.data("layer-id");
+
+                            RampMap.zoomToLayerScale(layerId);
+
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".button-none.zoom",
+                            activeClass: "button-pressed"
+                        }
+                    );
+
                     // adjust panel width on load
                     adjustPaneWidth();
                 }
