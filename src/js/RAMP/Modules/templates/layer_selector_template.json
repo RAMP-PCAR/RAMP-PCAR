@@ -205,6 +205,10 @@
 
     "layer_control_settings": "{% include('layer_control_generic', o); %}",
 
+    "layer_control_loading": " ",
+
+    "layer_control_error": " ",
+
     "layer_control_generic": "
         <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 
             data-layer-id='{%= o.id %}'>
@@ -225,6 +229,8 @@
     ",
 
     "layer_toggle_reload": " ",
+
+    "layer_toggle_hide": " ",
 
     "layer_toggle_placeholder": "<div class='checkbox-custom placeholder' role='presentation'></div>",
 
