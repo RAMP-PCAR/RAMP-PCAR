@@ -138,15 +138,15 @@ define([
                 if (this.state !== state || force) {
                     this.state = state;
 
-                    lang.mixin(this, options);
+                    //lang.mixin(this, options);
 
                     // set state class on the layerItem root node
                     this.node
                         .removeClass(ALL_STATES_CLASS)
                         .addClass(this.state);
 
-                    this._setControlsGroup();
-                    this._setTogglesGroup();
+                    this._setParts("controls", this._controlStore, this._controlsNode);
+                    this._setParts("toggles", this._toggleStore, this._togglesNode);
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
@@ -171,35 +171,16 @@ define([
                 }
             },
 
-            _setControlsGroup: function () {
-                var that = this;
+            _setParts: function (partType, partStore, target) {
+                var controls = [];
 
-                this._controlsNode
+                this.stateMatrix[this.state][partType].forEach(function (pKey) {
+                    controls.push(partStore[pKey]);
+                });
+
+                target
                     .empty()
-                    .append(
-                        this._template("layer_controls",
-                            {
-                                id: that.id,
-                                controls: that.stateMatrix[that.state].controls
-                            }
-                        )
-                );
-            },
-
-            _setTogglesGroup: function () {
-                var that = this;
-
-                this._togglesNode
-                    .empty()
-                    .append(
-                        this._template("layer_toggles",
-                            {
-                                id: that.id,
-                                config: this._config,
-                                toggles: that.stateMatrix[that.state].toggles
-                            }
-                        )
-                );
+                    .append(controls);
             },
 
             _template: function (key, data) {
