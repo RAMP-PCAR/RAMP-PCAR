@@ -531,6 +531,31 @@
             margin-left: 2px;
             line-height: 1.5em;
         }
+
+        .layer-notices {
+            position: absolute;
+            left: 9px;
+            top: -11px;
+
+            .fa {
+                line-height: 24px;
+            }
+
+            .layer-notice {
+                width: 24px;
+                height: 24px;
+            }
+
+            .scale {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-info-circle {
+                    color: @accent-color;
+                }
+            }
+        }
     }
 
     .layer-checkboxes {
@@ -542,7 +567,6 @@
             width: 21px;
             padding: 0;
             vertical-align: bottom;
-
             color: @light-grey-color;
 
             &:hover {

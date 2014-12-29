@@ -17,6 +17,8 @@
                         <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
                         <div class='layer-details'>
 
+                            <div class='layer-notices'></div>
+
                             {% include('feature_' + o.symbology.type + '_layer_image', o); %}
                             
                             <div class='layer-controls'>
@@ -268,6 +270,14 @@
             </label>
             <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
                 class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_notice_scale": "
+        <div class='layer-notice scale _tooltip fa-stack' title='{%= i18n.t('filterManager.zoomToData') %}'>
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-info-circle fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= i18n.t('filterManager.zoomToData') %}</span>
         </div>
     ",
 
