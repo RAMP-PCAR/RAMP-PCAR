@@ -374,10 +374,35 @@ define([
                 setNewUrl(link);
             }
 
+            //update lang href with current bookmark url
+            updateLangHref(link);
+
             //trigger event indicating bookmark is complete.  pass bookmark as arg
             topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
                 link: link
             });
+        }
+
+        /**
+      * update Href on language button based on link provided from bookmarklink
+      *
+      * @method updateHref
+      * @param {String} link bookmark url
+      * @private
+      */
+        function updateLangHref(link) {
+            var pos = link.indexOf('?');
+            if (pos <= 0) {
+                return;
+            }
+
+            var paras = link.split('?')[1],
+                element = $("#wb-lng").find("li a"),
+                url = element.attr("href");
+
+            url = url.split('?')[0] + "?" + paras;
+
+            element.attr("href", url);
         }
 
         /**
