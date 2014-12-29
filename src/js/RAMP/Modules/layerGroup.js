@@ -151,15 +151,21 @@ define([
             },
 
             setState: function (layerId, state, options) {
+                var layerItem = this.getLayerItem(layerId);
+
+                if (layerItem) {
+                    layerItem.setState(state, options);
+                }
+            },
+
+            getLayerItem: function(layerId) {
                 var layerItem;
 
                 layerItem = Array.find(this.layerItems, function (li) {
                     return li.id === layerId;
                 });
 
-                if (layerItem) {
-                    layerItem.setState(state, options);
-                }
+                return layerItem;
             },
 
             _template: function (key, data) {
