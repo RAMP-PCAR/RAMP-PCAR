@@ -282,6 +282,8 @@
         "hideBounds": "Hide Bounds of {0}",
         "hideAllBounds": "Hide All Bounds",
 
+        "noticeOffScale": "No data visible at this zoom level",
+
         "zoomToData": "Zoom to data",
 
         "metadata": "Metadata",

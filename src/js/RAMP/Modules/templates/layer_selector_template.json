@@ -274,10 +274,10 @@
     ",
 
     "layer_notice_scale": "
-        <div class='layer-notice scale _tooltip fa-stack' title='{%= i18n.t('filterManager.zoomToData') %}'>
+        <div class='layer-notice scale _tooltip fa-stack' title='{%= i18n.t('filterManager.noticeOffScale') %}'>
             <i class='fa fa-circle fa-stack-1x'></i>
             <i class='fa fa-info-circle fa-stack-1x'></i>
-            <span class='wb-invisible'>{%= i18n.t('filterManager.zoomToData') %}</span>
+            <span class='wb-invisible'>{%= i18n.t('filterManager.noticeOffScale') %}</span>
         </div>
     ",
 
