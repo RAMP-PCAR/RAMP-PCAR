@@ -474,12 +474,14 @@
                     position: relative;
                     //outline: none;
                     border: 0;
-                    padding: 1px 3px;
-                    margin-right: 3px;
-                    margin-left: 2px;
+                    padding: 1px 2px;
+                    margin-right: 4px;
+                    margin-left: 3px;
                     top: -1px;
 
-                    &.button-pressed {
+                    &.button-pressed,
+                    &:hover,
+                    &:focus {
                         &:before {
                             content: "";
                             position: absolute;
