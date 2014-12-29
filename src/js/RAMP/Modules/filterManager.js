@@ -879,22 +879,10 @@ define([
                 };
             }());
 
-        /**
-        * Initiates a listener to handle tab deselected event
-        *
-        * @method initListeners
-        * @private
-        */
-        function initListeners() {
+        function setLayerOffScaleStates() {
             var visibleLayers,
                 allLayers,
                 invisibleLayers;
-
-            topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
-                if (arg.tabName === "filterManager") {
-                    topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
-                }
-            });
 
             function filterLayerIds(layers) {
                 layers = layers
@@ -910,27 +898,42 @@ define([
                 return layers;
             }
 
-            topic.subscribe(EventManager.Map.ZOOM_END, function () {
-                visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
-                allLayers = RampMap.getMap()._layers;
-                invisibleLayers = [];
+            visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
+            allLayers = RampMap.getMap()._layers;
+            invisibleLayers = [];
 
-                UtilDict.forEachEntry(allLayers, function (key, value) {
-                    var index = UtilArray.indexOf(visibleLayers, function (vl) {
-                        return key === vl.id;
-                    });
-
-                    if (index === -1) {
-                        invisibleLayers.push(value);
-                    }
+            UtilDict.forEachEntry(allLayers, function (key, value) {
+                var index = UtilArray.indexOf(visibleLayers, function (vl) {
+                    return key === vl.id;
                 });
 
-                visibleLayers = filterLayerIds(visibleLayers);
-                ui.setLayerItemState(visibleLayers, LayerItem.state.DEFAULT, true);
+                if (index === -1) {
+                    invisibleLayers.push(value);
+                }
+            });
 
-                invisibleLayers = filterLayerIds(invisibleLayers);
-                ui.setLayerItemState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
-                //console.log(RampMap.getMap().getLayersVisibleAtScale());
+            visibleLayers = filterLayerIds(visibleLayers);
+            ui.setLayerItemState(visibleLayers, LayerItem.state.DEFAULT, true);
+
+            invisibleLayers = filterLayerIds(invisibleLayers);
+            ui.setLayerItemState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+        }
+
+        /**
+        * Initiates a listener to handle tab deselected event
+        *
+        * @method initListeners
+        * @private
+        */
+        function initListeners() {
+            topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
+                if (arg.tabName === "filterManager") {
+                    topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
+                }
+            });
+
+            topic.subscribe(EventManager.Map.ZOOM_END, function () {
+                setLayerOffScaleStates();
             });
         }
 
@@ -947,6 +950,8 @@ define([
                 initListeners();
 
                 ui.init();
+
+                setLayerOffScaleStates();
             },
             /**
             * Queries all map points on a given feature layer and returns their attributes
