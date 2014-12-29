@@ -109,7 +109,7 @@ define([
                     layerItemOptions = {
                         stateMatrix: this._constructStateMatrix(layer)
                     };
-                
+
                 lang.mixin(layerItemOptions,
                     {
                         state: this.layerState
@@ -133,7 +133,7 @@ define([
                     settingsKey = "settings",
                     boxKey = "box",
                     placeholderKey = "placeholder";
-                                
+
                 if (!layerConfig.settings.panelEnabled) {
                     Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
                     Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
@@ -158,7 +158,7 @@ define([
                 }
             },
 
-            getLayerItem: function(layerId) {
+            getLayerItem: function (layerId) {
                 var layerItem;
 
                 layerItem = Array.find(this.layerItems, function (li) {
