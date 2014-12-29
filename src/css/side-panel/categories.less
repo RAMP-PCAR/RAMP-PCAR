@@ -327,7 +327,6 @@
 
                         .layer-renderer-image-box {
                             .row-image-box;
-                            
                             //border: none;
                             float: none;
                             width: 24px;
@@ -470,7 +469,6 @@
 
                 button.button-none {
                     .link-button2;
-
                     position: relative;
                     //outline: none;
                     border: 0;
@@ -499,7 +497,7 @@
                         right: -4px;
                         top: 2px;
                         bottom: 2px;
-                    }                    
+                    }
 
                     &:last-child {
                         margin-right: 0;
@@ -537,5 +535,24 @@
 
     .layer-checkboxes {
         .right-align-checkboxes;
+
+        .checkbox-button button {
+            border: 0;
+            height: 21px;
+            width: 21px;
+            padding: 0;
+            vertical-align: bottom;
+
+            color: @light-light-grey-color;
+
+            &:hover {
+                color: #000;
+            }
+
+            &:active {
+                .box-shadow (none);
+                text-shadow: none;
+            }
+        }
     }
 }

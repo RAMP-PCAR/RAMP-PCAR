@@ -247,7 +247,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 } else if (this.state === Checkbox.state.INVALID) {
                     this.reset();
                 }
-
+                
                 return this;
             },
 
