@@ -467,59 +467,6 @@ define([
                 * @private
                 */
                 function setButtonEvents() {
-                    /*
-                    var expandAllButton = _filterGlobalToggles_to_remove.find(".global-button"),
-                        expandAllPopupHandle,
-                        expandNodes = layerList.find(".layerList-container:hidden"),
-                        expandButtons = layerList.find("button.legend-button");
-                                        
-                    function adjustExpandAllButtonState() {
-                        var count = expandNodes.length,
-                            hiddenCount = expandNodes.filter(":hidden").length;
-
-                        if (hiddenCount === 0) {
-                            expandAllPopupHandle.open();
-                        } else if (hiddenCount === count) {
-                            expandAllPopupHandle.close();
-                        }
-                    }
-
-                    expandButtons.map(function () {
-                        var handle = $(this),
-                            target = handle.parents("fieldset").find("> .layerList-container");
-
-                        PopupManager.registerPopup(handle, "state-expanded", target, "click",
-                            function (d) {
-                                target.slideToggle(400, function () {
-                                    adjustPaneWidth();
-                                    adjustExpandAllButtonState();
-                                    d.resolve();
-                                });
-                            },
-                            "same"
-                        );
-                    });
-
-                    expandAllPopupHandle = PopupManager.registerPopup(expandAllButton, "state-expanded", expandNodes, "click",
-                        function (d) {
-                            expandNodes.slideDown(400, function () {
-                                expandButtons.addClass("state-expanded");
-
-                                adjustPaneWidth();
-                                d.resolve();
-                            });
-                        },
-                        function (d) {
-                            expandNodes.slideUp(400, function () {
-                                expandButtons.removeClass("state-expanded");
-                                $("#tabs1_1-parent").scrollTop(0);
-
-                                adjustPaneWidth();
-                                d.resolve();
-                            });
-                        });
-                    */
-                    
                     PopupManager.registerPopup(_mainList, "hover, focus",
                         function (d) {
                             d.resolve();
@@ -896,18 +843,31 @@ define([
                         300
                     );*/
 
-                        layerGroups[GlobalStorage.layerType.feature]
+                        /*layerGroups[GlobalStorage.layerType.feature]
                             .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
 
-                        layerToggles.update();
+                        layerToggles.update();*/
                     },
 
-                    setState: function (layerType, layerId) {
+                    getLayerItem: function (layerId) {
+                        var layerItem = null;
+
                         UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
-                            layerGroup.setState(layerId, LayerItem.state.OFF_SCALE);
+                            if (!layerItem) {
+                                layerItem = layerGroup.getLayerItem(layerId);
+                            }
                         });
 
-                        layerToggles.update();
+                        return layerItem;
+                    },
+
+                    setLayerItemState: function (layerId, layerState, updateToggles) {
+                        var layerItem;
+
+                        layerItem = this.getLayerItem(layerId);
+                        if (layerItem && layerItem.setState(layerState) && updateToggles) {
+                            layerToggles.update();
+                        }
                     }
                 };
             }());
@@ -919,7 +879,9 @@ define([
         * @private
         */
         function initListeners() {
-            var visibleLayers;
+            var visibleLayers,
+                allLayers,
+                invisibleLayers;
 
             topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
                 if (arg.tabName === "filterManager") {
@@ -929,11 +891,30 @@ define([
 
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
+                allLayers = RampMap.getMap()._layers;
+                invisibleLayers = [];
+
+                UtilDict.forEachEntry(allLayers, function (key, value) {
+                    var index = UtilArray.indexOf(visibleLayers, function (vl) {
+                        return key === vl.id;
+                    });
+
+                    if (index === -1) {
+                        invisibleLayers.push(value);
+                    }
+                });                
 
                 visibleLayers.forEach(function (vl) {
                     if (vl.ramp) {
                         console.log(vl.ramp.type, vl.id);
-                        ui.setState(vl.ramp.type, vl.id);
+                        ui.setLayerItemState(vl.id, LayerItem.state.DEFAULT, true);
+                    }
+                });
+
+                invisibleLayers.forEach(function (vl) {
+                    if (vl.ramp) {
+                        console.log(vl.ramp.type, vl.id);
+                        ui.setLayerItemState(vl.id, LayerItem.state.OFF_SCALE, true);
                     }
                 });
 
