@@ -18,9 +18,9 @@
                 "description": "[fr] NrCan Simple"
             },
             "baseCBME_CBCE_HS_RO_3978": {
-                "name": "[fr] Road Networks",
+                "name": "[fr] Shaded Relief",
                 "altText": "[fr] Topographic Map",
-                "description": "[fr] NrCan CBMT_CBCT_GEOM"
+                "description": "[fr] NrCan CBMT_CBCT_HS"
             },
             "baseCBMT_CBCT_GEOM_3978": {
                 "name": "Road Networks",
