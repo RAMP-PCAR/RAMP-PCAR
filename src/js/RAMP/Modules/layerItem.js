@@ -44,7 +44,7 @@ define([
     function (
         Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, TmplUtil, Array
+        TmplHelper, TmplUtil, UtilArray
     ) {
         "use strict";
 
@@ -119,7 +119,7 @@ define([
                         partKeys = partKeys.concat(LayerItem.stateMatrix[stateKey][partType]);
                     });
 
-                partKeys = Array.unique(partKeys);
+                partKeys = UtilArray.unique(partKeys);
 
                 partKeys.forEach(function (pKey) {
                     control = $(that._template(templateKey + pKey,
@@ -135,40 +135,49 @@ define([
             },
 
             setState: function (state, options, force) {
-                if (this.state !== state || force) {
-                    this.state = state;
+                var allowedStates = LayerItem.transitionMatrix[this.state];
 
-                    //lang.mixin(this, options);
+                //if (this.state !== state || force) {
 
-                    // set state class on the layerItem root node
-                    this.node
-                        .removeClass(ALL_STATES_CLASS)
-                        .addClass(this.state);
+                    if (allowedStates.indexOf(state) !== -1 || force) {
 
-                    this._setParts("controls", this._controlStore, this._controlsNode);
-                    this._setParts("toggles", this._toggleStore, this._togglesNode);
+                        this.state = state;
+                        //lang.mixin(this, options);
 
-                    switch (this.state) {
-                        case LayerItem.state.DEFAULT:
-                            console.log("default");
-                            break;
+                        // set state class on the layerItem root node
+                        this.node
+                            .removeClass(ALL_STATES_CLASS)
+                            .addClass(this.state);
 
-                        case LayerItem.state.LOADING:
-                            console.log("load");
-                            break;
+                        this._setParts("controls", this._controlStore, this._controlsNode);
+                        this._setParts("toggles", this._toggleStore, this._togglesNode);
 
-                        case LayerItem.state.ERROR:
-                            console.log("error");
-                            break;
+                        switch (this.state) {
+                            case LayerItem.state.DEFAULT:
+                                console.log("default");
+                                break;
 
-                        case LayerItem.state.OFF_SCALE:
-                            console.log("scale");
-                            break;
+                            case LayerItem.state.LOADING:
+                                console.log("load");
+                                break;
 
-                        default:
-                            break;
+                            case LayerItem.state.ERROR:
+                                console.log("error");
+                                break;
+
+                            case LayerItem.state.OFF_SCALE:
+                                console.log("scale");
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        return true;
+                    } else {
+                        return false;
                     }
-                }
+                //}
             },
 
             _setParts: function (partType, partStore, target) {
@@ -203,7 +212,9 @@ define([
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
-                stateMatrix: {}
+                stateMatrix: {},
+
+                transitionMatrix: {}
             }
         );
 
@@ -226,6 +237,26 @@ define([
             controls: ["metadata", "settings"],
             toggles: ["zoom", "eye", "box"]
         };
+
+        LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
+            LayerItem.state.ERROR,
+            LayerItem.state.OFF_SCALE
+        ];
+
+        LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
+            LayerItem.state.ERROR,
+            LayerItem.state.DEFAULT,
+            LayerItem.state.OFF_SCALE
+        ];
+
+        LayerItem.transitionMatrix[LayerItem.state.ERROR] = [
+            LayerItem.state.LOADING
+        ];
+
+        LayerItem.transitionMatrix[LayerItem.state.OFF_SCALE] = [
+            LayerItem.state.ERROR,
+            LayerItem.state.DEFAULT
+        ];
 
         ALL_STATES_CLASS =
             Object
