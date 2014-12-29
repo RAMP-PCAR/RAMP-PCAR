@@ -328,8 +328,6 @@ define([
         * @private
         */
         function updateURL() {
-
-       
             var link = baseUrl,
                 delim = "?";
 
@@ -389,25 +387,23 @@ define([
       * update Href on language button based on link provided from bookmarklink
       *
       * @method updateHref
-      * @param link : link from bookmarklink
+      * @param {String} link bookmark url
       * @private
       */
-        function updateLangHref(link)
-        {        
-
+        function updateLangHref(link) {
             var pos = link.indexOf('?');
-            if (pos <= 0) return;
+            if (pos <= 0) {
+                return;
+            }
 
-            var paras = link.split('?')[1];
-                   
-            var element =$("#wb-lng").find("li a");
-            var url = element.attr("href");
-          
-            url = url.split('?')[0] + "?"+ paras;
-         
-            element.attr("href",url)
+            var paras = link.split('?')[1],
+                element = $("#wb-lng").find("li a"),
+                url = element.attr("href");
+
+            url = url.split('?')[0] + "?" + paras;
+
+            element.attr("href", url);
         }
-
 
         /**
        * If a co-ordinate has a big value before the decimal point, drop the precision after the decimal
