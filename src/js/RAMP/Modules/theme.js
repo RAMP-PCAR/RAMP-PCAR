@@ -199,13 +199,13 @@ define(["utils/util"],
                                 if (title) {
                                     node.attr("data-tooltip", node.attr("title"));
                                 } else {
-                                    node.attr("title", node.attr("data-tooltip"));
+                                    node.attr("title", node.data("tooltip"));
                                 }
-
-                            })
-                            .tooltipster({
-                                theme: 'tooltipster-shadow',
-                                delay: 500
+                                
+                                node.tooltipster({
+                                    theme: node.data("tooltip-theme") || attr.theme,
+                                    delay: attr.delay
+                                });
                             })
                             .removeAttr("title");
                         break;
