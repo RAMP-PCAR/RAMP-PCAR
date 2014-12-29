@@ -71,6 +71,7 @@ define([
 
                         _controlStore: {},
                         _toggleStore: {},
+                        _noticeStore: {},
 
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
@@ -96,9 +97,11 @@ define([
                 this._displayNameNode = this.node.find(".layer-name > span");
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
+                this._noticesNode = this.node.find(".layer-notices");
 
                 this._generateParts("controls", "layer_control_", this._controlStore);
                 this._generateParts("toggles", "layer_toggle_", this._toggleStore);
+                this._generateParts("notices", "layer_notice_", this._noticeStore);
 
                 this.setState(this.state, null, true);
 
@@ -151,6 +154,7 @@ define([
 
                         this._setParts("controls", this._controlStore, this._controlsNode);
                         this._setParts("toggles", this._toggleStore, this._togglesNode);
+                        this._setParts("notices", this._noticeStore, this._noticesNode);
 
                         switch (this.state) {
                             case LayerItem.state.DEFAULT:
@@ -186,7 +190,7 @@ define([
                 this.stateMatrix[this.state][partType].forEach(function (pKey) {
                     controls.push(partStore[pKey]);
                 });
-
+                 
                 target
                     .empty()
                     .append(controls);
@@ -220,22 +224,26 @@ define([
 
         LayerItem.stateMatrix[LayerItem.state.DEFAULT] = {
             controls: ["metadata", "settings"],
-            toggles: ["eye", "box"]
+            toggles: ["eye", "box"],
+            notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
             controls: ["loading"],
-            toggles: []
+            toggles: [],
+            notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: ["error"],
-            toggles: ["reload", "hide"]
+            toggles: ["reload", "hide"],
+            notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
             controls: ["metadata", "settings"],
-            toggles: ["zoom", "eye", "box"]
+            toggles: ["zoom", "eye", "box"],
+            notices: ["scale"]
         };
 
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
