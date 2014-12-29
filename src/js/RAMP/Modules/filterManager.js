@@ -519,7 +519,7 @@ define([
                             });
                         });
                     */
-
+                    
                     PopupManager.registerPopup(_mainList, "hover, focus",
                         function (d) {
                             d.resolve();
@@ -566,20 +566,19 @@ define([
                         }
                     );
 
-                    //PopupManager.registerPopup(_mainList, "click",
-                    //    function (d) {
+                    PopupManager.registerPopup(_mainList, "click",
+                        function (d) {
+                            metadataClickHandler(this.target);
 
-                    //        md(this.handle);
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".metadata-button",
+                            activeClass: "button-pressed"
+                        }
+                    );
 
-                    //        d.resolve();
-                    //    },
-                    //    {
-                    //        handleSelector: ".metadata-button",
-                    //        activeClass: "button-pressed"
-                    //    }
-                    //);
-
-                    function md(target) {
+                    function metadataClickHandler(target) {
                         var button = $(target),
                             node = button.parents("legend");
 
@@ -596,8 +595,13 @@ define([
                                 target: node.find(".layer-details"),
                                 origin: "filterManager",
                                 guid: id,
-                                doOnOpen: function () { node.addClass("selected-row"); },
-                                doOnHide: function () { _mainList.find(".selected-row").removeClass("selected-row"); }
+                                doOnOpen: function () {
+                                    node.addClass("selected-row");
+                                },
+                                doOnHide: function () {
+                                    button.removeClass("button-pressed");
+                                    node.removeClass("selected-row");
+                                }
                             });
 
                             //only wms layers have this value
@@ -665,12 +669,6 @@ define([
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
                         }
                     }
-
-                    // metadata buttons
-                    // to be changed...
-                    _mainList.on("click", "legend button.metadata-button", function () {
-                        md(this);
-                    });
 
                     PopupManager.registerPopup(_mainList, "click",
                         function (d) {
