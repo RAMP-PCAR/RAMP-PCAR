@@ -842,11 +842,6 @@ define([
                         /*},
                         300
                     );*/
-
-                        /*layerGroups[GlobalStorage.layerType.feature]
-                            .setState("layer_g5h6i", LayerItem.state.OFF_SCALE);
-
-                        layerToggles.update();*/
                     },
 
                     getLayerItem: function (layerId) {
@@ -861,11 +856,23 @@ define([
                         return layerItem;
                     },
 
-                    setLayerItemState: function (layerId, layerState, updateToggles) {
-                        var layerItem;
+                    setLayerItemState: function (layerId, layerState) {
+                        var that = this,
+                            layerItem,
+                            isChanged = false;
 
-                        layerItem = this.getLayerItem(layerId);
-                        if (layerItem && layerItem.setState(layerState) && updateToggles) {
+                        if (!(layerId instanceof Array)) {
+                            layerId = [layerId];
+                        }
+
+                        layerId.forEach(function (lId) {
+                            layerItem = that.getLayerItem(lId);
+                            if (layerItem && layerItem.setState(layerState)) {
+                                isChanged = true;
+                            }
+                        });
+
+                        if (isChanged) {
                             layerToggles.update();
                         }
                     }
@@ -889,6 +896,20 @@ define([
                 }
             });
 
+            function filterLayerIds(layers) {
+                layers = layers
+                    .map(function (l) {
+                        if (l.ramp) {
+                            return l.id;
+                        }
+                    })
+                    .filter(function (l) {
+                        return (l);
+                    });
+
+                return layers;
+            }
+
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
                 allLayers = RampMap.getMap()._layers;
@@ -902,22 +923,13 @@ define([
                     if (index === -1) {
                         invisibleLayers.push(value);
                     }
-                });                
-
-                visibleLayers.forEach(function (vl) {
-                    if (vl.ramp) {
-                        console.log(vl.ramp.type, vl.id);
-                        ui.setLayerItemState(vl.id, LayerItem.state.DEFAULT, true);
-                    }
                 });
 
-                invisibleLayers.forEach(function (vl) {
-                    if (vl.ramp) {
-                        console.log(vl.ramp.type, vl.id);
-                        ui.setLayerItemState(vl.id, LayerItem.state.OFF_SCALE, true);
-                    }
-                });
+                visibleLayers = filterLayerIds(visibleLayers);
+                ui.setLayerItemState(visibleLayers, LayerItem.state.DEFAULT, true);
 
+                invisibleLayers = filterLayerIds(invisibleLayers);
+                ui.setLayerItemState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
                 //console.log(RampMap.getMap().getLayersVisibleAtScale());
             });
         }
