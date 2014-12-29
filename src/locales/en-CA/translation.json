@@ -282,6 +282,8 @@
         "hideBounds": "Hide Bounds of {0}",
         "hideAllBounds": "Hide All Bounds",
 
+        "zoomToData": "Zoom to data",
+
         "metadata": "Metadata",
         "metadataNotFound": "No metadata was found for this layer.",
         "metadataNotPublished": "No metadata was published for this layer.",

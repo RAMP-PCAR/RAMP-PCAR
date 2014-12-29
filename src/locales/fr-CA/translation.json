@@ -282,6 +282,8 @@
         "hideBounds": "Masquer les limites de {0}",
         "hideAllBounds": "Masquer toutes les limites",
 
+        "zoomToData": "Zoom to data",
+
         "metadata": "Métadonnées",
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche",
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche",
