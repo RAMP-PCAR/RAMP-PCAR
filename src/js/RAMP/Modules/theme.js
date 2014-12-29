@@ -206,7 +206,8 @@ define(["utils/util"],
                             .tooltipster({
                                 theme: 'tooltipster-shadow',
                                 delay: 500
-                            });
+                            })
+                            .removeAttr("title");
                         break;
                 }
 
