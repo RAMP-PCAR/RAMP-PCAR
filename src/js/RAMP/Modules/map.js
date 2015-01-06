@@ -53,7 +53,7 @@ define([
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
-"utils/util", "utils/array", "utils/dictionary"],
+"utils/util", "utils/array"],
 
     function (
     /* Dojo */
@@ -67,7 +67,7 @@ define([
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
-    UtilMisc, UtilArray, UtilDict) {
+    UtilMisc, UtilArray) {
         "use strict";
 
         /**
@@ -93,7 +93,7 @@ define([
             * @private
             * @property boundingBoxMapping {Object}
             */
-            boundingBoxMapping,
+            boundingBoxMapping = {},
 
             /**
             * The map not only contains feature layers, but also other layers such as the
@@ -296,6 +296,8 @@ define([
                 }
             });
 
+            //TODO uncomment this once things are working
+            /*
             topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (evt) {
                 var layer = map.getLayer(evt.layerId);
 
@@ -310,6 +312,7 @@ define([
                 catch (err) {
                 }
             });
+            */
 
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
                 setBoundingBoxVisibility(evt.id, evt.state);
@@ -345,6 +348,7 @@ define([
                 topic.publish(EventManager.Map.REORDER_END);
             });
 
+            //TODO this will likely get removed or amended by aly
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {
                 var type = dom.byId("addLayer-select-type").value,
@@ -367,34 +371,6 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            var handle,
-                // filter out non static layers for any feature interaction: maptip
-                nonStaticLayers = dojoArray.filter(featureLayers, function (layer) {
-                    return layer.ramp.type !== GlobalStorage.layerType.Static;
-                }
-            );
-
-            // original value : featureLayers
-            // updated with nonStaticLayer
-            dojoArray.forEach(nonStaticLayers, function (fl) {
-                //TODO: set timer for maptips onMouseOver event
-
-                fl.on("click", function (evt) {
-                    evt.stopImmediatePropagation();
-                    FeatureClickHandler.onFeatureSelect(evt);
-                });
-
-                fl.on("mouse-over", function (evt) {
-                    FeatureClickHandler.onFeatureMouseOver(evt);
-
-                    //console.log("hover on point", evt);
-                });
-
-                fl.on("mouse-out", function (evt) {
-                    FeatureClickHandler.onFeatureMouseOut(evt);
-                });
-            });
-
             map.on("load", _initScale);
             map.on("extent-change", function (event) {
                 _updateScale(event);
@@ -412,16 +388,13 @@ define([
                 topic.publish(EventManager.Map.CLICK, evt);
             });
 
-            // Hide all the maptips if the map finishes updating
-            map.on("update-end", function () {
-                //topic.publish(EventManager.Maptips.HIDE, {});
-            });
-
             // Show/Hide spinner for map loading
             map.on("update-start", _showLoadingImg);
             map.on("update-end", _hideLoadingImg);
 
-            handle = map.on("update-end", function () {
+            // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep around to steal later
+            /*
+            var handle = map.on("update-end", function () {
                 var isAllLoaded = dojoArray.every(
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
@@ -439,6 +412,7 @@ define([
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
+            */
         }
 
         /**
@@ -684,7 +658,7 @@ define([
                     break;
 
                 default:
-                    //TODO add in other types of maps... wms?  non-esri tile?
+                    console.log("unknown static layer type encountered: " + layerType);
                     break;
             }
             return tempLayer;
@@ -704,7 +678,7 @@ define([
                         break;
                     }
                 }
-                
+
                 console.log(map.getBasemap(), layerId, layer.maxScale, layer.minScale, lod, map.getZoom());
                 map.setZoom(lod.level);
             },
@@ -743,6 +717,16 @@ define([
                 return dojoArray.filter(map.getLayersVisibleAtScale(), function (layer) {
                     return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
+            },
+
+            /**
+            * Generates a bounding box layer for a map layer.
+            * @method addBoundingBox
+            * @param {Object} layer An ESRI layer object, with config node attached
+            *
+            */
+            addBoundingBox: function (layer) {
+                return createGraphic(createExtent(layer.layerExtent));
             },
 
             /**
@@ -882,15 +866,6 @@ define([
                 schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
 
                 /**
-                * The spatial reference of the map
-                *
-                * @property spatialReference
-                * @private
-                * @type {esri/SpatialReference}
-                */
-                spatialReference = new SpatialReference(schemaBasemap.spatialReference),
-
-                /**
                 * The URL of the first layer of the basemap that is on by default.
                 *
                 * @property url
@@ -908,6 +883,21 @@ define([
                 */
                 baseLayer = new ArcGISTiledMapServiceLayer(url, {
                     id: "basemapLayer"
+                }),
+
+                loadListener = baseLayer.on('update-end', function () {
+                    //only load things once, pls!
+                    loadListener.remove();
+
+                    //basemap has loaded.  continue on with the map loading
+                    topic.publish(EventManager.Map.INITIAL_BASEMAP_LOADED);
+                });
+
+                baseLayer.on('error', function (evt) {
+                    //basemap has died.  long live the basemap.
+                    //TODO some proper error handling here.  error page?  message to user of catastrophic failure?
+
+                    console.log('initial basemap failed to load: ' + evt.error.message);
                 });
 
                 /**
@@ -953,14 +943,6 @@ define([
                         type: GlobalStorage.layerType.wms
                     };
 
-                    // WMS binding for getFeatureInfo calls
-
-                    if (layer.featureInfo !== undefined) {
-                        console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
-                        MapClickHandler.registerWMSClick({ wmsLayer: wmsl, layerConfig: layer });
-                    }
-
-                    //wmsl.setVisibleLayers(layer.layerName);
                     wmsl.setVisibility(layer.settings.visible);
 
                     console.log("wms registered: " + layer.id);
@@ -997,62 +979,6 @@ define([
                     }
                     return fl;
                 });
-
-                /**
-                * A list GraphicsLayer that represent the extent bounding box of the feature layers.
-                * {[esr/layer/featurelayers]} featureLayers A list of feature layers found in the application config
-                * {[esri/layer/graphiclayer]}  An array of graphic layers to add to the map
-                *
-                * @property boundingBoxLayers
-                * @type {array of esri/layer/GraphicsLayer}
-                */
-
-                // geometry service to reproject any extent that does not have
-                // same spatialReference as the map
-                var gsvc = new GeometryService(RAMP.config.geometryServiceUrl),
-
-                boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
-                    // Map a list of featurelayers into a list of GraphicsLayer representing
-                    // the extent bounding box of the feature layer. Note each bounding box layer
-                    // at this point are empty, the actual graphic that represent the bounding box
-                    // will be generated the first time the user toggles it on.
-                    var boundingBox = new GraphicsLayer({
-                        id: String.format("boundingBoxLayer_{0}", layer.id),
-                        visible: layer.settings.boundingBoxVisible
-                    });
-                    boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                    var boundingBoxExtent;
-                    if (typeof layer.layerExtent !== "undefined") {
-                        boundingBoxExtent = createExtent(layer.layerExtent);
-
-                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, spatialReference)) {
-                            //layer is in same projection as basemap.  can directly use the extent
-                            var extentGraphic = createGraphic(boundingBoxExtent);
-                            boundingBox.add(extentGraphic);
-                        } else {
-                            //layer is in different projection.  reproject to basemap
-
-                            var params = new ProjectParameters();
-                            params.geometries = [boundingBoxExtent];
-                            params.outSR = spatialReference;
-
-                            gsvc.project(params, function (projectedExtents) {
-                                console.log("re-project");
-                                var extentGraphic = createGraphic(projectedExtents[0]);
-                                boundingBox.add(extentGraphic);
-                            });
-                        }
-                    }
-
-                    return boundingBox;
-                });
-
-                // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
-                // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(RAMP.config.layers.feature, function (layer) {
-                    return layer.id;
-                }), boundingBoxLayers);
 
                 //the map!
                 map = new EsriMap(RAMP.config.divNames.map, {
@@ -1093,10 +1019,11 @@ define([
                     type: GlobalStorage.layerType.Basemap
                 };
 
-                // Combine all layer arrays then add them all at once (for efficiency)
-                console.log('adding wmses');
-                console.log(wmsLayers);
-                map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
+                //save layer objects to load after basemap.
+                RAMP.startupLayers = wmsLayers.concat(staticLayers, featureLayers);
+
+                //add the basemap
+                map.addLayer(baseLayer);
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
@@ -1111,7 +1038,7 @@ define([
 
                 _initRepublishers(map);
                 _initListeners(map);
-                _initEventHandlers(map, featureLayers);
+                _initEventHandlers(map);
             }
         };
     });

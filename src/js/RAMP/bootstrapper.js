@@ -38,6 +38,7 @@
 * @uses Util
 * @uses Prototype
 * @uses FunctionMangler
+* @uses LayerLoader
 */
 
 require([
@@ -53,7 +54,7 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme",
+    "ramp/theme", "ramp/layerLoader",
 
 /* Utils */
     "utils/util",
@@ -71,7 +72,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
 
     /* Utils */
         UtilMisc
@@ -98,7 +99,7 @@ require([
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
 
-            topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
+            topic.subscribe(EventManager.Map.INITIAL_BASEMAP_LOADED, function () {
                 console.log("map - >> first update-end; init the rest");
 
                 // Only initialize the bookmark link after all the UI events of all other modules have
@@ -136,7 +137,12 @@ require([
                 }
 
                 Datagrid.init();
-                theme.tooltipster();                
+                theme.tooltipster();
+
+                //start loading the layers
+                dojoArray.forEach(RAMP.startupLayers, function (layer) {
+                    LayerLoader.loadLayer(layer);
+                });
             });
 
             RampMap.init();

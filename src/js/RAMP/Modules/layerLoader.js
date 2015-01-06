@@ -46,34 +46,6 @@ define([
             },
 
             /**
-            * This function initiates the loading process for an ESRI layer object.
-            *
-            * @method loadLayer
-            * @param  {Object} layer an instantiated, unloaded ESRI layer object
-            */
-            loadLayer: function (layer) {
-                //test layer type
-                console.log(typeof layer);
-
-                //TODO possibly have an optional param for position to add
-                // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
-
-                //assign layer ramp.type tag
-
-                //add config node to layer??
-                //   might be a good idea.  will ensure layers added by user also have this, and thus the code to do this wont be scattered in 3-4 different spots
-
-                //add error handler for layer
-                // consider using ramp.error tag to track error?
-
-                //add loaded handler for layer
-
-                //add entry to alex selector, defaulting to loading state
-
-                //add layer to map, triggering the loading process.  should add at correct position
-            },
-
-            /**
             * Deals with a layer that had an error when it tried to load.
             *
             * @method onLayerError
@@ -103,9 +75,8 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
-                console.log("failed to load layer " + evt.target.url);
-                console.log(evt.error.message);
-
+                console.log("layer loaded: " + evt.target.url);
+                
                 //figure out which layer selector state object matches this layer object
 
                 //check if this layer is in an error state.  if so, exit the handler
@@ -115,6 +86,39 @@ define([
                 //call map functions to wire up event handlers (see map._initEventHandlers )
 
                 //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
+            },
+
+            /**
+            * This function initiates the loading process for an ESRI layer object.
+            *
+            * @method loadLayer
+            * @param  {Object} layer an instantiated, unloaded ESRI layer object
+            */
+            loadLayer: function (layer) {
+                if (layer.ramp) {
+                    console.log(layer.ramp.type);
+                } else {
+                    console.log('you failed to supply a ramp.type to the layer!');
+                }
+
+                //TODO possibly have an optional param for position to add
+                // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
+
+                //add config node to layer??
+                //   might be a good idea.  will ensure layers added by user also have this, and thus the code to do this wont be scattered in 3-4 different spots
+                //   dont do it for now.  possible future enhancement
+
+                //add error handler for layer
+                layer.on('error', this.onLayerError);
+
+                //add loaded handler for layer
+                layer.on('update-end', this.onLayerLoaded);
+
+                //TODO
+                //add entry to alex selector, defaulting to loading state
+
+                //add layer to map, triggering the loading process.  should add at correct position
+                RampMap.getMap().addLayer(layer);
             }
         };
     });
