@@ -626,10 +626,7 @@ define([
 
                 return {
                     init: function () {
-                        var layers = RAMP.config.layers,
-                            section,
-
-                            that = this;
+                        var section;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -637,13 +634,6 @@ define([
                         sectionNode.empty().append(section);
 
                         _mainList = sectionNode.find("#layerList");
-
-                        UtilDict.forEachEntry(layers, function (key, value) {
-                            value.forEach(function (v) {
-                                console.log(that, key, v);
-                                //that.addLayer(GlobalStorage.layerType[key], v);
-                            });
-                        });
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
@@ -656,8 +646,6 @@ define([
 
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
-
-                        //_filterGlobalToggles_to_remove = $('#filterGlobalToggles');
 
                         setLayerReorderingEvents();
 
