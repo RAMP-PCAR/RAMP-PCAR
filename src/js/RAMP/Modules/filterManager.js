@@ -694,6 +694,10 @@ define([
                             layerGroups[layerType] = layerGroup;
                             _mainList.append(layerGroup.node);
                         }
+
+                        // TODO: check scale in cleaner way
+                        setLayerOffScaleStates();
+                        update();
                     },
 
                     getLayerItem: function (layerId) {
@@ -724,6 +728,7 @@ define([
                             }
                         });
 
+                        // update the toggle groups after changing state since toggles might disappear/be added
                         if (isChanged) {
                             layerToggles.update();
                         }
