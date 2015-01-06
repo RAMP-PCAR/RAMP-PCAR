@@ -98,11 +98,13 @@ define([
                     layerGroups = {};
 
                 layerSettings = (function () {
+                    var transparencySliders;
+
                     function initTransparencySliders() {
-                        var transparencySliders;
 
                         // initializes all sliders in the layer list
-                        transparencySliders = layerList.find(".nstSlider")
+                        transparencySliders = layerList.find(".nstSlider._slider")
+                            .removeClass("_slider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
                                 rounding: 0.01,
@@ -142,8 +144,25 @@ define([
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
 
+                        //topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
+                        //    var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
+                        //        value;
+
+                        //    if (slider.length > 0) {
+                        //        slider.toggleClass("disabled", !evt.state);
+                        //        value = slider.nstSlider("get_current_min_value");
+
+                        //        // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
+                        //        if (value === 0 && evt.state) {
+                        //            slider.nstSlider("set_position", 1);
+                        //        }
+                        //    }
+                        //});
+                    }
+
+                    function initListeners() {
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                            var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
+                            var slider = layerList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
                                 value;
 
                             if (slider.length > 0) {
@@ -160,6 +179,12 @@ define([
 
                     return {
                         init: function () {
+                            initTransparencySliders();
+
+                            initListeners();
+                        },
+
+                        update: function () {
                             initTransparencySliders();
                         }
                     };
@@ -592,13 +617,15 @@ define([
                     });
                 }
 
+                function update() {
+                    layerList = $("#layerList > li > ul");
+
+                    layerSettings.update();
+                    layerToggles.update();
+                }
+
                 return {
                     init: function () {
-                        // reset and load global template
-                        // move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
-                        tmpl.cache = {};
-                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
-
                         var layers = RAMP.config.layers,
                             section,
 
@@ -771,6 +798,11 @@ define([
             init: function () {
                 // Convenience config objects
                 config = RAMP.config;
+
+                // reset and load global template
+                // move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
                 initListeners();
 
