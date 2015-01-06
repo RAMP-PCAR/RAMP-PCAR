@@ -601,7 +601,8 @@ define([
 
                         var layers = RAMP.config.layers,
                             section,
-                            layerGroup;
+
+                            that = this;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -611,14 +612,10 @@ define([
                         _mainList = sectionNode.find("#layerList");
 
                         UtilDict.forEachEntry(layers, function (key, value) {
-                            var layerType = GlobalStorage.layerType[key];
-
-                            layerGroup = new LayerGroup(value, {
-                                layerType: layerType
+                            value.forEach(function (v) {
+                                console.log(that, key, v);
+                                //that.addLayer(GlobalStorage.layerType[key], v);
                             });
-
-                            layerGroups[layerType] = layerGroup;
-                            _mainList.append(layerGroup.node);
                         });
 
                         // fade out the loading animation
@@ -655,6 +652,23 @@ define([
                     );*/
                     },
 
+                    addLayer: function (layerType, layerConfig) {
+                        var layerGroup = layerGroups[layerType];
+
+                        // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
+
+                        if (layerGroup) {
+                            layerGroup.addLayerItem(layerConfig);
+                        } else {
+                            layerGroup = new LayerGroup([layerConfig], {
+                                layerType: layerType
+                            });
+
+                            layerGroups[layerType] = layerGroup;
+                            _mainList.append(layerGroup.node);
+                        }
+                    },
+
                     getLayerItem: function (layerId) {
                         var layerItem = null;
 
@@ -667,7 +681,7 @@ define([
                         return layerItem;
                     },
 
-                    setLayerItemState: function (layerId, layerState) {
+                    setLayerState: function (layerId, layerState) {
                         var that = this,
                             layerItem,
                             isChanged = false;
@@ -724,10 +738,10 @@ define([
             });
 
             visibleLayers = filterLayerIds(visibleLayers);
-            ui.setLayerItemState(visibleLayers, LayerItem.state.DEFAULT, true);
+            ui.setLayerState(visibleLayers, LayerItem.state.DEFAULT, true);
 
             invisibleLayers = filterLayerIds(invisibleLayers);
-            ui.setLayerItemState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+            ui.setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
         }
 
         /**
@@ -764,6 +778,11 @@ define([
 
                 setLayerOffScaleStates();
             },
+
+            addLayer: function (type, config) {
+                ui.addLayer(type, config);
+            },
+
             /**
             * Queries all map points on a given feature layer and returns their attributes
             * @method _getFeatures

@@ -51,12 +51,12 @@ require([
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
     "ramp/theme",
 
 /* Utils */
-    "utils/util",
+    "utils/util", "utils/dictionary",
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
@@ -71,10 +71,10 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme,
 
     /* Utils */
-        UtilMisc
+        UtilMisc, UtilDict
     ) {
         "use strict";
 
@@ -129,7 +129,13 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
-
+                // TODO : remove this hack after James finishes layer loader
+                UtilDict.forEachEntry(RAMP.config.layers, function (key, value) {
+                    value.forEach(function (v) {
+                        FilterManager.addLayer(GlobalStorage.layerType[key], v);
+                    });
+                });
+                
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
@@ -251,7 +257,7 @@ require([
 
             console.log("Bootstrapper: config loaded");
 
-            globalStorage.init(configObject);
+            GlobalStorage.init(configObject);
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
