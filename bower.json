@@ -40,7 +40,9 @@
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",
         "jquery-hoverIntent": "~1.8.1",
-        "i18next": "~1.7.4"
+        "i18next": "~1.7.4",
+        "terraformer": "~1.0.4",
+        "terraformer-arcgis-parser": "~1.0.4"
     },
     "moduleType": [
         "globals"
