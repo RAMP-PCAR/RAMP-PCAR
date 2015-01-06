@@ -129,22 +129,20 @@ define([
             },
 
             _constructStateMatrix: function (layerConfig) {
-                var stateMatrix = lang.clone(LayerItem.stateMatrix),
-                    settingsKey = "settings",
-                    boxKey = "box",
-                    placeholderKey = "placeholder";
+                var stateMatrix = lang.clone(LayerItem.stateMatrix);
 
                 if (!layerConfig.settings.panelEnabled) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, LayerItem.controls.SETTINGS);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, LayerItem.controls.SETTINGS);
                 }
 
+                // remove bounding box toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, boxKey);
-                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(placeholderKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, LayerItem.toggles.BOX);
+                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(LayerItem.toggles.PLACEHOLDER);
 
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, boxKey);
-                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(placeholderKey);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, LayerItem.toggles.BOX);
+                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(LayerItem.toggles.PLACEHOLDER);
                 }
 
                 return stateMatrix;

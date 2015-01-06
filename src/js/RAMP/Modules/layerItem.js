@@ -216,36 +216,80 @@ define([
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
+                controls: {
+                    METADATA: "metadata",
+                    SETTINGS: "settings",
+                    LOADING: "loading",
+                    ERROR: "error"
+                },
+
+                toggles: {
+                    EYE: "eye",
+                    BOX: "box",
+                    RELOAD: "reload",
+                    HIDE: "hide",
+                    ZOOM: "zoom",
+                    PLACEHOLDER: "placeholder"
+                },
+
+                notices: {
+                    SCALE: "scale"
+                },
+
                 stateMatrix: {},
 
                 transitionMatrix: {}
             }
         );
 
+        // setting defaults for state matrix
         LayerItem.stateMatrix[LayerItem.state.DEFAULT] = {
-            controls: ["metadata", "settings"],
-            toggles: ["eye", "box"],
+            controls: [
+                LayerItem.controls.METADATA,
+                LayerItem.controls.SETTINGS
+            ],
+            toggles: [
+                LayerItem.toggles.EYE,
+                LayerItem.toggles.BOX
+            ],
             notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
-            controls: ["loading"],
+            controls: [
+                LayerItem.controls.LOADING
+            ],
             toggles: [],
             notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
-            controls: ["error"],
-            toggles: ["reload", "hide"],
+            controls: [
+                LayerItem.controls.ERROR
+            ],
+            toggles: [
+                LayerItem.toggles.RELOAD,
+                LayerItem.toggles.HIDE
+            ],
             notices: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
-            controls: ["metadata", "settings"],
-            toggles: ["zoom", "eye", "box"],
-            notices: ["scale"]
+            controls: [
+                LayerItem.controls.METADATA,
+                LayerItem.controls.SETTINGS
+            ],
+            toggles: [
+                LayerItem.toggles.ZOOM,
+                LayerItem.toggles.EYE,
+                LayerItem.toggles.BOX
+            ],
+            notices: [
+                LayerItem.notices.SCALE
+            ]
         };
 
+        // setting defaults for transition matrix
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
             LayerItem.state.ERROR,
             LayerItem.state.OFF_SCALE
