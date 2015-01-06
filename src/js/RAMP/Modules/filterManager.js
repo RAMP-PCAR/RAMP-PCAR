@@ -91,7 +91,6 @@ define([
                 var sectionNode,
                     _mainList,
                     layerList,
-                    _filterGlobalToggles_to_remove,
 
                     layerSettings,
                     layerToggles,
@@ -171,6 +170,17 @@ define([
                         boxCheckboxGroup,
                         eyeCheckboxGroup;
 
+                    /**
+                    * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
+                    * publishes event "filterManager/box-visibility-toggled" every time a layer status changed.
+                    * There should only be one eye and one global checkbox, but
+                    * we say checkbox"es" because jquery returns a list and it's
+                    * easier to write a function that takes a list of checkboxes
+                    * than to write two functions, one to take a list and one to
+                    * take an individual checkbox
+                    * @method createGroups
+                    * @private
+                    */
                     function createGroups() {
                         boxCheckboxGroup = new CheckboxGroup(
                             _mainList.find(".checkbox-custom .box + input"),
@@ -283,146 +293,6 @@ define([
                         }
                     };
                 }());
-
-                /**
-                * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
-                * publishes event "filterManager/box-visibility-toggled" every time a layer status changed.
-                * There should only be one eye and one global checkbox, but
-                * we say checkbox"es" because jquery returns a list and it's
-                * easier to write a function that takes a list of checkboxes
-                * than to write two functions, one to take a list and one to
-                * take an individual checkbox
-                * @method setCheckboxEvents
-                * @private
-                */
-                function setCheckboxEvents() {
-                    var boxCheckboxGroup,
-                        eyeCheckboxGroup;
-
-                    boxCheckboxGroup = new CheckboxGroup(
-                        layerList.find(".checkbox-custom .box + input"),
-                        {
-                            nodeIdAttr: layerIdField,
-
-                            /*cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
-                            },*/
-
-                            label: {
-                                check: i18n.t('filterManager.hideBounds'),
-                                uncheck: i18n.t('filterManager.showBounds')
-                            },
-
-                            onChange: function () {
-                                Theme.tooltipster(this.labelNode.parent(), null, "update");
-                            },
-
-                            master: {
-                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .box + input"),
-
-                                nodeIdAttr: "id",/*
-
-                                cssClass: {
-                                    active: "active",
-                                    focus: "focused",
-                                    check: "checked"
-                                },*/
-
-                                label: {
-                                    check: i18n.t('filterManager.hideAllBounds'),
-                                    uncheck: i18n.t('filterManager.showAllBounds')
-                                }/*,
-
-                                onChange: Theme.tooltipster*/
-                            }
-                        });
-
-                    /*boxCheckboxGroup.setEachState(function (checkbox) {
-                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.settings.boundingBoxVisible;
-                    });*/
-
-                    boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
-                            id: evt.checkbox.id,
-                            state: evt.checkbox.state
-                        });
-                    });
-
-                    boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                    });
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
-                        boxCheckboxGroup.setState(evt.state, evt.layerId);
-                    });
-
-                    eyeCheckboxGroup = new CheckboxGroup(
-                        layerList.find(".checkbox-custom .eye + input"),
-                        {
-                            nodeIdAttr: layerIdField,
-
-                            /*cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
-                            },*/
-
-                            label: {
-                                check: i18n.t('filterManager.hideFeatures'),
-                                uncheck: i18n.t('filterManager.showFeatures')
-                            },
-
-                            onChange: function () {
-                                Theme.tooltipster(this.labelNode.parent(), null, "update");
-                            },
-
-                            master: {
-                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .eye + input"),
-
-                                nodeIdAttr: "id",/*
-
-                                cssClass: {
-                                    active: "active",
-                                    focus: "focused",
-                                    check: "checked"
-                                }*/
-
-                                label: {
-                                    check: i18n.t('filterManager.hideAllFeatures'),
-                                    uncheck: i18n.t('filterManager.showAllFeatures')
-                                }/*,
-
-                                onChange: Theme.tooltipster*/
-                            }
-                        });
-
-                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
-                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.settings.visible;
-                    });*/
-
-                    eyeCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
-                            id: evt.checkbox.id,
-                            state: evt.checkbox.state
-                        });
-                    });
-
-                    eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                    });
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
-                        eyeCheckboxGroup.setState(evt.state, evt.layerId);
-                    });
-                }
 
                 /**
                 * initialize a tooltip for each layer, using the layer name.
@@ -729,62 +599,6 @@ define([
                         tmpl.cache = {};
                         tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
-                        /*
-                        // get visible layers reversing their order; that's important
-                        var layers = RampMap.getMap().getLayersVisibleAtScale().reverse(),
-                            layerGroups = {
-                                feature: [
-
-                                ],
-
-                                wms: [
-
-                                ]
-                            },
-                            data,
-                            section;
-
-                        // limit only to visible layer that is not basemap
-                        dojoArray.forEach(layers, function (layer) {
-                            var wmsLayerName = null;
-                            if (layer.ramp.type === GlobalStorage.layerType.wms) {
-                                // wmsLayerName = layer.layerName;
-                                layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
-
-                                if (layer.layerConfig.legendMimeType) {
-                                    layer.layerConfig.legend = {
-                                        type: "wms",
-                                        imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
-                                            layer.layerConfig.url,
-                                            layer.version,
-                                            layer.layerConfig.legendMimeType,
-                                            layer.layerConfig.layerName
-                                        )
-                                    };
-                                }
-
-                                layerGroups.wms.push(layer);
-                            } else if (layer.ramp.type === GlobalStorage.layerType.feature || layer.ramp.type === GlobalStorage.layerType.Static) {
-                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-
-                                layerGroups.feature.push(layer);
-                            }
-                        });
-
-                        // put layer in datawrapper to be used in template
-                        data = {
-                            config: RAMP.config,
-                            layerGroups: {
-                                feature: TmplHelper.dataBuilder(layerGroups.feature),
-                                wms: TmplHelper.dataBuilder(layerGroups.wms)
-                            }
-                        };
-
-                        sectionNode = $("#" + RAMP.config.divNames.filter);
-                        // TODO: generate section using one template, need to refactoring the following fixed string
-                        section = tmpl('filter_manager_template', data);
-                        */
-
                         var layers = RAMP.config.layers,
                             section,
                             layerGroup;
@@ -823,9 +637,6 @@ define([
 
                         setLayerReorderingEvents();
 
-                        if (false) {
-                            setCheckboxEvents();
-                        }
                         layerToggles.init();
 
                         initTooltips();
