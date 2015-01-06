@@ -53,8 +53,6 @@ define([
 
         LayerItem = declare([Evented], {
             constructor: function (config, options) {
-                //var that = this;
-
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -88,6 +86,11 @@ define([
                         stateMatrix: lang.mixin(
                             lang.clone(LayerItem.stateMatrix),
                             options.stateMatrix
+                        ),
+
+                        transitionMatrix: lang.mixin(
+                            lang.clone(LayerItem.transitionMatrix),
+                            options.transitionMatrix
                         )
                     }
                 );
@@ -119,7 +122,7 @@ define([
                     .getOwnPropertyNames(LayerItem.state)
                     .forEach(function (s) {
                         stateKey = LayerItem.state[s];
-                        partKeys = partKeys.concat(LayerItem.stateMatrix[stateKey][partType]);
+                        partKeys = partKeys.concat(that.stateMatrix[stateKey][partType]);
                     });
 
                 partKeys = UtilArray.unique(partKeys);
@@ -138,50 +141,47 @@ define([
             },
 
             setState: function (state, options, force) {
-                var allowedStates = LayerItem.transitionMatrix[this.state];
+                var allowedStates = this.transitionMatrix[this.state];
 
-                //if (this.state !== state || force) {
+                if (allowedStates.indexOf(state) !== -1 || force) {
 
-                    if (allowedStates.indexOf(state) !== -1 || force) {
+                    this.state = state;
+                    //lang.mixin(this, options);
 
-                        this.state = state;
-                        //lang.mixin(this, options);
+                    // set state class on the layerItem root node
+                    this.node
+                        .removeClass(ALL_STATES_CLASS)
+                        .addClass(this.state);
 
-                        // set state class on the layerItem root node
-                        this.node
-                            .removeClass(ALL_STATES_CLASS)
-                            .addClass(this.state);
+                    this._setParts("controls", this._controlStore, this._controlsNode);
+                    this._setParts("toggles", this._toggleStore, this._togglesNode);
+                    this._setParts("notices", this._noticeStore, this._noticesNode);
 
-                        this._setParts("controls", this._controlStore, this._controlsNode);
-                        this._setParts("toggles", this._toggleStore, this._togglesNode);
-                        this._setParts("notices", this._noticeStore, this._noticesNode);
+                    switch (this.state) {
+                        case LayerItem.state.DEFAULT:
+                            console.log("default");
+                            break;
 
-                        switch (this.state) {
-                            case LayerItem.state.DEFAULT:
-                                console.log("default");
-                                break;
+                        case LayerItem.state.LOADING:
+                            console.log("load");
+                            break;
 
-                            case LayerItem.state.LOADING:
-                                console.log("load");
-                                break;
+                        case LayerItem.state.ERROR:
+                            console.log("error");
+                            break;
 
-                            case LayerItem.state.ERROR:
-                                console.log("error");
-                                break;
+                        case LayerItem.state.OFF_SCALE:
+                            console.log("scale");
+                            break;
 
-                            case LayerItem.state.OFF_SCALE:
-                                console.log("scale");
-                                break;
-
-                            default:
-                                break;
-                        }
-
-                        return true;
-                    } else {
-                        return false;
+                        default:
+                            break;
                     }
-                //}
+
+                    return true;
+                } else {
+                    return false;
+                }
             },
 
             _setParts: function (partType, partStore, target) {
@@ -190,7 +190,7 @@ define([
                 this.stateMatrix[this.state][partType].forEach(function (pKey) {
                     controls.push(partStore[pKey]);
                 });
-                 
+
                 target
                     .empty()
                     .append(controls);
