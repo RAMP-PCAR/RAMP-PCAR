@@ -1,19 +1,27 @@
 ﻿/* global define, tmpl, $, console */
 
 /**
-* @module 
+* @module RAMP
+* @submodule FilterManager
+* @main FilterManager
 */
 
 /**
-*
-*
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+*  
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
+* 
 * @class LayerGroup
 * @constructor
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/_base/lang
 * @uses dojo/_base/array
-* @uses Checkbox
 *
 * @param {JArray} nodes a jQuery object representing the checkboxes to be grouped
 * @param {Object} [options] Additional options
@@ -38,7 +46,7 @@
 * @param {Object} [options.master.label.uncheck] A text to be set as a label when the master Checkbox is `unchecked`
 * @param {Function} [options.master.onChnage] A function to be called when the state of the master Checkbox changes.
 *
-* @return {CheckboxGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
+* @return {LayerGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
 */
 
 define([
@@ -62,8 +70,7 @@ define([
 
         return declare([Evented], {
             constructor: function (layers, options) {
-                var that = this;//,
-                //layerItem;
+                var that = this;
 
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
@@ -96,11 +103,6 @@ define([
 
                 this.layers.forEach(function (layer) {
                     that.addLayer(layer);
-
-                    //layerItem = new LayerItem(layer, layerItemOptions);
-                    //that.layerItems.push(layerItem);
-
-                    //that._listNode.append(layerItem.node);
                 });
             },
 
@@ -124,27 +126,23 @@ define([
 
                 this.layerItems.push(layerItem);
                 this._listNode.append(layerItem.node);
-
-                //layerItem.setState(LayerItem.state.ERROR);
             },
 
             _constructStateMatrix: function (layerConfig) {
-                var stateMatrix = lang.clone(LayerItem.stateMatrix),
-                    settingsKey = "settings",
-                    boxKey = "box",
-                    placeholderKey = "placeholder";
+                var stateMatrix = lang.clone(LayerItem.stateMatrix);
 
                 if (!layerConfig.settings.panelEnabled) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, settingsKey);
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, settingsKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, LayerItem.controls.SETTINGS);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, LayerItem.controls.SETTINGS);
                 }
 
+                // remove bounding box toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, boxKey);
-                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(placeholderKey);
+                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, LayerItem.toggles.BOX);
+                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(LayerItem.toggles.PLACEHOLDER);
 
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, boxKey);
-                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(placeholderKey);
+                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, LayerItem.toggles.BOX);
+                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(LayerItem.toggles.PLACEHOLDER);
                 }
 
                 return stateMatrix;
