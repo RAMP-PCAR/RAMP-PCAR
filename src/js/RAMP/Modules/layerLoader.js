@@ -17,19 +17,21 @@
 * @static
 * @uses EventManager
 * @uses Map
+* @uses GlobalStorage
+* @uses FeatureClickHandler
 * @uses dojo/topic
 */
 
 define([
 /* RAMP */
-    "ramp/eventManager", "ramp/map",
+    "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler",
 
 /* Dojo */
     "dojo/topic"],
 
     function (
     /* RAMP */
-    EventManager, RampMap,
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler,
 
     /* Dojo */
     topic) {
@@ -39,10 +41,6 @@ define([
             lintRemoveMe: function () {
                 //stupid function to satisfy lint
                 topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
-
-                RampMap.createGraphic({
-                    name: "ugly"
-                });
             },
 
             /**
@@ -75,17 +73,49 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
-                console.log("layer loaded: " + evt.target.url);
-                
+                var layer = evt.target;
+
+                console.log("layer loaded: " + layer.url);
+
+                //TODO
                 //figure out which layer selector state object matches this layer object
 
+                //TODO
                 //check if this layer is in an error state.  if so, exit the handler
 
+                //TODO
                 //set layer selector state to loaded (and possibly do other alex magic)
 
                 //call map functions to wire up event handlers (see map._initEventHandlers )
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        console.log("hoss");
+                        break;
+                    case GlobalStorage.layerType.feature:
+
+                        //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
+
+                        //wire up click handler
+                        layer.on("click", function (evt) {
+                            evt.stopImmediatePropagation();
+                            FeatureClickHandler.onFeatureSelect(evt);
+                        });
+
+                        //wire up mouse over / mouse out handler
+                        layer.on("mouse-over", function (evt) {
+                            FeatureClickHandler.onFeatureMouseOver(evt);
+                        });
+
+                        layer.on("mouse-out", function (evt) {
+                            FeatureClickHandler.onFeatureMouseOut(evt);
+                        });
+
+                        break;
+                }
 
                 //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
+
+                topic.publish(EventManager.Map.LAYER_LOADED, { layer: evt.target });
             },
 
             /**
