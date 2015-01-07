@@ -36,6 +36,7 @@
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
+* @uses MapClickHandler
 * @uses Navigation
 * @uses EventManager
 * @uses Util

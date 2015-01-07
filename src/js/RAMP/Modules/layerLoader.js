@@ -24,6 +24,7 @@
 * @uses FeatureClickHandler
 * @uses GlobalStorage
 * @uses Map
+* @uses MapClickHandler
 * @uses Ramp
 * @uses Util
 */
@@ -36,7 +37,7 @@ define([
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/ramp",
+"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
 
 /* Util */
 "utils/util"],
@@ -49,7 +50,7 @@ define([
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
 
     /* RAMP */
-    EventManager, RampMap, GlobalStorage, FeatureClickHandler, Ramp,
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
 
      /* Util */
     UtilMisc) {
@@ -91,6 +92,7 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
+                //TODO was under the impression the layer had the config object already tacked onto it.  can't find it.  ask aly
                 var layer = evt.target,
                     layerConfig = Ramp.getLayerConfigWithId(layer.id),
                     map = RampMap.getMap();
@@ -109,7 +111,12 @@ define([
                 //call map functions to wire up event handlers (see map._initEventHandlers )
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
-                        console.log("hoss");
+
+                        // WMS binding for getFeatureInfo calls
+                        if (layerConfig.featureInfo !== undefined) {
+                            MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                        }
+
                         break;
                     case GlobalStorage.layerType.feature:
 
@@ -181,9 +188,7 @@ define([
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             */
             loadLayer: function (layer) {
-                if (layer.ramp) {
-                    console.log(layer.ramp.type);
-                } else {
+                if (!layer.ramp) {                   
                     console.log('you failed to supply a ramp.type to the layer!');
                 }
 
