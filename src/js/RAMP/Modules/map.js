@@ -300,22 +300,23 @@ define([
             });
 
             //TODO uncomment this once things are working
-            /*
+
             topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (evt) {
                 var layer = map.getLayer(evt.layerId);
 
-                layer.setOpacity(evt.value);
-                //loops through any static layers that are mapped to the feature layer being toggled
-                try {
-                    dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
-                        var layer = map.getLayer(staticLayer);
-                        layer.setOpacity(evt.value);
-                    });
-                }
-                catch (err) {
+                if (layer !== undefined) {
+                    layer.setOpacity(evt.value);
+                    //loops through any static layers that are mapped to the feature layer being toggled
+                    try {
+                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                            var layer = map.getLayer(staticLayer);
+                            layer.setOpacity(evt.value);
+                        });
+                    }
+                    catch (err) {
+                    }
                 }
             });
-            */
 
             topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (evt) {
                 setBoundingBoxVisibility(evt.id, evt.state);
@@ -940,9 +941,7 @@ define([
                     }
 
                     if (layerConfig.settings.visible === false) {
-                        dojoOn.once(fl, "update-end", function () {
-                            fl.setVisibility(false);
-                        });
+                        fl.setVisibility(false);                       
                     }
                     return fl;
                 });
