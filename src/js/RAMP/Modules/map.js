@@ -31,6 +31,8 @@
 * @uses esri/SpatialReference
 * @uses esri/dijit/Scalebar
 * @uses esri/geometry/Extent
+* @uses esri/tasks/GeometryService
+* @uses esri/tasks/ProjectParameters
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
@@ -46,7 +48,7 @@ define([
         "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
-"esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
+"esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
 "esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
 
 /* Ramp */
@@ -60,7 +62,7 @@ define([
     declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
-    EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
+    EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
     SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
@@ -416,19 +418,6 @@ define([
         }
 
         /**
-        * Instantiates an extent from a JSON config object.
-        * The ojbect should contain 4 bounding co-ordiantes and a spatial reference
-        *
-        * @private
-        * @method createExtent
-        * @param {Object} extentConfig the JSON config object
-        * @return {esri/geometry/Extent} An ESRI extent object based on the config data
-        */
-        function createExtent(extentConfig) {
-            return new EsriExtent(extentConfig);
-        }
-
-        /**
         * project an extent to a new spatial reference, if required
         * when projection is finished, call another function and pass the result to it.
         *
@@ -442,7 +431,7 @@ define([
             var geomSrv, geomParams, realExtent;
 
             //convert configuration extent to proper esri extent object
-            realExtent = createExtent(extent);
+            realExtent = new EsriExtent(extent);
 
             if (UtilMisc.isSpatialRefEqual(realExtent.spatialReference, sr)) {
                 //the extent is already in the correct projection.
@@ -509,29 +498,6 @@ define([
 
             //throw event
             topic.publish(EventManager.Map.EXTENTS_REPROJECTED);
-        }
-
-        /**
-         * Create boudingbox graphic for a bounding box extent
-         *
-         * @param  {esri/geometry/Extent} extent of a bounding box
-         * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
-         */
-        function createGraphic(extent) {
-            return new esri.Graphic({
-                geometry: extent,
-                symbol: {
-                    color: [255, 0, 0, 64],
-                    outline: {
-                        color: [240, 128, 128, 255],
-                        width: 1,
-                        type: "esriSLS",
-                        style: "esriSLSSolid"
-                    },
-                    type: "esriSFS",
-                    style: "esriSFSSolid"
-                }
-            });
         }
 
         /**
@@ -720,13 +686,13 @@ define([
             },
 
             /**
-            * Generates a bounding box layer for a map layer.
-            * @method addBoundingBox
-            * @param {Object} layer An ESRI layer object, with config node attached
+            * Returns the mapping of feature layer ids to assocciated bounding box layers.
+            * @method getBoundingBoxMapping
+            * @return {Object} A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
             *
             */
-            addBoundingBox: function (layer) {
-                return createGraphic(createExtent(layer.layerExtent));
+            getBoundingBoxMapping: function () {
+                return boundingBoxMapping;
             },
 
             /**
@@ -907,7 +873,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(RAMP.config.extents.defaultExtent);
+                initExtent = new EsriExtent(RAMP.config.extents.defaultExtent);
 
                 /**
                 * Used for full extent in nav widget
@@ -916,7 +882,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(RAMP.config.extents.fullExtent);
+                fullExtent = new EsriExtent(RAMP.config.extents.fullExtent);
 
                 /**
                 * The maximum extent of the map
@@ -925,7 +891,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                maxExtent = createExtent(RAMP.config.extents.maximumExtent);
+                maxExtent = new EsriExtent(RAMP.config.extents.maximumExtent);
 
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {

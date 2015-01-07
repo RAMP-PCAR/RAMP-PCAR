@@ -1,4 +1,4 @@
-﻿/* global define, console */
+﻿/* global define, console, RAMP */
 
 /**
 *
@@ -15,26 +15,44 @@
 *
 * @class LayerLoader
 * @static
-* @uses EventManager
-* @uses Map
-* @uses GlobalStorage
-* @uses FeatureClickHandler
 * @uses dojo/topic
+* @uses esri/geometry/Extent
+* @uses esri/layers/GraphicsLayer
+* @uses esri/tasks/GeometryService
+* @uses esri/tasks/ProjectParameters
+* @uses EventManager
+* @uses FeatureClickHandler
+* @uses GlobalStorage
+* @uses Map
+* @uses Ramp
+* @uses Util
 */
 
 define([
-/* RAMP */
-    "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler",
-
 /* Dojo */
-    "dojo/topic"],
+"dojo/topic",
+
+/* ESRI */
+"esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
+
+/* RAMP */
+"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/ramp",
+
+/* Util */
+"utils/util"],
 
     function (
-    /* RAMP */
-    EventManager, RampMap, GlobalStorage, FeatureClickHandler,
-
     /* Dojo */
-    topic) {
+    topic,
+
+    /* ESRI */
+    GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
+
+    /* RAMP */
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler, Ramp,
+
+     /* Util */
+    UtilMisc) {
         "use strict";
         return {
             //TODO REMOVE THIS HOGWASH
@@ -73,7 +91,9 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
-                var layer = evt.target;
+                var layer = evt.target,
+                    layerConfig = Ramp.getLayerConfigWithId(layer.id),
+                    map = RampMap.getMap();
 
                 console.log("layer loaded: " + layer.url);
 
@@ -109,6 +129,42 @@ define([
                         layer.on("mouse-out", function (evt) {
                             FeatureClickHandler.onFeatureMouseOut(evt);
                         });
+
+                        //generate bounding box
+
+                        var boundingBoxExtent,
+                            boundingBox = new GraphicsLayer({
+                                id: String.format("boundingBoxLayer_{0}", layer.id),
+                                visible: layerConfig.settings.boundingBoxVisible
+                            });
+                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                        if (typeof layerConfig.layerExtent !== "undefined") {
+                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                //layer is in same projection as basemap.  can directly use the extent
+                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                            } else {
+                                //layer is in different projection.  reproject to basemap
+
+                                var params = new ProjectParameters(),
+                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                params.geometries = [boundingBoxExtent];
+                                params.outSR = map.spatialReference;
+
+                                gsvc.project(params, function (projectedExtents) {
+                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                });
+                            }
+                        }
+
+                        //add mapping to bounding box
+                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+
+                        //TODO what is the perfect spot / index to inject this layer?
+                        map.addLayer(boundingBox);
 
                         break;
                 }
