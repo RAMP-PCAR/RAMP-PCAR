@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader */
 /* jshint bitwise:false  */
 
 /**
@@ -864,6 +864,22 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         }
                     });
                 }
+            },
+
+            /**
+            * Parses a file using the FileReader API.  Wraps readAsText and returns a promise.
+            *
+            * @param {File} a file object to be read
+            * @return {Object} a promise which sends a string containing the file output if successful
+            */
+            readFileAsText: function (file) {
+                var reader = new FileReader(),
+                    def = new Deferred();
+
+                reader.onload = function (e) { def.resolve(e.target.result); };
+                reader.readAsText(file);
+
+                return def.promise;
             },
 
             /**
