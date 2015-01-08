@@ -1,4 +1,4 @@
-﻿/* global define, Terraformer */
+﻿/* global define, Terraformer, Shapefile */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -22,12 +22,42 @@ define([
 
         }
 
+        function buildShapefile(args) {
+            var def = new Deferred(), shpArgs, shape;
+
+            if (args.shpFile) {
+                if (args.shpUrl) {
+                    throw new Error("Either shpFile or shpUrl must be specified");
+                }
+                shpArgs = {shp:args.shpFile};
+                if (args.dbfFile) {
+                    shpArgs.dbf = args.dbfFile;
+                }
+            } else if (args.shpUrl) {
+                shpArgs = {shp:args.shpUrl};
+                if (args.dbfUrl) {
+                    shpArgs.dbf = args.dbfUrl;
+                }
+            }
+            if (!shpArgs) {
+                throw new Error("Either shpFile or shpUrl must be specified");
+            }
+            shape = new Shapefile(shpArgs, function (data) {
+                try {
+                    def.resolve(makeGeoJsonLayer(data.geojson));
+                } catch (e) {
+                    def.reject(e);
+                }
+            });
+            return def.promise;
+        }
+
         function buildGeoJson(args) {
             var def = new Deferred();
 
             if (args.file) {
                 if (args.url) {
-                    throw new Error("Either url or file should be specified, not both");
+                    throw new Error("Either url or file must be specified");
                 }
 
                 Util.readFileAsText(args.file).then(function (data) {
@@ -57,9 +87,12 @@ define([
 
                 return def.promise;
             }
+
+            throw new Error("Either url or file must be specified");
         }
 
         return {
-            makeGeoJson: buildGeoJson
+            buildGeoJson: buildGeoJson,
+            buildShapefile: buildShapefile
         };
     });
