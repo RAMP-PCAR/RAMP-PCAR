@@ -108,7 +108,7 @@ define([
                 //TODO
                 //set layer selector state to loaded (and possibly do other alex magic)
 
-                //call map functions to wire up event handlers (see map._initEventHandlers )
+                //call map functions to wire up event handlers
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
 

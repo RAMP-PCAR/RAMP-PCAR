@@ -74,7 +74,7 @@ define([
         "use strict";
 
         /**
-        * An Array of {{#crossLink "Esri/layer/FeatureLayer"}}{{/crossLink}} objects.
+        * An Array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects.
         *
         * @private
         * @property featureLayers {Array}
@@ -91,7 +91,7 @@ define([
 
             /**
             * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
-            * A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
+            * A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
             *
             * @private
             * @property boundingBoxMapping {Object}
@@ -593,45 +593,6 @@ define([
             return layerOpacity.default || 1;
         }
 
-        function generateStaticLayer(staticLayer) {
-            var tempLayer,
-                layerType = staticLayer.layerType || "feature";
-            //determine layer type and process
-            switch (layerType) {
-                case "feature":
-                    tempLayer = new FeatureLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        mode: FeatureLayer.MODE_SNAPSHOT,
-                        id: staticLayer.id
-                    });
-                    tempLayer.ramp = {
-                        type: GlobalStorage.layerType.Static
-                    };
-                    break;
-
-                case "tile":
-                    tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: staticLayer.id
-                    });
-                    console.log("tile layer added. " + staticLayer.id);
-                    break;
-
-                case "dynamic":
-                    tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: staticLayer.id
-                    });
-                    console.log("dynamic layer added. " + staticLayer.id);
-                    break;
-
-                default:
-                    console.log("unknown static layer type encountered: " + layerType);
-                    break;
-            }
-            return tempLayer;
-        }
-
         return {
             zoomToLayerScale: function (layerId) {
                 var layer = map.getLayer(layerId),
@@ -676,7 +637,7 @@ define([
             /**
             * Returns a list of feature layers that are currently visible on the map.
             * @method getVisibleFeatureLayers
-            * @return {Array} an array of {{#crossLink "Esri/layer/FeatureLayer"}}{{/crossLink}} objects
+            * @return {Array} an array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects
             *
             */
             getVisibleFeatureLayers: function () {
@@ -690,7 +651,7 @@ define([
             /**
             * Returns the mapping of feature layer ids to assocciated bounding box layers.
             * @method getBoundingBoxMapping
-            * @return {Object} A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
+            * @return {Object} A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
             *
             */
             getBoundingBoxMapping: function () {
@@ -703,7 +664,7 @@ define([
             * @method getFeatureLayer
             * @private
             * @param {String} featureUrl the url of the feature layer
-            * @return {Esri/layer/FeatureLayer} feature layer
+            * @return {Esri/layers/FeatureLayer} feature layer
             */
             getFeatureLayer: function (featureUrl) {
                 return UtilArray.find(featureLayers,
@@ -800,28 +761,132 @@ define([
                     return adjustedEx;
                 }
             },
+
+            /**
+           * Create a new FeatureLayer object based on the config input
+           *
+           * @method makeFeatureLayer
+           * @param {Object} layerConfig config object for the layer to create
+           * @return {Esri/layers/FeatureLayer} feature layer object (unloaded)
+           */
+            makeFeatureLayer: function (layerConfig) {
+                var fl = new FeatureLayer(layerConfig.url, {
+                    id: layerConfig.id,
+                    mode: FeatureLayer.MODE_SNAPSHOT,
+                    outFields: [layerConfig.layerAttributes],
+                    visible: layerConfig.settings.visible,
+                    opacity: resolveLayerOpacity(layerConfig.settings.opacity)
+                });
+
+                fl.ramp = { type: GlobalStorage.layerType.feature };
+
+                if (layerConfig.settings.boundingBoxVisible === true) {
+                    dojoOn.once(fl, "update-end", function () {
+                        setBoundingBoxVisibility(layerConfig.id, true);
+                    });
+                }
+
+                if (layerConfig.settings.visible === false) {
+                    fl.setVisibility(false);
+                }
+
+                return fl;
+            },
+
+            /**
+           * Return the feature layer corresponding to the given url.
+           *
+           * @method makeWmsLayer
+           * @param {Object} layerConfig config object for the layer to create
+           * @return {Esri/layers/WMSLayer} WMS layer
+           */
+
+            makeWmsLayer: function (layerConfig) {
+                var wmsl = new WMSLayer(layerConfig.url, {
+                    id: layerConfig.id,
+                    format: layerConfig.format,
+                    opacity: resolveLayerOpacity(layerConfig.settings.opacity),
+                    visibleLayers: [layerConfig.layerName]
+                    //resourceInfo: {
+                    //    extent: new EsriExtent(layer.extent),
+                    //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
+                    //}
+                });
+                wmsl.ramp = {
+                    type: GlobalStorage.layerType.wms
+                };
+
+                wmsl.setVisibility(layerConfig.settings.visible);
+
+                return wmsl;
+            },
+
+           /**
+           * Return the static layer corresponding to the given url.
+           *
+           * @method makeStaticLayer
+           * @private
+           * @param {Object} layerConfig config object for the layer to create
+           * @return {Object} layer object of the appropriate type
+           */
+
+            makeStaticLayer: function (layerConfig) {
+                var tempLayer,
+                    layerType = layerConfig.layerType || "feature";
+                //determine layer type and process
+                switch (layerType) {
+                    case "feature":
+                        tempLayer = new FeatureLayer(layerConfig.url, {
+                            opacity: resolveLayerOpacity(layerConfig.settings.opacity),
+                            mode: FeatureLayer.MODE_SNAPSHOT,
+                            id: layerConfig.id
+                        });
+                        tempLayer.ramp = {
+                            type: GlobalStorage.layerType.Static
+                        };
+
+                        if (layerConfig.settings.visible === false) {
+                            tempLayer.setVisibility(false);
+                        }
+
+                        break;
+
+                        //We are currently not supporting other static layer types at the moment.
+                        //Future versions should re-implement these cases
+                        /*
+                    case "tile":
+                        tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
+                            opacity: resolveLayerOpacity(staticLayer.settings.opacity),
+                            id: staticLayer.id
+                        });
+                        console.log("tile layer added. " + staticLayer.id);
+                        break;
+
+                    case "dynamic":
+                        tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
+                            opacity: resolveLayerOpacity(staticLayer.settings.opacity),
+                            id: staticLayer.id
+                        });
+                        console.log("dynamic layer added. " + staticLayer.id);
+                        break;
+                        */
+
+                    default:
+                        console.log("unknown static layer type encountered: " + layerType);
+                        break;
+                }
+                return tempLayer;
+            },
+
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
             *
             * Initialize extent
-            * Add base map from the config.basemaps array that has the showOnInit()
-            * Add Static layer from config.featureLayers.staticLayers
-            * Add feature layers from config.featureLayers
-            * Create bounding layers and add to map control
-            * Add map tip events to each feature layer (click/hover/out)
+            * Generate and load initial base map
+            * Generate map layer objects
             * Show scalebar
             * Publish events to outside for other modules to use
             * Subscribe events to update map control
-            *
-            * Note: Not sure if we want to include all the config requirements here.
-            * Map control is initialized with div id provided. The following config file entries are used:
-            * config.extents.defaultExtent xmin, ymin, xmax, ymax
-            * config.levelOfDetails.minLevel
-            * config.levelOfDetails.maxLevel
-            * config.extents.maximumExtent
-            * config.extents.fullExtent
-            * config.basemaps  arrays of basemap, only one or first one with showOnInit set to true
-            * config.featureLayers
             *
             * @method init
             * @param {Object} mapDiv the HTML div that will store the map control
@@ -829,7 +894,7 @@ define([
             *
             */
             init: function () {
-                var
+                var that = this,
 
                 schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
 
@@ -897,25 +962,7 @@ define([
 
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
-                    var wmsl = new WMSLayer(layer.url, {
-                        id: layer.id,
-                        format: layer.format,
-                        opacity: resolveLayerOpacity(layer.settings.opacity),
-                        visibleLayers: [layer.layerName]
-                        //resourceInfo: {
-                        //    extent: new EsriExtent(layer.extent),
-                        //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
-                        //}
-                    });
-                    wmsl.ramp = {
-                        type: GlobalStorage.layerType.wms
-                    };
-
-                    wmsl.setVisibility(layer.settings.visible);
-
-                    console.log("wms registered: " + layer.id);
-                    console.log(wmsl);
-                    return wmsl;
+                    return that.makeWmsLayer(layer);
                 });
 
                 //generate feature layers array
@@ -923,25 +970,14 @@ define([
                     var fl;
 
                     if (layerConfig.isStatic) {
-                        fl = generateStaticLayer(layerConfig);
+                        fl = that.makeStaticLayer(layerConfig);
                     } else {
-                        fl = new FeatureLayer(layerConfig.url, {
-                            id: layerConfig.id,
-                            mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layerConfig.layerAttributes],
-                            visible: layerConfig.settings.visible,
-                            opacity: resolveLayerOpacity(layerConfig.settings.opacity)
-                        });
-                        fl.ramp = { type: GlobalStorage.layerType.feature };
-                        if (layerConfig.settings.boundingBoxVisible === true) {
-                            dojoOn.once(fl, "update-end", function () {
-                                setBoundingBoxVisibility(layerConfig.id, true);
-                            });
-                        }
+                        fl = that.makeFeatureLayer(layerConfig);
                     }
 
+                    //TODO remove this once the logic is in both functions for generating feature and static layers
                     if (layerConfig.settings.visible === false) {
-                        fl.setVisibility(false);                       
+                        fl.setVisibility(false);
                     }
                     return fl;
                 });
@@ -967,7 +1003,7 @@ define([
                 dojoArray.forEach(RAMP.config.layers.feature, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
-                        var tempLayer = map.generateStaticLayer(staticLayer);
+                        var tempLayer = that.makeStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
                         //creates an array of all static layers defined for the current, single feature layer
