@@ -170,6 +170,8 @@ define([
                         //add mapping to bounding box
                         RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
 
+                        boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
+
                         //TODO what is the perfect spot / index to inject this layer?
                         map.addLayer(boundingBox);
 
@@ -188,7 +190,7 @@ define([
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             */
             loadLayer: function (layer) {
-                if (!layer.ramp) {                   
+                if (!layer.ramp) {
                     console.log('you failed to supply a ramp.type to the layer!');
                 }
 

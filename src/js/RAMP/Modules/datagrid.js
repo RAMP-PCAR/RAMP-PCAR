@@ -325,7 +325,6 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (utilMisc.isUndefined(obj[datagridMode])) {
-
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
 
@@ -473,7 +472,6 @@ define([
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {
-
                         jqgridWrapper.addClass("fadedOut");
 
                         // explicitly set height of the scrollbody so the horizontal scrollbar is visible
@@ -792,7 +790,7 @@ define([
 
                 /**
                 * Registers event handlers for following events:
-                * 
+                *
                 * datagrid/highlightrow-show
                 * datagrid/zoomlightrow-show
                 * datagrid/zoomlightrow-hide
@@ -812,7 +810,7 @@ define([
                 }
                 /**
                  * Updates the state of the dataset selector based on whether the dataset has been loaded and what dataset is currently selected.
-                 * 
+                 *
                  * @method updateDatasetSelectorState
                  * @param {Boolean} state indicates if button is disabled or not; true - disabled;
                  * @param {Boolean} [loaded] indicates if the selected dataset is already loaded; it's assumed to be loading otherwise
@@ -879,7 +877,6 @@ define([
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
-
                             //console.timeEnd('applyExtentFilter');
 
                             console.log("I'm resuming");
@@ -898,7 +895,6 @@ define([
                         //console.time('applyExtentFilter');
 
                         applyExtentFilter(deffered);
-
                     }, null, this, duration + 0.05);
 
                     /*tl.set(jqgridWrapper, { className: "-=fadeOut" });
@@ -1220,6 +1216,8 @@ define([
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
+            console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
+
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                     return layer.url === ui.getSelectedDatasetUrl();
@@ -1250,7 +1248,6 @@ define([
 
             var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
-
                     //console.timeEnd('applyExtentFilter:part 1 - 2');
 
                     if (features.features.length > 0) {
@@ -1258,11 +1255,10 @@ define([
                         visibleFeatures[layer.url] = features.features;
                     }
                 });
-            });            
+            });
 
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
-                
                 //console.timeEnd('applyExtentFilter:part 1');
 
                 //console.time('applyExtentFilter:part 2 - fetchRecords');
@@ -1447,6 +1443,16 @@ define([
                 }
             });
 
+            topic.subscribe(EventManager.Map.LAYER_LOADED, function (evt) {
+                //new layer has been added.  if it has grid-worthy data, refresh the grid
+                if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
+                    if (ui.getDatagridMode() !== GRID_MODE_FULL) {
+                        console.log('HOGG - layer loaded event');
+                        applyExtentFilter();
+                    }
+                }
+            });
+
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
                 if (evt.origin === "ex-datagrid" &&
                     evt.isComplete) {
@@ -1462,14 +1468,12 @@ define([
             * @method init
             */
             init: function () {
-
                 // Added to make sure the layer is not static
                 var layerConfigs = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 
                 if (layerConfigs.length !== 0) {
-
                     // layerConfig = config.featureLayers;
                     gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
 

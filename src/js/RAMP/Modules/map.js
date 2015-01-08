@@ -780,12 +780,6 @@ define([
 
                 fl.ramp = { type: GlobalStorage.layerType.feature };
 
-                if (layerConfig.settings.boundingBoxVisible === true) {
-                    dojoOn.once(fl, "update-end", function () {
-                        setBoundingBoxVisibility(layerConfig.id, true);
-                    });
-                }
-
                 if (layerConfig.settings.visible === false) {
                     fl.setVisibility(false);
                 }
@@ -821,14 +815,14 @@ define([
                 return wmsl;
             },
 
-           /**
-           * Return the static layer corresponding to the given url.
-           *
-           * @method makeStaticLayer
-           * @private
-           * @param {Object} layerConfig config object for the layer to create
-           * @return {Object} layer object of the appropriate type
-           */
+            /**
+            * Return the static layer corresponding to the given url.
+            *
+            * @method makeStaticLayer
+            * @private
+            * @param {Object} layerConfig config object for the layer to create
+            * @return {Object} layer object of the appropriate type
+            */
 
             makeStaticLayer: function (layerConfig) {
                 var tempLayer,
@@ -975,10 +969,6 @@ define([
                         fl = that.makeFeatureLayer(layerConfig);
                     }
 
-                    //TODO remove this once the logic is in both functions for generating feature and static layers
-                    if (layerConfig.settings.visible === false) {
-                        fl.setVisibility(false);
-                    }
                     return fl;
                 });
 
