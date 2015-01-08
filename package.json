@@ -84,7 +84,10 @@
                 "Snap.svg/dist/snap.svg.js",
                 "tooltipster/js/jquery.tooltipster.js",
                 "urlshortener/jquery.urlshortener.js",
-                "blueimp-tmpl/js/tmpl.js"
+                "blueimp-tmpl/js/tmpl.js",
+                "js-shapefile-to-geojson/shapefile.js",
+                "js-shapefile-to-geojson/dbf.js",
+                "js-shapefile-to-geojson/stream.js"
             ],
 
             "cssLib": [
