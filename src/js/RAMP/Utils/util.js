@@ -883,6 +883,22 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
+            * Parses a file using the FileReader API.  Wraps readAsBinaryString and returns a promise.
+            *
+            * @param {File} file a dom file object to be read
+            * @return {Object} a promise which sends a string containing the file output if successful
+            */
+            readFileAsBinary: function (file) {
+                var reader = new FileReader(),
+                    def = new Deferred();
+
+                reader.onload = function (e) { def.resolve(e.target.result); };
+                reader.readAsBinaryString(file);
+
+                return def.promise;
+            },
+
+            /**
             * Augments lists of items to be sortable using keyboard.
             * 
             * @method keyboardSortable
