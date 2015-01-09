@@ -299,8 +299,6 @@ define([
                 }
             });
 
-            //TODO uncomment this once things are working
-
             topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (evt) {
                 var layer = map.getLayer(evt.layerId);
 
@@ -416,7 +414,7 @@ define([
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
-        */
+            */
         }
 
         /**
@@ -821,7 +819,10 @@ define([
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
 
-                fl.ramp = { type: GlobalStorage.layerType.feature };
+                fl.ramp = {
+                    type: GlobalStorage.layerType.feature,
+                    config: layerConfig
+                };
 
                 if (layerConfig.settings.visible === false) {
                     fl.setVisibility(false);
@@ -850,7 +851,8 @@ define([
                     //}
                 });
                 wmsl.ramp = {
-                    type: GlobalStorage.layerType.wms
+                    type: GlobalStorage.layerType.wms,
+                    config: layerConfig
                 };
 
                 wmsl.setVisibility(layerConfig.settings.visible);
@@ -879,7 +881,8 @@ define([
                             id: layerConfig.id
                         });
                         tempLayer.ramp = {
-                            type: GlobalStorage.layerType.Static
+                            type: GlobalStorage.layerType.Static,
+                            config: layerConfig
                         };
 
                         if (layerConfig.settings.visible === false) {
