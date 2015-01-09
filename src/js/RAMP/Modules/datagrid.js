@@ -278,6 +278,7 @@ define([
 
                     datagridStatusLine,
                     datagridGlobalToggles,
+                    datagridNotice,
                     jqgridWrapper,
                     jqgridTableWrapper,
                     dataTablesScroll,
@@ -714,8 +715,10 @@ define([
 
                             if (currentTopScroll === 0) {
                                 datagridGlobalToggles.removeClass("scroll");
+                                datagridNotice.removeClass("scroll");
                             } else {
                                 datagridGlobalToggles.addClass("scroll");
+                                datagridNotice.addClass("scroll");
                             }
 
                             if (currentBottomScroll === 0) {
@@ -967,6 +970,8 @@ define([
                         createDatatable();
 
                         datagridGlobalToggles = sectionNode.find('#datagridGlobalToggles');
+                        datagridNotice = sectionNode.find('.datagrid-info-notice');
+
                         datagridStatusLine = sectionNode.find('.status-line');
                         datasetSelector = $("#datasetSelector");
                         datasetSelectorSubmitButton = $("#datasetSelectorSubmitButton");
@@ -1061,7 +1066,7 @@ define([
 
                 function adjustPanelWidth() {
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine]);
+                        utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine, datagridNotice]);
                     } else {
                         if (jqgrid.outerWidth() === jqgridWrapper.outerWidth()) {
                             dataTablesScrollBody.addClass("overflow-x-hidden");
@@ -1091,7 +1096,7 @@ define([
                                     initScrollListeners();
                                     initUIListeners();
                                 }
-                                );
+                            );
 
                             sectionNode = $("#" + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
@@ -1142,7 +1147,33 @@ define([
                     * publishes the subPanel_Capture event to the GUI class
                     * @method capturePanel
                     */
-                    capturePanel: capturePanel
+                    capturePanel: capturePanel,
+
+                    updateNotice: function () {
+                        var notice,
+                            invisibleLayers =
+                                RampMap.getInvisibleLayers()
+                                .filter(function (l) {
+                                    return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
+                                });
+
+                        if (invisibleLayers.length > 0) {
+
+                            tmpl.cache = {};
+                            tmpl.templates = data_grid_template_json;
+
+                            notice = tmpl("datagrid_info_notice", { layers: invisibleLayers });
+
+                            datagridNotice
+                                .empty()
+                                .append(notice);
+
+                            sectionNode.addClass("notice");
+                        } else {
+                            datagridNotice.empty();
+                            sectionNode.removeClass("notice");
+                        }
+                    }
                 };
             }());
 
@@ -1266,6 +1297,8 @@ define([
                 fetchRecords(visibleFeatures);
 
                 //console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
+
+                ui.updateNotice();
 
                 if (d) {
                     console.log("I'm calling reserve!!!");
@@ -1451,6 +1484,10 @@ define([
                         applyExtentFilter();
                     }
                 }
+            });
+
+            topic.subscribe(EventManager.Map.ZOOM_END, function () {
+                ui.updateNotice();
             });
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
