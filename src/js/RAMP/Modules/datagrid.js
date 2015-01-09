@@ -1167,12 +1167,8 @@ define([
 
                         if (this.isReady()) {
                             if (invisibleLayers.length > 0) {
-
-                                // TODO: use authoritative layer config lookup
                                 data.layers = invisibleLayers.map(function (il) {
-                                    return UtilArray.find(RAMP.config.layers.feature, function (fl) {
-                                        return fl.id === il.id;
-                                    });
+                                    return il.ramp.config;
                                 });
 
                                 tmpl.cache = {};
