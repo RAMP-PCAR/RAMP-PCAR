@@ -307,6 +307,10 @@ define([
                             console.log("load");
                             break;
 
+                        case LayerItem.state.LOADED:
+                            this.setState(LayerItem.state.DEFAULT);
+                            break;
+
                         case LayerItem.state.ERROR:
                             console.log("error");
                             break;
@@ -385,6 +389,7 @@ define([
                 state: {
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
+                    LOADED: "layer-state-loaded",
                     ERROR: "layer-state-load-error",
                     OFF_SCALE: "layer-state-off-scale"
                 },
@@ -476,6 +481,12 @@ define([
                 *            toggles: [],
                 *            notices: []
                 *        },
+                * 
+                *        LOADED: {
+                *            controls: [],
+                *            toggles: [],
+                *            notices: []
+                *        },
                 *
                 *        ERROR: {
                 *            controls: [
@@ -516,6 +527,9 @@ define([
                 *            LayerItem.state.ERROR,
                 *            LayerItem.state.OFF_SCALE
                 *        ],
+                *        LOADED: [
+                *            LayerItem.state.LOADING
+                *        ],
                 *        LOADING: [
                 *            LayerItem.state.ERROR,
                 *            LayerItem.state.DEFAULT,
@@ -555,6 +569,12 @@ define([
             notices: []
         };
 
+        LayerItem.stateMatrix[LayerItem.state.LOADED] = {
+            controls: [],
+            toggles: [],
+            notices: []
+        };
+
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
                 LayerItem.controls.ERROR
@@ -588,6 +608,10 @@ define([
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
+            LayerItem.state.LOADED
+        ];
+
+        LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
             LayerItem.state.ERROR,
             LayerItem.state.DEFAULT,
             LayerItem.state.OFF_SCALE
