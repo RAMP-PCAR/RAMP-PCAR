@@ -821,7 +821,8 @@ define([
                     layerGroup.addLayerItem(layerConfig);
                 } else {
                     layerGroup = new LayerGroup([layerConfig], {
-                        layerType: layerType
+                        layerType: layerType,
+                        layerState: LayerItem.state.LOADING
                     });
 
                     layerGroups[layerType] = layerGroup;
