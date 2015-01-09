@@ -94,6 +94,7 @@ define([
 
                     layerSettings,
                     layerToggles,
+                    layerSort,
 
                     layerGroups = {};
 
@@ -315,6 +316,90 @@ define([
 
                         globalToggleSection: function () {
                             return globalToggleSection;
+                        }
+                    };
+                }());
+
+                layerSort = (function () {
+                    var sortableHandle,
+
+                        layerGroupSeparator,
+                        reorderLists,
+
+                        onUpdate = function (event, ui) {
+                            var layerId = ui.item[0].id,
+                                idArray = layerList
+                                    .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
+                                    .map(function (i, elm) { return elm.id; }), // get ids
+                                index = dojoArray.indexOf(idArray, layerId);
+
+                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
+                                origin: "rampPopup,datagrid"
+                            });
+
+                            topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
+                                id: layerId,
+                                index: index
+                            });
+
+                            console.log("Layer", layerId, "moved ->", index);
+                        },
+
+                        onStop = function () {
+                            layerList
+                                .removeClass("sort-active")
+                                .removeClass("sort-disabled");
+
+                            layerGroupSeparator.removeClass("active");
+
+                            console.log("Layer Reordering complete.");
+                        },
+
+                        onStart = function (event, ui) {
+                            layerList
+                                .has(ui.item).addClass("sort-active")
+                                .end().filter(":not(.sort-active)").addClass("sort-disabled");
+                            ui.item.removeClass("bg-very-light");
+
+                            layerGroupSeparator.addClass("active");
+
+                            console.log("Layer Reordering starts.");
+                        };
+
+                    return {
+                        init: function () {
+
+                        },
+
+                        /**
+                        * Sets all the events to handle layer reordering with both mouse and keyboard.
+                        * @method setLayerReorderingEvents
+                        * @private
+                        */
+                        update: function () {
+                            layerGroupSeparator = layerList.parent().find(".layer-group-separator");
+                            reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
+
+                            if (sortableHandle) {
+                                sortableHandle.sortable("destroy");
+                            }
+
+                            sortableHandle = reorderLists
+                                .sortable({
+                                    axis: "y",
+                                    handle: ".sort-handle",
+                                    placeholder: "sortable-placeholder",
+                                    update: onUpdate,
+                                    stop: onStop,
+                                    start: onStart
+                                });
+
+                            UtilMisc.keyboardSortable(reorderLists, {
+                                linkLists: true,
+                                onUpdate: onUpdate,
+                                onStart: onStart,
+                                onStop: onStop
+                            });
                         }
                     };
                 }());
@@ -548,80 +633,12 @@ define([
                     });
                 }
 
-                /**
-                * Sets all the events to handle layer reordering with both mouse and keyboard.
-                * @method setLayerReorderingEvents
-                * @private
-                */
-                function setLayerReorderingEvents() {
-                    // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList > li > ul");
-
-                    var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
-                        reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
-
-                        onUpdate = function (event, ui) {
-                            var layerId = ui.item[0].id,
-                                idArray = layerList
-                                    .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
-                                    .map(function (i, elm) { return elm.id; }), // get ids
-                                index = dojoArray.indexOf(idArray, layerId);
-
-                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                                origin: "rampPopup,datagrid"
-                            });
-
-                            topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
-                                id: layerId,
-                                index: index
-                            });
-
-                            console.log("Layer", layerId, "moved ->", index);
-                        },
-
-                        onStop = function () {
-                            layerList
-                                .removeClass("sort-active")
-                                .removeClass("sort-disabled");
-
-                            layerGroupSeparator.removeClass("active");
-
-                            console.log("Layer Reordering complete.");
-                        },
-
-                        onStart = function (event, ui) {
-                            layerList
-                                .has(ui.item).addClass("sort-active")
-                                .end().filter(":not(.sort-active)").addClass("sort-disabled");
-                            ui.item.removeClass("bg-very-light");
-
-                            layerGroupSeparator.addClass("active");
-
-                            console.log("Layer Reordering starts.");
-                        };
-
-                    reorderLists.sortable({
-                        axis: "y",
-                        handle: ".sort-handle",
-                        placeholder: "sortable-placeholder",
-                        update: onUpdate,
-                        stop: onStop,
-                        start: onStart
-                    });
-
-                    UtilMisc.keyboardSortable(reorderLists, {
-                        linkLists: true,
-                        onUpdate: onUpdate,
-                        onStart: onStart,
-                        onStop: onStop
-                    });
-                }
-
                 function update() {
-                    layerList = $("#layerList > li > ul");
+                    layerList = _mainList.find("> li > ul");
 
                     layerSettings.update();
                     layerToggles.update();
+                    layerSort.update();
                 }
 
                 return {
@@ -634,6 +651,7 @@ define([
                         sectionNode.empty().append(section);
 
                         _mainList = sectionNode.find("#layerList");
+                        layerList = _mainList.find("> li > ul");
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
@@ -646,8 +664,6 @@ define([
 
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
-
-                        setLayerReorderingEvents();
 
                         layerToggles.init();
 
