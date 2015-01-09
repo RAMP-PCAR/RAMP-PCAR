@@ -748,9 +748,8 @@ define([
         * @private
         */
         function setLayerOffScaleStates() {
-            var visibleLayers,
-                allLayers,
-                invisibleLayers;
+            var visibleLayers = RampMap.getVisibleLayers(),
+                invisibleLayers = RampMap.getInvisibleLayers();
 
             function filterLayerIds(layers) {
                 layers = layers
@@ -765,20 +764,6 @@ define([
 
                 return layers;
             }
-
-            visibleLayers = RampMap.getMap().getLayersVisibleAtScale();
-            allLayers = RampMap.getMap()._layers;
-            invisibleLayers = [];
-
-            UtilDict.forEachEntry(allLayers, function (key, value) {
-                var index = UtilArray.indexOf(visibleLayers, function (vl) {
-                    return key === vl.id;
-                });
-
-                if (index === -1) {
-                    invisibleLayers.push(value);
-                }
-            });
 
             visibleLayers = filterLayerIds(visibleLayers);
             ui.setLayerState(visibleLayers, LayerItem.state.DEFAULT, true);

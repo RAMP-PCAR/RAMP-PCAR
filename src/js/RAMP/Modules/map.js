@@ -56,7 +56,7 @@ define([
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
-"utils/util", "utils/array"],
+"utils/util", "utils/array", "utils/dictionary"],
 
     function (
     /* Dojo */
@@ -70,7 +70,7 @@ define([
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
-    UtilMisc, UtilArray) {
+    UtilMisc, UtilArray, UtilDict) {
         "use strict";
 
         /**
@@ -303,16 +303,16 @@ define([
                 var layer = map.getLayer(evt.layerId);
 
                 if (layer !== undefined) {
-                layer.setOpacity(evt.value);
-                //loops through any static layers that are mapped to the feature layer being toggled
-                try {
-                    dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
-                        var layer = map.getLayer(staticLayer);
-                        layer.setOpacity(evt.value);
-                    });
-                }
-                catch (err) {
-                }
+                    layer.setOpacity(evt.value);
+                    //loops through any static layers that are mapped to the feature layer being toggled
+                    try {
+                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                            var layer = map.getLayer(staticLayer);
+                            layer.setOpacity(evt.value);
+                        });
+                    }
+                    catch (err) {
+                    }
                 }
             });
 
@@ -414,7 +414,7 @@ define([
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
-        */
+            */
         }
 
         /**
@@ -617,7 +617,7 @@ define([
                         bottomLod = lods[Math.max(0, i - 1)];
                     }
                 }
-                
+
                 //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
 
                 if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
@@ -661,6 +661,32 @@ define([
                 return dojoArray.filter(map.getLayersVisibleAtScale(), function (layer) {
                     return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
+            },
+
+            getVisibleLayers: function () {
+                return map.getLayersVisibleAtScale();
+            },
+
+            getInvisibleLayers: function () {
+                var visibleLayers,
+                    allLayers,
+                    invisibleLayers;
+
+                visibleLayers = this.getVisibleLayers();
+                allLayers = map._layers;
+                invisibleLayers = [];
+
+                UtilDict.forEachEntry(allLayers, function (key, value) {
+                    var index = UtilArray.indexOf(visibleLayers, function (vl) {
+                        return key === vl.id;
+                    });
+
+                    if (index === -1) {
+                        invisibleLayers.push(value);
+                    }
+                });
+
+                return invisibleLayers;
             },
 
             /**
@@ -972,7 +998,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
                     return that.makeWmsLayer(layer);
-                    });
+                });
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {

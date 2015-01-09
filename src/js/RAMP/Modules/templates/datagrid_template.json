@@ -43,11 +43,31 @@
                                         {% include('datagrid_global_row_Template', o.buttons);%}
                                     </div>
                                     
+                                    <div class='datagrid-info-notice'></div>
+
                                     {% include('datagrid_manager_table_Template', o); %}
 
                                     <div class='clearfix'>
                                     </div>",
     
+    "datagrid_info_notice": "
+
+        <details>
+            <summary>
+                <p>Some data points are not visible at this zoom level.</p>
+            </summary>
+            <div class='small'>
+                {%
+                    o.layers.forEach(function(layer) {
+                        %}      
+                            <p>{%= layer %}</p>
+                        {%
+                    });
+                %}
+            </div>
+        </details>
+    ",
+
     // The following three templates are used to generate the top section (global) for layer toggle.	
     // datagrid global template, used by datagrid.js to generate top section before layer toggles. E.g. All-data
     "datagrid_full_manager_Template":	"<div id='datagridGlobalToggles' class='global-toggles bg-very-light'>
