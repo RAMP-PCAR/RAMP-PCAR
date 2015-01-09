@@ -89,21 +89,24 @@ define([
 
             ui = (function () {
                 var sectionNode,
-                    _mainList,
+                    mainList,
                     layerList,
-                    _filterGlobalToggles_to_remove,
 
                     layerSettings,
                     layerToggles,
+                    layerSort,
+                    layerTooltips,
 
                     layerGroups = {};
 
                 layerSettings = (function () {
+                    var transparencySliders;
+
                     function initTransparencySliders() {
-                        var transparencySliders;
 
                         // initializes all sliders in the layer list
-                        transparencySliders = layerList.find(".nstSlider")
+                        transparencySliders = layerList.find(".nstSlider._slider")
+                            .removeClass("_slider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
                                 rounding: 0.01,
@@ -142,9 +145,11 @@ define([
                                 }
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
+                    }
 
+                    function initListeners() {
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                            var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
+                            var slider = layerList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
                                 value;
 
                             if (slider.length > 0) {
@@ -162,6 +167,12 @@ define([
                     return {
                         init: function () {
                             initTransparencySliders();
+
+                            initListeners();
+                        },
+
+                        update: function () {
+                            initTransparencySliders();
                         }
                     };
                 }());
@@ -171,9 +182,20 @@ define([
                         boxCheckboxGroup,
                         eyeCheckboxGroup;
 
+                    /**
+                    * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
+                    * publishes event "filterManager/box-visibility-toggled" every time a layer status changed.
+                    * There should only be one eye and one global checkbox, but
+                    * we say checkbox"es" because jquery returns a list and it's
+                    * easier to write a function that takes a list of checkboxes
+                    * than to write two functions, one to take a list and one to
+                    * take an individual checkbox
+                    * @method createGroups
+                    * @private
+                    */
                     function createGroups() {
                         boxCheckboxGroup = new CheckboxGroup(
-                            _mainList.find(".checkbox-custom .box + input"),
+                            mainList.find(".checkbox-custom .box + input"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -212,7 +234,7 @@ define([
                         });
 
                         eyeCheckboxGroup = new CheckboxGroup(
-                            _mainList.find(".checkbox-custom .eye + input"),
+                            mainList.find(".checkbox-custom .eye + input"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -264,7 +286,7 @@ define([
                     return {
                         init: function () {
                             globalToggleSection = sectionNode.find("#filterGlobalToggles");
-                            Theme.tooltipster(_mainList);
+                            Theme.tooltipster(mainList);
 
                             createGroups();
                             initListeners();
@@ -272,10 +294,10 @@ define([
                         },
 
                         update: function () {
-                            Theme.tooltipster(_mainList);
+                            Theme.tooltipster(mainList);
 
-                            boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
-                            eyeCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .eye + input"));
+                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .box + input"));
+                            eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
                         },
 
                         globalToggleSection: function () {
@@ -284,172 +306,120 @@ define([
                     };
                 }());
 
-                /**
-                * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
-                * publishes event "filterManager/box-visibility-toggled" every time a layer status changed.
-                * There should only be one eye and one global checkbox, but
-                * we say checkbox"es" because jquery returns a list and it's
-                * easier to write a function that takes a list of checkboxes
-                * than to write two functions, one to take a list and one to
-                * take an individual checkbox
-                * @method setCheckboxEvents
-                * @private
-                */
-                function setCheckboxEvents() {
-                    var boxCheckboxGroup,
-                        eyeCheckboxGroup;
+                layerSort = (function () {
+                    var sortableHandle,
 
-                    boxCheckboxGroup = new CheckboxGroup(
-                        layerList.find(".checkbox-custom .box + input"),
-                        {
-                            nodeIdAttr: layerIdField,
+                        layerGroupSeparator,
+                        reorderLists,
 
-                            /*cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
-                            },*/
+                        onUpdate = function (event, ui) {
+                            var layerId = ui.item[0].id,
+                                idArray = layerList
+                                    .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
+                                    .map(function (i, elm) { return elm.id; }), // get ids
+                                index = dojoArray.indexOf(idArray, layerId);
 
-                            label: {
-                                check: i18n.t('filterManager.hideBounds'),
-                                uncheck: i18n.t('filterManager.showBounds')
-                            },
+                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
+                                origin: "rampPopup,datagrid"
+                            });
 
-                            onChange: function () {
-                                Theme.tooltipster(this.labelNode.parent(), null, "update");
-                            },
+                            topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
+                                id: layerId,
+                                index: index
+                            });
 
-                            master: {
-                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .box + input"),
-
-                                nodeIdAttr: "id",/*
-
-                                cssClass: {
-                                    active: "active",
-                                    focus: "focused",
-                                    check: "checked"
-                                },*/
-
-                                label: {
-                                    check: i18n.t('filterManager.hideAllBounds'),
-                                    uncheck: i18n.t('filterManager.showAllBounds')
-                                }/*,
-
-                                onChange: Theme.tooltipster*/
-                            }
-                        });
-
-                    /*boxCheckboxGroup.setEachState(function (checkbox) {
-                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.settings.boundingBoxVisible;
-                    });*/
-
-                    boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        topic.publish(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, {
-                            id: evt.checkbox.id,
-                            state: evt.checkbox.state
-                        });
-                    });
-
-                    boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                    });
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_BOX_VISIBILITY, function (evt) {
-                        boxCheckboxGroup.setState(evt.state, evt.layerId);
-                    });
-
-                    eyeCheckboxGroup = new CheckboxGroup(
-                        layerList.find(".checkbox-custom .eye + input"),
-                        {
-                            nodeIdAttr: layerIdField,
-
-                            /*cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
-                            },*/
-
-                            label: {
-                                check: i18n.t('filterManager.hideFeatures'),
-                                uncheck: i18n.t('filterManager.showFeatures')
-                            },
-
-                            onChange: function () {
-                                Theme.tooltipster(this.labelNode.parent(), null, "update");
-                            },
-
-                            master: {
-                                node: _filterGlobalToggles_to_remove.find(".checkbox-custom .eye + input"),
-
-                                nodeIdAttr: "id",/*
-
-                                cssClass: {
-                                    active: "active",
-                                    focus: "focused",
-                                    check: "checked"
-                                }*/
-
-                                label: {
-                                    check: i18n.t('filterManager.hideAllFeatures'),
-                                    uncheck: i18n.t('filterManager.showAllFeatures')
-                                }/*,
-
-                                onChange: Theme.tooltipster*/
-                            }
-                        });
-
-                    /*eyeCheckboxGroup.setEachState(function (checkbox) {
-                        var layerConfig = Ramp.getLayerConfigWithId(checkbox.node.data(layerIdField));
-                        return layerConfig.settings.visible;
-                    });*/
-
-                    eyeCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-
-                        topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
-                            id: evt.checkbox.id,
-                            state: evt.checkbox.state
-                        });
-                    });
-
-                    eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
-                        console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                    });
-
-                    topic.subscribe(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, function (evt) {
-                        eyeCheckboxGroup.setState(evt.state, evt.layerId);
-                    });
-                }
-
-                /**
-                * initialize a tooltip for each layer, using the layer name.
-                * @method initTooltips
-                * @private
-                */
-                function initTooltips() {
-                    //Theme.tooltipster(_filterGlobalToggles_to_remove);
-                    Theme.tooltipster(layerList);
-
-                    PopupManager.registerPopup(layerList, "hoverIntent",
-                        function () {
-                            if (this.target.attr("title")) {
-                                if (this.target.isOverflowed()) {
-                                    this.target.tooltipster({ theme: '.tooltipster-dark' }).tooltipster("show");
-                                } else {
-                                    this.target.removeAttr("title");
-                                }
-                            }
+                            console.log("Layer", layerId, "moved ->", index);
                         },
-                        {
-                            handleSelector: ".layer-name span, .layer-details span",
-                            useAria: false,
-                            timeout: 500
+
+                        onStop = function () {
+                            layerList
+                                .removeClass("sort-active")
+                                .removeClass("sort-disabled");
+
+                            layerGroupSeparator.removeClass("active");
+
+                            console.log("Layer Reordering complete.");
+                        },
+
+                        onStart = function (event, ui) {
+                            layerList
+                                .has(ui.item).addClass("sort-active")
+                                .end().filter(":not(.sort-active)").addClass("sort-disabled");
+                            ui.item.removeClass("bg-very-light");
+
+                            layerGroupSeparator.addClass("active");
+
+                            console.log("Layer Reordering starts.");
+                        };
+
+                    return {
+                        init: function () {
+
+                        },
+
+                        /**
+                        * Sets all the events to handle layer reordering with both mouse and keyboard.
+                        * @method setLayerReorderingEvents
+                        * @private
+                        */
+                        update: function () {
+                            layerGroupSeparator = layerList.parent().find(".layer-group-separator");
+                            reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
+
+                            if (sortableHandle) {
+                                sortableHandle.sortable("destroy");
+                            }
+
+                            sortableHandle = reorderLists
+                                .sortable({
+                                    axis: "y",
+                                    handle: ".sort-handle",
+                                    placeholder: "sortable-placeholder",
+                                    update: onUpdate,
+                                    stop: onStop,
+                                    start: onStart
+                                });
+
+                            UtilMisc.keyboardSortable(reorderLists, {
+                                linkLists: true,
+                                onUpdate: onUpdate,
+                                onStart: onStart,
+                                onStop: onStop
+                            });
                         }
-                    );
-                }
+                    };
+                }());
+
+                layerTooltips = (function () {
+                    return {
+                        /**
+                        * initialize a tooltip for each layer, using the layer name.
+                        * @method initTooltips
+                        * @private
+                        */
+                        init: function () {
+                            //Theme.tooltipster(_filterGlobalToggles_to_remove);
+                            Theme.tooltipster(mainList);
+
+                            PopupManager.registerPopup(mainList, "hoverIntent",
+                                function () {
+                                    if (this.target.attr("title")) {
+                                        if (this.target.isOverflowed()) {
+                                            this.target.tooltipster({ theme: '.tooltipster-dark' }).tooltipster("show");
+                                        } else {
+                                            this.target.removeAttr("title");
+                                        }
+                                    }
+                                },
+                                {
+                                    handleSelector: ".layer-name span, .layer-details span",
+                                    useAria: false,
+                                    timeout: 500
+                                }
+                            );
+                        }
+                    };
+                }());
 
                 /**
                 * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
@@ -462,12 +432,14 @@ define([
                 }
 
                 /**
-                * Adjusts UI layout according to a layer event.
+                * Sets event handlers for various controls that may be present in the layer items. All event handlers are set on the main list container and are independed of the individual layer items.
+                * 
                 * @method setButtonEvents
                 * @private
                 */
                 function setButtonEvents() {
-                    PopupManager.registerPopup(_mainList, "hover, focus",
+                    // highlight layer item on hover/focus with a light gray background
+                    PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
                             d.resolve();
                         },
@@ -479,7 +451,8 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    // open the settings panel when the settings control is clicked; visibility slider is refreshed;
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
@@ -496,14 +469,14 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    // open renderers sections when the renderer button (layer icon) is clicked;
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
                                 adjustPaneWidth();
                                 d.resolve();
                             });
-                            //this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
                             handleSelector: ".renderer-button",
@@ -513,7 +486,9 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    // display metadata when the metadata button is clicked;
+                    // TODO: move to a separate/different module?
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             metadataClickHandler(this.target);
 
@@ -617,7 +592,8 @@ define([
                         }
                     }
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    // for scale-dependent layers - zoom to data
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             var layerId = this.target.data("layer-id");
 
@@ -654,158 +630,47 @@ define([
                 }
 
                 /**
-                * Sets all the events to handle layer reordering with both mouse and keyboard.
-                * @method setLayerReorderingEvents
+                * Returns a LayerItem object with specified layerId.
+                * @param {String} layerId a layer id 
+                * @method getLayerItem
                 * @private
                 */
-                function setLayerReorderingEvents() {
-                    // Drag and drop layer reordering using jQuery UI Sortable widget
-                    layerList = $("#layerList > li > ul");
+                function getLayerItem(layerId) {
+                    var layerItem = null;
 
-                    var layerGroupSeparator = layerList.parent().find(".layer-group-separator"),
-                        reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; }),
-
-                        onUpdate = function (event, ui) {
-                            var layerId = ui.item[0].id,
-                                idArray = layerList
-                                    .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
-                                    .map(function (i, elm) { return elm.id; }), // get ids
-                                index = dojoArray.indexOf(idArray, layerId);
-
-                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                                origin: "rampPopup,datagrid"
-                            });
-
-                            topic.publish(EventManager.FilterManager.SELECTION_CHANGED, {
-                                id: layerId,
-                                index: index
-                            });
-
-                            console.log("Layer", layerId, "moved ->", index);
-                        },
-
-                        onStop = function () {
-                            layerList
-                                .removeClass("sort-active")
-                                .removeClass("sort-disabled");
-
-                            layerGroupSeparator.removeClass("active");
-
-                            console.log("Layer Reordering complete.");
-                        },
-
-                        onStart = function (event, ui) {
-                            layerList
-                                .has(ui.item).addClass("sort-active")
-                                .end().filter(":not(.sort-active)").addClass("sort-disabled");
-                            ui.item.removeClass("bg-very-light");
-
-                            layerGroupSeparator.addClass("active");
-
-                            console.log("Layer Reordering starts.");
-                        };
-
-                    reorderLists.sortable({
-                        axis: "y",
-                        handle: ".sort-handle",
-                        placeholder: "sortable-placeholder",
-                        update: onUpdate,
-                        stop: onStop,
-                        start: onStart
+                    UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
+                        if (!layerItem) {
+                            layerItem = layerGroup.getLayerItem(layerId);
+                        }
                     });
 
-                    UtilMisc.keyboardSortable(reorderLists, {
-                        linkLists: true,
-                        onUpdate: onUpdate,
-                        onStart: onStart,
-                        onStop: onStop
-                    });
+                    return layerItem;
+                }
+
+                /**
+                * Updates certain UI aspects like layer settings panel (visibility sliders for now only), layer visibility and bounding box toggles, and layer sorting.
+                * @method update
+                * @private
+                */
+                function update() {
+                    layerList = mainList.find("> li > ul");
+
+                    layerSettings.update();
+                    layerToggles.update();
+                    layerSort.update();
                 }
 
                 return {
                     init: function () {
-                        // reset and load global template
-                        // move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
-                        tmpl.cache = {};
-                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
-
-                        /*
-                        // get visible layers reversing their order; that's important
-                        var layers = RampMap.getMap().getLayersVisibleAtScale().reverse(),
-                            layerGroups = {
-                                feature: [
-
-                                ],
-
-                                wms: [
-
-                                ]
-                            },
-                            data,
-                            section;
-
-                        // limit only to visible layer that is not basemap
-                        dojoArray.forEach(layers, function (layer) {
-                            var wmsLayerName = null;
-                            if (layer.ramp.type === GlobalStorage.layerType.wms) {
-                                // wmsLayerName = layer.layerName;
-                                layer.layerConfig = Ramp.getLayerConfigWithId(layer.id);
-
-                                if (layer.layerConfig.legendMimeType) {
-                                    layer.layerConfig.legend = {
-                                        type: "wms",
-                                        imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
-                                            layer.layerConfig.url,
-                                            layer.version,
-                                            layer.layerConfig.legendMimeType,
-                                            layer.layerConfig.layerName
-                                        )
-                                    };
-                                }
-
-                                layerGroups.wms.push(layer);
-                            } else if (layer.ramp.type === GlobalStorage.layerType.feature || layer.ramp.type === GlobalStorage.layerType.Static) {
-                                layer.layerConfig = Ramp.getLayerConfig(layer.url, wmsLayerName);
-
-                                layerGroups.feature.push(layer);
-                            }
-                        });
-
-                        // put layer in datawrapper to be used in template
-                        data = {
-                            config: RAMP.config,
-                            layerGroups: {
-                                feature: TmplHelper.dataBuilder(layerGroups.feature),
-                                wms: TmplHelper.dataBuilder(layerGroups.wms)
-                            }
-                        };
-
-                        sectionNode = $("#" + RAMP.config.divNames.filter);
-                        // TODO: generate section using one template, need to refactoring the following fixed string
-                        section = tmpl('filter_manager_template', data);
-                        */
-
-                        var layers = RAMP.config.layers,
-                            section,
-                            layerGroup;
+                        var section;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
 
                         sectionNode.empty().append(section);
 
-                        _mainList = sectionNode.find("#layerList");
-
-                        UtilDict.forEachEntry(layers, function (key, value) {
-                            var layerType = GlobalStorage.layerType[key];
-
-                            layerGroup = new LayerGroup(value, {
-                                layerType: layerType
-                            });
-
-                            layerGroups[layerType] = layerGroup;
-                            _mainList.append(layerGroup.node);
-                        });
+                        mainList = sectionNode.find("#layerList");
+                        layerList = mainList.find("> li > ul");
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
@@ -819,21 +684,10 @@ define([
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
-                        //_filterGlobalToggles_to_remove = $('#filterGlobalToggles');
-
-                        setLayerReorderingEvents();
-
-                        if (false) {
-                            setCheckboxEvents();
-                        }
                         layerToggles.init();
-
-                        initTooltips();
-
+                        layerTooltips.init();
                         setButtonEvents();
-
                         initScrollListeners();
-
                         layerSettings.init();
 
                         // ui initialization completes
@@ -844,21 +698,29 @@ define([
                     );*/
                     },
 
-                    getLayerItem: function (layerId) {
-                        var layerItem = null;
+                    addLayer: function (layerType, layerConfig) {
+                        var layerGroup = layerGroups[layerType];
 
-                        UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
-                            if (!layerItem) {
-                                layerItem = layerGroup.getLayerItem(layerId);
-                            }
-                        });
+                        // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
-                        return layerItem;
+                        if (layerGroup) {
+                            layerGroup.addLayerItem(layerConfig);
+                        } else {
+                            layerGroup = new LayerGroup([layerConfig], {
+                                layerType: layerType
+                            });
+
+                            layerGroups[layerType] = layerGroup;
+                            mainList.append(layerGroup.node);
+                        }
+
+                        // TODO: check scale in cleaner way
+                        setLayerOffScaleStates();
+                        update();
                     },
 
-                    setLayerItemState: function (layerId, layerState) {
-                        var that = this,
-                            layerItem,
+                    setLayerState: function (layerId, layerState) {
+                        var layerItem,
                             isChanged = false;
 
                         if (!(layerId instanceof Array)) {
@@ -866,12 +728,13 @@ define([
                         }
 
                         layerId.forEach(function (lId) {
-                            layerItem = that.getLayerItem(lId);
+                            layerItem = getLayerItem(lId);
                             if (layerItem && layerItem.setState(layerState)) {
                                 isChanged = true;
                             }
                         });
 
+                        // update the toggle groups after changing state since toggles might disappear/be added
                         if (isChanged) {
                             layerToggles.update();
                         }
@@ -879,6 +742,11 @@ define([
                 };
             }());
 
+        /**
+        * Checks if any of the layers have data that is not visible and sets the appropriate layer state.
+        * @method setLayerOffScaleStates
+        * @private
+        */
         function setLayerOffScaleStates() {
             var visibleLayers,
                 allLayers,
@@ -913,10 +781,10 @@ define([
             });
 
             visibleLayers = filterLayerIds(visibleLayers);
-            ui.setLayerItemState(visibleLayers, LayerItem.state.DEFAULT, true);
+            ui.setLayerState(visibleLayers, LayerItem.state.DEFAULT, true);
 
             invisibleLayers = filterLayerIds(invisibleLayers);
-            ui.setLayerItemState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+            ui.setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
         }
 
         /**
@@ -947,12 +815,21 @@ define([
                 // Convenience config objects
                 config = RAMP.config;
 
-                initListeners();
+                // reset and load global template
+                // move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
                 ui.init();
 
+                initListeners();
                 setLayerOffScaleStates();
             },
+
+            addLayer: function (type, config) {
+                ui.addLayer(type, config);
+            },
+
             /**
             * Queries all map points on a given feature layer and returns their attributes
             * @method _getFeatures

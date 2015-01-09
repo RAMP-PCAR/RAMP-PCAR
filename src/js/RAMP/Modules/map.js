@@ -299,22 +299,20 @@ define([
                 }
             });
 
-            //TODO uncomment this once things are working
-
             topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (evt) {
                 var layer = map.getLayer(evt.layerId);
 
                 if (layer !== undefined) {
-                    layer.setOpacity(evt.value);
-                    //loops through any static layers that are mapped to the feature layer being toggled
-                    try {
-                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
-                            var layer = map.getLayer(staticLayer);
-                            layer.setOpacity(evt.value);
-                        });
-                    }
-                    catch (err) {
-                    }
+                layer.setOpacity(evt.value);
+                //loops through any static layers that are mapped to the feature layer being toggled
+                try {
+                    dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                        var layer = map.getLayer(staticLayer);
+                        layer.setOpacity(evt.value);
+                    });
+                }
+                catch (err) {
+                }
                 }
             });
 
@@ -416,7 +414,7 @@ define([
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
-            */
+        */
         }
 
         /**
@@ -594,22 +592,39 @@ define([
         }
 
         return {
+            /**
+            * For a specified layer, zooms to the closest level that has some visible data.
+            * @param {String} layerId a layer id to zoom to.
+            * @method zoomToLayerScale
+            */
             zoomToLayerScale: function (layerId) {
                 var layer = map.getLayer(layerId),
                     lods = map._params.lods,
+                    currentLevel = map.getLevel(),
+                    topLod,
+                    bottomLod,
                     lod,
                     i;
 
                 for (i = 0; i < lods.length; i += 1) {
                     lod = lods[i];
-                    console.log("lod", lod, lod.scale > layer.minScale);
-                    if (lod.scale <= layer.minScale) {
-                        break;
+                    //console.log("lod", lod, lod.scale > layer.minScale);
+                    if (!topLod && lod.scale <= layer.minScale) {
+                        topLod = lod;
+                    }
+
+                    if (!bottomLod && lod.scale <= layer.maxScale) {
+                        bottomLod = lods[Math.max(0, i - 1)];
                     }
                 }
+                
+                //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
 
-                console.log(map.getBasemap(), layerId, layer.maxScale, layer.minScale, lod, map.getZoom());
-                map.setZoom(lod.level);
+                if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
+                    map.setZoom(topLod.level);
+                } else {
+                    map.setZoom(bottomLod.level);
+                }
             },
 
             /**
@@ -957,7 +972,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
                     return that.makeWmsLayer(layer);
-                });
+                    });
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {

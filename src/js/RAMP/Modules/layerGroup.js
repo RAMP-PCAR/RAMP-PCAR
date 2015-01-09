@@ -102,11 +102,11 @@ define([
                 console.debug(LayerItem.state);
 
                 this.layers.forEach(function (layer) {
-                    that.addLayer(layer);
+                    that.addLayerItem(layer);
                 });
             },
 
-            addLayer: function (layer, options) {
+            addLayerItem: function (layer, options) {
                 var layerItem,
                     layerItemOptions = {
                         stateMatrix: this._constructStateMatrix(layer)

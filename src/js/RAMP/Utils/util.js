@@ -894,8 +894,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * Augments lists of items to be sortable using keyboard.
-            *
+            * Augments lists of items to be sortable using keyboard. Can only be applied after jQuery UI Sortable has been applied to the lists.
+            * 
             * @method keyboardSortable
             * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
             * @param {Object} [settings] Additional settings
@@ -917,7 +917,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 ulNodes.each(function (index, _ulNode) {
                     var ulNode = $(_ulNode),
                         liNodes = ulNode.find("> li"),
-                        sortHandleNodes = liNodes.find(".sort-handle"),
+                        //sortHandleNodes = liNodes.find(".sort-handle"),
                         isReordering = false,
                         grabbed;
 
@@ -928,8 +928,13 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         liNode.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
                     }
 
-                    sortHandleNodes
-                        .focusout(function (event) {
+                    // try to remove event handlers to prevent double initialization
+                    ulNode
+                        .off("focusout", ".sort-handle")
+                        .off("keyup", ".sort-handle");
+
+                    ulNode
+                        .on("focusout", ".sort-handle", function (event) {
                             var node = $(this).closest("li");
 
                             // if the list is not being reordered right now, release list item
@@ -945,7 +950,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", function (event) {
+                        .on("keyup", ".sort-handle", function (event) { 
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -1044,15 +1049,15 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter
-             *
+             * 
              *      [
              *          {
              *              timeline: {timeline},
              *              generator: {function}
              *          }
              *      ]
-             *
-             *
+             *      
+             * 
              * @method resetTimelines
              * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
              * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
