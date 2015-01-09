@@ -1157,21 +1157,23 @@ define([
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
                                 });
 
-                        if (invisibleLayers.length > 0) {
+                        if (this.isReady()) {
+                            if (invisibleLayers.length > 0) {
 
-                            tmpl.cache = {};
-                            tmpl.templates = data_grid_template_json;
+                                tmpl.cache = {};
+                                tmpl.templates = data_grid_template_json;
 
-                            notice = tmpl("datagrid_info_notice", { layers: invisibleLayers });
+                                notice = tmpl("datagrid_info_notice", { layers: invisibleLayers });
 
-                            datagridNotice
-                                .empty()
-                                .append(notice);
+                                datagridNotice
+                                    .empty()
+                                    .append(notice);
 
-                            sectionNode.addClass("notice");
-                        } else {
-                            datagridNotice.empty();
-                            sectionNode.removeClass("notice");
+                                sectionNode.addClass("notice");
+                            } else {
+                                datagridNotice.empty();
+                                sectionNode.removeClass("notice");
+                            }
                         }
                     }
                 };
