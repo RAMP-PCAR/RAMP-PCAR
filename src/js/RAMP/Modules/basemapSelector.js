@@ -1,4 +1,4 @@
-/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite, window */
+/*global define, $, esri, tmpl, RAMP, i18n, TimelineLite, window, console */
 /*jslint white: true */
 
 /**
@@ -192,7 +192,6 @@ function (
                                 heightTimeline;
 
                             if (!this.isOpen()) {
-
                                 fromHeight = selectorSection.height();
                                 toHeight = this.target.height();
                                 heightTimeline = new TimelineLite({
@@ -379,6 +378,11 @@ function (
                 basemaps: esriBasemaps,
                 map: RampMap.getMap()
             }, placementAnchorId);
+
+            basemapGallery.on('error', function (evt) {
+                //TODO handle this in a nicer way
+                console.log('Error occurred when loading basemap: ' + evt.message);
+            });
 
             basemapGallery.startup();
 
