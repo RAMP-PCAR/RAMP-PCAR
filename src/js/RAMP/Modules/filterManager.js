@@ -87,6 +87,8 @@ define([
         var config,
             layerIdField = "layer-id",
 
+            layerGroups = {},
+
             ui = (function () {
                 var sectionNode,
                     mainList,
@@ -95,9 +97,7 @@ define([
                     layerSettings,
                     layerToggles,
                     layerSort,
-                    layerTooltips,
-
-                    layerGroups = {};
+                    layerTooltips;
 
                 layerSettings = (function () {
                     var transparencySliders;
@@ -629,37 +629,6 @@ define([
                     });
                 }
 
-                /**
-                * Returns a LayerItem object with specified layerId.
-                * @param {String} layerId a layer id 
-                * @method getLayerItem
-                * @private
-                */
-                function getLayerItem(layerId) {
-                    var layerItem = null;
-
-                    UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
-                        if (!layerItem) {
-                            layerItem = layerGroup.getLayerItem(layerId);
-                        }
-                    });
-
-                    return layerItem;
-                }
-
-                /**
-                * Updates certain UI aspects like layer settings panel (visibility sliders for now only), layer visibility and bounding box toggles, and layer sorting.
-                * @method update
-                * @private
-                */
-                function update() {
-                    layerList = mainList.find("> li > ul");
-
-                    layerSettings.update();
-                    layerToggles.update();
-                    layerSort.update();
-                }
-
                 return {
                     init: function () {
                         var section;
@@ -698,59 +667,63 @@ define([
                     );*/
                     },
 
-                    addLayer: function (layerType, layerConfig) {
-                        var layerGroup = layerGroups[layerType];
+                    /**
+                    * Updates certain UI aspects like layer settings panel (visibility sliders for now only), layer visibility and bounding box toggles, and layer sorting.
+                    * @method update
+                    * @private
+                    */
+                    update: function () {
+                        layerList = mainList.find("> li > ul");
 
-                        // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
-
-                        if (layerGroup) {
-                            layerGroup.addLayerItem(layerConfig);
-                        } else {
-                            layerGroup = new LayerGroup([layerConfig], {
-                                layerType: layerType
-                            });
-
-                            layerGroups[layerType] = layerGroup;
-                            mainList.append(layerGroup.node);
-                        }
-
-                        // TODO: check scale in cleaner way
-                        setLayerOffScaleStates();
-                        update();
+                        layerSettings.update();
+                        layerToggles.update();
+                        layerSort.update();
                     },
 
-                    getLayerState: function (layerId) {
-                        var layerItem = getLayerItem(layerId);
-
-                        if (layerItem) {
-                            return layerItem.state;
-                        } else {
-                            return null;
-                        }
-                    },
-
-                    setLayerState: function (layerId, layerState) {
-                        var layerItem,
-                            isChanged = false;
-
-                        if (!(layerId instanceof Array)) {
-                            layerId = [layerId];
-                        }
-
-                        layerId.forEach(function (lId) {
-                            layerItem = getLayerItem(lId);
-                            if (layerItem && layerItem.setState(layerState)) {
-                                isChanged = true;
-                            }
-                        });
-
-                        // update the toggle groups after changing state since toggles might disappear/be added
-                        if (isChanged) {
-                            layerToggles.update();
-                        }
+                    addLayerGroup: function (layerGroupNode) {
+                        mainList.append(layerGroupNode);
                     }
                 };
             }());
+
+        /**
+        * Returns a LayerItem object with specified layerId.
+        * @param {String} layerId a layer id 
+        * @method getLayerItem
+        * @private
+        */
+        function getLayerItem(layerId) {
+            var layerItem = null;
+
+            UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
+                if (!layerItem) {
+                    layerItem = layerGroup.getLayerItem(layerId);
+                }
+            });
+
+            return layerItem;
+        }
+
+        function setLayerState(layerId, layerState) {
+            var layerItem,
+                isChanged = false;
+
+            if (!(layerId instanceof Array)) {
+                layerId = [layerId];
+            }
+
+            layerId.forEach(function (lId) {
+                layerItem = getLayerItem(lId);
+                if (layerItem && layerItem.setState(layerState)) {
+                    isChanged = true;
+                }
+            });
+
+            // update the toggle groups after changing state since toggles might disappear/be added
+            if (isChanged) {
+                ui.update();
+            }
+        }
 
         /**
         * Checks if any of the layers have data that is not visible and sets the appropriate layer state.
@@ -776,10 +749,10 @@ define([
             }
 
             visibleLayers = filterLayerIds(visibleLayers);
-            ui.setLayerState(visibleLayers, LayerItem.state.DEFAULT, true);
+            setLayerState(visibleLayers, LayerItem.state.DEFAULT, true);
 
             invisibleLayers = filterLayerIds(invisibleLayers);
-            ui.setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+            setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
         }
 
         /**
@@ -821,12 +794,40 @@ define([
                 setLayerOffScaleStates();
             },
 
-            addLayer: function (type, config) {
-                ui.addLayer(type, config);
+            addLayer: function (layerType, layerConfig) {
+                //ui.addLayer(type, config);
+
+                var layerGroup = layerGroups[layerType];
+
+                // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
+
+                if (layerGroup) {
+                    layerGroup.addLayerItem(layerConfig);
+                } else {
+                    layerGroup = new LayerGroup([layerConfig], {
+                        layerType: layerType
+                    });
+
+                    layerGroups[layerType] = layerGroup;
+                    ui.addLayerGroup(layerGroup.node);
+                }
+
+                // TODO: check scale in cleaner way
+                setLayerOffScaleStates();
+
+                ui.update();
             },
 
             getLayerState: function (layerId) {
-                ui.getLayerState(layerId);
+                //ui.getLayerState(layerId);
+
+                var layerItem = getLayerItem(layerId);
+
+                if (layerItem) {
+                    return layerItem.state;
+                } else {
+                    return null;
+                }
             },
 
             /**
