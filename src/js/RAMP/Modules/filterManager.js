@@ -669,7 +669,7 @@ define([
 
                     /**
                     * Updates certain UI aspects like layer settings panel (visibility sliders for now only), layer visibility and bounding box toggles, and layer sorting.
-                    * @method update
+                    * @method ui.update
                     * @private
                     */
                     update: function () {
@@ -680,6 +680,11 @@ define([
                         layerSort.update();
                     },
 
+                    /**
+                    * Add the provided layer group node to the layer selector ui.
+                    * @method ui.addLayerGroup
+                    * @private
+                    */
                     addLayerGroup: function (layerGroupNode) {
                         mainList.append(layerGroupNode);
                     }
@@ -704,6 +709,13 @@ define([
             return layerItem;
         }
 
+        /**
+        * Set the state of the specified layer to the provided value.
+        * @param {String} layerId a layer id 
+        * @param {String} layerState a state to set the specified layer to
+        * @method setLayerState
+        * @private
+        */
         function setLayerState(layerId, layerState) {
             var layerItem,
                 isChanged = false;
@@ -794,9 +806,13 @@ define([
                 setLayerOffScaleStates();
             },
 
+            /**
+            * Add a provided layer to the layer selector.
+            * @param {String} layerType layer type - name of the layer group
+            * @param {Object} layerConfig a layer config
+            * @method addLayer
+            */
             addLayer: function (layerType, layerConfig) {
-                //ui.addLayer(type, config);
-
                 var layerGroup = layerGroups[layerType];
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
@@ -818,9 +834,13 @@ define([
                 ui.update();
             },
 
+            /**
+            * Returns the state of the layer with the specified layer id.
+            * @param {String} layerId a layer id 
+            * @method getLayerState
+            * @private
+            */
             getLayerState: function (layerId) {
-                //ui.getLayerState(layerId);
-
                 var layerItem = getLayerItem(layerId);
 
                 if (layerItem) {
