@@ -55,11 +55,30 @@ define([
      /* Util */
     UtilMisc) {
         "use strict";
+
+        /*
+        var iFeatureCount,  //includes static layers
+            iBoundingCount,
+            iWmsCount,
+            iBaseCount;
+            */
+
         return {
-            //TODO REMOVE THIS HOGWASH
-            lintRemoveMe: function () {
-                //stupid function to satisfy lint
-                topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
+            /**
+            * Initializes properties.
+            *
+            * @method init
+            */
+            init: function () {
+                //counters for layers loaded, so we know where to insert things
+                //default basemap count to 1, as we always load 1 to begin with
+
+                RAMP.layerCounts = {
+                    feature: 0,
+                    bb: 0,
+                    wms: 0,
+                    base: 1
+                };
             },
 
             /**
@@ -74,16 +93,26 @@ define([
                 console.log("failed to load layer " + evt.target.url);
                 console.log(evt.error.message);
 
+                //reduce count
+                switch (evt.target.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        RAMP.layerCounts.wms -= 1;
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        RAMP.layerCounts.feature -= 1;
+                        break;
+                }
+
+                //TODO
                 //figure out which layer selector state object matches this layer object
 
+                //TODO
                 //set layer selector state to error
 
-                //remove layer object from Map's layer collection?
-                //   if bounding box was added, remove that layer too?
-
+                //remove layer object from Map's layer collection
                 RampMap.getMap().removeLayer(evt.target);
-
-                //possibly update ramp.error tag?
             },
 
             /**
@@ -94,7 +123,6 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
-                
                 var layer = evt.target,
                     layerConfig = layer.ramp.config,
                     map = RampMap.getMap();
@@ -145,7 +173,9 @@ define([
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
                                 visible: layerConfig.settings.boundingBoxVisible
-                            });
+                            }),
+                            insertIdx;
+
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
@@ -174,8 +204,10 @@ define([
 
                         boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
 
-                        //TODO what is the perfect spot / index to inject this layer?
-                        map.addLayer(boundingBox);
+                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                        RAMP.layerCounts.bb += 1;
+
+                        map.addLayer(boundingBox, insertIdx);
 
                         break;
                 }
@@ -192,6 +224,8 @@ define([
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             */
             loadLayer: function (layer) {
+                var insertIdx;
+
                 if (!layer.ramp) {
                     console.log('you failed to supply a ramp.type to the layer!');
                 }
@@ -209,11 +243,25 @@ define([
                 //add loaded handler for layer
                 layer.on('update-end', this.onLayerLoaded);
 
+                //increase count
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
+                        RAMP.layerCounts.wms += 1;
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        insertIdx = RAMP.layerCounts.feature;
+                        RAMP.layerCounts.feature += 1;
+                        break;
+                }
+
                 //TODO
                 //add entry to alex selector, defaulting to loading state
 
                 //add layer to map, triggering the loading process.  should add at correct position
-                RampMap.getMap().addLayer(layer);
+                RampMap.getMap().addLayer(layer, insertIdx);
             }
         };
     });

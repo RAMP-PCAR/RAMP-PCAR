@@ -298,6 +298,7 @@ require([
                 // the available screen size may still be changing (e.g. due to fullscreen
                 // or subpanel closing)
                 topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    LayerLoader.init();
                     initializeMap();
                 });
 
