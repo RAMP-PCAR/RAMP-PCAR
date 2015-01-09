@@ -31,7 +31,7 @@
             </button>
             <div class='basemap-list-pane'>
                 {% if(!o.isActive) { %}
-                    <div class='basemap-warning'>
+                    <div class='basemap-info-notice'>
                         <p>Page refresh required</p>
                     </div>
                 {% } %}
