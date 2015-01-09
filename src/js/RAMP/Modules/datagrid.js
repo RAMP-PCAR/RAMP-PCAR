@@ -1216,7 +1216,7 @@ define([
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
-            console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
+            //console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
 
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
@@ -1447,7 +1447,7 @@ define([
                 //new layer has been added.  if it has grid-worthy data, refresh the grid
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
-                        console.log('HOGG - layer loaded event');
+                        //console.log('HOGG - layer loaded event');
                         applyExtentFilter();
                     }
                 }

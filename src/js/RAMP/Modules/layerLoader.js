@@ -81,6 +81,8 @@ define([
                 //remove layer object from Map's layer collection?
                 //   if bounding box was added, remove that layer too?
 
+                RampMap.getMap().removeLayer(evt.target);
+
                 //possibly update ramp.error tag?
             },
 
