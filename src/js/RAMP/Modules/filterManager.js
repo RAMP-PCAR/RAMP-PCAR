@@ -89,7 +89,7 @@ define([
 
             ui = (function () {
                 var sectionNode,
-                    _mainList,
+                    mainList,
                     layerList,
 
                     layerSettings,
@@ -195,7 +195,7 @@ define([
                     */
                     function createGroups() {
                         boxCheckboxGroup = new CheckboxGroup(
-                            _mainList.find(".checkbox-custom .box + input"),
+                            mainList.find(".checkbox-custom .box + input"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -234,7 +234,7 @@ define([
                         });
 
                         eyeCheckboxGroup = new CheckboxGroup(
-                            _mainList.find(".checkbox-custom .eye + input"),
+                            mainList.find(".checkbox-custom .eye + input"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -286,7 +286,7 @@ define([
                     return {
                         init: function () {
                             globalToggleSection = sectionNode.find("#filterGlobalToggles");
-                            Theme.tooltipster(_mainList);
+                            Theme.tooltipster(mainList);
 
                             createGroups();
                             initListeners();
@@ -294,10 +294,10 @@ define([
                         },
 
                         update: function () {
-                            Theme.tooltipster(_mainList);
+                            Theme.tooltipster(mainList);
 
-                            boxCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .box + input"));
-                            eyeCheckboxGroup.addCheckbox(_mainList.find(".checkbox-custom .eye + input"));
+                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .box + input"));
+                            eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
                         },
 
                         globalToggleSection: function () {
@@ -399,9 +399,9 @@ define([
                         */
                         init: function () {
                             //Theme.tooltipster(_filterGlobalToggles_to_remove);
-                            Theme.tooltipster(_mainList);
+                            Theme.tooltipster(mainList);
 
-                            PopupManager.registerPopup(_mainList, "hoverIntent",
+                            PopupManager.registerPopup(mainList, "hoverIntent",
                                 function () {
                                     if (this.target.attr("title")) {
                                         if (this.target.isOverflowed()) {
@@ -437,7 +437,7 @@ define([
                 * @private
                 */
                 function setButtonEvents() {
-                    PopupManager.registerPopup(_mainList, "hover, focus",
+                    PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
                             d.resolve();
                         },
@@ -449,7 +449,7 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
@@ -466,7 +466,7 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
 
@@ -483,7 +483,7 @@ define([
                         }
                     );
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             metadataClickHandler(this.target);
 
@@ -587,7 +587,7 @@ define([
                         }
                     }
 
-                    PopupManager.registerPopup(_mainList, "click",
+                    PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             var layerId = this.target.data("layer-id");
 
@@ -623,8 +623,20 @@ define([
                     });
                 }
 
+                function getLayerItem(layerId) {
+                    var layerItem = null;
+
+                    UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
+                        if (!layerItem) {
+                            layerItem = layerGroup.getLayerItem(layerId);
+                        }
+                    });
+
+                    return layerItem;
+                }
+
                 function update() {
-                    layerList = _mainList.find("> li > ul");
+                    layerList = mainList.find("> li > ul");
 
                     layerSettings.update();
                     layerToggles.update();
@@ -640,8 +652,8 @@ define([
 
                         sectionNode.empty().append(section);
 
-                        _mainList = sectionNode.find("#layerList");
-                        layerList = _mainList.find("> li > ul");
+                        mainList = sectionNode.find("#layerList");
+                        layerList = mainList.find("> li > ul");
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
@@ -656,13 +668,9 @@ define([
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
                         layerToggles.init();
-
                         layerTooltips.init();
-
                         setButtonEvents();
-
                         initScrollListeners();
-
                         layerSettings.init();
 
                         // ui initialization completes
@@ -686,7 +694,7 @@ define([
                             });
 
                             layerGroups[layerType] = layerGroup;
-                            _mainList.append(layerGroup.node);
+                            mainList.append(layerGroup.node);
                         }
 
                         // TODO: check scale in cleaner way
@@ -694,21 +702,8 @@ define([
                         update();
                     },
 
-                    getLayerItem: function (layerId) {
-                        var layerItem = null;
-
-                        UtilDict.forEachEntry(layerGroups, function (key, layerGroup) {
-                            if (!layerItem) {
-                                layerItem = layerGroup.getLayerItem(layerId);
-                            }
-                        });
-
-                        return layerItem;
-                    },
-
                     setLayerState: function (layerId, layerState) {
-                        var that = this,
-                            layerItem,
+                        var layerItem,
                             isChanged = false;
 
                         if (!(layerId instanceof Array)) {
@@ -716,7 +711,7 @@ define([
                         }
 
                         layerId.forEach(function (lId) {
-                            layerItem = that.getLayerItem(lId);
+                            layerItem = getLayerItem(lId);
                             if (layerItem && layerItem.setState(layerState)) {
                                 isChanged = true;
                             }
@@ -803,10 +798,9 @@ define([
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
-                initListeners();
-
                 ui.init();
 
+                initListeners();
                 setLayerOffScaleStates();
             },
 
