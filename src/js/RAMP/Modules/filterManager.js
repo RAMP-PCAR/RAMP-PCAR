@@ -432,11 +432,13 @@ define([
                 }
 
                 /**
-                * Adjusts UI layout according to a layer event.
+                * Sets event handlers for various controls that may be present in the layer items. All event handlers are set on the main list container and are independed of the individual layer items.
+                * 
                 * @method setButtonEvents
                 * @private
                 */
                 function setButtonEvents() {
+                    // highlight layer item on hover/focus with a light gray background
                     PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
                             d.resolve();
@@ -449,6 +451,7 @@ define([
                         }
                     );
 
+                    // open the settings panel when the settings control is clicked; visibility slider is refreshed;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
@@ -466,6 +469,7 @@ define([
                         }
                     );
 
+                    // open renderers sections when the renderer button (layer icon) is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
@@ -473,7 +477,6 @@ define([
                                 adjustPaneWidth();
                                 d.resolve();
                             });
-                            //this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
                             handleSelector: ".renderer-button",
@@ -483,6 +486,8 @@ define([
                         }
                     );
 
+                    // display metadata when the metadata button is clicked;
+                    // TODO: move to a separate/different module?
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             metadataClickHandler(this.target);
@@ -587,6 +592,7 @@ define([
                         }
                     }
 
+                    // for scale-dependent layers - zoom to data
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             var layerId = this.target.data("layer-id");
@@ -623,6 +629,12 @@ define([
                     });
                 }
 
+                /**
+                * Returns a LayerItem object with specified layerId.
+                * @param {String} layerId a layer id 
+                * @method getLayerItem
+                * @private
+                */
                 function getLayerItem(layerId) {
                     var layerItem = null;
 
@@ -635,6 +647,11 @@ define([
                     return layerItem;
                 }
 
+                /**
+                * Updates certain UI aspects like layer settings panel (visibility sliders for now only), layer visibility and bounding box toggles, and layer sorting.
+                * @method update
+                * @private
+                */
                 function update() {
                     layerList = mainList.find("> li > ul");
 
@@ -725,6 +742,11 @@ define([
                 };
             }());
 
+        /**
+        * Checks if any of the layers have data that is not visible and sets the appropriate layer state.
+        * @method setLayerOffScaleStates
+        * @private
+        */
         function setLayerOffScaleStates() {
             var visibleLayers,
                 allLayers,
