@@ -719,6 +719,16 @@ define([
                         update();
                     },
 
+                    getLayerState: function (layerId) {
+                        var layerItem = getLayerItem(layerId);
+
+                        if (layerItem) {
+                            return layerItem.state;
+                        } else {
+                            return null;
+                        }
+                    },
+
                     setLayerState: function (layerId, layerState) {
                         var layerItem,
                             isChanged = false;
@@ -813,6 +823,10 @@ define([
 
             addLayer: function (type, config) {
                 ui.addLayer(type, config);
+            },
+
+            getLayerState: function (layerId) {
+                ui.getLayerState(layerId);
             },
 
             /**
