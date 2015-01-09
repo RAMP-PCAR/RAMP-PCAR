@@ -95,6 +95,7 @@ define([
                     layerSettings,
                     layerToggles,
                     layerSort,
+                    layerTooltips,
 
                     layerGroups = {};
 
@@ -144,21 +145,6 @@ define([
                                 }
                             });
                         //.nstSlider("set_step_histogram", [4, 6, 10, 107]);
-
-                        //topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                        //    var slider = transparencySliders.filter("[data-layer-id='" + evt.id + "']"),
-                        //        value;
-
-                        //    if (slider.length > 0) {
-                        //        slider.toggleClass("disabled", !evt.state);
-                        //        value = slider.nstSlider("get_current_min_value");
-
-                        //        // Toggling layer to Visible when Opacity is 0.0, sets Opacity to 1.0
-                        //        if (value === 0 && evt.state) {
-                        //            slider.nstSlider("set_position", 1);
-                        //        }
-                        //    }
-                        //});
                     }
 
                     function initListeners() {
@@ -404,32 +390,36 @@ define([
                     };
                 }());
 
-                /**
-                * initialize a tooltip for each layer, using the layer name.
-                * @method initTooltips
-                * @private
-                */
-                function initTooltips() {
-                    //Theme.tooltipster(_filterGlobalToggles_to_remove);
-                    Theme.tooltipster(layerList);
+                layerTooltips = (function () {
+                    return {
+                        /**
+                        * initialize a tooltip for each layer, using the layer name.
+                        * @method initTooltips
+                        * @private
+                        */
+                        init: function () {
+                            //Theme.tooltipster(_filterGlobalToggles_to_remove);
+                            Theme.tooltipster(_mainList);
 
-                    PopupManager.registerPopup(layerList, "hoverIntent",
-                        function () {
-                            if (this.target.attr("title")) {
-                                if (this.target.isOverflowed()) {
-                                    this.target.tooltipster({ theme: '.tooltipster-dark' }).tooltipster("show");
-                                } else {
-                                    this.target.removeAttr("title");
+                            PopupManager.registerPopup(_mainList, "hoverIntent",
+                                function () {
+                                    if (this.target.attr("title")) {
+                                        if (this.target.isOverflowed()) {
+                                            this.target.tooltipster({ theme: '.tooltipster-dark' }).tooltipster("show");
+                                        } else {
+                                            this.target.removeAttr("title");
+                                        }
+                                    }
+                                },
+                                {
+                                    handleSelector: ".layer-name span, .layer-details span",
+                                    useAria: false,
+                                    timeout: 500
                                 }
-                            }
-                        },
-                        {
-                            handleSelector: ".layer-name span, .layer-details span",
-                            useAria: false,
-                            timeout: 500
+                            );
                         }
-                    );
-                }
+                    };
+                }());
 
                 /**
                 * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
@@ -667,7 +657,7 @@ define([
 
                         layerToggles.init();
 
-                        initTooltips();
+                        layerTooltips.init();
 
                         setButtonEvents();
 
