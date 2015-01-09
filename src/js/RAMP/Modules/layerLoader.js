@@ -94,9 +94,9 @@ define([
             * @param  {Object} evt.target the layer object that loaded
             */
             onLayerLoaded: function (evt) {
-                //TODO was under the impression the layer had the config object already tacked onto it.  can't find it.  ask aly
+                
                 var layer = evt.target,
-                    layerConfig = Ramp.getLayerConfigWithId(layer.id),
+                    layerConfig = layer.ramp.config,
                     map = RampMap.getMap();
 
                 console.log("layer loaded: " + layer.url);
