@@ -1158,6 +1158,7 @@ define([
 
                     updateNotice: function () {
                         var notice,
+                            data = { layers: null },
                             invisibleLayers =
                                 RampMap.getInvisibleLayers()
                                 .filter(function (l) {
@@ -1167,10 +1168,17 @@ define([
                         if (this.isReady()) {
                             if (invisibleLayers.length > 0) {
 
+                                // TODO: use authoritative layer config lookup
+                                data.layers = invisibleLayers.map(function (il) {
+                                    return UtilArray.find(RAMP.config.layers.feature, function (fl) {
+                                        return fl.id === il.id;
+                                    });
+                                });
+
                                 tmpl.cache = {};
                                 tmpl.templates = data_grid_template_json;
 
-                                notice = tmpl("datagrid_info_notice", { layers: invisibleLayers });
+                                notice = tmpl("datagrid_info_notice", data);
 
                                 datagridNotice
                                     .empty()
