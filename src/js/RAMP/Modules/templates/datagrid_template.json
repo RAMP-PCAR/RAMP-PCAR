@@ -67,7 +67,7 @@
                                         <div class='global-details'>
                                             <div class='global-controls'>
                                                 <div class='col-md-3'>
-                                                    {% if (o.datasets.length > 1) { %}
+                                                  
                                                             
                                                             <div class='input-group'>
                                                                 <label class='wb-inv' for='datasetSelector'>{%=o.txtDataset%}:</label>
@@ -83,13 +83,7 @@
                                                                     <button id='datasetSelectorSubmitButton' class='btn btn-info btn-sm' type='button'>Go!</button>
                                                                 </span>
                                                             </div>
-
-                                                        {% } else if (o.datasets.length === 0) { %}
-
-                                                        {% } else { %}      
-                                                            <label for='datasetSelector' class='wb-inv'>{%=o.txtDataset%}:</label>                                                      
-                                                            <input readonly='true' id='datasetSelector' class='form-control input-sm' data-role='none' value='{%=o.datasets[0].displayName%}'/>
-                                                        {% } %}
+                                                      
                                                 </div>
 
                                                 <div class='col-md-9 input-sm'>

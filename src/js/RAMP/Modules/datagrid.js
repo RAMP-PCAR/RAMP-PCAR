@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP */
+﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP, document */
 /*jslint white: true */
 
 /**
@@ -904,6 +904,7 @@ define([
                     tl.play();
                 }
 
+                //recreates the datagrid panel with the new grid + stuff ( summary or extended )
                 function refreshPanel(d) {
                     // using template to generate global checkboxes
                     var globalCheckBoxesData = generateToggleButtonDataForTemplate(),
@@ -933,9 +934,15 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
+                        // TODO need to use the official source of layers here.   we want a list of layer config nodes for feature layers that are in a LOADED state only
+                        // for now, we will use the .loaded tag of the layer, if it even exists
                         var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                             var layer = RAMP.map.getLayer(layerConfig.id);
-                            return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
+                            if (layer) {
+                                if (layer.loaded) {
+                                    return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
+                                }
+                            }
                         });
 
                         templateData.buttons = lang.mixin(templateData.buttons,
@@ -1447,6 +1454,15 @@ define([
                 //new layer has been added.  if it has grid-worthy data, refresh the grid
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
+                        //add layer to selection combo box
+                        var layerConfig = Ramp.getLayerConfigWithId(evt.layer.id),
+                            optElem = document.createElement("option"),  // "<option value='" + layerConfig.url + "'>" + layerConfig.displayName + "</option>",
+                            datasetSelector = $("#datasetSelector");
+
+                        optElem.text = layerConfig.displayName;
+                        optElem.value = layerConfig.url;
+                        datasetSelector.add(optElem);
+
                         //console.log('HOGG - layer loaded event');
                         applyExtentFilter();
                     }
