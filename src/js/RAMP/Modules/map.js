@@ -305,16 +305,16 @@ define([
                 var layer = map.getLayer(evt.layerId);
 
                 if (layer !== undefined) {
-                layer.setOpacity(evt.value);
-                //loops through any static layers that are mapped to the feature layer being toggled
-                try {
-                    dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
-                        var layer = map.getLayer(staticLayer);
-                        layer.setOpacity(evt.value);
-                    });
-                }
-                catch (err) {
-                }
+                    layer.setOpacity(evt.value);
+                    //loops through any static layers that are mapped to the feature layer being toggled
+                    try {
+                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                            var layer = map.getLayer(staticLayer);
+                            layer.setOpacity(evt.value);
+                        });
+                    }
+                    catch (err) {
+                    }
                 }
             });
 
@@ -619,7 +619,7 @@ define([
                         bottomLod = lods[Math.max(0, i - 1)];
                     }
                 }
-                
+
                 //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
 
                 if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
@@ -665,12 +665,16 @@ define([
                 });
             },
 
+            getVisibleLayers: function () {
+                return map.getLayersVisibleAtScale();
+            },
+
             getInvisibleLayers: function () {
                 var visibleLayers,
                     allLayers,
                     invisibleLayers;
 
-                visibleLayers = map.getLayersVisibleAtScale();
+                visibleLayers = this.getVisibleLayers();
                 allLayers = map._layers;
                 invisibleLayers = [];
 
@@ -996,7 +1000,7 @@ define([
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
                     return that.makeWmsLayer(layer);
-                    });
+                });
 
                 //generate feature layers array
                 featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {
