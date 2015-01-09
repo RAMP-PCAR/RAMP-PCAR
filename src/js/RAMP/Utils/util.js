@@ -23,9 +23,11 @@
 * @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses dojo/Deferred
+* @uses esri/geometry/Extent
+* @uses esri/graphic
 */
-define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"],
-    function (dojoArray, dojoLang, topic, Deferred, Extent) {
+define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent", "esri/graphic"],
+    function (dojoArray, dojoLang, topic, Deferred, Extent, Graphic) {
         "use strict";
 
         return {
@@ -589,6 +591,31 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                               point.y + toleraceInMapCoords,
                               map.spatialReference);
             },
+
+            /**
+            * Create boudingbox graphic for a bounding box extent
+            *
+            * @method createGraphic
+            * @param  {esri/geometry/Extent} extent of a bounding box
+            * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
+            */
+            createGraphic: function (extent) {
+                return new Graphic({
+                    geometry: extent,
+                    symbol: {
+                        color: [255, 0, 0, 64],
+                        outline: {
+                            color: [240, 128, 128, 255],
+                            width: 1,
+                            type: "esriSLS",
+                            style: "esriSLSSolid"
+                        },
+                        type: "esriSFS",
+                        style: "esriSFSSolid"
+                    }
+                });
+            },
+
             /**
             * Checks if the string ends with the supplied suffix.
             *

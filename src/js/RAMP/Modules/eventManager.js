@@ -391,13 +391,33 @@ define([],
                 // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events should be prefixed with map/
 
                 /**
-                 * Indicates that all the map layers are loaded.
-                 *
-                 * @event RampMap.ALL_LAYERS_LOADED
-                 * @for RampMap
-                 *
-                 */
+                * Indicates that all the map layers are loaded.
+                *
+                * @event RampMap.ALL_LAYERS_LOADED
+                * @for RampMap
+                *
+                */
                 ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
+
+                /**
+                * Indicates that a map layer has loaded.
+                *
+                * @event RampMap.LAYER_LOADED
+                * @for RampMap
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has loaded
+                *
+                */
+                LAYER_LOADED: "rampMap/layer-loaded",
+
+                /**
+                * Indicates that the initial basemap has loaded.
+                *
+                * @event RampMap.INITIAL_BASEMAP_LOADED
+                * @for RampMap
+                *
+                */
+                INITIAL_BASEMAP_LOADED: "rampMap/initial-basemap-loaded",
 
                 /**
                 * Centers the map at the given point.

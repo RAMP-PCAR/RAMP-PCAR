@@ -12,8 +12,8 @@
         "exnatives": {
             "JQuery": "http://api.jquery.com/Types/#jQuery",
             "Esri/layers/ArcGISTiledMapServiceLayer": "_esri/arcgistiledmapservicelayer-amd.html",
-            "Esri/layer/FeatureLayer": "_esri/featurelayer-amd.html",
-            "Esri/layer/GraphicsLayer": "_esri/graphicslayer-amd.html",
+            "Esri/layers/FeatureLayer": "_esri/featurelayer-amd.html",
+            "Esri/layers/GraphicsLayer": "_esri/graphicslayer-amd.html",
             "Esri/SpatialReference": "_esri/spatialreference-amd.html"
         },
         "exlinks": {
