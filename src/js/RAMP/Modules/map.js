@@ -56,7 +56,7 @@ define([
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
-"utils/util", "utils/array"],
+"utils/util", "utils/array", "utils/dictionary"],
 
     function (
     /* Dojo */
@@ -70,7 +70,7 @@ define([
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
-    UtilMisc, UtilArray) {
+    UtilMisc, UtilArray, UtilDict) {
         "use strict";
 
         /**
@@ -663,6 +663,28 @@ define([
                 return dojoArray.filter(map.getLayersVisibleAtScale(), function (layer) {
                     return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
+            },
+
+            getInvisibleLayers: function () {
+                var visibleLayers,
+                    allLayers,
+                    invisibleLayers;
+
+                visibleLayers = map.getLayersVisibleAtScale();
+                allLayers = map._layers;
+                invisibleLayers = [];
+
+                UtilDict.forEachEntry(allLayers, function (key, value) {
+                    var index = UtilArray.indexOf(visibleLayers, function (vl) {
+                        return key === vl.id;
+                    });
+
+                    if (index === -1) {
+                        invisibleLayers.push(value);
+                    }
+                });
+
+                return invisibleLayers;
             },
 
             /**
