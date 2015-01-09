@@ -691,22 +691,39 @@ define([
         }
 
         return {
+            /**
+            * For a specified layer, zooms to the closest level that has some visible data.
+            * @param {String} layerId a layer id to zoom to.
+            * @method zoomToLayerScale
+            */
             zoomToLayerScale: function (layerId) {
                 var layer = map.getLayer(layerId),
                     lods = map._params.lods,
+                    currentLevel = map.getLevel(),
+                    topLod,
+                    bottomLod,
                     lod,
                     i;
 
                 for (i = 0; i < lods.length; i += 1) {
                     lod = lods[i];
-                    console.log("lod", lod, lod.scale > layer.minScale);
-                    if (lod.scale <= layer.minScale) {
-                        break;
+                    //console.log("lod", lod, lod.scale > layer.minScale);
+                    if (!topLod && lod.scale <= layer.minScale) {
+                        topLod = lod;
+                    }
+
+                    if (!bottomLod && lod.scale <= layer.maxScale) {
+                        bottomLod = lods[Math.max(0, i - 1)];
                     }
                 }
-                
-                console.log(map.getBasemap(), layerId, layer.maxScale, layer.minScale, lod, map.getZoom());
-                map.setZoom(lod.level);
+
+                //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
+
+                if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
+                    map.setZoom(topLod.level);
+                } else {
+                    map.setZoom(bottomLod.level);
+                }
             },
 
             /**
