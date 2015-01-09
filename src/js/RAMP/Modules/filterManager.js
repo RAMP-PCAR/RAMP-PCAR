@@ -796,7 +796,7 @@ define([
                 config = RAMP.config;
 
                 // reset and load global template
-                // move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
+                // TODO: move the following out from generateGlobalCheckboxes() and merge filter_global_row_template_json into filter_row_template
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json));
 
