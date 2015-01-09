@@ -54,13 +54,13 @@
 
         <details>
             <summary>
-                <p>Some data points are not visible at this zoom level.</p>
+                <p>{%=i18n.t('datagrid.notices.offScale')%}</p>
             </summary>
             <div class='small'>
                 {%
                     o.layers.forEach(function(layer) {
                         %}      
-                            <p>{%= layer %}</p>
+                            <p>{%= layer.displayName %}</p>
                         {%
                     });
                 %}

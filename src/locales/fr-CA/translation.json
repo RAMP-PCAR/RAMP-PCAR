@@ -230,6 +230,10 @@
         "zoomBack": "Zoom arrière",
         "fullData": "Données complètes",
 
+        "notices": {
+            "offScale": "[fr] Some data is not visible at this zoom level."
+        },
+
         "ex": {
             "datasetSelectorButtonLoad": "Charger",
             "datasetSelectorButtonLoading": "Chargement en cours ...",
