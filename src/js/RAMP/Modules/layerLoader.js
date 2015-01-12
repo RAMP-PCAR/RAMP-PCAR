@@ -24,6 +24,7 @@
 * @uses FeatureClickHandler
 * @uses FilterManager
 * @uses GlobalStorage
+* @uses LayerItem
 * @uses Map
 * @uses MapClickHandler
 * @uses Ramp
@@ -39,7 +40,7 @@ define([
 
 /* RAMP */
 "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
-"ramp/filterManager",
+"ramp/filterManager", "ramp/layerItem",
 
 /* Util */
 "utils/util"],
@@ -53,7 +54,7 @@ define([
 
     /* RAMP */
     EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
-    FilterManager,
+    FilterManager, LayerItem,
 
      /* Util */
     UtilMisc) {
@@ -128,18 +129,19 @@ define([
             onLayerLoaded: function (evt) {
                 var layer = evt.target,
                     layerConfig = layer.ramp.config,
-                    map = RampMap.getMap();
+                    map = RampMap.getMap(),
+                    layerState;
 
                 console.log("layer loaded: " + layer.url);
 
-                //TODO
                 //figure out which layer selector state object matches this layer object
+                layerState = FilterManager.getLayerState(layer.ramp.config.id);
 
-                //TODO
                 //check if this layer is in an error state.  if so, exit the handler
-
-                //TODO
-                //set layer selector state to loaded (and possibly do other alex magic)
+                //WMS layers will sometimes trigger their loaded event after they error out (the layer loads but has no picture).
+                if (layerState === LayerItem.state.ERROR) {
+                    return;
+                }
 
                 //call map functions to wire up event handlers
                 switch (layer.ramp.type) {
@@ -216,8 +218,10 @@ define([
                         break;
                 }
 
-                //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
+                //set layer selector state to loaded
+                FilterManager.setLayerState(layer.ramp.config.id, LayerItem.state.LOADED);
 
+                //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
                 topic.publish(EventManager.Map.LAYER_LOADED, { layer: evt.target });
             },
 
@@ -234,12 +238,10 @@ define([
                     console.log('you failed to supply a ramp.type to the layer!');
                 }
 
-                //TODO possibly have an optional param for position to add
+                // possibly have an optional param for position to add
                 // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
-
-                //add config node to layer??
-                //   might be a good idea.  will ensure layers added by user also have this, and thus the code to do this wont be scattered in 3-4 different spots
-                //   dont do it for now.  possible future enhancement
+                // as for now, we will assume we always add to the end of the appropriate zone for the layer.  initial layers get added in proper order.
+                // user added layers get added to the top.  afterwards they can be re-arranged via the UI
 
                 //add error handler for layer
                 layer.on('error', this.onLayerError);
@@ -263,7 +265,7 @@ define([
                         layerSection = GlobalStorage.layerType.feature;
                         break;
                 }
-               
+
                 //add entry to alex selector, defaulting to loading state
                 FilterManager.addLayer(layerSection, layer.ramp.config);
 
