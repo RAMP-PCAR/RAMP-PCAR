@@ -410,6 +410,8 @@ define([
                 *            METADATA: "metadata",
                 *            SETTINGS: "settings",
                 *            LOADING: "loading",
+                *            REMOVE: "remove",
+                *            RELOAD: "reload",
                 *            ERROR: "error"
                 *           }
                 */
@@ -417,6 +419,8 @@ define([
                     METADATA: "metadata",
                     SETTINGS: "settings",
                     LOADING: "loading",
+                    REMOVE: "remove",
+                    RELOAD: "reload",
                     ERROR: "error"
                 },
 
@@ -497,12 +501,10 @@ define([
                 *
                 *        ERROR: {
                 *            controls: [
-                *                LayerItem.controls.ERROR
+                *                LayerItem.controls.RELOAD,
+                *                LayerItem.controls.REMOVE
                 *            ],
-                *            toggles: [
-                *                LayerItem.toggles.RELOAD,
-                *                LayerItem.toggles.HIDE
-                *            ],
+                *            toggles: [],
                 *            notices: [
                 *                LayerItem.notices.ERROR
                 *            ]
@@ -586,12 +588,10 @@ define([
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
-                LayerItem.controls.ERROR
+                LayerItem.controls.RELOAD,
+                LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.RELOAD,
-                LayerItem.toggles.HIDE
-            ],
+            toggles: [],
             notices: [
                 LayerItem.notices.ERROR
             ]

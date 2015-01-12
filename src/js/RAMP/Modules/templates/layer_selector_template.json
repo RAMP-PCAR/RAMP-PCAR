@@ -224,7 +224,9 @@
         </div>
     ",
 
-    "layer_control_error": "{% include('layer_control_generic', o); %}",
+    "layer_control_reload": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_remove": "{% include('layer_control_generic', o); %}",
 
     "layer_control_generic": "
         <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 

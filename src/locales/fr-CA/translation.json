@@ -311,7 +311,9 @@
         "controlsMatrix": {
             "metadata": "Métadonnées",
             "settings": "Paramètres",
-            "error": "[fr] Remove"
+            "error": "[fr] Remove",
+            "reload": "[fr] Reload",
+            "remove": "[fr] Remove"
         }
     },
 
