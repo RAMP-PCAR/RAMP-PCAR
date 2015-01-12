@@ -28,6 +28,13 @@
         margin: 0 !important;
         padding: 0;
 
+        .sk-spinner-wave-10.sk-spinner {
+            position: absolute;
+            left: 60px;
+            right: 11px;
+            width: auto;
+        }
+
         .layer-group-separator {
             height: 1px;
 
@@ -342,6 +349,36 @@
                 }
             }
         }
+
+        &.layer-state-loading {
+            img {
+                .grayscale;
+            }
+
+            background-color: @very-light-grey-color !important;
+        }
+
+        &.layer-state-error {
+            img {
+                .grayscale;
+            }
+
+            background-color: @light-attention-color !important;
+            font-weight: bold !important;
+
+            .layer-controls-group button {
+                font-weight: bold !important;
+            }
+
+            &:before {
+                content: "";
+                position: absolute;
+                width: 3px;
+                height: 100%;
+                background-color: @attention-color;
+                z-index: 10;
+            }
+        }
     }
 
     .layer-details {
@@ -553,6 +590,16 @@
 
                 .fa-info-circle {
                     color: @info-color;
+                }
+            }
+
+            .error {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-exclamation-circle  {
+                    color: @attention-color;
                 }
             }
         }

@@ -13,6 +13,7 @@
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * {{#crossLink "TmplUtil"}}{{/crossLink}}  
 * {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
 *  
 * 
 * ####Uses RAMP Templates:
@@ -43,12 +44,12 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/tmplUtil", "utils/array"
+    "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, TmplUtil, UtilArray
+        TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
 
@@ -249,7 +250,7 @@ define([
 
                     stateKey,
                     partKeys = [],
-                    control;
+                    part;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
@@ -261,28 +262,60 @@ define([
                 partKeys = UtilArray.unique(partKeys);
 
                 partKeys.forEach(function (pKey) {
-                    control = $(that._template(templateKey + pKey,
-                        {
-                            id: that.id,
-                            config: that._config,
-                            nameKey: pKey
-                        }
-                    ));
+                    part = that._generatePart(templateKey, pKey);
 
-                    partStore[pKey] = (control);
+                    partStore[pKey] = (part);
                 });
+            },
+
+            /**
+             * Generates a control given the template name and additional data object to pass to the template engine.
+             *
+             * @param {String} templateKey a template name prefix for the template parts
+             * @param {String} pKey name of the template to build
+             * @param {Object} [data] optional data to pass to template engine; used to update strings on notice objects
+             * @method _generatePart
+             * @private
+             * @return Created part node
+             */
+            _generatePart: function (templateKey, pKey, data) {
+                var part = $(this._template(templateKey + pKey,
+                    {
+                        id: this.id,
+                        config: this._config,
+                        nameKey: pKey,
+                        data: data
+                    }
+                ));
+
+                return part;
             },
 
             /**
              * Changes the state of the LayerItem and update its UI representation.
              *
              * @param {String} state name of the state to be set
-             * @param {Object} options additional options [not used now]
+             * @param {Object} [options] additional options
+             * @param {Object} [options.notices] custom information to be displayed in a notice for the current state if needed; object structure is not set; look at the appropriate template; 
+             * @example
+             *      {
+             *          notices: {
+             *              error: {
+             *                  message: "I'm error"
+             *              },
+             *              scale: {
+             *                  message: "All your base are belong to us"
+             *              }
+             *          }
+             *      }
              * @param {Boolean} force if `true`, forces the state change even if it's no allowed by the `transitionMatrix`
              * @method setState
              */
             setState: function (state, options, force) {
-                var allowedStates = this.transitionMatrix[this.state];
+                var allowedStates = this.transitionMatrix[this.state],
+                    notice,
+
+                    that = this;
 
                 if (allowedStates.indexOf(state) !== -1 || force) {
 
@@ -294,29 +327,46 @@ define([
                         .removeClass(ALL_STATES_CLASS)
                         .addClass(this.state);
 
+                    // regenerate notice controls if extra data is provided
+                    if (options) {
+                        if (options.notices) {
+
+                            UtilDict.forEachEntry(options.notices, function (pKey, data) {
+                                notice = that._generatePart("layer_notice_", pKey, data);
+
+                                that._noticeStore[pKey] = (notice);
+                            });
+                        }
+                    }
+
                     this._setParts("controls", this._controlStore, this._controlsNode);
                     this._setParts("toggles", this._toggleStore, this._togglesNode);
                     this._setParts("notices", this._noticeStore, this._noticesNode);
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
-                            console.log("default");
+                            console.log(LayerItem.state.DEFAULT);
                             break;
 
                         case LayerItem.state.LOADING:
-                            console.log("load");
+                            this.node.attr("aria-busy", true); // indicates that the region is loading
+
+                            console.log(LayerItem.state.LOADING);
                             break;
 
                         case LayerItem.state.LOADED:
+                            this.node.attr("aria-busy", false); // indicates that the loading is complete
                             this.setState(LayerItem.state.DEFAULT);
+
+                            console.log(LayerItem.state.LOADED);
                             break;
 
                         case LayerItem.state.ERROR:
-                            console.log("error");
+                            console.log(LayerItem.state.ERROR);
                             break;
 
                         case LayerItem.state.OFF_SCALE:
-                            console.log("scale");
+                            console.log(LayerItem.state.OFF_SCALE);
                             break;
 
                         default:
@@ -382,7 +432,7 @@ define([
                 *     state: {
                 *       DEFAULT: "layer-state-default",
                 *       LOADING: "layer-state-loading",
-                *       ERROR: "layer-state-load-error",
+                *       ERROR: "layer-state-error",
                 *       OFF_SCALE: "layer-state-off-scale"
                 *       }
                 */
@@ -390,7 +440,7 @@ define([
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     LOADED: "layer-state-loaded",
-                    ERROR: "layer-state-load-error",
+                    ERROR: "layer-state-error",
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
@@ -405,6 +455,8 @@ define([
                 *            METADATA: "metadata",
                 *            SETTINGS: "settings",
                 *            LOADING: "loading",
+                *            REMOVE: "remove",
+                *            RELOAD: "reload",
                 *            ERROR: "error"
                 *           }
                 */
@@ -412,6 +464,8 @@ define([
                     METADATA: "metadata",
                     SETTINGS: "settings",
                     LOADING: "loading",
+                    REMOVE: "remove",
+                    RELOAD: "reload",
                     ERROR: "error"
                 },
 
@@ -449,10 +503,12 @@ define([
                 * @example 
                 *     notices: {
                 *            SCALE: "scale"
+                *            ERROR: "error"
                 *           }
                 */
                 notices: {
-                    SCALE: "scale"
+                    SCALE: "scale",
+                    ERROR: "error"
                 },
 
                 /**
@@ -490,13 +546,13 @@ define([
                 *
                 *        ERROR: {
                 *            controls: [
-                *                LayerItem.controls.ERROR
+                *                LayerItem.controls.RELOAD,
+                *                LayerItem.controls.REMOVE
                 *            ],
-                *            toggles: [
-                *                LayerItem.toggles.RELOAD,
-                *                LayerItem.toggles.HIDE
-                *            ],
-                *            notices: []
+                *            toggles: [],
+                *            notices: [
+                *                LayerItem.notices.ERROR
+                *            ]
                 *        },
                 *
                 *        OFF_SCALE: {
@@ -510,7 +566,7 @@ define([
                 *                LayerItem.toggles.BOX
                 *            ],
                 *            notices: [
-                *                LayerItem.notices.SCALE,
+                *                LayerItem.notices.SCALE
                 *            ]
                 *        }
                 */
@@ -577,13 +633,13 @@ define([
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
-                LayerItem.controls.ERROR
+                LayerItem.controls.RELOAD,
+                LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.RELOAD,
-                LayerItem.toggles.HIDE
-            ],
-            notices: []
+            toggles: [],
+            notices: [
+                LayerItem.notices.ERROR
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
@@ -626,6 +682,7 @@ define([
             LayerItem.state.DEFAULT
         ];
 
+        // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
         ALL_STATES_CLASS =
             Object
                 .getOwnPropertyNames(LayerItem.state)

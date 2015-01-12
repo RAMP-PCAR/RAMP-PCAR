@@ -66,7 +66,7 @@
 .tooltipster-info {
     border-radius: 0;
     border: 1px solid #2c2c2c;
-    background: @very-light-blue-color;
+    background: @light-info-color;
     color: #2c2c2c;
     box-shadow: 0 0 1px 2px rgba(34,34,34,0.4);
 
@@ -78,8 +78,36 @@
         border-left: 6px solid @info-color;
 
         &:before {
-            color: #269abc;
+            color: @info-color;
             content: "\e086";
+            font-family: "Glyphicons Halflings";
+            position: absolute;
+            left: 12px;
+        }
+    }
+
+    .tooltipster-arrow {
+        top: 1px;
+    }
+}
+
+.tooltipster-error {
+    border-radius: 0;
+    border: 1px solid #2c2c2c;
+    background: @light-attention-color;
+    color: #2c2c2c;
+    box-shadow: 0 0 1px 2px rgba(34,34,34,0.4);
+
+    .tooltipster-content {
+        font-family: 'Arial', serif;
+        font-size: 14px;
+        line-height: 16px;
+        padding: 8px 10px 8px 26px;
+        border-left: 6px solid @attention-color;
+
+        &:before {
+            color: @attention-color;
+            content: "\e101";
             font-family: "Glyphicons Halflings";
             position: absolute;
             left: 12px;

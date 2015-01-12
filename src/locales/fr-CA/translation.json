@@ -286,7 +286,10 @@
         "hideBounds": "Masquer les limites de {0}",
         "hideAllBounds": "Masquer toutes les limites",
 
-        "noticeOffScale": "[fr] No data visible at this zoom level",
+        "notices": {
+            "offScale": "[fr] No data visible at this zoom level",
+            "error": "[fr] Error"
+        },
 
         "zoomToData": "[fr] Zoom to data",
 
@@ -307,7 +310,10 @@
 
         "controlsMatrix": {
             "metadata": "Métadonnées",
-            "settings": "Paramètres"
+            "settings": "Paramètres",
+            "error": "[fr] Remove",
+            "reload": "[fr] Reload",
+            "remove": "[fr] Remove"
         }
     },
 
