@@ -297,10 +297,10 @@
     ",
 
     "layer_notice_error": "
-        <div class='layer-notice error _tooltip fa-stack' title='{%= i18n.t('filterManager.noticeOffScale') %}' data-tooltip-theme='tooltipster-error'>
+        <div class='layer-notice error _tooltip fa-stack' title='{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.error') %}' data-tooltip-theme='tooltipster-error'>
             <i class='fa fa-circle fa-stack-1x'></i>
             <i class='fa fa-exclamation-circle fa-stack-1x'></i>
-            <span class='wb-invisible'>{%= i18n.t('filterManager.noticeOffScale') %}</span>
+            <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.error') %}</span>
         </div>
     ",
 
