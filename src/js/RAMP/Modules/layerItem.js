@@ -631,6 +631,7 @@ define([
             LayerItem.state.DEFAULT
         ];
 
+        // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
         ALL_STATES_CLASS =
             Object
                 .getOwnPropertyNames(LayerItem.state)

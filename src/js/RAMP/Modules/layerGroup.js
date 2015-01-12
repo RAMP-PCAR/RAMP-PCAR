@@ -23,30 +23,18 @@
 * @uses dojo/_base/lang
 * @uses dojo/_base/array
 *
-* @param {JArray} nodes a jQuery object representing the checkboxes to be grouped
+* @param {Array} layers an array of layer config definitions to be added to the group
 * @param {Object} [options] Additional options
-* @param {String} [options.nodeIdAttr] Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id. If no appropriate "data-*" attribute found,
-* `nodeIdAttr` is used directly, failing that, regular `id` is used.
-* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
-* @param {Object} [options.cssClass.active] CSS class to be set when the Checkbox is `active`.
-* @param {Object} [options.cssClass.focus] CSS class to be set when the Checkbox is `focused`.
-* @param {Object} [options.cssClass.check] CSS class to be set when the Checkbox is `checked`.
-* @param {Object} [options.label] `check` and `uncheck` label texts to be applied to the Checkbox labels.
-* @param {Object} [options.label.check] A text to be set as a label when the Checkbox is `checked`
-* @param {Object} [options.label.uncheck] A text to be set as a label when the Checkbox is `unchecked`
-* @param {Function} [options.onChnage] A function to be called when the state of the Checkbox changes.
-* @param {Object} [options.master] Additional options applied to the master Checkbox.
-* @param {Object} [options.master.node] An `input` node to serve as the master Checkbox for the group.
-* @param {Object} [options.master.cssClass] `active`, `focus`, and `check` CSS class to be applied to the master Checkbox correspondingly.
-* @param {Object} [options.master.cssClass.active] CSS class to be set when the Checkbox is `active`.
-* @param {Object} [options.master.cssClass.focus] CSS class to be set when the master Checkbox is `focused`.
-* @param {Object} [options.master.cssClass.check] CSS class to be set when the master Checkbox is `checked`.
-* @param {Object} [options.master.label] `check` and `uncheck` label texts to be applied to the master Checkbox labels.
-* @param {Object} [options.master.label.check] A text to be set as a label when the master Checkbox is `checked`
-* @param {Object} [options.master.label.uncheck] A text to be set as a label when the master Checkbox is `unchecked`
-* @param {Function} [options.master.onChnage] A function to be called when the state of the master Checkbox changes.
+* 
+* @param {String} [options.groupType] Specifies type of this LayerGroup and the name of the layer group template to use
+* @param {String} [options.layerState] Specifies the initial state of any LyerItem added to this group; must be one of the `LayerItem.state` defaults
+* @param {String} [options.layerType] Specifies type of any LayerItem added to this group and the name of the layer item template to use
+* 
+* @param {Object} [options.stateMatrix] additional state matrix records to be mixed into the default
+* @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed into the default
+
 *
-* @return {LayerGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
+* @return {LayerGroup} A control object representing a group of layers allowing to dynamically change their states.
 */
 
 define([
@@ -75,19 +63,77 @@ define([
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
+                        /**
+                         * A node of the LayerGroup.
+                         *
+                         * @property node
+                         * @type JObject
+                         * @default null
+                         */
                         node: null,
+
+                        /**
+                         * A node of the list in the LayerGroup.
+                         *
+                         * @property node
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
                         _listNode: null,
 
+                        /**
+                         * Templates to be used in construction of the layer nodes.
+                         *
+                         * @property templates
+                         * @type Object
+                         * @default layer_selector_template.json
+                         */
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
+                        /**
+                         * Specifies type of this LayerGroup and the name of the layer group template to use; is set by `groupType` value;
+                         *
+                         * @property groupType
+                         * @type String
+                         * @default "layer_group"
+                         */
                         groupType: "layer_group",
 
+                        /**
+                         * Specifies type of any LayerItem added to this group during initialization and the name of the layer item template to use; is set by `layerType` value;; can be overwritten when adding individual layers by `options.type`.
+                         *
+                         * @property type
+                         * @type String
+                         * @default null
+                         */
                         layerType: null,
 
+                        /**
+                         * State of any LayerItem added to this group during its initialization; is set by `layerSate` value; can be overwritten when adding individual layers by `options.state`.
+                         *
+                         * @property state
+                         * @type String
+                         * @default LayerItem.state.DEFAULT
+                         */
                         layerState: LayerItem.state.DEFAULT,
 
+                        /**
+                         * An array of layer config definitions to be added to the group during initialization; is set to `layers` value.
+                         *
+                         * @property layers
+                         * @type Array
+                         * @default []
+                         */
                         layers: [],
 
+                        /**
+                         * An array of resulting LayerItem objects.
+                         *
+                         * @property layerItems
+                         * @type Array
+                         * @default []
+                         */
                         layerItems: []
                     },
                     options,
@@ -96,6 +142,7 @@ define([
                     }
                 );
 
+                // create group node from the template
                 this.node = $(this._template(this.groupType));
                 this._listNode = this.node.find("ul");
 
@@ -106,6 +153,13 @@ define([
                 });
             },
 
+            /**
+             * Constructs and adds a LayerItem to the LayerGroup.
+             *
+             * @param {Object} layer config of the layer to be added
+             * @param {Object} options additional options allowing for customization
+             * @method addLayerItem
+             */
             addLayerItem: function (layer, options) {
                 var layerItem,
                     layerItemOptions = {
@@ -114,12 +168,10 @@ define([
 
                 lang.mixin(layerItemOptions,
                     {
-                        state: this.layerState
-                    },
-                    options,
-                    {
+                        state: this.layerState,
                         type: this.layerType
-                    }
+                    },
+                    options
                 );
 
                 layerItem = new LayerItem(layer, layerItemOptions);
@@ -128,6 +180,14 @@ define([
                 this._listNode.append(layerItem.node);
             },
 
+            /**
+             * Modifies the state matrix of the layer to accommodate types of layers that might not use/have all the default controls or have extra controls.
+             *
+             * @param {Object} layerConfig layer config
+             * @method _constructStateMatrix
+             * @private
+             * @return {Object} modified layer state matrix
+             */
             _constructStateMatrix: function (layerConfig) {
                 var stateMatrix = lang.clone(LayerItem.stateMatrix);
 
@@ -148,6 +208,14 @@ define([
                 return stateMatrix;
             },
 
+            /**
+             * Constructs and adds a LayerItem to the LayerGroup.
+             *
+             * @param {String} layerId an id of the LayerItem to set the state on
+             * @param {String} state state to be set; must be one of the `LayerItem.state` defaults
+             * @param {Object} options additional options allowing for customization
+             * @method setState
+             */
             setState: function (layerId, state, options) {
                 var layerItem = this.getLayerItem(layerId);
 
@@ -156,6 +224,13 @@ define([
                 }
             },
 
+            /**
+             * Finds and returns a LayerItem object with the specified id. If none found, returns null.
+             *
+             * @param {String} layerId an id of the LayerItem to return
+             * @return {LayerItem} a LayerItem with the specified id
+             * @method getLayerItem
+             */
             getLayerItem: function (layerId) {
                 var layerItem;
 
@@ -166,6 +241,15 @@ define([
                 return layerItem;
             },
 
+            /**
+             * Populates a template specified by the key with the supplied data.
+             *
+             * @param {String} key template name
+             * @param {Object} data data to be inserted into the template
+             * @method _template
+             * @private
+             * @return {String} a string template filled with supplied data
+             */
             _template: function (key, data) {
                 tmpl.cache = {};
                 tmpl.templates = this.templates;
