@@ -286,7 +286,10 @@
         "hideBounds": "Hide Bounds of {0}",
         "hideAllBounds": "Hide All Bounds",
 
-        "noticeOffScale": "No data visible at this zoom level",
+        "notices": {
+            "offScale": "No data visible at this zoom level",
+            "error": "Error"
+        },
 
         "zoomToData": "Zoom to data",
 
