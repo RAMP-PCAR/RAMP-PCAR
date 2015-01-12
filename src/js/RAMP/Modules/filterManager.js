@@ -713,10 +713,11 @@ define([
         * Set the state of the specified layer to the provided value.
         * @param {String} layerId a layer id 
         * @param {String} layerState a state to set the specified layer to
+        * @param {Object} [options] additional options to be passed to the layerItem upon setting state
         * @method setLayerState
         * @private
         */
-        function setLayerState(layerId, layerState) {
+        function setLayerState(layerId, layerState, options) {
             var layerItem,
                 isChanged = false;
 
@@ -726,7 +727,7 @@ define([
 
             layerId.forEach(function (lId) {
                 layerItem = getLayerItem(lId);
-                if (layerItem && layerItem.setState(layerState)) {
+                if (layerItem && layerItem.setState(layerState, options)) {
                     isChanged = true;
                 }
             });
@@ -849,6 +850,17 @@ define([
                 } else {
                     return null;
                 }
+            },
+
+            /**
+            * Set the state of the specified layer to the provided value. Public hook to call internal setLayerState function.
+            * @param {String} layerId a layer id 
+            * @param {String} layerState a state to set the specified layer to
+            * @param {Object} [options] additional options to be passed to the layerItem upon setting state
+            * @method setLayerState
+            */
+            setLayerState: function (layerId, layerState, options) {
+                setLayerState(layerId, layerState, options);
             },
 
             /**
