@@ -817,10 +817,8 @@ define([
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
-                if (layerGroup) {
-                    layerGroup.addLayerItem(layerConfig);
-                } else {
-                    layerGroup = new LayerGroup([layerConfig], {
+                if (!layerGroup) {
+                    layerGroup = new LayerGroup([], {
                         layerType: layerType,
                         layerState: LayerItem.state.LOADING
                     });
@@ -828,6 +826,8 @@ define([
                     layerGroups[layerType] = layerGroup;
                     ui.addLayerGroup(layerGroup.node);
                 }
+
+                layerGroup.addLayerItem(layerConfig);
 
                 // TODO: check scale in cleaner way
                 setLayerOffScaleStates();
