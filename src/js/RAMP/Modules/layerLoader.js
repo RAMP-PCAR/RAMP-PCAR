@@ -22,6 +22,7 @@
 * @uses esri/tasks/ProjectParameters
 * @uses EventManager
 * @uses FeatureClickHandler
+* @uses FilterManager
 * @uses GlobalStorage
 * @uses Map
 * @uses MapClickHandler
@@ -38,6 +39,7 @@ define([
 
 /* RAMP */
 "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
+"ramp/filterManager",
 
 /* Util */
 "utils/util"],
@@ -51,6 +53,7 @@ define([
 
     /* RAMP */
     EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
+    FilterManager,
 
      /* Util */
     UtilMisc) {
@@ -225,7 +228,7 @@ define([
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             */
             loadLayer: function (layer) {
-                var insertIdx;
+                var insertIdx, layerSection;
 
                 if (!layer.ramp) {
                     console.log('you failed to supply a ramp.type to the layer!');
@@ -249,6 +252,7 @@ define([
                     case GlobalStorage.layerType.wms:
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
                         RAMP.layerCounts.wms += 1;
+                        layerSection = GlobalStorage.layerType.wms;
                         break;
 
                     case GlobalStorage.layerType.feature:
@@ -256,11 +260,12 @@ define([
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                         RAMP.layerCounts.feature += 1;
+                        layerSection = GlobalStorage.layerType.feature;
                         break;
                 }
-
-                //TODO
+               
                 //add entry to alex selector, defaulting to loading state
+                FilterManager.addLayer(layerSection, layer.ramp.config);
 
                 //add layer to map, triggering the loading process.  should add at correct position
                 RampMap.getMap().addLayer(layer, insertIdx);
