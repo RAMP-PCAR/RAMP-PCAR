@@ -1031,6 +1031,13 @@ define([
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
+                //NOTE: this type of thing is not currenlty supported by the config schema.  Need to revisit and determine if we want to keep this code or not.
+                // this only deals with static layers that are bound to a feature layer.  stand alone static layers are handled like normal feature layers
+
+                //if this does get implemented, this code should be moved to the layerLoader.js onLayerLoaded function.  After a feature layer successfully loads,
+                //we should then load any of it's static layers.  Extra tricky because these static layers do not appear in the layer selector (their state is bound
+                //to the feature layer.
+                //may want to consider another layerType .BoundStatic
 
                 var staticLayers = [],
                     perLayerStaticMaps = [],
@@ -1050,6 +1057,7 @@ define([
                 });
 
                 RAMP.staticLayerMap = staticLayerMap;
+
                 /*  End - Add static layers   */
 
                 //This was intended to be used to distinguish layers from each other when crawling; Looks like we are not using it. Commenting out for now. SZ
@@ -1058,6 +1066,7 @@ define([
                 };
 
                 //save layer objects to load after basemap.
+                //static layers is currently empty always
                 RAMP.startupLayers = wmsLayers.concat(staticLayers, featureLayers);
 
                 //add the basemap

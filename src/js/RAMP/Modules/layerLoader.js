@@ -204,6 +204,7 @@ define([
 
                         boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
 
+                        //bounding boxes are on top of feature layers
                         insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
                         RAMP.layerCounts.bb += 1;
 
@@ -252,6 +253,7 @@ define([
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
+                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                         RAMP.layerCounts.feature += 1;
                         break;
