@@ -207,7 +207,20 @@
 
     "layer_control_settings": "{% include('layer_control_generic', o); %}",
 
-    "layer_control_loading": " ",
+    "layer_control_loading": "
+        <div class='sk-spinner sk-spinner-wave-10' role='progressbar' aria-describedby='{%= o.id %}'>
+          <div class='sk-rect1'></div>
+          <div class='sk-rect2'></div>
+          <div class='sk-rect3'></div>
+          <div class='sk-rect4'></div>
+          <div class='sk-rect5'></div>
+          <div class='sk-rect6'></div>
+          <div class='sk-rect7'></div>
+          <div class='sk-rect8'></div>
+          <div class='sk-rect9'></div>
+          <div class='sk-rect10'></div>
+        </div>
+    ",
 
     "layer_control_error": " ",
 
