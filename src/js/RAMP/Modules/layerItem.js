@@ -300,23 +300,28 @@ define([
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
-                            console.log("default");
+                            console.log(LayerItem.state.DEFAULT);
                             break;
 
                         case LayerItem.state.LOADING:
-                            console.log("load");
+                            this.node.attr("aria-busy", true); // indicates that the region is loading
+
+                            console.log(LayerItem.state.LOADING);
                             break;
 
                         case LayerItem.state.LOADED:
+                            this.node.attr("aria-busy", false); // indicates that the loading is complete
                             this.setState(LayerItem.state.DEFAULT);
+
+                            console.log(LayerItem.state.LOADED);
                             break;
 
                         case LayerItem.state.ERROR:
-                            console.log("error");
+                            console.log(LayerItem.state.ERROR);
                             break;
 
                         case LayerItem.state.OFF_SCALE:
-                            console.log("scale");
+                            console.log(LayerItem.state.OFF_SCALE);
                             break;
 
                         default:
