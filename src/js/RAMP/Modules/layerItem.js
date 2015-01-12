@@ -387,7 +387,7 @@ define([
                 *     state: {
                 *       DEFAULT: "layer-state-default",
                 *       LOADING: "layer-state-loading",
-                *       ERROR: "layer-state-load-error",
+                *       ERROR: "layer-state-error",
                 *       OFF_SCALE: "layer-state-off-scale"
                 *       }
                 */
@@ -395,7 +395,7 @@ define([
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     LOADED: "layer-state-loaded",
-                    ERROR: "layer-state-load-error",
+                    ERROR: "layer-state-error",
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
