@@ -454,10 +454,12 @@ define([
                 * @example 
                 *     notices: {
                 *            SCALE: "scale"
+                *            ERROR: "error"
                 *           }
                 */
                 notices: {
-                    SCALE: "scale"
+                    SCALE: "scale",
+                    ERROR: "error"
                 },
 
                 /**
@@ -501,7 +503,9 @@ define([
                 *                LayerItem.toggles.RELOAD,
                 *                LayerItem.toggles.HIDE
                 *            ],
-                *            notices: []
+                *            notices: [
+                *                LayerItem.notices.ERROR
+                *            ]
                 *        },
                 *
                 *        OFF_SCALE: {
@@ -515,7 +519,7 @@ define([
                 *                LayerItem.toggles.BOX
                 *            ],
                 *            notices: [
-                *                LayerItem.notices.SCALE,
+                *                LayerItem.notices.SCALE
                 *            ]
                 *        }
                 */
@@ -588,7 +592,9 @@ define([
                 LayerItem.toggles.RELOAD,
                 LayerItem.toggles.HIDE
             ],
-            notices: []
+            notices: [
+                LayerItem.notices.ERROR
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {

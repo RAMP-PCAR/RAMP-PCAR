@@ -17,10 +17,10 @@
                         <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
                         <div class='layer-details'>
 
-                            <div class='layer-notices'></div>
-
                             {% include('feature_' + o.symbology.type + '_layer_image', o); %}
                             
+                            <div class='layer-notices'></div>
+
                             <div class='layer-controls'>
                                 <div class='layer-name'>
                                     <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
@@ -111,6 +111,8 @@
                         <div class='layer-details'>
 
                             {% include('wms_layer_image', o); %}
+
+                            <div class='layer-notices'></div>
 
                             <div class='layer-controls'>
                                 <div class='layer-name'>
@@ -222,7 +224,7 @@
         </div>
     ",
 
-    "layer_control_error": " ",
+    "layer_control_error": "{% include('layer_control_generic', o); %}",
 
     "layer_control_generic": "
         <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 
@@ -290,6 +292,14 @@
         <div class='layer-notice scale _tooltip fa-stack' title='{%= i18n.t('filterManager.noticeOffScale') %}' data-tooltip-theme='tooltipster-info'>
             <i class='fa fa-circle fa-stack-1x'></i>
             <i class='fa fa-info-circle fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= i18n.t('filterManager.noticeOffScale') %}</span>
+        </div>
+    ",
+
+    "layer_notice_error": "
+        <div class='layer-notice error _tooltip fa-stack' title='{%= i18n.t('filterManager.noticeOffScale') %}' data-tooltip-theme='tooltipster-error'>
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-exclamation-circle fa-stack-1x'></i>
             <span class='wb-invisible'>{%= i18n.t('filterManager.noticeOffScale') %}</span>
         </div>
     ",

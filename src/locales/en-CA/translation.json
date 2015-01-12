@@ -307,7 +307,8 @@
 
         "controlsMatrix": {
             "metadata": "Metadata",
-            "settings": "Settings"
+            "settings": "Settings",
+            "error": "Remove"
         }
     },
 
