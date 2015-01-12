@@ -355,7 +355,18 @@
                 .grayscale;
             }
 
-            background-color: @very-light-grey-color !important;
+            background-color: @very-light-grey-color !important;            
+        }
+
+        &.layer-state-off-scale {
+            &:before {
+                content: "";
+                position: absolute;
+                width: 3px;
+                height: 100%;
+                background-color: @info-color;
+                z-index: 10;
+            }
         }
 
         &.layer-state-error {
