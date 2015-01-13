@@ -228,35 +228,7 @@ define([
                 topic.publish(EventManager.Map.LAYER_LOADED, { layer: evt.target });
             },
 
-            /**
-            * Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
-            * Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.
-            *
-            * @method onLayerUpdateStart
-            * @param  {Object} evt
-            * @param  {Object} evt.target the layer object that loaded
-            */
-            onLayerUpdateStart: function (evt) {
-                var layer = evt,
-                    layerState;
-
-                console.log(layer);
-                console.log(layerState);
-
-                /*
-                //figure out which layer selector state object matches this layer object
-                layerState = FilterManager.getLayerState(layer.ramp.config.id);
-
-                //check if this layer is in an error state.  if so, exit the handler
-                if (layerState === LayerItem.state.ERROR) {
-                    return;
-                }
-
-                //set layer selector state to loading
-                FilterManager.setLayerState(layer.ramp.config.id, LayerItem.state.LOADING);
-               */
-            },
-
+           
             /**
             * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
@@ -325,7 +297,10 @@ define([
 
                     //since the update-start event is terrible and doesn't let you know who threw it, we need to tack the handler
                     //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
-                    layer.ramp.startHandler = function () {
+                    
+                    //Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
+                    //Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.                                        
+                    layer.ramp.onUpdateStart = function () {
                         var layerState;
 
                         console.log("LAYER START HANDLER " + this.url);
@@ -341,8 +316,7 @@ define([
                         FilterManager.setLayerState(this.ramp.config.id, LayerItem.state.LOADING);
                     };
 
-                    layer.on('update-start', layer.ramp.startHandler);
-                    // layer.on('update-start', this.onLayerUpdateStart);
+                    layer.on('update-start', layer.ramp.onUpdateStart);
 
                     //add update end handler for layer
                     layer.on('update-end', this.onLayerUpdateEnd);
@@ -363,7 +337,7 @@ define([
                     }
 
                     //add entry to alex selector, defaulting to loading state
-                    FilterManager.addLayer(layerSection, layer.ramp.config);
+                    FilterManager.addLayer(layerSection, layer.ramp.config, LayerItem.state.DEFAULT);
 
                     //add layer to map, triggering the loading process.  should add at correct position
                     map.addLayer(layer, insertIdx);
@@ -452,7 +426,7 @@ define([
                     //TODO ensure the layer selector item can find itself when there is no actual layer object in the map stack.
 
                     //TODO make a way to add a layer that starts in error state
-                    FilterManager.addLayer(layerSection, layer.ramp.config);
+                    FilterManager.addLayer(layerSection, layer.ramp.config, LayerItem.state.ERROR);
                 }
             }
         };

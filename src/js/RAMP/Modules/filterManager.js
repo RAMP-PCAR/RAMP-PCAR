@@ -811,9 +811,10 @@ define([
             * Add a provided layer to the layer selector.
             * @param {String} layerType layer type - name of the layer group
             * @param {Object} layerConfig a layer config
+            * @param {String} initState optional. the state to initialize in.  Default value is LOADING
             * @method addLayer
             */
-            addLayer: function (layerType, layerConfig) {
+            addLayer: function (layerType, layerConfig, initState) {
                 var layerGroup = layerGroups[layerType];
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
@@ -821,7 +822,7 @@ define([
                 if (!layerGroup) {
                     layerGroup = new LayerGroup([], {
                         layerType: layerType,
-                        layerState: LayerItem.state.LOADING
+                        layerState: UtilMisc.isUndefined(initState) ? LayerItem.state.LOADING : initState
                     });
 
                     layerGroups[layerType] = layerGroup;
