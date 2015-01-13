@@ -422,7 +422,7 @@ define([
                                         render: rowRenderer
                                     };
                                 }),
-                                dom: '<"jqgrid_table_wrapper full-table"t><"status-line"p>',
+                                dom: '<"jqgrid_table_wrapper full-table"t><"datagrid-info-notice simple"><"status-line"p>',
                                 scrollY: "500px", // just a placeholder; it will be dynamically updated later
                                 searching: RAMP.config.extendedDatagridExtentFilterEnabled
                             }
@@ -468,6 +468,8 @@ define([
                     dataTablesScroll = sectionNode.find(".dataTables_scroll");
                     dataTablesScrollBody = dataTablesScroll.find(".dataTables_scrollBody");
                     dataTablesScrollHead = dataTablesScroll.find(".dataTables_scrollHead");
+
+                    datagridNotice = sectionNode.find('.datagrid-info-notice');
 
                     Theme.tooltipster(jqgridWrapper);
 
@@ -701,7 +703,7 @@ define([
                     popupManager.registerPopup(sectionNode, "click",
                         function (d) {
                             this.target.toggle();
-                            
+
                             this.handle
                                 .find(".separator i")
                                 .removeClass("fa-angle-down")
@@ -1007,8 +1009,7 @@ define([
                         createDatatable();
 
                         datagridGlobalToggles = sectionNode.find('#datagridGlobalToggles');
-                        datagridNotice = sectionNode.find('.datagrid-info-notice');
-
+                        
                         datagridStatusLine = sectionNode.find('.status-line');
                         datasetSelector = $("#datasetSelector");
                         datasetSelectorSubmitButton = $("#datasetSelectorSubmitButton");
@@ -1193,22 +1194,47 @@ define([
                                 RampMap.getInvisibleLayers()
                                 .filter(function (l) {
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
-                                });
+                                }),
+                            
+                            selectedDatasetUrl,
+                            index;
 
                         if (this.isReady()) {
-                            if (invisibleLayers.length > 0) {
-                                data.layers = invisibleLayers.map(function (il) {
-                                    return il.ramp.config;
+                            tmpl.cache = {};
+                            tmpl.templates = data_grid_template_json;
+
+                            if (datagridMode === GRID_MODE_FULL) {
+
+                                selectedDatasetUrl = ui.getSelectedDatasetUrl();
+                                index = UtilArray.indexOf(invisibleLayers, function (il) {
+                                    return il.url === selectedDatasetUrl;
                                 });
 
-                                tmpl.cache = {};
-                                tmpl.templates = data_grid_template_json;
+                                if (index !== -1) {
+                                    
+                                    notice = tmpl("datagrid_full_info_notice", data);
 
-                                notice = tmpl("datagrid_info_notice", data);
+                                    datagridNotice
+                                        .empty()
+                                        .append(notice);
 
+                                    sectionNode.addClass("notice");
+                                }
+
+                            } else {
+                                if (invisibleLayers.length > 0) {
+                                    data.layers = invisibleLayers.map(function (il) {
+                                        return il.ramp.config;
+                                    });
+
+                                    notice = tmpl("datagrid_info_notice", data);                                    
+                                }
+                            }
+
+                            if (notice) {
                                 datagridNotice
-                                    .empty()
-                                    .append(notice);
+                                        .empty()
+                                        .append(notice);
 
                                 sectionNode.addClass("notice");
                             } else {

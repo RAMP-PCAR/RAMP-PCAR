@@ -53,7 +53,7 @@
     "datagrid_info_notice": "
 
         <button class='btn btn-xs button-none info-notice-button'>
-            <span>{%= i18n.t('datagrid.notices.offScale') %}</span> 
+            <span>{%= i18n.t('datagrid.notices.offScaleSummary') %}</span> 
             <span class='separator'><i class='fa fa-angle-down'></i></span>
         </button>
         <div class='notice-details small'>
@@ -65,6 +65,10 @@
                 });
             %}
         </div>
+    ",
+
+    "datagrid_full_info_notice": "
+        <p>{%= i18n.t('datagrid.notices.offScaleFullData') %}</p>        
     ",
 
     // The following three templates are used to generate the top section (global) for layer toggle.	
