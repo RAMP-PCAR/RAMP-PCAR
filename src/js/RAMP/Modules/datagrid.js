@@ -1187,6 +1187,13 @@ define([
                     */
                     capturePanel: capturePanel,
 
+                    /**
+                    * Update the datagrid notice to show feedback to the user if any.
+                    * Right now is used to display notifications about scale dependent layers that are off scale at the moment.
+                    * 
+                    * @private
+                    * @method updateNotice
+                    */
                     updateNotice: function () {
                         var notice,
                             data = { layers: null },
@@ -1204,21 +1211,14 @@ define([
                             tmpl.templates = data_grid_template_json;
 
                             if (datagridMode === GRID_MODE_FULL) {
-
+                                // check if the selected layer is off scale at the current extent
                                 selectedDatasetUrl = ui.getSelectedDatasetUrl();
                                 index = UtilArray.indexOf(invisibleLayers, function (il) {
                                     return il.url === selectedDatasetUrl;
                                 });
 
                                 if (index !== -1) {
-                                    
                                     notice = tmpl("datagrid_full_info_notice", data);
-
-                                    datagridNotice
-                                        .empty()
-                                        .append(notice);
-
-                                    sectionNode.addClass("notice");
                                 }
 
                             } else {
@@ -1231,6 +1231,7 @@ define([
                                 }
                             }
 
+                            // if a notice was created, add it to the DOM
                             if (notice) {
                                 datagridNotice
                                         .empty()
@@ -1564,6 +1565,7 @@ define([
                 }
             });
 
+            // update notice after zoom end event since some of the scale-dependent layers might end up off scale
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 ui.updateNotice();
             });
