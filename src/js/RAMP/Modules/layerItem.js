@@ -660,7 +660,8 @@ define([
         // setting defaults for transition matrix
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
             LayerItem.state.ERROR,
-            LayerItem.state.OFF_SCALE
+            LayerItem.state.OFF_SCALE,
+            LayerItem.state.LOADING
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
@@ -679,7 +680,8 @@ define([
 
         LayerItem.transitionMatrix[LayerItem.state.OFF_SCALE] = [
             LayerItem.state.ERROR,
-            LayerItem.state.DEFAULT
+            LayerItem.state.DEFAULT,
+            LayerItem.state.LOADING
         ];
 
         // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
