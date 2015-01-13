@@ -591,6 +591,25 @@ define([
             return layerOpacity.default || 1;
         }
 
+        /**
+        * Readies a layer for initial handshake.  Will catch success or failure
+        *
+        * @private
+        * @method prepLayer
+        * @param  {Object} layer layer to be prepped
+        */
+        function prepLayer(layer) {
+            layer.on('load', function (evt) {
+                console.log("PREP LOAD OK " + evt.layer.url);
+                evt.layer.ramp.loadOk = true;
+            });
+
+            layer.on('error', function (evt) {
+                console.log("PREP LOAD FAIL " + evt.target.url);
+                evt.target.ramp.loadOk = false;
+            });
+        }
+
         return {
             /**
             * For a specified layer, zooms to the closest level that has some visible data.
@@ -819,12 +838,14 @@ define([
                     visible: layerConfig.settings.visible,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
-
+                
                 fl.ramp = {
                     type: GlobalStorage.layerType.feature,
                     config: layerConfig,
                     user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
+
+                prepLayer(fl);
 
                 if (layerConfig.settings.visible === false) {
                     fl.setVisibility(false);
@@ -859,6 +880,8 @@ define([
                     user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
 
+                prepLayer(wmsl);
+
                 wmsl.setVisibility(layerConfig.settings.visible);
 
                 return wmsl;
@@ -890,6 +913,8 @@ define([
                             config: layerConfig,
                             user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                         };
+
+                        prepLayer(tempLayer);
 
                         if (layerConfig.settings.visible === false) {
                             tempLayer.setVisibility(false);
