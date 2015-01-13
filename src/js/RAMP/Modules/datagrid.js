@@ -696,6 +696,36 @@ define([
                             useAria: false
                         }
                     );
+
+                    // handle clicks on notices
+                    popupManager.registerPopup(sectionNode, "click",
+                        function (d) {
+                            this.target.toggle();
+                            
+                            this.handle
+                                .find(".separator i")
+                                .removeClass("fa-angle-down")
+                                .addClass("fa-angle-up");
+
+                            d.resolve();
+                        },
+                        {
+                            closeHandler: function (d) {
+                                this.target.toggle();
+
+                                this.handle
+                                    .find(".separator i")
+                                    .removeClass("fa-angle-up")
+                                    .addClass("fa-angle-down");
+
+                                d.resolve();
+                            },
+
+                            handleSelector: ".info-notice-button",
+                            containerSelector: ".datagrid-info-notice",
+                            targetSelector: ".notice-details"
+                        }
+                    );
                 }
 
                 /**
