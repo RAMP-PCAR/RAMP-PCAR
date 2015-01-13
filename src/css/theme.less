@@ -89,46 +89,97 @@
     background: @light-info-color;
     border-left: 10px solid @info-color;
 
-    > p {
-        margin: 0 0 0 21px;
-        padding: 5px;
+    &.simple {
+        /* simple notice */
+        > p {
+            margin: 0 0 0 21px;
+            padding: 5px;
 
-        &:before {
-            color: @info-color;
-            content: "\e086";
-            font-family: "Glyphicons Halflings";
-            margin-left: -20px;
-            position: absolute;
+            &:before {
+                color: @info-color;
+                content: "\e086";
+                font-family: "Glyphicons Halflings";
+                margin-left: -20px;
+                position: absolute;
+            }
         }
     }
 
-    details {
-        padding-left: 26px;
-        padding-bottom: 0;
+    &.details {
+        /* RAMP custom notice */
+        > button.button-none {
+            .link-button2;
+            color: #000;
+            width: 100%;
+            text-align: left;
+            padding-top: 4px;
+            padding-bottom: 4px;
 
-        summary {
-            
-            p {
-                margin: 0 0 0 0;
-                padding: 5px 5px 5px 0;
-                display: inline-block !important;
+            span:first-child {
+                margin-left: 26px;
+            }
 
-                &:before {
-                    color: @info-color;
-                    content: "\e086";
-                    font-family: "Glyphicons Halflings";
-                    margin-left: -34px;
-                    position: absolute;
+            &:before {
+                color: @info-color;
+                content: "\e086";
+                font-family: "Glyphicons Halflings";
+                margin-left: 1px;
+                position: absolute;
+            }
+
+            .separator {
+                border-left: 1px solid #222222;
+                margin: 2px 0 2px 9px;
+                padding: 0 0 0 9px;
+                height: 17px;
+
+                .fa {
+                    line-height: 17px;
+                    vertical-align: text-bottom;
                 }
             }
         }
 
-        > div {
-            margin-top: 5px;
-            margin-bottom: 8px;
+        > div.notice-details {
+            display: none;
+            margin: 5px 0 8px 32px;
 
             p {
                 margin-bottom: 5px;
+            }
+        }
+    }
+
+    &.ugly {
+        /* simple details/summary notice */
+        details {
+            padding-left: 26px;
+            padding-bottom: 0;
+
+            summary {
+
+                p {
+                    margin: 0 0 0 0;
+                    padding: 5px 5px 5px 0;
+                    display: inline-block !important;
+
+                    &:before {
+                        color: @info-color;
+                        content: "\e086";
+                        font-family: "Glyphicons Halflings";
+                        margin-left: -34px;
+                        position: absolute;
+                    }
+                }
+            }
+
+            > div {
+                margin-top: 5px;
+                margin-bottom: 8px;
+
+                p {
+                    margin-bottom: 5px;
+                }
             }
         }
     }

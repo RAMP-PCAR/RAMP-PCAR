@@ -43,7 +43,7 @@
                                         {% include('datagrid_global_row_Template', o.buttons);%}
                                     </div>
                                     
-                                    <div class='datagrid-info-notice'></div>
+                                    <div class='datagrid-info-notice details'></div>
 
                                     {% include('datagrid_manager_table_Template', o); %}
 
@@ -52,20 +52,19 @@
     
     "datagrid_info_notice": "
 
-        <details>
-            <summary>
-                <p>{%=i18n.t('datagrid.notices.offScale')%}</p>
-            </summary>
-            <div class='small'>
-                {%
-                    o.layers.forEach(function(layer) {
-                        %}      
-                            <p>{%= layer.displayName %}</p>
-                        {%
-                    });
-                %}
-            </div>
-        </details>
+        <button class='btn btn-xs button-none info-notice-button'>
+            <span>{%= i18n.t('datagrid.notices.offScale') %}</span> 
+            <span class='separator'><i class='fa fa-angle-down'></i></span>
+        </button>
+        <div class='notice-details small'>
+            {%
+                o.layers.forEach(function(layer) {
+                    %}      
+                        <p>{%= layer.displayName %}</p>
+                    {%
+                });
+            %}
+        </div>
     ",
 
     // The following three templates are used to generate the top section (global) for layer toggle.	
