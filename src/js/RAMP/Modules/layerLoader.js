@@ -115,8 +115,10 @@ define([
                 //TODO
                 //set layer selector state to error
 
+                //TODO  figure this out.  since we can re-arrange the draw order of layers (while in an error state), we want to keep the object around to
+                //      preserve indexing.  Instead, we likely want to remove the layer at the begging of the "reload" event
                 //remove layer object from Map's layer collection
-                RampMap.getMap().removeLayer(evt.target);
+                //RampMap.getMap().removeLayer(evt.target);
             },
 
             /**
@@ -148,7 +150,7 @@ define([
                     case GlobalStorage.layerType.wms:
 
                         // WMS binding for getFeatureInfo calls
-                        if (layerConfig.featureInfo !== undefined) {
+                        if (!UtilMisc.isUnDefined(layerConfig.featureInfo)) {
                             MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
                         }
 
@@ -183,8 +185,9 @@ define([
 
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (typeof layerConfig.layerExtent !== "undefined") {
+                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer      
+                        //NOTE UtilMisc.isUnDefined fails epically when testing this value
+                        if (layerConfig.layerExtent !== undefined) {
                             boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                             if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {

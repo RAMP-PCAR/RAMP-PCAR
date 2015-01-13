@@ -808,9 +808,10 @@ define([
            *
            * @method makeFeatureLayer
            * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
            * @return {Esri/layers/FeatureLayer} feature layer object (unloaded)
            */
-            makeFeatureLayer: function (layerConfig) {
+            makeFeatureLayer: function (layerConfig, userLayer) {
                 var fl = new FeatureLayer(layerConfig.url, {
                     id: layerConfig.id,
                     mode: FeatureLayer.MODE_SNAPSHOT,
@@ -821,7 +822,8 @@ define([
 
                 fl.ramp = {
                     type: GlobalStorage.layerType.feature,
-                    config: layerConfig
+                    config: layerConfig,
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
 
                 if (layerConfig.settings.visible === false) {
@@ -836,10 +838,11 @@ define([
            *
            * @method makeWmsLayer
            * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
            * @return {Esri/layers/WMSLayer} WMS layer
            */
 
-            makeWmsLayer: function (layerConfig) {
+            makeWmsLayer: function (layerConfig, userLayer) {
                 var wmsl = new WMSLayer(layerConfig.url, {
                     id: layerConfig.id,
                     format: layerConfig.format,
@@ -852,7 +855,8 @@ define([
                 });
                 wmsl.ramp = {
                     type: GlobalStorage.layerType.wms,
-                    config: layerConfig
+                    config: layerConfig,
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
 
                 wmsl.setVisibility(layerConfig.settings.visible);
@@ -866,10 +870,11 @@ define([
             * @method makeStaticLayer
             * @private
             * @param {Object} layerConfig config object for the layer to create
+            * @param {Boolean} userLayer optional specifies if layer was added by a user
             * @return {Object} layer object of the appropriate type
             */
 
-            makeStaticLayer: function (layerConfig) {
+            makeStaticLayer: function (layerConfig, userLayer) {
                 var tempLayer,
                     layerType = layerConfig.layerType || "feature";
                 //determine layer type and process
@@ -882,7 +887,8 @@ define([
                         });
                         tempLayer.ramp = {
                             type: GlobalStorage.layerType.Static,
-                            config: layerConfig
+                            config: layerConfig,
+                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                         };
 
                         if (layerConfig.settings.visible === false) {
