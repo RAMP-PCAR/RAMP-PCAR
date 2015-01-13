@@ -231,7 +231,8 @@
         "fullData": "Full Data",
 
         "notices": {
-            "offScale": "Some data is not visible at this zoom level."
+            "offScaleSummary": "Some data is not visible at this zoom level.",
+            "offScaleFullData": "Data is not visible at this zoom level."
         },
 
         "ex": {
