@@ -432,6 +432,8 @@ define([
                 *     state: {
                 *       DEFAULT: "layer-state-default",
                 *       LOADING: "layer-state-loading",
+                *       LOADED: "layer-state-loaded",
+                *       UPDATING: "layer-state-updating",
                 *       ERROR: "layer-state-error",
                 *       OFF_SCALE: "layer-state-off-scale"
                 *       }
@@ -440,6 +442,7 @@ define([
                     DEFAULT: "layer-state-default",
                     LOADING: "layer-state-loading",
                     LOADED: "layer-state-loaded",
+                    UPDATING: "layer-state-updating",
                     ERROR: "layer-state-error",
                     OFF_SCALE: "layer-state-off-scale"
                 },
@@ -503,12 +506,14 @@ define([
                 * @example 
                 *     notices: {
                 *            SCALE: "scale"
-                *            ERROR: "error"
+                *            ERROR: "error",
+                *            UPDATE: "update"
                 *           }
                 */
                 notices: {
                     SCALE: "scale",
-                    ERROR: "error"
+                    ERROR: "error",
+                    UPDATE: "update"
                 },
 
                 /**
@@ -542,6 +547,19 @@ define([
                 *            controls: [],
                 *            toggles: [],
                 *            notices: []
+                *        },
+                *        DEFAULT: {
+                *            controls: [
+                *                LayerItem.controls.METADATA,
+                *                LayerItem.controls.SETTINGS
+                *            ],
+                *            toggles: [
+                *                LayerItem.toggles.EYE,
+                *                LayerItem.toggles.BOX
+                *            ],
+                *            notices: [
+                *                LayerItem.notices.UPDATE
+                *            ]
                 *        },
                 *
                 *        ERROR: {
@@ -581,22 +599,27 @@ define([
                 * @example 
                 *        DEFAULT: [
                 *            LayerItem.state.ERROR,
-                *            LayerItem.state.OFF_SCALE
+                *            LayerItem.state.OFF_SCALE,
+                *            LayerItem.state.UPDATING
                 *        ],
                 *        LOADED: [
-                *            LayerItem.state.LOADING
+                *            LayerItem.state.DEFAULT
                 *        ],
                 *        LOADING: [
+                *            LayerItem.state.LOADED
+                *        ],
+                *        UPDATING: [
                 *            LayerItem.state.ERROR,
-                *            LayerItem.state.DEFAULT,
-                *            LayerItem.state.OFF_SCALE
+                *            LayerItem.state.OFF_SCALE,
+                *            LayerItem.state.DEFAULT
                 *        ],
                 *        ERROR: [
                 *            LayerItem.state.LOADING
                 *        ],
                 *        OFF_SCALE: [
                 *            LayerItem.state.ERROR,
-                *            LayerItem.state.DEFAULT
+                *            LayerItem.state.DEFAULT,
+                *            LayerItem.state.UPDATING
                 *        ]
                 * 
                 */
@@ -631,6 +654,20 @@ define([
             notices: []
         };
 
+        LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
+            controls: [
+                LayerItem.controls.METADATA,
+                LayerItem.controls.SETTINGS
+            ],
+            toggles: [
+                LayerItem.toggles.EYE,
+                LayerItem.toggles.BOX
+            ],
+            notices: [
+                LayerItem.notices.UPDATE
+            ]
+        };
+
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
                 LayerItem.controls.RELOAD,
@@ -660,7 +697,8 @@ define([
         // setting defaults for transition matrix
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
             LayerItem.state.ERROR,
-            LayerItem.state.OFF_SCALE
+            LayerItem.state.OFF_SCALE,
+            LayerItem.state.UPDATING
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
@@ -668,9 +706,13 @@ define([
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
-            LayerItem.state.ERROR,
+            LayerItem.state.DEFAULT
+        ];
+
+        LayerItem.transitionMatrix[LayerItem.state.UPDATING] = [
             LayerItem.state.DEFAULT,
-            LayerItem.state.OFF_SCALE
+            LayerItem.state.OFF_SCALE,
+            LayerItem.state.ERROR
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.ERROR] = [
@@ -679,7 +721,8 @@ define([
 
         LayerItem.transitionMatrix[LayerItem.state.OFF_SCALE] = [
             LayerItem.state.ERROR,
-            LayerItem.state.DEFAULT
+            LayerItem.state.DEFAULT,
+            LayerItem.state.UPDATING
         ];
 
         // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
