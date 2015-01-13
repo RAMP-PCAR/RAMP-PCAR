@@ -306,6 +306,14 @@
         </div>
     ",
 
+    "layer_notice_update": "
+        <div class='layer-notice update _tooltip fa-stack' title='{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.update') %}' >
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-refresh fa-spin fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.update') %}</span>
+        </div>
+    ",
+
     // Level 2
     // Filter row overall layout for a given layer
     "layer_settings":"

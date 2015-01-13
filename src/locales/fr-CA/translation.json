@@ -1,9 +1,9 @@
 {
     "config": {
         "tileSchema": {
-            "NRCAN_Lambert_3978": "[fr] Canada Atlas Lambert", 
+            "NRCAN_Lambert_3978": "[fr] Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "[fr] Lambert 79",
-            "ESRI_World_AuxMerc_3857":  "Auxilliary Mercator"
+            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -32,32 +32,32 @@
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] Earth 2 Map"
             },
-            "baseEsriWorld":  {
+            "baseEsriWorld": {
                 "name": "[fr] World Imagery",
                 "altText": "[fr] Satellite Map",
                 "description": "[fr] ESRI World_Imagery"
             },
-            "baseEsriPhysical":  {
+            "baseEsriPhysical": {
                 "name": "[fr] Physical Earth",
                 "altText": "[fr] Satellite Map",
                 "description": "[fr] ESRI World_Physical_Map"
             },
-            "baseEsriRelief":  {
+            "baseEsriRelief": {
                 "name": "[fr] Shaded Relief",
                 "altText": "[fr] Satellite Map",
                 "description": "[fr] ESRI World_Shaded_Relief"
             },
-            "baseEsriStreet":  {
+            "baseEsriStreet": {
                 "name": "[fr] Streets",
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] ESRI World_Street_Map"
             },
-            "baseEsriTerrain":  {
+            "baseEsriTerrain": {
                 "name": "[fr] Terrain",
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] ESRI World_Terrain_Base"
             },
-            "baseEsriTopo":  {
+            "baseEsriTopo": {
                 "name": "[fr] Topographic",
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] ESRI World_Topo_Map"
@@ -101,7 +101,7 @@
                 "limits": {
                     "displayName": "[fr] Limits"
                 },
-                "wms6": { 
+                "wms6": {
                     "displayName": "[fr] Railway Network"
                 }
             }
@@ -231,7 +231,8 @@
         "fullData": "Données complètes",
 
         "notices": {
-            "offScale": "[fr] Some data is not visible at this zoom level."
+            "offScaleSummary": "[fr] Some data is not visible at this zoom level.",
+            "offScaleFullData": "[fr] Data is not visible at this zoom level."
         },
 
         "ex": {
@@ -288,7 +289,8 @@
 
         "notices": {
             "offScale": "[fr] No data visible at this zoom level",
-            "error": "[fr] Error"
+            "error": "[fr] Error",
+            "update": "[fr] Updating"
         },
 
         "zoomToData": "[fr] Zoom to data",
