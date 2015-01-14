@@ -50,7 +50,7 @@ define([
 "esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager", "ramp/dataLoader",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -64,7 +64,7 @@ define([
     SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
+    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager, DataLoader,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
@@ -1079,6 +1079,11 @@ define([
                 console.log('adding wmses');
                 console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
+                var gjlPromise = DataLoader.buildGeoJson({ url: "/convert.json" });
+                gjlPromise.then(function (layer) {
+                    console.log("adding geojson layer");
+                    map.addLayer(layer);
+                });
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
