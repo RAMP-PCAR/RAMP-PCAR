@@ -593,6 +593,7 @@ define([
 
         /**
         * Readies a layer for initial handshake.  Will catch success or failure
+        * Circular reference errors prevent us from calling LayerLoader directly from this module
         *
         * @private
         * @method prepLayer
@@ -602,11 +603,29 @@ define([
             layer.on('load', function (evt) {
                 console.log("PREP LOAD OK " + evt.layer.url);
                 evt.layer.ramp.loadOk = true;
+                topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
             layer.on('error', function (evt) {
                 console.log("PREP LOAD FAIL " + evt.target.url);
                 evt.target.ramp.loadOk = false;
+                topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
+                    layer: evt.target,
+                    error: evt.error
+                });
+            });
+
+            //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need to tack the handler
+            //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
+            layer.ramp.onUpdateStart = function () {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATING, { layer: this });
+            };
+
+            layer.on('update-start', layer.ramp.onUpdateStart);
+
+            //add update end handler for layer
+            layer.on('update-end', function (evt) {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATED, { layer: evt.target });
             });
         }
 
@@ -838,7 +857,7 @@ define([
                     visible: layerConfig.settings.visible,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
-                
+
                 fl.ramp = {
                     type: GlobalStorage.layerType.feature,
                     config: layerConfig,

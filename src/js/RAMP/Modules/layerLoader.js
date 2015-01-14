@@ -60,16 +60,9 @@ define([
     UtilMisc) {
         "use strict";
 
-        /*
-        var iFeatureCount,  //includes static layers
-            iBoundingCount,
-            iWmsCount,
-            iBaseCount;
-            */
-
         return {
             /**
-            * Initializes properties.
+            * Initializes properties.  Set up event listeners
             *
             * @method init
             */
@@ -83,6 +76,11 @@ define([
                     wms: 0,
                     base: 1
                 };
+
+                topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, this.onLayerLoaded);
+                topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, this.onLayerUpdateEnd);
+                topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
+                topic.subscribe(EventManager.LayerLoader.LAYER_ERROR, this.onLayerError);
             },
 
             /**
@@ -90,15 +88,18 @@ define([
             *
             * @method onLayerError
             * @param  {Object} evt
-            * @param  {Object} evt.target the layer object that failed
+            * @param  {Object} evt.layer the layer object that failed
             * @param  {Object} evt.error the error object
             */
             onLayerError: function (evt) {
-                console.log("failed to load layer " + evt.target.url);
+                console.log("failed to load layer " + evt.layer.url);
                 console.log(evt.error.message);
 
+                //TODO consider if the layer has not been loaded yet
+                //TODO consider if the layer does not yet have an entry in the layer selector
+
                 //reduce count
-                switch (evt.target.ramp.type) {
+                switch (evt.layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
                         //RAMP.layerCounts.wms -= 1;
                         break;
@@ -108,6 +109,18 @@ define([
                         //RAMP.layerCounts.feature -= 1;
                         break;
                 }
+
+                var layerState;
+
+                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
+
+                //check if this layer is in an error state.  if so, exit the handler
+                if (layerState === LayerItem.state.ERROR) {
+                    return;
+                }
+
+                //set layer selector state to loading
+                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.ERROR);
 
                 //TODO
                 //figure out which layer selector state object matches this layer object
@@ -120,20 +133,41 @@ define([
                 //remove layer object from Map's layer collection
                 //RampMap.getMap().removeLayer(evt.target);
             },
-           
+
+            /**
+            * Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
+            * Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.
+            *
+            * @method onLayerUpdateStart
+            * @param  {Object} evt
+            * @param  {Object} evt.layer the layer object that loaded
+            */
+            onLayerUpdateStart: function (evt) {
+                var layerState;
+
+                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
+
+                //check if this layer is in an error state.  if so, exit the handler
+                if (layerState === LayerItem.state.ERROR) {
+                    return;
+                }
+
+                //set layer selector state to loading
+                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.UPDATING);
+            },
+
             /**
             * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
             * @method onLayerUpdateEnd
             * @param  {Object} evt
-            * @param  {Object} evt.target the layer object that loaded
+            * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
-                var layer = evt.target,
-                    layerState;
+                var layerState;
 
                 //figure out which layer selector state object matches this layer object
-                layerState = FilterManager.getLayerState(layer.ramp.config.id);
+                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
 
                 //check if this layer is in an error state.  if so, exit the handler
                 if (layerState === LayerItem.state.ERROR) {
@@ -141,10 +175,30 @@ define([
                 }
 
                 //set layer selector state to loaded
-                FilterManager.setLayerState(layer.ramp.config.id, LayerItem.state.LOADED);
+                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.LOADED);
+            },
 
-                //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
-                topic.publish(EventManager.Map.LAYER_LOADED, { layer: layer });
+            /**
+            * Reacts when a layer has loaded successfully.  This means the site has shaken hands with the layer and it seems ok.
+            * This does not mean data has been downloaded
+            *
+            * @method onLayerLoaded
+            * @param  {Object} evt
+            * @param  {Object} evt.layer the layer object that loaded
+            */
+            onLayerLoaded: function (evt) {
+                //set state to loaded
+                //if we have a row in layer selector, update it to loaded (unless already in error)
+
+                //TODO set flags that we have loaded ok (steal from map function).
+                //TODO if a row already exists in selector, set it to LOADED state. (unless already in error state)
+
+                /*
+                var layerConfig = layer.ramp.config,
+                    map = RampMap.getMap(),
+                    layerState;
+                */
+                console.log("layer loaded: " + evt.layer.url);
             },
 
             /**
@@ -169,9 +223,6 @@ define([
                 // as for now, we will assume we always add to the end of the appropriate zone for the layer.  initial layers get added in proper order.
                 // user added layers get added to the top.  afterwards they can be re-arranged via the UI
 
-                //add error handler for layer
-                layer.on('error', this.onLayerError);
-
                 //derive section
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
@@ -185,34 +236,6 @@ define([
                 }
 
                 if (layer.ramp.loadOk) {
-                    //add update start handler for layer
-
-                    //since the update-start event is terrible and doesn't let you know who threw it, we need to tack the handler
-                    //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
-                    
-                    //Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
-                    //Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.                                        
-                    layer.ramp.onUpdateStart = function () {
-                        var layerState;
-
-                        console.log("LAYER START HANDLER " + this.url);
-
-                        layerState = FilterManager.getLayerState(this.ramp.config.id);
-
-                        //check if this layer is in an error state.  if so, exit the handler
-                        if (layerState === LayerItem.state.ERROR) {
-                            return;
-                        }
-
-                        //set layer selector state to loading
-                        FilterManager.setLayerState(this.ramp.config.id, LayerItem.state.UPDATING);
-                    };
-
-                    layer.on('update-start', layer.ramp.onUpdateStart);
-
-                    //add update end handler for layer
-                    layer.on('update-end', this.onLayerUpdateEnd);
-
                     //increase count
                     switch (layer.ramp.type) {
                         case GlobalStorage.layerType.wms:
@@ -274,7 +297,7 @@ define([
 
                             boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
-                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer                           
+                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
                             if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
                                 boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 

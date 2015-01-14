@@ -1546,7 +1546,7 @@ define([
                 }
             });
 
-            topic.subscribe(EventManager.Map.LAYER_LOADED, function (evt) {
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, function (evt) {
                 //new layer has been added.  if it has grid-worthy data, refresh the grid
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
