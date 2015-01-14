@@ -103,7 +103,6 @@ define([
                     var transparencySliders;
 
                     function initTransparencySliders() {
-
                         // initializes all sliders in the layer list
                         transparencySliders = layerList.find(".nstSlider._slider")
                             .removeClass("_slider")
@@ -290,7 +289,6 @@ define([
 
                             createGroups();
                             initListeners();
-
                         },
 
                         update: function () {
@@ -354,7 +352,6 @@ define([
 
                     return {
                         init: function () {
-
                         },
 
                         /**
@@ -423,7 +420,7 @@ define([
 
                 /**
                 * Changes the width of the layers pane to accommodate for the scrollbar if it's needed.
-                * 
+                *
                 * @method adjustPaneWidth
                 * @private
                 */
@@ -433,7 +430,7 @@ define([
 
                 /**
                 * Sets event handlers for various controls that may be present in the layer items. All event handlers are set on the main list container and are independed of the individual layer items.
-                * 
+                *
                 * @method setButtonEvents
                 * @private
                 */
@@ -455,7 +452,6 @@ define([
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
-
                                 adjustPaneWidth();
                                 d.resolve();
                             });
@@ -473,7 +469,6 @@ define([
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             this.target.slideToggle("fast", function () {
-
                                 adjustPaneWidth();
                                 d.resolve();
                             });
@@ -693,7 +688,7 @@ define([
 
         /**
         * Returns a LayerItem object with specified layerId.
-        * @param {String} layerId a layer id 
+        * @param {String} layerId a layer id
         * @method getLayerItem
         * @private
         */
@@ -711,7 +706,7 @@ define([
 
         /**
         * Set the state of the specified layer to the provided value.
-        * @param {String} layerId a layer id 
+        * @param {String} layerId a layer id
         * @param {String} layerState a state to set the specified layer to
         * @param {Object} [options] additional options to be passed to the layerItem upon setting state
         * @method setLayerState
@@ -728,6 +723,8 @@ define([
             layerId.forEach(function (lId) {
                 layerItem = getLayerItem(lId);
                 if (layerItem && layerItem.setState(layerState, options)) {
+                    //if we went to loaded, call a modified version of below function that only updates that one layer.
+                    setLayerOffScaleState(lId);
                     isChanged = true;
                 }
             });
@@ -751,7 +748,12 @@ define([
                 layers = layers
                     .map(function (l) {
                         if (l.ramp) {
-                            return l.id;
+                            if (l.ramp.config) {
+                                //we prefer the config id, as the ramp core can sometimes append things to the actual layer object id to help bind layers
+                                return l.ramp.config.id;
+                            } else {
+                                return l.id;
+                            }
                         }
                     })
                     .filter(function (l) {
@@ -766,6 +768,46 @@ define([
 
             invisibleLayers = filterLayerIds(invisibleLayers);
             setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+        }
+
+        /**
+       * Checks if a specific layer has data that is not visible and sets the appropriate layer state.
+       * @method setLayerOffScaleState
+       * @param {String} layerId a layer id
+       * @private
+       */
+        function setLayerOffScaleState(layerId) {
+            var visibleLayers = RampMap.getVisibleLayers(),
+                invisibleLayers = RampMap.getInvisibleLayers();
+
+            function filterLayerIds(layers) {
+                layers = layers
+                    .map(function (l) {
+                        if (l.ramp) {
+                            if (l.ramp.config) {
+                                //we prefer the config id, as the ramp core can sometimes append things to the actual layer object id to help bind layers
+                                return l.ramp.config.id;
+                            } else {
+                                return l.id;
+                            }
+                        }
+                    })
+                    .filter(function (l) {
+                        return (l);
+                    });
+
+                return layers;
+            }
+
+            visibleLayers = filterLayerIds(visibleLayers);
+            invisibleLayers = filterLayerIds(invisibleLayers);
+            if (visibleLayers.contains(layerId)) {
+                setLayerState(layerId, LayerItem.state.DEFAULT, true);
+            }
+
+            if (invisibleLayers.contains(layerId)) {
+                setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+            }
         }
 
         /**
@@ -815,21 +857,26 @@ define([
             * @method addLayer
             */
             addLayer: function (layerType, layerConfig, initState) {
-                var layerGroup = layerGroups[layerType];
+                var layerGroup = layerGroups[layerType],
+                    newLayer;
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
                 if (!layerGroup) {
                     layerGroup = new LayerGroup([], {
                         layerType: layerType,
-                        layerState: UtilMisc.isUndefined(initState) ? LayerItem.state.LOADING : initState
+                        layerState: LayerItem.state.LOADING
                     });
 
                     layerGroups[layerType] = layerGroup;
                     ui.addLayerGroup(layerGroup.node);
                 }
 
-                layerGroup.addLayerItem(layerConfig);
+                newLayer = layerGroup.addLayerItem(layerConfig);
+
+                if (!UtilMisc.isUndefined(initState)) {
+                    newLayer.setState(initState, null, true);
+                }
 
                 // TODO: check scale in cleaner way
                 setLayerOffScaleStates();
@@ -839,7 +886,7 @@ define([
 
             /**
             * Returns the state of the layer with the specified layer id.
-            * @param {String} layerId a layer id 
+            * @param {String} layerId a layer id
             * @method getLayerState
             * @private
             */
@@ -855,7 +902,7 @@ define([
 
             /**
             * Set the state of the specified layer to the provided value. Public hook to call internal setLayerState function.
-            * @param {String} layerId a layer id 
+            * @param {String} layerId a layer id
             * @param {String} layerState a state to set the specified layer to
             * @param {Object} [options] additional options to be passed to the layerItem upon setting state
             * @method setLayerState
