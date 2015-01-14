@@ -592,17 +592,28 @@ define([
         }
 
         /**
-        * Readies a layer for initial handshake.  Will catch success or failure
+        * Sets up loading event handlers and initializes the .ramp object of a layer
         * Circular reference errors prevent us from calling LayerLoader directly from this module
         *
         * @private
         * @method prepLayer
         * @param  {Object} layer layer to be prepped
+        * @param  {Object} config config object for the layer
+        * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
         */
-        function prepLayer(layer) {
+        function prepLayer(layer, config, userLayer) {
+
+            layer.ramp = {               
+                config: config,
+                user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                load: {
+                    state: "loading",
+                    inLS: false  //layer has entry in layer selector
+                }
+            };
+
             layer.on('load', function (evt) {
-                console.log("PREP LOAD OK " + evt.layer.url);
-                evt.layer.ramp.loadOk = true;
+                console.log("PREP LOAD OK " + evt.layer.url);                
                 topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
@@ -617,11 +628,11 @@ define([
 
             //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need to tack the handler
             //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
-            layer.ramp.onUpdateStart = function () {
+            layer.ramp.load.onUpdateStart = function () {
                 topic.publish(EventManager.LayerLoader.LAYER_UPDATING, { layer: this });
             };
 
-            layer.on('update-start', layer.ramp.onUpdateStart);
+            layer.on('update-start', layer.ramp.load.onUpdateStart);
 
             //add update end handler for layer
             layer.on('update-end', function (evt) {
@@ -858,15 +869,11 @@ define([
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
 
-                fl.ramp = {
-                    type: GlobalStorage.layerType.feature,
-                    config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
-                    loadOk: true
-                };
+                prepLayer(fl, layerConfig, userLayer);
 
-                prepLayer(fl);
+                fl.ramp.type = GlobalStorage.layerType.feature;
 
+                //TODO is this required?
                 if (layerConfig.settings.visible === false) {
                     fl.setVisibility(false);
                 }
@@ -894,14 +901,10 @@ define([
                     //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
                     //}
                 });
-                wmsl.ramp = {
-                    type: GlobalStorage.layerType.wms,
-                    config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
-                    loadOk: true
-                };
 
-                prepLayer(wmsl);
+                prepLayer(wmsl, layerConfig, userLayer);
+
+                wmsl.ramp.type = GlobalStorage.layerType.wms;
 
                 wmsl.setVisibility(layerConfig.settings.visible);
 
@@ -929,15 +932,12 @@ define([
                             mode: FeatureLayer.MODE_SNAPSHOT,
                             id: layerConfig.id
                         });
-                        tempLayer.ramp = {
-                            type: GlobalStorage.layerType.Static,
-                            config: layerConfig,
-                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
-                            loadOk: true
-                        };
 
-                        prepLayer(tempLayer);
+                        prepLayer(tempLayer, layerConfig, userLayer);
 
+                        tempLayer.ramp.type = GlobalStorage.layerType.Static;
+
+                        //TODO if this proves unrequired in the feature layer builder, lets use the same approach here
                         if (layerConfig.settings.visible === false) {
                             tempLayer.setVisibility(false);
                         }
