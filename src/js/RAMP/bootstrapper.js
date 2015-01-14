@@ -57,7 +57,7 @@ require([
     "ramp/theme", "ramp/layerLoader",
 
 /* Utils */
-    "utils/util", "utils/dictionary",
+    "utils/util",
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
@@ -75,7 +75,7 @@ require([
     Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
 
     /* Utils */
-        UtilMisc, UtilDict
+        UtilMisc
     ) {
         "use strict";
 
@@ -130,12 +130,6 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
-                // TODO : remove this hack after James finishes layer loader
-                UtilDict.forEachEntry(RAMP.config.layers, function (key, value) {
-                    value.forEach(function (v) {
-                        FilterManager.addLayer(GlobalStorage.layerType[key], v);
-                    });
-                });
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
@@ -143,7 +137,7 @@ require([
                 }
 
                 Datagrid.init();
-                theme.tooltipster();                
+                theme.tooltipster();
 
                 //start loading the layers
                 dojoArray.forEach(RAMP.startupLayers, function (layer) {

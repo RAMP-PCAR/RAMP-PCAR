@@ -159,6 +159,7 @@ define([
              * @param {Object} layer config of the layer to be added
              * @param {Object} options additional options allowing for customization
              * @method addLayerItem
+             * @return {Object} the item that was added
              */
             addLayerItem: function (layer, options) {
                 var layerItem,
@@ -178,6 +179,9 @@ define([
 
                 this.layerItems.push(layerItem);
                 this._listNode.append(layerItem.node);
+
+                return layerItem;
+
             },
 
             /**

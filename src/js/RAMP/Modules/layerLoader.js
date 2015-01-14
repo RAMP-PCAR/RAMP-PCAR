@@ -22,7 +22,9 @@
 * @uses esri/tasks/ProjectParameters
 * @uses EventManager
 * @uses FeatureClickHandler
+* @uses FilterManager
 * @uses GlobalStorage
+* @uses LayerItem
 * @uses Map
 * @uses MapClickHandler
 * @uses Ramp
@@ -38,6 +40,7 @@ define([
 
 /* RAMP */
 "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
+"ramp/filterManager", "ramp/layerItem",
 
 /* Util */
 "utils/util"],
@@ -51,6 +54,7 @@ define([
 
     /* RAMP */
     EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
+    FilterManager, LayerItem,
 
      /* Util */
     UtilMisc) {
@@ -96,12 +100,12 @@ define([
                 //reduce count
                 switch (evt.target.ramp.type) {
                     case GlobalStorage.layerType.wms:
-                        RAMP.layerCounts.wms -= 1;
+                        //RAMP.layerCounts.wms -= 1;
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
-                        RAMP.layerCounts.feature -= 1;
+                        //RAMP.layerCounts.feature -= 1;
                         break;
                 }
 
@@ -111,159 +115,211 @@ define([
                 //TODO
                 //set layer selector state to error
 
+                //TODO  figure this out.  since we can re-arrange the draw order of layers (while in an error state), we want to keep the object around to
+                //      preserve indexing.  Instead, we likely want to remove the layer at the begging of the "reload" event
                 //remove layer object from Map's layer collection
-                RampMap.getMap().removeLayer(evt.target);
+                //RampMap.getMap().removeLayer(evt.target);
             },
-
+           
             /**
-            * Reacts when a layer has loaded successfully.
+            * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
-            * @method onLayerLoaded
+            * @method onLayerUpdateEnd
             * @param  {Object} evt
             * @param  {Object} evt.target the layer object that loaded
             */
-            onLayerLoaded: function (evt) {
+            onLayerUpdateEnd: function (evt) {
                 var layer = evt.target,
-                    layerConfig = layer.ramp.config,
-                    map = RampMap.getMap();
+                    layerState;
 
-                console.log("layer loaded: " + layer.url);
-
-                //TODO
                 //figure out which layer selector state object matches this layer object
+                layerState = FilterManager.getLayerState(layer.ramp.config.id);
 
-                //TODO
                 //check if this layer is in an error state.  if so, exit the handler
-
-                //TODO
-                //set layer selector state to loaded (and possibly do other alex magic)
-
-                //call map functions to wire up event handlers
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-
-                        // WMS binding for getFeatureInfo calls
-                        if (layerConfig.featureInfo !== undefined) {
-                            MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
-                        }
-
-                        break;
-                    case GlobalStorage.layerType.feature:
-
-                        //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
-
-                        //wire up click handler
-                        layer.on("click", function (evt) {
-                            evt.stopImmediatePropagation();
-                            FeatureClickHandler.onFeatureSelect(evt);
-                        });
-
-                        //wire up mouse over / mouse out handler
-                        layer.on("mouse-over", function (evt) {
-                            FeatureClickHandler.onFeatureMouseOver(evt);
-                        });
-
-                        layer.on("mouse-out", function (evt) {
-                            FeatureClickHandler.onFeatureMouseOut(evt);
-                        });
-
-                        //generate bounding box
-
-                        var boundingBoxExtent,
-                            boundingBox = new GraphicsLayer({
-                                id: String.format("boundingBoxLayer_{0}", layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible
-                            }),
-                            insertIdx;
-
-                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (typeof layerConfig.layerExtent !== "undefined") {
-                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                //layer is in same projection as basemap.  can directly use the extent
-                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                            } else {
-                                //layer is in different projection.  reproject to basemap
-
-                                var params = new ProjectParameters(),
-                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                params.geometries = [boundingBoxExtent];
-                                params.outSR = map.spatialReference;
-
-                                gsvc.project(params, function (projectedExtents) {
-                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
-                                });
-                            }
-                        }
-
-                        //add mapping to bounding box
-                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
-
-                        boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
-
-                        //bounding boxes are on top of feature layers
-                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                        RAMP.layerCounts.bb += 1;
-
-                        map.addLayer(boundingBox, insertIdx);
-
-                        break;
+                if (layerState === LayerItem.state.ERROR) {
+                    return;
                 }
 
-                //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
+                //set layer selector state to loaded
+                FilterManager.setLayerState(layer.ramp.config.id, LayerItem.state.LOADED);
 
-                topic.publish(EventManager.Map.LAYER_LOADED, { layer: evt.target });
+                //raise event to indicate the layer is loaded, so that things like datagrid will refresh itself
+                topic.publish(EventManager.Map.LAYER_LOADED, { layer: layer });
             },
 
             /**
             * This function initiates the loading process for an ESRI layer object.
+            * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
             *
             * @method loadLayer
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             */
             loadLayer: function (layer) {
-                var insertIdx;
+                var insertIdx,
+                    layerSection,
+                    map = RampMap.getMap(),
+                    layerConfig = layer.ramp.config;
 
                 if (!layer.ramp) {
                     console.log('you failed to supply a ramp.type to the layer!');
                 }
 
-                //TODO possibly have an optional param for position to add
+                // possibly have an optional param for position to add
                 // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
-
-                //add config node to layer??
-                //   might be a good idea.  will ensure layers added by user also have this, and thus the code to do this wont be scattered in 3-4 different spots
-                //   dont do it for now.  possible future enhancement
+                // as for now, we will assume we always add to the end of the appropriate zone for the layer.  initial layers get added in proper order.
+                // user added layers get added to the top.  afterwards they can be re-arranged via the UI
 
                 //add error handler for layer
                 layer.on('error', this.onLayerError);
 
-                //add loaded handler for layer
-                layer.on('update-end', this.onLayerLoaded);
-
-                //increase count
+                //derive section
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
-                        insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
-                        RAMP.layerCounts.wms += 1;
+                        layerSection = GlobalStorage.layerType.wms;
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
-                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
-                        insertIdx = RAMP.layerCounts.feature;
-                        RAMP.layerCounts.feature += 1;
+                        layerSection = GlobalStorage.layerType.feature;
                         break;
                 }
 
-                //TODO
-                //add entry to alex selector, defaulting to loading state
+                if (layer.ramp.loadOk) {
+                    //add update start handler for layer
 
-                //add layer to map, triggering the loading process.  should add at correct position
-                RampMap.getMap().addLayer(layer, insertIdx);
+                    //since the update-start event is terrible and doesn't let you know who threw it, we need to tack the handler
+                    //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
+                    
+                    //Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
+                    //Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.                                        
+                    layer.ramp.onUpdateStart = function () {
+                        var layerState;
+
+                        console.log("LAYER START HANDLER " + this.url);
+
+                        layerState = FilterManager.getLayerState(this.ramp.config.id);
+
+                        //check if this layer is in an error state.  if so, exit the handler
+                        if (layerState === LayerItem.state.ERROR) {
+                            return;
+                        }
+
+                        //set layer selector state to loading
+                        FilterManager.setLayerState(this.ramp.config.id, LayerItem.state.UPDATING);
+                    };
+
+                    layer.on('update-start', layer.ramp.onUpdateStart);
+
+                    //add update end handler for layer
+                    layer.on('update-end', this.onLayerUpdateEnd);
+
+                    //increase count
+                    switch (layer.ramp.type) {
+                        case GlobalStorage.layerType.wms:
+                            insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
+                            RAMP.layerCounts.wms += 1;
+                            break;
+
+                        case GlobalStorage.layerType.feature:
+                        case GlobalStorage.layerType.Static:
+                            //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
+                            insertIdx = RAMP.layerCounts.feature;
+                            RAMP.layerCounts.feature += 1;
+                            break;
+                    }
+
+                    //add entry to alex selector, defaulting to loading state
+                    FilterManager.addLayer(layerSection, layer.ramp.config, LayerItem.state.DEFAULT);
+
+                    //add layer to map, triggering the loading process.  should add at correct position
+                    map.addLayer(layer, insertIdx);
+
+                    //wire up event handlers to the layer
+                    switch (layer.ramp.type) {
+                        case GlobalStorage.layerType.wms:
+
+                            // WMS binding for getFeatureInfo calls
+                            if (!UtilMisc.isUnDefined(layerConfig.featureInfo)) {
+                                MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                            }
+
+                            break;
+
+                        case GlobalStorage.layerType.feature:
+
+                            //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
+
+                            //wire up click handler
+                            layer.on("click", function (evt) {
+                                evt.stopImmediatePropagation();
+                                FeatureClickHandler.onFeatureSelect(evt);
+                            });
+
+                            //wire up mouse over / mouse out handler
+                            layer.on("mouse-over", function (evt) {
+                                FeatureClickHandler.onFeatureMouseOver(evt);
+                            });
+
+                            layer.on("mouse-out", function (evt) {
+                                FeatureClickHandler.onFeatureMouseOut(evt);
+                            });
+
+                            //generate bounding box
+
+                            var boundingBoxExtent,
+                                boundingBox = new GraphicsLayer({
+                                    id: String.format("boundingBoxLayer_{0}", layer.id),
+                                    visible: layerConfig.settings.boundingBoxVisible
+                                });
+
+                            boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                            //NOTE UtilMisc.isUnDefined fails epically when testing this value
+                            if (layerConfig.layerExtent !== undefined) {
+                                boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                                if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                    //layer is in same projection as basemap.  can directly use the extent
+                                    boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                                } else {
+                                    //layer is in different projection.  reproject to basemap
+
+                                    var params = new ProjectParameters(),
+                                        gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                    params.geometries = [boundingBoxExtent];
+                                    params.outSR = map.spatialReference;
+
+                                    gsvc.project(params, function (projectedExtents) {
+                                        boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                    });
+                                }
+                            }
+
+                            //add mapping to bounding box
+                            RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+
+                            //TODO is this required?  visible is being set in the constructor
+                            boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
+
+                            //bounding boxes are on top of feature layers
+                            insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                            RAMP.layerCounts.bb += 1;
+
+                            map.addLayer(boundingBox, insertIdx);
+
+                            break;
+                    }
+                } else {
+                    //the layer failed it's server handshake.
+                    //caused by something like a bad URL or a crashed server.
+
+                    //just add an error item to the layer selector
+                    //TODO ensure the layer selector item can find itself when there is no actual layer object in the map stack.
+
+                    //TODO make a way to add a layer that starts in error state
+                    FilterManager.addLayer(layerSection, layer.ramp.config, LayerItem.state.ERROR);
+                }
             }
         };
     });

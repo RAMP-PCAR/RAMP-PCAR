@@ -591,6 +591,25 @@ define([
             return layerOpacity.default || 1;
         }
 
+        /**
+        * Readies a layer for initial handshake.  Will catch success or failure
+        *
+        * @private
+        * @method prepLayer
+        * @param  {Object} layer layer to be prepped
+        */
+        function prepLayer(layer) {
+            layer.on('load', function (evt) {
+                console.log("PREP LOAD OK " + evt.layer.url);
+                evt.layer.ramp.loadOk = true;
+            });
+
+            layer.on('error', function (evt) {
+                console.log("PREP LOAD FAIL " + evt.target.url);
+                evt.target.ramp.loadOk = false;
+            });
+        }
+
         return {
             /**
             * For a specified layer, zooms to the closest level that has some visible data.
@@ -808,9 +827,10 @@ define([
            *
            * @method makeFeatureLayer
            * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
            * @return {Esri/layers/FeatureLayer} feature layer object (unloaded)
            */
-            makeFeatureLayer: function (layerConfig) {
+            makeFeatureLayer: function (layerConfig, userLayer) {
                 var fl = new FeatureLayer(layerConfig.url, {
                     id: layerConfig.id,
                     mode: FeatureLayer.MODE_SNAPSHOT,
@@ -818,11 +838,14 @@ define([
                     visible: layerConfig.settings.visible,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
-
+                
                 fl.ramp = {
                     type: GlobalStorage.layerType.feature,
-                    config: layerConfig
+                    config: layerConfig,
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
+
+                prepLayer(fl);
 
                 if (layerConfig.settings.visible === false) {
                     fl.setVisibility(false);
@@ -836,10 +859,11 @@ define([
            *
            * @method makeWmsLayer
            * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
            * @return {Esri/layers/WMSLayer} WMS layer
            */
 
-            makeWmsLayer: function (layerConfig) {
+            makeWmsLayer: function (layerConfig, userLayer) {
                 var wmsl = new WMSLayer(layerConfig.url, {
                     id: layerConfig.id,
                     format: layerConfig.format,
@@ -852,8 +876,11 @@ define([
                 });
                 wmsl.ramp = {
                     type: GlobalStorage.layerType.wms,
-                    config: layerConfig
+                    config: layerConfig,
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                 };
+
+                prepLayer(wmsl);
 
                 wmsl.setVisibility(layerConfig.settings.visible);
 
@@ -866,10 +893,11 @@ define([
             * @method makeStaticLayer
             * @private
             * @param {Object} layerConfig config object for the layer to create
+            * @param {Boolean} userLayer optional specifies if layer was added by a user
             * @return {Object} layer object of the appropriate type
             */
 
-            makeStaticLayer: function (layerConfig) {
+            makeStaticLayer: function (layerConfig, userLayer) {
                 var tempLayer,
                     layerType = layerConfig.layerType || "feature";
                 //determine layer type and process
@@ -882,8 +910,11 @@ define([
                         });
                         tempLayer.ramp = {
                             type: GlobalStorage.layerType.Static,
-                            config: layerConfig
+                            config: layerConfig,
+                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer
                         };
+
+                        prepLayer(tempLayer);
 
                         if (layerConfig.settings.visible === false) {
                             tempLayer.setVisibility(false);

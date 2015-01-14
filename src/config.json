@@ -508,7 +508,7 @@
                         "enabled": true,
                         "default": 0.7
                     },
-                    "visible": false
+                    "visible": true
                 },
                 "layerExtent": {
                     "xmin": -2566693.97839747,
