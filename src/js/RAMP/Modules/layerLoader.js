@@ -60,6 +60,29 @@ define([
     UtilMisc) {
         "use strict";
 
+        /**
+        * Will set a layerId's layer selector state to a new state.
+        *
+        * @method onLayerError
+        * @param  {String} layerId config id of the layer
+        * @param  {String} newState the state to set the layer to in the layer selector
+        * @param  {Boolean} abortIfError if true, don't update state if current state is an error state
+        */
+        function updateLayerSelectorState(layerId, newState, abortIfError) {
+            if (abortIfError) {
+                var layerState;
+                layerState = FilterManager.getLayerState(layerId);
+
+                //check if this layer is in an error state.  if so, exit the function
+                if (layerState === LayerItem.state.ERROR) {
+                    return;
+                }
+            }
+
+            //set layer selector to new state
+            FilterManager.setLayerState(layerId, newState);
+        }
+
         return {
             /**
             * Initializes properties.  Set up event listeners
@@ -110,17 +133,7 @@ define([
                         break;
                 }
 
-                var layerState;
-
-                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
-
-                //check if this layer is in an error state.  if so, exit the handler
-                if (layerState === LayerItem.state.ERROR) {
-                    return;
-                }
-
-                //set layer selector state to loading
-                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.ERROR);
+                updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
 
                 //TODO
                 //figure out which layer selector state object matches this layer object
@@ -143,19 +156,8 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateStart: function (evt) {
-                var layerState;
-
                 //console.log("LAYER UPDATE START: " + evt.layer.url);
-
-                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
-
-                //check if this layer is in an error state.  if so, exit the handler
-                if (layerState === LayerItem.state.ERROR) {
-                    return;
-                }
-
-                //set layer selector state to loading
-                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.UPDATING);
+                updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.UPDATING, true);
             },
 
             /**
@@ -166,18 +168,7 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
-                var layerState;
-
-                //figure out which layer selector state object matches this layer object
-                layerState = FilterManager.getLayerState(evt.layer.ramp.config.id);
-
-                //check if this layer is in an error state.  if so, exit the handler
-                if (layerState === LayerItem.state.ERROR) {
-                    return;
-                }
-
-                //set layer selector state to loaded
-                FilterManager.setLayerState(evt.layer.ramp.config.id, LayerItem.state.LOADED);
+                updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
             },
 
             /**
@@ -196,12 +187,10 @@ define([
                 evt.layer.ramp.load.state = "loaded";
 
                 //TODO if a row already exists in selector, set it to LOADED state. (unless already in error state)
+                if (evt.layer.ramp.load.inLS) {
+                    updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
+                }
 
-                /*
-                var layerConfig = layer.ramp.config,
-                    map = RampMap.getMap(),
-                    layerState;
-                */
                 console.log("layer loaded: " + evt.layer.url);
             },
 
@@ -262,10 +251,11 @@ define([
 
                 //add entry to layer selector
                 FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
+                layer.ramp.load.inLS = true;
 
                 //add layer to map, triggering the loading process.  should add at correct position
                 map.addLayer(layer, insertIdx);
-              
+
                 //wire up event handlers to the layer
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
