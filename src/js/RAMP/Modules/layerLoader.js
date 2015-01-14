@@ -239,7 +239,7 @@ define([
                         case GlobalStorage.layerType.wms:
 
                             // WMS binding for getFeatureInfo calls
-                            if (!UtilMisc.isUnDefined(layerConfig.featureInfo)) {
+                            if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
                                 MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
                             }
 
@@ -274,9 +274,8 @@ define([
 
                             boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
-                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                            //NOTE UtilMisc.isUnDefined fails epically when testing this value
-                            if (layerConfig.layerExtent !== undefined) {
+                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer                           
+                            if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
                                 boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                                 if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {

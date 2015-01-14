@@ -842,7 +842,8 @@ define([
                 fl.ramp = {
                     type: GlobalStorage.layerType.feature,
                     config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                    loadOk: true
                 };
 
                 prepLayer(fl);
@@ -877,7 +878,8 @@ define([
                 wmsl.ramp = {
                     type: GlobalStorage.layerType.wms,
                     config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
+                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                    loadOk: true
                 };
 
                 prepLayer(wmsl);
@@ -911,7 +913,8 @@ define([
                         tempLayer.ramp = {
                             type: GlobalStorage.layerType.Static,
                             config: layerConfig,
-                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer
+                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                            loadOk: true
                         };
 
                         prepLayer(tempLayer);
