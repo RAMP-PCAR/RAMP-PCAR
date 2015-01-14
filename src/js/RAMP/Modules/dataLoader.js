@@ -37,7 +37,6 @@ define([
                         width: 2
                     }
                 }
-
             },
             outlinedPoly: {
                 renderer: {
@@ -55,9 +54,7 @@ define([
                     }
                 }
             }
-
         };
-
 
         function makeGeoJsonLayer(geoJson, opts) {
             var esriJson, layerDefinition, layer;
