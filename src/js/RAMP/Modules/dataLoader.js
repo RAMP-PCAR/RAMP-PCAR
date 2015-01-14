@@ -1,4 +1,4 @@
-﻿/* global define, Terraformer */
+﻿/* global define, console, Terraformer */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -8,7 +8,7 @@
 */
 
 define([
-        "dojo/Deferred", "ersi/request", "esri/layers/FeatureLayer", "util/util"
+        "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer", "utils/util"
     ],
     function (
             Deferred, EsriRequest, FeatureLayer, Util
@@ -16,10 +16,15 @@ define([
         "use strict";
 
         function makeGeoJsonLayer(geoJson) {
-            var esriJson;
-            esriJson = Terraformer.arcgis.convert(geoJson);
-            return new FeatureLayer(esriJson, { mode: FeatureLayer.MODE_SNAPSHOT });
-
+            var esriJson, layerDefinition, layer;
+            layerDefinition = {
+                fields: []
+            };
+            esriJson = Terraformer.ArcGIS.convert(geoJson);
+            console.log(esriJson);
+            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: { features: esriJson, geometryType: "esriGeometryPolygon" } }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            layer.ramp = { type: "newtype?" };
+            return layer;
         }
 
         function buildGeoJson(args) {
@@ -60,6 +65,6 @@ define([
         }
 
         return {
-            makeGeoJson: buildGeoJson
+            buildGeoJson: buildGeoJson
         };
     });
