@@ -1079,11 +1079,6 @@ define([
                 console.log('adding wmses');
                 console.log(wmsLayers);
                 map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
-                var gjlPromise = DataLoader.buildGeoJson({ url: "/convert.json" });
-                gjlPromise.then(function (layer) {
-                    console.log("adding geojson layer");
-                    map.addLayer(layer);
-                });
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
