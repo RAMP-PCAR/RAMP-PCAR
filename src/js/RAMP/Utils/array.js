@@ -132,6 +132,15 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
                 return arr[index];
             },
 
+            /**
+            * Removes an item from the specified array.
+            *
+            * @method remove
+            * @static
+            * @param {Array} arr Array to have the item removed from
+            * @param {Number|String|Object} obj can be either an index of the item to be removed, a String to be removed from the array of strings, or an actual Object to be removed; if obj is an Object, you need to provide a predicate function
+            * @param {Function} [predicate] a function that takes one argument and returns true if the argument satisfies some condition, and false otherwise.
+            */
             remove: function (array, obj, predicate) {
                 var index;
 
@@ -141,6 +150,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
                     } else {
                         index = array.indexOf(obj);
                     }
+                } else {
+                    index = obj;
                 }
 
                 if (index !== -1) {
