@@ -89,6 +89,9 @@
                 },
                 "layer_g5h6i": {
                     "displayName": "[fr] EC Projects"
+                },
+                "cesi_ozone": { 
+                    "displayName": "CESI Air Ozone"
                 }
             },
             "wms": {

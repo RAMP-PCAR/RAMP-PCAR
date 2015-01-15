@@ -183,9 +183,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         nodes: nodes
                     }
                 );
-
-                this.addCheckbox(this.nodes);
-
+                
                 masterCheckboxOptions = {
                     nodeIdAttr: this.nodeIdAttr,
                     cssClass: this.cssClass,
@@ -213,7 +211,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                     this.master = null;
                 }
 
-                this._checkMaster();
+                this.addCheckbox(this.nodes);
             },
 
             addCheckbox: function (nodes) {
@@ -255,6 +253,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         that.checkboxes[cbIndex].reset();
                     }
                 });
+
+                this._checkMaster();
             },
 
             /**
@@ -275,6 +275,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                             .state;
                 });
 
+                // set state to the master checkbox only if you have one
                 if (this.master) {
                     this.master.checkbox.setState(allChecked);
                 }

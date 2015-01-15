@@ -359,7 +359,17 @@
             //background-color: @very-light-grey-color !important;            
         }
 
+        &.layer-state-updating {
+            img {
+                opacity: 0.5;
+            }
+        }
+
         &.layer-state-off-scale {
+            img {
+                opacity: 0.5;
+            }
+            
             &:before {
                 content: "";
                 position: absolute;
