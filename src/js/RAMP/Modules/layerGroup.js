@@ -228,7 +228,7 @@ define([
                 }
 
                 // remove bounding box toggle if there is no layer extent property - layer is a wms layer
-                if (!layerConfig.layerExtent) {
+                if (!layerConfig.layerExtent || layerConfig.isStatic) {
                     this._removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
                     this._addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
                 }
