@@ -76,10 +76,13 @@ define([
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
                     rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
-                        var req = {}, wkid, mapSR;
+                        var req = {}, wkid, mapSR, srList;
                         mapSR = wmsData.wmsLayer.getMap().spatialReference;
-                        wkid = wmsData.wmsLayer.spatialReferences[0];
-                        if (mapSR.wkid) {
+                        srList = wmsData.wmsLayer.spatialReferences;
+
+                        if (srList && srList.length > 1) {
+                            wkid = srList[0];
+                        } else if (mapSR.wkid) {
                             wkid = mapSR.wkid;
                         }
                         if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
