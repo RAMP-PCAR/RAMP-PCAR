@@ -86,6 +86,12 @@ define([
                 return GlobalStorage.urlCfg[url];
             },
 
+            /**
+            * Returns the feature layer config for the given id
+            *
+            * @param {String} id layer id string
+            * @method getLayerConfigWithId
+            */
             getLayerConfigWithId: function (id) {
                 return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature),
                     function (layerConfig) {

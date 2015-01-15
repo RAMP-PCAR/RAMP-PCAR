@@ -104,6 +104,7 @@ define([
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, this.onLayerUpdateEnd);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
                 topic.subscribe(EventManager.LayerLoader.LAYER_ERROR, this.onLayerError);
+                topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, this.onLayerRemove);
             },
 
             /**
@@ -122,6 +123,7 @@ define([
                 //TODO consider if the layer does not yet have an entry in the layer selector
 
                 //reduce count
+                /*
                 switch (evt.layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
                         //RAMP.layerCounts.wms -= 1;
@@ -132,16 +134,15 @@ define([
                         //RAMP.layerCounts.feature -= 1;
                         break;
                 }
+                */
 
-                updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
+                evt.layer.ramp.load.state = "error";
 
-                //TODO
-                //figure out which layer selector state object matches this layer object
+                if (evt.layer.ramp.load.inLS) {
+                    updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
+                }
 
-                //TODO
-                //set layer selector state to error
-
-                //TODO  figure this out.  since we can re-arrange the draw order of layers (while in an error state), we want to keep the object around to
+                //since we can re-arrange the draw order of layers (while in an error state), we want to keep the object around to
                 //      preserve indexing.  Instead, we likely want to remove the layer at the begging of the "reload" event
                 //remove layer object from Map's layer collection
                 //RampMap.getMap().removeLayer(evt.target);
@@ -186,7 +187,7 @@ define([
                 //set flags that we have loaded ok
                 evt.layer.ramp.load.state = "loaded";
 
-                //TODO if a row already exists in selector, set it to LOADED state. (unless already in error state)
+                //if a row already exists in selector, set it to LOADED state. (unless already in error state)
                 if (evt.layer.ramp.load.inLS) {
                     updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
                 }
@@ -195,10 +196,52 @@ define([
             },
 
             /**
+            * Reacts to a request for a layer to be removed.  Usually the case when a layer errors and the user clicks remove.
+            *
+            * @method onLayerRemove
+            * @param  {Object} evt
+            * @param  {Object} evt.layerId the layer id to be removed
+            */
+            onLayerRemove: function (evt) {
+                var map = RampMap.getMap(),
+                    layer = map.getLayer(evt.layerId),
+                    bbLayer = map.getBoundingBoxMapping()[evt.layerId],
+                    configIdx;
+
+                //remove item from layer selector
+                //TODO need a remove funciton in the filter manager
+                //FilterManager.X(evt.layerId);
+
+                //remove layer from map
+                map.removeLayer(layer);
+
+                //if bounding box, remove it too
+                if (bbLayer) {
+                    map.removeLayer(bbLayer);
+                }
+
+                //remove node from config
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        configIdx = RAMP.config.layers.wms.indexOf(layer.ramp.config);
+                        RAMP.config.layers.wms.splice(configIdx, 1);
+
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        configIdx = RAMP.config.layers.feature.indexOf(layer.ramp.config);
+                        RAMP.config.layers.feature.splice(configIdx, 1);
+                        break;
+                }
+            },
+
+            /**
             * This function initiates the loading of an ESRI layer object to the map.
             * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
             * Note: a point of confusion.  The layer objects "load" event may have already finished by the time this function is called.
             *       This means the object's constructor has initialized itself with the layers data source.
+            * This functions is not event triggered to guarantee the order in which things are added.
             *
             * @method loadLayer
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
