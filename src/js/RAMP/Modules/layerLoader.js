@@ -218,6 +218,18 @@ define([
                         case GlobalStorage.layerType.wms:
                             insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
                             RAMP.layerCounts.wms += 1;
+
+                            if (layerConfig.legendMimeType) {
+                                layer.ramp.config.legend = {
+                                    type: "wms",
+                                    imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
+                                        layerConfig.url,
+                                        layer.version,
+                                        layerConfig.legendMimeType,
+                                        layerConfig.layerName
+                                    )
+                                };
+                            }
                             break;
 
                         case GlobalStorage.layerType.feature:
