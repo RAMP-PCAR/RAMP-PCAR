@@ -17,17 +17,19 @@ define([
 
         var defaultRenderers = {
             circlePoint: {
+                geometryType: "esriGeometryPoint",
                 renderer: {
                     type: "simple",
                     symbol: {
                         type: "esriSMS",
                         style: "esriSMSCircle",
-                        color: [67, 100, 255, 70],
+                        color: [67, 100, 255, 200],
                         size: 7
                     }
                 }
             },
             solidLine: {
+                geometryType: "esriGeometryPolyline",
                 renderer: {
                     type: "simple",
                     symbol: {
@@ -39,6 +41,7 @@ define([
                 }
             },
             outlinedPoly: {
+                geometryType: "esriGeometryPolygon",
                 renderer: {
                     type: "simple",
                     symbol: {
@@ -54,25 +57,37 @@ define([
                     }
                 }
             }
+        },
+        featureTypeToRenderer = {
+            Point: "circlePoint", MultiPoint: "circlePoint",
+            LineString: "solidLine", MultiLineString: "solidLine",
+            Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
         };
 
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer;
+            var esriJson, layerDefinition, layer, fs;
             layerDefinition = {
                 fields: []
             };
+
+            esriJson = Terraformer.ArcGIS.convert(geoJson);
+            console.log('geojson -> esrijson converted');
+            console.log(esriJson);
+            console.log(featureTypeToRenderer);
+            fs = { features: esriJson };
+
             if (opts) {
                 if (opts.idField) {
                     layerDefinition.objectIdField = opts.idField;
                 }
                 if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
-                    layerDefinition.drawingInfo = defaultRenderers[opts.renderer];
+                    layerDefinition.drawingInfo = { renderer: defaultRenderers[opts.renderer].renderer };
+                    fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
             }
-            esriJson = Terraformer.ArcGIS.convert(geoJson);
-            console.log("some esri json");
-            console.log(esriJson);
-            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: { features: esriJson, geometryType: "esriGeometryPolygon" } }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            layerDefinition.drawingInfo = defaultRenderers.circlePoint;
+            fs.geometryType = 'esriGeometryPoint';
+            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
             layer.ramp = { type: "newtype?" };
             return layer;
         }
@@ -115,6 +130,7 @@ define([
         }
 
         return {
+            makeGeoJsonLayer: makeGeoJsonLayer,
             buildGeoJson: buildGeoJson
         };
     });
