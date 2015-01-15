@@ -16,7 +16,7 @@
 * @class GlobalStorage
 */
 
-define(["dojo/_base/array","utils/util"],
+define(["dojo/_base/array", "utils/util"],
     function (dojoArray, util) {
         "use strict";
 
@@ -59,10 +59,10 @@ define(["dojo/_base/array","utils/util"],
             console.log(configObj);
             result = applyDefaults(configDefaults, configObj);
             result.layers.wms = dojoArray.map(result.layers.wms, function (wms) {
-                return applyDefaults(wmsLayerDefaults,wms);
+                return applyDefaults(wmsLayerDefaults, wms);
             });
             result.basemaps = dojoArray.map(result.basemaps, function (b) {
-                return applyDefaults(basemapDefaults,b);
+                return applyDefaults(basemapDefaults, b);
             });
             result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
                 var layer = applyDefaults(featureLayerDefaults, fl);
@@ -80,6 +80,11 @@ define(["dojo/_base/array","utils/util"],
             init: function (configObj) {
                 var config = applyConfigDefaults(configObj);
                 RAMP.config = config;
+
+                this.layerSelectorGroups = [
+                    this.layerType.feature,
+                    this.layerType.wms
+                ];
             },
 
             layerType: {
@@ -91,6 +96,8 @@ define(["dojo/_base/array","utils/util"],
                 Highlight: "highlight_layer",
                 Hoverlight: "hoverlight_layer",
                 Zoomlight: "zoomlight_layer"
-            }
+            },
+
+            layerSelectorGroups: []
         };
     });
