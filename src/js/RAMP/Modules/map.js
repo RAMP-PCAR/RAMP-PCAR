@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP */
+﻿/*global define, esri, i18n, console, $, RAMP, window */
 
 /**
 *
@@ -1012,8 +1012,8 @@ define([
                 baseLayer.on('error', function (evt) {
                     //basemap has died.  long live the basemap.
                     //TODO some proper error handling here.  error page?  message to user of catastrophic failure?
-
                     console.log('initial basemap failed to load: ' + evt.error.message);
+                    window.location.href = "./error-en.html";
                 });
 
                 /**
