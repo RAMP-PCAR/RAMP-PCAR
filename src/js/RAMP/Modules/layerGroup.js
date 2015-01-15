@@ -44,7 +44,7 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/array",
+    "utils/tmplHelper", "utils/array", "utils/dictionary",
 
     /* RAMP */
     "ramp/layerItem"
@@ -52,7 +52,7 @@ define([
     function (
         Evented, declare, lang, dojoArray,
         layer_selector_template,
-        TmplHelper, Array,
+        TmplHelper, UtilArray, UtilDict,
         LayerItem) {
         "use strict";
 
@@ -201,7 +201,7 @@ define([
                 layerItem.node.remove();
 
                 // remove layerItem from the list
-                Array.remove(this.layerItems, layerItem, function (l) {
+                UtilArray.remove(this.layerItems, layerItem, function (l) {
                     return l.id === layerItem.id;
                 });
 
@@ -224,20 +224,46 @@ define([
                 var stateMatrix = lang.clone(LayerItem.stateMatrix);
 
                 if (!layerConfig.settings.panelEnabled) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].controls, LayerItem.controls.SETTINGS);
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].controls, LayerItem.controls.SETTINGS);
+                    this._removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
                 }
 
                 // remove bounding box toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent) {
-                    Array.remove(stateMatrix[LayerItem.state.DEFAULT].toggles, LayerItem.toggles.BOX);
-                    stateMatrix[LayerItem.state.DEFAULT].toggles.push(LayerItem.toggles.PLACEHOLDER);
-
-                    Array.remove(stateMatrix[LayerItem.state.OFF_SCALE].toggles, LayerItem.toggles.BOX);
-                    stateMatrix[LayerItem.state.OFF_SCALE].toggles.push(LayerItem.toggles.PLACEHOLDER);
+                    this._removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
+                    this._addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
                 }
 
                 return stateMatrix;
+            },
+
+            /**
+             * Modifies the state matrix by adding specified partKey to the specified partType collection
+             *
+             * @param {Object} stateMatrix matrix to modify
+             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+             * @param {String} partKey part key to be inserted into the collection
+             * @method _addStateMatrixPart
+             * @private
+             */
+            _addStateMatrixPart: function (stateMatrix, partType, partKey) {
+                UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                    data[partType].push(partKey);
+                });
+            },
+
+            /**
+             * Modifies the state matrix by removing specified partKey to the specified partType collection
+             *
+             * @param {Object} stateMatrix matrix to modify
+             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+             * @param {String} partKey part key to be removed into the collection
+             * @method _addStateMatrixPart
+             * @private
+             */
+            _removeStateMatrixPart: function (stateMatrix, partType, partKey) {
+                UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                    UtilArray.remove(data[partType], partKey);
+                });
             },
 
             /**
@@ -266,7 +292,7 @@ define([
             getLayerItem: function (layerId) {
                 var layerItem;
 
-                layerItem = Array.find(this.layerItems, function (li) {
+                layerItem = UtilArray.find(this.layerItems, function (li) {
                     return li.id === layerId;
                 });
 
