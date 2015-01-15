@@ -239,7 +239,7 @@ define([
                         case GlobalStorage.layerType.wms:
 
                             // WMS binding for getFeatureInfo calls
-                            if (!UtilMisc.isUnDefined(layerConfig.featureInfo)) {
+                            if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
                                 MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
                             }
 
