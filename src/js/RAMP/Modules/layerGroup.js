@@ -180,8 +180,36 @@ define([
                 this.layerItems.push(layerItem);
                 this._listNode.prepend(layerItem.node);
 
-                return layerItem;
+                if (this.layerItems.length === 1) {
+                    this.node.show();
+                }
 
+                return layerItem;
+            },
+
+            /**
+             * Removes the specified LayerItem from the LayerGroup.
+             *
+             * @param {String} layerId id of the layer to be removed
+             * @method removeLayerItem
+             * @return {Object} this LayerGroup for chaining
+             */
+            removeLayerItem: function (layerId) {
+                var layerItem = this.getLayerItem(layerId);
+
+                // remove layerItem from DOM
+                layerItem.node.remove();
+
+                // remove layerItem from the list
+                Array.remove(this.layerItems, layerItem, function (l) {
+                    return l.id === layerItem.id;
+                });
+
+                if (this.layerItems.length === 0) {
+                    this.node.hide();
+                }
+
+                return this;
             },
 
             /**

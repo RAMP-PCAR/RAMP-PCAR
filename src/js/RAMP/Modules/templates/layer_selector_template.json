@@ -1,6 +1,6 @@
 ﻿{
     "layer_group": "
-        <li>
+        <li class='layer-group'>
             <ul class='layer-group-container' role='listbox'>                
             </ul>
         </li>
