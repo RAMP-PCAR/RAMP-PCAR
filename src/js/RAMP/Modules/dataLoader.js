@@ -47,7 +47,7 @@ define([
                     symbol: {
                         type: "esriSFS",
                         style: "esriSFSSolid",
-                        color: [115,76,0,255],
+                        color: [76,76,125,200],
                         outline: {
                             type: "esriSLS",
                             style: "esriSLSSolid",
@@ -73,8 +73,10 @@ define([
             esriJson = Terraformer.ArcGIS.convert(geoJson);
             console.log('geojson -> esrijson converted');
             console.log(esriJson);
-            console.log(featureTypeToRenderer);
-            fs = { features: esriJson };
+            console.log(geoJson);
+            layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
+            fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
+            console.log(layerDefinition);
 
             if (opts) {
                 if (opts.idField) {
@@ -85,8 +87,7 @@ define([
                     fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
             }
-            layerDefinition.drawingInfo = defaultRenderers.circlePoint;
-            fs.geometryType = 'esriGeometryPoint';
+
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
             layer.ramp = { type: "newtype?" };
             return layer;
