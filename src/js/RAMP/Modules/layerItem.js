@@ -708,8 +708,7 @@ define([
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
-            LayerItem.state.DEFAULT,
-            LayerItem.state.UPDATING
+            LayerItem.state.DEFAULT
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.UPDATING] = [
