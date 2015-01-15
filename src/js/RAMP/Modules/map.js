@@ -602,8 +602,7 @@ define([
         * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
         */
         function prepLayer(layer, config, userLayer) {
-
-            layer.ramp = {               
+            layer.ramp = {
                 config: config,
                 user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
                 load: {
@@ -613,7 +612,7 @@ define([
             };
 
             layer.on('load', function (evt) {
-                console.log("PREP LOAD OK " + evt.layer.url);                
+                console.log("PREP LOAD OK " + evt.layer.url);
                 topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
@@ -873,11 +872,6 @@ define([
 
                 fl.ramp.type = GlobalStorage.layerType.feature;
 
-                //TODO is this required?
-                if (layerConfig.settings.visible === false) {
-                    fl.setVisibility(false);
-                }
-
                 return fl;
             },
 
@@ -930,17 +924,13 @@ define([
                         tempLayer = new FeatureLayer(layerConfig.url, {
                             opacity: resolveLayerOpacity(layerConfig.settings.opacity),
                             mode: FeatureLayer.MODE_SNAPSHOT,
+                            visible: layerConfig.settings.visible,
                             id: layerConfig.id
                         });
 
                         prepLayer(tempLayer, layerConfig, userLayer);
 
                         tempLayer.ramp.type = GlobalStorage.layerType.Static;
-
-                        //TODO if this proves unrequired in the feature layer builder, lets use the same approach here
-                        if (layerConfig.settings.visible === false) {
-                            tempLayer.setVisibility(false);
-                        }
 
                         break;
 
