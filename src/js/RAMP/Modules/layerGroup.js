@@ -178,7 +178,7 @@ define([
                 layerItem = new LayerItem(layer, layerItemOptions);
 
                 this.layerItems.push(layerItem);
-                this._listNode.append(layerItem.node);
+                this._listNode.prepend(layerItem.node);
 
                 return layerItem;
 
