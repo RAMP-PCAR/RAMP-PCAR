@@ -84,7 +84,9 @@
                 "Snap.svg/dist/snap.svg.js",
                 "tooltipster/js/jquery.tooltipster.js",
                 "urlshortener/jquery.urlshortener.js",
-                "blueimp-tmpl/js/tmpl.js"
+                "blueimp-tmpl/js/tmpl.js",
+                "terraformer/terraformer.js",
+                "terraformer-arcgis-parser/terraformer-arcgis-parser.js"
             ],
 
             "cssLib": [
