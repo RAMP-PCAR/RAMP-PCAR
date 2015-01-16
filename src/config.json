@@ -257,8 +257,7 @@
         }
     ],
     "layers": {
-        "feature": [
-            
+        "feature": [            
             {
                 "id": "layer_sea_parks",
                 "displayName": "@@config.layers.feature.layer_sea_parks.displayName",
@@ -748,6 +747,32 @@
                 }
             },
             {
+                "id": "dogGuts",
+                "displayName": "@@config.layers.feature.dog_guts.displayName",
+                "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/dog_guts/MapServer/0",
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "assets/images/icons/1421457419_099374-twitter-bird3.png"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.7
+                    },
+                    "visible": true
+                },
+                "layerExtent": {
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
+                },
+                "isStatic": true
+            },
+            {
                 "id": "oilAreaOverlay",
                 "displayName": "@@config.layers.feature.oilAreaOverlay.displayName",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
@@ -796,18 +821,6 @@
                     "mimeType": "text/plain"
                 },
                 "legendMimeType": "image/jpeg"
-            },
-            {
-                "id": "dogGuts",
-                "displayName": "@@config.layers.wms.dog_guts.displayName",
-                "format": "png",
-                "layerName": "railway.track",
-                "imageUrl": "assets/images/icons/1421457419_099374-twitter-bird3.png",
-                "url": "http://maps.geogratis.gc.ca/wms/railway_en",
-                "featureInfo": {
-                    "parser": "stringParse",
-                    "mimeType": "text/plain"
-                }
             }
         ]
 
