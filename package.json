@@ -1,7 +1,7 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "RAMP GIS viewer - Dragonfly; Sample of an implementation of RAMP",
     "main": "",
     "repository": {
