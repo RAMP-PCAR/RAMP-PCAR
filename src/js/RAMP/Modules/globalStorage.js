@@ -16,21 +16,37 @@
 * @class GlobalStorage
 */
 
-define(["dojo/_base/array","utils/util"],
+define(["dojo/_base/array", "utils/util"],
     function (dojoArray, util) {
         "use strict";
 
         var featureLayerDefaults = {
                 layerAttributes: '*',
+                minScale: 0,
+                maxScale: 0,
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
                 datagrid: { rowsPerPage: 50 },
                 templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
             },
+
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
             },
+
+            gridColumnDefaults = { orderable: true, type: "string", alignment: 1 },
+
+            basemapDefaults = { scaleCssClass: "map-scale-dark", type: "Topographic" },
+
             configDefaults = {
-                layers: { feature: [], wms: [] }
+                initialBasemapIndex: 0,
+                extendedDatagridExtentFilterEnabled: false,
+                rowsPerPage: 50,
+                navWidget: { sliderMinVal: 3, sliderMaxVal: 15, debug: false, animate: "fast", cssPath: "ramp-theme/navigation", skin: "white" },
+                zoomLevels: { min: 1, max: 17 },
+                templates: { basemap: "default_basemap", globalSelectorToggles: "default_selector_toggles" },
+                layers: { feature: [], wms: [] },
+                divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
+                advancedToolbar: { enabled: false, tools: [] }
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -43,10 +59,17 @@ define(["dojo/_base/array","utils/util"],
             console.log(configObj);
             result = applyDefaults(configDefaults, configObj);
             result.layers.wms = dojoArray.map(result.layers.wms, function (wms) {
-                return applyDefaults(wmsLayerDefaults,wms);
+                return applyDefaults(wmsLayerDefaults, wms);
+            });
+            result.basemaps = dojoArray.map(result.basemaps, function (b) {
+                return applyDefaults(basemapDefaults, b);
             });
             result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
-                return applyDefaults(featureLayerDefaults,fl);
+                var layer = applyDefaults(featureLayerDefaults, fl);
+                layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
+                    return applyDefaults(gridColumnDefaults, gc);
+                });
+                return layer;
             });
             console.log(result);
             return result;
@@ -57,16 +80,24 @@ define(["dojo/_base/array","utils/util"],
             init: function (configObj) {
                 var config = applyConfigDefaults(configObj);
                 RAMP.config = config;
+
+                this.layerSelectorGroups = [
+                    this.layerType.feature,
+                    this.layerType.wms
+                ];
             },
+
             layerType: {
-                Basemap: "Basemap",
-                WMS: "WMS",
-                BoundingBox: "Bounding Box",
-                Feature: "Feature Layer",
-                Static: "Static",
-                Highlight: "Highlight",
-                Hoverlight: "Hoverlight",
-                Zoomlight: "Zoomlight"
-            }
+                Basemap: "basemap",
+                wms: "wms_layer",
+                BoundingBox: "bounding_box",
+                feature: "feature_layer",
+                Static: "static_layer",
+                Highlight: "highlight_layer",
+                Hoverlight: "hoverlight_layer",
+                Zoomlight: "zoomlight_layer"
+            },
+
+            layerSelectorGroups: []
         };
     });

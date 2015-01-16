@@ -8,23 +8,20 @@
  * 
  */
 {				
-        // Generates legend for each interactive layer on the map (non-basemap layers).
-        "filter_section_template": "
-            {% include('filter_set_template',o); %}
-        ",
         // layer level, layer is passed in as o.data. Level 1
         // Filter overall structure, contains 1 to many filter row for the available layers.
-        "filter_set_template":"
+        "layer_item":"
             <li id='{%=o.data[o.idx].id%}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
                 {%  
                     var s = o.data[o.idx].layerConfig.symbology || o.data[o.idx].layerConfig.legend || { type: 'simple' };
 
                     include('filter_row_template', o);
                     include(s.type + '_renderer_template', s);
-                    include('filter_row_settings_template', o.fn.generateSettingsToggle(o));
+                    include('layer_settings', o.fn.generateSettingsToggle(o));
                 %}
             </li>
         ",
+
         // Level 2
         // Filter row overall layout for a given layer
         "filter_row_template": "
@@ -39,8 +36,8 @@
                                     console.log(s);
 
                                     include(s.type + '_layer_image_box', o);
-                                %}                                       
-
+                                %}   
+                                
                                 <div class='layer-controls'>
                                     <div class='layer-name'>
                                         <span title='{%=o.data[o.idx].layerConfig.displayName%}'>{%=o.data[o.idx].layerConfig.displayName%}</span>
@@ -49,7 +46,7 @@
                                         
                                         {% if(!o.data[o.idx].layerConfig.isStatic) { %}
                                         
-                                                <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
+                                            <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
                                            
                                         {% } %}
                                             
@@ -61,7 +58,7 @@
                                         
                                         {% if (o.data[o.idx].layerConfig.settings.panelEnabled) { %}
                                         
-                                                <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
+                                            <button class='btn btn-xs button-none xsmall settings-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.settings')%}</button>
                                           
                                         {% } %}
                                     </div>
@@ -80,7 +77,7 @@
         
         "simple_layer_image_box": "
             <div class='layer-image-box'>
-                <img alt='' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
+                <img alt='' role='presentation' src='{%=o.fn.getSymbolForLayer(o.data[o.idx].layerConfig)[0]%}' class='layer-image bg-white'>
             </div>
         ",
 
@@ -99,13 +96,13 @@
         "complex_layer_image_box": "
             <div class='layer-complex-image-box'>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[2]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[2]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[1]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[1]%}' class='layer-image bg-white'>
                 </div>
                 <div class='layer-image-box'>                                  
-                    <img alt='' src='{%=o[0]%}' class='layer-image bg-white'>
+                    <img alt='' role='presentation' src='{%=o[0]%}' class='layer-image bg-white'>
                 </div>
                 <button class='btn btn-xs button-none renderer-button'>
                     <i class='fa fa-square'></i>
@@ -119,10 +116,10 @@
         
         "wms_renderer_template": "
              <div class='renderer-list'>
-                <div class='wms-legend-box'>
+                <div class='wms-legend-image-box'>
                     <h4 class='mrgn-tp-0 h6'>{%=i18n.t('filterManager.legend')%}</h4>
                     <div class='image-div'>
-                        <img class='wms-image bg-white' src='{%=o.imageUrl%}' alt=''>
+                        <img class='wms-legend-image bg-white' src='{%=o.imageUrl%}' role='presentation' alt=''>
                     </div>
                 </div>       
              </div>
@@ -162,9 +159,9 @@
 
         "renderer_template": "
             <li>
-               <div class='layer-details'>
-                  <div class='layer-image-box'>
-                    <img alt='' src='{%=o.imageUrl%}' class='layer-image bg-white'>
+               <div class='layer-renderer'>
+                  <div class='layer-renderer-image-box'>
+                    <img alt='' src='{%=o.imageUrl%}' class='layer-renderer-image bg-white'>
                   </div>
                   <span title='{%=o.label%}'>{%=o.label%}</span>
                 </div>
@@ -173,114 +170,161 @@
         
         // Level 2
         // Filter row overall layout for a given layer
-        "filter_row_settings_template":"{% if (o.settings.panelEnabled) { %}
-                                            <div class='filter-row-settings bg-medium'>
-                                            
-                                                <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
-    
-                                                {% if (o.settings.opacity.enabled) { %}
-                                            
-                                                <div class='transparency-setting'>
-                                                    <span class='pull-left'>{%=i18n.t('filterManager.settingsOpacity')%}</span>                
-                                                
-                                                    <div class='nstSlider' data-aria_enabled='true'
-                                                        data-range_min='0' data-range_max='1' 
-                                                        data-cur_min='{%=o.settings.opacity.default%}'
-    
-                                                        data-layer-id='{%=o.layerId%}' >                                                      
-                                                
-                                                        <div class='highlightPanel'></div>
-                                                        <div class='leftGrip'></div>              
-                                                    </div>
-                                                    <span class='leftLabel'></span>                
-                                                </div>
+        "layer_settings":"
+            {% if (o.settings.panelEnabled) { %}
+                <div class='filter-row-settings bg-medium'>
+                
+                    <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%=i18n.t('filterManager.settingsLayerSettings')%}</h4>
 
-                                                {% } %}
-                                            </div>
-                                        {% } %}",
+                    {% if (o.settings.opacity.enabled) { %}
+                
+                        <div class='transparency-setting'>
+                            <span class='pull-left'>{%=i18n.t('filterManager.settingsOpacity')%}</span>                
+                        
+                            <div class='nstSlider' data-aria_enabled='true'
+                                data-range_min='0' data-range_max='1' 
+                                data-cur_min='{%=o.settings.opacity.default%}'
+
+                                data-layer-id='{%=o.layerId%}' >                                                      
+                        
+                                <div class='highlightPanel'></div>
+                                <div class='leftGrip'></div>              
+                            </div>
+                            <span class='leftLabel'></span>                
+                        </div>
+
+                    {% } %}
+                </div>
+            {% } %}
+        ",
 
         // filter row legend template 
         // used by level 2 to generate visibility and bounding box legend checkbox
         // added code to determine if bounding box is to be generated
-        "filter_legend_template":"{% if(!o.disabled) { %}
-                                        <div class='checkbox-custom'>
-                                        <label for='{%=o.for%}' class='form-checkbox _tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
-                                            <span class='wb-invisible'>{%=o.label%}</span>
-                                        </label>
-                                        <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' data-layer-id='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
-                                            type='checkbox'></input>
-                                        </div>
-                                    {% } else{ %}
-                                        <div class='checkbox-custom placeholder' role='presentation'></div>
-                                    {% } %}",
+        "filter_legend_template":"
+            {% if(!o.disabled) { %}
+                                        
+                <div class='checkbox-custom'>
+                <label for='{%=o.for%}' class='form-checkbox _tooltip {%=o.class%}' data-layer-id='{%=o.layerId%}' data-label-name='{%=o.label%}'>
+                    <span class='wb-invisible'>{%=o.label%}</span>
+                </label>
+                <input id='{%=o.for%}' data-groupingattrib='{%=o.attr%}' value='{%=o.layerId%}' data-layer-id='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend'
+                    type='checkbox'></input>
+                </div>
+
+            {% } else{ %}
+                
+                <div class='checkbox-custom placeholder' role='presentation'></div>
+
+            {% } %}
+        ",
         
         // filter row button template
-        "filter_button_template":"<li>
-                                    <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
-                                </li>",
+        "filter_button_template":"
+            <li>
+                <button class='btn btn-xs button-none xsmall metadata-button' data-layer-id='{%=o.data[o.idx].layerConfig.id%}'>{%=i18n.t('filterManager.metadata')%}</button>
+            </li>
+        ",
+        
         // Generates a data grid row with a checkbox.
         // o is the globalFilter setting in config.json
         // level 1: filter panel global section
-        "filter_global_row_template":"<div>
-                                        <div class='global-details'>
-                                            <div class='global-controls'>
-                                                <ul class='btn-group margin-top-none'>
-                                                    {%=i18n.t('filterManager.allData')%}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div class='global-checkboxes'>
-                                            {% o.toggleLabels.forEach(function(item){
-                                                    include('filter_global_label_template',item); 
-                                                });											
-                                            %}										
-                                        </div>
-                                        <div class='clearfix'>
-                                        </div>
-                                    </div>",
-        // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
-        //			This template is used to generate 'eye' and 'boundingbox' for All Data
-        "filter_global_label_template":	"<div class='checkbox-custom'>
-                                            <label for='{%=o.id%}' class='form-checkbox _tooltip {%=o.classAddition%}' title='{%=o.title%}'>
-                                                <span class='wb-invisible'>{%=o.title%}</span>
-                                            </label>
-                                            <input id='{%=o.id%}' data-***='{%=o.dataAttribute%}' value='{%=o.layerId%}' checked='{%=o.checked%}' class='layerList_legend' type='checkbox' ></input>
-                                        </div>",
+        "filter_global_row_template":"
+            <div>
+                <div class='global-details'>
+                    <div class='global-controls'>
+                        <ul class='btn-group margin-top-none'>
+                            {%=i18n.t('filterManager.allData')%}
+                        </ul>
+                    </div>
+                </div>
+                <div class='global-checkboxes'>
+                   {% include(o.globalSelectorToggles, o);%}
+                </div>
+                <div class='clearfix'>
+                </div>
+            </div>
+        ",
 
-        "layerGroup":   "<ul>
-                        {%
-                            var i=0;
-                            o.data.forEach(function(layer) {
-                                o.idx = i;
-                                include('filter_section_template',o);
-                                i++;
-                            });
-                        %}
-                    </ul>
-                    <li class='layer-group-separator' role='presentation'></li>",
+        "layerGlobalToggles":"
+            {% include( 'filter_global_label_template_eye',o); %}
+            {% include( 'filter_global_label_template_box',o); %}
+        ",
+
+        // level 2: filter panel global row; this is where "All Data" is located. Note: should rename this to custom checkbox template.
+        //  custom template for global visibility
+        "filter_global_label_template_eye": "
+            <div class='checkbox-custom'>
+                <label for='globalVisibility' class='form-checkbox _tooltip eye checked' title=''>
+                    <span class='wb-invisible'></span>
+                </label>
+                <input id='globalVisibility' data-***='***' checked='checked' class='layerList_legend' type='checkbox' ></input>
+            </div>
+        ",
+
+        // custom template for global bounding box visibility
+        "filter_global_label_template_box": "
+            <div class='checkbox-custom'>
+                <label for='globalBox' class='form-checkbox _tooltip box checked' title=''>
+                    <span class='wb-invisible'></span>
+                </label>
+                <input id='globalBox' data-***='***' checked='checked' class='layerList_legend' type='checkbox' ></input>
+            </div>
+        ",
+
+        "layer_group": "
+            <li>
+                <ul role='listbox'>
+                    {%
+                        var i=0;
+                        o.data.forEach(function(layer) {
+                            o.idx = i;
+                            include('layer_item',o);
+                            i++;
+                        });
+                    %}
+                </ul>
+            </li>
+            <li class='layer-group-separator' role='presentation'></li>
+        ",
 
 
         // Entry point
         // Template to create filter content for RAMP	
         // o is the datawrapper object contains layers stored in o.data
-        "filter_manager_template":"<div id='categories'>
-                                        <div id='filterGlobalToggles' class='global-toggles'>
-                                            {% include('filter_global_row_template', o.config.globalFilter);%}
-                                        </div>
-                                        <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
-                                        <ul id='layerList' role='listbox' aria-label='{%=i18n.t('filterManager.layerListLabel')%}'>
+        "filter_manager_template": "
+            <div id='categories'>
+                <div id='filterGlobalToggles' class='global-toggles'>
+                    {% include('filter_global_row_template', o.config.templates);%}
+                </div>
+                <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
+                <ul id='layerList' role='listbox' aria-label='{%=i18n.t('filterManager.layerListLabel')%}'>
 
-                                            {% 				
-                                                for (var prop in o.layerGroups ) {
-                                                    if (o.layerGroups.hasOwnProperty(prop)) {
-                                                        include('layerGroup', o.layerGroups[prop]);
-                                                    }
-                                                }
-                                            %}
+                    {% 				
+                        for (var prop in o.layerGroups ) {
+                            if (o.layerGroups.hasOwnProperty(prop)) {
+                                include('layer_group', o.layerGroups[prop]);
+                            }
+                        }
+                    %}
 
-                                        </ul>
-                                        <div class='clearBoth'>
-                                        </div>
-                                    </div>"
-                            
+                </ul>
+                <div class='clearBoth'>
+                </div>
+            </div>
+        ",
+
+        "filter_manager_template2": "
+            <div id='categories'>
+                <div id='filterGlobalToggles' class='global-toggles'>
+                    {% include('filter_global_row_template', o.config.templates);%}
+                </div>
+                <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
+                <ul id='layerList' role='listbox' aria-label='{%= i18n.t('filterManager.layerListLabel') %}'>
+                   
+                </ul>
+                <div class='clearBoth'>
+                </div>
+            </div>
+        "
 }

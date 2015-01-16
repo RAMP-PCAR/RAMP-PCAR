@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader */
 /* jshint bitwise:false  */
 
 /**
@@ -23,9 +23,11 @@
 * @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses dojo/Deferred
+* @uses esri/geometry/Extent
+* @uses esri/graphic
 */
-define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"],
-    function (dojoArray, dojoLang, topic, Deferred, Extent) {
+define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent", "esri/graphic"],
+    function (dojoArray, dojoLang, topic, Deferred, Extent, Graphic) {
         "use strict";
 
         return {
@@ -589,6 +591,31 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                               point.y + toleraceInMapCoords,
                               map.spatialReference);
             },
+
+            /**
+            * Create boudingbox graphic for a bounding box extent
+            *
+            * @method createGraphic
+            * @param  {esri/geometry/Extent} extent of a bounding box
+            * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
+            */
+            createGraphic: function (extent) {
+                return new Graphic({
+                    geometry: extent,
+                    symbol: {
+                        color: [255, 0, 0, 64],
+                        outline: {
+                            color: [240, 128, 128, 255],
+                            width: 1,
+                            type: "esriSLS",
+                            style: "esriSLSSolid"
+                        },
+                        type: "esriSFS",
+                        style: "esriSFSSolid"
+                    }
+                });
+            },
+
             /**
             * Checks if the string ends with the supplied suffix.
             *
@@ -688,7 +715,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {Function} callback The callback to be executed
             * @param {Boolean} returnFragment True if you want a document fragment returned (doesn't work in IE)}
             */
-            transformXML: function (xmlurl, xslurl, callback, returnFragment) {
+            transformXML: function (xmlurl, xslurl, callback, returnFragment, params) {
                 var xmld = new Deferred(),
                     xsld = new Deferred(),
                     xml, xsl,
@@ -706,7 +733,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 // Transform XML using XSLT
                 function applyXSLT(xmlString, xslString) {
-                    var output;
+                    var output, i;
                     if (window.ActiveXObject || window.hasOwnProperty("ActiveXObject")) { // IE
                         var xslt = new ActiveXObject("Msxml2.XSLTemplate"),
                             xmlDoc = new ActiveXObject("Msxml2.DOMDocument"),
@@ -718,11 +745,23 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         xslt.stylesheet = xslDoc;
                         xslProc = xslt.createProcessor();
                         xslProc.input = xmlDoc;
+                        // [patched from ECDMP] Add parameters to xsl document (addParameter = ie only)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xslProc.addParameter(params[i].key, params[i].value, "");
+                            }
+                        }
                         xslProc.transform();
                         output = xslProc.output;
                     } else { // Chrome/FF/Others
                         var xsltProcessor = new XSLTProcessor();
                         xsltProcessor.importStylesheet(xslString);
+                        // [patched from ECDMP] Add parameters to xsl document (setParameter = Chrome/FF/Others)
+                        if (params) {
+                            for (i = 0; i < params.length; i++) {
+                                xsltProcessor.setParameter(null, params[i].key, params[i].value);
+                            }
+                        }
                         output = xsltProcessor.transformToFragment(xmlString, document);
 
                         // turn a document fragment into a proper jQuery object
@@ -855,7 +894,32 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             /**
-            * [settings.linkLists]: false
+            * Parses a file using the FileReader API.  Wraps readAsText and returns a promise.
+            *
+            * @param {File} file a dom file object to be read
+            * @return {Object} a promise which sends a string containing the file output if successful
+            */
+            readFileAsText: function (file) {
+                var reader = new FileReader(),
+                    def = new Deferred();
+
+                reader.onload = function (e) { def.resolve(e.target.result); };
+                reader.readAsText(file);
+
+                return def.promise;
+            },
+
+            /**
+            * Augments lists of items to be sortable using keyboard.
+            * 
+            * @method keyboardSortable
+            * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
+            * @param {Object} [settings] Additional settings
+            * @param {Object} [settings.linkLists] Indicates if the supplied lists (if more than one) should be linked - items could be moved from one to another; Update: this is wrong - items can't be moved from list to list right now, but the keyboard focus can be moved between lists - need to fix.
+            * @param {Object} [settings.onStart] A callback function to be called when the user initiates sorting process
+            * @param {Object} [settings.onUpdate] A callback function to be called when the user moves the item around
+            * @param {Object} [settings.onStop] A callback function to be called when the user commits the item to its new place ending the sorting process
+            * @static
             */
             keyboardSortable: function (ulNodes, settings) {
                 settings = dojoLang.mixin({
@@ -869,7 +933,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 ulNodes.each(function (index, _ulNode) {
                     var ulNode = $(_ulNode),
                         liNodes = ulNode.find("> li"),
-                        sortHandleNodes = liNodes.find(".sort-handle"),
+                        //sortHandleNodes = liNodes.find(".sort-handle"),
                         isReordering = false,
                         grabbed;
 
@@ -880,8 +944,13 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         liNode.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
                     }
 
-                    sortHandleNodes
-                        .focusout(function (event) {
+                    // try to remove event handlers to prevent double initialization
+                    ulNode
+                        .off("focusout", ".sort-handle")
+                        .off("keyup", ".sort-handle");
+
+                    ulNode
+                        .on("focusout", ".sort-handle", function (event) {
                             var node = $(this).closest("li");
 
                             // if the list is not being reordered right now, release list item
@@ -897,7 +966,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", function (event) {
+                        .on("keyup", ".sort-handle", function (event) { 
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -991,6 +1060,62 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                             }
                         });
                 });
-            }
+            },
+                        
+            /**
+             * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
+             * ####Example of tls parameter
+             * 
+             *      [
+             *          {
+             *              timeline: {timeline},
+             *              generator: {function}
+             *          }
+             *      ]
+             *      
+             * 
+             * @method resetTimelines
+             * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
+             * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
+             */
+            resetTimelines: function (tls, keepPosition) {
+                var position;
+
+                tls.forEach(function (tl) {
+                    position = tl.timeLine.time(); // preserve timeline position
+                    tl.timeLine.seek(0).clear();
+
+                    tl.generator.call();
+
+                    if (keepPosition) {
+                        tl.timeLine.seek(position);
+                    }
+                });
+            },
+
+            /**
+            * Checks if two spatial reference objects are equivalent.  Handles both wkid and wkt definitions
+            *
+            * @method isSpatialRefEqual
+            * @param {Esri/SpatialReference} sr1 First {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @param {Esri/SpatialReference} sr2 Second {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
+            * @return {Boolean} true if the two spatial references are equivalent.  False otherwise.
+            */
+            isSpatialRefEqual: function (sr1, sr2) {
+                if ((sr1.wkid) && (sr2.wkid)) {
+                    //both SRs have wkids
+                    return sr1.wkid === sr2.wkid;
+                } else if ((sr1.wkt) && (sr2.wkt)) {
+                    //both SRs have wkt's
+                    return sr1.wkt === sr2.wkt;
+                } else {
+                    //not enough info provided or mismatch between wkid and wkt.
+                    return false;
+                }
+            },
+
+            containsInDom: function (el) {
+                return $.contains(document.documentElement, el);
+            }			
         };
     });

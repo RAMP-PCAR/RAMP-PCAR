@@ -1,5 +1,10 @@
 {
     "config": {
+        "tileSchema": {
+            "NRCAN_Lambert_3978": "[fr] Canada Atlas Lambert",
+            "NRCAN_Lambert_3979": "[fr] Lambert 79",
+            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
+        },
         "basemaps": {
             "baseNrCan": {
                 "name": "[fr] Canada Atlas",
@@ -13,9 +18,9 @@
                 "description": "[fr] NrCan Simple"
             },
             "baseCBME_CBCE_HS_RO_3978": {
-                "name": "[fr] Road Networks",
+                "name": "[fr] Shaded Relief",
                 "altText": "[fr] Topographic Map",
-                "description": "[fr] NrCan CBMT_CBCT_GEOM"
+                "description": "[fr] NrCan CBMT_CBCT_HS"
             },
             "baseCBMT_CBCT_GEOM_3978": {
                 "name": "Road Networks",
@@ -26,6 +31,36 @@
                 "name": "[fr] Canada Topographic",
                 "altText": "[fr] Topographic Map",
                 "description": "[fr] Earth 2 Map"
+            },
+            "baseEsriWorld": {
+                "name": "[fr] World Imagery",
+                "altText": "[fr] Satellite Map",
+                "description": "[fr] ESRI World_Imagery"
+            },
+            "baseEsriPhysical": {
+                "name": "[fr] Physical Earth",
+                "altText": "[fr] Satellite Map",
+                "description": "[fr] ESRI World_Physical_Map"
+            },
+            "baseEsriRelief": {
+                "name": "[fr] Shaded Relief",
+                "altText": "[fr] Satellite Map",
+                "description": "[fr] ESRI World_Shaded_Relief"
+            },
+            "baseEsriStreet": {
+                "name": "[fr] Streets",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Street_Map"
+            },
+            "baseEsriTerrain": {
+                "name": "[fr] Terrain",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Terrain_Base"
+            },
+            "baseEsriTopo": {
+                "name": "[fr] Topographic",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] ESRI World_Topo_Map"
             }
         },
 
@@ -54,6 +89,15 @@
                 },
                 "layer_g5h6i": {
                     "displayName": "[fr] EC Projects"
+                },
+                "cesi_ozone": { 
+                    "displayName": "[fr] CESI Air Ozone"
+                },
+                "dog_guts": { 
+                    "displayName": "[fr] Bird Habitats"
+                },
+                "layer_sea_parks": { 
+                    "displayName": "[fr] Sea Parks"
                 }
             },
             "wms": {
@@ -66,8 +110,11 @@
                 "limits": {
                     "displayName": "[fr] Limits"
                 },
-                "wms6": { 
+                "wms6": {
                     "displayName": "[fr] Railway Network"
+                },
+                "dog_guts": { 
+                    "displayName": "[fr] Bird Habitats"
                 }
             }
         }
@@ -195,6 +242,11 @@
         "zoomBack": "Zoom arrière",
         "fullData": "Données complètes",
 
+        "notices": {
+            "offScaleSummary": "[fr] Some data is not visible at this zoom level.",
+            "offScaleFullData": "[fr] Data is not visible at this zoom level."
+        },
+
         "ex": {
             "datasetSelectorButtonLoad": "Charger",
             "datasetSelectorButtonLoading": "Chargement en cours ...",
@@ -247,6 +299,14 @@
         "hideBounds": "Masquer les limites de {0}",
         "hideAllBounds": "Masquer toutes les limites",
 
+        "notices": {
+            "offScale": "[fr] No data visible at this zoom level",
+            "error": "[fr] Error",
+            "update": "[fr] Updating"
+        },
+
+        "zoomToData": "[fr] Zoom to data",
+
         "metadata": "Métadonnées",
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche",
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche",
@@ -260,7 +320,15 @@
 
         "layerHandle": "Descripteur de couche",
         "layerHandleLabel": "Descripteur de couche pour __layerName__",
-        "layerListLabel": "Liste des couches sortable"
+        "layerListLabel": "Liste des couches sortable",
+
+        "controlsMatrix": {
+            "metadata": "Métadonnées",
+            "settings": "Paramètres",
+            "error": "[fr] Remove",
+            "reload": "[fr] Reload",
+            "remove": "[fr] Remove"
+        }
     },
 
     "gui": {
@@ -273,7 +341,7 @@
 
     "map": {
         "loadingTitle": "Chargement",
-        "scale": "Scale"
+        "scale": "Échelle"
     },
 
     "help": {

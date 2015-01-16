@@ -1,4 +1,4 @@
-﻿/*global define, i18n, RAMP */
+﻿/*global define, i18n */
 
 /**
 * @module Tools
@@ -117,9 +117,7 @@ define([
                 //TODO store this URL in config
                 geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
 
-                geoprocessor.setOutputSpatialReference({
-                    wkid: RAMP.config.spatialReference.wkid
-                });
+                geoprocessor.setOutputSpatialReference(map.spatialReference);
                 geoprocessor.on("execute-complete", outputTotalPopulation);
 
                 toolbar.on("draw-end", computeZonalStats);

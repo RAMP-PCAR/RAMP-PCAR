@@ -28,6 +28,17 @@
         margin: 0 !important;
         padding: 0;
 
+        .sk-spinner-wave-10.sk-spinner {
+            position: absolute;
+            left: 60px;
+            right: 11px;
+            width: auto;
+        }
+
+        .layer-group {
+            display: none;
+        }
+
         .layer-group-separator {
             height: 1px;
 
@@ -40,7 +51,7 @@
             }
         }
 
-        > ul {
+        > li > ul {
             margin: 0;
             position: relative;
             padding: 0;
@@ -118,11 +129,11 @@
         position: relative;
 
         &:last-child {
-            padding: 0px 0 0 0;
+            padding: 0 0 0 0;
         }
 
         &.ui-sortable-helper {
-            // should settings panle be hidden on drag?
+            // should settings panel be hidden on drag?
             /*.filter-row-settings {
                     display: none !important;
                 }*/
@@ -249,7 +260,7 @@
         .renderer-list {
             display: none;
 
-            .wms-legend-box {
+            .wms-legend-image-box {
                 margin-left: 52px;
                 position: relative;
                 padding: 8px 0 8px 5px;
@@ -312,32 +323,86 @@
                         left: -17px;
                     }
 
-                    .layer-details {
+                    .layer-renderer {
                         height: 24px;
                         line-height: 24px;
                         overflow: hidden;
                         text-overflow: ellipsis;
+                        margin-right: 20px;
                         /*width: 250px;*/
                         white-space: nowrap;
 
                         > span {
                             //vertical-align: bottom;
                         }
-                    }
 
-                    .layer-image-box {
-                        //border: none;
-                        float: none;
-                        width: 24px;
-                        height: 24px;
-                        line-height: normal;
+                        .layer-renderer-image-box {
+                            .row-image-box;
+                            //border: none;
+                            float: none;
+                            width: 24px;
+                            height: 24px;
+                            line-height: normal;
 
-                        .layer-image {
-                            max-height: 22px;
-                            max-width: 22px;
+                            .layer-renderer-image {
+                                max-height: 22px;
+                                max-width: 22px;
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        &.layer-state-loading {
+            img {
+                .grayscale;
+                opacity: 0.5;
+            }
+
+            //background-color: @very-light-grey-color !important;            
+        }
+
+        &.layer-state-updating {
+            img {
+                opacity: 0.5;
+            }
+        }
+
+        &.layer-state-off-scale {
+            img {
+                opacity: 0.5;
+            }
+            
+            &:before {
+                content: "";
+                position: absolute;
+                width: 3px;
+                height: 100%;
+                background-color: @info-color;
+                z-index: 10;
+            }
+        }
+
+        &.layer-state-error {
+            img {
+                .grayscale;
+            }
+
+            background-color: @light-attention-color !important;
+            font-weight: bold !important;
+
+            .layer-controls-group button {
+                font-weight: bold !important;
+            }
+
+            &:before {
+                content: "";
+                position: absolute;
+                width: 3px;
+                height: 100%;
+                background-color: @attention-color;
+                z-index: 10;
             }
         }
     }
@@ -391,6 +456,7 @@
                 width: 32px;
                 height: 100%;
                 margin: 0 5px;
+                border: 0;
                 .link-button;
 
                 &:hover,
@@ -427,15 +493,7 @@
 
         .layer-controls {
             .block-control-group;
-            // what is legend-button?
-            /*ul button.legend-button {
-                    .global-toggle-button-icon;
-                    padding: 0 0 0 10px !important;
 
-                    &:before {
-                        left: 2px;
-                    }
-                }*/
             > div.btn-group {
                 margin: -6px 0 0 -3px !important;
                 padding: 0 !important;
@@ -469,6 +527,55 @@
                 }
             }
 
+            .layer-controls-group {
+                margin-top: -2px;
+
+                button.button-none {
+                    .link-button2;
+                    position: relative;
+                    //outline: none;
+                    border: 0;
+                    padding: 1px 2px;
+                    margin-right: 4px;
+                    margin-left: 3px;
+                    top: -1px;
+
+                    &.button-pressed,
+                    &:hover,
+                    &:focus {
+                        &:before {
+                            content: "";
+                            position: absolute;
+                            border-bottom: 2px solid #000;
+                            right: 0;
+                            left: 0;
+                            bottom: 0;
+                        }
+                    }
+
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        border-right: 1px solid #000;
+                        right: -4px;
+                        top: 2px;
+                        bottom: 2px;
+                    }
+
+                    &:last-child {
+                        margin-right: 0;
+
+                        &:after {
+                            display: none;
+                        }
+                    }
+
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+
             .separator {
                 border-right: 1px solid black;
                 float: left;
@@ -484,11 +591,75 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             margin-top: -3px;
+            margin-left: 2px;
             line-height: 1.5em;
+        }
+
+        .layer-notices {
+            position: absolute;
+            left: 9px;
+            top: -11px;
+
+            .fa {
+                line-height: 24px;
+            }
+
+            .layer-notice {
+                width: 24px;
+                height: 24px;
+            }
+
+            .scale {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-info-circle {
+                    color: @info-color;
+                }
+            }
+
+            .error {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-exclamation-circle  {
+                    color: @attention-color;
+                }
+            }
+
+            .update {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-refresh {
+                    //color: @info-color;
+                }
+            }
         }
     }
 
     .layer-checkboxes {
         .right-align-checkboxes;
+
+        .checkbox-button button {
+            border: 0;
+            height: 21px;
+            width: 21px;
+            padding: 0;
+            vertical-align: bottom;
+            color: @light-grey-color;
+
+            &:hover {
+                color: #000;
+            }
+
+            &:active {
+                .box-shadow (none);
+                text-shadow: none;
+            }
+        }
     }
 }

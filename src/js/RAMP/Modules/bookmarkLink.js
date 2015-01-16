@@ -100,6 +100,25 @@ define([
                     HIDDEN_BOXES: "hiddenBoxes"
                 }
             },
+
+            // defines any standard url param keys we are expecting
+            URL_KEYS = {
+                PANEL_VISIBLE: "pv",
+                FULL_SCREEN: "fs",
+                XMIN: "xmin",
+                YMIN: "ymin",
+                XMAX: "xmax",
+                YMAX: "ymax",
+                SPATIAL_REF: "sr",
+                BASEMAP: "bm",
+                LAYER_TRANSPARENCY: "lt",
+                SELECT_TAB: "st",
+                VISIBLE_LAYERS: "vl",
+                HIDDEN_LAYERS: "hl",
+                VISIBLE_BOXES: "vb",
+                HIDDEN_BOXES: "hb"
+            },
+
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
 
             config,
@@ -296,7 +315,7 @@ define([
                 i18n.t("bookmarkLink.emailUrlSubject"),
                 i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
-            
+
             linkPaneTextbox.val(url);
             getlinkEmailButton.attr("href", mailToHref);
         }
@@ -309,13 +328,18 @@ define([
         * @private
         */
         function updateURL() {
-            var link = baseUrl;
+            var link = baseUrl,
+                delim = "?";
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
             UtilDict.forEachEntry(parameters, function (key, value) {
                 if (value) { // Value cannot be null or the empty String
-                    link += "&" + value;
+                    link += delim + value;
+                    if (delim === "?") {
+                        //first param has a question mark in front of it.  all others have an &
+                        delim = "&";
+                    }
                 }
             });
 
@@ -349,6 +373,63 @@ define([
             } else {
                 setNewUrl(link);
             }
+
+            //update lang href with current bookmark url
+            updateLangHref(link);
+
+            //trigger event indicating bookmark is complete.  pass bookmark as arg
+            topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
+                link: link
+            });
+        }
+
+        /**
+      * update Href on language button based on link provided from bookmarklink
+      *
+      * @method updateHref
+      * @param {String} link bookmark url
+      * @private
+      */
+        function updateLangHref(link) {
+            var pos = link.indexOf('?');
+            if (pos <= 0) {
+                return;
+            }
+
+            var paras = link.split('?')[1],
+                element = $("#wb-lng").find("li a"),
+                url = element.attr("href");
+
+            url = url.split('?')[0] + "?" + paras;
+
+            element.attr("href", url);
+        }
+
+        /**
+       * If a co-ordinate has a big value before the decimal point, drop the precision after the decimal
+       *
+       * @method slimCoord
+       * @param {Object} value co-ordinate to potentially slim down
+       * @private
+       */
+        function slimCoord(value) {
+            var sVal = value.toString(),
+                decIndex = sVal.indexOf("."),
+                cutSize;
+
+            if (sVal.substring(0, 1) === "-") {
+                cutSize = 7;
+            } else {
+                cutSize = 6;
+            }
+
+            if (decIndex < cutSize) {
+                //number has 5 or less numbers before the decimal, or no decimal point.  return input as is
+                return sVal;
+            } else {
+                //trim that decimal!
+                return sVal.substring(0, decIndex);
+            }
         }
 
         /**
@@ -367,6 +448,13 @@ define([
             updateURL();
         }
 
+        /**
+        * Process the URL.  If there are any parameters that came from a short-link, apply them to the config or the RAMP application
+        *
+        * @method updateConfig
+        * @param {String} homePage the page name of the ramp site (e.g. index.html, map.html)
+        * @private
+        */
         function updateConfig(homePage) {
             var event,
                 urlObj = new Url(dojoRequire.toUrl(document.location));
@@ -380,68 +468,75 @@ define([
             if (baseUrl.indexOf(homePage) === -1) {
                 baseUrl += homePage;
             }
-            baseUrl += "?lang=" + config.lang;
 
             // Move the API key to config.json??
             jQuery.urlShortener.settings.apiKey = 'AIzaSyB52ByjsXrOYlXxc2Q9GVpClLDwt0Lw6pc';
 
             // Toggle the main panel
-            if (queryObject.panelVisible) {
+            if (queryObject[URL_KEYS.PANEL_VISIBLE]) {
                 event = {
-                    visible: UtilMisc.parseBool(queryObject.panelVisible)
+                    pv: UtilMisc.parseBool(queryObject[URL_KEYS.PANEL_VISIBLE])
                 };
 
                 addParameter(EVENT_PANEL_CHANGE, event);
-                config.ui.sidePanelOpened = event.visible;
+                RAMP.state.ui.sidePanelOpened = event.pv;
             }
 
             // Toggle fullscreen mode
-            if (queryObject.fullscreen) {
+            if (queryObject[URL_KEYS.FULL_SCREEN]) {
                 event = {
-                    fullscreen: UtilMisc.parseBool(queryObject.fullscreen)
+                    fs: UtilMisc.parseBool(queryObject[URL_KEYS.FULL_SCREEN])
                 };
                 addParameter(EVENT_FULLSCREEN, event);
-                config.ui.fullscreen = event.fullscreen;
+                RAMP.state.ui.fullscreen = event.fs;
             }
 
             // Check for map extent queries
-            if (queryObject.xmin) {
+
+            if (queryObject[URL_KEYS.XMIN]) {
                 event = {
-                    xmin: parseFloat(queryObject.xmin.replace(/,/g, "")),
-                    ymin: parseFloat(queryObject.ymin.replace(/,/g, "")),
-                    xmax: parseFloat(queryObject.xmax.replace(/,/g, "")),
-                    ymax: parseFloat(queryObject.ymax.replace(/,/g, "")),
-                    sr: queryObject.sr
+                    xmin: parseFloat(queryObject[URL_KEYS.XMIN].replace(/,/g, "")),
+                    ymin: parseFloat(queryObject[URL_KEYS.YMIN].replace(/,/g, "")),
+                    xmax: parseFloat(queryObject[URL_KEYS.XMAX].replace(/,/g, "")),
+                    ymax: parseFloat(queryObject[URL_KEYS.YMAX].replace(/,/g, "")),
+                    sr: queryObject[URL_KEYS.SPATIAL_REF]
                 };
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                config.extents.defaultExtent = event;
-                config.spatialReference = JSON.parse(queryObject.sr);
+                //we call the spatial refernce "sr" in the url to save on characters.  However, the internal config object uses the ESRI standard
+                //name of "spatialReference" (so we can serialize to a valid esri SR object)
+                var configExtent = {
+                    xmin: event.xmin,
+                    ymin: event.ymin,
+                    xmax: event.xmax,
+                    ymax: event.ymax,
+                    spatialReference: JSON.parse(event.sr)
+                };
+
+                config.extents.defaultExtent = configExtent;
 
                 // Wait for things such as fullscreen or panel collapse
                 // to finish before doing an extent change.
             }
 
             // Select the correct basemap
-            if (queryObject.baseMap) {
+            if (queryObject[URL_KEYS.BASEMAP]) {
                 event = {
-                    baseMap: queryObject.baseMap
+                    bm: queryObject[URL_KEYS.BASEMAP]
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
-                dojoArray.forEach(config.basemaps, function (basemap) {
-                    basemap.showOnInit = (basemap.id === event.baseMap);
-                });
+                config.initialBasemapIndex = parseInt(queryObject[URL_KEYS.BASEMAP]);
             }
 
             // Modify the layer transparency
-            if (queryObject.layerTransparency) {
+            if (queryObject[URL_KEYS.LAYER_TRANSPARENCY]) {
                 addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                    layerTransparency: queryObject.layerTransparency
+                    lt: queryObject[URL_KEYS.LAYER_TRANSPARENCY]
                 });
 
-                UtilDict.forEachEntry(JSON.parse(queryObject.layerTransparency), function (key, value) {
+                UtilDict.forEachEntry(JSON.parse(queryObject[URL_KEYS.LAYER_TRANSPARENCY]), function (key, value) {
                     var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
@@ -450,18 +545,18 @@ define([
             }
 
             // check for selected tab queries
-            if (queryObject.selectedTab) {
+            if (queryObject[URL_KEYS.SELECT_TAB]) {
                 // Just add the parameter, no need to do anything else
                 // since we're using anchor tags
                 addParameter(EVENT_TAB_CHANGE, {
-                    index: queryObject.selectedTab
+                    index: queryObject[URL_KEYS.SELECT_TAB]
                 });
             }
 
             var layerIds;
 
-            if (queryObject.visibleLayers) {
-                layerIds = queryObject.visibleLayers.split("+");
+            if (queryObject[URL_KEYS.VISIBLE_LAYERS]) {
+                layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -474,12 +569,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
-                    visibleLayers: queryObject.visibleLayers
+                    vl: queryObject[URL_KEYS.VISIBLE_LAYERS]
                 });
             }
 
-            if (queryObject.hiddenLayers) {
-                layerIds = queryObject.hiddenLayers.split("+");
+            if (queryObject[URL_KEYS.HIDDEN_LAYERS]) {
+                layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -492,12 +587,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
-                    hiddenLayers: queryObject.hiddenLayers
+                    hl: queryObject[URL_KEYS.HIDDEN_LAYERS]
                 });
             }
 
-            if (queryObject.visibleBoxes) {
-                layerIds = queryObject.visibleBoxes.split("+");
+            if (queryObject[URL_KEYS.VISIBLE_BOXES]) {
+                layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -508,12 +603,12 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
-                    visibleBoxes: queryObject.visibleBoxes
+                    vb: queryObject[URL_KEYS.VISIBLE_BOXES]
                 });
             }
 
-            if (queryObject.hiddenBoxes) {
-                layerIds = queryObject.hiddenBoxes.split("+");
+            if (queryObject[URL_KEYS.HIDDEN_BOXES]) {
+                layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = Ramp.getLayerConfigWithId(layerId);
@@ -525,8 +620,48 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {
-                    hiddenBoxes: queryObject.hiddenBoxes
+                    hb: queryObject[URL_KEYS.HIDDEN_BOXES]
                 });
+            }
+
+            //check for any additional unknown parameters that were on the url.  add them to our URL
+            var paramName, paramObj, knownNames = [];
+            //get list of known keys in a searchable list
+            for (paramName in URL_KEYS) {
+                if (URL_KEYS.hasOwnProperty(paramName)) {
+                    knownNames.push(URL_KEYS[paramName]);
+                }
+            }
+            for (paramName in queryObject) {
+                if (queryObject.hasOwnProperty(paramName)) {
+                    if (knownNames.indexOf(paramName) === -1) {
+                        //found a param that is not known.  add it to the collection
+                        paramObj = {};
+                        paramObj[paramName] = queryObject[paramName];
+                        addParameter(paramName, paramObj);
+                    }
+                }
+            }
+        }
+
+        /**
+        * Figures out if a layer is valid to be in the bookmark
+        *
+        * @method isBookmarkLayer
+        * @param {String} layerId layers id to check
+        * @private
+        * @returns {Boolean} true if layer should be included in the bookmark
+        */
+        function isBookmarkLayer(layerId) {
+            var layer = RampMap.getMap().getLayer(layerId);
+
+            if (UtilMisc.isUndefined(layer)) {
+                return false;
+            } else if (layer.ramp.user) {
+                //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                return false;
+            } else {
+                return true;
             }
         }
 
@@ -576,10 +711,10 @@ define([
                 topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
                     // Event fields: extent, delta, levelChange, lod;
                     addParameter(EVENT_EXTENT_CHANGE, {
-                        xmin: event.extent.xmin,
-                        ymin: event.extent.ymin,
-                        xmax: event.extent.xmax,
-                        ymax: event.extent.ymax,
+                        xmin: slimCoord(event.extent.xmin),
+                        ymin: slimCoord(event.extent.ymin),
+                        xmax: slimCoord(event.extent.xmax),
+                        ymax: slimCoord(event.extent.ymax),
                         sr: JSON.stringify(event.extent.spatialReference)
                     });
                     updateURL();
@@ -587,7 +722,7 @@ define([
 
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, {
-                        fullscreen: event.visible
+                        fs: event.visible
                     });
                     updateURL();
                 });
@@ -602,21 +737,29 @@ define([
 
                 topic.subscribe(EventManager.GUI.PANEL_CHANGE, function (event) {
                     addParameter(EVENT_PANEL_CHANGE, {
-                        panelVisible: event.visible
+                        pv: event.visible
                     });
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (event) {
+                    //lookup index from config. don't store id
+
                     addParameter(EVENT_BASEMAP_CHANGED, {
-                        baseMap: event.id
+                        bm: RAMP.basemapIndex[event.id]
                     });
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = event.id;
-                    layerVisibility[layerName] = event.state;
+                    var layerId = event.id;
+
+                    if (!isBookmarkLayer(layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
+                    layerVisibility[layerId] = event.state;
 
                     // Only keep attributes that are different from the default config
                     var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
@@ -628,20 +771,26 @@ define([
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        hiddenLayers: Object.keys(hiddenLayers).join("+")
+                        hl: Object.keys(hiddenLayers).join("+")
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        visibleLayers: Object.keys(visibleLayers).join("+")
+                        vl: Object.keys(visibleLayers).join("+")
                     });
 
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = event.id;
-                    boundingBoxVisibility[layerName] = event.state;
+                    var layerId = event.id;
+
+                    if (!isBookmarkLayer(layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
+                    boundingBoxVisibility[layerId] = event.state;
 
                     // Only keep attributes that are different from the default config
                     var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
@@ -653,23 +802,28 @@ define([
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        hiddenBoxes: Object.keys(hiddenBoxes).join("+")
+                        hb: Object.keys(hiddenBoxes).join("+")
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
                         // Convert an array of string into a "+" delimited string
-                        visibleBoxes: Object.keys(visibleBoxes).join("+")
+                        vb: Object.keys(visibleBoxes).join("+")
                     });
 
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (event) {
+                    if (!isBookmarkLayer(event.layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, event);
-                    layerTransparency[event.layerId] = event.value;
+                    layerTransparency[event.layerId] = Math.round(event.value * 100) / 100;
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                        layerTransparency: JSON.stringify(layerTransparency)
+                        lt: JSON.stringify(layerTransparency)
                     });
 
                     updateURL();

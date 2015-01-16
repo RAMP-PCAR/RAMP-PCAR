@@ -2,10 +2,44 @@
     height: 100%;
     .animation-duration (500ms);
 
+    .datagrid-info-notice {
+        .info-notice;
+        position: absolute;
+        top: 46px;
+        left: 0;
+        right: 21px;
+        z-index: 2;
+
+        display: none;
+
+        &.scroll {
+            .box-shadow (0 6px 5px -5px rgb(0, 0, 0));
+        }
+
+        &:after {
+            position: absolute;
+            content: "";
+            left: -10px;
+            right: 0;
+            bottom: 0;
+            border-bottom: 1px solid @medium-grey-color;
+        }
+    }
+
+    &.notice {
+        
+        .datagrid-info-notice {
+            display: block;
+        }
+
+        .jqgrid_table_wrapper {
+            padding-top: 76px;
+        }
+    }
+
     #datagridGlobalToggles {
         padding-bottom: 11px;
         padding-top: 11px;
-
 
         .global-controls {
             //margin-left: 37px;
@@ -345,7 +379,7 @@
             }
         }
     }
-
+    
     .jqgrid_table_wrapper {
         bottom: 0;
         left: 0;

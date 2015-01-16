@@ -1,11 +1,11 @@
 {
     "name": "ramp-pcar",
-    "version": "4.0.1",
+    "version": "5.0.0-5",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
     ],
-    "description": "RAMP GIS viewer - Dragonfly; Sample of an implementation of RAMP",
+    "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
     "keywords": [
         "ramp",
         "gis",
@@ -28,7 +28,7 @@
         "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
         "DataTables": "1.10.1",
         "jquery": "~2.1.1",
-        "gsap": "~1.13.2",
+        "gsap": "~1.14.2",
         "jquery-nstSlider": "~1.0.5",
         "jqueryui": "~1.10.4",
         "jquery.scrollTo": "~1.4.13",
@@ -40,7 +40,9 @@
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",
         "jquery-hoverIntent": "~1.8.1",
-        "i18next": "~1.7.4"
+        "i18next": "~1.7.4",
+        "terraformer": "~1.0.4",
+        "terraformer-arcgis-parser": "~1.0.4"
     },
     "moduleType": [
         "globals"

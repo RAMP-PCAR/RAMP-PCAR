@@ -18,7 +18,7 @@
     
     // sample icon template
     "graphic_icon":"<div class='point-image-box'>
-                        <img alt='' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
+                        <img alt='' role='presentation' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
                     </div>",
                     
     // Details button

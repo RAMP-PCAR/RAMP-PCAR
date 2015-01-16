@@ -123,8 +123,8 @@ module.exports = (grunt) ->
         'Create a minified distribution package.'
         [
             'clean:dist'
-            'copy:dist'
             'build'
+            'copy:dist'
             'js:dist'
             'templatemin'
             'json-minify'
@@ -539,13 +539,13 @@ module.exports = (grunt) ->
 
             proxyBuild:
                 expand: true
-                cwd: 'src/proxy'
+                cwd: 'proxy'
                 src: '**/*.*'
                 dest: 'build/proxy'
             
             proxyDist:
                 expand: true
-                cwd: 'src/proxy'
+                cwd: 'proxy'
                 src: '**/*.*'
                 dest: 'dist/proxy'
                 
@@ -655,6 +655,7 @@ module.exports = (grunt) ->
                         languages: ['en', 'fr']
                         templates: [
                             'site/pages/ramp.hbs'
+                            'site/pages/error.hbs'
                         ]
                 dest: 'build/'
                 src: '!*.*'
@@ -1141,7 +1142,7 @@ module.exports = (grunt) ->
                 ]
 
         clean:
-            optiosn:
+            options:
                 force: true
             
             build:[
@@ -1182,10 +1183,12 @@ module.exports = (grunt) ->
                 ]
 
         compress:
-            tar:
+            tgz:
                 options:
-                    mode: 'tar'
-                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tar'
+                    level: 9
+                    mode: 'tgz'
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tgz'
+                    pretty: true
                 files: [
                     expand: true
                     src: '**/*'
@@ -1197,8 +1200,8 @@ module.exports = (grunt) ->
                     mode: 'zip'
                     archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.zip',
                     level: 9
-
-                files: [
+                    pretty: true
+                files: [                    
                     expand: true
                     src: '**/*'
                     cwd: 'dist/'

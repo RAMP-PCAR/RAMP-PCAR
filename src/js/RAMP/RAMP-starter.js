@@ -53,6 +53,19 @@ RAMP = {
      */
     plugins: {
         featureInfoParser: {}
+    },
+
+    /**
+    * A temporary solution to state management.  Will be changed
+    *
+    * @property state
+    * @type Object
+    */
+    state: {
+        ui: {
+            sidePanelOpened: true,
+            fullscreen: false
+        }
     }
 };
 

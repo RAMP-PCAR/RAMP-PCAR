@@ -26,7 +26,7 @@
 
 define([
 //Dojo
-    "dojo/_base/declare", "dojo/topic",
+    "dojo/_base/declare", "dojo/topic", "dojo/_base/lang",
 
 //RAMP
     "ramp/globalStorage", "ramp/eventManager"
@@ -34,7 +34,7 @@ define([
 
 function (
 // Dojo
-    declare, topic,
+    declare, topic, lang,
 // RAMP
     GlobalStorage, EventManager) {
     "use strict";
@@ -107,6 +107,9 @@ function (
         init: function (currentLevel) {
 
             // NOTE: JKW Document the change. Refactor,
+            // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is no hook to attach a tooltip to.
+            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the disabled state.
+
             nav.navigation("setSliderVal", currentLevel);
             initTopics();
             initListeners();
@@ -116,7 +119,12 @@ function (
             // Note: JKW added currentlevel
             //RAMP.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            nav = $("#" + RAMP.config.divNames.navigation).navigation(RAMP.config.navWidget);
+            var options = lang.mixin({}, 
+                RAMP.config.navWidget,
+                {locale: RAMP.locale}
+            );
+
+            nav = $("#" + RAMP.config.divNames.navigation).navigation(options);
         }
     };
 });
