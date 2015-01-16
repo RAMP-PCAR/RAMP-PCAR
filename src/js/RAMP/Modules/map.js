@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP */
+﻿/*global define, esri, i18n, console, $, RAMP, window */
 
 /**
 *
@@ -592,21 +592,50 @@ define([
         }
 
         /**
-        * Readies a layer for initial handshake.  Will catch success or failure
+        * Sets up loading event handlers and initializes the .ramp object of a layer
+        * Circular reference errors prevent us from calling LayerLoader directly from this module
         *
         * @private
         * @method prepLayer
         * @param  {Object} layer layer to be prepped
+        * @param  {Object} config config object for the layer
+        * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
         */
-        function prepLayer(layer) {
+        function prepLayer(layer, config, userLayer) {
+            layer.ramp = {
+                config: config,
+                user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                load: {
+                    state: "loading",
+                    inLS: false  //layer has entry in layer selector
+                }
+            };
+
             layer.on('load', function (evt) {
                 console.log("PREP LOAD OK " + evt.layer.url);
-                evt.layer.ramp.loadOk = true;
+                topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
             layer.on('error', function (evt) {
                 console.log("PREP LOAD FAIL " + evt.target.url);
                 evt.target.ramp.loadOk = false;
+                topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
+                    layer: evt.target,
+                    error: evt.error
+                });
+            });
+
+            //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need to tack the handler
+            //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
+            layer.ramp.load.onUpdateStart = function () {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATING, { layer: this });
+            };
+
+            layer.on('update-start', layer.ramp.load.onUpdateStart);
+
+            //add update end handler for layer
+            layer.on('update-end', function (evt) {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATED, { layer: evt.target });
             });
         }
 
@@ -838,18 +867,10 @@ define([
                     visible: layerConfig.settings.visible,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity)
                 });
-                
-                fl.ramp = {
-                    type: GlobalStorage.layerType.feature,
-                    config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
-                };
 
-                prepLayer(fl);
+                prepLayer(fl, layerConfig, userLayer);
 
-                if (layerConfig.settings.visible === false) {
-                    fl.setVisibility(false);
-                }
+                fl.ramp.type = GlobalStorage.layerType.feature;
 
                 return fl;
             },
@@ -874,13 +895,10 @@ define([
                     //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
                     //}
                 });
-                wmsl.ramp = {
-                    type: GlobalStorage.layerType.wms,
-                    config: layerConfig,
-                    user: UtilMisc.isUndefined(userLayer) ? false : userLayer
-                };
 
-                prepLayer(wmsl);
+                prepLayer(wmsl, layerConfig, userLayer);
+
+                wmsl.ramp.type = GlobalStorage.layerType.wms;
 
                 wmsl.setVisibility(layerConfig.settings.visible);
 
@@ -906,19 +924,13 @@ define([
                         tempLayer = new FeatureLayer(layerConfig.url, {
                             opacity: resolveLayerOpacity(layerConfig.settings.opacity),
                             mode: FeatureLayer.MODE_SNAPSHOT,
+                            visible: layerConfig.settings.visible,
                             id: layerConfig.id
                         });
-                        tempLayer.ramp = {
-                            type: GlobalStorage.layerType.Static,
-                            config: layerConfig,
-                            user: UtilMisc.isUndefined(userLayer) ? false : userLayer
-                        };
 
-                        prepLayer(tempLayer);
+                        prepLayer(tempLayer, layerConfig, userLayer);
 
-                        if (layerConfig.settings.visible === false) {
-                            tempLayer.setVisibility(false);
-                        }
+                        tempLayer.ramp.type = GlobalStorage.layerType.Static;
 
                         break;
 
@@ -1000,8 +1012,8 @@ define([
                 baseLayer.on('error', function (evt) {
                     //basemap has died.  long live the basemap.
                     //TODO some proper error handling here.  error page?  message to user of catastrophic failure?
-
                     console.log('initial basemap failed to load: ' + evt.error.message);
+                    window.location.href = "./error-en.html";
                 });
 
                 /**

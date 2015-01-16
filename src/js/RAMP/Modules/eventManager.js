@@ -386,6 +386,64 @@ define([],
                 REPOSITION_INTERACTIVE: "maptips/repositionInteractive"
             },
 
+            LayerLoader: {
+                /**
+                * Indicates that a map layer has loaded.  This means the constructor initialized and shook hands with it's data source
+                *
+                * @event LayerLoader.LAYER_LOADED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has loaded
+                *
+                */
+                LAYER_LOADED: "layerLoader/layer-loaded",
+
+                /**
+                * Indicates that a map layer has updated.  This means the data it is showing is visible and up-to-date
+                *
+                * @event LayerLoader.LAYER_UPDATED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has updated
+                *
+                */
+                LAYER_UPDATED: "layerLoader/layer-updated",
+
+                /**
+                * Indicates that a map layer has started updating.  This means it is getting data from its source
+                *
+                * @event LayerLoader.LAYER_UPDATING
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that is updating
+                *
+                */
+                LAYER_UPDATING: "layerLoader/layer-updating",
+
+                /**
+                * Indicates that a map layer should be removed from the map
+                *
+                * @event LayerLoader.REMOVE_LAYER
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layerId {String} ESRI layer id to be removed
+                *
+                */
+                REMOVE_LAYER: "layerLoader/remove-layer",
+
+                /**
+                * Indicates that a map layer has errored
+                *
+                * @event LayerLoader.LAYER_ERROR
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has errored
+                * @param event.error {Object} the error object
+                *
+                */
+                LAYER_ERROR: "layerLoader/layer-error"
+            },
+
             Map: {
                 // NOTE: Map events fall into two categories.  There are native RAMP events and others which republish events from the ESRI API.
                 // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events should be prefixed with map/
@@ -398,17 +456,6 @@ define([],
                 *
                 */
                 ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
-
-                /**
-                * Indicates that a map layer has loaded.
-                *
-                * @event RampMap.LAYER_LOADED
-                * @for RampMap
-                * @param event {Object}
-                * @param event.layer {Object} ESRI layer object that has loaded
-                *
-                */
-                LAYER_LOADED: "rampMap/layer-loaded",
 
                 /**
                 * Indicates that the initial basemap has loaded.

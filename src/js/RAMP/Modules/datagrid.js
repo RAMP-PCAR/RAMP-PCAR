@@ -1009,7 +1009,7 @@ define([
                         createDatatable();
 
                         datagridGlobalToggles = sectionNode.find('#datagridGlobalToggles');
-                        
+
                         datagridStatusLine = sectionNode.find('.status-line');
                         datasetSelector = $("#datasetSelector");
                         datasetSelectorSubmitButton = $("#datasetSelectorSubmitButton");
@@ -1190,7 +1190,7 @@ define([
                     /**
                     * Update the datagrid notice to show feedback to the user if any.
                     * Right now is used to display notifications about scale dependent layers that are off scale at the moment.
-                    * 
+                    *
                     * @private
                     * @method updateNotice
                     */
@@ -1202,7 +1202,7 @@ define([
                                 .filter(function (l) {
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
                                 }),
-                            
+
                             selectedDatasetUrl,
                             index;
 
@@ -1220,14 +1220,13 @@ define([
                                 if (index !== -1) {
                                     notice = tmpl("datagrid_full_info_notice", data);
                                 }
-
                             } else {
                                 if (invisibleLayers.length > 0) {
                                     data.layers = invisibleLayers.map(function (il) {
                                         return il.ramp.config;
                                     });
 
-                                    notice = tmpl("datagrid_info_notice", data);                                    
+                                    notice = tmpl("datagrid_info_notice", data);
                                 }
                             }
 
@@ -1546,11 +1545,15 @@ define([
                 }
             });
 
-            topic.subscribe(EventManager.Map.LAYER_LOADED, function (evt) {
-                //new layer has been added.  if it has grid-worthy data, refresh the grid
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, function (evt) {
+                //layer has updated its data.  if it has grid-worthy data, refresh the grid
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
-                        //add layer to selection combo box
+                        //console.log('HOGG - layer loaded event');
+                        applyExtentFilter();
+                    } else {
+                        //in this case, a slow loading layer updated after the user has switched to the extended grid view.
+                        //add layer to selection combo box (as it would not have been added when the pane was generated)
                         var layerConfig = Ramp.getLayerConfigWithId(evt.layer.id),
                             optElem = document.createElement("option"),  // "<option value='" + layerConfig.url + "'>" + layerConfig.displayName + "</option>",
                             datasetSelector = $("#datasetSelector");
@@ -1558,9 +1561,6 @@ define([
                         optElem.text = layerConfig.displayName;
                         optElem.value = layerConfig.url;
                         datasetSelector.add(optElem);
-
-                        //console.log('HOGG - layer loaded event');
-                        applyExtentFilter();
                     }
                 }
             });

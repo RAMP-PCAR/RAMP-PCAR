@@ -703,7 +703,8 @@ define([
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
             LayerItem.state.LOADED,
-            LayerItem.state.ERROR
+            LayerItem.state.ERROR,
+            LayerItem.state.UPDATING
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
