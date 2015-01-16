@@ -91,7 +91,13 @@
                     "displayName": "[fr] EC Projects"
                 },
                 "cesi_ozone": { 
-                    "displayName": "CESI Air Ozone"
+                    "displayName": "[fr] CESI Air Ozone"
+                },
+                "dog_guts": { 
+                    "displayName": "[fr] Bird Habitats"
+                },
+                "layer_sea_parks": { 
+                    "displayName": "[fr] Sea Parks"
                 }
             },
             "wms": {
@@ -106,6 +112,9 @@
                 },
                 "wms6": {
                     "displayName": "[fr] Railway Network"
+                },
+                "dog_guts": { 
+                    "displayName": "[fr] Bird Habitats"
                 }
             }
         }
