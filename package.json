@@ -1,8 +1,8 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "4.0.0",
-    "description": "RAMP GIS viewer - Dragonfly; Sample of an implementation of RAMP",
+    "version": "5.0.0-1",
+    "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
     "main": "",
     "repository": {
         "type": "git",
@@ -85,9 +85,8 @@
                 "tooltipster/js/jquery.tooltipster.js",
                 "urlshortener/jquery.urlshortener.js",
                 "blueimp-tmpl/js/tmpl.js",
-                "js-shapefile-to-geojson/shapefile.js",
-                "js-shapefile-to-geojson/dbf.js",
-                "js-shapefile-to-geojson/stream.js"
+                "terraformer/terraformer.js",
+                "terraformer-arcgis-parser/terraformer-arcgis-parser.js"
             ],
 
             "cssLib": [

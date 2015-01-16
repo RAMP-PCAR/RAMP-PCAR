@@ -76,11 +76,19 @@ define([
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
                     rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
-                        var req = {};
+                        var req = {}, wkid, mapSR, srList;
+                        mapSR = wmsData.wmsLayer.getMap().spatialReference;
+                        srList = wmsData.wmsLayer.spatialReferences;
+
+                        if (srList && srList.length > 1) {
+                            wkid = srList[0];
+                        } else if (mapSR.wkid) {
+                            wkid = mapSR.wkid;
+                        }
                         if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
-                            req = { CRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid, I: evt.layerX, J: evt.layerY };
+                            req = { CRS: "EPSG:" + wkid, I: evt.layerX, J: evt.layerY };
                         } else {
-                            req = { SRS: "EPSG:" + wmsData.wmsLayer.spatialReference.wkid, X: evt.layerX, Y: evt.layerY };
+                            req = { SRS: "EPSG:" + wkid, X: evt.layerX, Y: evt.layerY };
                         }
                         $.extend(req, {
                             SERVICE: "WMS",
