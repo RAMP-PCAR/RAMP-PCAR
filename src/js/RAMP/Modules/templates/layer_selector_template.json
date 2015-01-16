@@ -1,6 +1,6 @@
 ﻿{
     "layer_group": "
-        <li>
+        <li class='layer-group'>
             <ul class='layer-group-container' role='listbox'>                
             </ul>
         </li>
@@ -159,7 +159,7 @@
                 <div class='wms-legend-image-box'>
                     <h4 class='mrgn-tp-0 h6'>{%= i18n.t('filterManager.legend') %}</h4>
                     <div class='image-div'>
-                        <img class='wms-legend-image bg-white' src='{%= o.imageUrl %}' role='presentation' alt=''>
+                        <img class='wms-legend-image bg-white' src='{%= o.legend ? o.legend.imageUrl : o.imageUrl %}' role='presentation' alt=''>
                     </div>
                 </div>       
             </div>

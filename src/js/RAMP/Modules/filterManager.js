@@ -626,7 +626,8 @@ define([
 
                 return {
                     init: function () {
-                        var section;
+                        var section,
+                            layerGroup;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -648,6 +649,15 @@ define([
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
+                        GlobalStorage.layerSelectorGroups.forEach(function (layerType) {
+                            layerGroup = new LayerGroup([], {
+                                layerType: layerType
+                            });
+
+                            layerGroups[layerType] = layerGroup;
+                            this.addLayerGroup(layerGroup.node);
+                        });
+                        
                         layerToggles.init();
                         layerTooltips.init();
                         setButtonEvents();
@@ -681,7 +691,7 @@ define([
                     * @private
                     */
                     addLayerGroup: function (layerGroupNode) {
-                        mainList.append(layerGroupNode);
+                        mainList.prepend(layerGroupNode);
                     }
                 };
             }());
