@@ -47,7 +47,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 reader[readMethod](file);
 
                 return def.promise;
-            }
+            };
         }
 
 
