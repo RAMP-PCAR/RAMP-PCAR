@@ -612,12 +612,12 @@ define([
             };
 
             layer.on('load', function (evt) {
-                console.log("PREP LOAD OK " + evt.layer.url);
+                //console.log("PREP LOAD OK " + evt.layer.url);
                 topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
             layer.on('error', function (evt) {
-                console.log("PREP LOAD FAIL " + evt.target.url);
+                //console.log("PREP LOAD FAIL " + evt.target.url);
                 evt.target.ramp.loadOk = false;
                 topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
                     layer: evt.target,

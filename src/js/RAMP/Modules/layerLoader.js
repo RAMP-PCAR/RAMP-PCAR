@@ -100,6 +100,8 @@ define([
                     base: 1
                 };
 
+                RAMP.layerRegistry = {};
+
                 topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, this.onLayerLoaded);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, this.onLayerUpdateEnd);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
@@ -206,16 +208,28 @@ define([
                 //HELLO.  I AM UNTESTED
 
                 var map = RampMap.getMap(),
-                    layer = map.getLayer(evt.layerId),
-                    bbLayer = map.getBoundingBoxMapping()[evt.layerId],
+                    layer,// = map.getLayer(evt.layerId),
+                    bbLayer, // = map.getBoundingBoxMapping()[evt.layerId],
                     configIdx,
                     layerSection,
-                    configCollection;
+                    configCollection,
+                    inMap;
+
+                bbLayer = RampMap.getBoundingBoxMapping()[evt.layerId];
+                layer = map._layers[evt.layerId];
+
+                if (layer) {
+                    inMap = true;
+                } else {
+                    //layer was kicked out of the map.  grab it from the registry
+                    inMap = false;
+                    layer = RAMP.layerRegistry[evt.layerId];
+                }
 
                 //derive section layer is in and the config collection it is in
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
-                        layerSection = GlobalStorage.layerType.feature;
+                        layerSection = GlobalStorage.layerType.wms;
                         configCollection = RAMP.config.layers.wms;
                         break;
 
@@ -230,7 +244,9 @@ define([
                 FilterManager.removeLayer(layerSection, evt.layerId);
 
                 //remove layer from map
-                map.removeLayer(layer);
+                if (inMap) {
+                    map.removeLayer(layer);
+                }
 
                 //if bounding box, remove it too
                 if (bbLayer) {
@@ -240,7 +256,8 @@ define([
                 //remove node from config
                 configIdx = configCollection.indexOf(layer.ramp.config);
                 configCollection.splice(configIdx, 1);
-                
+
+                RAMP.layerRegistry[evt.layerId] = undefined;
             },
 
             /**
@@ -376,6 +393,10 @@ define([
                 //add entry to layer selector
                 FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
                 layer.ramp.load.inLS = true;
+
+                //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+                //store a pointer here so we can find it (and it's information)
+                RAMP.layerRegistry[layer.id] = layer;
 
                 //add layer to map, triggering the loading process.  should add at correct position
                 map.addLayer(layer, insertIdx);

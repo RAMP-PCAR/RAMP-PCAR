@@ -510,8 +510,10 @@ define([
                     // remove layer when remove button is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
-                            //call remove thing here
+                            var id = $(this.target).data("layer-id");
 
+                            //call remove thing here
+                            topic.publish(EventManager.LayerLoader.REMOVE_LAYER, { layerId: id });
                             d.resolve();
                         },
                         {
