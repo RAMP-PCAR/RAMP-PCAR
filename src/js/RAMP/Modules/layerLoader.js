@@ -336,21 +336,19 @@ define([
                                     )
                                 };
                             }
-
                         } else {
                             insertIdx = reloadIndex;
                         }
 
-                       
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
                         layerSection = GlobalStorage.layerType.feature;
                         if (UtilMisc.isUndefined(reloadIndex)) {
-                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
-                        insertIdx = RAMP.layerCounts.feature;
-                        RAMP.layerCounts.feature += 1;
+                            //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
+                            insertIdx = RAMP.layerCounts.feature;
+                            RAMP.layerCounts.feature += 1;
                         } else {
                             insertIdx = reloadIndex;
                         }
@@ -410,46 +408,46 @@ define([
                         //generate bounding box
                         //if a reload, the bounding box still exists from the first load
                         if (UtilMisc.isUndefined(reloadIndex)) {
-                        var boundingBoxExtent,
-                            boundingBox = new GraphicsLayer({
-                                id: String.format("boundingBoxLayer_{0}", layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible
-                            });
-
-                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
-                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                //layer is in same projection as basemap.  can directly use the extent
-                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                            } else {
-                                //layer is in different projection.  reproject to basemap
-
-                                var params = new ProjectParameters(),
-                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                params.geometries = [boundingBoxExtent];
-                                params.outSR = map.spatialReference;
-
-                                gsvc.project(params, function (projectedExtents) {
-                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                            var boundingBoxExtent,
+                                boundingBox = new GraphicsLayer({
+                                    id: String.format("boundingBoxLayer_{0}", layer.id),
+                                    visible: layerConfig.settings.boundingBoxVisible
                                 });
+
+                            boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                            if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                                boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                                if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                    //layer is in same projection as basemap.  can directly use the extent
+                                    boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                                } else {
+                                    //layer is in different projection.  reproject to basemap
+
+                                    var params = new ProjectParameters(),
+                                        gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                    params.geometries = [boundingBoxExtent];
+                                    params.outSR = map.spatialReference;
+
+                                    gsvc.project(params, function (projectedExtents) {
+                                        boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                    });
+                                }
                             }
-                        }
 
-                        //add mapping to bounding box
-                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+                            //add mapping to bounding box
+                            RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
 
-                        //TODO is this required?  visible is being set in the constructor
-                        boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
+                            //TODO is this required?  visible is being set in the constructor
+                            boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
 
-                        //bounding boxes are on top of feature layers
-                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                        RAMP.layerCounts.bb += 1;
+                            //bounding boxes are on top of feature layers
+                            insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                            RAMP.layerCounts.bb += 1;
 
-                        map.addLayer(boundingBox, insertIdx);
+                            map.addLayer(boundingBox, insertIdx);
                         }
                         break;
                 }
