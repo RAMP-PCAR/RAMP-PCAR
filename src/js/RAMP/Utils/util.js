@@ -28,6 +28,30 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
     function (dojoArray, dojoLang, topic, Deferred, Extent) {
         "use strict";
 
+        /**
+        * Helper function for wrapping File API calls in Promise objects.  Used for building a series of helpers which
+        * call different file read methods.
+        *
+        * @method _wrapFileCallInPromise
+        * @static
+        * @param {String} readMethod a string indicating the FileReader method to call
+        * @return {Function} a function which accepts a {File} object and returns a Promise
+        */
+        function _wrapFileCallInPromise(readMethod) {
+            return function (file) {
+                var reader = new FileReader(),
+                    def = new Deferred();
+
+                reader.onloadend = function (e) { def.resolve(e.target.result); };
+                reader.onerror = function (e) { def.reject(e.target.error); };
+                reader[readMethod](file);
+
+                return def.promise;
+            }
+        }
+
+
+
         return {
             /**
             * Checks if the console exists, if not, redefine the console and all console methods to
@@ -872,15 +896,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
-            readFileAsText: function (file) {
-                var reader = new FileReader(),
-                    def = new Deferred();
-
-                reader.onload = function (e) { def.resolve(e.target.result); };
-                reader.readAsText(file);
-
-                return def.promise;
-            },
+            readFileAsText: _wrapFileCallInPromise('readAsText'),
 
             /**
             * Parses a file using the FileReader API.  Wraps readAsBinaryString and returns a promise.
@@ -888,15 +904,15 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
-            readFileAsBinary: function (file) {
-                var reader = new FileReader(),
-                    def = new Deferred();
+            readFileAsBinary: _wrapFileCallInPromise('readAsBinary'),
 
-                reader.onload = function (e) { def.resolve(e.target.result); };
-                reader.readAsBinaryString(file);
-
-                return def.promise;
-            },
+            /**
+            * Parses a file using the FileReader API.  Wraps readAsArrayBuffer and returns a promise.
+            *
+            * @param {File} file a dom file object to be read
+            * @return {Object} a promise which sends an ArrayBuffer containing the file output if successful
+            */
+            readFileAsArrayBuffer: _wrapFileCallInPromise('readAsArrayBuffer'),
 
             /**
             * Augments lists of items to be sortable using keyboard.
