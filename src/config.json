@@ -663,6 +663,18 @@
                     "mimeType": "text/plain"
                 },
                 "legendMimeType": "image/jpeg"
+            },
+            {
+                "id": "dogGuts",
+                "displayName": "@@config.layers.wms.dog_guts.displayName",
+                "format": "png",
+                "layerName": "railway.track",
+                "imageUrl": "assets/images/icons/1421457419_099374-twitter-bird3.png",
+                "url": "http://maps.geogratis.gc.ca/wms/railway_en",
+                "featureInfo": {
+                    "parser": "stringParse",
+                    "mimeType": "text/plain"
+                }
             }
         ]
 

@@ -106,6 +106,9 @@
                 },
                 "wms6": {
                     "displayName": "Railway Network"
+                },
+                "dog_guts": {
+                    "displayName": "Bird Habitats"
                 }
             }
         }
