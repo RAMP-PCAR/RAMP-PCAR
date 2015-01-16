@@ -50,8 +50,6 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             };
         }
 
-
-
         return {
             /**
             * Checks if the console exists, if not, redefine the console and all console methods to
