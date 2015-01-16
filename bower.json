@@ -43,7 +43,7 @@
         "i18next": "~1.7.4",
         "terraformer": "~1.0.4",
         "terraformer-arcgis-parser": "~1.0.4",
-        "js-shapefile-to-geojson": "https://github.com/wavded/js-shapefile-to-geojson.git#master"
+        "shapefile-js": "https://github.com/calvinmetcalf/shapefile-js.git#3.1.5"
     },
     "moduleType": [
         "globals"
