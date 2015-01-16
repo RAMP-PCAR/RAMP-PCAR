@@ -208,11 +208,26 @@ define([
                 var map = RampMap.getMap(),
                     layer = map.getLayer(evt.layerId),
                     bbLayer = map.getBoundingBoxMapping()[evt.layerId],
-                    configIdx;
+                    configIdx,
+                    layerSection,
+                    configCollection;
+
+                //derive section layer is in and the config collection it is in
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        layerSection = GlobalStorage.layerType.feature;
+                        configCollection = RAMP.config.layers.wms;
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        layerSection = GlobalStorage.layerType.feature;
+                        configCollection = RAMP.config.layers.feature;
+                        break;
+                }
 
                 //remove item from layer selector
-                //TODO need a remove funciton in the filter manager
-                //FilterManager.X(evt.layerId);
+                FilterManager.removeLayer(layerSection, evt.layerId);
 
                 //remove layer from map
                 map.removeLayer(layer);
@@ -223,19 +238,9 @@ define([
                 }
 
                 //remove node from config
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-                        configIdx = RAMP.config.layers.wms.indexOf(layer.ramp.config);
-                        RAMP.config.layers.wms.splice(configIdx, 1);
-
-                        break;
-
-                    case GlobalStorage.layerType.feature:
-                    case GlobalStorage.layerType.Static:
-                        configIdx = RAMP.config.layers.feature.indexOf(layer.ramp.config);
-                        RAMP.config.layers.feature.splice(configIdx, 1);
-                        break;
-                }
+                configIdx = configCollection.indexOf(layer.ramp.config);
+                configCollection.splice(configIdx, 1);
+                
             },
 
             /**

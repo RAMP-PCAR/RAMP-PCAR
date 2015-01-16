@@ -1,4 +1,6 @@
 ﻿{
+    //TODO add description comment to every template
+
     "layer_group": "
         <li class='layer-group'>
             <ul class='layer-group-container' role='listbox'>                
