@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP */
+﻿/*global define, esri, i18n, console, $, RAMP, window */
 
 /**
 *
@@ -31,9 +31,12 @@
 * @uses esri/SpatialReference
 * @uses esri/dijit/Scalebar
 * @uses esri/geometry/Extent
+* @uses esri/tasks/GeometryService
+* @uses esri/tasks/ProjectParameters
 * @uses GlobalStorage
 * @uses RAMP
 * @uses FeatureClickHandler
+* @uses MapClickHandler
 * @uses Navigation
 * @uses EventManager
 * @uses Util
@@ -46,7 +49,7 @@ define([
         "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
-"esri/map", "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
+"esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
 "esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
 
 /* Ramp */
@@ -60,7 +63,7 @@ define([
     declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
-    EsriMap, FeatureLayer, GraphicsLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
+    EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
     SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
@@ -71,38 +74,38 @@ define([
         "use strict";
 
         /**
-        * An Array of {{#crossLink "Esri/layer/FeatureLayer"}}{{/crossLink}} objects.
+        * An Array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects.
         *
         * @private
         * @property featureLayers {Array}
         */
         var featureLayers,
 
-        /**
-        * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
-        *
-        * @private
-        * @property wmsLayers {Array}
-        */
+            /**
+            * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
+            *
+            * @private
+            * @property wmsLayers {Array}
+            */
             wmsLayers = [],
 
-        /**
-        * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
-        * A dictionary of String, {{#crossLink "Esri/layer/GraphicsLayer"}}{{/crossLink}} pairs.
-        *
-        * @private
-        * @property boundingBoxMapping {Object}
-        */
-            boundingBoxMapping,
+            /**
+            * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
+            * A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
+            *
+            * @private
+            * @property boundingBoxMapping {Object}
+            */
+            boundingBoxMapping = {},
 
-        /**
-        * The map not only contains feature layers, but also other layers such as the
-        * basemap layer, highlight layer, bounding box layer, etc. This variable is
-        * used to store the starting index of the feature layers in the map.
-        *
-        * @private
-        * @property featureLayerStartIndex {Integer}
-        */
+            /**
+            * The map not only contains feature layers, but also other layers such as the
+            * basemap layer, highlight layer, bounding box layer, etc. This variable is
+            * used to store the starting index of the feature layers in the map.
+            *
+            * @private
+            * @property featureLayerStartIndex {Integer}
+            */
             featureLayerStartIndex,
 
             map,
@@ -299,15 +302,17 @@ define([
             topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (evt) {
                 var layer = map.getLayer(evt.layerId);
 
-                layer.setOpacity(evt.value);
-                //loops through any static layers that are mapped to the feature layer being toggled
-                try {
-                    dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
-                        var layer = map.getLayer(staticLayer);
-                        layer.setOpacity(evt.value);
-                    });
-                }
-                catch (err) {
+                if (layer !== undefined) {
+                    layer.setOpacity(evt.value);
+                    //loops through any static layers that are mapped to the feature layer being toggled
+                    try {
+                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                            var layer = map.getLayer(staticLayer);
+                            layer.setOpacity(evt.value);
+                        });
+                    }
+                    catch (err) {
+                    }
                 }
             });
 
@@ -345,6 +350,7 @@ define([
                 topic.publish(EventManager.Map.REORDER_END);
             });
 
+            //TODO this will likely get removed or amended by aly
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {
                 var type = dom.byId("addLayer-select-type").value,
@@ -367,34 +373,6 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            var handle,
-                // filter out non static layers for any feature interaction: maptip
-                nonStaticLayers = dojoArray.filter(featureLayers, function (layer) {
-                    return layer.ramp.type !== GlobalStorage.layerType.Static;
-                }
-            );
-
-            // original value : featureLayers
-            // updated with nonStaticLayer
-            dojoArray.forEach(nonStaticLayers, function (fl) {
-                //TODO: set timer for maptips onMouseOver event
-
-                fl.on("click", function (evt) {
-                    evt.stopImmediatePropagation();
-                    FeatureClickHandler.onFeatureSelect(evt);
-                });
-
-                fl.on("mouse-over", function (evt) {
-                    FeatureClickHandler.onFeatureMouseOver(evt);
-
-                    //console.log("hover on point", evt);
-                });
-
-                fl.on("mouse-out", function (evt) {
-                    FeatureClickHandler.onFeatureMouseOut(evt);
-                });
-            });
-
             map.on("load", _initScale);
             map.on("extent-change", function (event) {
                 _updateScale(event);
@@ -412,16 +390,13 @@ define([
                 topic.publish(EventManager.Map.CLICK, evt);
             });
 
-            // Hide all the maptips if the map finishes updating
-            map.on("update-end", function () {
-                //topic.publish(EventManager.Maptips.HIDE, {});
-            });
-
             // Show/Hide spinner for map loading
             map.on("update-start", _showLoadingImg);
             map.on("update-end", _hideLoadingImg);
 
-            handle = map.on("update-end", function () {
+            // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep around to steal later
+            /*
+            var handle = map.on("update-end", function () {
                 var isAllLoaded = dojoArray.every(
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
@@ -439,19 +414,7 @@ define([
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
-        }
-
-        /**
-        * Instantiates an extent from a JSON config object.
-        * The ojbect should contain 4 bounding co-ordiantes and a spatial reference
-        *
-        * @private
-        * @method createExtent
-        * @param {Object} extentConfig the JSON config object
-        * @return {esri/geometry/Extent} An ESRI extent object based on the config data
-        */
-        function createExtent(extentConfig) {
-            return new EsriExtent(extentConfig);
+            */
         }
 
         /**
@@ -468,7 +431,7 @@ define([
             var geomSrv, geomParams, realExtent;
 
             //convert configuration extent to proper esri extent object
-            realExtent = createExtent(extent);
+            realExtent = new EsriExtent(extent);
 
             if (UtilMisc.isSpatialRefEqual(realExtent.spatialReference, sr)) {
                 //the extent is already in the correct projection.
@@ -535,29 +498,6 @@ define([
 
             //throw event
             topic.publish(EventManager.Map.EXTENTS_REPROJECTED);
-        }
-
-        /**
-         * Create boudingbox graphic for a bounding box extent
-         *
-         * @param  {esri/geometry/Extent} extent of a bounding box
-         * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
-         */
-        function createGraphic(extent) {
-            return new esri.Graphic({
-                geometry: extent,
-                symbol: {
-                    color: [255, 0, 0, 64],
-                    outline: {
-                        color: [240, 128, 128, 255],
-                        width: 1,
-                        type: "esriSLS",
-                        style: "esriSLSSolid"
-                    },
-                    type: "esriSFS",
-                    style: "esriSFSSolid"
-                }
-            });
         }
 
         /**
@@ -651,46 +591,90 @@ define([
             return layerOpacity.default || 1;
         }
 
-        function generateStaticLayer(staticLayer) {
-            var tempLayer,
-                layerType = staticLayer.layerType || "feature";
-            //determine layer type and process
-            switch (layerType) {
-                case "feature":
-                    tempLayer = new FeatureLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        mode: FeatureLayer.MODE_SNAPSHOT,
-                        id: staticLayer.id
-                    });
-                    tempLayer.ramp = {
-                        type: GlobalStorage.layerType.Static
-                    };
-                    break;
+        /**
+        * Sets up loading event handlers and initializes the .ramp object of a layer
+        * Circular reference errors prevent us from calling LayerLoader directly from this module
+        *
+        * @private
+        * @method prepLayer
+        * @param  {Object} layer layer to be prepped
+        * @param  {Object} config config object for the layer
+        * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
+        */
+        function prepLayer(layer, config, userLayer) {
+            layer.ramp = {
+                config: config,
+                user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                load: {
+                    state: "loading",
+                    inLS: false  //layer has entry in layer selector
+                }
+            };
 
-                case "tile":
-                    tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: staticLayer.id
-                    });
-                    console.log("tile layer added. " + staticLayer.id);
-                    break;
+            layer.on('load', function (evt) {
+                console.log("PREP LOAD OK " + evt.layer.url);
+                topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
+            });
 
-                case "dynamic":
-                    tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
-                        opacity: resolveLayerOpacity(staticLayer.settings.opacity),
-                        id: staticLayer.id
-                    });
-                    console.log("dynamic layer added. " + staticLayer.id);
-                    break;
+            layer.on('error', function (evt) {
+                console.log("PREP LOAD FAIL " + evt.target.url);
+                evt.target.ramp.loadOk = false;
+                topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
+                    layer: evt.target,
+                    error: evt.error
+                });
+            });
 
-                default:
-                    //TODO add in other types of maps... wms?  non-esri tile?
-                    break;
-            }
-            return tempLayer;
+            //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need to tack the handler
+            //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
+            layer.ramp.load.onUpdateStart = function () {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATING, { layer: this });
+            };
+
+            layer.on('update-start', layer.ramp.load.onUpdateStart);
+
+            //add update end handler for layer
+            layer.on('update-end', function (evt) {
+                topic.publish(EventManager.LayerLoader.LAYER_UPDATED, { layer: evt.target });
+            });
         }
 
         return {
+            /**
+            * For a specified layer, zooms to the closest level that has some visible data.
+            * @param {String} layerId a layer id to zoom to.
+            * @method zoomToLayerScale
+            */
+            zoomToLayerScale: function (layerId) {
+                var layer = map.getLayer(layerId),
+                    lods = map._params.lods,
+                    currentLevel = map.getLevel(),
+                    topLod,
+                    bottomLod,
+                    lod,
+                    i;
+
+                for (i = 0; i < lods.length; i += 1) {
+                    lod = lods[i];
+                    //console.log("lod", lod, lod.scale > layer.minScale);
+                    if (!topLod && lod.scale <= layer.minScale) {
+                        topLod = lod;
+                    }
+
+                    if (!bottomLod && lod.scale <= layer.maxScale) {
+                        bottomLod = lods[Math.max(0, i - 1)];
+                    }
+                }
+
+                //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
+
+                if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
+                    map.setZoom(topLod.level);
+                } else {
+                    map.setZoom(bottomLod.level);
+                }
+            },
+
             /**
             * The maximum extent of the map control is allowed to go to
             * @property getMaxExtent
@@ -716,7 +700,7 @@ define([
             /**
             * Returns a list of feature layers that are currently visible on the map.
             * @method getVisibleFeatureLayers
-            * @return {Array} an array of {{#crossLink "Esri/layer/FeatureLayer"}}{{/crossLink}} objects
+            * @return {Array} an array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects
             *
             */
             getVisibleFeatureLayers: function () {
@@ -727,13 +711,49 @@ define([
                 });
             },
 
+            getVisibleLayers: function () {
+                return map.getLayersVisibleAtScale();
+            },
+
+            getInvisibleLayers: function () {
+                var visibleLayers,
+                    allLayers,
+                    invisibleLayers;
+
+                visibleLayers = this.getVisibleLayers();
+                allLayers = map._layers;
+                invisibleLayers = [];
+
+                UtilDict.forEachEntry(allLayers, function (key, value) {
+                    var index = UtilArray.indexOf(visibleLayers, function (vl) {
+                        return key === vl.id;
+                    });
+
+                    if (index === -1) {
+                        invisibleLayers.push(value);
+                    }
+                });
+
+                return invisibleLayers;
+            },
+
+            /**
+            * Returns the mapping of feature layer ids to assocciated bounding box layers.
+            * @method getBoundingBoxMapping
+            * @return {Object} A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
+            *
+            */
+            getBoundingBoxMapping: function () {
+                return boundingBoxMapping;
+            },
+
             /**
             * Return the feature layer corresponding to the given url.
             *
             * @method getFeatureLayer
             * @private
             * @param {String} featureUrl the url of the feature layer
-            * @return {Esri/layer/FeatureLayer} feature layer
+            * @return {Esri/layers/FeatureLayer} feature layer
             */
             getFeatureLayer: function (featureUrl) {
                 return UtilArray.find(featureLayers,
@@ -830,28 +850,126 @@ define([
                     return adjustedEx;
                 }
             },
+
+            /**
+           * Create a new FeatureLayer object based on the config input
+           *
+           * @method makeFeatureLayer
+           * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
+           * @return {Esri/layers/FeatureLayer} feature layer object (unloaded)
+           */
+            makeFeatureLayer: function (layerConfig, userLayer) {
+                var fl = new FeatureLayer(layerConfig.url, {
+                    id: layerConfig.id,
+                    mode: FeatureLayer.MODE_SNAPSHOT,
+                    outFields: [layerConfig.layerAttributes],
+                    visible: layerConfig.settings.visible,
+                    opacity: resolveLayerOpacity(layerConfig.settings.opacity)
+                });
+
+                prepLayer(fl, layerConfig, userLayer);
+
+                fl.ramp.type = GlobalStorage.layerType.feature;
+
+                return fl;
+            },
+
+            /**
+           * Return the feature layer corresponding to the given url.
+           *
+           * @method makeWmsLayer
+           * @param {Object} layerConfig config object for the layer to create
+           * @param {Boolean} userLayer optional specifies if layer was added by a user
+           * @return {Esri/layers/WMSLayer} WMS layer
+           */
+
+            makeWmsLayer: function (layerConfig, userLayer) {
+                var wmsl = new WMSLayer(layerConfig.url, {
+                    id: layerConfig.id,
+                    format: layerConfig.format,
+                    opacity: resolveLayerOpacity(layerConfig.settings.opacity),
+                    visibleLayers: [layerConfig.layerName]
+                    //resourceInfo: {
+                    //    extent: new EsriExtent(layer.extent),
+                    //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
+                    //}
+                });
+
+                prepLayer(wmsl, layerConfig, userLayer);
+
+                wmsl.ramp.type = GlobalStorage.layerType.wms;
+
+                wmsl.setVisibility(layerConfig.settings.visible);
+
+                return wmsl;
+            },
+
+            /**
+            * Return the static layer corresponding to the given url.
+            *
+            * @method makeStaticLayer
+            * @private
+            * @param {Object} layerConfig config object for the layer to create
+            * @param {Boolean} userLayer optional specifies if layer was added by a user
+            * @return {Object} layer object of the appropriate type
+            */
+
+            makeStaticLayer: function (layerConfig, userLayer) {
+                var tempLayer,
+                    layerType = layerConfig.layerType || "feature";
+                //determine layer type and process
+                switch (layerType) {
+                    case "feature":
+                        tempLayer = new FeatureLayer(layerConfig.url, {
+                            opacity: resolveLayerOpacity(layerConfig.settings.opacity),
+                            mode: FeatureLayer.MODE_SNAPSHOT,
+                            visible: layerConfig.settings.visible,
+                            id: layerConfig.id
+                        });
+
+                        prepLayer(tempLayer, layerConfig, userLayer);
+
+                        tempLayer.ramp.type = GlobalStorage.layerType.Static;
+
+                        break;
+
+                        //We are currently not supporting other static layer types at the moment.
+                        //Future versions should re-implement these cases
+                        /*
+                    case "tile":
+                        tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
+                            opacity: resolveLayerOpacity(staticLayer.settings.opacity),
+                            id: staticLayer.id
+                        });
+                        console.log("tile layer added. " + staticLayer.id);
+                        break;
+
+                    case "dynamic":
+                        tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
+                            opacity: resolveLayerOpacity(staticLayer.settings.opacity),
+                            id: staticLayer.id
+                        });
+                        console.log("dynamic layer added. " + staticLayer.id);
+                        break;
+                        */
+
+                    default:
+                        console.log("unknown static layer type encountered: " + layerType);
+                        break;
+                }
+                return tempLayer;
+            },
+
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
             *
             * Initialize extent
-            * Add base map from the config.basemaps array that has the showOnInit()
-            * Add Static layer from config.featureLayers.staticLayers
-            * Add feature layers from config.featureLayers
-            * Create bounding layers and add to map control
-            * Add map tip events to each feature layer (click/hover/out)
+            * Generate and load initial base map
+            * Generate map layer objects
             * Show scalebar
             * Publish events to outside for other modules to use
             * Subscribe events to update map control
-            *
-            * Note: Not sure if we want to include all the config requirements here.
-            * Map control is initialized with div id provided. The following config file entries are used:
-            * config.extents.defaultExtent xmin, ymin, xmax, ymax
-            * config.levelOfDetails.minLevel
-            * config.levelOfDetails.maxLevel
-            * config.extents.maximumExtent
-            * config.extents.fullExtent
-            * config.basemaps  arrays of basemap, only one or first one with showOnInit set to true
-            * config.featureLayers
             *
             * @method init
             * @param {Object} mapDiv the HTML div that will store the map control
@@ -859,18 +977,9 @@ define([
             *
             */
             init: function () {
-                var
+                var that = this,
 
                 schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
-
-                /**
-                * The spatial reference of the map
-                *
-                * @property spatialReference
-                * @private
-                * @type {esri/SpatialReference}
-                */
-                spatialReference = new SpatialReference(schemaBasemap.spatialReference),
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -890,6 +999,21 @@ define([
                 */
                 baseLayer = new ArcGISTiledMapServiceLayer(url, {
                     id: "basemapLayer"
+                }),
+
+                loadListener = baseLayer.on('update-end', function () {
+                    //only load things once, pls!
+                    loadListener.remove();
+
+                    //basemap has loaded.  continue on with the map loading
+                    topic.publish(EventManager.Map.INITIAL_BASEMAP_LOADED);
+                });
+
+                baseLayer.on('error', function (evt) {
+                    //basemap has died.  long live the basemap.
+                    //TODO some proper error handling here.  error page?  message to user of catastrophic failure?
+                    console.log('initial basemap failed to load: ' + evt.error.message);
+                    window.location.href = "./error-en.html";
                 });
 
                 /**
@@ -899,7 +1023,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                initExtent = createExtent(RAMP.config.extents.defaultExtent);
+                initExtent = new EsriExtent(RAMP.config.extents.defaultExtent);
 
                 /**
                 * Used for full extent in nav widget
@@ -908,7 +1032,7 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                fullExtent = createExtent(RAMP.config.extents.fullExtent);
+                fullExtent = new EsriExtent(RAMP.config.extents.fullExtent);
 
                 /**
                 * The maximum extent of the map
@@ -917,37 +1041,11 @@ define([
                 * @private
                 * @type {esri/geometry/Extent}
                 */
-                maxExtent = createExtent(RAMP.config.extents.maximumExtent);
+                maxExtent = new EsriExtent(RAMP.config.extents.maximumExtent);
 
                 //generate WMS layers array
                 wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
-                    var wmsl = new WMSLayer(layer.url, {
-                        id: layer.id,
-                        format: layer.format,
-                        opacity: resolveLayerOpacity(layer.settings.opacity),
-                        visibleLayers: [layer.layerName]
-                        //resourceInfo: {
-                        //    extent: new EsriExtent(layer.extent),
-                        //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
-                        //}
-                    });
-                    wmsl.ramp = {
-                        type: GlobalStorage.layerType.WMS
-                    };
-
-                    // WMS binding for getFeatureInfo calls
-
-                    if (layer.featureInfo !== undefined) {
-                        console.log('registering ' + layer.displayName + ' for WMS getFeatureInfo');
-                        MapClickHandler.registerWMSClick({ wmsLayer: wmsl, layerConfig: layer });
-                    }
-
-                    //wmsl.setVisibleLayers(layer.layerName);
-                    wmsl.setVisibility(layer.settings.visible);
-
-                    console.log("wms registered: " + layer.id);
-                    console.log(wmsl);
-                    return wmsl;
+                    return that.makeWmsLayer(layer);
                 });
 
                 //generate feature layers array
@@ -955,86 +1053,13 @@ define([
                     var fl;
 
                     if (layerConfig.isStatic) {
-                        fl = generateStaticLayer(layerConfig);
+                        fl = that.makeStaticLayer(layerConfig);
                     } else {
-                        fl = new FeatureLayer(layerConfig.url, {
-                            id: layerConfig.id,
-                            mode: FeatureLayer.MODE_SNAPSHOT,
-                            outFields: [layerConfig.layerAttributes],
-                            visible: layerConfig.settings.visible,
-                            opacity: resolveLayerOpacity(layerConfig.settings.opacity)
-                        });
-                        fl.ramp = { type: GlobalStorage.layerType.Feature };
-                        if (layerConfig.settings.boundingBoxVisible === true) {
-                            dojoOn.once(fl, "update-end", function () {
-                                setBoundingBoxVisibility(layerConfig.id, true);
-                            });
-                        }
+                        fl = that.makeFeatureLayer(layerConfig);
                     }
 
-                    if (layerConfig.settings.visible === false) {
-                        dojoOn.once(fl, "update-end", function () {
-                            fl.setVisibility(false);
-                        });
-                    }
                     return fl;
                 });
-
-                /**
-                * A list GraphicsLayer that represent the extent bounding box of the feature layers.
-                * {[esr/layer/featurelayers]} featureLayers A list of feature layers found in the application config
-                * {[esri/layer/graphiclayer]}  An array of graphic layers to add to the map
-                *
-                * @property boundingBoxLayers
-                * @type {array of esri/layer/GraphicsLayer}
-                */
-
-                // geometry service to reproject any extent that does not have
-                // same spatialReference as the map
-                var gsvc = new GeometryService(RAMP.config.geometryServiceUrl),
-
-                boundingBoxLayers = dojoArray.map(RAMP.config.layers.feature, function (layer) {
-                    // Map a list of featurelayers into a list of GraphicsLayer representing
-                    // the extent bounding box of the feature layer. Note each bounding box layer
-                    // at this point are empty, the actual graphic that represent the bounding box
-                    // will be generated the first time the user toggles it on.
-                    var boundingBox = new GraphicsLayer({
-                        id: String.format("boundingBoxLayer_{0}", layer.id),
-                        visible: layer.settings.boundingBoxVisible
-                    });
-                    boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                    var boundingBoxExtent;
-                    if (typeof layer.layerExtent !== "undefined") {
-                        boundingBoxExtent = createExtent(layer.layerExtent);
-
-                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, spatialReference)) {
-                            //layer is in same projection as basemap.  can directly use the extent
-                            var extentGraphic = createGraphic(boundingBoxExtent);
-                            boundingBox.add(extentGraphic);
-                        } else {
-                            //layer is in different projection.  reproject to basemap
-
-                            var params = new ProjectParameters();
-                            params.geometries = [boundingBoxExtent];
-                            params.outSR = spatialReference;
-
-                            gsvc.project(params, function (projectedExtents) {
-                                console.log("re-project");
-                                var extentGraphic = createGraphic(projectedExtents[0]);
-                                boundingBox.add(extentGraphic);
-                            });
-                        }
-                    }
-
-                    return boundingBox;
-                });
-
-                // Maps layerId to a GraphicsLayer Object that represents the extent bounding box
-                // for that layer
-                boundingBoxMapping = UtilDict.zip(dojoArray.map(RAMP.config.layers.feature, function (layer) {
-                    return layer.id;
-                }), boundingBoxLayers);
 
                 //the map!
                 map = new EsriMap(RAMP.config.divNames.map, {
@@ -1049,6 +1074,13 @@ define([
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
+                //NOTE: this type of thing is not currenlty supported by the config schema.  Need to revisit and determine if we want to keep this code or not.
+                // this only deals with static layers that are bound to a feature layer.  stand alone static layers are handled like normal feature layers
+
+                //if this does get implemented, this code should be moved to the layerLoader.js onLayerLoaded function.  After a feature layer successfully loads,
+                //we should then load any of it's static layers.  Extra tricky because these static layers do not appear in the layer selector (their state is bound
+                //to the feature layer.
+                //may want to consider another layerType .BoundStatic
 
                 var staticLayers = [],
                     perLayerStaticMaps = [],
@@ -1057,7 +1089,7 @@ define([
                 dojoArray.forEach(RAMP.config.layers.feature, function (layer) {
                     perLayerStaticMaps = [];
                     dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
-                        var tempLayer = map.generateStaticLayer(staticLayer);
+                        var tempLayer = that.makeStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
                         //creates an array of all static layers defined for the current, single feature layer
@@ -1068,6 +1100,7 @@ define([
                 });
 
                 RAMP.staticLayerMap = staticLayerMap;
+
                 /*  End - Add static layers   */
 
                 //This was intended to be used to distinguish layers from each other when crawling; Looks like we are not using it. Commenting out for now. SZ
@@ -1075,10 +1108,12 @@ define([
                     type: GlobalStorage.layerType.Basemap
                 };
 
-                // Combine all layer arrays then add them all at once (for efficiency)
-                console.log('adding wmses');
-                console.log(wmsLayers);
-                map.addLayers([baseLayer].concat(wmsLayers, staticLayers, boundingBoxLayers, featureLayers));
+                //save layer objects to load after basemap.
+                //static layers is currently empty always
+                RAMP.startupLayers = wmsLayers.concat(staticLayers, featureLayers);
+
+                //add the basemap
+                map.addLayer(baseLayer);
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
@@ -1093,7 +1128,7 @@ define([
 
                 _initRepublishers(map);
                 _initListeners(map);
-                _initEventHandlers(map, featureLayers);
+                _initEventHandlers(map);
             }
         };
     });

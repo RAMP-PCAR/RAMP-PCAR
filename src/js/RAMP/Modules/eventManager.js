@@ -386,18 +386,85 @@ define([],
                 REPOSITION_INTERACTIVE: "maptips/repositionInteractive"
             },
 
+            LayerLoader: {
+                /**
+                * Indicates that a map layer has loaded.  This means the constructor initialized and shook hands with it's data source
+                *
+                * @event LayerLoader.LAYER_LOADED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has loaded
+                *
+                */
+                LAYER_LOADED: "layerLoader/layer-loaded",
+
+                /**
+                * Indicates that a map layer has updated.  This means the data it is showing is visible and up-to-date
+                *
+                * @event LayerLoader.LAYER_UPDATED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has updated
+                *
+                */
+                LAYER_UPDATED: "layerLoader/layer-updated",
+
+                /**
+                * Indicates that a map layer has started updating.  This means it is getting data from its source
+                *
+                * @event LayerLoader.LAYER_UPDATING
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that is updating
+                *
+                */
+                LAYER_UPDATING: "layerLoader/layer-updating",
+
+                /**
+                * Indicates that a map layer should be removed from the map
+                *
+                * @event LayerLoader.REMOVE_LAYER
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layerId {String} ESRI layer id to be removed
+                *
+                */
+                REMOVE_LAYER: "layerLoader/remove-layer",
+
+                /**
+                * Indicates that a map layer has errored
+                *
+                * @event LayerLoader.LAYER_ERROR
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} ESRI layer object that has errored
+                * @param event.error {Object} the error object
+                *
+                */
+                LAYER_ERROR: "layerLoader/layer-error"
+            },
+
             Map: {
                 // NOTE: Map events fall into two categories.  There are native RAMP events and others which republish events from the ESRI API.
                 // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events should be prefixed with map/
 
                 /**
-                 * Indicates that all the map layers are loaded.
-                 *
-                 * @event RampMap.ALL_LAYERS_LOADED
-                 * @for RampMap
-                 *
-                 */
+                * Indicates that all the map layers are loaded.
+                *
+                * @event RampMap.ALL_LAYERS_LOADED
+                * @for RampMap
+                *
+                */
                 ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
+
+                /**
+                * Indicates that the initial basemap has loaded.
+                *
+                * @event RampMap.INITIAL_BASEMAP_LOADED
+                * @for RampMap
+                *
+                */
+                INITIAL_BASEMAP_LOADED: "rampMap/initial-basemap-loaded",
 
                 /**
                 * Centers the map at the given point.
@@ -470,7 +537,7 @@ define([],
                 REORDER_END: "map/reorder-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `update-end`.
+                * Republishes a standard ESRI map component event `update-end`.
                 *
                 * @event RampMap.UPDATE_END
                 * @for RampMap
@@ -478,7 +545,7 @@ define([],
                 UPDATE_END: "map/update-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `extent-change`.
+                * Republishes a standard ESRI map component event `extent-change`.
                 *
                 * @event RampMap.EXTENT_CHANGE
                 * @for RampMap
@@ -486,7 +553,7 @@ define([],
                 EXTENT_CHANGE: "map/extent-change",
 
                 /**
-                * Republishes a standard ESRI map compnent event `zoom-start`.
+                * Republishes a standard ESRI map component event `zoom-start`.
                 *
                 * @event RampMap.ZOOM_START
                 * @for RampMap
@@ -494,7 +561,7 @@ define([],
                 ZOOM_START: "map/zoom-start",
 
                 /**
-                * Republishes a standard ESRI map compnent event `zoom-end`.
+                * Republishes a standard ESRI map component event `zoom-end`.
                 *
                 * @event RampMap.ZOOM_END
                 * @for RampMap
@@ -502,7 +569,7 @@ define([],
                 ZOOM_END: "map/zoom-end",
 
                 /**
-                * Republishes a standard ESRI map compnent event `pan-start`.
+                * Republishes a standard ESRI map component event `pan-start`.
                 *
                 * @event RampMap.PAN_START
                 * @for RampMap
@@ -510,7 +577,7 @@ define([],
                 PAN_START: "map/pan-start",
 
                 /**
-                * Republishes a standard ESRI map compnent event `pan-end`.
+                * Republishes a standard ESRI map component event `pan-end`.
                 *
                 * @event RampMap.PAN_END
                 * @for RampMap

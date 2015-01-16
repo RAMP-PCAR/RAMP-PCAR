@@ -172,6 +172,7 @@ define(["utils/util"],
                             .each(function (i, obj) {
                                 var node = $(obj);
                                 node
+                                    .attr("data-tooltip", node.attr("title"))
                                     .tooltipster("content", node.attr("title"))
                                     .removeAttr("title");
                             });
@@ -188,11 +189,25 @@ define(["utils/util"],
                         break;
 
                     default:
-                        target.find('.tooltip, ._tooltip')
-                            .tooltipster({
-                                theme: 'tooltipster-shadow',
-                                delay: 500
-                            });
+                        target
+                            .find('.tooltip, ._tooltip')
+                            // preserve title value for future use 
+                            .each(function (i, obj) {
+                                var node = $(obj),
+                                    title = node.attr("title");
+
+                                if (title) {
+                                    node.attr("data-tooltip", node.attr("title"));
+                                } else {
+                                    node.attr("title", node.data("tooltip"));
+                                }
+                                
+                                node.tooltipster({
+                                    theme: node.data("tooltip-theme") || attr.theme,
+                                    delay: attr.delay
+                                });
+                            })
+                            .removeAttr("title");
                         break;
                 }
 

@@ -23,9 +23,11 @@
 * @uses dojo/_base/lang
 * @uses dojo/topic
 * @uses dojo/Deferred
+* @uses esri/geometry/Extent
+* @uses esri/graphic
 */
-define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"],
-    function (dojoArray, dojoLang, topic, Deferred, Extent) {
+define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent", "esri/graphic"],
+    function (dojoArray, dojoLang, topic, Deferred, Extent, Graphic) {
         "use strict";
 
         return {
@@ -589,6 +591,31 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                               point.y + toleraceInMapCoords,
                               map.spatialReference);
             },
+
+            /**
+            * Create boudingbox graphic for a bounding box extent
+            *
+            * @method createGraphic
+            * @param  {esri/geometry/Extent} extent of a bounding box
+            * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
+            */
+            createGraphic: function (extent) {
+                return new Graphic({
+                    geometry: extent,
+                    symbol: {
+                        color: [255, 0, 0, 64],
+                        outline: {
+                            color: [240, 128, 128, 255],
+                            width: 1,
+                            type: "esriSLS",
+                            style: "esriSLSSolid"
+                        },
+                        type: "esriSFS",
+                        style: "esriSFSSolid"
+                    }
+                });
+            },
+
             /**
             * Checks if the string ends with the supplied suffix.
             *
@@ -888,7 +915,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @method keyboardSortable
             * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
             * @param {Object} [settings] Additional settings
-            * @param {Object} [settings.linkLists] Indicates if the supplied lists (if more than one) should be linked - items could be moved from one to another
+            * @param {Object} [settings.linkLists] Indicates if the supplied lists (if more than one) should be linked - items could be moved from one to another; Update: this is wrong - items can't be moved from list to list right now, but the keyboard focus can be moved between lists - need to fix.
             * @param {Object} [settings.onStart] A callback function to be called when the user initiates sorting process
             * @param {Object} [settings.onUpdate] A callback function to be called when the user moves the item around
             * @param {Object} [settings.onStop] A callback function to be called when the user commits the item to its new place ending the sorting process
@@ -906,7 +933,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 ulNodes.each(function (index, _ulNode) {
                     var ulNode = $(_ulNode),
                         liNodes = ulNode.find("> li"),
-                        sortHandleNodes = liNodes.find(".sort-handle"),
+                        //sortHandleNodes = liNodes.find(".sort-handle"),
                         isReordering = false,
                         grabbed;
 
@@ -917,8 +944,13 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         liNode.attr("aria-grabbed", "true").removeAttr("aria-dropeffect");
                     }
 
-                    sortHandleNodes
-                        .focusout(function (event) {
+                    // try to remove event handlers to prevent double initialization
+                    ulNode
+                        .off("focusout", ".sort-handle")
+                        .off("keyup", ".sort-handle");
+
+                    ulNode
+                        .on("focusout", ".sort-handle", function (event) {
                             var node = $(this).closest("li");
 
                             // if the list is not being reordered right now, release list item
@@ -934,7 +966,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", function (event) {
+                        .on("keyup", ".sort-handle", function (event) { 
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -1080,6 +1112,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     //not enough info provided or mismatch between wkid and wkt.
                     return false;
                 }
+            },
+
+            containsInDom: function (el) {
+                return $.contains(document.documentElement, el);
             }			
         };
     });

@@ -38,6 +38,7 @@
 * @uses Util
 * @uses Prototype
 * @uses FunctionMangler
+* @uses LayerLoader
 */
 
 require([
@@ -51,9 +52,9 @@ require([
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme",
+    "ramp/theme", "ramp/layerLoader",
 
 /* Utils */
     "utils/util",
@@ -71,7 +72,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, globalStorage, gui, EventManager, AdvancedToolbar, theme,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
 
     /* Utils */
         UtilMisc
@@ -98,7 +99,7 @@ require([
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
 
-            topic.subscribe(EventManager.Map.ALL_LAYERS_LOADED, function () {
+            topic.subscribe(EventManager.Map.INITIAL_BASEMAP_LOADED, function () {
                 console.log("map - >> first update-end; init the rest");
 
                 // Only initialize the bookmark link after all the UI events of all other modules have
@@ -113,6 +114,8 @@ require([
                         EventManager.FilterManager.UI_COMPLETE
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
+
+                        //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
@@ -135,6 +138,11 @@ require([
 
                 Datagrid.init();
                 theme.tooltipster();
+
+                //start loading the layers
+                dojoArray.forEach(RAMP.startupLayers, function (layer) {
+                    LayerLoader.loadLayer(layer);
+                });
             });
 
             RampMap.init();
@@ -249,7 +257,7 @@ require([
 
             console.log("Bootstrapper: config loaded");
 
-            globalStorage.init(configObject);
+            GlobalStorage.init(configObject);
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
@@ -284,6 +292,7 @@ require([
                 // the available screen size may still be changing (e.g. due to fullscreen
                 // or subpanel closing)
                 topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    LayerLoader.init();
                     initializeMap();
                 });
 

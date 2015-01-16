@@ -644,6 +644,27 @@ define([
             }
         }
 
+        /**
+        * Figures out if a layer is valid to be in the bookmark
+        *
+        * @method isBookmarkLayer
+        * @param {String} layerId layers id to check
+        * @private
+        * @returns {Boolean} true if layer should be included in the bookmark
+        */
+        function isBookmarkLayer(layerId) {
+            var layer = RampMap.getMap().getLayer(layerId);
+
+            if (UtilMisc.isUndefined(layer)) {
+                return false;
+            } else if (layer.ramp.user) {
+                //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         return {
             /**
             * Instantiates a BookmarkLink. Subscribes to all the events that causes
@@ -731,8 +752,14 @@ define([
                 });
 
                 topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = event.id;
-                    layerVisibility[layerName] = event.state;
+                    var layerId = event.id;
+
+                    if (!isBookmarkLayer(layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
+                    layerVisibility[layerId] = event.state;
 
                     // Only keep attributes that are different from the default config
                     var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
@@ -756,8 +783,14 @@ define([
                 });
 
                 topic.subscribe(EventManager.FilterManager.BOX_VISIBILITY_TOGGLED, function (event) {
-                    var layerName = event.id;
-                    boundingBoxVisibility[layerName] = event.state;
+                    var layerId = event.id;
+
+                    if (!isBookmarkLayer(layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
+                    boundingBoxVisibility[layerId] = event.state;
 
                     // Only keep attributes that are different from the default config
                     var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
@@ -781,6 +814,11 @@ define([
                 });
 
                 topic.subscribe(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, function (event) {
+                    if (!isBookmarkLayer(event.layerId)) {
+                        //we do not store user-added layers in the bookmark link (as they will not be reloaded).
+                        return;
+                    }
+
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, event);
                     layerTransparency[event.layerId] = Math.round(event.value * 100) / 100;
 

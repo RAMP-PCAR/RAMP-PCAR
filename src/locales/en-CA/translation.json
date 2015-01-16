@@ -1,9 +1,9 @@
 {
     "config": {
         "tileSchema": {
-            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "Lambert 79",
-            "ESRI_World_AuxMerc_3857":  "Auxilliary Mercator"
+            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -32,32 +32,32 @@
                 "altText": "Topographic Map",
                 "description": "Earth 2 Map"
             },
-            "baseEsriWorld":  {
+            "baseEsriWorld": {
                 "name": "Satellite Imagery",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Imagery"
             },
-            "baseEsriPhysical":  {
+            "baseEsriPhysical": {
                 "name": "Physical Earth",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Physical_Map"
             },
-            "baseEsriRelief":  {
+            "baseEsriRelief": {
                 "name": "Shaded Relief",
                 "altText": "Satellite Map",
                 "description": "ESRI World_Shaded_Relief"
             },
-            "baseEsriStreet":  {
+            "baseEsriStreet": {
                 "name": "Streets",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Street_Map"
             },
-            "baseEsriTerrain":  {
+            "baseEsriTerrain": {
                 "name": "Terrain",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Terrain_Base"
             },
-            "baseEsriTopo":  {
+            "baseEsriTopo": {
                 "name": "Topographic",
                 "altText": "Topographic Map",
                 "description": "ESRI World_Topo_Map"
@@ -89,6 +89,9 @@
                 },
                 "layer_g5h6i": {
                     "displayName": "EC Projects"
+                },
+                "cesi_ozone": { 
+                    "displayName": "CESI Air Ozone"
                 }
             },
             "wms": {
@@ -230,6 +233,11 @@
         "zoomBack": "Zoom Back",
         "fullData": "Full Data",
 
+        "notices": {
+            "offScaleSummary": "Some data is not visible at this zoom level.",
+            "offScaleFullData": "Data is not visible at this zoom level."
+        },
+
         "ex": {
             "datasetSelectorButtonLoad": "Load",
             "datasetSelectorButtonLoading": "Loading ...",
@@ -264,7 +272,7 @@
             }
         }
     },
-    
+
     "filterManager": {
         "datasetsTabTitle": "Datasets",
 
@@ -282,6 +290,14 @@
         "hideBounds": "Hide Bounds of {0}",
         "hideAllBounds": "Hide All Bounds",
 
+        "notices": {
+            "offScale": "No data visible at this zoom level",
+            "error": "Error",
+            "update": "Updating"
+        },
+
+        "zoomToData": "Zoom to data",
+
         "metadata": "Metadata",
         "metadataNotFound": "No metadata was found for this layer.",
         "metadataNotPublished": "No metadata was published for this layer.",
@@ -295,7 +311,15 @@
 
         "layerHandle": "Layer Handle",
         "layerHandleLabel": "Layer handle for __layerName__",
-        "layerListLabel": "Sortable layer list"
+        "layerListLabel": "Sortable layer list",
+
+        "controlsMatrix": {
+            "metadata": "Metadata",
+            "settings": "Settings",
+            "error": "Remove",
+            "reload": "Reload",
+            "remove": "Remove"
+        }
     },
 
     "gui": {

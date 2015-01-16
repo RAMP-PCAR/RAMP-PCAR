@@ -253,10 +253,16 @@
             button {
                 color: #FFFFFF !important;
                 outline-color: #fff !important;
+                border-color: #fff !important;
+
+                &:after,
+                &:before {
+                    border-color: #FFF !important;
+                }
 
                 &:hover,
                 &:focus {
-                    outline: 1px dotted #fff !important;
+                    //outline: 1px dotted #fff !important;
                 }
             }
         }
@@ -357,6 +363,15 @@
 
 .checkbox-custom-inverted() {
     .checkbox-custom {
+        &.checkbox-button button {
+
+            color: @light-light-grey-color !important;
+
+            &:hover {
+                color: #FFF !important;
+            }
+        }
+
         .form-checkbox {
             background-position-x: -60px !important;
 

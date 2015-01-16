@@ -10,6 +10,23 @@
 
         #gridpane {
 
+            .datagrid-info-notice {
+                .info-notice;
+                position: absolute;
+                top: 0;
+                right: 0;
+                
+                &:after {
+                    border-bottom: none;
+                }
+            }
+
+            &.notice {
+                .datagrid-info-notice {
+                    display: block;
+                }
+            }
+
             #datagridGlobalToggles {
                 padding: 8px 0 7px 10px;
             }
@@ -109,6 +126,7 @@
 
                         .point-image-box {
                             .row-image-box;
+                            float: none;
 
                             .point-image {
                                 vertical-align: middle;

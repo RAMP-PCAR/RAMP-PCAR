@@ -1,0 +1,347 @@
+﻿{
+    "layer_group": "
+        <li class='layer-group'>
+            <ul class='layer-group-container' role='listbox'>                
+            </ul>
+        </li>
+        <li class='layer-group-separator' role='presentation'></li>
+    ",
+
+    // layer level, layer is passed in as o.data. Level 1
+    // Filter overall structure, contains 1 to many filter row for the available layers.
+    "feature_layer":"
+        <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+            <fieldset>
+                <legend>
+                    <div class='filter-row'>
+                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                        <div class='layer-details'>
+
+                            {% include('feature_' + o.symbology.type + '_layer_image', o); %}
+                            
+                            <div class='layer-notices'></div>
+
+                            <div class='layer-controls'>
+                                <div class='layer-name'>
+                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
+                                </div>
+
+                                <div class='layer-controls-group'>
+                                </div>                                
+
+                            </div>
+
+                        </div>
+
+                        <div class='layer-checkboxes'>                            
+                        </div>
+
+                        <div class='clearfix'></div>
+                    </div>
+                </legend>                                                                                       
+            </fieldset>
+
+            {% include('feature_' + o.symbology.type + '_renderer', o.symbology); %}
+
+            {% include('layer_settings', o); %}
+        </li>
+    ",
+
+    "feature_simple_layer_image": "
+        {% include('simple_layer_image', o); %}
+    ",
+
+    "feature_uniqueValue_layer_image": "
+        {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
+    ",
+
+    "feature_classBreaks_layer_image": "
+        {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
+    ",
+
+    "feature_simple_renderer": " ",
+
+    "feature_uniqueValue_renderer": "
+        <div class='renderer-list'>
+            <ul>
+                {% 
+                    o.valueMaps.forEach(function(vm) {
+                        include('feature_renderer', {
+                            imageUrl: vm.imageUrl,
+                            label: vm.label || vm.value
+                        });
+                    });
+                 %}
+            </ul>
+        </div>
+    ",
+
+    "feature_classBreaks_renderer": "
+        <div class='renderer-list'>
+            <ul>
+                {% 
+                    o.rangeMaps.forEach(function(rm) {
+                        include('feature_renderer', {
+                            imageUrl: rm.imageUrl,
+                            label: rm.label || rm.maxValue
+                        });
+                    });
+                 %}
+            </ul>
+        </div>
+    ",
+
+    "feature_renderer": "
+        <li>
+           <div class='layer-renderer'>
+              <div class='layer-renderer-image-box'>
+                <img alt='' src='{%=o.imageUrl%}' class='layer-renderer-image bg-white'>
+              </div>
+              <span title='{%=o.label%}'>{%=o.label%}</span>
+            </div>
+        </li>
+    ",
+
+    "wms_layer":"
+        <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
+            <fieldset>
+                <legend>
+                    <div class='filter-row'>
+                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                        <div class='layer-details'>
+
+                            {% include('wms_layer_image', o); %}
+
+                            <div class='layer-notices'></div>
+
+                            <div class='layer-controls'>
+                                <div class='layer-name'>
+                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
+                                </div>
+
+                                <div class='layer-controls-group'>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class='layer-checkboxes'>                            
+                        </div>
+
+                        <div class='clearfix'></div>
+                    </div>
+                </legend>                                                                                       
+            </fieldset>
+
+            {% include('wms_layer_renderer', o); %}
+
+            {% include('layer_settings', o); %}
+        </li>
+    ",
+
+    "wms_layer_image": "
+        {% if (o.legendMimeType) { %}
+
+            {% include('complex_layer_image', o.fn.getSymbolForLayer(o)); %}
+
+        {% } else { %}
+
+            {% include('simple_layer_image', o); %}
+
+        {% } %}
+    ",
+
+    "wms_layer_renderer": "
+        {% if (o.legendMimeType) { %}
+            
+            <div class='renderer-list'>
+                <div class='wms-legend-image-box'>
+                    <h4 class='mrgn-tp-0 h6'>{%= i18n.t('filterManager.legend') %}</h4>
+                    <div class='image-div'>
+                        <img class='wms-legend-image bg-white' src='{%= o.legend ? o.legend.imageUrl : o.imageUrl %}' role='presentation' alt=''>
+                    </div>
+                </div>       
+            </div>
+
+        {% } %}
+    ",
+
+    "simple_layer_image": "
+        <div class='layer-image-box'>
+            <img alt='' role='presentation' src='{%= o.fn.getSymbolForLayer(o)[0] %}' class='layer-image bg-white'>
+        </div>
+    ",
+
+    "complex_layer_image": "
+        <div class='layer-complex-image-box'>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[2] %}' class='layer-image bg-white'>
+            </div>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[1] %}' class='layer-image bg-white'>
+            </div>
+            <div class='layer-image-box'>                                  
+                <img alt='' role='presentation' src='{%= o[0] %}' class='layer-image bg-white'>
+            </div>
+            <button class='btn btn-xs button-none renderer-button'>
+                <i class='fa fa-square'></i>
+                <i class='fa fa-plus-square-o'></i>
+                <i class='fa fa-minus-square-o'></i>                                            
+                <span class='wb-invisible'></span>
+            </button>
+            
+        </div>
+    ",
+
+    "layer_controls": "
+        {% 
+            o.controls.forEach(function(c) {
+                include('layer_control_' + c, {
+                    id: o.id,
+                    nameKey: c    
+                });
+            });
+         %}
+    ",
+
+    "layer_control_metadata": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_settings": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_loading": "
+        <div class='sk-spinner sk-spinner-wave-10' role='progressbar' aria-describedby='{%= o.id %}'>
+          <div class='sk-rect1'></div>
+          <div class='sk-rect2'></div>
+          <div class='sk-rect3'></div>
+          <div class='sk-rect4'></div>
+          <div class='sk-rect5'></div>
+          <div class='sk-rect6'></div>
+          <div class='sk-rect7'></div>
+          <div class='sk-rect8'></div>
+          <div class='sk-rect9'></div>
+          <div class='sk-rect10'></div>
+        </div>
+    ",
+
+    "layer_control_reload": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_remove": "{% include('layer_control_generic', o); %}",
+
+    "layer_control_generic": "
+        <button class='btn btn-xs button-none xsmall {%= o.nameKey %}-button' 
+            data-layer-id='{%= o.id %}'>
+                {%= i18n.t('filterManager.controlsMatrix.' + o.nameKey) %}
+        </button>
+    ",
+
+    "layer_toggles": "
+        {% 
+            o.toggles.forEach(function(c) {
+                include('layer_toggle_' + c, {
+                    id: o.id,
+                    config: o.config,
+                    nameKey: c 
+                });
+            });
+         %}
+    ",
+
+    "layer_toggle_reload": " ",
+
+    "layer_toggle_hide": " ",
+
+    "layer_toggle_placeholder": "<div class='checkbox-custom placeholder' role='presentation'></div>",
+
+    "layer_toggle_zoom": "
+        <div class='checkbox-custom checkbox-button'>
+            <button class='btn btn-xs button-none larger _tooltip {%= o.nameKey %}' id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' 
+            data-layer-id='{%= o.id %}' title='{%= i18n.t('filterManager.zoomToData') %}'>
+                <i class='fa fa-search-plus'></i>
+                <span class='wb-invisible'>{%= i18n.t('filterManager.controlsMatrix.' + o.nameKey) %}</span>
+            </button>
+        </div>
+    ",
+
+    "layer_toggle_eye": "{% include('layer_toggle_generic', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                checked: o.config.settings.visible,
+                                nameKey: o.nameKey
+                            }); %}
+    ",
+
+    "layer_toggle_box": "{% include('layer_toggle_generic', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                checked: o.config.settings.boundingBoxVisible,
+                                nameKey: o.nameKey
+                            }); %}
+    ",
+
+    "layer_toggle_generic": "
+        <div class='checkbox-custom'>
+            <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_notice_scale": "
+        <div class='layer-notice scale _tooltip fa-stack' title='{%= i18n.t('filterManager.notices.offScale') %}' data-tooltip-theme='tooltipster-info'>
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-info-circle fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= i18n.t('filterManager.notices.offScale') %}</span>
+        </div>
+    ",
+
+    "layer_notice_error": "
+        <div class='layer-notice error _tooltip fa-stack' title='{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.error') %}' data-tooltip-theme='tooltipster-error'>
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-exclamation-circle fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.error') %}</span>
+        </div>
+    ",
+
+    "layer_notice_update": "
+        <div class='layer-notice update _tooltip fa-stack' title='{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.update') %}' >
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-refresh fa-spin fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.update') %}</span>
+        </div>
+    ",
+
+    // Level 2
+    // Filter row overall layout for a given layer
+    "layer_settings":"
+        {% if (o.settings.panelEnabled) { %}
+
+            <div class='filter-row-settings bg-medium'>            
+                <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
+
+                {% if (o.settings.opacity.enabled) { %}
+            
+                    <div class='transparency-setting'>
+                        <span class='pull-left'>{%= i18n.t('filterManager.settingsOpacity') %}</span>                
+                    
+                        <div class='nstSlider _slider' data-aria_enabled='true'
+                            data-range_min='0' data-range_max='1' 
+                            data-cur_min='{%= o.settings.opacity.default %}'
+
+                            data-layer-id='{%= o.id %}' >                                                      
+                    
+                            <div class='highlightPanel'></div>
+                            <div class='leftGrip'></div>              
+                        </div>
+                        <span class='leftLabel'></span>                
+                    </div>
+
+                {% } %}
+            </div>
+
+        {% } %}
+    "
+}

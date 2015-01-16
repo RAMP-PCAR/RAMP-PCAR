@@ -43,11 +43,34 @@
                                         {% include('datagrid_global_row_Template', o.buttons);%}
                                     </div>
                                     
+                                    <div class='datagrid-info-notice details'></div>
+
                                     {% include('datagrid_manager_table_Template', o); %}
 
                                     <div class='clearfix'>
                                     </div>",
     
+    "datagrid_info_notice": "
+
+        <button class='btn btn-xs button-none info-notice-button'>
+            <span>{%= i18n.t('datagrid.notices.offScaleSummary') %}</span> 
+            <span class='separator'><i class='fa fa-angle-down'></i></span>
+        </button>
+        <div class='notice-details small'>
+            {%
+                o.layers.forEach(function(layer) {
+                    %}      
+                        <p>{%= layer.displayName %}</p>
+                    {%
+                });
+            %}
+        </div>
+    ",
+
+    "datagrid_full_info_notice": "
+        <p>{%= i18n.t('datagrid.notices.offScaleFullData') %}</p>        
+    ",
+
     // The following three templates are used to generate the top section (global) for layer toggle.	
     // datagrid global template, used by datagrid.js to generate top section before layer toggles. E.g. All-data
     "datagrid_full_manager_Template":	"<div id='datagridGlobalToggles' class='global-toggles bg-very-light'>
@@ -67,7 +90,7 @@
                                         <div class='global-details'>
                                             <div class='global-controls'>
                                                 <div class='col-md-3'>
-                                                    {% if (o.datasets.length > 1) { %}
+                                                  
                                                             
                                                             <div class='input-group'>
                                                                 <label class='wb-inv' for='datasetSelector'>{%=o.txtDataset%}:</label>
@@ -83,13 +106,7 @@
                                                                     <button id='datasetSelectorSubmitButton' class='btn btn-info btn-sm' type='button'>Go!</button>
                                                                 </span>
                                                             </div>
-
-                                                        {% } else if (o.datasets.length === 0) { %}
-
-                                                        {% } else { %}      
-                                                            <label for='datasetSelector' class='wb-inv'>{%=o.txtDataset%}:</label>                                                      
-                                                            <input readonly='true' id='datasetSelector' class='form-control input-sm' data-role='none' value='{%=o.datasets[0].displayName%}'/>
-                                                        {% } %}
+                                                      
                                                 </div>
 
                                                 <div class='col-md-9 input-sm'>
