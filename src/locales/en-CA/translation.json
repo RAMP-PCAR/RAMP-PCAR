@@ -92,6 +92,12 @@
                 },
                 "cesi_ozone": { 
                     "displayName": "CESI Air Ozone"
+                },
+                "dog_guts": {
+                    "displayName": "Bird Habitats"
+                },
+                "layer_sea_parks": { 
+                    "displayName": "Sea Parks"
                 }
             },
             "wms": {

@@ -258,6 +258,139 @@
     ],
     "layers": {
         "feature": [
+            
+            {
+                "id": "layer_sea_parks",
+                "displayName": "@@config.layers.feature.layer_sea_parks.displayName",
+                "nameField": "NAME_EN",
+                "url": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0",
+                "catalogueUrl": "http://www.google.ca",
+                "minScale": 0,
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "detailsCol",
+                            "fieldName": "NAME_EN",
+                            "width": "60px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Details",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "NAME_EN",
+                            "width": "90px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Project Name",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "proVol",
+                            "fieldName": "PROV_EN",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Category",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "classCol",
+                            "fieldName": "CLASS",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Classs",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "typeCol",
+                            "fieldName": "TYPE",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Type",
+                            "columnTemplate": "title_span"
+                        },
+                        {
+                            "id": "shapeCol",
+                            "fieldName": "SHAPE",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Shape",
+                            "columnTemplate": "title_span"
+                        }
+
+                    ]
+                },
+                "symbology": {
+                    "defaultImageUrl": "",
+                    "minValue": 67051.7745534503,
+                    "field": "Shape_Area",
+                    "type": "classBreaks",
+                    "rangeMaps": [
+                        {
+                            "maxValue": 1432182875.06102,
+                            "label": "67051.774553 - 1432182875.061020",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs9QAAiCER8wAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+                        },
+                        {
+                            "maxValue": 4553728333.21153,
+                            "label": "1432182875.061020 - 4553728333.211530",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs/YoAR14wigAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+                        },
+                        {
+                            "maxValue": 12387916450.0657,
+                            "label": "4553728333.211540 - 12387916450.065700",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs9fUA4eoECwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+                        },
+                        {
+                            "maxValue": 21361450262.0896,
+                            "label": "12387916450.065700 - 21361450262.089600",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxslPcAmsnHngAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
+                        },
+                        {
+                            "maxValue": 58789645998.2141,
+                            "label": "21361450262.089600 - 58789645998.214100",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//APUAbGxsJX9ZrwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGEFEClGLGBUalQKf7IhAwAADbMCOcVvP1sAAAAASUVORK5CYII="
+                        }
+                    ]
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.9
+                    }
+                },
+                "layerExtent": {
+                    "xmin": -15561507.4653,
+                    "ymin": 5099812.9776,
+                    "xmax": 13733118.2248,
+                    "ymax": 10530239.1434,
+                    "spatialReference": {
+                        "wkid": 54004
+                    }
+                }
+            },
             {
                 "id": "layer_g5h6i",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
