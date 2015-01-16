@@ -1152,7 +1152,12 @@ define([
                             } else {
                                 var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = RAMP.map.getLayer(layerConfig.id);
-                                    return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
+                                    if (layer) {
+                                        return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
+                                    } else {
+                                        //layer failed to load.  it will not be visible
+                                        return false;
+                                    }
                                 });
                                 selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
                             }
