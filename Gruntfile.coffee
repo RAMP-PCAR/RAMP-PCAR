@@ -1179,7 +1179,11 @@ module.exports = (grunt) ->
                     'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    'dist'
+                    'checkDependencies'
+                    'test'
+                    'build'
+                    'minify'
+                    'i18n_csv:assemble'
                 ]
 
         compress:
