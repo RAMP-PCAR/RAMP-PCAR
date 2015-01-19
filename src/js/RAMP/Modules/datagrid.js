@@ -969,8 +969,6 @@ define([
                         templateKey = "datagrid_full_manager_Template";
 
                         // filter out static layers
-                        // TODO need to use the official source of layers here.   we want a list of layer config nodes for feature layers that are in a LOADED state only
-                        // for now, we will use the .loaded tag of the layer, if it even exists
                         var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
                             var layer = RAMP.map.getLayer(layerConfig.id);
                             if (layer) {

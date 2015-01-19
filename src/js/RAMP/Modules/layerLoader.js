@@ -108,11 +108,6 @@ define([
                 console.log('you failed to supply a ramp.type to the layer!');
             }
 
-            // possibly have an optional param for position to add
-            // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
-            // as for now, we will assume we always add to the end of the appropriate zone for the layer.  initial layers get added in proper order.
-            // user added layers get added to the top.  afterwards they can be re-arranged via the UI
-
             //derive section
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
@@ -244,9 +239,6 @@ define([
 
                         //add mapping to bounding box
                         RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
-
-                        //TODO is this required?  visible is being set in the constructor
-                        boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
 
                         //bounding boxes are on top of feature layers
                         insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
@@ -422,8 +414,6 @@ define([
             * @param  {Object} evt.layerId the layer id to be reloaded
             */
             onLayerReload: function (evt) {
-                //HELLO.  I AM UNTESTED
-
                 var map = RampMap.getMap(),
                     layer,
                     layerConfig,
