@@ -499,7 +499,8 @@ define([
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
                             //call reload thing here
-
+                            var id = $(this.target).data("layer-id");
+                            topic.publish(EventManager.LayerLoader.RELOAD_LAYER, { layerId: id });
                             d.resolve();
                         },
                         {
