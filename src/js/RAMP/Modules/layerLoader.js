@@ -100,6 +100,8 @@ define([
                     base: 1
                 };
 
+                RAMP.layerRegistry = {};
+
                 topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, this.onLayerLoaded);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, this.onLayerUpdateEnd);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
@@ -203,17 +205,48 @@ define([
             * @param  {Object} evt.layerId the layer id to be removed
             */
             onLayerRemove: function (evt) {
+                //HELLO.  I AM UNTESTED
+
                 var map = RampMap.getMap(),
-                    layer = map.getLayer(evt.layerId),
-                    bbLayer = map.getBoundingBoxMapping()[evt.layerId],
-                    configIdx;
+                    layer,// = map.getLayer(evt.layerId),
+                    bbLayer, // = map.getBoundingBoxMapping()[evt.layerId],
+                    configIdx,
+                    layerSection,
+                    configCollection,
+                    inMap;
+
+                bbLayer = RampMap.getBoundingBoxMapping()[evt.layerId];
+                layer = map._layers[evt.layerId];
+
+                if (layer) {
+                    inMap = true;
+                } else {
+                    //layer was kicked out of the map.  grab it from the registry
+                    inMap = false;
+                    layer = RAMP.layerRegistry[evt.layerId];
+                }
+
+                //derive section layer is in and the config collection it is in
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        layerSection = GlobalStorage.layerType.wms;
+                        configCollection = RAMP.config.layers.wms;
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        layerSection = GlobalStorage.layerType.feature;
+                        configCollection = RAMP.config.layers.feature;
+                        break;
+                }
 
                 //remove item from layer selector
-                //TODO need a remove funciton in the filter manager
-                //FilterManager.X(evt.layerId);
+                FilterManager.removeLayer(layerSection, evt.layerId);
 
                 //remove layer from map
-                map.removeLayer(layer);
+                if (inMap) {
+                    map.removeLayer(layer);
+                }
 
                 //if bounding box, remove it too
                 if (bbLayer) {
@@ -221,19 +254,61 @@ define([
                 }
 
                 //remove node from config
+                configIdx = configCollection.indexOf(layer.ramp.config);
+                configCollection.splice(configIdx, 1);
+
+                RAMP.layerRegistry[evt.layerId] = undefined;
+            },
+
+            /**
+            * Reacts to a request for a layer to be reloaded.  Usually the case when a layer errors and user wants to try again
+            *
+            * @method onLayerRemove
+            * @param  {Object} evt
+            * @param  {Object} evt.layerId the layer id to be reloaded
+            */
+            onLayerReload: function (evt) {
+                //HELLO.  I AM UNTESTED
+
+                var map = RampMap.getMap(),
+                    layer = map.getLayer(evt.layerId),
+                    layerConfig = layer.ramp.config,
+                    user = layer.ramp.user,
+                    newLayer,
+                    layerIndex;
+
+                //figure out index of layer
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
-                        configIdx = RAMP.config.layers.wms.indexOf(layer.ramp.config);
-                        RAMP.config.layers.wms.splice(configIdx, 1);
-
+                        layerIndex = map.layerIds.indexOf(layerConfig.id);
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
-                        configIdx = RAMP.config.layers.feature.indexOf(layer.ramp.config);
-                        RAMP.config.layers.feature.splice(configIdx, 1);
+                        layerIndex = map.graphicsLayerIds.indexOf(layerConfig.id);
                         break;
                 }
+
+                //remove layer from map
+                map.removeLayer(layer);
+
+                //generate new layer
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        newLayer = RampMap.makeWmsLayer(layerConfig, user);
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                        newLayer = RampMap.makeFeatureLayer(layerConfig, user);
+                        break;
+
+                    case GlobalStorage.layerType.Static:
+                        newLayer = RampMap.makeStaticLayer(layerConfig, user);
+                        break;
+                }
+
+                //load the layer at the previous index
+                this.loadLayer(newLayer, layerIndex);
             },
 
             /**
@@ -245,8 +320,9 @@ define([
             *
             * @method loadLayer
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
+            * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not set for new layers
             */
-            loadLayer: function (layer) {
+            loadLayer: function (layer, reloadIndex) {
                 var insertIdx,
                     layerSection,
                     map = RampMap.getMap(),
@@ -266,29 +342,38 @@ define([
                 switch (layer.ramp.type) {
                     case GlobalStorage.layerType.wms:
                         layerSection = GlobalStorage.layerType.wms;
-                        insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
-                        RAMP.layerCounts.wms += 1;
+                        if (UtilMisc.isUndefined(reloadIndex)) {
+                            insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
+                            RAMP.layerCounts.wms += 1;
 
-                        // generate wms legend image url and store in the layer config
-                        if (layerConfig.legendMimeType) {
-                            layer.ramp.config.legend = {
-                                type: "wms",
-                                imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
-                                    layerConfig.url,
-                                    layer.version,
-                                    layerConfig.legendMimeType,
-                                    layerConfig.layerName
-                                )
-                            };
+                            // generate wms legend image url and store in the layer config
+                            if (layerConfig.legendMimeType) {
+                                layer.ramp.config.legend = {
+                                    type: "wms",
+                                    imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
+                                        layerConfig.url,
+                                        layer.version,
+                                        layerConfig.legendMimeType,
+                                        layerConfig.layerName
+                                    )
+                                };
+                            }
+                        } else {
+                            insertIdx = reloadIndex;
                         }
+
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
                         layerSection = GlobalStorage.layerType.feature;
-                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
-                        insertIdx = RAMP.layerCounts.feature;
-                        RAMP.layerCounts.feature += 1;
+                        if (UtilMisc.isUndefined(reloadIndex)) {
+                            //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
+                            insertIdx = RAMP.layerCounts.feature;
+                            RAMP.layerCounts.feature += 1;
+                        } else {
+                            insertIdx = reloadIndex;
+                        }
                         break;
                 }
 
@@ -308,6 +393,10 @@ define([
                 //add entry to layer selector
                 FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
                 layer.ramp.load.inLS = true;
+
+                //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+                //store a pointer here so we can find it (and it's information)
+                RAMP.layerRegistry[layer.id] = layer;
 
                 //add layer to map, triggering the loading process.  should add at correct position
                 map.addLayer(layer, insertIdx);
@@ -343,48 +432,49 @@ define([
                         });
 
                         //generate bounding box
-
-                        var boundingBoxExtent,
-                            boundingBox = new GraphicsLayer({
-                                id: String.format("boundingBoxLayer_{0}", layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible
-                            });
-
-                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
-                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                //layer is in same projection as basemap.  can directly use the extent
-                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                            } else {
-                                //layer is in different projection.  reproject to basemap
-
-                                var params = new ProjectParameters(),
-                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                params.geometries = [boundingBoxExtent];
-                                params.outSR = map.spatialReference;
-
-                                gsvc.project(params, function (projectedExtents) {
-                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                        //if a reload, the bounding box still exists from the first load
+                        if (UtilMisc.isUndefined(reloadIndex)) {
+                            var boundingBoxExtent,
+                                boundingBox = new GraphicsLayer({
+                                    id: String.format("boundingBoxLayer_{0}", layer.id),
+                                    visible: layerConfig.settings.boundingBoxVisible
                                 });
+
+                            boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                            if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                                boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                                if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                    //layer is in same projection as basemap.  can directly use the extent
+                                    boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                                } else {
+                                    //layer is in different projection.  reproject to basemap
+
+                                    var params = new ProjectParameters(),
+                                        gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                    params.geometries = [boundingBoxExtent];
+                                    params.outSR = map.spatialReference;
+
+                                    gsvc.project(params, function (projectedExtents) {
+                                        boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                    });
+                                }
                             }
+
+                            //add mapping to bounding box
+                            RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+
+                            //TODO is this required?  visible is being set in the constructor
+                            boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
+
+                            //bounding boxes are on top of feature layers
+                            insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                            RAMP.layerCounts.bb += 1;
+
+                            map.addLayer(boundingBox, insertIdx);
                         }
-
-                        //add mapping to bounding box
-                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
-
-                        //TODO is this required?  visible is being set in the constructor
-                        boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
-
-                        //bounding boxes are on top of feature layers
-                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                        RAMP.layerCounts.bb += 1;
-
-                        map.addLayer(boundingBox, insertIdx);
-
                         break;
                 }
             } //end loadLayer

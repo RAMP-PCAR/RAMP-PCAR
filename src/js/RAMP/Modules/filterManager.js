@@ -495,6 +495,32 @@ define([
                         }
                     );
 
+                    // reload layer when reload button is clicked;
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            //call reload thing here
+
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".reload-button"
+                        }
+                    );
+
+                    // remove layer when remove button is clicked;
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            var id = $(this.target).data("layer-id");
+
+                            //call remove thing here
+                            topic.publish(EventManager.LayerLoader.REMOVE_LAYER, { layerId: id });
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".remove-button"
+                        }
+                    );
+
                     function metadataClickHandler(target) {
                         var button = $(target),
                             node = button.parents("legend");
@@ -657,7 +683,7 @@ define([
                             layerGroups[layerType] = layerGroup;
                             this.addLayerGroup(layerGroup.node);
                         });
-                        
+
                         layerToggles.init();
                         layerTooltips.init();
                         setButtonEvents();
@@ -892,6 +918,26 @@ define([
                 setLayerOffScaleStates();
 
                 ui.update();
+            },
+
+            /**
+            * Remove a layer from the layer selector.
+            * @param {String} layerType layer type - name of the layer group
+            * @param {String} layerId layer id of layer to remove
+            * @method removeLayer
+            */
+            removeLayer: function (layerType, layerId) {
+                var layerGroup = layerGroups[layerType];
+
+                if (!layerGroup) {
+                    //tried to remove a layer that doesn't exist
+                    console.log("tried to remove layer from nonexistant group: " + layerType);
+                } else {
+                    layerGroup.removeLayerItem(layerId);
+
+                    //TODO REQUIRED?
+                    ui.update();
+                }
             },
 
             /**
