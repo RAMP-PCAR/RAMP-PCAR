@@ -86,7 +86,8 @@
                 "urlshortener/jquery.urlshortener.js",
                 "blueimp-tmpl/js/tmpl.js",
                 "terraformer/terraformer.js",
-                "terraformer-arcgis-parser/terraformer-arcgis-parser.js"
+                "terraformer-arcgis-parser/terraformer-arcgis-parser.js",
+                "csv2geojson/csv2geojson.js"
             ],
 
             "cssLib": [
