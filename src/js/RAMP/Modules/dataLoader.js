@@ -104,8 +104,18 @@ define([
                 Util.readFileAsText(args.file).then(function (data) {
                     var jsonLayer = null;
                     try {
-                        jsonLayer = makeGeoJsonLayer(JSON.parse(data));
-                        def.resolve(jsonLayer);
+                        csv2geojson.csv2geojson(data, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
+                            if (err) {
+                                def.reject(err);
+                                console.log("conversion error");
+                                console.log(err);
+                                return;
+                            }
+                            console.log('csv parsed');
+                            console.log(data);
+                            jsonLayer = makeGeoJsonLayer(data);
+                            def.resolve(jsonLayer);
+                        });
                     } catch (e) {
                         def.reject(e);
                     }
