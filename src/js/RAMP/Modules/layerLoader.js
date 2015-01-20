@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP */
+﻿/* global define, console, RAMP, $ */
 
 /**
 *
@@ -16,6 +16,7 @@
 * @class LayerLoader
 * @static
 * @uses dojo/topic
+* @uses dojo/_base/array
 * @uses esri/geometry/Extent
 * @uses esri/layers/GraphicsLayer
 * @uses esri/tasks/GeometryService
@@ -33,7 +34,7 @@
 
 define([
 /* Dojo */
-"dojo/topic",
+"dojo/topic", "dojo/_base/array",
 
 /* ESRI */
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
@@ -47,7 +48,7 @@ define([
 
     function (
     /* Dojo */
-    topic,
+    topic, dojoArray,
 
     /* ESRI */
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
@@ -64,6 +65,7 @@ define([
         * Will set a layerId's layer selector state to a new state.
         *
         * @method onLayerError
+        * @private
         * @param  {String} layerId config id of the layer
         * @param  {String} newState the state to set the layer to in the layer selector
         * @param  {Boolean} abortIfError if true, don't update state if current state is an error state
@@ -81,6 +83,171 @@ define([
 
             //set layer selector to new state
             FilterManager.setLayerState(layerId, newState);
+        }
+
+        /**
+        * This function initiates the loading of an ESRI layer object to the map.
+        * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
+        * Note: a point of confusion.  The layer objects "load" event may have already finished by the time this function is called.
+        *       This means the object's constructor has initialized itself with the layers data source.
+        * This functions is not event triggered to guarantee the order in which things are added.
+        *
+        * @method _loadLayer
+        * @private
+        * @param  {Object} layer an instantiated, unloaded ESRI layer object
+        * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not set for new layers
+        */
+        function _loadLayer(layer, reloadIndex) {
+            var insertIdx,
+                   layerSection,
+                   map = RampMap.getMap(),
+                   layerConfig = layer.ramp.config,
+                   lsState;
+
+            if (!layer.ramp) {
+                console.log('you failed to supply a ramp.type to the layer!');
+            }
+
+            //derive section
+            switch (layer.ramp.type) {
+                case GlobalStorage.layerType.wms:
+                    layerSection = GlobalStorage.layerType.wms;
+                    if (UtilMisc.isUndefined(reloadIndex)) {
+                        insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
+                        RAMP.layerCounts.wms += 1;
+
+                        // generate wms legend image url and store in the layer config
+                        if (layerConfig.legendMimeType) {
+                            layer.ramp.config.legend = {
+                                type: "wms",
+                                imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
+                                    layerConfig.url,
+                                    layer.version,
+                                    layerConfig.legendMimeType,
+                                    layerConfig.layerName
+                                )
+                            };
+                        }
+                    } else {
+                        insertIdx = reloadIndex;
+                    }
+
+                    break;
+
+                case GlobalStorage.layerType.feature:
+                case GlobalStorage.layerType.Static:
+                    layerSection = GlobalStorage.layerType.feature;
+                    if (UtilMisc.isUndefined(reloadIndex)) {
+                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
+                        insertIdx = RAMP.layerCounts.feature;
+                        RAMP.layerCounts.feature += 1;
+                    } else {
+                        insertIdx = reloadIndex;
+                    }
+                    break;
+            }
+
+            //derive initial state
+            switch (layer.ramp.load.state) {
+                case "loaded":
+                    lsState = LayerItem.state.LOADED;
+                    break;
+                case "loading":
+                    lsState = LayerItem.state.LOADING;
+                    break;
+                case "error":
+                    lsState = LayerItem.state.ERROR;
+                    break;
+            }
+
+            //add entry to layer selector
+            if (UtilMisc.isUndefined(reloadIndex)) {
+                FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
+            } else {
+                updateLayerSelectorState(layerConfig.id, lsState);
+            }
+            layer.ramp.load.inLS = true;
+
+            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+            //store a pointer here so we can find it (and it's information)
+            RAMP.layerRegistry[layer.id] = layer;
+
+            //add layer to map, triggering the loading process.  should add at correct position
+            map.addLayer(layer, insertIdx);
+
+            //wire up event handlers to the layer
+            switch (layer.ramp.type) {
+                case GlobalStorage.layerType.wms:
+
+                    // WMS binding for getFeatureInfo calls
+                    if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
+                        MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                    }
+
+                    break;
+
+                case GlobalStorage.layerType.feature:
+
+                    //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
+
+                    //wire up click handler
+                    layer.on("click", function (evt) {
+                        evt.stopImmediatePropagation();
+                        FeatureClickHandler.onFeatureSelect(evt);
+                    });
+
+                    //wire up mouse over / mouse out handler
+                    layer.on("mouse-over", function (evt) {
+                        FeatureClickHandler.onFeatureMouseOver(evt);
+                    });
+
+                    layer.on("mouse-out", function (evt) {
+                        FeatureClickHandler.onFeatureMouseOut(evt);
+                    });
+
+                    //generate bounding box
+                    //if a reload, the bounding box still exists from the first load
+                    if (UtilMisc.isUndefined(reloadIndex)) {
+                        var boundingBoxExtent,
+                            boundingBox = new GraphicsLayer({
+                                id: String.format("boundingBoxLayer_{0}", layer.id),
+                                visible: layerConfig.settings.boundingBoxVisible
+                            });
+
+                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                //layer is in same projection as basemap.  can directly use the extent
+                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                            } else {
+                                //layer is in different projection.  reproject to basemap
+
+                                var params = new ProjectParameters(),
+                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                params.geometries = [boundingBoxExtent];
+                                params.outSR = map.spatialReference;
+
+                                gsvc.project(params, function (projectedExtents) {
+                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                });
+                            }
+                        }
+
+                        //add mapping to bounding box
+                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+
+                        //bounding boxes are on top of feature layers
+                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                        RAMP.layerCounts.bb += 1;
+
+                        map.addLayer(boundingBox, insertIdx);
+                    }
+                    break;
+            }
         }
 
         return {
@@ -107,6 +274,7 @@ define([
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
                 topic.subscribe(EventManager.LayerLoader.LAYER_ERROR, this.onLayerError);
                 topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, this.onLayerRemove);
+                topic.subscribe(EventManager.LayerLoader.RELOAD_LAYER, this.onLayerReload);
             },
 
             /**
@@ -121,33 +289,11 @@ define([
                 console.log("failed to load layer " + evt.layer.url);
                 console.log(evt.error.message);
 
-                //TODO consider if the layer has not been loaded yet
-                //TODO consider if the layer does not yet have an entry in the layer selector
-
-                //reduce count
-                /*
-                switch (evt.layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-                        //RAMP.layerCounts.wms -= 1;
-                        break;
-
-                    case GlobalStorage.layerType.feature:
-                    case GlobalStorage.layerType.Static:
-                        //RAMP.layerCounts.feature -= 1;
-                        break;
-                }
-                */
-
                 evt.layer.ramp.load.state = "error";
 
                 if (evt.layer.ramp.load.inLS) {
                     updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
                 }
-
-                //since we can re-arrange the draw order of layers (while in an error state), we want to keep the object around to
-                //      preserve indexing.  Instead, we likely want to remove the layer at the begging of the "reload" event
-                //remove layer object from Map's layer collection
-                //RampMap.getMap().removeLayer(evt.target);
             },
 
             /**
@@ -205,18 +351,16 @@ define([
             * @param  {Object} evt.layerId the layer id to be removed
             */
             onLayerRemove: function (evt) {
-                //HELLO.  I AM UNTESTED
-
                 var map = RampMap.getMap(),
-                    layer,// = map.getLayer(evt.layerId),
-                    bbLayer, // = map.getBoundingBoxMapping()[evt.layerId],
+                    layer,
+                    bbLayer,
                     configIdx,
                     layerSection,
                     configCollection,
                     inMap;
 
                 bbLayer = RampMap.getBoundingBoxMapping()[evt.layerId];
-                layer = map._layers[evt.layerId];
+                layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
                 if (layer) {
                     inMap = true;
@@ -231,12 +375,14 @@ define([
                     case GlobalStorage.layerType.wms:
                         layerSection = GlobalStorage.layerType.wms;
                         configCollection = RAMP.config.layers.wms;
+                        RAMP.layerCounts.wms -= 1;
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
                         layerSection = GlobalStorage.layerType.feature;
                         configCollection = RAMP.config.layers.feature;
+                        RAMP.layerCounts.feature -= 1;
                         break;
                 }
 
@@ -268,29 +414,51 @@ define([
             * @param  {Object} evt.layerId the layer id to be reloaded
             */
             onLayerReload: function (evt) {
-                //HELLO.  I AM UNTESTED
-
                 var map = RampMap.getMap(),
-                    layer = map.getLayer(evt.layerId),
-                    layerConfig = layer.ramp.config,
-                    user = layer.ramp.user,
+                    layer,
+                    layerConfig,
+                    user,
                     newLayer,
-                    layerIndex;
+                    layerIndex,
+                    inMap,
+                    layerList,
+                    idArray;
+
+                layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+
+                if (layer) {
+                    inMap = true;
+                } else {
+                    //layer was kicked out of the map.  grab it from the registry
+                    inMap = false;
+                    layer = RAMP.layerRegistry[evt.layerId];
+                }
+
+                layerConfig = layer.ramp.config;
+                user = layer.ramp.user;
 
                 //figure out index of layer
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-                        layerIndex = map.layerIds.indexOf(layerConfig.id);
-                        break;
+                //since the layer may not be in the map, we have to use some trickery to derive where it is sitting
 
-                    case GlobalStorage.layerType.feature:
-                    case GlobalStorage.layerType.Static:
-                        layerIndex = map.graphicsLayerIds.indexOf(layerConfig.id);
-                        break;
+                //get our list of layers
+                layerList = $("#" + RAMP.config.divNames.filter).find("#layerList").find("> li > ul");
+
+                //make an array of the ids in order of the list on the page
+                idArray = layerList
+                            .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
+                            .map(function (i, elm) { return elm.id; });
+                //find where our index is
+                layerIndex = dojoArray.indexOf(idArray, evt.layerId);
+
+                if (layer.ramp.type === GlobalStorage.layerType.wms) {
+                    //adjust for wms, as it's in a different layer list on the map
+                    layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
                 }
 
                 //remove layer from map
-                map.removeLayer(layer);
+                if (inMap) {
+                    map.removeLayer(layer);
+                }
 
                 //generate new layer
                 switch (layer.ramp.type) {
@@ -308,175 +476,18 @@ define([
                 }
 
                 //load the layer at the previous index
-                this.loadLayer(newLayer, layerIndex);
+                _loadLayer(newLayer, layerIndex);
             },
 
             /**
-            * This function initiates the loading of an ESRI layer object to the map.
-            * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
-            * Note: a point of confusion.  The layer objects "load" event may have already finished by the time this function is called.
-            *       This means the object's constructor has initialized itself with the layers data source.
-            * This functions is not event triggered to guarantee the order in which things are added.
+            * Public endpoint to initiate the loading of an ESRI layer object to the map.
             *
             * @method loadLayer
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
             * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not set for new layers
             */
             loadLayer: function (layer, reloadIndex) {
-                var insertIdx,
-                    layerSection,
-                    map = RampMap.getMap(),
-                    layerConfig = layer.ramp.config,
-                    lsState;
-
-                if (!layer.ramp) {
-                    console.log('you failed to supply a ramp.type to the layer!');
-                }
-
-                // possibly have an optional param for position to add
-                // position = typeof position !== 'undefined' ? position : 0; //where 0 is "last", may need to modifiy the default value
-                // as for now, we will assume we always add to the end of the appropriate zone for the layer.  initial layers get added in proper order.
-                // user added layers get added to the top.  afterwards they can be re-arranged via the UI
-
-                //derive section
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-                        layerSection = GlobalStorage.layerType.wms;
-                        if (UtilMisc.isUndefined(reloadIndex)) {
-                            insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
-                            RAMP.layerCounts.wms += 1;
-
-                            // generate wms legend image url and store in the layer config
-                            if (layerConfig.legendMimeType) {
-                                layer.ramp.config.legend = {
-                                    type: "wms",
-                                    imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
-                                        layerConfig.url,
-                                        layer.version,
-                                        layerConfig.legendMimeType,
-                                        layerConfig.layerName
-                                    )
-                                };
-                            }
-                        } else {
-                            insertIdx = reloadIndex;
-                        }
-
-                        break;
-
-                    case GlobalStorage.layerType.feature:
-                    case GlobalStorage.layerType.Static:
-                        layerSection = GlobalStorage.layerType.feature;
-                        if (UtilMisc.isUndefined(reloadIndex)) {
-                            //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
-                            insertIdx = RAMP.layerCounts.feature;
-                            RAMP.layerCounts.feature += 1;
-                        } else {
-                            insertIdx = reloadIndex;
-                        }
-                        break;
-                }
-
-                //derive initial state
-                switch (layer.ramp.load.state) {
-                    case "loaded":
-                        lsState = LayerItem.state.LOADED;
-                        break;
-                    case "loading":
-                        lsState = LayerItem.state.LOADING;
-                        break;
-                    case "error":
-                        lsState = LayerItem.state.ERROR;
-                        break;
-                }
-
-                //add entry to layer selector
-                FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
-                layer.ramp.load.inLS = true;
-
-                //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
-                //store a pointer here so we can find it (and it's information)
-                RAMP.layerRegistry[layer.id] = layer;
-
-                //add layer to map, triggering the loading process.  should add at correct position
-                map.addLayer(layer, insertIdx);
-
-                //wire up event handlers to the layer
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-
-                        // WMS binding for getFeatureInfo calls
-                        if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
-                            MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
-                        }
-
-                        break;
-
-                    case GlobalStorage.layerType.feature:
-
-                        //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
-
-                        //wire up click handler
-                        layer.on("click", function (evt) {
-                            evt.stopImmediatePropagation();
-                            FeatureClickHandler.onFeatureSelect(evt);
-                        });
-
-                        //wire up mouse over / mouse out handler
-                        layer.on("mouse-over", function (evt) {
-                            FeatureClickHandler.onFeatureMouseOver(evt);
-                        });
-
-                        layer.on("mouse-out", function (evt) {
-                            FeatureClickHandler.onFeatureMouseOut(evt);
-                        });
-
-                        //generate bounding box
-                        //if a reload, the bounding box still exists from the first load
-                        if (UtilMisc.isUndefined(reloadIndex)) {
-                            var boundingBoxExtent,
-                                boundingBox = new GraphicsLayer({
-                                    id: String.format("boundingBoxLayer_{0}", layer.id),
-                                    visible: layerConfig.settings.boundingBoxVisible
-                                });
-
-                            boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                            //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                            if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
-                                boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                                if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                    //layer is in same projection as basemap.  can directly use the extent
-                                    boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                                } else {
-                                    //layer is in different projection.  reproject to basemap
-
-                                    var params = new ProjectParameters(),
-                                        gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                    params.geometries = [boundingBoxExtent];
-                                    params.outSR = map.spatialReference;
-
-                                    gsvc.project(params, function (projectedExtents) {
-                                        boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
-                                    });
-                                }
-                            }
-
-                            //add mapping to bounding box
-                            RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
-
-                            //TODO is this required?  visible is being set in the constructor
-                            boundingBox.setVisibility(layerConfig.settings.boundingBoxVisible);
-
-                            //bounding boxes are on top of feature layers
-                            insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                            RAMP.layerCounts.bb += 1;
-
-                            map.addLayer(boundingBox, insertIdx);
-                        }
-                        break;
-                }
-            } //end loadLayer
+                _loadLayer(layer, reloadIndex);
+            }
         };
     });
