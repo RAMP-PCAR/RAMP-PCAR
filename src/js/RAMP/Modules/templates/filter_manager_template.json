@@ -323,6 +323,25 @@
                 <ul id='layerList' role='listbox' aria-label='{%= i18n.t('filterManager.layerListLabel') %}'>
                    
                 </ul>
+
+                <div id='add-dataset-section-container'>
+                    <div id='add-dataset-section'>
+                        <section>
+                            <h2 class='mrgn-tp-sm page-header h5'>
+                                Add Dataset
+                            </h2>
+
+                            <button class='button-none button-close _tooltip tooltipstered'>
+                                <span class='wb-invisible'>{%= i18n.t('gui.actions.close') %}</span>
+                            </button>
+
+                            <div class='add-dataset-content'> 
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
                 <div class='clearBoth'>
                 </div>
             </div>
