@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer */
+﻿/* global define, console, Terraformer, csv2geojson */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -114,13 +114,20 @@ define([
                 return def.promise;
 
             } else if (args.url) {
-                (new EsriRequest({ url: args.url })).then(function (result) {
+                (new EsriRequest({ url: args.url, handleAs: "text" })).then(function (result) {
                     var jsonLayer = null;
                     try {
-                        csv2geojson.csv2geojson(result, { latfield: 'Lat', lonfield: 'Log', delimiter: ',' }, function(err, data) {
+                        console.log('raw csv text');
+                        console.log(result);
+                        csv2geojson.csv2geojson(result, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
                             if (err) {
                                 def.reject(err);
+                                console.log("conversion error");
+                                console.log(err);
+                                return;
                             }
+                            console.log('csv parsed');
+                            console.log(data);
                             jsonLayer = makeGeoJsonLayer(data);
                             def.resolve(jsonLayer);
                         });
