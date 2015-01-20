@@ -93,6 +93,49 @@ define([
             return layer;
         }
 
+        function buildCsv(args) {
+            var def = new Deferred();
+
+            if (args.file) {
+                if (args.url) {
+                    throw new Error("Either url or file should be specified, not both");
+                }
+
+                Util.readFileAsText(args.file).then(function (data) {
+                    var jsonLayer = null;
+                    try {
+                        jsonLayer = makeGeoJsonLayer(JSON.parse(data));
+                        def.resolve(jsonLayer);
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                });
+
+                return def.promise;
+
+            } else if (args.url) {
+                (new EsriRequest({ url: args.url })).then(function (result) {
+                    var jsonLayer = null;
+                    try {
+                        csv2geojson.csv2geojson(result, { latfield: 'Lat', lonfield: 'Log', delimiter: ',' }, function(err, data) {
+                            if (err) {
+                                def.reject(err);
+                            }
+                            jsonLayer = makeGeoJsonLayer(data);
+                            def.resolve(jsonLayer);
+                        });
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                }, function (error) {
+                    def.reject(error);
+                });
+
+                return def.promise;
+            }
+
+        }
+
         function buildGeoJson(args) {
             var def = new Deferred();
 
@@ -132,6 +175,7 @@ define([
 
         return {
             makeGeoJsonLayer: makeGeoJsonLayer,
+            buildCsv: buildCsv,
             buildGeoJson: buildGeoJson
         };
     });
