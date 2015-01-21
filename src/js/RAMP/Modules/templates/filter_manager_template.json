@@ -327,7 +327,7 @@
                 <div id='add-dataset-section-container'>
                     <div id='add-dataset-section'>
                         <section>
-                            <h2 class='mrgn-tp-sm page-header h5'>
+                            <h2 class='mrgn-tp-sm mrgn-bttm-sm h5'>
                                 Add Dataset
                             </h2>
 
@@ -336,7 +336,58 @@
                             </button>
 
                             <div class='add-dataset-content'> 
+                                <div class='step step-1'>
+                                    <div class='step-content'>
+                                        <h3 class='h6'>Data Source</h3>
+                                        <div class='btn-group'>
+                                            <button class='btn btn-sm btn-default'>Service</button>
+                                            <button class='btn btn-sm btn-default'>File</button>
+                                        </div>
+                                    </div>
 
+                                    <div class='step-options'>
+
+                                        <div class='step step-2 service current-step'>
+                                            <div class='step-content'>
+                                                <h3 class='h6'>Layer Type</h3>
+                                                <div class='btn-group'>
+                                                    <button class='btn btn-sm btn-default'>Feature</button>
+                                                    <button class='btn btn-sm btn-default'>WMS</button>
+                                                </div>
+                                            </div>
+
+                                            <div class='step-options'>
+                                                <div class='step step-3 feature'>
+                                                    <div class='step-content'>
+                                                        <p>URL</p>
+                                                        <input></input>
+                                                    </div>
+
+                                                    <div class='step-options'>
+                                                        <div class='step step-4 default'>
+                                                            <div class='step-content'>
+                                                                <p>Primary Attribute</p>
+                                                                <input></input>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-2 file'>
+                                                <div class='step-content'>
+                                                    <p>File Type</p>
+                                                    <div class='btn-group'>
+                                                        <button class='btn btn-sm btn-default'>GeoJSON</button>
+                                                        <button class='btn btn-sm btn-default'>CSV</button>
+                                                        <button class='btn btn-sm btn-default'>Shapefile</button>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class='clearBoth'></div>
+                                    </div>                                    
+                                </div>
                             </div>
                         </section>
                     </div>
