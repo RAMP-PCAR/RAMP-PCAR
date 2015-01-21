@@ -51,18 +51,19 @@
                 .step-options-container {
                     position: relative;
                     display: none;
-
+                    border-top: 1px solid @very-light-grey-color;
+                    
                     &:before {
                         position: absolute;
                         content: "";
                         border-left: 7px solid @light-success-color;
                         height: 100%;
-                        z-index: 901;
+                        //z-index: 901;
                     }
 
                     &:after {
                         .ghost-number();
-                        z-index: 901;
+                        //z-index: 901;
                     }
                 }
 
@@ -130,6 +131,8 @@
 
             .step-1 {
 
+                border-bottom: 1px solid @very-light-grey-color;
+
                 & > .step-content {
                     z-index: 1000;
 
@@ -151,11 +154,11 @@
 
                 & > .step-options-container:after {
                     content: "2";
-                    //z-index: 901;
+                    z-index: 901;
                 }
 
                 & > .step-options-container:before {
-                    //z-index: 901;
+                    z-index: 901;
                 }
             }
 
@@ -167,11 +170,11 @@
 
                 > .step-options-container:after {
                     content: "3";
-                    //z-index: 801;
+                    z-index: 902;
                 }
 
                 & > .step-options-container:before {
-                    //z-index: 801;
+                    z-index: 902;
                 }
             }
 
