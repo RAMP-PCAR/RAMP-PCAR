@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer */
+﻿/* global define, console, Terraformer, csv2geojson */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -93,6 +93,66 @@ define([
             return layer;
         }
 
+        function buildCsv(args) {
+            var def = new Deferred();
+
+            if (args.file) {
+                if (args.url) {
+                    throw new Error("Either url or file should be specified, not both");
+                }
+
+                Util.readFileAsText(args.file).then(function (data) {
+                    var jsonLayer = null;
+                    try {
+                        csv2geojson.csv2geojson(data, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
+                            if (err) {
+                                def.reject(err);
+                                console.log("conversion error");
+                                console.log(err);
+                                return;
+                            }
+                            console.log('csv parsed');
+                            console.log(data);
+                            jsonLayer = makeGeoJsonLayer(data);
+                            def.resolve(jsonLayer);
+                        });
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                });
+
+                return def.promise;
+
+            } else if (args.url) {
+                (new EsriRequest({ url: args.url, handleAs: "text" })).then(function (result) {
+                    var jsonLayer = null;
+                    try {
+                        console.log('raw csv text');
+                        console.log(result);
+                        csv2geojson.csv2geojson(result, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
+                            if (err) {
+                                def.reject(err);
+                                console.log("conversion error");
+                                console.log(err);
+                                return;
+                            }
+                            console.log('csv parsed');
+                            console.log(data);
+                            jsonLayer = makeGeoJsonLayer(data);
+                            def.resolve(jsonLayer);
+                        });
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                }, function (error) {
+                    def.reject(error);
+                });
+
+                return def.promise;
+            }
+
+        }
+
         function buildGeoJson(args) {
             var def = new Deferred();
 
@@ -132,6 +192,7 @@ define([
 
         return {
             makeGeoJsonLayer: makeGeoJsonLayer,
+            buildCsv: buildCsv,
             buildGeoJson: buildGeoJson
         };
     });

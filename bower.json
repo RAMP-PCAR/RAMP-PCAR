@@ -42,7 +42,8 @@
         "jquery-hoverIntent": "~1.8.1",
         "i18next": "~1.7.4",
         "terraformer": "~1.0.4",
-        "terraformer-arcgis-parser": "~1.0.4"
+        "terraformer-arcgis-parser": "~1.0.4",
+        "csv2geojson": "https://github.com/mapbox/csv2geojson.git#v3.7.1"
     },
     "moduleType": [
         "globals"
