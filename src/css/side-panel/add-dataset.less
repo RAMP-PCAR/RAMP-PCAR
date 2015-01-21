@@ -1,5 +1,4 @@
 ﻿#add-dataset-section-container {
-
     bottom: 0;
     left: 0;
     right: 0;
@@ -13,10 +12,105 @@
     z-index: 10;
 
     #add-dataset-section {
-        padding: 12px 12px 12px 22px;
 
         section {
             position: relative;
+
+            h2 {
+                padding: 12px 12px 12px 29px;
+            }
+
+            .button-close {
+                margin: 12px 12px 0 0;
+            }
+
+            .add-dataset-content {
+                border-top: 1px solid @very-light-grey-color;
+            }
+
+            .step {
+                overflow: hidden;
+                width: 100%;
+
+                .step-content {
+                    padding: 8px 12px 12px 22px;
+                    position: relative;
+                    overflow: hidden;
+
+                    border-left: 7px solid @light-success-color;
+
+                    h3 {
+                        margin: 2px 0 10px 0;
+                    }
+                }
+
+                &.current-step {
+
+                    & > .step-content {
+                        border-left: 7px solid @info-color;
+                        //padding-left: 15px;
+
+                        &:after {
+                            opacity: 1;
+                            color: @info-color;
+                        }
+                    }
+                }
+
+                .step-options {
+                    position: relative;
+                    white-space: nowrap;
+
+                    & > .step {
+                        display: inline-block;
+                    }
+                }
+            }
+
+            @font-face {
+                font-family: 'pirulen';
+                src: url('../assets/pirulen rg.ttf') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'millennia';
+                src: url('../assets/MILLENNIA.TTF') format('truetype');
+            }
+
+            @font-face {
+                font-family: 'spire';
+                src: url('../assets/SPIRE0.ttf') format('truetype');
+            }
+
+            .step > .step-content:after {
+                //font-family: 'spire', Fallback, sans-serif;
+                position: absolute;
+                right: -18px;
+                top: -26px;
+                font-size: 75pt;
+                opacity: 0.5;
+                font-weight: bold;
+            }
+
+            .step-1 > .step-content:after {
+                content: "1";
+            }
+
+            .step-2 > .step-content:after {
+                content: "2";
+            }
+
+            .step-3 > .step-content:after {
+                content: "3";
+            }
+
+            .step-4 > .step-content:after {
+                content: "4";
+            }
+
+            .step-5 > .step-content:after {
+                content: "5";
+            }
         }
     }
 }
