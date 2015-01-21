@@ -71,6 +71,8 @@ define([
                         .removeClass("current-step");
 
                 this.target.addClass("current-step");
+
+                this.target.parents(".step:first").find(".button-pressed").removeClass("button-pressed");
                 
                 d.resolve();
             },

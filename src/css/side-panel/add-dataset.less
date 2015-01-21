@@ -13,6 +13,34 @@
 
     #add-dataset-section {
 
+        .btn-group {
+            .btn-option {
+
+                border-color: @light-grey-color;
+                background-color: @very-light-grey-color;
+                min-width: 95px;
+                border-radius: 0;
+                color: #000;
+
+                &.focused,
+                &:focus, &:hover {
+                    background-color: #D4D4D4 !important;
+                    color: inherit !important;
+                }
+
+                &.button-pressed {
+                    border-color: @medium-dark-grey-color !important;
+                    background-color: #545454 !important;
+                    color: #FFF !important;
+                    box-shadow: @button-active-shadow;
+
+                    .separator {
+                        border-color: #FFF;
+                    }
+                }
+            }
+        }
+
         section {
             position: relative;
 
@@ -52,18 +80,26 @@
                     position: relative;
                     display: none;
                     border-top: 1px solid @very-light-grey-color;
-                    
-                    &:before {
-                        position: absolute;
-                        content: "";
-                        border-left: 7px solid @light-success-color;
-                        height: 100%;
-                        //z-index: 901;
-                    }
 
-                    &:after {
-                        .ghost-number();
-                        //z-index: 901;
+                    .options-bg {
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+
+                        &:before {
+                            position: absolute;
+                            content: "";
+                            border-left: 7px solid @light-success-color;
+                            height: 100%;
+                            z-index: 1001;
+                        }
+
+                        &:after {
+                            .ghost-number();
+                            color: @light-light-grey-color;
+                            z-index: 1001;
+                        }
                     }
                 }
 
@@ -86,21 +122,21 @@
                     }
 
                     &:after {
-                        opacity: 1;
                         color: @info-color;
                     }
                 }
 
                 &.step-options-container {
-                    &:before {
-                        border-left-color: @info-color;
-                        //z-index: 2000;
-                    }
 
-                    &:after {
-                        //z-index: 2000;
-                        opacity: 1 !important;
-                        color: @info-color !important;
+                    .options-bg {
+
+                        &:before {
+                            border-left-color: @info-color;
+                        }
+
+                        &:after {
+                            color: @info-color !important;
+                        }
                     }
                 }
             }
@@ -125,12 +161,12 @@
                 right: -18px;
                 top: -26px;
                 font-size: 75pt;
-                opacity: 0.3;
+                //opacity: 0.3;
                 font-weight: bold;
+                background-color: #fff;
             }
 
             .step-1 {
-
                 border-bottom: 1px solid @very-light-grey-color;
 
                 & > .step-content {
@@ -138,6 +174,7 @@
 
                     &:after {
                         .ghost-number;
+                        color: @light-light-grey-color;
                         content: "1";
                     }
 
@@ -152,13 +189,8 @@
                     }
                 }
 
-                & > .step-options-container:after {
+                & > .step-options-container > .options-bg:after {
                     content: "2";
-                    z-index: 901;
-                }
-
-                & > .step-options-container:before {
-                    z-index: 901;
                 }
             }
 
@@ -168,13 +200,8 @@
                     z-index: 900;
                 }
 
-                > .step-options-container:after {
+                > .step-options-container > .options-bg:after {
                     content: "3";
-                    z-index: 902;
-                }
-
-                & > .step-options-container:before {
-                    z-index: 902;
                 }
             }
 
@@ -184,7 +211,7 @@
                     z-index: 800;
                 }
 
-                > .step-options-container:after {
+                > .step-options-container > .options-bg:after {
                     content: "4";
                 }
             }
@@ -195,7 +222,7 @@
                     z-index: 700;
                 }
 
-                > .step-options-container:after {
+                > .step-options-container > .options-bg:after {
                     content: "5";
                 }
             }
@@ -206,7 +233,7 @@
                     z-index: 600;
                 }
 
-                > .step-options-container:after {
+                > .step-options-container > .options-bg:after {
                     content: "6";
                 }
             }

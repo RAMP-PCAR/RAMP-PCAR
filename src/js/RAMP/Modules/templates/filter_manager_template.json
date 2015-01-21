@@ -346,8 +346,9 @@
                                     </div>
 
                                     <div class='step-options-container'>
-                                        <div class='step-options'>
+                                        <div class='options-bg' role='presentation'></div>
 
+                                        <div class='step-options'>
                                             <div class='step step-2 option-1 service'>
                                                 <div class='step-content'>
                                                     <h3 class='h6'>Layer Type</h3>
@@ -358,29 +359,35 @@
                                                 </div>
 
                                                 <div class='step-options-container'>
+                                                    <div class='options-bg' role='presentation'></div>
+
                                                     <div class='step-options'>
                                                         <div class='step step-3 option-1 feature'>
                                                             <div class='step-content'>
-                                                                <h3 class='h6'>Feature Layer URL</h3>
+                                                                <h3 class='h6'>Feature Layer URL</h3> 
 
                                                                 <div class='input-group'>
                                                                     <label class='wb-inv' for='featureURLinput'>Feature layer URL</label>
                                                                     <input name='select' class='form-control input-sm' id='featureURLinput' data-role='none'/>
                                                                     <span class='input-group-btn'>
-                                                                        <button id='featureURLinputSubmit' class='btn btn-info btn-sm' type='button'>Load</button>
+                                                                        <button id='featureURLinputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Load</button>
                                                                     </span>
                                                                 </div>
                                                             </div>
 
                                                             <div class='step-options-container'>
+                                                                <div class='options-bg' role='presentation'></div>
+
                                                                 <div class='step-options'>
-                                                                    <div class='step step-4 default'>
+                                                                    <div class='step step-4 option-1 default'>
                                                                         <div class='step-content'>
                                                                             <h3 class='h6'>Available Layers</h3>
                                                                             <input></input>
                                                                         </div>
 
                                                                         <div class='step-options-container'>
+                                                                            <div class='options-bg' role='presentation'></div>
+
                                                                             <div class='step-options'>
                                                                                 <div class='step step-5 default'>
                                                                                     <div class='step-content'>
@@ -426,9 +433,9 @@
                                                         <h3 class='h6'>File Type</h3>
                                                         <h3 class='h6'>File Type</h3>
                                                         <div class='btn-group'>
-                                                            <button class='btn btn-sm btn-default'>GeoJSON</button>
-                                                            <button class='btn btn-sm btn-default'>CSV</button>
-                                                            <button class='btn btn-sm btn-default'>Shapefile</button>
+                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-1'>GeoJSON</button>
+                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-2'>CSV</button>
+                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-3'>Shapefile</button>
                                                         </div>
                                                     </div>
                                             </div>
