@@ -336,57 +336,104 @@
                             </button>
 
                             <div class='add-dataset-content'> 
-                                <div class='step step-1'>
+                                <div class='step step-1 current-step'>
                                     <div class='step-content'>
                                         <h3 class='h6'>Data Source</h3>
                                         <div class='btn-group'>
-                                            <button class='btn btn-sm btn-default'>Service</button>
-                                            <button class='btn btn-sm btn-default'>File</button>
+                                            <button class='btn btn-sm btn-default btn-option' data-option='option-1'>Service</button>
+                                            <button class='btn btn-sm btn-default btn-option' data-option='option-2'>File</button>
                                         </div>
                                     </div>
 
-                                    <div class='step-options'>
+                                    <div class='step-options-container'>
+                                        <div class='step-options'>
 
-                                        <div class='step step-2 service current-step'>
-                                            <div class='step-content'>
-                                                <h3 class='h6'>Layer Type</h3>
-                                                <div class='btn-group'>
-                                                    <button class='btn btn-sm btn-default'>Feature</button>
-                                                    <button class='btn btn-sm btn-default'>WMS</button>
-                                                </div>
-                                            </div>
-
-                                            <div class='step-options'>
-                                                <div class='step step-3 feature'>
-                                                    <div class='step-content'>
-                                                        <p>URL</p>
-                                                        <input></input>
+                                            <div class='step step-2 option-1 service'>
+                                                <div class='step-content'>
+                                                    <h3 class='h6'>Layer Type</h3>
+                                                    <div class='btn-group'>
+                                                        <button class='btn btn-sm btn-default btn-option' data-option='option-1'>Feature</button>
+                                                        <button class='btn btn-sm btn-default btn-option' data-option='option-2'>WMS</button>
                                                     </div>
+                                                </div>
 
+                                                <div class='step-options-container'>
                                                     <div class='step-options'>
-                                                        <div class='step step-4 default'>
+                                                        <div class='step step-3 option-1 feature'>
                                                             <div class='step-content'>
-                                                                <p>Primary Attribute</p>
-                                                                <input></input>
+                                                                <h3 class='h6'>Feature Layer URL</h3>
+
+                                                                <div class='input-group'>
+                                                                    <label class='wb-inv' for='featureURLinput'>Feature layer URL</label>
+                                                                    <input name='select' class='form-control input-sm' id='featureURLinput' data-role='none'/>
+                                                                    <span class='input-group-btn'>
+                                                                        <button id='featureURLinputSubmit' class='btn btn-info btn-sm' type='button'>Load</button>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class='step-options-container'>
+                                                                <div class='step-options'>
+                                                                    <div class='step step-4 default'>
+                                                                        <div class='step-content'>
+                                                                            <h3 class='h6'>Available Layers</h3>
+                                                                            <input></input>
+                                                                        </div>
+
+                                                                        <div class='step-options-container'>
+                                                                            <div class='step-options'>
+                                                                                <div class='step step-5 default'>
+                                                                                    <div class='step-content'>
+                                                                                        <h3 class='h6'>Primary Attribute</h3>
+                                                                                        <input></input>
+
+                                                                                        <h3 class='h6'>Symbology</h3>
+
+                                                                                        <h3 class='h6 smaller'>Style</h3>
+                                                                                        <input></input>
+                                                                                        <h3 class='h6 smaller'>Colour</h3>
+                                                                                        <input></input>
+                                                                                    </div>
+
+                                                                                    
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>                                                            
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='step step-3 option-2 wms'>
+                                                            <div class='step-content'>
+                                                                <h3 class='h6'>WMS Layer URL</h3>
+
+                                                                <div class='input-group'>
+                                                                    <label class='wb-inv' for='wmsURLinput'>WMS Layer URL</label>
+                                                                    <input name='select' class='form-control input-sm' id='wmsURLinput' data-role='none'/>
+                                                                    <span class='input-group-btn'>
+                                                                        <button id='wmsURLinputSubmit' class='btn btn-info btn-sm' type='button'>Load</button>
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class='step step-2 file'>
-                                                <div class='step-content'>
-                                                    <p>File Type</p>
-                                                    <div class='btn-group'>
-                                                        <button class='btn btn-sm btn-default'>GeoJSON</button>
-                                                        <button class='btn btn-sm btn-default'>CSV</button>
-                                                        <button class='btn btn-sm btn-default'>Shapefile</button>
+                                            <div class='step step-2 option-2 file'>
+                                                    <div class='step-content'>
+                                                        <h3 class='h6'>File Type</h3>
+                                                        <h3 class='h6'>File Type</h3>
+                                                        <div class='btn-group'>
+                                                            <button class='btn btn-sm btn-default'>GeoJSON</button>
+                                                            <button class='btn btn-sm btn-default'>CSV</button>
+                                                            <button class='btn btn-sm btn-default'>Shapefile</button>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                        </div>
-                                        <div class='clearBoth'></div>
-                                    </div>                                    
+                                            </div>
+                                        </div>                 
+                                    </div>                   
                                 </div>
                             </div>
                         </section>
