@@ -43,7 +43,8 @@
         "i18next": "~1.7.4",
         "terraformer": "~1.0.4",
         "terraformer-arcgis-parser": "~1.0.4",
-        "csv2geojson": "https://github.com/mapbox/csv2geojson.git#v3.7.1"
+        "csv2geojson": "https://github.com/mapbox/csv2geojson.git#v3.7.1",
+        "shapefile-js": "https://github.com/calvinmetcalf/shapefile-js.git#3.1.5"
     },
     "moduleType": [
         "globals"

@@ -87,6 +87,7 @@
                 "blueimp-tmpl/js/tmpl.js",
                 "terraformer/terraformer.js",
                 "terraformer-arcgis-parser/terraformer-arcgis-parser.js",
+                "shapefile-js/dist/shp.js",
                 "csv2geojson/csv2geojson.js"
             ],
 

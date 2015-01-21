@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer, csv2geojson */
+﻿/* global define, console, Terraformer, shp, csv2geojson */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -153,12 +153,59 @@ define([
 
         }
 
+        function buildShapefile(args) {
+            var def = new Deferred();
+
+            if (args.file) {
+                if (args.url) {
+                    throw new Error("Either url or file must be specified");
+                }
+
+                Util.readFileAsArrayBuffer(args.file).then(function (data) {
+                    var jsonLayer = null;
+                    try {
+                        shp(data).then(function (geojson) {
+                            try {
+                                jsonLayer = makeGeoJsonLayer(geojson);
+                                def.resolve(jsonLayer);
+                            } catch (e) {
+                                def.reject(e);
+                            }
+                        }, function (failReason) {
+                            def.reject(failReason);
+                        });
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                });
+
+                return def.promise;
+
+            } else if (args.url) {
+                shp(args.url).then(function (geojson) {
+                    var jsonLayer = null;
+                    try {
+                        jsonLayer = makeGeoJsonLayer(geojson);
+                        def.resolve(jsonLayer);
+                    } catch (e) {
+                        def.reject(e);
+                    }
+                }, function (error) {
+                    def.reject(error);
+                });
+
+                return def.promise;
+            }
+
+            throw new Error("Either url or file must be specified");
+        }
+
         function buildGeoJson(args) {
             var def = new Deferred();
 
             if (args.file) {
                 if (args.url) {
-                    throw new Error("Either url or file should be specified, not both");
+                    throw new Error("Either url or file must be specified");
                 }
 
                 Util.readFileAsText(args.file).then(function (data) {
@@ -188,11 +235,14 @@ define([
 
                 return def.promise;
             }
+
+            throw new Error("Either url or file must be specified");
         }
 
         return {
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
+            buildShapefile: buildShapefile,
             buildGeoJson: buildGeoJson
         };
     });
