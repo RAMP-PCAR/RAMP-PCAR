@@ -12,4 +12,4 @@ script:
   - grunt
 
 after_success: 
-  - grunt thanks
+  - grunt gh-pages:travis
