@@ -1244,7 +1244,7 @@ module.exports = (grunt) ->
                         if process.env.TRAVIS_TAG
                             "Production files for the " + process.env.TRAVIS_TAG + " release"
                         else
-                            "Travis build " + process.env.TRAVIS_BUILD_NUMBER
+                            "Travis build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
                     ))
                     silent: true
                     tag: ((
