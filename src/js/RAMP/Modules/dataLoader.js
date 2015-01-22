@@ -8,10 +8,18 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer", "utils/util"
+        "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer",
+
+        "ramp/dataLoaderGui",
+
+        "utils/util"
     ],
     function (
-            Deferred, EsriRequest, FeatureLayer, Util
+            Deferred, EsriRequest, FeatureLayer,
+
+            DataLoadedGui,
+
+            Util
         ) {
         "use strict";
 
