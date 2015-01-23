@@ -346,7 +346,7 @@
                                     </div>
 
                                     <div class='step-options-container'>
-                                        <div class='options-bg' role='presentation'></div>
+                                        <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
 
                                         <div class='step-options'>
                                             <div class='step step-2 option-1 service'>
@@ -359,7 +359,7 @@
                                                 </div>
 
                                                 <div class='step-options-container'>
-                                                    <div class='options-bg' role='presentation'></div>
+                                                    <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
 
                                                     <div class='step-options'>
                                                         <div class='step step-3 option-1 feature'>
@@ -376,7 +376,7 @@
                                                             </div>
 
                                                             <div class='step-options-container'>
-                                                                <div class='options-bg' role='presentation'></div>
+                                                                <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
 
                                                                 <div class='step-options'>
                                                                     <div class='step step-4 option-1 default'>
@@ -386,7 +386,7 @@
                                                                         </div>
 
                                                                         <div class='step-options-container'>
-                                                                            <div class='options-bg' role='presentation'></div>
+                                                                            <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
 
                                                                             <div class='step-options'>
                                                                                 <div class='step step-5 default'>

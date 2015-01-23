@@ -71,23 +71,8 @@ define([
                     console.log(optionStepContent.position());
 
                     var //q = this.target.find(".step-options-container:first"),
-                        descendantOptionsContainers = optionsContainer.find(".step-options-container"),
-
-                        desContainers = this.target.find(".step-options-container");
-
-                    tl
-                        .to(options, transitionDuration, { left: -optionStepContent.position().left, ease: "easeOutCirc" }, transitionDuration * 6);
-
-                    //.to(this.target, transitionDuration, { height: optionStepContent.outerHeight() + 1, ease: "easeOutCirc" }, 0)
-                    //.set(q, { display: "none" }, transitionDuration - 0.0001);
-
-                    desContainers.each(function (i, ds) {
-                        ds = $(ds);
-
-                        //tl.to(ds, transitionDuration, { top: -ds.height(), ease: "easeOutCirc" }, transitionDuration * (desContainers.length - i));
-                    });
-
-                    tl.clear();
+                        descendantOptionsContainers = optionsContainer.find(".step-options-container:visible"),
+                        optionsLeftShift = optionStepContent.position().left;
 
                     descendantOptionsContainers.each(function (i, doc) {
                         var docActiveOption,
@@ -97,10 +82,22 @@ define([
                         docActiveOption = doc.find("> .step-options > .step.active-option");
                         docActiveOptionContent = docActiveOption.find("> .step-content");
 
-                        tl.to(doc, transitionDuration,
-                            { top: -docActiveOptionContent.outerHeight(), ease: "easeOutCirc" },
-                            transitionDuration * (descendantOptionsContainers.length - i));
+                        tl
+                            .to(doc, transitionDuration,
+                                { top: -docActiveOptionContent.outerHeight(), ease: "easeInCirc" },
+                                transitionDuration * 0.5 * (descendantOptionsContainers.length - i - 1))
+                            .set(doc, { display: "none" })
+                        ;
                     });
+
+                    if (optionsLeftShift !== options.position().left) {
+                        tl
+                            .addLabel("leftShiftStart")
+                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart")
+                            .to(options, transitionDuration,
+                                { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart")
+                        ;
+                    }
 
                     //tl.play();
                     //tl
