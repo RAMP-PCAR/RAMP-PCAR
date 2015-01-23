@@ -41,6 +41,7 @@ define([
 
                     descendantOptionsContainers,
                     descendantStagger,
+                    leftShiftStartAdjustment,
 
                     optionsLeftShift = optionStepContent.position().left,
 
@@ -58,12 +59,13 @@ define([
                         .set(option, { className: '+=active-option' }, 0)
 
                         .to(optionsContainer, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, 0)
-                        .fromTo(optionsContainer, transitionDuration, { top: -optionsContainer.height() }, { top: 0, ease: "easeOutCirc" }, 0)                    
+                        .fromTo(optionsContainer, transitionDuration, { top: -optionsContainer.height() }, { top: 0, ease: "easeOutCirc" }, 0)
                     ;
 
                 } else {
                     descendantOptionsContainers = optionsContainer.find(".step-options-container:visible");
                     descendantStagger = transitionDuration / 2 / descendantOptionsContainers.length;
+                    leftShiftStartAdjustment = descendantOptionsContainers.length > 0 ? "-=0.1" : "";
 
                     descendantOptionsContainers.each(function (i, doc) {
                         var docActiveOption,
@@ -84,9 +86,9 @@ define([
                     if (optionsLeftShift !== options.position().left) {
                         tl
                             .addLabel("leftShiftStart")
-                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart-=0.1")
+                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart" + leftShiftStartAdjustment)
                             .to(options, transitionDuration,
-                                { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart-=0.1")
+                                { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
                         ;
                     }
                 }
