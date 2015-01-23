@@ -1,6 +1,4 @@
-<a href="http://gruntjs.com" target="_blank"><img src="https://cdn.gruntjs.com/builtwith.png" alt="Built with Grunt"></a> 
-
-# Reusable, Accessible, Mapping Platform (RAMP)
+# Reusable, Accessible, Mapping Platform (RAMP) [![build status](https://api.travis-ci.com/RAMP-PCAR/RAMP-PCAR.svg?token=anSdnpWxEpyskkPtDLjm)](https://travis-ci.com) [![build status](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
 
 ## What is the RAMP?
 
