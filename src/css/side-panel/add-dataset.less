@@ -150,6 +150,20 @@
                 }
             }
 
+            .loading {
+
+                > .options-bg {
+                    z-index: 9999;
+
+                    .barFill;
+
+                    &:after {
+                        background-color: transparent !important;
+                    }
+                }
+
+            }
+
             @font-face {
                 font-family: 'pirulen';
                 src: url('../assets/pirulen rg.ttf') format('truetype');
@@ -304,4 +318,49 @@
             }
         }
     }
+}
+
+@keyframes progress {
+    to {
+        background-position: 120px 0;
+    }
+}
+
+.barFill {
+    width: 100%;
+    //border-radius: 20px;
+    animation: progress 3s linear infinite;
+    background-repeat: repeat;
+    background-size: 120px 120px;
+    /*background-image: linear-gradient(-45deg, 
+        rgba(255, 255, 255, 0.15) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.15) 50%, 
+        rgba(255, 255, 255, 0.15) 75%, 
+        transparent 75%, transparent);*/
+
+    .grad(@info-color, 0.15);
+}   
+
+
+
+.grad(@color: #F5F5F5, @opacity: 1) {
+    
+    @rgba-color: rgba(red(@color), green(@color), blue(@color), @opacity);
+
+    background-image: linear-gradient(-45deg, 
+        @rgba-color 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        @rgba-color 50%, 
+        @rgba-color 75%, 
+        transparent 75%, transparent);
+    
+    /*background: @color;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
+    background: -ms-linear-gradient(bottom, @start, @stop);
+    background: -moz-linear-gradient(center bottom, @start 0%, @stop 100%);
+    background: -o-linear-gradient(@stop, @start);
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));*/
 }
