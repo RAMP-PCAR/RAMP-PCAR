@@ -25,55 +25,108 @@ define([
 
         console.log(lang, layer_selector_template, TmplHelper, TmplUtil, UtilArray, UtilDict);
 
-        var tl = new TimelineLite({ paused: true });
+        var transitionDuration = 1;
 
         PopupManager.registerPopup($("#searchMapSectionBody"), "click",
             function (d) {
-                var options = this.target.find("> .step-options"),
-                    option = options.find(" > ." + this.handle.data("option") + "> .step-content");
+                var optionsContainer = this.target,
+                    optionsBackground = optionsContainer.find("> .options-bg"),
+                    options = optionsContainer.find("> .step-options"),
+                    option = options.find("> ." + this.handle.data("option")),
+                    optionStepContent = option.find("> .step-content"),
 
-                if (this.target.is(":hidden")) {
-                    this.target.show();
+                    currentOptionsContainer = $("#searchMapSectionBody").find(".current-step"),
 
-                    $("#searchMapSectionBody").find(".current-step")
-                        .height("auto")
-                        .removeClass("current-step");
+                    tl = new TimelineLite({ paused: true });
 
-                    TweenLite.to(options, 0, { left: -option.position().left, ease: "easeOutCirc" });
-                    TweenLite.to(this.target, 0, { height: option.outerHeight() + 1, ease: "easeOutCirc" });
-                    TweenLite.fromTo(this.target, 0.4, { top: -this.target.height() }, { top: 0, ease: "easeOutCirc" });
+                if (optionsContainer.is(":hidden")) {
 
-                    
-                    this.target.addClass("current-step");
-
-                } else {
-                    console.log(option.position());
-
-                    var q = this.target.find(".step-options-container:first");
+                    TweenLite.set(optionsContainer, { display: "block" });
 
                     tl
-                        .clear()
-                        .to(options, 0.4, { left: -option.position().left, ease: "easeOutCirc" }, 0)
-                        .to(this.target, 0.4, { height: option.outerHeight() + 1, ease: "easeOutCirc" }, 0)
-                        .set(q, { display: "none" }, 0.3999);
+                        .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, 0)
 
-                    tl.play();
+                        .set(options, { left: -optionStepContent.position().left, ease: "easeOutCirc" })
+
+                        .set(option, { className: '+=active-option' }, 0)
+
+                        .to(optionsContainer, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, 0)
+                        .fromTo(optionsContainer, transitionDuration, { top: -optionsContainer.height() }, { top: 0, ease: "easeOutCirc" }, 0)
+                    
+                    ;
+
+                    //  this.target.show();
+
+                    //$("#searchMapSectionBody").find(".current-step")
+                    //    .height("auto")
+                    //    .removeClass("current-step");
+
+                    //TweenLite.to(options, 0, { left: -optionStepContent.position().left, ease: "easeOutCirc" });
+                    //  TweenLite.to(this.target, 0, { height: optionStepContent.outerHeight() + 1, ease: "easeOutCirc" });
+                    //  TweenLite.fromTo(this.target, transitionDuration, { top: -this.target.height() }, { top: 0, ease: "easeOutCirc" });
+
+                    //this.target.addClass("current-step");
+
+                } else {
+                    console.log(optionStepContent.position());
+
+                    var //q = this.target.find(".step-options-container:first"),
+                        descendantOptionsContainers = optionsContainer.find(".step-options-container"),
+
+                        desContainers = this.target.find(".step-options-container");
+
+                    tl
+                        .to(options, transitionDuration, { left: -optionStepContent.position().left, ease: "easeOutCirc" }, transitionDuration * 6);
+
+                    //.to(this.target, transitionDuration, { height: optionStepContent.outerHeight() + 1, ease: "easeOutCirc" }, 0)
+                    //.set(q, { display: "none" }, transitionDuration - 0.0001);
+
+                    desContainers.each(function (i, ds) {
+                        ds = $(ds);
+
+                        //tl.to(ds, transitionDuration, { top: -ds.height(), ease: "easeOutCirc" }, transitionDuration * (desContainers.length - i));
+                    });
+
+                    tl.clear();
+
+                    descendantOptionsContainers.each(function (i, doc) {
+                        var docActiveOption,
+                            docActiveOptionContent;
+
+                        doc = $(doc);
+                        docActiveOption = doc.find("> .step-options > .step.active-option");
+                        docActiveOptionContent = docActiveOption.find("> .step-content");
+
+                        tl.to(doc, transitionDuration,
+                            { top: -docActiveOptionContent.outerHeight(), ease: "easeOutCirc" },
+                            transitionDuration * (descendantOptionsContainers.length - i));
+                    });
+
+                    //tl.play();
                     //tl
                     //    .to(this.target.find(".step-options-container"), 0.3, { display: "none", ease: "easeOutCirc" });
 
-                    //TweenLite.to(options, 0.4, { left: -option.position().left, ease: "easeOutCirc" });
-                    //TweenLite.to(this.target, 0.4, { height: option.outerHeight(), ease: "easeOutCirc" });
+                    //TweenLite.to(options, 0.4, { left: -optionStepContent.position().left, ease: "easeOutCirc" });
+                    //TweenLite.to(this.target, 0.4, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" });
 
                     //TweenLite
                 }
 
-                $("#searchMapSectionBody").find(".current-step")
-                        .removeClass("current-step");
+                tl
+                    .set(currentOptionsContainer, { height: "auto", className: "-=current-step" }, 0)
+                    .set(optionsContainer, { className: "+=current-step" }, 0)
 
-                this.target.addClass("current-step");
+                ;
+
+                tl.play();
+
+                //$("#searchMapSectionBody").find(".current-step")
+                //        .removeClass("current-step");
+
+                //this.target.addClass("current-step");
 
                 this.target.parents(".step:first").find(".button-pressed").removeClass("button-pressed");
-                
+
                 d.resolve();
             },
             {

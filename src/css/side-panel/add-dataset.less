@@ -67,6 +67,9 @@
                     overflow: hidden;
                     background-color: #fff;
                     //border-left: 7px solid @light-success-color;
+
+                    border-bottom: 1px solid @very-light-grey-color;
+
                     h3 {
                         margin: 2px 0 10px 0;
                     }
@@ -79,7 +82,9 @@
                 .step-options-container {
                     position: relative;
                     display: none;
-                    border-top: 1px solid @very-light-grey-color;
+                    //visibility: hidden;
+
+                    //border-top: 1px solid @very-light-grey-color;
 
                     .options-bg {
                         position: absolute;
@@ -92,13 +97,13 @@
                             content: "";
                             border-left: 7px solid @light-success-color;
                             height: 100%;
-                            z-index: 1001;
+                            //z-index: 1001;
                         }
 
                         &:after {
                             .ghost-number();
                             color: @light-light-grey-color;
-                            z-index: 1001;
+                            //z-index: 1001;
                         }
                     }
                 }
@@ -128,7 +133,7 @@
 
                 &.step-options-container {
 
-                    .options-bg {
+                    > .options-bg {
 
                         &:before {
                             border-left-color: @info-color;
@@ -167,10 +172,13 @@
             }
 
             .step-1 {
-                border-bottom: 1px solid @very-light-grey-color;
+                
 
                 & > .step-content {
                     z-index: 1000;
+
+                    border-top: 1px solid @very-light-grey-color;
+                    border-bottom: 1px solid @very-light-grey-color;
 
                     &:after {
                         .ghost-number;
@@ -189,6 +197,11 @@
                     }
                 }
 
+                & > .step-options-container > .options-bg:after, 
+                & > .step-options-container > .options-bg:before {
+                    z-index: 901;
+                }
+
                 & > .step-options-container > .options-bg:after {
                     content: "2";
                 }
@@ -200,6 +213,11 @@
                     z-index: 900;
                 }
 
+                & > .step-options-container > .options-bg:after, 
+                & > .step-options-container > .options-bg:before {
+                    z-index: 801;
+                }
+
                 > .step-options-container > .options-bg:after {
                     content: "3";
                 }
@@ -209,6 +227,11 @@
 
                 & > .step-content {
                     z-index: 800;
+                }
+
+                & > .step-options-container > .options-bg:after, 
+                & > .step-options-container > .options-bg:before {
+                    z-index: 701;
                 }
 
                 > .step-options-container > .options-bg:after {
