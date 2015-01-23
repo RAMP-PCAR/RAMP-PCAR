@@ -368,7 +368,7 @@
 
                                                                 <div class='input-group'>
                                                                     <label class='wb-inv' for='featureURLinput'>Feature layer URL</label>
-                                                                    <input name='select' class='form-control input-sm' id='featureURLinput' data-role='none'/>
+                                                                    <input name='input' class='form-control input-sm' id='featureURLinput' data-role='none'/>
                                                                     <span class='input-group-btn'>
                                                                         <button id='featureURLinputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Load</button>
                                                                     </span>
@@ -382,14 +382,24 @@
                                                                     <div class='step step-4 option-1 default'>
                                                                         <div class='step-content'>
                                                                             <h3 class='h6'>Available Layers</h3>
-                                                                            <input></input>
+                                                                            
+                                                                            <div class='input-group'>
+                                                                                <label class='wb-inv' for='availableLayersLinput'>Available Layers</label>
+                                                                                <select name='select' class='form-control input-sm' id='availableLayersLinput' data-role='none'>
+                                                                                    <option value='placeholder'>placeholder</option>
+                                                                                </select>
+
+                                                                                <span class='input-group-btn'>
+                                                                                    <button id='availableLayersLinputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Select</button>
+                                                                                </span>
+                                                                            </div>
                                                                         </div>
 
                                                                         <div class='step-options-container'>
                                                                             <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
 
                                                                             <div class='step-options'>
-                                                                                <div class='step step-5 default'>
+                                                                                <div class='step step-5 option-1 default'>
                                                                                     <div class='step-content'>
                                                                                         <h3 class='h6'>Primary Attribute</h3>
                                                                                         <input></input>
