@@ -67,7 +67,6 @@
                     background-color: #fff;
                     //border-left: 7px solid @light-success-color;
                     //border-bottom: 1px solid @very-light-grey-color;
-
                     h3 {
                         margin: 2px 0 10px 0;
                     }
@@ -82,14 +81,12 @@
                     display: none;
                     //visibility: hidden;
                     //border-top: 1px solid @very-light-grey-color;
-
                     .options-bg {
                         position: absolute;
                         width: 100%;
                         height: 100%;
                         overflow: hidden;
                         //border-bottom: 1px solid @very-light-grey-color;
-
                         &:before {
                             position: absolute;
                             content: "";
@@ -202,17 +199,19 @@
                     }
                 }
 
-                & > .step-options-container > .options-bg:after,
-                & > .step-options-container > .options-bg:before {
-                    z-index: 901;
-                }
+                & > .step-options-container > .options-bg {
+                    &:before {
+                        z-index: 901;
+                    }
 
-                & > .step-options-container > .options-bg:after {
-                    content: "2";
-                }
+                    &:after {
+                        z-index: 901;
+                        content: "2";
+                    }
 
-                > .step-options-container > .options-bg .bg-border {
-                    z-index: 902;
+                    .bg-border {
+                        z-index: 902;
+                    }
                 }
             }
 
@@ -222,17 +221,19 @@
                     z-index: 900;
                 }
 
-                & > .step-options-container > .options-bg:after,
-                & > .step-options-container > .options-bg:before {
-                    z-index: 801;
-                }
+                & > .step-options-container > .options-bg {
+                    &:before {
+                        z-index: 801;
+                    }
 
-                > .step-options-container > .options-bg:after {
-                    content: "3";
-                }
+                    &:after {
+                        z-index: 801;
+                        content: "3";
+                    }
 
-                > .step-options-container > .options-bg .bg-border {
-                    z-index: 802;
+                    .bg-border {
+                        z-index: 802;
+                    }
                 }
             }
 
@@ -242,16 +243,19 @@
                     z-index: 800;
                 }
 
-                & > .step-options-container > .options-bg:after,
-                & > .step-options-container > .options-bg:before {
-                    z-index: 701;
-                }
+                & > .step-options-container > .options-bg {
+                    &:before {
+                        z-index: 701;
+                    }
 
-                > .step-options-container > .options-bg:after {
-                    content: "4";
-                }
-                > .step-options-container > .options-bg .bg-border {
-                    z-index: 702;
+                    &:after {
+                        z-index: 701;
+                        content: "4";
+                    }
+
+                    .bg-border {
+                        z-index: 702;
+                    }
                 }
             }
 
@@ -261,8 +265,19 @@
                     z-index: 700;
                 }
 
-                > .step-options-container > .options-bg:after {
-                    content: "5";
+                & > .step-options-container > .options-bg {
+                    &:before {
+                        z-index: 601;
+                    }
+
+                    &:after {
+                        z-index: 601;
+                        content: "5";
+                    }
+
+                    .bg-border {
+                        z-index: 602;
+                    }
                 }
             }
 
@@ -272,8 +287,19 @@
                     z-index: 600;
                 }
 
-                > .step-options-container > .options-bg:after {
-                    content: "6";
+                & > .step-options-container > .options-bg {
+                    &:before {
+                        z-index: 501;
+                    }
+
+                    &:after {
+                        z-index: 501;
+                        content: "6";
+                    }
+
+                    .bg-border {
+                        z-index: 502;
+                    }
                 }
             }
         }
