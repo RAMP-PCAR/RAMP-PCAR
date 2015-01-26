@@ -641,7 +641,31 @@
                 "isStatic": true
             }
         ],
-        "wms": [ ]
+        "wms": [
+            {
+                "id": "nasa_modis",
+                "displayName": "@@config.layers.wms.nasa_modis.displayName",
+                "format": "image/jpeg",
+                "layerName": "36",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
+                "legendMimeType": "image/jpeg"
+            },
+            {
+                "id": "wms6",
+                "displayName": "@@config.layers.wms.wms6.displayName",
+                "format": "png",
+                "layerName": "railway.track",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://maps.geogratis.gc.ca/wms/railway_en",
+                "featureInfo": {
+                    "parser": "stringParse",
+                    "mimeType": "text/plain"
+                },
+                "legendMimeType": "image/jpeg"
+            }
+        ]
+
     },
     "rowsPerPage": 40,
     "extendedDatagridExtentFilterEnabled": false,

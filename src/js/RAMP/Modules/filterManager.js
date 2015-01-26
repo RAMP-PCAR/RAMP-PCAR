@@ -495,6 +495,33 @@ define([
                         }
                     );
 
+                    // reload layer when reload button is clicked;
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            //call reload thing here
+                            var id = $(this.target).data("layer-id");
+                            topic.publish(EventManager.LayerLoader.RELOAD_LAYER, { layerId: id });
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".reload-button"
+                        }
+                    );
+
+                    // remove layer when remove button is clicked;
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            var id = $(this.target).data("layer-id");
+
+                            //call remove thing here
+                            topic.publish(EventManager.LayerLoader.REMOVE_LAYER, { layerId: id });
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".remove-button"
+                        }
+                    );
+
                     function metadataClickHandler(target) {
                         var button = $(target),
                             node = button.parents("legend");
@@ -626,7 +653,8 @@ define([
 
                 return {
                     init: function () {
-                        var section;
+                        var section,
+                            layerGroup;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -647,6 +675,15 @@ define([
 
                         // remove the animating css class
                         //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
+
+                        GlobalStorage.layerSelectorGroups.forEach(function (layerType) {
+                            layerGroup = new LayerGroup([], {
+                                layerType: layerType
+                            });
+
+                            layerGroups[layerType] = layerGroup;
+                            this.addLayerGroup(layerGroup.node);
+                        });
 
                         layerToggles.init();
                         layerTooltips.init();
@@ -681,7 +718,7 @@ define([
                     * @private
                     */
                     addLayerGroup: function (layerGroupNode) {
-                        mainList.append(layerGroupNode);
+                        mainList.prepend(layerGroupNode);
                     }
                 };
             }());
@@ -882,6 +919,26 @@ define([
                 setLayerOffScaleStates();
 
                 ui.update();
+            },
+
+            /**
+            * Remove a layer from the layer selector.
+            * @param {String} layerType layer type - name of the layer group
+            * @param {String} layerId layer id of layer to remove
+            * @method removeLayer
+            */
+            removeLayer: function (layerType, layerId) {
+                var layerGroup = layerGroups[layerType];
+
+                if (!layerGroup) {
+                    //tried to remove a layer that doesn't exist
+                    console.log("tried to remove layer from nonexistant group: " + layerType);
+                } else {
+                    layerGroup.removeLayerItem(layerId);
+
+                    //TODO REQUIRED?
+                    ui.update();
+                }
             },
 
             /**

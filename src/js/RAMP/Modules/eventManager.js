@@ -432,6 +432,17 @@ define([],
                 REMOVE_LAYER: "layerLoader/remove-layer",
 
                 /**
+                * Indicates that a map layer should be removed from the map
+                *
+                * @event LayerLoader.RELOAD_LAYER
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layerId {String} ESRI layer id to be reloaded
+                *
+                */
+                RELOAD_LAYER: "layerLoader/reload-layer",
+
+                /**
                 * Indicates that a map layer has errored
                 *
                 * @event LayerLoader.LAYER_ERROR
