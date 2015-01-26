@@ -51,6 +51,9 @@ define([
 
                     TweenLite.set(optionsContainer, { display: "block" });
 
+                    // re-detect the left offset if the block has been hidden before; otherwise it will be zero;
+                    optionsLeftShift = optionStepContent.position().left;
+
                     tl
                         .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, 0)
 
