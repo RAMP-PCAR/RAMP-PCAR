@@ -461,9 +461,11 @@
                 }
             },
             "additionalProperties": false
-        }
+        },
 
+        "mapInitFailUrl": { "type": "string" }
 
     },
     "required": [ "version", "extents", "basemaps" ]
+
 }

@@ -1013,7 +1013,7 @@ define([
                     //basemap has died.  long live the basemap.
                     //TODO some proper error handling here.  error page?  message to user of catastrophic failure?
                     console.log('initial basemap failed to load: ' + evt.error.message);
-                    window.location.href = "./error-en.html";
+                    window.location.href = RAMP.config.mapInitFailUrl;
                 });
 
                 /**

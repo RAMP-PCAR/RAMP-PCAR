@@ -661,5 +661,7 @@
         "htmlRawParse.js",
         "jsonRawParse.js",
         "windParse.js"
-    ]
+    ],
+
+    "mapInitFailUrl": "./error-en.html"
 }
