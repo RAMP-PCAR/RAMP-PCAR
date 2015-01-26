@@ -314,6 +314,46 @@
             </div>
         ",
 
+        "a_d_options_bg": "
+            <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+        ",
+
+        "a_d_choice_button": "
+            <button class='btn btn-sm btn-default btn-option' data-option='{%= o.option %}'>{%= o.optionName %}</button>
+        ",        
+
+        "a_d_choice_step":"
+            <div class='step-content'>
+                <h3 class='h6'>{%= o.header %}</h3>
+                <div class='btn-group'>
+                    {%              
+                        for (var option in o.options ) {
+                            if (o.options.hasOwnProperty(option)) {
+                                include('a_d_choice_button', {
+                                    option: option,
+                                    optionName: o.options[option]
+                                });
+                            }
+                        }
+                    %}
+                </div>
+            </div>
+        ",
+
+        "a_d_load_URL_step": "
+            <div class='step-content'>
+                <h3 class='h6'>{%= o.header %}</h3> 
+
+                <div class='input-group'>
+                    <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                    <input name='input' class='form-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                    <span class='input-group-btn'>
+                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Load</button>
+                    </span>
+                </div>
+            </div>
+        ",
+
         "filter_manager_template2": "
             <div id='categories'>
                 <div id='filterGlobalToggles' class='global-toggles'>
@@ -337,46 +377,41 @@
 
                             <div class='add-dataset-content'> 
                                 <div class='step step-1 current-step'>
-                                    <div class='step-content'>
-                                        <h3 class='h6'>Data Source</h3>
-                                        <div class='btn-group'>
-                                            <button class='btn btn-sm btn-default btn-option' data-option='option-1'>Service</button>
-                                            <button class='btn btn-sm btn-default btn-option' data-option='option-2'>File</button>
-                                        </div>
-                                    </div>
+                                    {% include('a_d_choice_step', {
+                                        'header': 'Data Source',
+                                        options: {
+                                            'option-1': 'Service',
+                                            'option-2': 'File'
+                                        }
+                                    }); %}
 
                                     <div class='step-options-container'>
-                                        <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+                                        {% include('a_d_options_bg', o); %}
 
                                         <div class='step-options'>
                                             <div class='step step-2 option-1 service'>
-                                                <div class='step-content'>
-                                                    <h3 class='h6'>Layer Type</h3>
-                                                    <div class='btn-group'>
-                                                        <button class='btn btn-sm btn-default btn-option' data-option='option-1'>Feature</button>
-                                                        <button class='btn btn-sm btn-default btn-option' data-option='option-2'>WMS</button>
-                                                    </div>
-                                                </div>
+                                                {% include('a_d_choice_step', {
+                                                    'header': 'Layer Type',
+                                                    options: {
+                                                        'option-1': 'Feature',
+                                                        'option-2': 'WMS'
+                                                    }
+                                                }); %}
 
                                                 <div class='step-options-container'>
-                                                    <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+                                                    {% include('a_d_options_bg', o); %}
 
                                                     <div class='step-options'>
                                                         <div class='step step-3 option-1 feature'>
-                                                            <div class='step-content'>
-                                                                <h3 class='h6'>Feature Layer URL</h3> 
-
-                                                                <div class='input-group'>
-                                                                    <label class='wb-inv' for='featureURLinput'>Feature layer URL</label>
-                                                                    <input name='input' class='form-control input-sm' id='featureURLinput' data-role='none'/>
-                                                                    <span class='input-group-btn'>
-                                                                        <button id='featureURLinputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Load</button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            {% include('a_d_load_URL_step', {
+                                                                header: 'Feature Layer URL *',
+                                                                label:  'Feature Layer URL *',
+                                                                idPrefix: 'featureURL',
+                                                                placeholder: 'ESRI MapServer or Feature layer'
+                                                            }); %}
 
                                                             <div class='step-options-container'>
-                                                                <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+                                                                {% include('a_d_options_bg', o); %}
 
                                                                 <div class='step-options'>
                                                                     <div class='step step-4 option-1 default'>
@@ -396,7 +431,7 @@
                                                                         </div>
 
                                                                         <div class='step-options-container'>
-                                                                            <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+                                                                            {% include('a_d_options_bg', o); %}
 
                                                                             <div class='step-options'>
                                                                                 <div class='step step-5 option-1 default'>
@@ -410,6 +445,8 @@
                                                                                         <input></input>
                                                                                         <h3 class='h6 smaller'>Colour</h3>
                                                                                         <input></input>
+
+
                                                                                     </div>
 
                                                                                     
@@ -422,32 +459,26 @@
                                                         </div>
 
                                                         <div class='step step-3 option-2 wms'>
-                                                            <div class='step-content'>
-                                                                <h3 class='h6'>WMS Layer URL</h3>
-
-                                                                <div class='input-group'>
-                                                                    <label class='wb-inv' for='wmsURLinput'>WMS Layer URL</label>
-                                                                    <input name='select' class='form-control input-sm' id='wmsURLinput' data-role='none'/>
-                                                                    <span class='input-group-btn'>
-                                                                        <button id='wmsURLinputSubmit' class='btn btn-info btn-sm' type='button'>Load</button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                                            {% include('a_d_load_URL_step', {
+                                                                header: 'WMS Layer URL *',
+                                                                label:  'WMS Layer URL *',
+                                                                idPrefix: 'wmsURL',
+                                                                placeholder: 'WMS URL'
+                                                            }); %}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class='step step-2 option-2 file'>
-                                                    <div class='step-content'>
-                                                        <h3 class='h6'>File Type</h3>
-                                                        <h3 class='h6'>File Type</h3>
-                                                        <div class='btn-group'>
-                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-1'>GeoJSON</button>
-                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-2'>CSV</button>
-                                                            <button class='btn btn-sm btn-default btn-option' data-option='option-3'>Shapefile</button>
-                                                        </div>
-                                                    </div>
+                                                    {% include('a_d_choice_step', {
+                                                        'header': 'File Type',
+                                                        options: {
+                                                            'option-1': 'GeoJSON',
+                                                            'option-2': 'CSV',
+                                                            'option-3': 'Shapefile'
+                                                        }
+                                                    }); %}
                                             </div>
                                         </div>                 
                                     </div>                   
