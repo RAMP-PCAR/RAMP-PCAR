@@ -540,6 +540,13 @@
         }
     },
 
+    "serverError": {
+        "basemapNotAvailable": {
+            "title": "French translation required - Error : Basemap service not available",
+            "detail": "French translation required - Basemap service not available; map failed to initialize properly."
+        }
+    },
+
     "_unused": {
         "altMaptip_image": "Icône vedette",
         "showHeaders": "Afficher haut de page",
