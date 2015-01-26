@@ -115,6 +115,13 @@ define([
             }
         );
 
+        rootNode.on("input", ".load-url-control", function (event) {
+            var control = $(event.target),
+                controlButton = control.next().find("button[id^='" + control.attr("id") + "']");
+
+            controlButton.toggleClass("disabled", control.val().length === 0);
+        });
+
         return {
 
         };
