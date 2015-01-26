@@ -1,15 +1,13 @@
 ---
 {
-    "title": "We couldn't find that Web page (Error 404) / Nous ne pouvons trouver cette page Web (Erreur 404)",
-    "language": "en","fr"
-    "layout": "servermessage.hbs"
+    "title": "Basemap service not available",
+    "layout": "servermessage.hbs",
+    "dateModified": "2015-01-26",
+    "sitesearch": "false",
+    "breadcrumb": "false"
 }
 ---
-<section class="col-md-12">
-    <h1><span class="glyphicon glyphicon-warning-sign mrgn-rght-md"></span> We couldn't find that Web page</h1>
-    <p>Error 404</p>
-    <p>We're sorry you ended up here. Sometimes a page gets moved or deleted, but hopefully we can help you find what you're looking for.</p>
-    <ul>
-        <li>Return to the <a href="{{environment.root}}/index-en.html">home page</a></li>
-    </ul>
-</section>
+<div class="col-md-12">
+    <h1><span class="glyphicon glyphicon-warning-sign mrgn-rght-md"></span> {{t "serverError.basemapNotAvailable.title"}}</h1>
+    <p>{{t "serverError.basemapNotAvailable.detail"}}</p>
+</div>
