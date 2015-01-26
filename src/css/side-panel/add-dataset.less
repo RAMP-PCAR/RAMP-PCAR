@@ -60,13 +60,11 @@
                 width: 100%;
 
                 .step-content {
-                    //padding: 8px 12px 12px 22px;
                     padding: 8px 12px 12px 29px;
                     position: relative;
                     overflow: hidden;
                     background-color: #fff;
-                    //border-left: 7px solid @light-success-color;
-                    //border-bottom: 1px solid @very-light-grey-color;
+
                     h3 {
                         margin: 2px 0 10px 0;
                     }
@@ -74,19 +72,35 @@
                     .input-group {
                         width: 85%;
                     }
+
+                    &.load-url-step {
+
+                        .btn-cancel {
+                            display: none;
+                        }
+
+                        &.loaded {
+                            .btn-option {
+                                display: none;
+                            }
+                             
+                            .btn-cancel {
+                                display: block;
+                            }
+                        }
+                    }
                 }
 
                 .step-options-container {
                     position: relative;
                     display: none;
-                    //visibility: hidden;
-                    //border-top: 1px solid @very-light-grey-color;
+
                     .options-bg {
                         position: absolute;
                         width: 100%;
                         height: 100%;
                         overflow: hidden;
-                        //border-bottom: 1px solid @very-light-grey-color;
+
                         &:before {
                             position: absolute;
                             content: "";
