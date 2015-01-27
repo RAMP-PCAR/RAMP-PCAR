@@ -9,7 +9,7 @@ define([
 
     /* Ramp */
 
-    "utils/PopupManager",
+    "utils/PopupManager", "ramp/theme",
 
     /* Util */
     "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
@@ -17,7 +17,7 @@ define([
     function (
         lang, Deferred,
         layer_selector_template,
-        PopupManager,
+        PopupManager, Theme,
         TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -184,8 +184,8 @@ define([
                     var inputControlGroup = currentStepContent.find(".input-group");
 
                     currentOptionsContainer
-                                .removeClass("error")
-                                .addClass("loading");
+                        .removeClass("error")
+                        .addClass("loading");
 
                     currentStepContent.removeClass("error");
 
@@ -218,7 +218,7 @@ define([
                     var inputControlGroup = currentStepContent.find(".input-group"),
                         //inputControl = inputControlGroup.find(".load-url-control"),
                         inputControlButtons = inputControlGroup.find(".input-group-btn"),
-                        inputLoadButton = inputControlButtons.find(".btn-option:not(.btn-cancel)");
+                        inputCancelButton = inputControlButtons.find(".btn-cancel");
 
                     tl
                         .set(currentOptionsContainer, { className: "-=loading" })
@@ -231,7 +231,7 @@ define([
                                 .css({ right: inputControlButtons.width() });
                         }, [], null)
 
-                        .set(inputLoadButton, { className: "-=button-pressed" }, 0)
+                        .set(inputCancelButton, { className: "-=button-pressed" }, 0)
                     ;
 
                     //resolveTreeTransitions();
@@ -250,15 +250,17 @@ define([
                     resolveTreeTransitions();
 
                     tl
-                        .set(currentStepContent, { className: "-=loaded" }, 0)
                         .set(optionsContainer.find(".active-option"), { className: "-=active-option" })
                         .set(optionsContainer.find(".button-pressed"), { className: "-=button-pressed" })
-                        .set(inputControlGroup, { className: "-=has-feedback has-success" }, 0)
-
+                        
                         .call(function () {
                             inputControl
                                 .val("")
                                 .attr("readonly", false);
+
+                            currentOptionsContainer.removeClass("error");
+                            currentStepContent.removeClass("loaded error");
+                            inputControlGroup.removeClass("has-feedback has-success has-error");
 
                             loadUrlControlStatusCheck(inputLoadButton);
                         }, [], null, 0)
@@ -272,6 +274,7 @@ define([
 
                     switch (action) {
                         case "featureURLcancel":
+                            //beforeLoadUrlStep();
                             cancelLoadUrlStep();
 
                             break;
@@ -279,14 +282,12 @@ define([
                         case "featureURL":
 
                             beforeLoadUrlStep();
-
                             
                             window.setTimeout(function () {
                                 if (toggle) {
                                     successLoadUrlStep();
                                 } else {
                                     errorLoadUrlStep();
-
                                 }
 
                                 toggle = !toggle;
