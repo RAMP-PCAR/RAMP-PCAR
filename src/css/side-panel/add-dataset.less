@@ -75,6 +75,10 @@
 
                     &.load-url-step {
 
+                        .glyphicon {
+                            top: 0;
+                        }
+
                         .btn-cancel,
                         .glyphicon-ok,
                         .glyphicon-remove {
@@ -88,6 +92,12 @@
                              
                             .btn-cancel,
                             .glyphicon-ok {
+                                display: block;
+                            }
+                        }
+
+                        &.error {
+                            .glyphicon-remove {
                                 display: block;
                             }
                         }
@@ -126,6 +136,19 @@
                             background-color: @light-lighter-grey-color;
                             height: 1px;
                         }
+                    }
+
+                    &.error {
+                        > .options-bg {
+
+                        &:before {
+                            border-left-color: @attention-color !important;
+                        }
+
+                        &:after {
+                            color: @attention-color !important;
+                        }
+                    }
                     }
                 }
 

@@ -28,6 +28,8 @@ define([
 
         var rootNode = $("#searchMapSectionBody"),
 
+            toggle = true,
+
             transitionDuration = 0.4;
 
         PopupManager.registerPopup(rootNode, "click",
@@ -178,11 +180,23 @@ define([
                     d.resolve();
                 }
 
+                function beforeLoadUrlStep() {
+                    var inputControlGroup = currentStepContent.find(".input-group");
+
+                    currentOptionsContainer
+                                .removeClass("error")
+                                .addClass("loading");
+
+                    currentStepContent.removeClass("error");
+
+                    inputControlGroup.removeClass("has-feedback has-success has-error");
+                }
+
                 function successLoadUrlStep() {
                     var inputControlGroup = currentStepContent.find(".input-group"),
                         inputControl = inputControlGroup.find(".load-url-control"),
                         inputControlButtons = inputControlGroup.find(".input-group-btn");
-                    
+
                     tl
                         .set(currentOptionsContainer, { className: "-=loading" })
                         .set(currentStepContent, { className: "+=loaded" })
@@ -192,11 +206,35 @@ define([
 
                             currentStepContent
                                 .find(".glyphicon")
-                                .css({ right: inputControlButtons.width(), top: 0 });
+                                .css({ right: inputControlButtons.width() });
                         }, [], null)
                     ;
 
                     resolveTreeTransitions();
+                    executeTransitions();
+                }
+
+                function errorLoadUrlStep() {
+                    var inputControlGroup = currentStepContent.find(".input-group"),
+                        //inputControl = inputControlGroup.find(".load-url-control"),
+                        inputControlButtons = inputControlGroup.find(".input-group-btn"),
+                        inputLoadButton = inputControlButtons.find(".btn-option:not(.btn-cancel)");
+
+                    tl
+                        .set(currentOptionsContainer, { className: "-=loading" })
+                        .set(currentOptionsContainer, { className: "+=error" })
+                        .set(currentStepContent, { className: "+=error" })
+                        .set(inputControlGroup, { className: "+=has-feedback has-error" })
+                        .call(function () {
+                            currentStepContent
+                                .find(".glyphicon")
+                                .css({ right: inputControlButtons.width() });
+                        }, [], null)
+
+                        .set(inputLoadButton, { className: "-=button-pressed" }, 0)
+                    ;
+
+                    //resolveTreeTransitions();
                     executeTransitions();
                 }
 
@@ -240,11 +278,19 @@ define([
 
                         case "featureURL":
 
-                            currentOptionsContainer.addClass("loading");
+                            beforeLoadUrlStep();
 
+                            
                             window.setTimeout(function () {
+                                if (toggle) {
+                                    successLoadUrlStep();
+                                } else {
+                                    errorLoadUrlStep();
 
-                                successLoadUrlStep();
+                                }
+
+                                toggle = !toggle;
+
                             }, 1000);
 
                             break;
