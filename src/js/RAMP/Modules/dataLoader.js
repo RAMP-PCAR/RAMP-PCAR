@@ -64,6 +64,44 @@ define([
             Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
         };
 
+        /**
+        * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
+        * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
+        * into a string or an ArrayBuffer.
+        * 
+        * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
+        *                      {string} type as "text" or "binary" (text by default)
+        * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
+        */
+        function loadDataSet(args) {
+            var def = new Deferred(), promise;
+
+            if (args.file) {
+                if (args.url) {
+                    throw new Error("Either url or file should be specified, not both");
+                }
+
+                if (args.type === "binary") {
+                    promise = Util.readFileAsArrayBuffer(args.file);
+                } else {
+                    promise = Util.readFileAsText(args.file);
+                }
+
+            } else if (args.url) {
+                try {
+                    promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
+                } catch (e) {
+                    def.reject(e);
+                }
+
+            } else {
+                throw new Error("One of url or file should be specified");
+            }
+
+            promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
+            return def.promise;
+        }
+
         function makeGeoJsonLayer(geoJson, opts) {
             var esriJson, layerDefinition, layer, fs;
             layerDefinition = {
@@ -240,6 +278,7 @@ define([
         }
 
         return {
+            loadDataSet: loadDataSet,
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
