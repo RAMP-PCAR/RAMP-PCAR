@@ -68,6 +68,44 @@ define([
             Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
         };
 
+        /**
+        * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
+        * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
+        * into a string or an ArrayBuffer.
+        * 
+        * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
+        *                      {string} type as "text" or "binary" (text by default)
+        * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
+        */
+        function loadDataSet(args) {
+            var def = new Deferred(), promise;
+
+            if (args.file) {
+                if (args.url) {
+                    throw new Error("Either url or file should be specified, not both");
+                }
+
+                if (args.type === "binary") {
+                    promise = Util.readFileAsArrayBuffer(args.file);
+                } else {
+                    promise = Util.readFileAsText(args.file);
+                }
+
+            } else if (args.url) {
+                try {
+                    promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
+                } catch (e) {
+                    def.reject(e);
+                }
+
+            } else {
+                throw new Error("One of url or file should be specified");
+            }
+
+            promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
+            return def.promise;
+        }
+
         function makeGeoJsonLayer(geoJson, opts) {
             var esriJson, layerDefinition, layer, fs;
             layerDefinition = {
@@ -97,97 +135,60 @@ define([
             return layer;
         }
 
-        function buildCsv(args) {
-            var def = new Deferred();
+        /**
+        * Constructs a FeatureLayer from CSV data.
+        * @param {string} csvData the CSV data to be processed
+        * @param {object} opts options to be set for the parser {string} latfield, {string} lonfield, {string} delimiter
+        * @returns {Promise} a promise resolving with a {FeatureLayer}
+        */
+        function buildCsv(csvData, opts) {
+            var def = new Deferred(), csvOpts = { latfield: 'Lat', lonfield: 'Long', delimiter: ',' };
 
-            if (args.file) {
-                if (args.url) {
-                    throw new Error("Either url or file should be specified, not both");
+            if (opts) {
+                if (opts.latfield) {
+                    csvOpts.latfield = opts.latfield;
                 }
-
-                Util.readFileAsText(args.file).then(function (data) {
-                    var jsonLayer = null;
-                    try {
-                        csv2geojson.csv2geojson(data, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
-                            if (err) {
-                                def.reject(err);
-                                console.log("conversion error");
-                                console.log(err);
-                                return;
-                            }
-                            console.log('csv parsed');
-                            console.log(data);
-                            jsonLayer = makeGeoJsonLayer(data);
-                            def.resolve(jsonLayer);
-                        });
-                    } catch (e) {
-                        def.reject(e);
-                    }
-                });
-
-                return def.promise;
-
-            } else if (args.url) {
-                (new EsriRequest({ url: args.url, handleAs: "text" })).then(function (result) {
-                    var jsonLayer = null;
-                    try {
-                        console.log('raw csv text');
-                        console.log(result);
-                        csv2geojson.csv2geojson(result, { latfield: 'Lat', lonfield: 'Long', delimiter: ',' }, function (err, data) {
-                            if (err) {
-                                def.reject(err);
-                                console.log("conversion error");
-                                console.log(err);
-                                return;
-                            }
-                            console.log('csv parsed');
-                            console.log(data);
-                            jsonLayer = makeGeoJsonLayer(data);
-                            def.resolve(jsonLayer);
-                        });
-                    } catch (e) {
-                        def.reject(e);
-                    }
-                }, function (error) {
-                    def.reject(error);
-                });
-
-                return def.promise;
+                if (opts.lonfield) {
+                    csvOpts.lonfield = opts.lonfield;
+                }
+                if (opts.delimiter) {
+                    csvOpts.delimiter = opts.delimiter;
+                }
             }
 
+            try {
+                csv2geojson.csv2geojson(csvData, csvOpts, function (err, data) {
+                    var jsonLayer;
+
+                    if (err) {
+                        def.reject(err);
+                        console.log("conversion error");
+                        console.log(err);
+                        return;
+                    }
+                    console.log('csv parsed');
+                    console.log(data);
+                    jsonLayer = makeGeoJsonLayer(data);
+                    def.resolve(jsonLayer);
+                });
+            } catch (e) {
+                def.reject(e);
+            }
+
+            return def.promise;
         }
 
-        function buildShapefile(args) {
+        /**
+        * Constructs a FeatureLayer from a Shapefile.
+        * @param {ArrayBuffer} shpData an ArrayBuffer of the Shapefile in zip format
+        * @returns {Promise} a promise resolving with a {FeatureLayer}
+        */
+        function buildShapefile(shpData) {
             var def = new Deferred();
 
-            if (args.file) {
-                if (args.url) {
-                    throw new Error("Either url or file must be specified");
-                }
-
-                Util.readFileAsArrayBuffer(args.file).then(function (data) {
-                    var jsonLayer = null;
-                    try {
-                        shp(data).then(function (geojson) {
-                            try {
-                                jsonLayer = makeGeoJsonLayer(geojson);
-                                def.resolve(jsonLayer);
-                            } catch (e) {
-                                def.reject(e);
-                            }
-                        }, function (failReason) {
-                            def.reject(failReason);
-                        });
-                    } catch (e) {
-                        def.reject(e);
-                    }
-                });
-
-                return def.promise;
-
-            } else if (args.url) {
-                shp(args.url).then(function (geojson) {
-                    var jsonLayer = null;
+            try {
+                shp(shpData).then(function (geojson) {
+                    var jsonLayer;
                     try {
                         jsonLayer = makeGeoJsonLayer(geojson);
                         def.resolve(jsonLayer);
@@ -197,53 +198,34 @@ define([
                 }, function (error) {
                     def.reject(error);
                 });
-
-                return def.promise;
+            } catch (e) {
+                def.reject(e);
             }
 
-            throw new Error("Either url or file must be specified");
+            return def.promise;
         }
 
-        function buildGeoJson(args) {
-            var def = new Deferred();
+        /**
+        * Constructs a FeatureLayer from a GeoJSON string.
+        * This wraps makeGeoJsonLayer in an async wrapper, this is unnecessary but provides a consistent API.
+        * @param {string} jsonData a string containing the GeoJSON
+        * @returns {Promise} a promise resolving with a {FeatureLayer}
+        */
+        function buildGeoJson(jsonData) {
+            var def = new Deferred(), jsonLayer = null;
 
-            if (args.file) {
-                if (args.url) {
-                    throw new Error("Either url or file must be specified");
-                }
-
-                Util.readFileAsText(args.file).then(function (data) {
-                    var jsonLayer = null;
-                    try {
-                        jsonLayer = makeGeoJsonLayer(JSON.parse(data));
-                        def.resolve(jsonLayer);
-                    } catch (e) {
-                        def.reject(e);
-                    }
-                });
-
-                return def.promise;
-
-            } else if (args.url) {
-                (new EsriRequest({ url: args.url })).then(function (result) {
-                    var jsonLayer = null;
-                    try {
-                        jsonLayer = makeGeoJsonLayer(result);
-                        def.resolve(jsonLayer);
-                    } catch (e) {
-                        def.reject(e);
-                    }
-                }, function (error) {
-                    def.reject(error);
-                });
-
-                return def.promise;
+            try {
+                jsonLayer = makeGeoJsonLayer(JSON.parse(jsonData));
+                def.resolve(jsonLayer);
+            } catch (e) {
+                def.reject(e);
             }
 
-            throw new Error("Either url or file must be specified");
+            return def.promise;
         }
 
         return {
+            loadDataSet: loadDataSet,
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
