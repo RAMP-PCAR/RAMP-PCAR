@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP, document */
+/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP, document */
 /*jslint white: true */
 
 /**
@@ -126,6 +126,9 @@ define([
             zoomToGraphic,
 
             lastExtent,
+
+            // invisibleLayer toggle counter
+            invisibleLayerToggleOn = [], 
 
             /**
             * Total number of features in all the visible layers on the map
@@ -1226,10 +1229,14 @@ define([
                             } else {
                                 if (invisibleLayers.length > 0) {
                                     data.layers = invisibleLayers.map(function (il) {
-                                        return il.ramp.config;
+                                        return il.ramp.config;                                        
                                     });
 
-                                    notice = tmpl("datagrid_info_notice", data);
+                                    // display notice only if invisibleLayer has eyeToggle on
+                                    if (invisibleLayerToggleOn.length > 0) {
+                                        notice = tmpl("datagrid_info_notice", data);
+                                    }
+                                    
                                 }
                             }
 
@@ -1245,7 +1252,20 @@ define([
                                 sectionNode.removeClass("notice");
                             }
                         }
-                    }
+                    },
+
+                    initInvisibleLayerToggleCount: utilMisc.once(
+                        function () {
+                            invisibleLayerToggleOn = RampMap.getInvisibleLayers()
+                            .filter(function (l) {
+                                // make sure l.ramp is not undefined, and it's a feature layer, and config.settings.visible is true
+                                return !utilMisc.isUndefined(l.ramp) && l.ramp.type === GlobalStorage.layerType.feature && l.ramp.config.settings.visible === true;
+                            })
+                            .map(function (lyr) {
+                                return lyr.ramp.config.id;
+                            });
+                        }
+                    )
                 };
             }());
 
@@ -1369,6 +1389,8 @@ define([
                 fetchRecords(visibleFeatures);
 
                 //console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
+                // initialize invisible layer toggle count
+                ui.initInvisibleLayerToggleCount();
 
                 ui.updateNotice();
 
@@ -1515,8 +1537,21 @@ define([
         * @private
         */
         function initListeners() {
-            topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function () {
+            topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (event) {
                 extentFilterExpired = true;
+
+                // added by Jack to make sure layer visibility is added or removed from checkedLayerVisibility
+                if (event.id !== null) {
+                    var idx = dojoArray.indexOf(invisibleLayerToggleOn, event.id);
+                    if (idx === -1 && event.state) {
+                        // add 
+                        invisibleLayerToggleOn.push(event.id);
+                    }else if (idx !== -1 && !event.state) {
+                        // remove
+                        invisibleLayerToggleOn.splice(idx,1);
+                    }
+                }
+                
             });
 
             /* UI EVENTS */
