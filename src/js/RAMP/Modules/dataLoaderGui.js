@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window */
+﻿/* global define, console, TweenLite, TimelineLite, $ */
 
 define([
     /* Dojo */
@@ -28,8 +28,6 @@ define([
 
         var rootNode = $("#searchMapSectionBody"),
 
-            toggle = true,
-
             transitionDuration = 0.4;
 
         PopupManager.registerPopup(rootNode, "click",
@@ -54,8 +52,6 @@ define([
 
                     optionsLeftShift,
                     leftShiftStartAdjustment,
-
-                    pr,
 
                     tl = new TimelineLite({ paused: true }),
 
@@ -216,7 +212,7 @@ define([
 
                 function errorLoadUrlStep() {
                     var inputControlGroup = currentStepContent.find(".input-group"),
-                        //inputControl = inputControlGroup.find(".load-url-control"),
+                        inputControl = inputControlGroup.find(".load-url-control"),
                         inputControlButtons = inputControlGroup.find(".input-group-btn"),
                         inputCancelButton = inputControlButtons.find(".btn-cancel");
 
@@ -234,17 +230,23 @@ define([
                         .set(inputCancelButton, { className: "-=button-pressed" }, 0)
                     ;
 
-                    //resolveTreeTransitions();
+                    // no need to resolve transition since there shouldn't be any transitions on error
                     executeTransitions();
 
                     //Theme.tooltipster(rootNode, null, null, { position: "left" });
+
+                    inputControl.on("input", function () {
+                        inputControl.off("input");
+
+                        inputCancelButton.trigger("click");
+                    });
                 }
 
                 function cancelLoadUrlStep() {
                     var inputControlGroup = currentStepContent.find(".input-group"),
-                        inputControl = inputControlGroup.find(".load-url-control"),
-                        inputControlButtons = inputControlGroup.find(".input-group-btn"),
-                        inputLoadButton = inputControlButtons.find(".btn-option:not(.btn-cancel)");
+                        inputControl = inputControlGroup.find(".load-url-control");
+                        //inputControlButtons = inputControlGroup.find(".input-group-btn")
+                        //inputLoadButton = inputControlButtons.find(".btn-option:not(.btn-cancel)");
 
                     retreatOptionsContainers.unshift(optionsContainer); // retreat the current options container
                     lastContainer = optionsContainer.parents(".step-options-container:first");
@@ -254,17 +256,17 @@ define([
                     tl
                         .set(optionsContainer.find(".active-option"), { className: "-=active-option" })
                         .set(optionsContainer.find(".button-pressed"), { className: "-=button-pressed" })
-                        
+
                         .call(function () {
                             inputControl
-                                .val("")
+                                //.val("")
                                 .attr("readonly", false);
 
                             currentOptionsContainer.removeClass("error");
                             currentStepContent.removeClass("loaded error");
                             inputControlGroup.removeClass("has-feedback has-success has-error");
 
-                            loadUrlControlStatusCheck(inputLoadButton);
+                            loadUrlControlStatusCheck(inputControl);
                         }, [], null, 0)
                     ;
 
@@ -272,11 +274,10 @@ define([
                 }
 
                 function someFunction(action) {
-                    var def = new Deferred();
+                    var promise;
 
                     switch (action) {
                         case "featureURLcancel":
-                            //beforeLoadUrlStep();
                             cancelLoadUrlStep();
 
                             break;
@@ -284,38 +285,30 @@ define([
                         case "featureURL":
 
                             beforeLoadUrlStep();
-                            
-                            window.setTimeout(function () {
-                                if (toggle) {
-                                    successLoadUrlStep();
-                                } else {
-                                    errorLoadUrlStep();
-                                }
 
-                                toggle = !toggle;
+                            promise = DataLoader.loadDataSet({
+                                url: currentStepContent.find(".load-url-control").val()
+                            });
 
-                            }, 1000);
+                            promise.then(function (event) {
+                                successLoadUrlStep();
+                                event = null;
+                                //console.log(event);
+
+                            }, function () {
+                                errorLoadUrlStep();
+                            });
 
                             break;
                     }
-
-                    return def.promise;
                 }
 
                 if (this.handle.data("action")) {
-                    pr = someFunction(this.handle.data("action"));
+                    someFunction(this.handle.data("action"));
                 } else {
-                    //pr = (new Deferred()).resolve();
                     resolveTreeTransitions();
                     executeTransitions();
                 }
-
-                //pr.then(function () {
-
-                //}, function (err) {
-                //    console.log(err);
-
-                //});
             },
             {
                 containerSelector: ".step:first",
