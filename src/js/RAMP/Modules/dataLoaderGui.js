@@ -62,11 +62,10 @@ define([
 
                 // find all downstream containers that have active options including the current container;
                 // they will be opened
-                //node = optionsContainer.find(".active-option:first");
-                node = options.find("> ." + this.handle.data("option"));
+                node = option;
                 while (node.length) {
                     advanceOptionsContainers.push(node.parents(".step-options-container:first"));
-                    node = node.find(".active-option:first");
+                    node = node.find("> .step-options-container > .step-options > .active-option:first");
                 }
 
                 // find all downstream containers that are visible;
@@ -91,7 +90,7 @@ define([
                     //var lastContainer;
 
                     // convert to jQuery array
-                    advanceOptionsContainers = advanceOptionsContainers.map(function (a) { return $(a); });
+                    //advanceOptionsContainers = advanceOptionsContainers.map(function (a) { return $(a); });
                     advanceStagger = transitionDuration / 2 / advanceOptionsContainers.length;
 
                     option.addClass("active-option");
@@ -99,11 +98,17 @@ define([
                     tl.addLabel("advanceStart");
 
                     advanceOptionsContainers.forEach(function (aoc, i) {
-                        var optionsBackground = aoc.find("> .options-bg"),
-                            options = aoc.find("> .step-options"),
-                            //option = options.find("> ." + this.handle.data("option")),
-                            option = options.find(".active-option:first"),
-                            optionStepContent = option.find("> .step-content");
+                        var optionsBackground,
+                            options,
+                            //option,
+                            optionStepContent;
+
+                        aoc = $(aoc);
+
+                        optionsBackground = aoc.find("> .options-bg");
+                        options = aoc.find("> .step-options");
+                        //option = options.find("> .active-option:first");
+                        optionStepContent = options.find("> .active-option:first > .step-content"); // option.find("> .step-content");
 
                         TweenLite.set(aoc, { display: "block" });
 
@@ -164,7 +169,6 @@ define([
                                 { top: -docActiveOptionContent.outerHeight(), ease: "easeOutCirc" },
                                 retreatStagger * (retreatOptionsContainers.length - i - 1))
                             .set(doc, { display: "none" })
-                        //.set(docActiveOption, { className: "-=active-option" })
                         ;
                     });
                 }
@@ -179,14 +183,44 @@ define([
                         .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart" + leftShiftStartAdjustment)
                         .to(options, transitionDuration,
                             { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
+                        .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
+                        .set(option, { className: "+=active-option" })
                     ;
+                }
+
+                function resolveTreeTransitions() {
+                    if (optionsContainer.is(":hidden")) {
+                        advance();
+                    } else {
+                        //retreatOptionsContainers = optionsContainer.find(".step-options-container:visible");
+
+                        retreat();
+
+                        if (optionsLeftShift !== options.position().left) {
+                            shift();
+                        }
+
+                        // drop the first container since it shouldn't be advanced
+                        UtilArray.remove(advanceOptionsContainers, 0);
+                        advance();
+                    }
+
+                    tl
+                        .set(currentOptionsContainer, { height: "auto", className: "-=current-step" }, 0)
+                        .set(lastContainer, { className: "+=current-step" }, 0)
+                        .set(otherOptionButtons, { className: "-=button-pressed" }, 0)
+                    ;
+
+                    tl.play();
+
+                    d.resolve();
                 }
 
                 function someFunction(action) {
                     var def = new Deferred();
 
                     switch (action) {
-                        case "cancel":
+                        case "featureURLcancel":
 
                             retreatOptionsContainers =
                                 optionsContainer.add(
@@ -208,6 +242,7 @@ define([
                                 currentOptionsContainer.removeClass("loading");
                                 currentStepContent.addClass("loaded");
 
+                                resolveTreeTransitions();
                                 def.resolve();
                             }, 1000);
 
@@ -221,40 +256,15 @@ define([
                     pr = someFunction(this.handle.data("action"));
                 } else {
                     pr = (new Deferred()).resolve();
+                    resolveTreeTransitions();
                 }
 
-                pr.then(function () {
+                //pr.then(function () {
 
-                    if (optionsContainer.is(":hidden")) {
-                        advance();
-                    } else {
-                        //retreatOptionsContainers = optionsContainer.find(".step-options-container:visible");
+                //}, function (err) {
+                //    console.log(err);
 
-                        retreat();
-
-                        if (optionsLeftShift !== options.position().left) {
-                            shift();
-                        }
-
-                        // drop the first container since it shouldn't be advanced
-                        UtilArray.remove(advanceOptionsContainers, 0);
-                        advance();
-                    }
-
-                    tl
-                        .set(currentOptionsContainer, { height: "auto", className: "-=current-step" }, 0)
-                        .set(lastContainer, { className: "+=current-step" }, 0)
-                        //.set(optionsContainer, { className: "+=current-step" }, 0)
-                        .set(otherOptionButtons, { className: "-=button-pressed" }, 0)
-                    ;
-
-                    tl.play();
-
-                    d.resolve();
-                }, function (err) {
-                    console.log(err);
-
-                });
+                //});
             },
             {
                 containerSelector: ".step:first",
