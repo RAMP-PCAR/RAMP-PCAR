@@ -70,47 +70,29 @@ define([
 
                 // find all downstream containers that are visible;
                 // they will be closed
-                retreatOptionsContainers = optionsContainer.find(".step-options-container:visible");
-
-                //function _advance(optionsBackground, optionStepContent, options, option, aoc) {
-                //    tl
-                //        .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, 0)
-
-                //        .set(options, { left: -optionsLeftShift, ease: "easeOutCirc" })
-
-                //        .set(option, { className: "+=active-option" }, 0)
-
-                //        .to(aoc, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, 0)
-                //        .fromTo(aoc, transitionDuration, { top: -aoc.height() }, { top: 0, ease: "easeOutCirc" }, 0)
-                //    ;
-                //}
+                retreatOptionsContainers = optionsContainer
+                    .find(".step-options-container:visible")
+                    .toArray();
 
                 function advance() {
+                    advanceStagger = transitionDuration / 2 / advanceOptionsContainers.length; // calculate advance transition stagger
 
-                    //var lastContainer;
+                    option.addClass("active-option"); // mark selected option as active
 
-                    // convert to jQuery array
-                    //advanceOptionsContainers = advanceOptionsContainers.map(function (a) { return $(a); });
-                    advanceStagger = transitionDuration / 2 / advanceOptionsContainers.length;
-
-                    option.addClass("active-option");
-
-                    tl.addLabel("advanceStart");
+                    tl.addLabel("advanceStart"); // add time label
 
                     advanceOptionsContainers.forEach(function (aoc, i) {
                         var optionsBackground,
                             options,
-                            //option,
                             optionStepContent;
 
                         aoc = $(aoc);
 
                         optionsBackground = aoc.find("> .options-bg");
                         options = aoc.find("> .step-options");
-                        //option = options.find("> .active-option:first");
-                        optionStepContent = options.find("> .active-option:first > .step-content"); // option.find("> .step-content");
+                        optionStepContent = options.find("> .active-option:first > .step-content");
 
-                        TweenLite.set(aoc, { display: "block" });
+                        TweenLite.set(aoc, { display: "block" }); // unhide options container
 
                         // re-detect the left offset if the block has been hidden before; otherwise it will be zero;
                         optionsLeftShift = optionStepContent.position().left;
@@ -119,8 +101,6 @@ define([
                             .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, "advanceStart+=" + advanceStagger * (i))
 
                             .set(options, { left: -optionsLeftShift, ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
-
-                            //.set(option, { className: "+=active-option" }, 0)
 
                             .to(aoc, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
                             .fromTo(aoc, transitionDuration,
@@ -132,31 +112,13 @@ define([
 
                         lastContainer = aoc;
                     });
-
-                    //tl.set(lastContainer, { className: "+=current-step", immediateRender: false });
-
-                    /*TweenLite.set(optionsContainer, { display: "block" });
-        
-                    // re-detect the left offset if the block has been hidden before; otherwise it will be zero;
-                    optionsLeftShift = optionStepContent.position().left;
-        
-                    tl
-                        .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, 0)
-        
-                        .set(options, { left: -optionsLeftShift, ease: "easeOutCirc" })
-        
-                        .set(option, { className: "+=active-option" }, 0)
-        
-                        .to(optionsContainer, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, 0)
-                        .fromTo(optionsContainer, transitionDuration, { top: -optionsContainer.height() }, { top: 0, ease: "easeOutCirc" }, 0)
-                    ;*/
                 }
 
                 function retreat() {
                     retreatStagger = transitionDuration / 2 / retreatOptionsContainers.length;
                     leftShiftStartAdjustment = retreatOptionsContainers.length > 0 ? "-=0.1" : "";
 
-                    retreatOptionsContainers.each(function (i, doc) {
+                    retreatOptionsContainers.forEach(function (doc, i) {
                         var docActiveOption,
                             docActiveOptionContent;
 
@@ -174,31 +136,29 @@ define([
                 }
 
                 function shift() {
+                    var optionsLeftShift = optionStepContent.length > 0 ? optionStepContent.position().left : -1;
 
-                    optionsLeftShift = optionStepContent.position().left;
+                    if (optionsLeftShift !== -1 && optionsLeftShift !== options.position().left) {
 
-                    tl
-                        .addLabel("leftShiftStart")
+                        tl
+                            .addLabel("leftShiftStart")
 
-                        .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart" + leftShiftStartAdjustment)
-                        .to(options, transitionDuration,
-                            { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
-                        .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
-                        .set(option, { className: "+=active-option" })
-                    ;
+                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart" + leftShiftStartAdjustment)
+                            .to(options, transitionDuration,
+                                { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
+                            .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
+                            .set(option, { className: "+=active-option" })
+                        ;
+                    }
                 }
 
                 function resolveTreeTransitions() {
                     if (optionsContainer.is(":hidden")) {
                         advance();
                     } else {
-                        //retreatOptionsContainers = optionsContainer.find(".step-options-container:visible");
-
                         retreat();
 
-                        if (optionsLeftShift !== options.position().left) {
-                            shift();
-                        }
+                        shift();
 
                         // drop the first container since it shouldn't be advanced
                         UtilArray.remove(advanceOptionsContainers, 0);
@@ -210,10 +170,52 @@ define([
                         .set(lastContainer, { className: "+=current-step" }, 0)
                         .set(otherOptionButtons, { className: "-=button-pressed" }, 0)
                     ;
+                }
 
+                function executeTransitions() {
                     tl.play();
 
                     d.resolve();
+                }
+
+                function successLoadUrlStep() {
+                    currentOptionsContainer.removeClass("loading");
+                    currentStepContent.addClass("loaded");
+
+                    currentStepContent
+                        .find(".glyphicon")
+                        .css({ right: currentStepContent.find(".input-group-btn").width(), top: 0 });
+
+                    currentStepContent.find(".input-group").addClass("has-feedback has-success");
+
+                    resolveTreeTransitions();
+                    executeTransitions();
+                }
+
+                function cancelLoadUrlStep() {
+                    var inputControlGroup = currentStepContent.find(".input-group"),
+                        inputControl = inputControlGroup.find(".load-url-control"),
+                        inputControlButtons = inputControlGroup.find(".input-group-btn"),
+                        inputLoadButton = inputControlButtons.find(".btn-option:not(.btn-cancel)");
+
+                    retreatOptionsContainers.unshift(optionsContainer); // retreat the current options container
+                    lastContainer = optionsContainer.parents(".step-options-container:first");
+
+                    resolveTreeTransitions();
+
+                    tl
+                        .set(currentStepContent, { className: "-=loaded" }, 0)
+                        .set(optionsContainer.find(".active-option"), { className: "-=active-option" })
+                        .set(optionsContainer.find(".button-pressed"), { className: "-=button-pressed" })
+                        .set(inputControlGroup, { className: "-=has-feedback has-success" }, 0)
+                        
+                        .call(function () {
+                            inputControl.val("");
+                            loadUrlControlStatusCheck(inputLoadButton);
+                        }, [], null, 0)
+                    ;
+
+                    executeTransitions();
                 }
 
                 function someFunction(action) {
@@ -221,16 +223,7 @@ define([
 
                     switch (action) {
                         case "featureURLcancel":
-
-                            retreatOptionsContainers =
-                                optionsContainer.add(
-                                    optionsContainer.find(".step-options-container:visible")
-                                );
-
-                            retreat();
-                            tl.play();
-
-                            d.resolve();
+                            cancelLoadUrlStep();
 
                             break;
 
@@ -239,11 +232,8 @@ define([
                             currentOptionsContainer.addClass("loading");
 
                             window.setTimeout(function () {
-                                currentOptionsContainer.removeClass("loading");
-                                currentStepContent.addClass("loaded");
-
-                                resolveTreeTransitions();
-                                def.resolve();
+                                
+                                successLoadUrlStep();
                             }, 1000);
 
                             break;
@@ -255,8 +245,9 @@ define([
                 if (this.handle.data("action")) {
                     pr = someFunction(this.handle.data("action"));
                 } else {
-                    pr = (new Deferred()).resolve();
+                    //pr = (new Deferred()).resolve();
                     resolveTreeTransitions();
+                    executeTransitions();
                 }
 
                 //pr.then(function () {
@@ -275,11 +266,14 @@ define([
             }
         );
 
-        rootNode.on("input", ".load-url-control", function (event) {
-            var control = $(event.target),
-                controlButton = control.next().find("button[id^='" + control.attr("id") + "']");
+        function loadUrlControlStatusCheck(control) {
+            var controlButton = control.parent().find("button[id^='" + control.attr("id") + "']");
 
             controlButton.toggleClass("disabled", control.val().length === 0);
+        }
+
+        rootNode.on("input", ".load-url-control", function (event) {
+            loadUrlControlStatusCheck($(event.target));
         });
 
         return {
