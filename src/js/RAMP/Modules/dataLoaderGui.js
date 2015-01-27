@@ -179,14 +179,22 @@ define([
                 }
 
                 function successLoadUrlStep() {
-                    currentOptionsContainer.removeClass("loading");
-                    currentStepContent.addClass("loaded");
+                    var inputControlGroup = currentStepContent.find(".input-group"),
+                        inputControl = inputControlGroup.find(".load-url-control"),
+                        inputControlButtons = inputControlGroup.find(".input-group-btn");
+                    
+                    tl
+                        .set(currentOptionsContainer, { className: "-=loading" })
+                        .set(currentStepContent, { className: "+=loaded" })
+                        .set(inputControlGroup, { className: "+=has-feedback has-success" })
+                        .call(function () {
+                            inputControl.attr("readonly", true);
 
-                    currentStepContent
-                        .find(".glyphicon")
-                        .css({ right: currentStepContent.find(".input-group-btn").width(), top: 0 });
-
-                    currentStepContent.find(".input-group").addClass("has-feedback has-success");
+                            currentStepContent
+                                .find(".glyphicon")
+                                .css({ right: inputControlButtons.width(), top: 0 });
+                        }, [], null)
+                    ;
 
                     resolveTreeTransitions();
                     executeTransitions();
@@ -208,9 +216,12 @@ define([
                         .set(optionsContainer.find(".active-option"), { className: "-=active-option" })
                         .set(optionsContainer.find(".button-pressed"), { className: "-=button-pressed" })
                         .set(inputControlGroup, { className: "-=has-feedback has-success" }, 0)
-                        
+
                         .call(function () {
-                            inputControl.val("");
+                            inputControl
+                                .val("")
+                                .attr("readonly", false);
+
                             loadUrlControlStatusCheck(inputLoadButton);
                         }, [], null, 0)
                     ;
@@ -232,7 +243,7 @@ define([
                             currentOptionsContainer.addClass("loading");
 
                             window.setTimeout(function () {
-                                
+
                                 successLoadUrlStep();
                             }, 1000);
 
