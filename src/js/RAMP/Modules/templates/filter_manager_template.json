@@ -341,7 +341,7 @@
         ",
 
         "a_d_load_URL_step": "
-            <div class='step-content load-url-step'>
+            <div class='step-content load-url-step __tooltip' title='error' data-tooltip-theme='tooltipster-error'>
                 <h3 class='h6'>{%= o.header %}</h3> 
 
                 <div class='input-group'>
@@ -374,7 +374,7 @@
                                 Add Dataset
                             </h2>
 
-                            <button class='button-none button-close _tooltip tooltipstered'>
+                            <button class='button-none button-close _tooltip' title='{%= i18n.t('gui.actions.close') %}'>
                                 <span class='wb-invisible'>{%= i18n.t('gui.actions.close') %}</span>
                             </button>
 

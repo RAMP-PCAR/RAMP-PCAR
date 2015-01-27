@@ -10,14 +10,10 @@
 define([
         "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer",
 
-        "ramp/dataLoaderGui",
-
         "utils/util"
     ],
     function (
             Deferred, EsriRequest, FeatureLayer,
-
-            DataLoadedGui,
 
             Util
         ) {

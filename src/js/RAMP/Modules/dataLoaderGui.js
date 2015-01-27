@@ -9,7 +9,7 @@ define([
 
     /* Ramp */
 
-    "utils/PopupManager", "ramp/theme",
+    "utils/PopupManager", "ramp/dataLoader", "ramp/theme",
 
     /* Util */
     "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
@@ -17,7 +17,7 @@ define([
     function (
         lang, Deferred,
         layer_selector_template,
-        PopupManager, Theme,
+        PopupManager, DataLoader, Theme,
         TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -236,6 +236,8 @@ define([
 
                     //resolveTreeTransitions();
                     executeTransitions();
+
+                    //Theme.tooltipster(rootNode, null, null, { position: "left" });
                 }
 
                 function cancelLoadUrlStep() {

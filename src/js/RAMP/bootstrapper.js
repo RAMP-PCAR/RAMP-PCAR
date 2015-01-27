@@ -54,8 +54,8 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme", "ramp/layerLoader",
-
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui",
+    
 /* Utils */
     "utils/util",
 
@@ -72,7 +72,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui,
 
     /* Utils */
         UtilMisc
