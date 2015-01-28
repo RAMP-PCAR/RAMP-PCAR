@@ -134,6 +134,7 @@ define(["ramp/globalStorage"],
             getObjectId: function (graphic) {
                 return graphic.attributes[graphic.getLayer().objectIdField];
             },
+
             /*
             * Helper function, get attribute value by field name
             *
@@ -163,6 +164,23 @@ define(["ramp/globalStorage"],
                     };
                 return visibilityLegendLabel;
             },
+
+            /**
+            * Wraps plain text urls and emails with <a> tags.
+            *
+            * @method autoHyperlink
+            * @param {String} content the text you would like to search in.
+            */
+            autoHyperlink: function (content) {
+                var urlRegex = /((f|ht)tp(s|):\/\/.+?[\w=%\?\&\./-]+)/g;
+                content = content.replace(urlRegex, '<a href="$1">$1</a>');
+
+                var emailRegex = /([\w-\.]+@([\w-]+\.)+[\w-]{2,4})/g;
+                content = content.replace(emailRegex, '<a href="mailto:$1">$1</a>')
+
+                return content;
+            },
+
             /*
             * generate visibility legend object
             * @param o
