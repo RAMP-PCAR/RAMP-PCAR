@@ -133,7 +133,7 @@ define([
                                     // Setting Opacity to >0.0, sets layer to visible
                                     newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
 
-                                    if (!UtilMisc.isUndefined(newState)) {
+                                    if (!UtilMisc.isUndefined(newState) && !UtilMisc.isUndefined(cause) && cause !== "refresh") {
                                         topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
                                             state: newState,
                                             layerId: sliderId
