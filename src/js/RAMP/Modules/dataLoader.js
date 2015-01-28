@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer, shp, csv2geojson */
+﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -128,7 +128,7 @@ define([
                 }
             }
 
-            console.log('reprojecting '+srcProj+' -> '+mapProj);
+            console.log('reprojecting ' + srcProj + ' -> ' + mapProj);
             console.log(geoJson);
             Terraformer.Proj.convert(geoJson, mapProj, srcProj);
             console.log(geoJson);
