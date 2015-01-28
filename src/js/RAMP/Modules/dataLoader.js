@@ -103,17 +103,13 @@ define([
         }
 
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs;
+            var esriJson, layerDefinition, layer, fs, mapProj, srcProj;
             layerDefinition = {
                 fields: []
             };
 
-            esriJson = Terraformer.ArcGIS.convert(geoJson);
-            console.log('geojson -> esrijson converted');
-            console.log(esriJson);
-            console.log(geoJson);
+            mapProj = 'EPSG:' + RAMP.map.spatialReference.wkid;
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
-            fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
             console.log(layerDefinition);
 
             if (opts) {
@@ -124,8 +120,22 @@ define([
                     layerDefinition.drawingInfo = { renderer: defaultRenderers[opts.renderer].renderer };
                     fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
+                if (opts.sourceProjection) {
+                    srcProj = opts.sourceProjection;
+                }
+                if (opts.targetProjection) {
+                    mapProj = opts.targetProjection;
+                }
             }
 
+            console.log('reprojecting '+srcProj+' -> '+mapProj);
+            console.log(geoJson);
+            Terraformer.Proj.convert(geoJson, mapProj, srcProj);
+            console.log(geoJson);
+            esriJson = Terraformer.ArcGIS.convert(geoJson);
+            console.log('geojson -> esrijson converted');
+            console.log(esriJson);
+            fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
             layer.ramp = { type: "newtype?" };
             return layer;
