@@ -319,17 +319,17 @@
         ",
 
         "a_d_choice_button": "
-            <button class='btn btn-sm btn-default btn-option' data-option='{%= o.option %}'>{%= o.optionName %}</button>
+            <button class='btn btn-sm btn-default btn-option {%= o.state %}' data-option='{%= o.option %}'>{%= o.optionName %}</button>
         ",        
 
         "a_d_choice_step":"
-            <div class='step-content'>
                 <h3 class='h6'>{%= o.header %}</h3>
-                <div class='btn-group'>
+                <div class='btn-group choice-group' data-choice-id='{%= o.choiceId %}'>
                     {%              
                         for (var option in o.options ) {
                             if (o.options.hasOwnProperty(option)) {
                                 include('a_d_choice_button', {
+                                    state: o.active ? 'btn-action' : '',
                                     option: option,
                                     optionName: o.options[option]
                                 });
@@ -337,16 +337,23 @@
                         }
                     %}
                 </div>
-            </div>
         ",
 
-        "a_d_load_URL_step": "
-            <div class='step-content load-url-step __tooltip' title='error' data-tooltip-theme='tooltipster-error'>
+        "a_d_load_file_or_URL_step": "
+            <div class='step-content load-url-step '>
                 <h3 class='h6'>{%= o.header %}</h3> 
 
                 <div class='input-group'>
                     <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                    <span class='input-group-btn'>
+                        <button class='btn btn-default btn-sm' type='button'>
+                            <i class='fa fa-file'></i>
+                            <span class='on-right'>Browse</span>
+                        </button>                                                                                                
+                    </span>
+
                     <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                    
                     <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                     <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                     <span class='input-group-btn'>
@@ -355,6 +362,21 @@
                     </span>
                 </div>
             </div>
+        ",
+
+        "a_d_load_URL_step": "
+                <h3 class='h6'>{%= o.header %}</h3> 
+
+                <div class='input-group'>
+                    <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                    <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                    <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+                    <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    <span class='input-group-btn wb-in'>
+                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
+                        <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>    
+                    </span>
+                </div>
         ",
 
         "filter_manager_template2": "
@@ -380,38 +402,61 @@
 
                             <div class='add-dataset-content'> 
                                 <div class='step step-1 current-step'>
-                                    {% include('a_d_choice_step', {
-                                        'header': 'Data Source',
-                                        options: {
-                                            'option-1': 'Service',
-                                            'option-2': 'File'
-                                        }
-                                    }); %}
+                                    <div class='step-content'>
+                                        {% include('a_d_choice_step', {
+                                            header: 'Data Source',
+                                            active: true,
+                                            options: {
+                                                'option-1': 'Service',
+                                                'option-2': 'File'
+                                            }
+                                        }); %}
+                                    </div>
 
                                     <div class='step-options-container'>
                                         {% include('a_d_options_bg', o); %}
 
                                         <div class='step-options'>
-                                            <div class='step step-2 option-1 service'>
-                                                {% include('a_d_choice_step', {
-                                                    'header': 'Layer Type',
-                                                    options: {
-                                                        'option-1': 'Feature',
-                                                        'option-2': 'WMS'
-                                                    }
-                                                }); %}
+                                            <div class='step step-2 option-1' data-step-id='loadServiceStep'>
+                                                <div class='step-content load-url-step'>
+                                                    {% include('a_d_choice_step', {
+                                                        header: 'Service Type',
+                                                        choiceId: 'serviceType',
+                                                        options: {
+                                                            'option-1': 'Feature',
+                                                            'option-2': 'WMS'
+                                                        }
+                                                    }); %}
+
+                                                    {% include('a_d_load_URL_step', {
+                                                        header: 'Service Layer URL',
+                                                        label:  'Service Layer URL',
+                                                        idPrefix: 'serviceURL',
+                                                        placeholder: 'ESRI MapServer or Feature layer or WMS layer'
+                                                    }); %}
+                                                </div>
 
                                                 <div class='step-options-container'>
                                                     {% include('a_d_options_bg', o); %}
 
                                                     <div class='step-options'>
                                                         <div class='step step-3 option-1 feature'>
-                                                            {% include('a_d_load_URL_step', {
-                                                                header: 'Feature Layer URL',
-                                                                label:  'Feature Layer URL',
-                                                                idPrefix: 'featureURL',
-                                                                placeholder: 'ESRI MapServer or Feature layer'
-                                                            }); %}
+                                                            <div class='step-content load-url-step'>
+                                                                {% include('a_d_choice_step', {
+                                                                    header: 'Layer Type',
+                                                                    options: {
+                                                                        'option-1': 'Feature',
+                                                                        'option-2': 'WMS'
+                                                                    }
+                                                                }); %}
+
+                                                                {% include('a_d_load_URL_step', {
+                                                                    header: 'Feature Layer URL',
+                                                                    label:  'Feature Layer URL',
+                                                                    idPrefix: 'featureURL',
+                                                                    placeholder: 'ESRI MapServer or Feature layer'
+                                                                }); %}
+                                                            </div>
 
                                                             <div class='step-options-container'>
                                                                 {% include('a_d_options_bg', o); %}
@@ -462,26 +507,45 @@
                                                         </div>
 
                                                         <div class='step step-3 option-2 wms'>
-                                                            {% include('a_d_load_URL_step', {
-                                                                header: 'WMS Layer URL',
-                                                                label:  'WMS Layer URL',
-                                                                idPrefix: 'wmsURL',
-                                                                placeholder: 'WMS URL'
-                                                            }); %}
+                                                            <div class='step-content load-url-step'>
+                                                                {% include('a_d_load_URL_step', {
+                                                                    header: 'WMS Layer URL',
+                                                                    label:  'WMS Layer URL',
+                                                                    idPrefix: 'wmsURL',
+                                                                    placeholder: 'WMS URL'
+                                                                }); %}
+                                                            </div>
+
+                                                            <div class='step-options-container'>
+                                                                {% include('a_d_options_bg', o); %}
+
+                                                                <div class='step-options'>
+                                                                    <div class='step step-4 option-1 default'>  
+                                                                        {% include('a_d_load_file_or_URL_step', {
+                                                                            header: 'WMS Layer URL',
+                                                                            label:  'WMS Layer URL',
+                                                                            idPrefix: 'wmsURL',
+                                                                            placeholder: 'WMS URL'
+                                                                        }); %}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class='step step-2 option-2 file'>
-                                                    {% include('a_d_choice_step', {
-                                                        'header': 'File Type',
-                                                        options: {
-                                                            'option-1': 'GeoJSON',
-                                                            'option-2': 'CSV',
-                                                            'option-3': 'Shapefile'
-                                                        }
-                                                    }); %}
+                                                    <div class='step-content'>
+                                                        {% include('a_d_choice_step', {
+                                                            'header': 'File Type',
+                                                            options: {
+                                                                'option-1': 'GeoJSON',
+                                                                'option-2': 'CSV',
+                                                                'option-3': 'Shapefile'
+                                                            }
+                                                        }); %}
+                                                    </div>
                                             </div>
                                         </div>                 
                                     </div>                   
