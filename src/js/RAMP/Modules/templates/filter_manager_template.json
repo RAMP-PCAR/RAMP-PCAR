@@ -339,28 +339,49 @@
                 </div>
         ",
 
-        "a_d_load_file_or_URL_step": "
-            <div class='step-content load-url-step '>
-                <h3 class='h6'>{%= o.header %}</h3> 
+        "a_d_list_list":"
+                {% if(o.header) { %}
+                    <h3 class='h6 smaller'>{%= o.header %}</h3>
+                {% } %}
 
-                <div class='input-group'>
-                    <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
-                    <span class='input-group-btn'>
-                        <button class='btn btn-default btn-sm' type='button'>
-                            <i class='fa fa-file'></i>
-                            <span class='on-right'>Browse</span>
-                        </button>                                                                                                
-                    </span>
-
-                    <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
-                    
-                    <span class='glyphicon glyphicon-ok form-control-feedback'></span>
-                    <span class='glyphicon glyphicon-remove form-control-feedback'></span>
-                    <span class='input-group-btn'>
-                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option disabled' data-action='{%= o.idPrefix %}' data-option='option-1' type='button'>Load</button>
-                        <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
-                    </span>
+                <div class='input-group list-group' data-list-id='{%= o.listId %}'>
+                    <label class='wb-inv' for='{%= o.listId %}list'>{%= o.label %}:</label>
+                    <select name='select' class='form-control list-control input-sm' id='{%= o.listId %}list' data-role='none'>
+                        <option value=''>blah</option>
+                    </select>
                 </div>
+        ",        
+
+        "a_d_list_step":"
+                <h3 class='h6'>{%= o.header %}</h3>
+
+                {%     
+                    o.lists.forEach(function(list) {
+                        include('a_d_list_list', list);
+                    });
+                %}
+        ",
+
+        "a_d_load_file_or_URL_step": "
+            <h3 class='h6'>{%= o.header %}</h3> 
+
+            <div class='input-group'>
+                <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                <span class='input-group-btn'>
+                    <button class='btn btn-default btn-sm' type='button'>
+                        <i class='fa fa-file'></i>
+                        <span class='on-right wb-inv'>Browse</span>
+                    </button>                                                                                                
+                </span>
+
+                <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                
+                <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+                <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                <span class='input-group-btn'>
+                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option disabled' data-action='{%= o.idPrefix %}' data-option='option-1' type='button'>Load</button>
+                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
+                </span>
             </div>
         ",
 
@@ -440,22 +461,35 @@
                                                     {% include('a_d_options_bg', o); %}
 
                                                     <div class='step-options'>
-                                                        <div class='step step-3 option-1 feature'>
+                                                        <div class='step step-3 option-1'  data-step-id='feaureAttrStep'>
                                                             <div class='step-content load-url-step'>
-                                                                {% include('a_d_choice_step', {
-                                                                    header: 'Layer Type',
-                                                                    options: {
-                                                                        'option-1': 'Feature',
-                                                                        'option-2': 'WMS'
-                                                                    }
+                                                                {% include('a_d_list_step', {
+                                                                    header: 'Primary Attribute',
+                                                                    lists: [
+                                                                        {
+                                                                            label:  'Primary Attribute',
+                                                                            listId: 'featurePrimaryAttr'
+                                                                        }
+                                                                    ]                                                                    
                                                                 }); %}
 
-                                                                {% include('a_d_load_URL_step', {
-                                                                    header: 'Feature Layer URL',
-                                                                    label:  'Feature Layer URL',
-                                                                    idPrefix: 'featureURL',
-                                                                    placeholder: 'ESRI MapServer or Feature layer'
+                                                                {% include('a_d_list_step', {
+                                                                    header: 'Symbology',
+                                                                    lists: [
+                                                                        {
+                                                                            header: 'Style',
+                                                                            label:  'Style',
+                                                                            listId: 'featureStyleAttr'
+                                                                        },
+                                                                        {
+                                                                            header: 'Colour',
+                                                                            label:  'Colour',
+                                                                            listId: 'featureColourAttr'
+                                                                        }
+                                                                    ]                                                                    
                                                                 }); %}
+
+                                                                
                                                             </div>
 
                                                             <div class='step-options-container'>
@@ -535,15 +569,23 @@
                                                 </div>
                                             </div>
 
-                                            <div class='step step-2 option-2 file'>
-                                                    <div class='step-content'>
+                                            <div class='step step-2 option-2' data-step-id='loadFileStep'>
+                                                    <div class='step-content load-file-step'>
                                                         {% include('a_d_choice_step', {
-                                                            'header': 'File Type',
+                                                            header: 'File Type',
+                                                            choiceId: 'fileType',
                                                             options: {
                                                                 'option-1': 'GeoJSON',
                                                                 'option-2': 'CSV',
                                                                 'option-3': 'Shapefile'
                                                             }
+                                                        }); %}
+
+                                                        {% include('a_d_load_file_or_URL_step', {
+                                                            header: 'File or URL',
+                                                            label:  'File or URL',
+                                                            idPrefix: 'fileOrURL',
+                                                            placeholder: 'Local file or URL'
                                                         }); %}
                                                     </div>
                                             </div>

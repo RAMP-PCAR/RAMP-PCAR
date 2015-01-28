@@ -9,7 +9,7 @@ define([
 
     /* Ramp */
 
-    "utils/PopupManager", "ramp/dataLoader", "ramp/theme",
+    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader",
 
     /* Util */
     "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
@@ -17,7 +17,7 @@ define([
     function (
         lang, Deferred,
         layer_selector_template,
-        PopupManager, DataLoader, Theme,
+        PopupManager, DataLoader, Theme, Map, LayerLoader,
         TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -31,15 +31,62 @@ define([
             loadSteps = {
                 loadServiceStep: {
                     serviceType: null,
+                    typeUserSelected: false,
                     url: "",
                     buttonId: "serviceURLinputSubmit"
                 },
 
                 loadFileStep: {
                     fileType: null,
-                    "file-url": "",
-                    buttonId: ""
+                    typeUserSelected: false,
+                    url: "",
+                    file: null,
+                    buttonId: "fileOrURLinputSubmit"
                 }
+            },
+
+            hc = {
+                layerAttributes: "*",
+                minScale: 0,
+                maxScale: 0,
+                settings: {
+                    panelEnabled: true,
+                    opacity: {
+                        enabled: true,
+                        default: 0.7
+                    },
+                    visible: true,
+                    boundingBoxVisible: false
+                },
+                datagrid: {
+                    rowsPerPage: 50,
+                    gridColumns: [
+
+                    ]
+                },
+                templates: {
+                    detail: "default_feature_details",
+                    hover: "feature_hover_maptip_template",
+                    anchor: "anchored_map_tip",
+                    summary: "default_grid_summary_row"
+                },
+                id: "oilAreaOverlay",
+                displayName: "CESI Oil Area Overlay",
+                url: "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
+                symbology: {
+                    type: "simple",
+                    imageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
+                },
+                layerExtent: {
+                    xmin: -2566693.97839747,
+                    ymin: -1104728.00466316,
+                    xmax: 4021444.19787888,
+                    ymax: 3657781.52035589,
+                    spatialReference: {
+                        wkid: 3978
+                    }
+                },
+                isStatic: true
             },
 
             transitionDuration = 0.4;
@@ -71,6 +118,42 @@ define([
                         .toggleClass("disabled", (!loadStep.serviceType || loadStep.url === ""));
 
                     break;
+
+                case "loadFileStep":
+                    if ((loadStep.url || loadStep.file) && !loadStep.typeUserSelected) {
+                        if (loadStep.url.indexOf(".txt") !== -1) {
+
+                            step
+                                .find("div[data-choice-id='fileType'] button")
+                                .removeClass("button-pressed")
+                                .filter("button[data-option='option-1']")
+                                .addClass("button-pressed");
+
+                            loadStep.fileType = "option-1";
+
+                        } else if (loadStep.url.indexOf(".json") !== -1) {
+
+                            step
+                                .find("div[data-choice-id='fileType'] button")
+                                .removeClass("button-pressed")
+                                .filter("button[data-option='option-2']")
+                                .addClass("button-pressed");
+
+                            loadStep.fileType = "option-2";
+                        } else {
+                            step
+                                .find("div[data-choice-id='fileType'] button")
+                                .removeClass("button-pressed");
+
+                            loadStep.fileType = null;
+                        }
+                    }
+
+                    rootNode
+                        .find("#" + loadStep.buttonId)
+                        .toggleClass("disabled", (!loadStep.fileType || !loadStep.file || loadStep.url === ""));
+
+                    break;
             }
         }
 
@@ -86,6 +169,7 @@ define([
                     .removeClass("button-pressed");
 
                 loadSteps[stepId][choiceId] = this.handle.data("option");
+                loadSteps[stepId].typeUserSelected = true;
 
                 checkLoadStep(stepId, step);
 
@@ -340,7 +424,7 @@ define([
                         tl
                             .addLabel("leftShiftStart")
 
-                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight() }, "leftShiftStart" + leftShiftStartAdjustment)
+                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
                             .to(options, transitionDuration,
                                 { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
                             .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
@@ -392,18 +476,25 @@ define([
                             loadURLStep.init();
 
                             loadURLStep.beforeLoadUrlStep();
-
+                            
                             promise = DataLoader.loadDataSet({
                                 url: loadSteps[stepId].url
                             });
 
                             promise.then(function (event) {
+                                var fl;
+
                                 option = options.find("> ." + loadSteps[stepId].serviceType + ":first");
 
                                 loadURLStep.successLoadUrlStep();
 
                                 event = null;
                                 //console.log(event);
+
+                                hc.url = loadSteps[stepId].url;
+
+                                fl = Map.makeFeatureLayer(hc, true);
+                                LayerLoader.loadLayer(fl);
 
                             }, function () {
                                 loadURLStep.errorLoadUrlStep();

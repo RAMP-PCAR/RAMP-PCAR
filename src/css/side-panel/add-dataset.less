@@ -60,24 +60,31 @@
                 width: 100%;
 
                 .step-content {
-                    padding: 8px 12px 12px 29px;
+                    padding: 12px 12px 12px 29px;
                     position: relative;
                     overflow: hidden;
                     background-color: #fff;
 
                     h3 {
-                        margin: 12px 0 10px 0;
+                        margin: 21px 0 10px 0;
                         
                         &:first-child {
                             margin: 2px 0 10px 0;
                         }
                     }
 
+                    .btn-group,
+                    .input-group {
+                        margin-bottom: 10px;
+                        display: table;
+                    }
+
                     .input-group {
                         width: 85%;
                     }
 
-                    &.load-url-step {
+                    &.load-url-step,
+                    &.load-file-step {
 
                         .btn-load,
                         .btn-cancel {
@@ -245,6 +252,7 @@
                 //opacity: 0.3;
                 font-weight: bold;
                 background-color: #fff;
+                bottom: 0;
             }
 
             .step-1 {
