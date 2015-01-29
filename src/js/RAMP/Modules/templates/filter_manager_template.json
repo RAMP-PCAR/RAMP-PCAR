@@ -379,7 +379,7 @@
                 <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                 <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                 <span class='input-group-btn'>
-                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option disabled' data-action='{%= o.idPrefix %}' data-option='option-1' type='button'>Load</button>
+                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option disabled' data-action='{%= o.idPrefix %}' data-option='option-1' type='button'>Load</button>
                     <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
                 </span>
             </div>
@@ -394,7 +394,7 @@
                     <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                     <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                     <span class='input-group-btn wb-in'>
-                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-info btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
+                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
                         <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>    
                     </span>
                 </div>
