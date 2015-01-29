@@ -179,16 +179,19 @@ define(["ramp/globalStorage"],
                 // var urlRegex = /((f|ht)tp(s|):\/\/.+?[\w=%\?\&\./-]+)/g;
                 // var emailRegex = /([\w-\.]+@([\w-]+\.)+[\w-]{2,4})/g;
 
-                var urlRegex = /(["'>:]?)((ftp|http|https|file):\/\/[\S]+(\b|$))/gi;
-                content = content.replace(urlRegex, function ($0, $1) {
-                    return $1 ? $0 : '<a href="' + $0 + '" target="_blank">' + $0 + '</a>';
-                });
+                if (content) {
+                    content = content.toString();
 
-                var emailRegex = /(["'>:]?)([\w.-]+@[\w.-]+\.[\w.-]+)/gi;
-                content = content.replace(emailRegex, function ($0, $1) {
-                    return $1 ? $0 : '<a href="mailto:' + $0 + '">' + $0 + '</a>';
-                });
+                    var urlRegex = /(["'>:]?)((ftp|http|https|file):\/\/[\S]+(\b|$))/gi;
+                    content = content.replace(urlRegex, function ($0, $1) {
+                        return $1 ? $0 : '<a href="' + $0 + '" target="_blank">' + $0 + '</a>';
+                    });
 
+                    var emailRegex = /(["'>:]?)([\w.-]+@[\w.-]+\.[\w.-]+)/gi;
+                    content = content.replace(emailRegex, function ($0, $1) {
+                        return $1 ? $0 : '<a href="mailto:' + $0 + '">' + $0 + '</a>';
+                    });
+                }
                 return content;
             },
 
