@@ -408,6 +408,7 @@ module.exports = (grunt) ->
 
         # Metadata.
         pkg: grunt.file.readJSON('package.json')
+        series: 'v' + grunt.file.readJSON('package.json').version.split('.').slice(0,2).join('.') + '-dist'
 
         yuidocconfig: grunt.file.readJSON('yuidoc.json')
 
@@ -1179,7 +1180,11 @@ module.exports = (grunt) ->
                     'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    'dist'
+                    'checkDependencies'
+                    'test'
+                    'build'
+                    'minify'
+                    'i18n_csv:assemble'
                 ]
 
         compress:
@@ -1224,7 +1229,32 @@ module.exports = (grunt) ->
                 ]
                 commit: false
                 createTag: false
-                push: false                
+                push: false
+                
+        'gh-pages':
+            options:
+                clone: 'ramp-pcar-dist'
+                # base: 'dist'
+
+            travis:
+                options:
+                    repo: process.env.DIST_REPO
+                    branch: '<%= series %>'
+                    message: ((
+                        if process.env.TRAVIS_TAG
+                            "Production files for the " + process.env.TRAVIS_TAG + " release"
+                        else
+                            "Travis build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
+                    ))
+                    silent: true
+                    tag: ((
+                        if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
+                    ))
+                src: [
+                    'dist/**/*.*'
+                    'build/**/*.*'
+                    'tarball/**/*.*'
+                ]
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1242,6 +1272,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-uglify'
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
+    @loadNpmTasks 'grunt-gh-pages'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'

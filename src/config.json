@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "geometryServiceUrl": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/Geometry/GeometryServer",
+    "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "proxy/dotNet/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
