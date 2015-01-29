@@ -1000,7 +1000,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", ".sort-handle", function (event) { 
+                        .on("keyup", ".sort-handle", function (event) {
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -1095,7 +1095,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         });
                 });
             },
-                        
+
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter
@@ -1150,6 +1150,52 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
             containsInDom: function (el) {
                 return $.contains(document.documentElement, el);
-            }			
+            },
+
+            styleBrowseFilesButton: function (nodes) {
+                var input,
+                    button;
+
+                function focusIn(event) {
+                    event.data.button.addClass("btn-focus btn-hover");
+                }
+
+                function focusOut(event) {
+                    event.data.button.removeClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseEnter(event) {
+                    event.data.button.addClass("btn-hover");
+                }
+
+                function mouseLeave(event) {
+                    event.data.button.removeClass("btn-hover btn-active");
+                }
+
+                function mouseDown(event) {
+                    event.data.button.addClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseUp(event) {
+                    event.data.button.removeClass("btn-active");
+                }
+
+                nodes.each(function (i, node) {
+                    node = $(node);
+                    input = node.find("input[type='file']");
+                    button = node.find(".browse-button");
+
+                    input
+                        .on("focusin", { button: button }, focusIn)
+                        .on("focusout", { button: button }, focusOut)
+
+                        .on("mouseenter", { button: button }, mouseEnter)
+                        .on("mouseleave", { button: button }, mouseLeave)
+
+                        .on("mousedown", { button: button }, mouseDown)
+                        .on("mouseup", { button: button }, mouseUp)
+                    ;
+                });
+            }
         };
     });

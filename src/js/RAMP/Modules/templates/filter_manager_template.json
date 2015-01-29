@@ -367,12 +367,15 @@
 
             <div class='input-group'>
                 <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
-                <span class='input-group-btn'>
-                    <button class='btn btn-default btn-sm' type='button'>
-                        <i class='fa fa-file'></i>
+                <div class='input-group-btn browse-files'>
+                    <div class='input-container'>
+                        <input type='file' data-role='upload'>
+                    </div>
+                    <span class='btn btn-default btn-sm browse-button'>
+                        <i class='fa fa-file-o'></i>
                         <span class='on-right wb-inv'>Browse</span>
-                    </button>                                                                                                
-                </span>
+                    </span>                                                                                                
+                </div>
 
                 <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
                 

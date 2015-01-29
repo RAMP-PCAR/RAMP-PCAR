@@ -3,10 +3,54 @@
     width: 100%;
 
     .input-group-btn {
+        > span.btn,
         > button.btn,
         > a.btn {
             white-space: nowrap;
             border-radius: 0;
+        }
+
+        &.browse-files {
+            > .input-container {
+                top: 0;
+                bottom: 0;
+                position: absolute;
+                left: 0;
+                right: 0;
+                overflow: hidden;
+
+                > input[type='file'] {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    z-index: 1;
+                    font: 200px monospace !important;
+                    opacity: 0;
+                    margin: 0;
+                    padding: 0;
+                    cursor: pointer;
+                }
+            }
+
+            > .browse-button {
+                &.btn-hover {
+                    color: #335075;
+                    background-color: #cfd1d5;
+                    border-color: #bbbfc5;
+                }
+
+                &.btn-active {
+                    outline: 0;
+                    background-image: none;
+                    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+                }
+
+                &.btn-focus {
+                    border-color: #66afe9;
+                    outline: 0;
+                    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+                }
+            }
         }
     }
 }
