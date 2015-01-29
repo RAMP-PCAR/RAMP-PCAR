@@ -172,7 +172,10 @@ define(["ramp/globalStorage"],
             * @param {String} content the text you would like to search in.
             */
             autoHyperlink: function (content) {
-                var urlRegex = /((f|ht)tp(s|):\/\/.+?[\w=%\?\&\./-]+)/g;
+                //http://stackoverflow.com/questions/11863847/regex-to-match-urls-but-not-urls-in-hyperlinks
+
+                // var urlRegex = /((f|ht)tp(s|):\/\/.+?[\w=%\?\&\./-]+)/g;
+                var urlRegex = /(?:^|[^"'])((ftp|http|https|file):\/\/[\S]+(\b|$))/gi
                 content = content.replace(urlRegex, '<a href="$1">$1</a>');
 
                 var emailRegex = /([\w-\.]+@([\w-]+\.)+[\w-]{2,4})/g;
