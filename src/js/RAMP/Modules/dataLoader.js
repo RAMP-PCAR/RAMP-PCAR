@@ -102,13 +102,27 @@ define([
             return def.promise;
         }
 
+        /**
+        * Converts a GeoJSON object into a FeatureLayer.  Expects GeoJSON to be formed as a FeatureCollection
+        * containing a uniform feature type (FeatureLayer type will be set according to the type of the first
+        * feature entry).  Accepts the following options:
+        *   - renderer: a string identifying one of the properties in defaultRenders
+        *   - sourceProjection: a string matching a proj4.defs projection to be used for the source data (overrides
+        *     geoJson.crs)
+        *   - targetWkid: an integer for an ESRI wkid, defaults to map wkid if not specified
+        *
+        * @param {Object} geoJson An object following the GeoJSON specification, should be a FeatureCollection with
+        * Features of only one type
+        * @param {Object} opts An object for supplying additional parameters
+        * @returns {FeatureLayer} An ESRI FeatureLayer
+        */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, mapWkid, srcProj;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj;
             layerDefinition = {
                 fields: []
             };
 
-            mapWkid = RAMP.map.spatialReference.wkid;
+            targetWkid = RAMP.map.spatialReference.wkid;
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
 
             if (opts) {
@@ -123,22 +137,22 @@ define([
                     srcProj = opts.sourceProjection;
                 }
                 if (opts.targetWkid) {
-                    mapWkid = opts.targetWkid;
+                    targetWkid = opts.targetWkid;
                 }
             }
 
-            console.log('reprojecting ' + srcProj + ' -> EPSG:' + mapWkid);
+            console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
             console.log(geoJson);
-            Terraformer.Proj.convert(geoJson, 'EPSG:' + mapWkid, srcProj);
+            Terraformer.Proj.convert(geoJson, 'EPSG:' + targetWkid, srcProj);
             console.log(geoJson);
-            esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: mapWkid });
+            esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: targetWkid });
             console.log('geojson -> esrijson converted');
             console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
-            layer.spatialReference = new SpatialReference({ wkid: mapWkid });
+            layer.spatialReference = new SpatialReference({ wkid: targetWkid });
             layer.ramp = { type: "newtype?" };
             return layer;
         }
