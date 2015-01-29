@@ -258,6 +258,7 @@ require([
             console.log("Bootstrapper: config loaded");
 
             GlobalStorage.init(configObject);
+            GlobalStorage.defineProjections(window.proj4);
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
