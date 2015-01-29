@@ -8,10 +8,10 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer", "utils/util"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util"
     ],
     function (
-            Deferred, EsriRequest, FeatureLayer, Util
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util
         ) {
         "use strict";
 
@@ -103,14 +103,13 @@ define([
         }
 
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, mapProj, srcProj;
+            var esriJson, layerDefinition, layer, fs, mapWkid, srcProj;
             layerDefinition = {
                 fields: []
             };
 
-            mapProj = 'EPSG:' + RAMP.map.spatialReference.wkid;
+            mapWkid = RAMP.map.spatialReference.wkid;
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
-            console.log(layerDefinition);
 
             if (opts) {
                 if (opts.idField) {
@@ -123,20 +122,23 @@ define([
                 if (opts.sourceProjection) {
                     srcProj = opts.sourceProjection;
                 }
-                if (opts.targetProjection) {
-                    mapProj = opts.targetProjection;
+                if (opts.targetWkid) {
+                    mapWkid = opts.targetWkid;
                 }
             }
 
-            console.log('reprojecting ' + srcProj + ' -> ' + mapProj);
+            console.log('reprojecting ' + srcProj + ' -> EPSG:' + mapWkid);
             console.log(geoJson);
-            Terraformer.Proj.convert(geoJson, mapProj, srcProj);
+            Terraformer.Proj.convert(geoJson, 'EPSG:' + mapWkid, srcProj);
             console.log(geoJson);
-            esriJson = Terraformer.ArcGIS.convert(geoJson);
+            esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: mapWkid });
             console.log('geojson -> esrijson converted');
             console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
+
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            // ＼(｀O´)／ manually setting SR because it will come out as 4326
+            layer.spatialReference = new SpatialReference({ wkid: mapWkid });
             layer.ramp = { type: "newtype?" };
             return layer;
         }
