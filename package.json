@@ -89,7 +89,9 @@
                 "terraformer/terraformer.js",
                 "terraformer-arcgis-parser/terraformer-arcgis-parser.js",
                 "shapefile-js/dist/shp.js",
-                "csv2geojson/csv2geojson.js"
+                "csv2geojson/csv2geojson.js",
+                "proj4js/dist/proj4-src.js",
+                "terraformer-proj4js/src/terraformer-proj4js.js"
             ],
 
             "cssLib": [
