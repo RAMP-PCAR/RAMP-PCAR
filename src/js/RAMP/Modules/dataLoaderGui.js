@@ -12,13 +12,13 @@ define([
     "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader",
 
     /* Util */
-    "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         lang, Deferred,
         layer_selector_template,
         PopupManager, DataLoader, Theme, Map, LayerLoader,
-        TmplHelper, TmplUtil, UtilArray, UtilDict
+        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
 
@@ -30,18 +30,16 @@ define([
 
             loadSteps = {
                 loadServiceStep: {
-                    serviceType: null,
                     typeUserSelected: false,
-                    url: "",
-                    buttonId: "serviceURLinputSubmit"
+                    serviceType: null,
+                    url: ""
                 },
 
                 loadFileStep: {
-                    fileType: null,
                     typeUserSelected: false,
+                    fileType: null,
                     url: "",
-                    file: null,
-                    buttonId: "fileOrURLinputSubmit"
+                    file: null
                 }
             },
 
@@ -110,16 +108,14 @@ define([
                         } else if (loadStep.url.match(/wms/ig)) {
                             console.log("Z: wms?");
                         }
-
                     }
 
-                    rootNode
-                        .find("#" + loadStep.buttonId)
-                        .toggleClass("disabled", (!loadStep.serviceType || loadStep.url === ""));
+                    loadStep.button.toggleClass("disabled", (!loadStep.serviceType || loadStep.url === ""));
 
                     break;
 
                 case "loadFileStep":
+
                     if ((loadStep.url || loadStep.file) && !loadStep.typeUserSelected) {
                         if (loadStep.url.indexOf(".txt") !== -1) {
 
@@ -151,7 +147,7 @@ define([
 
                     rootNode
                         .find("#" + loadStep.buttonId)
-                        .toggleClass("disabled", (!loadStep.fileType || !loadStep.file || loadStep.url === ""));
+                        .toggleClass("disabled", (!loadStep.fileType && (!loadStep.file || loadStep.url === "")));
 
                     break;
             }
@@ -160,18 +156,17 @@ define([
         PopupManager.registerPopup(rootNode, "click",
             function (d) {
                 var step = this.handle.parents(".step:first"),
-                    stepId = step.data("step-id"),
-                    group = this.handle.parents(".choice-group:first"),
-                    choiceId = group.data("choice-id");
+                    stepId = step.attr("id"),
+                    group = this.handle.parents(".choice-group:first");//,
+                    //choiceId = group.data("choice-id");
 
                 group
                     .find(".button-pressed")
                     .removeClass("button-pressed");
 
-                loadSteps[stepId][choiceId] = this.handle.data("option");
-                loadSteps[stepId].typeUserSelected = true;
+                loadSteps[stepId].setChoice(this.handle.data("option"));
 
-                checkLoadStep(stepId, step);
+                //checkLoadStep(stepId, step);
 
                 d.resolve();
             },
@@ -198,7 +193,7 @@ define([
                     currentOptionsContainer = rootNode.find(".current-step"),
 
                     step = this.handle.parents(".step:first"),
-                    stepId = step.data("step-id"),
+                    stepId = step.attr("id"),
 
                     retreatOptionsContainers = [],
 
@@ -474,7 +469,6 @@ define([
 
                         case "serviceURL":
                             loadURLStep.init();
-
                             loadURLStep.beforeLoadUrlStep();
                             
                             promise = DataLoader.loadDataSet({
@@ -533,18 +527,88 @@ define([
 
         function loadUrlControlStatusCheck(control) {
             var step = control.parents(".step:first"),
-                stepId = step.data("step-id");
+                stepId = step.attr("id");
 
             loadSteps[stepId].url = control.val();
 
             checkLoadStep(stepId, step);
         }
 
-        rootNode.on("input", ".load-url-control", function (event) {
-            loadUrlControlStatusCheck($(event.target));
-        });
+        function loadFileControlStatusCheck(control) {
+            var step = control.parents(".step:first"),
+                stepId = step.attr("id");
+
+            loadSteps[stepId].file = control[0].files[0] || null;
+
+            checkLoadStep(stepId, step);
+        }
+
+        rootNode
+            .on("input", ".load-url-control", function (event) {
+                loadUrlControlStatusCheck($(event.target));
+            })
+            .on("change", ".browse-files input", function (event) {
+                loadFileControlStatusCheck($(event.currentTarget));
+            })
+        ;       
 
         return {
+            init: function () {
+                UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
+                loadSteps.loadServiceStep = (function () {
+                    var step = rootNode.find("#loadServiceStep"),
+                        stepContent = step.find(".step-content"),
+                        choiceButtons = stepContent.find(".choice-group .btn-option"),
+
+                        inputControl = stepContent.find("#serviceURLinput"),
+                        submitButton = stepContent.find("#serviceURLinputSubmit"),
+
+                        typeUserSelected = false,
+                        serviceType = null,
+                        serviceUrl = ""
+                    ;
+
+                    function checkStepStatus () {
+                        if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
+                            if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
+
+                                choiceButtons
+                                    .removeClass("button-pressed")
+                                    .filter("button[data-option='option-1']")
+                                    .addClass("button-pressed");
+
+                                serviceType = "option-1";
+
+                            } else if (serviceUrl.match(/wms/ig)) {
+                                console.log("Z: wms?");
+                            }
+                        }
+
+                        submitButton.toggleClass("disabled", (!serviceType || serviceUrl === ""));
+
+                        if (serviceUrl === "" && !typeUserSelected) {
+                            serviceType = null;
+                            choiceButtons
+                                .removeClass("button-pressed");
+                        }
+                    }
+
+                    inputControl.on("input", function (event) {
+                        serviceUrl = $(event.target).val();
+                        checkStepStatus();
+                    });
+
+                    return {
+                        setChoice: function (value) {
+                            serviceType = value;
+                            typeUserSelected = true;
+
+                            checkStepStatus();
+                        }
+                    };
+
+                }());
+            }
         };
     });

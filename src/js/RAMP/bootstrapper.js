@@ -131,6 +131,8 @@ require([
                 //initialize the filter
                 FilterManager.init();
 
+                DataLoadedGui.init();
+
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
