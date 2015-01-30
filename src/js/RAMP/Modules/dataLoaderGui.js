@@ -5,7 +5,7 @@ define([
     "dojo/_base/lang", "dojo/Deferred",
 
     /* Text */
-    "dojo/text!./templates/layer_selector_template.json",
+    "dojo/text!./templates/filter_manager_template.json",
 
     /* Ramp */
 
@@ -16,7 +16,7 @@ define([
 ],
     function (
         lang, Deferred,
-        layer_selector_template,
+        filter_manager_template,
         PopupManager, DataLoader, Theme, Map, LayerLoader,
         UtilMisc, TmplHelper, TmplUtil, UtilArray
     ) {
@@ -88,7 +88,7 @@ define([
             },
 
             transitionDuration = 0.4;
-        
+
         PopupManager.registerPopup(rootNode, "click",
             function (d) {
                 var step = this.handle.parents(".step:first"),
@@ -319,7 +319,7 @@ define([
 
                         tl
                             .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, "advanceStart+=" + advanceStagger * (i))
-                            
+
                             .set(options, { left: 0 }, "advanceStart+=" + advanceStagger * (i))
                             //.set(options, { left: -optionsLeftShift }, "advanceStart+=" + advanceStagger * (i))
                             .set(options.find("> .active-option"), { display: "inline-block" }, "advanceStart+=" + advanceStagger * (i))
@@ -360,7 +360,7 @@ define([
 
                 function shift() {
                     var optionsLeftShift;
-                    
+
                     TweenLite.set(options.find("> .step"), { display: "inline-block" });
                     TweenLite.set(options, { left: -options.find("> .active-option").position().left });
 
@@ -372,8 +372,6 @@ define([
                             .addLabel("leftShiftStart")
 
                             .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
-
-                            
 
                             .to(options, transitionDuration,
                                 { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
@@ -685,6 +683,24 @@ define([
                     };
 
                 }());
+
+                PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
+                    function (d) {
+                        TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 1, ease: "easeOutCirc" });
+
+                        d.resolve();
+                    },
+                    {
+                        closeHandler: function (d) {
+                            TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" });
+
+                            d.resolve();
+                        },
+                        target: rootNode.find("#add-dataset-section-container"),
+                        activeClass: "button-pressed",
+                        resetFocusOnClose: true
+                    }
+                );
             }
         };
     });
