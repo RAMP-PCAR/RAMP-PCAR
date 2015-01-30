@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $ */
+﻿/* global define, console, TweenLite, TimelineLite, $, window */
 
 define([
     /* Dojo */
@@ -317,8 +317,11 @@ define([
 
                         tl
                             .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, "advanceStart+=" + advanceStagger * (i))
-
-                            .set(options, { left: -optionsLeftShift, ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
+                            
+                            .set(options, { left: 0 }, "advanceStart+=" + advanceStagger * (i))
+                            //.set(options, { left: -optionsLeftShift }, "advanceStart+=" + advanceStagger * (i))
+                            .set(options.find("> .active-option"), { display: "inline-block" }, "advanceStart+=" + advanceStagger * (i))
+                            .set(options.find("> .step:not(.active-option)"), { display: "none" }, "advanceStart+=" + advanceStagger * (i))
 
                             .to(aoc, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
                             .fromTo(aoc, transitionDuration,
@@ -354,7 +357,12 @@ define([
                 }
 
                 function shift() {
-                    var optionsLeftShift = optionStepContent.length > 0 ? optionStepContent.position().left : -1;
+                    var optionsLeftShift;
+                    
+                    TweenLite.set(options.find("> .step"), { display: "inline-block" });
+                    TweenLite.set(options, { left: -options.find("> .active-option").position().left });
+
+                    optionsLeftShift = optionStepContent.length > 0 ? optionStepContent.position().left : -1;
 
                     if (optionsLeftShift !== -1 && optionsLeftShift !== options.position().left) {
 
@@ -362,10 +370,16 @@ define([
                             .addLabel("leftShiftStart")
 
                             .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
+
+                            
+
                             .to(options, transitionDuration,
                                 { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
                             .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
                             .set(option, { className: "+=active-option" })
+
+                            .set(options, { left: 0 })
+                            .set(options.find("> .step").not(option), { display: "none" })
                         ;
                     }
                 }
@@ -567,6 +581,7 @@ define([
                         inputControl = stepContent.find("#fileOrURLinput"),
                         submitButton = stepContent.find("#fileOrURLinputSubmit"),
 
+                        browsefiles = stepContent.find(".browse-files"),
                         browseControl = stepContent.find(".browse-files input[type='file']"),
                         pseudoBrowseControl = stepContent.find("#fileOrURLpseudoBrowse"),
 
@@ -632,6 +647,17 @@ define([
                         pseudoBrowseControl.addClass("selected");
                         checkStepStatus();
                     });
+
+                    if (!window.FileReader) {
+                        browseControl.remove();
+                        pseudoBrowseControl.attr("disabled", true);
+                        browsefiles
+                            .attr({
+                                title: "You have IE9"
+                            })
+                            .addClass("_tooltip");
+                        Theme.tooltipster(browsefiles.parent());
+                    }
 
                     return {
                         setChoice: function (value) {
