@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl */
 
 define([
     /* Dojo */
@@ -27,7 +27,7 @@ define([
         //console.log(lang, layer_selector_template, TmplHelper, TmplUtil, UtilArray, UtilDict);
 
         var rootNode = $("#searchMapSectionBody"),
-
+            
             loadSteps = {
                 loadServiceStep: {
                     typeUserSelected: false,
@@ -88,6 +88,8 @@ define([
             },
 
             transitionDuration = 0.4;
+
+        filter_manager_template = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
         PopupManager.registerPopup(rootNode, "click",
             function (d) {
@@ -507,182 +509,198 @@ define([
             }
         );
 
-        return {
-            init: function () {
-                UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
+        function reset() {
+            var section;
 
-                loadSteps.loadServiceStep = (function () {
-                    var step = rootNode.find("#loadServiceStep"),
-                        stepContent = step.find(".step-content"),
-                        choiceButtons = stepContent.find(".choice-group .btn-option"),
+            tmpl.cache = {};
+            tmpl.templates = filter_manager_template;
 
-                        inputControl = stepContent.find("#serviceURLinput"),
-                        submitButton = stepContent.find("#serviceURLinputSubmit"),
+            section = tmpl('add_dataset_content_template', {});
 
-                        typeUserSelected = false,
-                        serviceType = null,
-                        serviceUrl = ""
-                    ;
+            rootNode
+                .find(".add-dataset-content")
+                .replaceWith(section);
+            
+            UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
-                    function checkStepStatus() {
-                        if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
-                            if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
+            loadSteps.loadServiceStep = (function () {
+                var step = rootNode.find("#loadServiceStep"),
+                    stepContent = step.find(".step-content"),
+                    choiceButtons = stepContent.find(".choice-group .btn-option"),
 
-                                choiceButtons
-                                    .removeClass("button-pressed")
-                                    .filter("button[data-option='option-1']")
-                                    .addClass("button-pressed");
+                    inputControl = stepContent.find("#serviceURLinput"),
+                    submitButton = stepContent.find("#serviceURLinputSubmit"),
 
-                                serviceType = "option-1";
+                    typeUserSelected = false,
+                    serviceType = null,
+                    serviceUrl = ""
+                ;
 
-                            } else if (serviceUrl.match(/wms/ig)) {
-                                console.log("Z: wms?");
-                            }
-                        }
+                function checkStepStatus() {
+                    if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
+                        if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
 
-                        submitButton.toggleClass("disabled", (!serviceType || serviceUrl === ""));
-                        submitButton.attr("disabled", (!serviceType || serviceUrl === ""));
-
-                        if (serviceUrl === "" && !typeUserSelected) {
-                            serviceType = null;
                             choiceButtons
-                                .removeClass("button-pressed");
+                                .removeClass("button-pressed")
+                                .filter("button[data-option='option-1']")
+                                .addClass("button-pressed");
+
+                            serviceType = "option-1";
+
+                        } else if (serviceUrl.match(/wms/ig)) {
+                            console.log("Z: wms?");
                         }
                     }
 
-                    inputControl.on("input", function (event) {
-                        serviceUrl = $(event.target).val();
+                    submitButton.toggleClass("disabled", (!serviceType || serviceUrl === ""));
+                    submitButton.attr("disabled", (!serviceType || serviceUrl === ""));
+
+                    if (serviceUrl === "" && !typeUserSelected) {
+                        serviceType = null;
+                        choiceButtons
+                            .removeClass("button-pressed");
+                    }
+                }
+
+                inputControl.on("input", function (event) {
+                    serviceUrl = $(event.target).val();
+                    checkStepStatus();
+                });
+
+                return {
+                    setChoice: function (value) {
+                        serviceType = value;
+                        typeUserSelected = true;
+
                         checkStepStatus();
-                    });
+                    },
 
-                    return {
-                        setChoice: function (value) {
-                            serviceType = value;
-                            typeUserSelected = true;
+                    getServiceType: function () {
+                        return serviceType;
+                    },
 
-                            checkStepStatus();
-                        },
+                    getUrl: function () {
+                        return serviceUrl;
+                    }
+                };
 
-                        getServiceType: function () {
-                            return serviceType;
-                        },
+            }());
 
-                        getUrl: function () {
-                            return serviceUrl;
-                        }
-                    };
+            loadSteps.loadFileStep = (function () {
+                var step = rootNode.find("#loadFileStep"),
+                    stepContent = step.find(".step-content"),
+                    choiceButtons = stepContent.find(".choice-group .btn-option"),
 
-                }());
+                    inputControl = stepContent.find("#fileOrURLinput"),
+                    submitButton = stepContent.find("#fileOrURLinputSubmit"),
 
-                loadSteps.loadFileStep = (function () {
-                    var step = rootNode.find("#loadFileStep"),
-                        stepContent = step.find(".step-content"),
-                        choiceButtons = stepContent.find(".choice-group .btn-option"),
+                    browsefiles = stepContent.find(".browse-files"),
+                    browseControl = stepContent.find(".browse-files input[type='file']"),
+                    pseudoBrowseControl = stepContent.find("#fileOrURLpseudoBrowse"),
 
-                        inputControl = stepContent.find("#fileOrURLinput"),
-                        submitButton = stepContent.find("#fileOrURLinputSubmit"),
+                    typeUserSelected = false,
+                    fileType = null,
+                    file = null,
+                    fileUrl = ""
+                ;
 
-                        browsefiles = stepContent.find(".browse-files"),
-                        browseControl = stepContent.find(".browse-files input[type='file']"),
-                        pseudoBrowseControl = stepContent.find("#fileOrURLpseudoBrowse"),
+                function checkStepStatus() {
+                    var fileName = fileUrl || (file ? file.name : null) || "";
 
-                        typeUserSelected = false,
-                        fileType = null,
-                        file = null,
-                        fileUrl = ""
-                    ;
+                    if (!typeUserSelected) {
+                        if (fileName.endsWith(".csv")) {
+                            fileType = "option-2";
 
-                    function checkStepStatus() {
-                        var fileName = fileUrl || (file ? file.name : null) || "";
+                            choiceButtons
+                                .removeClass("button-pressed")
+                                .filter("button[data-option='option-2']")
+                                .addClass("button-pressed");
 
-                        if (!typeUserSelected) {
-                            if (fileName.endsWith(".csv")) {
-                                fileType = "option-2";
+                        } else if (fileName.endsWith(".json")) {
+                            fileType = "option-1";
 
-                                choiceButtons
-                                    .removeClass("button-pressed")
-                                    .filter("button[data-option='option-2']")
-                                    .addClass("button-pressed");
+                            choiceButtons
+                                .removeClass("button-pressed")
+                                .filter("button[data-option='option-1']")
+                                .addClass("button-pressed");
 
-                            } else if (fileName.endsWith(".json")) {
-                                fileType = "option-1";
-
-                                choiceButtons
-                                    .removeClass("button-pressed")
-                                    .filter("button[data-option='option-1']")
-                                    .addClass("button-pressed");
-
-                            } else {
-                                fileType = null;
-                                choiceButtons
-                                    .removeClass("button-pressed");
-                            }
-                        }
-
-                        submitButton.toggleClass("disabled", (!fileType || (!file && fileUrl === "")));
-                        submitButton.attr("disabled", (!fileType || (!file && fileUrl === "")));
-
-                        if (fileUrl === "" && !file && !typeUserSelected) {
+                        } else {
                             fileType = null;
                             choiceButtons
                                 .removeClass("button-pressed");
                         }
                     }
 
-                    function resetFormElement(e) {
-                        e.wrap('<form>').closest('form').get(0).reset();
-                        e.unwrap();
+                    submitButton.toggleClass("disabled", (!fileType || (!file && fileUrl === "")));
+                    submitButton.attr("disabled", (!fileType || (!file && fileUrl === "")));
+
+                    if (fileUrl === "" && !file && !typeUserSelected) {
+                        fileType = null;
+                        choiceButtons
+                            .removeClass("button-pressed");
                     }
+                }
 
-                    inputControl.on("input", function (event) {
-                        fileUrl = $(event.target).val();
-                        file = null;
-                        resetFormElement(browseControl);
-                        pseudoBrowseControl.removeClass("selected");
+                function resetFormElement(e) {
+                    e.wrap('<form>').closest('form').get(0).reset();
+                    e.unwrap();
+                }
+
+                inputControl.on("input", function (event) {
+                    fileUrl = $(event.target).val();
+                    file = null;
+                    resetFormElement(browseControl);
+                    pseudoBrowseControl.removeClass("selected");
+                    checkStepStatus();
+                });
+
+                browseControl.on("change", function (event) {
+                    file = event.target.files[0];
+                    inputControl.val(file.name);
+                    fileUrl = '';
+                    pseudoBrowseControl.addClass("selected");
+                    checkStepStatus();
+                });
+
+                if (!window.FileReader) {
+                    browseControl.remove();
+                    pseudoBrowseControl.attr("disabled", true);
+                    browsefiles
+                        .attr({
+                            title: "You have IE9"
+                        })
+                        .addClass("_tooltip");
+                    Theme.tooltipster(browsefiles.parent());
+                }
+
+                return {
+                    setChoice: function (value) {
+                        fileType = value;
+                        typeUserSelected = true;
+
                         checkStepStatus();
-                    });
+                    },
 
-                    browseControl.on("change", function (event) {
-                        file = event.target.files[0];
-                        inputControl.val(file.name);
-                        fileUrl = '';
-                        pseudoBrowseControl.addClass("selected");
-                        checkStepStatus();
-                    });
+                    getFileType: function () {
+                        return fileType;
+                    },
 
-                    if (!window.FileReader) {
-                        browseControl.remove();
-                        pseudoBrowseControl.attr("disabled", true);
-                        browsefiles
-                            .attr({
-                                title: "You have IE9"
-                            })
-                            .addClass("_tooltip");
-                        Theme.tooltipster(browsefiles.parent());
+                    getFileUrl: function () {
+                        return fileUrl;
+                    },
+
+                    getFile: function () {
+                        return file;
                     }
+                };
 
-                    return {
-                        setChoice: function (value) {
-                            fileType = value;
-                            typeUserSelected = true;
+            }());
+        }
 
-                            checkStepStatus();
-                        },
-
-                        getFileType: function () {
-                            return fileType;
-                        },
-
-                        getFileUrl: function () {
-                            return fileUrl;
-                        },
-
-                        getFile: function () {
-                            return file;
-                        }
-                    };
-
-                }());
+        return {
+            init: function () {
+                
+                reset();
 
                 PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
                     function (d) {
@@ -694,6 +712,7 @@ define([
                         closeHandler: function (d) {
                             TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" });
 
+                            reset();
                             d.resolve();
                         },
                         target: rootNode.find("#add-dataset-section-container"),

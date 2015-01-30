@@ -434,6 +434,243 @@
             </div>
         ",
 
+        "add_dataset_content_template": "
+            <div class='add-dataset-content'> 
+                <div class='step step-1 current-step'>
+                    <div class='step-content'>
+                        {% include('a_d_choice_step', {
+                            header: 'Data Source',
+                            active: true,
+                            options: {
+                                'option-1': 'Service',
+                                'option-2': 'File'
+                            }
+                        }); %}
+                    </div>
+
+                    <div class='step-options-container'>
+                        {% include('a_d_options_bg', o); %}
+
+                        <div class='step-options'>
+                            <div class='step step-2 option-1' id='loadServiceStep'>
+                                <div class='step-content load-url-step'>
+                                    {% include('a_d_choice_step', {
+                                        header: 'Service Type',
+                                        choiceId: 'serviceType',
+                                        options: {
+                                            'option-1': 'Feature',
+                                            'option-2': 'WMS'
+                                        }
+                                    }); %}
+
+                                    {% include('a_d_load_URL_step', {
+                                        header: 'Service Layer URL',
+                                        label:  'Service Layer URL',
+                                        idPrefix: 'serviceURL',
+                                        placeholder: 'ESRI MapServer or Feature layer or WMS layer'
+                                    }); %}
+                                </div>
+
+                                <div class='step-options-container'>
+                                    {% include('a_d_options_bg', o); %}
+
+                                    <div class='step-options'>
+                                        <div class='step step-3 option-1' id='featureAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: 'Primary Attribute',
+                                                    lists: [
+                                                        {
+                                                            label:  'Primary Attribute',
+                                                            listId: 'featurePrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: 'Symbology',
+                                                    lists: [
+                                                        {
+                                                            header: 'Style',
+                                                            label:  'Style',
+                                                            listId: 'featureStyleAttr'
+                                                        },
+                                                        {
+                                                            header: 'Colour',
+                                                            label:  'Colour',
+                                                            listId: 'featureColourAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}                                                                
+
+                                                {% include('a_d_add_dataset_button', o); %}
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-2' id='wmsAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: 'Request Parser',
+                                                    lists: [
+                                                        {
+                                                            label:  'Request Parser',
+                                                            listId: 'wmsParserAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+                                            </div>
+
+                                             {% include('a_d_add_dataset_button', o); %}
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class='step step-2 option-2' id='loadFileStep'>
+                                    <div class='step-content load-file-step'>
+                                        {% include('a_d_choice_step', {
+                                            header: 'File Type',
+                                            choiceId: 'fileType',
+                                            options: {
+                                                'option-1': 'GeoJSON',
+                                                'option-2': 'CSV',
+                                                'option-3': 'Shapefile'
+                                            }
+                                        }); %}
+
+                                        {% include('a_d_load_file_or_URL_step', {
+                                            header: 'File or URL',
+                                            label:  'File or URL',
+                                            idPrefix: 'fileOrURL',
+                                            placeholder: 'Local file or URL'
+                                        }); %}
+                                    </div>
+
+                                <div class='step-options-container'>
+                                    {% include('a_d_options_bg', o); %}
+
+                                    <div class='step-options'>
+                                        <div class='step step-3 option-1' id='geojsonAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: 'Primary Attribute',
+                                                    lists: [
+                                                        {
+                                                            label:  'Primary Attribute',
+                                                            listId: 'geojsonPrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: 'Symbology',
+                                                    lists: [
+                                                        {
+                                                            header: 'Style',
+                                                            label:  'Style',
+                                                            listId: 'geojsonStyleAttr'
+                                                        },
+                                                        {
+                                                            header: 'Colour',
+                                                            label:  'Colour',
+                                                            listId: 'geojsonColourAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-2' id='csvAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: 'Primary Attribute',
+                                                    lists: [
+                                                        {
+                                                            label:  'Primary Attribute',
+                                                            listId: 'csvPrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+                                                
+                                                {% include('a_d_double_list_step', {
+                                                    lists: [
+                                                        {
+                                                            header: 'Latitude',
+                                                            label:  'Latitude',
+                                                            listId: 'csvLatitudeAttr'
+                                                        },
+                                                        {
+                                                            header: 'Longitude',
+                                                            label:  'Longitude',
+                                                            listId: 'csvLongitudeAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: 'Symbology',
+                                                    lists: [
+                                                        {
+                                                            header: 'Style',
+                                                            label:  'Style',
+                                                            listId: 'csvStyleAttr'
+                                                        },
+                                                        {
+                                                            header: 'Colour',
+                                                            label:  'Colour',
+                                                            listId: 'csvColourAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                                                                                
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-3' id='shapefileAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: 'Primary Attribute',
+                                                    lists: [
+                                                        {
+                                                            label:  'Primary Attribute',
+                                                            listId: 'shapefilePrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: 'Symbology',
+                                                    lists: [
+                                                        {
+                                                            header: 'Style',
+                                                            label:  'Style',
+                                                            listId: 'shapefileStyleAttr'
+                                                        },
+                                                        {
+                                                            header: 'Colour',
+                                                            label:  'Colour',
+                                                            listId: 'shapefileColourAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %} 
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                                                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>                 
+                    </div>                   
+                </div>
+            </div>
+        ",
+
         "add_dataset_template": "            
             <div id='add-dataset-section-container'>
                 <div id='add-dataset-section'>
@@ -446,240 +683,7 @@
                             <span class='wb-invisible'>{%= i18n.t('gui.actions.close') %}</span>
                         </button>
 
-                        <div class='add-dataset-content'> 
-                            <div class='step step-1 current-step'>
-                                <div class='step-content'>
-                                    {% include('a_d_choice_step', {
-                                        header: 'Data Source',
-                                        active: true,
-                                        options: {
-                                            'option-1': 'Service',
-                                            'option-2': 'File'
-                                        }
-                                    }); %}
-                                </div>
-
-                                <div class='step-options-container'>
-                                    {% include('a_d_options_bg', o); %}
-
-                                    <div class='step-options'>
-                                        <div class='step step-2 option-1' id='loadServiceStep'>
-                                            <div class='step-content load-url-step'>
-                                                {% include('a_d_choice_step', {
-                                                    header: 'Service Type',
-                                                    choiceId: 'serviceType',
-                                                    options: {
-                                                        'option-1': 'Feature',
-                                                        'option-2': 'WMS'
-                                                    }
-                                                }); %}
-
-                                                {% include('a_d_load_URL_step', {
-                                                    header: 'Service Layer URL',
-                                                    label:  'Service Layer URL',
-                                                    idPrefix: 'serviceURL',
-                                                    placeholder: 'ESRI MapServer or Feature layer or WMS layer'
-                                                }); %}
-                                            </div>
-
-                                            <div class='step-options-container'>
-                                                {% include('a_d_options_bg', o); %}
-
-                                                <div class='step-options'>
-                                                    <div class='step step-3 option-1' id='featureAttrStep'>
-                                                        <div class='step-content load-url-step'>
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Primary Attribute',
-                                                                lists: [
-                                                                    {
-                                                                        label:  'Primary Attribute',
-                                                                        listId: 'featurePrimaryAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Symbology',
-                                                                lists: [
-                                                                    {
-                                                                        header: 'Style',
-                                                                        label:  'Style',
-                                                                        listId: 'featureStyleAttr'
-                                                                    },
-                                                                    {
-                                                                        header: 'Colour',
-                                                                        label:  'Colour',
-                                                                        listId: 'featureColourAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}                                                                
-
-                                                            {% include('a_d_add_dataset_button', o); %}
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='step step-3 option-2' id='wmsAttrStep'>
-                                                        <div class='step-content load-url-step'>
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Request Parser',
-                                                                lists: [
-                                                                    {
-                                                                        label:  'Request Parser',
-                                                                        listId: 'wmsParserAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-                                                        </div>
-
-                                                         {% include('a_d_add_dataset_button', o); %}
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class='step step-2 option-2' id='loadFileStep'>
-                                                <div class='step-content load-file-step'>
-                                                    {% include('a_d_choice_step', {
-                                                        header: 'File Type',
-                                                        choiceId: 'fileType',
-                                                        options: {
-                                                            'option-1': 'GeoJSON',
-                                                            'option-2': 'CSV',
-                                                            'option-3': 'Shapefile'
-                                                        }
-                                                    }); %}
-
-                                                    {% include('a_d_load_file_or_URL_step', {
-                                                        header: 'File or URL',
-                                                        label:  'File or URL',
-                                                        idPrefix: 'fileOrURL',
-                                                        placeholder: 'Local file or URL'
-                                                    }); %}
-                                                </div>
-
-                                            <div class='step-options-container'>
-                                                {% include('a_d_options_bg', o); %}
-
-                                                <div class='step-options'>
-                                                    <div class='step step-3 option-1' id='geojsonAttrStep'>
-                                                        <div class='step-content load-url-step'>
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Primary Attribute',
-                                                                lists: [
-                                                                    {
-                                                                        label:  'Primary Attribute',
-                                                                        listId: 'geojsonPrimaryAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Symbology',
-                                                                lists: [
-                                                                    {
-                                                                        header: 'Style',
-                                                                        label:  'Style',
-                                                                        listId: 'geojsonStyleAttr'
-                                                                    },
-                                                                    {
-                                                                        header: 'Colour',
-                                                                        label:  'Colour',
-                                                                        listId: 'geojsonColourAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_add_dataset_button', o); %}                                                                
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='step step-3 option-2' id='csvAttrStep'>
-                                                        <div class='step-content load-url-step'>
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Primary Attribute',
-                                                                lists: [
-                                                                    {
-                                                                        label:  'Primary Attribute',
-                                                                        listId: 'csvPrimaryAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-                                                            
-                                                            {% include('a_d_double_list_step', {
-                                                                lists: [
-                                                                    {
-                                                                        header: 'Latitude',
-                                                                        label:  'Latitude',
-                                                                        listId: 'csvLatitudeAttr'
-                                                                    },
-                                                                    {
-                                                                        header: 'Longitude',
-                                                                        label:  'Longitude',
-                                                                        listId: 'csvLongitudeAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Symbology',
-                                                                lists: [
-                                                                    {
-                                                                        header: 'Style',
-                                                                        label:  'Style',
-                                                                        listId: 'csvStyleAttr'
-                                                                    },
-                                                                    {
-                                                                        header: 'Colour',
-                                                                        label:  'Colour',
-                                                                        listId: 'csvColourAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_add_dataset_button', o); %}                                                                                                                                
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='step step-3 option-3' id='shapefileAttrStep'>
-                                                        <div class='step-content load-url-step'>
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Primary Attribute',
-                                                                lists: [
-                                                                    {
-                                                                        label:  'Primary Attribute',
-                                                                        listId: 'shapefilePrimaryAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %}
-
-                                                            {% include('a_d_list_step', {
-                                                                header: 'Symbology',
-                                                                lists: [
-                                                                    {
-                                                                        header: 'Style',
-                                                                        label:  'Style',
-                                                                        listId: 'shapefileStyleAttr'
-                                                                    },
-                                                                    {
-                                                                        header: 'Colour',
-                                                                        label:  'Colour',
-                                                                        listId: 'shapefileColourAttr'
-                                                                    }
-                                                                ]                                                                    
-                                                            }); %} 
-
-                                                            {% include('a_d_add_dataset_button', o); %}                                                                                                                               
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>                 
-                                </div>                   
-                            </div>
-                        </div>
+                        <div class='add-dataset-content'> </div>
                     </section>
                 </div>
             </div>
