@@ -12,19 +12,19 @@ define([
     "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader",
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array"
 ],
     function (
         lang, Deferred,
         layer_selector_template,
         PopupManager, DataLoader, Theme, Map, LayerLoader,
-        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
+        UtilMisc, TmplHelper, TmplUtil, UtilArray
     ) {
         "use strict";
 
         //var rootNode = $("#add-dataset-section-container");
 
-        console.log(lang, layer_selector_template, TmplHelper, TmplUtil, UtilArray, UtilDict);
+        //console.log(lang, layer_selector_template, TmplHelper, TmplUtil, UtilArray, UtilDict);
 
         var rootNode = $("#searchMapSectionBody"),
 
@@ -89,7 +89,7 @@ define([
 
             transitionDuration = 0.4;
 
-        function checkLoadStep(stepId, step) {
+        /*function checkLoadStep(stepId, step) {
             var loadStep = loadSteps[stepId];
 
             switch (stepId) {
@@ -151,22 +151,20 @@ define([
 
                     break;
             }
-        }
+        }*/
 
         PopupManager.registerPopup(rootNode, "click",
             function (d) {
                 var step = this.handle.parents(".step:first"),
                     stepId = step.attr("id"),
                     group = this.handle.parents(".choice-group:first");//,
-                    //choiceId = group.data("choice-id");
+                //choiceId = group.data("choice-id");
 
                 group
                     .find(".button-pressed")
                     .removeClass("button-pressed");
 
                 loadSteps[stepId].setChoice(this.handle.data("option"));
-
-                //checkLoadStep(stepId, step);
 
                 d.resolve();
             },
@@ -222,7 +220,7 @@ define([
                             init: function () {
                                 inputControlGroup = currentStepContent.find(".input-group");
                                 inputControl = inputControlGroup.find(".load-url-control");
-                                inputControlButtons = inputControlGroup.find(".input-group-btn");
+                                inputControlButtons = inputControlGroup.find(".input-group-btn:not(.browse-files)");
                             },
 
                             beforeLoadUrlStep: function () {
@@ -245,8 +243,9 @@ define([
                                         inputControlGroup.addClass("has-feedback has-success");
 
                                         currentStepContent
-                                            .find(".btn-option:not(.btn-action)")
-                                            .addClass("disabled");
+                                            .find(".btn-option:not(.btn-action), .browse-button")
+                                            .addClass("disabled")
+                                            .end().find("input[type='file']").attr("disabled", true);
 
                                         currentStepContent
                                             .find(".glyphicon")
@@ -291,6 +290,12 @@ define([
 
                                     clearStep();
                                 });
+
+                                currentStepContent.on("click", "input[type='file']", function () {
+                                    currentStepContent.off("click", "input[type='file']");
+
+                                    clearStep();
+                                });
                             },
 
                             cancelLoadUrlStep: function () {
@@ -308,8 +313,9 @@ define([
                                         clearStep();
 
                                         currentStepContent
-                                            .find(".btn-option:not(.btn-action)")
-                                            .removeClass("disabled");
+                                            .find(".btn-option:not(.btn-action), .browse-button")
+                                            .removeClass("disabled")
+                                            .end().find("input[type='file']").attr("disabled", false);
 
                                         // disable all active options in the following steps
                                         optionsContainer
@@ -317,7 +323,7 @@ define([
                                             .end()
                                             .find(".button-pressed").removeClass("button-pressed");
 
-                                        loadUrlControlStatusCheck(inputControl);
+                                        //loadUrlControlStatusCheck(inputControl);
                                     }, [], null, 0)
                                 ;
 
@@ -470,26 +476,52 @@ define([
                         case "serviceURL":
                             loadURLStep.init();
                             loadURLStep.beforeLoadUrlStep();
-                            
+
                             promise = DataLoader.loadDataSet({
-                                url: loadSteps[stepId].url
+                                url: loadSteps[stepId].getUrl()
                             });
 
                             promise.then(function (event) {
                                 var fl;
 
-                                option = options.find("> ." + loadSteps[stepId].serviceType + ":first");
+                                option = options.find("> ." + loadSteps[stepId].getServiceType() + ":first");
 
                                 loadURLStep.successLoadUrlStep();
 
                                 event = null;
                                 //console.log(event);
 
-                                hc.url = loadSteps[stepId].url;
+                                hc.url = loadSteps[stepId].getUrl();
 
                                 fl = Map.makeFeatureLayer(hc, true);
                                 LayerLoader.loadLayer(fl);
 
+                            }, function () {
+                                loadURLStep.errorLoadUrlStep();
+                            });
+
+                            break;
+
+                        case "fileOrURLcancel":
+                            loadURLStep.init();
+                            loadURLStep.cancelLoadUrlStep();
+
+                            break;
+
+                        case "fileOrURL":
+                            loadURLStep.init();
+                            loadURLStep.beforeLoadUrlStep();
+
+                            promise = DataLoader.loadDataSet({
+                                url: loadSteps[stepId].getFileUrl(),
+                                file: loadSteps[stepId].getFile()
+                            });
+
+                            promise.then(function (event) {
+                                console.log(event);
+                                option = options.find("> ." + loadSteps[stepId].getFileType() + ":first");
+
+                                loadURLStep.successLoadUrlStep();
                             }, function () {
                                 loadURLStep.errorLoadUrlStep();
                             });
@@ -525,32 +557,32 @@ define([
             }
         );
 
-        function loadUrlControlStatusCheck(control) {
-            var step = control.parents(".step:first"),
-                stepId = step.attr("id");
+        //function loadUrlControlStatusCheck(control) {
+        //    var step = control.parents(".step:first"),
+        //        stepId = step.attr("id");
 
-            loadSteps[stepId].url = control.val();
+        //    loadSteps[stepId].url = control.val();
 
-            checkLoadStep(stepId, step);
-        }
+        //    //checkLoadStep(stepId, step);
+        //}
 
-        function loadFileControlStatusCheck(control) {
+        /*function loadFileControlStatusCheck(control) {
             var step = control.parents(".step:first"),
                 stepId = step.attr("id");
 
             loadSteps[stepId].file = control[0].files[0] || null;
 
             checkLoadStep(stepId, step);
-        }
+        }*/
 
-        rootNode
-            .on("input", ".load-url-control", function (event) {
-                loadUrlControlStatusCheck($(event.target));
-            })
-            .on("change", ".browse-files input", function (event) {
-                loadFileControlStatusCheck($(event.currentTarget));
-            })
-        ;       
+        //rootNode
+        /*.on("input", ".load-url-control", function (event) {
+            loadUrlControlStatusCheck($(event.target));
+        })*/
+        /*.on("change", ".browse-files input", function (event) {
+            loadFileControlStatusCheck($(event.currentTarget));
+        })*/
+        //;
 
         return {
             init: function () {
@@ -569,7 +601,7 @@ define([
                         serviceUrl = ""
                     ;
 
-                    function checkStepStatus () {
+                    function checkStepStatus() {
                         if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
                             if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
 
@@ -605,6 +637,111 @@ define([
                             typeUserSelected = true;
 
                             checkStepStatus();
+                        },
+
+                        getServiceType: function () {
+                            return serviceType;
+                        },
+
+                        getUrl: function () {
+                            return serviceUrl;
+                        }
+                    };
+
+                }());
+
+                loadSteps.loadFileStep = (function () {
+                    var step = rootNode.find("#loadFileStep"),
+                        stepContent = step.find(".step-content"),
+                        choiceButtons = stepContent.find(".choice-group .btn-option"),
+
+                        inputControl = stepContent.find("#fileOrURLinput"),
+                        submitButton = stepContent.find("#fileOrURLinputSubmit"),
+
+                        browseControl = stepContent.find(".browse-files input[type='file']"),
+                        pseudoBrowseControl = stepContent.find("#fileOrURLpseudoBrowse"),
+
+                        typeUserSelected = false,
+                        fileType = null,
+                        file = null,
+                        fileUrl = ""
+                    ;
+
+                    function checkStepStatus() {
+                        var fileName = fileUrl || (file ? file.name : null) || "";
+
+                        if (!typeUserSelected) {
+                            if (fileName.endsWith(".csv")) {
+                                fileType = "CSV";
+
+                                choiceButtons
+                                    .removeClass("button-pressed")
+                                    .filter("button[data-option='option-1']")
+                                    .addClass("button-pressed");
+
+                            } else if (fileName.endsWith(".json")) {
+                                fileType = "GeoJSON";
+
+                                choiceButtons
+                                    .removeClass("button-pressed")
+                                    .filter("button[data-option='option-2']")
+                                    .addClass("button-pressed");
+
+                            } else {
+                                fileType = null;
+                                choiceButtons
+                                    .removeClass("button-pressed");
+                            }
+                        }
+
+                        submitButton.toggleClass("disabled", (!fileType || (!file && fileUrl === "")));
+
+                        if (fileUrl === "" && !file && !typeUserSelected) {
+                            fileType = null;
+                            choiceButtons
+                                .removeClass("button-pressed");
+                        }
+                    }
+
+                    function resetFormElement(e) {
+                        e.wrap('<form>').closest('form').get(0).reset();
+                        e.unwrap();
+                    }
+
+                    inputControl.on("input", function (event) {
+                        fileUrl = $(event.target).val();
+                        file = null;
+                        resetFormElement(browseControl);
+                        pseudoBrowseControl.removeClass("selected");
+                        checkStepStatus();
+                    });
+
+                    browseControl.on("change", function (event) {
+                        file = event.target.files[0];
+                        inputControl.val(file.name);
+                        fileUrl = '';
+                        pseudoBrowseControl.addClass("selected");
+                        checkStepStatus();
+                    });
+
+                    return {
+                        setChoice: function (value) {
+                            fileType = value;
+                            typeUserSelected = true;
+
+                            checkStepStatus();
+                        },
+
+                        getFileType: function () {
+                            return fileType;
+                        },
+
+                        getFileUrl: function () {
+                            return fileUrl;
+                        },
+
+                        getFile: function () {
+                            return file;
                         }
                     };
 

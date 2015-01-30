@@ -67,7 +67,7 @@
 
                     h3 {
                         margin: 21px 0 10px 0;
-                        
+
                         &:first-child {
                             margin: 2px 0 10px 0;
                         }
@@ -109,7 +109,7 @@
                             .btn-load {
                                 display: none;
                             }
-                             
+
                             .btn-cancel,
                             .glyphicon-ok {
                                 display: block;
@@ -124,6 +124,26 @@
                             .glyphicon-remove,
                             .btn-cancel {
                                 display: block;
+                            }
+                        }
+
+                        .browse-button {
+                            .fa-file-o {
+                                display: inline-block;
+                            }
+
+                            .fa-file {
+                                display: none;
+                            }
+
+                            &.selected {
+                                .fa-file-o {
+                                    display: none;
+                                }
+
+                                .fa-file {
+                                    display: inline-block;
+                                }
                             }
                         }
                     }
@@ -166,14 +186,14 @@
                     &.error {
                         > .options-bg {
 
-                        &:before {
-                            border-left-color: @attention-color !important;
-                        }
+                            &:before {
+                                border-left-color: @attention-color !important;
+                            }
 
-                        &:after {
-                            color: @attention-color !important;
+                            &:after {
+                                color: @attention-color !important;
+                            }
                         }
-                    }
                     }
                 }
 
@@ -219,14 +239,12 @@
 
                 > .options-bg {
                     z-index: 9999;
-
                     .barFill;
 
                     &:after {
                         background-color: transparent !important;
                     }
                 }
-
             }
 
             @font-face {
@@ -405,25 +423,16 @@
         rgba(255, 255, 255, 0.15) 50%, 
         rgba(255, 255, 255, 0.15) 75%, 
         transparent 75%, transparent);*/
-
     .grad(@info-color, 0.15);
-}   
+}
 
 
 
 .grad(@color: #F5F5F5, @opacity: 1) {
-    
+
     @rgba-color: rgba(red(@color), green(@color), blue(@color), @opacity);
 
-    background-image: linear-gradient(-45deg, 
-        @rgba-color 25%, 
-        transparent 25%, 
-        transparent 50%, 
-        @rgba-color 50%, 
-        @rgba-color 75%, 
-        transparent 75%, 
-        transparent);
-    
+    background-image: linear-gradient(-45deg, @rgba-color 25%, transparent 25%, transparent 50%, @rgba-color 50%, @rgba-color 75%, transparent 75%, transparent);
     /*background: @color;
     background: -webkit-gradient(linear, left bottom, left top, color-stop(0, @start), color-stop(1, @stop));
     background: -ms-linear-gradient(bottom, @start, @stop);

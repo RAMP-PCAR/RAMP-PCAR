@@ -372,6 +372,7 @@
                         <input type='file' data-role='upload'>
                     </div>
                     <span class='btn btn-default btn-sm browse-button' id='{%= o.idPrefix %}pseudoBrowse'>
+                        <i class='fa fa-file'></i>
                         <i class='fa fa-file-o'></i>
                         <span class='on-right wb-inv'>Browse</span>
                     </span>                                                                                                
@@ -382,8 +383,8 @@
                 <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                 <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                 <span class='input-group-btn'>
-                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option disabled' data-action='{%= o.idPrefix %}' data-option='option-1' type='button'>Load</button>
-                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
+                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
+                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
                 </span>
             </div>
         ",
@@ -464,7 +465,7 @@
                                                     {% include('a_d_options_bg', o); %}
 
                                                     <div class='step-options'>
-                                                        <div class='step step-3 option-1'  data-step-id='feaureAttrStep'>
+                                                        <div class='step step-3 option-1' id='featureAttrStep'>
                                                             <div class='step-content load-url-step'>
                                                                 {% include('a_d_list_step', {
                                                                     header: 'Primary Attribute',
@@ -490,60 +491,84 @@
                                                                             listId: 'featureColourAttr'
                                                                         }
                                                                     ]                                                                    
-                                                                }); %}
-
-                                                                
-                                                            </div>
-
-                                                            <div class='step-options-container'>
-                                                                {% include('a_d_options_bg', o); %}
-
-                                                                <div class='step-options'>
-                                                                    <div class='step step-4 option-1 default'>
-                                                                        <div class='step-content'>
-                                                                            <h3 class='h6'>Available Layers</h3>
-                                                                            
-                                                                            <div class='input-group'>
-                                                                                <label class='wb-inv' for='availableLayersLinput'>Available Layers</label>
-                                                                                <select name='select' class='form-control input-sm' id='availableLayersLinput' data-role='none'>
-                                                                                    <option value='placeholder'>placeholder</option>
-                                                                                </select>
-
-                                                                                <span class='input-group-btn'>
-                                                                                    <button id='availableLayersLinputSubmit' class='btn btn-info btn-sm btn-option' data-option='option-1' type='button'>Select</button>
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class='step-options-container'>
-                                                                            {% include('a_d_options_bg', o); %}
-
-                                                                            <div class='step-options'>
-                                                                                <div class='step step-5 option-1 default'>
-                                                                                    <div class='step-content'>
-                                                                                        <h3 class='h6'>Primary Attribute</h3>
-                                                                                        <input></input>
-
-                                                                                        <h3 class='h6'>Symbology</h3>
-
-                                                                                        <h3 class='h6 smaller'>Style</h3>
-                                                                                        <input></input>
-                                                                                        <h3 class='h6 smaller'>Colour</h3>
-                                                                                        <input></input>
-
-
-                                                                                    </div>
-
-                                                                                    
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>                                                            
-                                                                    </div>
-                                                                </div>
+                                                                }); %}                                                                
                                                             </div>
                                                         </div>
 
-                                                        <div class='step step-3 option-2 wms'>
+                                                        <div class='step step-3 option-2' id='wmsAttrStep'>
+                                                            <div class='step-content load-url-step'>
+                                                                {% include('a_d_list_step', {
+                                                                    header: 'Request Parser',
+                                                                    lists: [
+                                                                        {
+                                                                            label:  'Request Parser',
+                                                                            listId: 'wmsParserAttr'
+                                                                        }
+                                                                    ]                                                                    
+                                                                }); %}
+                                                            </div>
+
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class='step step-2 option-2' id='loadFileStep'>
+                                                    <div class='step-content load-file-step'>
+                                                        {% include('a_d_choice_step', {
+                                                            header: 'File Type',
+                                                            choiceId: 'fileType',
+                                                            options: {
+                                                                'option-1': 'GeoJSON',
+                                                                'option-2': 'CSV',
+                                                                'option-3': 'Shapefile'
+                                                            }
+                                                        }); %}
+
+                                                        {% include('a_d_load_file_or_URL_step', {
+                                                            header: 'File or URL',
+                                                            label:  'File or URL',
+                                                            idPrefix: 'fileOrURL',
+                                                            placeholder: 'Local file or URL'
+                                                        }); %}
+                                                    </div>
+
+                                                <div class='step-options-container'>
+                                                    {% include('a_d_options_bg', o); %}
+
+                                                    <div class='step-options'>
+                                                        <div class='step step-3 option-1' id='csvAttrStep'>
+                                                            <div class='step-content load-url-step'>
+                                                                {% include('a_d_list_step', {
+                                                                    header: 'Primary Attribute',
+                                                                    lists: [
+                                                                        {
+                                                                            label:  'Primary Attribute',
+                                                                            listId: 'featurePrimaryAttr'
+                                                                        }
+                                                                    ]                                                                    
+                                                                }); %}
+
+                                                                {% include('a_d_list_step', {
+                                                                    header: 'Symbology',
+                                                                    lists: [
+                                                                        {
+                                                                            header: 'Style',
+                                                                            label:  'Style',
+                                                                            listId: 'featureStyleAttr'
+                                                                        },
+                                                                        {
+                                                                            header: 'Colour',
+                                                                            label:  'Colour',
+                                                                            listId: 'featureColourAttr'
+                                                                        }
+                                                                    ]                                                                    
+                                                                }); %}                                                                
+                                                            </div>
+                                                        </div>
+
+                                                        <div class='step step-3 option-2' id='geojsonAttrStep'>
                                                             <div class='step-content load-url-step'>
                                                                 {% include('a_d_load_URL_step', {
                                                                     header: 'WMS Layer URL',
@@ -570,27 +595,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <div class='step step-2 option-2' data-step-id='loadFileStep'>
-                                                    <div class='step-content load-file-step'>
-                                                        {% include('a_d_choice_step', {
-                                                            header: 'File Type',
-                                                            choiceId: 'fileType',
-                                                            options: {
-                                                                'option-1': 'GeoJSON',
-                                                                'option-2': 'CSV',
-                                                                'option-3': 'Shapefile'
-                                                            }
-                                                        }); %}
-
-                                                        {% include('a_d_load_file_or_URL_step', {
-                                                            header: 'File or URL',
-                                                            label:  'File or URL',
-                                                            idPrefix: 'fileOrURL',
-                                                            placeholder: 'Local file or URL'
-                                                        }); %}
-                                                    </div>
                                             </div>
                                         </div>                 
                                     </div>                   

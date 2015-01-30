@@ -1157,7 +1157,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     button;
 
                 function focusIn(event) {
-                    event.data.button.addClass("btn-focus btn-hover");
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover");
                 }
 
                 function focusOut(event) {
@@ -1165,7 +1165,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 }
 
                 function mouseEnter(event) {
-                    event.data.button.addClass("btn-hover");
+                    event.data.button.not(".disabled").addClass("btn-hover");
                 }
 
                 function mouseLeave(event) {
@@ -1173,7 +1173,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 }
 
                 function mouseDown(event) {
-                    event.data.button.addClass("btn-focus btn-hover btn-active");
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover btn-active");
                 }
 
                 function mouseUp(event) {
