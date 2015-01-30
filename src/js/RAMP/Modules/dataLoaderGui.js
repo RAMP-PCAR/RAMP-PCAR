@@ -88,71 +88,7 @@ define([
             },
 
             transitionDuration = 0.4;
-
-        /*function checkLoadStep(stepId, step) {
-            var loadStep = loadSteps[stepId];
-
-            switch (stepId) {
-                case "loadServiceStep":
-                    if (loadStep.url && !loadStep.serviceType) {
-                        if (loadStep.url.match(/ArcGIS\/rest\/services/ig)) {
-
-                            step
-                                .find("div[data-choice-id='serviceType'] button")
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-1']")
-                                .addClass("button-pressed");
-
-                            loadStep.serviceType = "option-1";
-
-                        } else if (loadStep.url.match(/wms/ig)) {
-                            console.log("Z: wms?");
-                        }
-                    }
-
-                    loadStep.button.toggleClass("disabled", (!loadStep.serviceType || loadStep.url === ""));
-
-                    break;
-
-                case "loadFileStep":
-
-                    if ((loadStep.url || loadStep.file) && !loadStep.typeUserSelected) {
-                        if (loadStep.url.indexOf(".txt") !== -1) {
-
-                            step
-                                .find("div[data-choice-id='fileType'] button")
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-1']")
-                                .addClass("button-pressed");
-
-                            loadStep.fileType = "option-1";
-
-                        } else if (loadStep.url.indexOf(".json") !== -1) {
-
-                            step
-                                .find("div[data-choice-id='fileType'] button")
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-2']")
-                                .addClass("button-pressed");
-
-                            loadStep.fileType = "option-2";
-                        } else {
-                            step
-                                .find("div[data-choice-id='fileType'] button")
-                                .removeClass("button-pressed");
-
-                            loadStep.fileType = null;
-                        }
-                    }
-
-                    rootNode
-                        .find("#" + loadStep.buttonId)
-                        .toggleClass("disabled", (!loadStep.fileType && (!loadStep.file || loadStep.url === "")));
-
-                    break;
-            }
-        }*/
-
+        
         PopupManager.registerPopup(rootNode, "click",
             function (d) {
                 var step = this.handle.parents(".step:first"),
@@ -557,33 +493,6 @@ define([
             }
         );
 
-        //function loadUrlControlStatusCheck(control) {
-        //    var step = control.parents(".step:first"),
-        //        stepId = step.attr("id");
-
-        //    loadSteps[stepId].url = control.val();
-
-        //    //checkLoadStep(stepId, step);
-        //}
-
-        /*function loadFileControlStatusCheck(control) {
-            var step = control.parents(".step:first"),
-                stepId = step.attr("id");
-
-            loadSteps[stepId].file = control[0].files[0] || null;
-
-            checkLoadStep(stepId, step);
-        }*/
-
-        //rootNode
-        /*.on("input", ".load-url-control", function (event) {
-            loadUrlControlStatusCheck($(event.target));
-        })*/
-        /*.on("change", ".browse-files input", function (event) {
-            loadFileControlStatusCheck($(event.currentTarget));
-        })*/
-        //;
-
         return {
             init: function () {
                 UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
@@ -672,19 +581,19 @@ define([
 
                         if (!typeUserSelected) {
                             if (fileName.endsWith(".csv")) {
-                                fileType = "CSV";
-
-                                choiceButtons
-                                    .removeClass("button-pressed")
-                                    .filter("button[data-option='option-1']")
-                                    .addClass("button-pressed");
-
-                            } else if (fileName.endsWith(".json")) {
-                                fileType = "GeoJSON";
+                                fileType = "option-2";
 
                                 choiceButtons
                                     .removeClass("button-pressed")
                                     .filter("button[data-option='option-2']")
+                                    .addClass("button-pressed");
+
+                            } else if (fileName.endsWith(".json")) {
+                                fileType = "option-1";
+
+                                choiceButtons
+                                    .removeClass("button-pressed")
+                                    .filter("button[data-option='option-1']")
                                     .addClass("button-pressed");
 
                             } else {

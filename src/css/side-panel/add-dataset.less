@@ -68,8 +68,18 @@
                     h3 {
                         margin: 21px 0 10px 0;
 
-                        &:first-child {
+                        &:first-child {                        
                             margin: 2px 0 10px 0;
+                        }
+
+                        &.smaller {
+                            margin: 10px 0 5px 0;
+                        }
+                    }
+
+                    h4 {
+                        &.smaller {
+                            margin: 10px 0 5px 0;
                         }
                     }
 
@@ -144,6 +154,36 @@
                                 .fa-file {
                                     display: inline-block;
                                 }
+                            }
+                        }
+                    }
+
+                    .btn-add-dataset-container {
+                        width: 85%;
+                        text-align: right;
+                        margin: 30px 0 5px 0;
+
+                        .btn-add-dataset {
+                            border-radius: 0;
+                            width: 50%;
+                        }
+                    }
+
+                    .double-list-container {
+                        width: 85%;
+                        display: table;
+                        margin: 19px 0 10px 0;
+
+                        .list-group {
+                            display: table-cell;
+                            width: 50%;
+
+                            &:first-child {
+                                padding-right: 10px;
+                            }
+
+                            &:last-child {
+                                padding-left: 8px;
                             }
                         }
                     }
