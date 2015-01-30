@@ -180,7 +180,8 @@ define([
 
                                         currentStepContent
                                             .find(".btn-option:not(.btn-action), .browse-button")
-                                            .addClass("disabled")
+                                            .attr("disabled", true)
+                                            //.addClass("disabled")
                                             .end().find("input[type='file']").attr("disabled", true);
 
                                         currentStepContent
@@ -250,7 +251,8 @@ define([
 
                                         currentStepContent
                                             .find(".btn-option:not(.btn-action), .browse-button")
-                                            .removeClass("disabled")
+                                            .attr("disabled", false)
+                                            //.removeClass("disabled")
                                             .end().find("input[type='file']").attr("disabled", false);
 
                                         // disable all active options in the following steps
@@ -541,6 +543,7 @@ define([
                         }
 
                         submitButton.toggleClass("disabled", (!serviceType || serviceUrl === ""));
+                        submitButton.attr("disabled", (!serviceType || serviceUrl === ""));
 
                         if (serviceUrl === "" && !typeUserSelected) {
                             serviceType = null;
@@ -619,6 +622,7 @@ define([
                         }
 
                         submitButton.toggleClass("disabled", (!fileType || (!file && fileUrl === "")));
+                        submitButton.attr("disabled", (!fileType || (!file && fileUrl === "")));
 
                         if (fileUrl === "" && !file && !typeUserSelected) {
                             fileType = null;
