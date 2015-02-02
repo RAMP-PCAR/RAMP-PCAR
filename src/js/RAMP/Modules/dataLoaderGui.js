@@ -616,6 +616,12 @@ define([
             });
         }
 
+        function addDataset(obj) {
+            console.log(obj);
+
+            mainPopup.close();
+        }
+
         function reset() {
             var section;
 
@@ -809,9 +815,15 @@ define([
 
                 reset();
 
-                PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
+                mainPopup = PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
                     function (d) {
-                        TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 1, ease: "easeOutCirc" });
+                        TweenLite.to(this.target, transitionDuration / 2,
+                            {
+                                autoAlpha: 1, ease: "easeOutCirc",
+                                onComplete: function () {
+                                    this.target.focus();
+                                }
+                            });
 
                         d.resolve();
                     },

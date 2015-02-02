@@ -671,7 +671,7 @@
         ",
 
         "add_dataset_template": "            
-            <div id='add-dataset-section-container'>
+            <div id='add-dataset-section-container' tabindex='-1'>
                 <div id='add-dataset-section'>
                     <section>
                         <h2 class='mrgn-tp-sm mrgn-bttm-sm h5'>
