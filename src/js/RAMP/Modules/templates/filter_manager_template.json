@@ -533,9 +533,9 @@
                                             header: 'File Type',
                                             choiceId: 'fileType',
                                             options: {
-                                                'option-1': 'GeoJSON',
-                                                'option-2': 'CSV',
-                                                'option-3': 'Shapefile'
+                                                'option-geojson': 'GeoJSON',
+                                                'option-csv': 'CSV',
+                                                'option-shapefile': 'Shapefile'
                                             }
                                         }); %}
 
@@ -551,7 +551,7 @@
                                     {% include('a_d_options_bg', o); %}
 
                                     <div class='step-options'>
-                                        <div class='step step-3 option-1' id='geojsonAttrStep'>
+                                        <div class='step step-3 option-geojson' id='geojsonAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
                                                     header: 'Primary Attribute',
@@ -583,7 +583,7 @@
                                             </div>
                                         </div>
 
-                                        <div class='step step-3 option-2' id='csvAttrStep'>
+                                        <div class='step step-3 option-csv' id='csvAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
                                                     header: 'Primary Attribute',
@@ -630,7 +630,7 @@
                                             </div>
                                         </div>
 
-                                        <div class='step step-3 option-3' id='shapefileAttrStep'>
+                                        <div class='step step-3 option-shapefile' id='shapefileAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
                                                     header: 'Primary Attribute',

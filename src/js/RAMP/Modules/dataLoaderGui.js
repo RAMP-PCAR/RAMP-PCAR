@@ -12,22 +12,18 @@ define([
     "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader",
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         lang, Deferred,
         filter_manager_template,
         PopupManager, DataLoader, Theme, Map, LayerLoader,
-        UtilMisc, TmplHelper, TmplUtil, UtilArray
+        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
 
-        //var rootNode = $("#add-dataset-section-container");
-
-        //console.log(lang, layer_selector_template, TmplHelper, TmplUtil, UtilArray, UtilDict);
-
         var rootNode = $("#searchMapSectionBody"),
-            
+
             loadSteps = {
                 loadServiceStep: {
                     typeUserSelected: false,
@@ -470,8 +466,78 @@ define([
                             });
 
                             promise.then(function (event) {
+                                var fileType = loadSteps[stepId].getFileType(),
+                                    optionStepContent;
+
                                 console.log(event);
-                                option = options.find("> ." + loadSteps[stepId].getFileType() + ":first");
+                                option = options.find("> ." + fileType + ":first");
+                                optionStepContent = option.find("> .step-content");
+
+                                switch (fileType) {
+                                    case "option-geojson":
+                                        setSelectOptions(
+                                            optionStepContent.find("#geojsonPrimaryAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#geojsonStyleAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#geojsonColourAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        break;
+
+                                    case "option-csv":
+                                        setSelectOptions(
+                                            optionStepContent.find("#csvPrimaryAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#csvLatitudeAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#csvLongitudeAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#csvStyleAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#csvColourAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        break;
+
+                                    case "option-shapefile":
+                                        setSelectOptions(
+                                            optionStepContent.find("#shapefilePrimaryAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#shapefileStyleAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#shapefileColourAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        break;
+                                }
 
                                 loadURLStep.successLoadUrlStep();
                             }, function () {
@@ -509,6 +575,17 @@ define([
             }
         );
 
+        function setSelectOptions(select, options) {
+            select.empty(); // remove old options
+
+            UtilDict.forEachEntry(options, function (key, value) {
+                select
+                    .append($("<option></option>")
+                    .attr("value", key).text(value))
+                ;
+            });
+        }
+
         function reset() {
             var section;
 
@@ -520,7 +597,7 @@ define([
             rootNode
                 .find(".add-dataset-content")
                 .replaceWith(section);
-            
+
             UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
             loadSteps.loadServiceStep = (function () {
@@ -609,19 +686,19 @@ define([
 
                     if (!typeUserSelected) {
                         if (fileName.endsWith(".csv")) {
-                            fileType = "option-2";
+                            fileType = "option-csv";
 
                             choiceButtons
                                 .removeClass("button-pressed")
-                                .filter("button[data-option='option-2']")
+                                .filter("button[data-option='option-csv']")
                                 .addClass("button-pressed");
 
                         } else if (fileName.endsWith(".json")) {
-                            fileType = "option-1";
+                            fileType = "option-geojson";
 
                             choiceButtons
                                 .removeClass("button-pressed")
-                                .filter("button[data-option='option-1']")
+                                .filter("button[data-option='option-geojson']")
                                 .addClass("button-pressed");
 
                         } else {
@@ -699,7 +776,7 @@ define([
 
         return {
             init: function () {
-                
+
                 reset();
 
                 PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
