@@ -90,13 +90,13 @@
                 "layer_g5h6i": {
                     "displayName": "[fr] EC Projects"
                 },
-                "cesi_ozone": { 
+                "cesi_ozone": {
                     "displayName": "[fr] CESI Air Ozone"
                 },
-                "dog_guts": { 
+                "dog_guts": {
                     "displayName": "[fr] Bird Habitats"
                 },
-                "layer_sea_parks": { 
+                "layer_sea_parks": {
                     "displayName": "[fr] Sea Parks"
                 }
             },
@@ -113,7 +113,7 @@
                 "wms6": {
                     "displayName": "[fr] Railway Network"
                 },
-                "dog_guts": { 
+                "dog_guts": {
                     "displayName": "[fr] Bird Habitats"
                 }
             }
@@ -217,6 +217,35 @@
         "addLayer-opacity-alt": " Étendue : de 0 à 10 par bond de 1",
         "addLayer-opacity-display-start": " (Valeur actuelle:",
         "addLayer-opacity-display-end": "%)"
+    },
+
+    "addDataset": {
+        "title": "[fr] Add Dataset",
+        "cancel": "[fr] Cancel",
+        "load": "[fr] Load",
+        "dataSource": "[fr] Data Source",
+        "dataSourceService": "[fr] Service",
+        "dataSourceFile": "[fr] File",
+        "serviceType": "[fr] Service Type",
+        "serviceTypeFeature": "[fr] Feature",
+        "serviceTypeWMS": "[fr] WMS",
+        "serviceLayerURL": "[fr] Service Layer URL",
+        "serviceLayerURLPlaceholder": "[fr] ESRI MapServer or Feature layer or WMS layer",
+        "primaryAttribute": "[fr] Primary Attribute",
+        "symbology": "[fr] Symbology",
+        "style": "[fr] Style",
+        "colour": "[fr] Colour",
+        "requestParser": "[fr] Request Parser",
+        "fileType": "[fr] File Type",
+        "geojson": "[fr] GeoJSON",
+        "csv": "[fr] CSV",
+        "shapefile": "[fr] Shapefile",
+        "fileOrURL": "[fr] File or URL",
+        "fileOrURLPlaceholder": "[fr] Local file or URL",
+        "latitude": "[fr] Latitude",
+        "longitude": "[fr] Longitude",
+        "addDatasetButton": "[fr] Add Dataset"
+
     },
 
     "advancedToolbar": {

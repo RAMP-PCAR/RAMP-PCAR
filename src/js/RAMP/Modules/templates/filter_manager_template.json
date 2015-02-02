@@ -236,7 +236,7 @@
                         <ul class='btn-group margin-top-none'>
                             <button class='btn btn-sm button-none' id='addDatasetToggle'> 
                                 <i class='fa fa-plus'></i>
-                                <span class='on-right'>Add Dataset</span>
+                                <span class='on-right'>{%= i18n.t('addDataset.title') %}</span>
                              </button>
                         </ul>
                     </div>
@@ -407,8 +407,8 @@
                 <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                 <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                 <span class='input-group-btn'>
-                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
-                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>
+                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>{%= i18n.t('addDataset.load') %}</button>
+                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>{%= i18n.t('addDataset.cancel') %}</button>
                 </span>
             </div>
         ",
@@ -422,15 +422,15 @@
                     <span class='glyphicon glyphicon-ok form-control-feedback'></span>
                     <span class='glyphicon glyphicon-remove form-control-feedback'></span>
                     <span class='input-group-btn wb-in'>
-                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>Load</button>
-                        <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>Cancel</button>    
+                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>{%= i18n.t('addDataset.load') %}</button>
+                        <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>{%= i18n.t('addDataset.cancel') %}</button>
                     </span>
                 </div>
         ",
 
         "a_d_add_dataset_button": "
             <div class='btn-add-dataset-container'>
-                <button class='btn btn-primary btn-add-dataset'>Add Dataset</button>
+                <button class='btn btn-primary btn-add-dataset'>{%= i18n.t('addDataset.addDatasetButton') %}</button>
             </div>
         ",
 
@@ -439,11 +439,11 @@
                 <div class='step step-1 current-step'>
                     <div class='step-content'>
                         {% include('a_d_choice_step', {
-                            header: 'Data Source',
+                            header: i18n.t('addDataset.dataSource'),
                             active: true,
                             options: {
-                                'option-service': 'Service',
-                                'option-file': 'File'
+                                'option-service': i18n.t('addDataset.dataSourceService'),
+                                'option-file': i18n.t('addDataset.dataSourceFile')
                             }
                         }); %}
                     </div>
@@ -455,19 +455,19 @@
                             <div class='step step-2 option-service' id='loadServiceStep'>
                                 <div class='step-content load-url-step'>
                                     {% include('a_d_choice_step', {
-                                        header: 'Service Type',
+                                        header: i18n.t('addDataset.serviceType'),
                                         choiceId: 'serviceType',
                                         options: {
-                                            'option-feature': 'Feature',
-                                            'option-wms': 'WMS'
+                                            'option-feature': i18n.t('addDataset.serviceTypeFeature'),
+                                            'option-wms': i18n.t('addDataset.serviceTypeWMS')
                                         }
                                     }); %}
 
                                     {% include('a_d_load_URL_step', {
-                                        header: 'Service Layer URL',
-                                        label:  'Service Layer URL',
+                                        header: i18n.t('addDataset.serviceLayerURL'),
+                                        label:  i18n.t('addDataset.serviceLayerURL'),
                                         idPrefix: 'serviceURL',
-                                        placeholder: 'ESRI MapServer or Feature layer or WMS layer'
+                                        placeholder: i18n.t('addDataset.serviceLayerURLPlaceholder')
                                     }); %}
                                 </div>
 
@@ -478,26 +478,26 @@
                                         <div class='step step-3 option-feature' id='featureAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
-                                                    header: 'Primary Attribute',
+                                                    header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
                                                         {
-                                                            label:  'Primary Attribute',
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
                                                             listId: 'featurePrimaryAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
 
                                                 {% include('a_d_list_step', {
-                                                    header: 'Symbology',
+                                                    header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: 'Style',
-                                                            label:  'Style',
+                                                            header: i18n.t('addDataset.style'),
+                                                            label:  i18n.t('addDataset.style'),
                                                             listId: 'featureStyleAttr'
                                                         },
                                                         {
-                                                            header: 'Colour',
-                                                            label:  'Colour',
+                                                            header: i18n.t('addDataset.colour'),
+                                                            label:  i18n.t('addDataset.colour'),
                                                             listId: 'featureColourAttr'
                                                         }
                                                     ]                                                                    
@@ -510,10 +510,10 @@
                                         <div class='step step-3 option-wms' id='wmsAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
-                                                    header: 'Request Parser',
+                                                    header: i18n.t('addDataset.requestParser'),
                                                     lists: [
                                                         {
-                                                            label:  'Request Parser',
+                                                            label:  i18n.t('addDataset.requestParser'),
                                                             listId: 'wmsParserAttr'
                                                         }
                                                     ]                                                                    
@@ -529,20 +529,20 @@
                             <div class='step step-2 option-file' id='loadFileStep'>
                                     <div class='step-content load-file-step'>
                                         {% include('a_d_choice_step', {
-                                            header: 'File Type',
+                                            header: i18n.t('addDataset.fileType'),
                                             choiceId: 'fileType',
                                             options: {
-                                                'option-geojson': 'GeoJSON',
-                                                'option-csv': 'CSV',
-                                                'option-shapefile': 'Shapefile'
+                                                'option-geojson': i18n.t('addDataset.geojson'),
+                                                'option-csv': i18n.t('addDataset.csv'),
+                                                'option-shapefile': i18n.t('addDataset.shapefile')
                                             }
                                         }); %}
 
                                         {% include('a_d_load_file_or_URL_step', {
-                                            header: 'File or URL',
-                                            label:  'File or URL',
+                                            header: i18n.t('addDataset.fileOrURL'),
+                                            label:  i18n.t('addDataset.fileOrURL'),
                                             idPrefix: 'fileOrURL',
-                                            placeholder: 'Local file or URL'
+                                            placeholder: i18n.t('addDataset.fileOrURLPlaceholder')
                                         }); %}
                                     </div>
 
@@ -553,26 +553,26 @@
                                         <div class='step step-3 option-geojson' id='geojsonAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
-                                                    header: 'Primary Attribute',
+                                                    header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
                                                         {
-                                                            label:  'Primary Attribute',
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
                                                             listId: 'geojsonPrimaryAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
 
                                                 {% include('a_d_list_step', {
-                                                    header: 'Symbology',
+                                                    header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: 'Style',
-                                                            label:  'Style',
+                                                            header: i18n.t('addDataset.style'),
+                                                            label:  i18n.t('addDataset.style'),
                                                             listId: 'geojsonStyleAttr'
                                                         },
                                                         {
-                                                            header: 'Colour',
-                                                            label:  'Colour',
+                                                            header: i18n.t('addDataset.colour'),
+                                                            label:  i18n.t('addDataset.colour'),
                                                             listId: 'geojsonColourAttr'
                                                         }
                                                     ]                                                                    
@@ -585,10 +585,10 @@
                                         <div class='step step-3 option-csv' id='csvAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
-                                                    header: 'Primary Attribute',
+                                                    header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
                                                         {
-                                                            label:  'Primary Attribute',
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
                                                             listId: 'csvPrimaryAttr'
                                                         }
                                                     ]                                                                    
@@ -597,29 +597,29 @@
                                                 {% include('a_d_double_list_step', {
                                                     lists: [
                                                         {
-                                                            header: 'Latitude',
-                                                            label:  'Latitude',
+                                                            header: i18n.t('addDataset.latitude'),
+                                                            label:  i18n.t('addDataset.latitude'),
                                                             listId: 'csvLatitudeAttr'
                                                         },
                                                         {
-                                                            header: 'Longitude',
-                                                            label:  'Longitude',
+                                                            header: i18n.t('addDataset.longitude'),
+                                                            label:  i18n.t('addDataset.longitude'),
                                                             listId: 'csvLongitudeAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
 
                                                 {% include('a_d_list_step', {
-                                                    header: 'Symbology',
+                                                    header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: 'Style',
-                                                            label:  'Style',
+                                                            header: i18n.t('addDataset.style'),
+                                                            label:  i18n.t('addDataset.style'),
                                                             listId: 'csvStyleAttr'
                                                         },
                                                         {
-                                                            header: 'Colour',
-                                                            label:  'Colour',
+                                                            header: i18n.t('addDataset.colour'),
+                                                            label:  i18n.t('addDataset.colour'),
                                                             listId: 'csvColourAttr'
                                                         }
                                                     ]                                                                    
@@ -632,26 +632,26 @@
                                         <div class='step step-3 option-shapefile' id='shapefileAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
-                                                    header: 'Primary Attribute',
+                                                    header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
                                                         {
-                                                            label:  'Primary Attribute',
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
                                                             listId: 'shapefilePrimaryAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
 
                                                 {% include('a_d_list_step', {
-                                                    header: 'Symbology',
+                                                    header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: 'Style',
-                                                            label:  'Style',
+                                                            header: i18n.t('addDataset.style'),
+                                                            label:  i18n.t('addDataset.style'),
                                                             listId: 'shapefileStyleAttr'
                                                         },
                                                         {
-                                                            header: 'Colour',
-                                                            label:  'Colour',
+                                                            header: i18n.t('addDataset.colour'),
+                                                            label:  i18n.t('addDataset.colour'),
                                                             listId: 'shapefileColourAttr'
                                                         }
                                                     ]                                                                    
@@ -675,7 +675,7 @@
                 <div id='add-dataset-section'>
                     <section>
                         <h2 class='mrgn-tp-sm mrgn-bttm-sm h5'>
-                            Add Dataset
+                            {%= i18n.t('addDataset.title') %}
                         </h2>
 
                         <button class='button-none button-close _tooltip' title='{%= i18n.t('gui.actions.close') %}'>
