@@ -23,6 +23,7 @@ define([
         "use strict";
 
         var rootNode = $("#searchMapSectionBody"),
+            mainPopup,
 
             loadSteps = {
                 loadServiceStep: {
@@ -453,6 +454,14 @@ define([
                                             { selectOne: "Select One" }
                                         );
 
+                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                            addDataset({
+                                                primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
+                                                style: optionStepContent.find("#featureStyleAttrlist").val(),
+                                                colour: optionStepContent.find("#featureColourAttrlist").val()
+                                            });
+                                        });
+
                                         break;
 
                                     case "option-wms":
@@ -460,6 +469,12 @@ define([
                                             optionStepContent.find("#wmsParserAttrlist"),
                                             { selectOne: "Select One" }
                                         );
+
+                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                            addDataset({
+                                                parser: optionStepContent.find("#wmsParserAttrlist").val()
+                                            });
+                                        });
 
                                         break;
                                 }
@@ -520,6 +535,14 @@ define([
                                             { selectOne: "Select One" }
                                         );
 
+                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                            addDataset({
+                                                primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
+                                                style: optionStepContent.find("#geojsonStyleAttrlist").val(),
+                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                            });
+                                        });
+
                                         break;
 
                                     case "option-csv":
@@ -548,6 +571,16 @@ define([
                                             { selectOne: "Select One" }
                                         );
 
+                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                            addDataset({
+                                                primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
+                                                lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
+                                                lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
+                                                style: optionStepContent.find("#geojsonStyleAttrlist").val(),
+                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                            });
+                                        });
+
                                         break;
 
                                     case "option-shapefile":
@@ -565,6 +598,14 @@ define([
                                             optionStepContent.find("#shapefileColourAttrlist"),
                                             { selectOne: "Select One" }
                                         );
+
+                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                            addDataset({
+                                                primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
+                                                style: optionStepContent.find("#shapefileStyleAttrlist").val(),
+                                                colour: optionStepContent.find("#shapefileColourAttrlist").val()
+                                            });
+                                        });
 
                                         break;
                                 }
@@ -829,7 +870,7 @@ define([
                     },
                     {
                         closeHandler: function (d) {
-                            TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" });
+                            TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 0, ease: "easeInCirc" });
 
                             reset();
                             d.resolve();
