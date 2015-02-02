@@ -39,7 +39,7 @@ define([
                 }
             },
 
-            hc = {
+            /*hc = {
                 layerAttributes: "*",
                 minScale: 0,
                 maxScale: 0,
@@ -81,7 +81,7 @@ define([
                     }
                 },
                 isStatic: true
-            },
+            },*/
 
             transitionDuration = 0.4;
 
@@ -430,19 +430,49 @@ define([
                             });
 
                             promise.then(function (event) {
-                                var fl;
+                                var serviceType = loadSteps[stepId].getServiceType(),
+                                    optionStepContent;
 
-                                option = options.find("> ." + loadSteps[stepId].getServiceType() + ":first");
+                                option = options.find("> ." + serviceType + ":first");
+                                optionStepContent = option.find("> .step-content");
+
+                                switch (serviceType) {
+                                    case "option-feature":
+                                        setSelectOptions(
+                                            optionStepContent.find("#featurePrimaryAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#featureStyleAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#featureColourAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        break;
+
+                                    case "option-wms":
+                                        setSelectOptions(
+                                            optionStepContent.find("#wmsParserAttrlist"),
+                                            { selectOne: "Select One" }
+                                        );
+
+                                        break;
+                                }
 
                                 loadURLStep.successLoadUrlStep();
 
                                 event = null;
                                 //console.log(event);
 
+                                /*var fl;
                                 hc.url = loadSteps[stepId].getUrl();
-
                                 fl = Map.makeFeatureLayer(hc, true);
-                                LayerLoader.loadLayer(fl);
+                                LayerLoader.loadLayer(fl);*/
 
                             }, function () {
                                 loadURLStep.errorLoadUrlStep();
@@ -619,10 +649,10 @@ define([
 
                             choiceButtons
                                 .removeClass("button-pressed")
-                                .filter("button[data-option='option-1']")
+                                .filter("button[data-option='option-feature']")
                                 .addClass("button-pressed");
 
-                            serviceType = "option-1";
+                            serviceType = "option-feature";
 
                         } else if (serviceUrl.match(/wms/ig)) {
                             console.log("Z: wms?");

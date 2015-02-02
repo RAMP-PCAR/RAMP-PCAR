@@ -442,8 +442,8 @@
                             header: 'Data Source',
                             active: true,
                             options: {
-                                'option-1': 'Service',
-                                'option-2': 'File'
+                                'option-service': 'Service',
+                                'option-file': 'File'
                             }
                         }); %}
                     </div>
@@ -452,14 +452,14 @@
                         {% include('a_d_options_bg', o); %}
 
                         <div class='step-options'>
-                            <div class='step step-2 option-1' id='loadServiceStep'>
+                            <div class='step step-2 option-service' id='loadServiceStep'>
                                 <div class='step-content load-url-step'>
                                     {% include('a_d_choice_step', {
                                         header: 'Service Type',
                                         choiceId: 'serviceType',
                                         options: {
-                                            'option-1': 'Feature',
-                                            'option-2': 'WMS'
+                                            'option-feature': 'Feature',
+                                            'option-wms': 'WMS'
                                         }
                                     }); %}
 
@@ -475,7 +475,7 @@
                                     {% include('a_d_options_bg', o); %}
 
                                     <div class='step-options'>
-                                        <div class='step step-3 option-1' id='featureAttrStep'>
+                                        <div class='step step-3 option-feature' id='featureAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
                                                     header: 'Primary Attribute',
@@ -507,7 +507,7 @@
                                             </div>
                                         </div>
 
-                                        <div class='step step-3 option-2' id='wmsAttrStep'>
+                                        <div class='step step-3 option-wms' id='wmsAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
                                                     header: 'Request Parser',
@@ -518,16 +518,15 @@
                                                         }
                                                     ]                                                                    
                                                 }); %}
-                                            </div>
 
-                                             {% include('a_d_add_dataset_button', o); %}
-                                            
+                                                {% include('a_d_add_dataset_button', o); %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class='step step-2 option-2' id='loadFileStep'>
+                            <div class='step step-2 option-file' id='loadFileStep'>
                                     <div class='step-content load-file-step'>
                                         {% include('a_d_choice_step', {
                                             header: 'File Type',
