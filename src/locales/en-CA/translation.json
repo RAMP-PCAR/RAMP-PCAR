@@ -90,13 +90,13 @@
                 "layer_g5h6i": {
                     "displayName": "EC Projects"
                 },
-                "cesi_ozone": { 
+                "cesi_ozone": {
                     "displayName": "CESI Air Ozone"
                 },
                 "dog_guts": {
                     "displayName": "Bird Habitats"
                 },
-                "layer_sea_parks": { 
+                "layer_sea_parks": {
                     "displayName": "Sea Parks"
                 }
             },
@@ -233,6 +233,16 @@
         "emailUrlBody": "Here's a cool map:"
     },
 
+    "mapExport": {
+        "title": "Map Export",
+        "includeLegend": "Include Legend",
+        "downloadJPG": "JPG",
+        "downloadJPGdesc": "Download as JPG",
+        "downloadPNG": "PNG",
+        "downloadPNGdesc": "Download as PNG"
+
+    },
+
     "datagrid": {
         "dataTabTitle": "Data",
 
@@ -335,7 +345,8 @@
         "actions": {
             "close": "Close",
             "open": "Open",
-            "fullScreen": "Full Screen"
+            "fullScreen": "Full Screen",
+            "mapExport": "Map Export"
         }
     },
 

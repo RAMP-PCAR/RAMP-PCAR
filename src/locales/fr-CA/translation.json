@@ -233,6 +233,17 @@
         "emailUrlBody": ""
     },
 
+    
+    "mapExport": {
+        "title": "[fr] Map Export",
+        "includeLegend": "[fr] Include Legend",
+        "downloadJPG": "[fr] JPG",
+        "downloadJPGdesc": "[fr] Download as JPG",
+        "downloadPNG": "[fr] PNG",
+        "downloadPNGdesc": "[fr] Download as PNG"
+
+    },
+
     "datagrid": {
         "dataTabTitle": "Données",
 
@@ -335,7 +346,8 @@
         "actions": {
             "close": "Fermer",
             "open": "Ouvrir",
-            "fullScreen": "Plein écran"
+            "fullScreen": "Plein écran",
+            "mapExport": "[fr] Map Export"
         }
     },
 
