@@ -54,6 +54,12 @@ define(["dojo/_base/array", "utils/util"],
             return util.mergeRecursive(defaultClone, srcObj);
         }
 
+        function defineProjections(proj4) {
+            // wgs84 and aux mercator are built in, add Canada Lambert and Canada Atlas Lambert
+            proj4.defs("EPSG:3978", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            proj4.defs("EPSG:3979", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+        }
+
         function applyConfigDefaults(configObj) {
             var result;
             console.log(configObj);
@@ -86,6 +92,8 @@ define(["dojo/_base/array", "utils/util"],
                     this.layerType.wms
                 ];
             },
+
+            defineProjections: defineProjections,
 
             layerType: {
                 Basemap: "basemap",

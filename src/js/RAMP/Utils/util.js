@@ -46,7 +46,11 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 reader.onloadend = function (e) { def.resolve(e.target.result); };
                 reader.onerror = function (e) { def.reject(e.target.error); };
-                reader[readMethod](file);
+                try {
+                    reader[readMethod](file);
+                } catch (e) {
+                    def.reject(e);
+                }
 
                 return def.promise;
             };
