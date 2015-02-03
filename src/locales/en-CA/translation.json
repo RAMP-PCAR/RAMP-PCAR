@@ -498,6 +498,12 @@
         "siteTitle": "Reusable Accessible Mapping Platform", 
         "title": "Reusable Accessible Mapping Platform (RAMP)"
     }, 
+	"serverError": {
+        "basemapNotAvailable": {
+            "detail": "Basemap service not available; map failed to initialize properly.",
+            "title": "Error: Basemap service not available"
+        }
+    },
     "tools": {
         "basetool": {
             "clearmap": "Clear", 

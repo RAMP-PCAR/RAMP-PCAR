@@ -498,6 +498,12 @@
         "siteTitle": "Plateforme de cartographie accessible et réutilisable", 
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)"
     }, 
+	"serverError": {
+        "basemapNotAvailable": {
+            "detail": "[fr] Basemap service not available; map failed to initialize properly.",
+            "title": "[fr] Error: Basemap service not available"
+        }
+    },
     "tools": {
         "basetool": {
             "clearmap": "Effacer", 
