@@ -46,7 +46,8 @@ define(["dojo/_base/array", "utils/util"],
                 templates: { basemap: "default_basemap", globalSelectorToggles: "default_selector_toggles" },
                 layers: { feature: [], wms: [] },
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
-                advancedToolbar: { enabled: false, tools: [] }
+                advancedToolbar: { enabled: false, tools: [] },
+                mapInitFailUrl: "./error-en.html"
             };
 
         function applyDefaults(defaults, srcObj) {
