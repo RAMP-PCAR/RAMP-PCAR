@@ -74,8 +74,16 @@ define([
             });
         }
 
-        function csvHeaderPeek(csv) {
-            console.log(csv2geojson.parse(csv));
+        /**
+        * Peek at the CSV output (useful for checking headers).
+        *
+        * @param {string} data a string containing the CSV (or any DSV) data
+        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess a delimiter and
+        * this parameter is required
+        * @returns {Array} an array of arrays containing the parsed CSV
+        */
+        function csvPeek(data, delimiter) {
+            return csv2geojson.dsv(delimiter).parseRows(data);
         }
 
         /**
@@ -162,7 +170,6 @@ define([
             }
 
             try {
-                csvHeaderPeek(csvData);
                 csv2geojson.csv2geojson(csvData, csvOpts, function (err, data) {
                     var jsonLayer;
 
@@ -233,6 +240,7 @@ define([
         return {
             loadDataSet: loadDataSet,
             makeGeoJsonLayer: makeGeoJsonLayer,
+            csvPeek: csvPeek,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
             buildGeoJson: buildGeoJson
