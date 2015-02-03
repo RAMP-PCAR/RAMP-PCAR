@@ -21,13 +21,13 @@ define(["dojo/_base/array", "utils/util"],
         "use strict";
 
         var featureLayerDefaults = {
-                layerAttributes: '*',
-                minScale: 0,
-                maxScale: 0,
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-                datagrid: { rowsPerPage: 50 },
-                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
-            },
+            layerAttributes: '*',
+            minScale: 0,
+            maxScale: 0,
+            settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
+            datagrid: { rowsPerPage: 50 },
+            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
+        },
 
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
@@ -118,16 +118,17 @@ define(["dojo/_base/array", "utils/util"],
             result.basemaps = dojoArray.map(result.basemaps, function (b) {
                 return applyDefaults(basemapDefaults, b);
             });
-            result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
-                var layer = applyDefaults(featureLayerDefaults, fl);
-                layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
-                    return applyDefaults(gridColumnDefaults, gc);
-                });
-                return layer;
-            });
+            result.layers.feature = dojoArray.map(result.layers.feature, applyFeatureDefaults);
             console.log(result);
             return result;
+        }
 
+        function applyFeatureDefaults(featureLayer) {
+            var layer = applyDefaults(featureLayerDefaults, featureLayer);
+            layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
+                return applyDefaults(gridColumnDefaults, gc);
+            });
+            return layer;
         }
 
         return {
@@ -143,6 +144,7 @@ define(["dojo/_base/array", "utils/util"],
 
             defineProjections: defineProjections,
             DefaultRenderers: defaultRenderers,
+            applyFeatureDefaults: applyFeatureDefaults,
 
             layerType: {
                 Basemap: "basemap",

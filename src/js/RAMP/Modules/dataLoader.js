@@ -142,8 +142,29 @@ define([
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
 
-            RampMap.enhanceLayer(layer, {}, true);
+            //make a minimal config object for this layer
+            var d = new Date(),
+                timeID = "user" + d.toISOString().substring(11, 19).replace(/:/g, ""),
+                newConfig = {
+                    id: timeID,
+                    displayName: "TemporaryName",  //TODO can we use file name here?
+                    nameField: "",   //TODO how to we get field from input screen?
+                    symbology: {
+                        type: "simple",
+                        imageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
+                    }
+                };
+
+            //backfill the rest of the config object with default values
+            newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+            //add custom properties and event handlers to layer object
+            RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = "newtype?";
+
+            //plop config in global config object so everyone can access it.
+            RAMP.config.layers.feature.push(newConfig);
+
             return layer;
         }
 
