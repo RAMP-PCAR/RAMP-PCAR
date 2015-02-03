@@ -134,6 +134,7 @@ define(["ramp/globalStorage"],
             getObjectId: function (graphic) {
                 return graphic.attributes[graphic.getLayer().objectIdField];
             },
+
             /*
             * Helper function, get attribute value by field name
             *
@@ -163,6 +164,37 @@ define(["ramp/globalStorage"],
                     };
                 return visibilityLegendLabel;
             },
+
+            /**
+            * Wraps plain text urls and emails with <a> tags.
+            *
+            * @method autoHyperlink
+            * @param {String} content the text you would like to search in.
+            */
+            autoHyperlink: function (content) {
+                //http://stackoverflow.com/questions/11863847/regex-to-match-urls-but-not-urls-in-hyperlinks
+                //http://stackoverflow.com/questions/15039993/javascript-function-to-find-email-address-from-a-webpage
+
+                // orig regex's.  did not handle pre-linked content
+                // var urlRegex = /((f|ht)tp(s|):\/\/.+?[\w=%\?\&\./-]+)/g;
+                // var emailRegex = /([\w-\.]+@([\w-]+\.)+[\w-]{2,4})/g;
+
+                if (content) {
+                    content = content.toString();
+
+                    var urlRegex = /(["'>:]?)((ftp|http|https|file):\/\/[\S]+(\b|$))/gi;
+                    content = content.replace(urlRegex, function ($0, $1) {
+                        return $1 ? $0 : '<a href="' + $0 + '" target="_blank">' + $0 + '</a>';
+                    });
+
+                    var emailRegex = /(["'>:]?)([\w.-]+@[\w.-]+\.[\w.-]+)/gi;
+                    content = content.replace(emailRegex, function ($0, $1) {
+                        return $1 ? $0 : '<a href="mailto:' + $0 + '">' + $0 + '</a>';
+                    });
+                }
+                return content;
+            },
+
             /*
             * generate visibility legend object
             * @param o

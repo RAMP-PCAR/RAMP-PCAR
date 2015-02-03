@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer, shp, csv2geojson */
+﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -8,14 +8,10 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/layers/FeatureLayer",
-
-        "utils/util"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array"
     ],
     function (
-            Deferred, EsriRequest, FeatureLayer,
-
-            Util
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray
         ) {
         "use strict";
 
@@ -106,31 +102,78 @@ define([
             return def.promise;
         }
 
+        /**
+        * Performs in place assignment of integer ids for a GeoJSON FeatureCollection.
+        */
+        function assignIds(geoJson)
+        {
+            if (geoJson.type !== 'FeatureCollection') {
+                throw new Error("Assignment can only be performed on FeatureCollections");
+            }
+            dojoArray.forEach(geoJson.features, function (val, idx) {
+                if (typeof val.id === "undefined") {
+                    val.id = idx;
+                }
+            });
+        }
+
+        /**
+        * Converts a GeoJSON object into a FeatureLayer.  Expects GeoJSON to be formed as a FeatureCollection
+        * containing a uniform feature type (FeatureLayer type will be set according to the type of the first
+        * feature entry).  Accepts the following options:
+        *   - renderer: a string identifying one of the properties in defaultRenders
+        *   - sourceProjection: a string matching a proj4.defs projection to be used for the source data (overrides
+        *     geoJson.crs)
+        *   - targetWkid: an integer for an ESRI wkid, defaults to map wkid if not specified
+        *   - fields: an array of fields to be appended to the FeatureLayer layerDefinition (OBJECTID is set by default)
+        *
+        * @param {Object} geoJson An object following the GeoJSON specification, should be a FeatureCollection with
+        * Features of only one type
+        * @param {Object} opts An object for supplying additional parameters
+        * @returns {FeatureLayer} An ESRI FeatureLayer
+        */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj;
             layerDefinition = {
-                fields: []
+                objectIdField: "OBJECTID",
+                fields: [{
+                    name: "OBJECTID",
+                    type: "esriFieldTypeOID"
+                }]
             };
 
-            esriJson = Terraformer.ArcGIS.convert(geoJson);
-            console.log('geojson -> esrijson converted');
-            console.log(esriJson);
-            console.log(geoJson);
+            targetWkid = RAMP.map.spatialReference.wkid;
+            assignIds(geoJson);
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
-            fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
-            console.log(layerDefinition);
 
             if (opts) {
-                if (opts.idField) {
-                    layerDefinition.objectIdField = opts.idField;
-                }
                 if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
                     layerDefinition.drawingInfo = { renderer: defaultRenderers[opts.renderer].renderer };
                     fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
+                if (opts.sourceProjection) {
+                    srcProj = opts.sourceProjection;
+                }
+                if (opts.targetWkid) {
+                    targetWkid = opts.targetWkid;
+                }
+                if (opts.fields) {
+                    layerDefinition.fields = layerDefinition.fields.concat(opts.fields);
+                }
             }
 
+            console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
+            console.log(geoJson);
+            Terraformer.Proj.convert(geoJson, 'EPSG:' + targetWkid, srcProj);
+            console.log(geoJson);
+            esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: targetWkid });
+            console.log('geojson -> esrijson converted');
+            console.log(esriJson);
+            fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
+
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            // ＼(｀O´)／ manually setting SR because it will come out as 4326
+            layer.spatialReference = new SpatialReference({ wkid: targetWkid });
             layer.ramp = { type: "newtype?" };
             return layer;
         }

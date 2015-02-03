@@ -9,23 +9,9 @@
  */
 
 {
-    // generates a list of all the properties and their corresponding values of a given object "o"
-    "CESI2012_freshwater_quality":	"<div class='point-details-list'>
-                                        <ul class='zebra-list'>
-                                            
-                                            {% include('simpleListItem', {key: 'A template', value: 'that iterates over all object properties'}); %}
-
-                                            {% for (var prop in o ) { 
-                                                if (o.hasOwnProperty(prop)) { 
-                                                    include('simpleListItem', {key: prop, value: o[prop]}); 
-                                                }
-                                            } %}
-
-                                        </ul>
-                                    </div>",
 
     // generates a list with an image, several simple key-value pairs, and a link
-    "Test_coarse_proj":	"<div class='point-details-list'>
+    "sample_rich_media_details":	"<div class='point-details-list'>
                             <ul class='zebra-list' style='list-style: none; margin: 0;'>
                                 {% include('simpleListItem', {key: 'A template', value: 'with an image'}); %}
                                 {% include('imageListItem', {url: 'http://lorempixel.com/100/100/nature/' + o.NAME, text: 'A random image from the internet or a logo'}); %}
@@ -39,7 +25,7 @@
                             </ul>
                         </div>",
 
-    "bbs_routes_canada": 	"<p>Just a Data dump template</p>
+    "sample_dump_template": 	"<p>Just a Data dump template</p>
                                 <p>
                                     <span>{</span><br>
                                     {% for (var prop in o ) { 
@@ -53,12 +39,13 @@
                                 </p>",
 
     // generates a list of all items in a "features" array of a given object "o"
+	// will autolink any urls/emails in the attribute values
     "default_feature_details":	"<div class='point-details-list'>
                             <ul class='zebra-list'>
                                 
                                 {% for (var prop in o.data.attributes ) { 
                                     if (o.data.attributes.hasOwnProperty(prop)) { 
-                                        include('simpleListItem', {key: prop, value: o.data.attributes[prop]}); 
+                                        include('simpleListItem', {key: prop, value: o.data.attributes[prop], fn: o.fn}); 
                                     }
                                 } %}
                                 
@@ -71,7 +58,7 @@
                                 <p>{%=o.key%}</p>
                             </div>
                             <div class='col-md-8 pair-value'>
-                                <p class='shorten-candidate'>{%=o.value%}</p>
+                                <p class='shorten-candidate'>{%#o.fn.autoHyperlink(o.value)%}</p>
                             </div>
                             <div class='clearfix'></div>
                         </li>",
@@ -84,6 +71,37 @@
     // a simple template to display an image with some text beside it
     "imageListItem": 	"<li class='row'>
                             <img src='{%=o.url%}' style='width: 100px; height: 100px; float:left; margin: 0 10px 0 0; '><span>{%=o.text%}</span>
+                        </li>",
+						
+	//the following templates are the same as the above templates, but do not implement any auto-linking of embedded urls/emails
+	
+	
+	// generates a list of all items in a "features" array of a given object "o"
+    "default_feature_details_nolink":	"<div class='point-details-list'>
+                            <ul class='zebra-list'>
+                                
+                                {% for (var prop in o.data.attributes ) { 
+                                    if (o.data.attributes.hasOwnProperty(prop)) { 
+                                        include('simpleListItem_nolink', {key: prop, value: o.data.attributes[prop]}); 
+                                    }
+                                } %}
+                                
+                            </ul>
+                        </div>",
+
+    // a simple item template for a key-value pairs
+    "simpleListItem_nolink":	"<li>
+                            <div class='col-md-4 small pair-key'>
+                                <p>{%=o.key%}</p>
+                            </div>
+                            <div class='col-md-8 pair-value'>
+                                <p class='shorten-candidate'>{%=o.value%}</p>
+                            </div>
+                            <div class='clearfix'></div>
                         </li>"
+
+
+
+
 }
 
