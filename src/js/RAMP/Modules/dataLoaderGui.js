@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor */
 
 define([
     /* Dojo */
@@ -485,7 +485,7 @@ define([
                                 }
 
                                 loadURLStep.successLoadUrlStep();
-                                
+
                                 /*var fl;
                                 hc.url = loadSteps[stepId].getUrl();
                                 fl = Map.makeFeatureLayer(hc, true);
@@ -885,10 +885,23 @@ define([
             }());
         }
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split(''),
+                color = '';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
         return {
             init: function () {
-
                 reset();
+
+                rootNode.find("input.color").each(function (i, picker) {
+                    picker = new jscolor.color(picker, {});
+                    picker.fromString(getRandomColor());
+                });
 
                 mainPopup = PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
                     function (d) {
@@ -915,7 +928,6 @@ define([
                     }
                 );
 
-                
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key, value) {
                         symbologyPreset[key] = value.title;
