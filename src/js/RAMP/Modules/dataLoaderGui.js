@@ -9,7 +9,7 @@ define([
 
     /* Ramp */
 
-    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader",
+    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage",
 
     /* Util */
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
@@ -17,7 +17,7 @@ define([
     function (
         lang, Deferred,
         filter_manager_template,
-        PopupManager, DataLoader, Theme, Map, LayerLoader,
+        PopupManager, DataLoader, Theme, Map, LayerLoader, GlobalStorage,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -39,6 +39,8 @@ define([
                     file: null
                 }
             },
+
+            symbologyPreset = {},
 
             /*hc = {
                 layerAttributes: "*",
@@ -573,7 +575,7 @@ define([
 
                                         setSelectOptions(
                                             optionStepContent.find("#csvStyleAttrlist"),
-                                            { selectOne: "Select One" }
+                                            symbologyPreset
                                         );
 
                                         setSelectOptions(
@@ -888,6 +890,13 @@ define([
                         target: rootNode.find("#add-dataset-section-container"),
                         activeClass: "button-pressed",
                         resetFocusOnClose: true
+                    }
+                );
+
+                
+                UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
+                    function (key, value) {
+                        symbologyPreset[key] = value.title;
                     }
                 );
             }
