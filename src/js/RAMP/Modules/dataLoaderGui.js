@@ -512,9 +512,10 @@ define([
 
                             promise.then(function (event) {
                                 var fileType = loadSteps[stepId].getFileType(),
-                                    optionStepContent;
+                                    optionStepContent,
+                                    data = event;
 
-                                console.log(event);
+                                //console.log(event);
                                 option = options.find("> ." + fileType + ":first");
                                 optionStepContent = option.find("> .step-content");
 
@@ -546,19 +547,28 @@ define([
                                         break;
 
                                     case "option-csv":
+                                        var rows = DataLoader.csvPeek(data, ","),
+                                            headers = {};
+
+                                        rows[0].forEach(function (row) {
+                                            headers[row] = row;
+                                        });
+
+                                        console.log(headers);
+
                                         setSelectOptions(
                                             optionStepContent.find("#csvPrimaryAttrlist"),
-                                            { selectOne: "Select One" }
+                                            headers
                                         );
 
                                         setSelectOptions(
                                             optionStepContent.find("#csvLatitudeAttrlist"),
-                                            { selectOne: "Select One" }
+                                            headers
                                         );
 
                                         setSelectOptions(
                                             optionStepContent.find("#csvLongitudeAttrlist"),
-                                            { selectOne: "Select One" }
+                                            headers
                                         );
 
                                         setSelectOptions(
