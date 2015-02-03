@@ -76,36 +76,42 @@ define([
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
                     rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
-                        var req = {}, wkid, mapSR, srList;
-                        mapSR = wmsData.wmsLayer.getMap().spatialReference;
-                        srList = wmsData.wmsLayer.spatialReferences;
+                        try {
+                            var req = {}, wkid, mapSR, srList;
+                            mapSR = wmsData.wmsLayer.getMap().spatialReference;
+                            srList = wmsData.wmsLayer.spatialReferences;
 
-                        if (srList && srList.length > 1) {
-                            wkid = srList[0];
-                        } else if (mapSR.wkid) {
-                            wkid = mapSR.wkid;
+                            if (srList && srList.length > 1) {
+                                wkid = srList[0];
+                            } else if (mapSR.wkid) {
+                                wkid = mapSR.wkid;
+                            }
+                            if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
+                                req = { CRS: "EPSG:" + wkid, I: evt.layerX, J: evt.layerY };
+                            } else {
+                                req = { SRS: "EPSG:" + wkid, X: evt.layerX, Y: evt.layerY };
+                            }
+                            $.extend(req, {
+                                SERVICE: "WMS",
+                                REQUEST: "GetFeatureInfo",
+                                VERSION: wmsData.wmsLayer.version,
+                                BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
+                                WIDTH: esriMap.width,
+                                HEIGHT: esriMap.height,
+                                QUERY_LAYERS: wmsData.layerConfig.layerName,
+                                LAYERS: wmsData.layerConfig.layerName,
+                                INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
+                            });
+                            return new EsriRequest({
+                                url: wmsData.wmsLayer.url.split('?')[0],
+                                content: req,
+                                handleAs: "text"
+                            });
+
+                        } catch (exception) {
+                            console.log("WMS Error: " + exception);
                         }
-                        if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
-                            req = { CRS: "EPSG:" + wkid, I: evt.layerX, J: evt.layerY };
-                        } else {
-                            req = { SRS: "EPSG:" + wkid, X: evt.layerX, Y: evt.layerY };
-                        }
-                        $.extend(req, {
-                            SERVICE: "WMS",
-                            REQUEST: "GetFeatureInfo",
-                            VERSION: wmsData.wmsLayer.version,
-                            BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
-                            WIDTH: esriMap.width,
-                            HEIGHT: esriMap.height,
-                            QUERY_LAYERS: wmsData.layerConfig.layerName,
-                            LAYERS: wmsData.layerConfig.layerName,
-                            INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
-                        });
-                        return new EsriRequest({
-                            url: wmsData.wmsLayer.url.split('?')[0],
-                            content: req,
-                            handleAs: "text"
-                        });
+                        
 
                     });
 
