@@ -62,6 +62,7 @@ module.exports = (grunt) ->
                     [
                         'src/js/lib/jquery.dataTables.pagination.ramp.js'
                         'src/js/lib/jquery.ui.navigation.ramp.js'
+                        'src/js/lib/jscolor.js'
                     ]
                 )
             )

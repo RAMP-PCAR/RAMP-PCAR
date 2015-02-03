@@ -386,6 +386,16 @@
                 %}
         ",
 
+        "a_d_colour_picker":"
+            <h3 class='h6'>{%= o.header %}</h3>
+
+            <div class='input-group' data-list-id='{%= o.listId %}'>
+                <label class='wb-inv' for='{%= o.listId %}picker'>{%= o.label %}:</label>
+                <input name='input' class='color {pickerPosition: top} form-control picker-control input-sm' id='{%= o.listId %}picker' data-role='none'/>
+            </div>
+        ",
+
+
         "a_d_load_file_or_URL_step": "
             <h3 class='h6'>{%= o.header %}</h3> 
 
@@ -491,17 +501,19 @@
                                                     header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: i18n.t('addDataset.style'),
                                                             label:  i18n.t('addDataset.style'),
                                                             listId: 'featureStyleAttr'
-                                                        },
-                                                        {
-                                                            header: i18n.t('addDataset.colour'),
-                                                            label:  i18n.t('addDataset.colour'),
-                                                            listId: 'featureColourAttr'
                                                         }
                                                     ]                                                                    
-                                                }); %}                                                                
+                                                }); %}
+
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'featureColourAttr'
+                                                    }); 
+                                                %}                                                                
 
                                                 {% include('a_d_add_dataset_button', o); %}
                                             </div>
@@ -566,17 +578,19 @@
                                                     header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: i18n.t('addDataset.style'),
                                                             label:  i18n.t('addDataset.style'),
                                                             listId: 'geojsonStyleAttr'
-                                                        },
-                                                        {
-                                                            header: i18n.t('addDataset.colour'),
-                                                            label:  i18n.t('addDataset.colour'),
-                                                            listId: 'geojsonColourAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
+
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'geojsonColourAttr'
+                                                    }); 
+                                                %} 
 
                                                 {% include('a_d_add_dataset_button', o); %}                                                                
                                             </div>
@@ -608,22 +622,24 @@
                                                         }
                                                     ]                                                                    
                                                 }); %}
-
+                    
                                                 {% include('a_d_list_step', {
                                                     header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: i18n.t('addDataset.style'),
                                                             label:  i18n.t('addDataset.style'),
                                                             listId: 'csvStyleAttr'
-                                                        },
-                                                        {
-                                                            header: i18n.t('addDataset.colour'),
-                                                            label:  i18n.t('addDataset.colour'),
-                                                            listId: 'csvColourAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %}
+            
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'csvColourAttr'
+                                                    }); 
+                                                %} 
 
                                                 {% include('a_d_add_dataset_button', o); %}                                                                                                                                
                                             </div>
@@ -645,17 +661,19 @@
                                                     header: i18n.t('addDataset.symbology'),
                                                     lists: [
                                                         {
-                                                            header: i18n.t('addDataset.style'),
                                                             label:  i18n.t('addDataset.style'),
                                                             listId: 'shapefileStyleAttr'
-                                                        },
-                                                        {
-                                                            header: i18n.t('addDataset.colour'),
-                                                            label:  i18n.t('addDataset.colour'),
-                                                            listId: 'shapefileColourAttr'
                                                         }
                                                     ]                                                                    
                                                 }); %} 
+
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'shapefileColourAttr'
+                                                    }); 
+                                                %} 
 
                                                 {% include('a_d_add_dataset_button', o); %}                                                                                                                               
                                             </div>

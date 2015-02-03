@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor */
 
 define([
     /* Dojo */
@@ -39,6 +39,10 @@ define([
                     file: null
                 }
             },
+
+            ESCAPE_DELIMITERS = ['|', '^'],
+            CELL_DELIMITERS = [',', ';', '\t', '|', '^'],
+            //LINE_DELIMITERS = ['\r\n', '\r', '\n'],
 
             symbologyPreset = {},
 
@@ -452,17 +456,17 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#featureColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#featureColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#featureStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#featureColourAttrlist").val()
+                                                colour: optionStepContent.find("#featureColourAttrpicker").val()
                                             });
                                         });
 
@@ -485,7 +489,7 @@ define([
                                 }
 
                                 loadURLStep.successLoadUrlStep();
-                                
+
                                 /*var fl;
                                 hc.url = loadSteps[stepId].getUrl();
                                 fl = Map.makeFeatureLayer(hc, true);
@@ -533,25 +537,28 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#geojsonColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#geojsonColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                             });
                                         });
 
                                         break;
 
                                     case "option-csv":
-                                        var rows = DataLoader.csvPeek(data, ","),
+                                        var rows,
+                                            delimiter = detectDelimiter(data, CELL_DELIMITERS),
                                             headers = {};
+
+                                        rows = DataLoader.csvPeek(data, delimiter);
 
                                         rows[0].forEach(function (row) {
                                             headers[row] = row;
@@ -579,19 +586,20 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#csvColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addCSVDataset({
                                                 data: data,
+                                                delimiter: delimiter,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                             });
                                         });
 
@@ -608,17 +616,17 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#shapefileColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#shapefileColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#shapefileStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#shapefileColourAttrlist").val()
+                                                colour: optionStepContent.find("#shapefileColourAttrpicker").val()
                                             });
                                         });
 
@@ -678,13 +686,23 @@ define([
             mainPopup.close();
         }
 
+        //function addFeatureDataset(obj) {
+        //    var promise;
+
+        //}
+
+        //function addWMSDataset(obj) {
+        //    var promise;
+
+        //}
+
         function addCSVDataset(obj) {
             var promise;
 
             promise = DataLoader.buildCsv(obj.data, {
                 latfield: obj.lat,
                 lonfield: obj.lon,
-                delimited: ","
+                delimiter: obj.delimiter
             });
 
             promise.then(function (event) {
@@ -696,6 +714,36 @@ define([
                 mainPopup.close();
             });
         }
+
+        //function addGeoJSONDataset(obj) {
+        //    var promise;
+
+        //    promise = DataLoader.buildGeoJson(obj.data);
+
+        //    promise.then(function (event) {
+        //        var fl = event;
+
+        //        //fl = Map.makeFeatureLayer(hc, true);
+        //        LayerLoader.loadLayer(fl);
+
+        //        mainPopup.close();
+        //    });
+        //}
+
+        //function addShapefileDataset(obj) {
+        //    var promise;
+
+        //    promise = DataLoader.buildShapefile(obj.data);
+
+        //    promise.then(function (event) {
+        //        var fl = event;
+
+        //        //fl = Map.makeFeatureLayer(hc, true);
+        //        LayerLoader.loadLayer(fl);
+
+        //        mainPopup.close();
+        //    });
+        //}
 
         function reset() {
             var section;
@@ -885,10 +933,47 @@ define([
             }());
         }
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split(''),
+                color = '';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function detectDelimiter(string, delimiters) {
+            var count = 0,
+                detected;
+
+            delimiters.forEach(function (delimiter) {
+                var needle = delimiter,
+                    matches;
+
+                if (ESCAPE_DELIMITERS.indexOf(delimiter) !== -1) {
+                    needle = '\\' + needle;
+                }
+
+                matches = string.match(new RegExp(needle, 'g'));
+                if (matches && matches.length > count) {
+                    count = matches.length;
+                    detected = delimiter;
+                }
+            });
+
+            console.log("Cell delimiter detected: ", (detected || delimiters[0]));
+
+            return (detected || delimiters[0]);
+        }
+
         return {
             init: function () {
-
                 reset();
+
+                rootNode.find("input.color").each(function (i, picker) {
+                    picker = new jscolor.color(picker, {});
+                    picker.fromString(getRandomColor());
+                });
 
                 mainPopup = PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
                     function (d) {
@@ -915,7 +1000,6 @@ define([
                     }
                 );
 
-                
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key, value) {
                         symbologyPreset[key] = value.title;
