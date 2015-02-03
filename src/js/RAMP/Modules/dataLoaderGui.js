@@ -434,7 +434,8 @@ define([
 
                             promise.then(function (event) {
                                 var serviceType = loadSteps[stepId].getServiceType(),
-                                    optionStepContent;
+                                    optionStepContent,
+                                    data = event;
 
                                 option = options.find("> ." + serviceType + ":first");
                                 optionStepContent = option.find("> .step-content");
@@ -448,7 +449,7 @@ define([
 
                                         setSelectOptions(
                                             optionStepContent.find("#featureStyleAttrlist"),
-                                            { selectOne: "Select One" }
+                                            symbologyPreset
                                         );
 
                                         setSelectOptions(
@@ -458,6 +459,7 @@ define([
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
+                                                data: data,
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#featureStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#featureColourAttrlist").val()
@@ -474,6 +476,7 @@ define([
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
+                                                data: data,
                                                 parser: optionStepContent.find("#wmsParserAttrlist").val()
                                             });
                                         });
@@ -482,10 +485,7 @@ define([
                                 }
 
                                 loadURLStep.successLoadUrlStep();
-
-                                event = null;
-                                //console.log(event);
-
+                                
                                 /*var fl;
                                 hc.url = loadSteps[stepId].getUrl();
                                 fl = Map.makeFeatureLayer(hc, true);
@@ -530,7 +530,7 @@ define([
 
                                         setSelectOptions(
                                             optionStepContent.find("#geojsonStyleAttrlist"),
-                                            { selectOne: "Select One" }
+                                            symbologyPreset
                                         );
 
                                         setSelectOptions(
@@ -540,6 +540,7 @@ define([
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
+                                                data: data,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#geojsonColourAttrlist").val()
@@ -584,7 +585,8 @@ define([
                                         );
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addDataset({
+                                            addCSVDataset({
+                                                data: data,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
@@ -603,7 +605,7 @@ define([
 
                                         setSelectOptions(
                                             optionStepContent.find("#shapefileStyleAttrlist"),
-                                            { selectOne: "Select One" }
+                                            symbologyPreset
                                         );
 
                                         setSelectOptions(
@@ -613,6 +615,7 @@ define([
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
+                                                data: data,
                                                 primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#shapefileStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#shapefileColourAttrlist").val()
@@ -673,6 +676,25 @@ define([
             console.log(obj);
 
             mainPopup.close();
+        }
+
+        function addCSVDataset(obj) {
+            var promise;
+
+            promise = DataLoader.buildCsv(obj.data, {
+                latfield: obj.lat,
+                lonfield: obj.lon,
+                delimited: ","
+            });
+
+            promise.then(function (event) {
+                var fl = event;
+
+                //fl = Map.makeFeatureLayer(hc, true);
+                LayerLoader.loadLayer(fl);
+
+                mainPopup.close();
+            });
         }
 
         function reset() {
