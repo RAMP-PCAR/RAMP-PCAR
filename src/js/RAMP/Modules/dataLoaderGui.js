@@ -452,17 +452,17 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#featureColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#featureColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#featureStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#featureColourAttrlist").val()
+                                                colour: optionStepContent.find("#featureColourAttrpicker").val()
                                             });
                                         });
 
@@ -533,17 +533,17 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#geojsonColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#geojsonColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                             });
                                         });
 
@@ -579,10 +579,10 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#csvColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addCSVDataset({
@@ -591,7 +591,7 @@ define([
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrlist").val()
+                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                             });
                                         });
 
@@ -608,17 +608,17 @@ define([
                                             symbologyPreset
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#shapefileColourAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#shapefileColourAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#shapefileStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#shapefileColourAttrlist").val()
+                                                colour: optionStepContent.find("#shapefileColourAttrpicker").val()
                                             });
                                         });
 
