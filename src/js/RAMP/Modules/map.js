@@ -961,6 +961,20 @@ define([
                 return tempLayer;
             },
 
+            /**
+            * Adds custom ramp properties to layer.  Adds handlers to loading events.
+            *
+            * @method enhanceLayer
+            * @param  {Object} layer layer to be prepped
+            * @param  {Object} config config object for the layer
+            * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
+            */
+
+            enhanceLayer: function (layer, config, userLayer) {
+                //call the private function
+                prepLayer(layer, config, userLayer);
+            },
+
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
             *
