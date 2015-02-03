@@ -40,6 +40,10 @@ define([
                 }
             },
 
+            ESCAPE_DELIMITERS = ['|', '^'],
+            CELL_DELIMITERS = [',', ';', '\t', '|', '^'],
+            //LINE_DELIMITERS = ['\r\n', '\r', '\n'],
+
             symbologyPreset = {},
 
             /*hc = {
@@ -550,8 +554,11 @@ define([
                                         break;
 
                                     case "option-csv":
-                                        var rows = DataLoader.csvPeek(data, ","),
+                                        var rows,
+                                            delimiter = detectDelimiter(data, CELL_DELIMITERS),
                                             headers = {};
+
+                                        rows = DataLoader.csvPeek(data, delimiter);
 
                                         rows[0].forEach(function (row) {
                                             headers[row] = row;
@@ -587,6 +594,7 @@ define([
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addCSVDataset({
                                                 data: data,
+                                                delimiter: delimiter,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
@@ -680,7 +688,7 @@ define([
 
         //function addFeatureDataset(obj) {
         //    var promise;
-            
+
         //}
 
         //function addWMSDataset(obj) {
@@ -694,7 +702,7 @@ define([
             promise = DataLoader.buildCsv(obj.data, {
                 latfield: obj.lat,
                 lonfield: obj.lon,
-                delimited: ","
+                delimiter: obj.delimiter
             });
 
             promise.then(function (event) {
@@ -932,6 +940,30 @@ define([
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
+        }
+
+        function detectDelimiter(string, delimiters) {
+            var count = 0,
+                detected;
+
+            delimiters.forEach(function (delimiter) {
+                var needle = delimiter,
+                    matches;
+
+                if (ESCAPE_DELIMITERS.indexOf(delimiter) !== -1) {
+                    needle = '\\' + needle;
+                }
+
+                matches = string.match(new RegExp(needle, 'g'));
+                if (matches && matches.length > count) {
+                    count = matches.length;
+                    detected = delimiter;
+                }
+            });
+
+            console.log("Cell delimiter detected: ", (detected || delimiters[0]));
+
+            return (detected || delimiters[0]);
         }
 
         return {
