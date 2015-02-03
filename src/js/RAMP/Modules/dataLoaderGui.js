@@ -678,6 +678,16 @@ define([
             mainPopup.close();
         }
 
+        //function addFeatureDataset(obj) {
+        //    var promise;
+            
+        //}
+
+        //function addWMSDataset(obj) {
+        //    var promise;
+
+        //}
+
         function addCSVDataset(obj) {
             var promise;
 
@@ -696,6 +706,36 @@ define([
                 mainPopup.close();
             });
         }
+
+        //function addGeoJSONDataset(obj) {
+        //    var promise;
+
+        //    promise = DataLoader.buildGeoJson(obj.data);
+
+        //    promise.then(function (event) {
+        //        var fl = event;
+
+        //        //fl = Map.makeFeatureLayer(hc, true);
+        //        LayerLoader.loadLayer(fl);
+
+        //        mainPopup.close();
+        //    });
+        //}
+
+        //function addShapefileDataset(obj) {
+        //    var promise;
+
+        //    promise = DataLoader.buildShapefile(obj.data);
+
+        //    promise.then(function (event) {
+        //        var fl = event;
+
+        //        //fl = Map.makeFeatureLayer(hc, true);
+        //        LayerLoader.loadLayer(fl);
+
+        //        mainPopup.close();
+        //    });
+        //}
 
         function reset() {
             var section;
