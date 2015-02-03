@@ -21,13 +21,13 @@ define(["dojo/_base/array", "utils/util"],
         "use strict";
 
         var featureLayerDefaults = {
-                layerAttributes: '*',
-                minScale: 0,
-                maxScale: 0,
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-                datagrid: { rowsPerPage: 50 },
-                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
-            },
+            layerAttributes: '*',
+            minScale: 0,
+            maxScale: 0,
+            settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
+            datagrid: { rowsPerPage: 50 },
+            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
+        },
 
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
@@ -47,6 +47,50 @@ define(["dojo/_base/array", "utils/util"],
                 layers: { feature: [], wms: [] },
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
                 advancedToolbar: { enabled: false, tools: [] }
+            },
+
+            defaultRenderers = {
+                circlePoint: {
+                    geometryType: "esriGeometryPoint",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSMS",
+                            style: "esriSMSCircle",
+                            color: [67, 100, 255, 200],
+                            size: 7
+                        }
+                    }
+                },
+                solidLine: {
+                    geometryType: "esriGeometryPolyline",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSLS",
+                            style: "esriSLSSolid",
+                            color: [90, 90, 90, 200],
+                            width: 2
+                        }
+                    }
+                },
+                outlinedPoly: {
+                    geometryType: "esriGeometryPolygon",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSFS",
+                            style: "esriSFSSolid",
+                            color: [76, 76, 125, 200],
+                            outline: {
+                                type: "esriSLS",
+                                style: "esriSLSSolid",
+                                color: [110, 110, 110, 255],
+                                width: 1
+                            }
+                        }
+                    }
+                }
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -94,6 +138,7 @@ define(["dojo/_base/array", "utils/util"],
             },
 
             defineProjections: defineProjections,
+            DefaultRenderers: defaultRenderers,
 
             layerType: {
                 Basemap: "basemap",

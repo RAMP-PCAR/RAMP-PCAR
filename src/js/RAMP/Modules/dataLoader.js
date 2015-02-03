@@ -8,61 +8,18 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage"
     ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage
         ) {
         "use strict";
 
-        var defaultRenderers = {
-            circlePoint: {
-                geometryType: "esriGeometryPoint",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSMS",
-                        style: "esriSMSCircle",
-                        color: [67, 100, 255, 200],
-                        size: 7
-                    }
-                }
-            },
-            solidLine: {
-                geometryType: "esriGeometryPolyline",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSLS",
-                        style: "esriSLSSolid",
-                        color: [90, 90, 90, 200],
-                        width: 2
-                    }
-                }
-            },
-            outlinedPoly: {
-                geometryType: "esriGeometryPolygon",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSFS",
-                        style: "esriSFSSolid",
-                        color: [76,76,125,200],
-                        outline: {
-                            type: "esriSLS",
-                            style: "esriSLSSolid",
-                            color: [110,110,110,255],
-                            width: 1
-                        }
-                    }
-                }
-            }
-        },
-        featureTypeToRenderer = {
-            Point: "circlePoint", MultiPoint: "circlePoint",
-            LineString: "solidLine", MultiLineString: "solidLine",
-            Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
-        };
+        var featureTypeToRenderer = {
+                Point: "circlePoint", MultiPoint: "circlePoint",
+                LineString: "solidLine", MultiLineString: "solidLine",
+                Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
+            };
 
         /**
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
@@ -117,6 +74,10 @@ define([
             });
         }
 
+        function csvHeaderPeek(csv) {
+            console.log(csv2geojson.parse(csv));
+        }
+
         /**
         * Converts a GeoJSON object into a FeatureLayer.  Expects GeoJSON to be formed as a FeatureCollection
         * containing a uniform feature type (FeatureLayer type will be set according to the type of the first
@@ -133,7 +94,8 @@ define([
         * @returns {FeatureLayer} An ESRI FeatureLayer
         */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj, defaultRenderers = GlobalStorage.DefaultRenderers;
+
             layerDefinition = {
                 objectIdField: "OBJECTID",
                 fields: [{
@@ -200,6 +162,7 @@ define([
             }
 
             try {
+                csvHeaderPeek(csvData);
                 csv2geojson.csv2geojson(csvData, csvOpts, function (err, data) {
                     var jsonLayer;
 
