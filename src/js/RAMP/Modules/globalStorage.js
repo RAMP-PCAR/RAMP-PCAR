@@ -48,6 +48,50 @@ define(["dojo/_base/array", "utils/util"],
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
                 advancedToolbar: { enabled: false, tools: [] },
                 mapInitFailUrl: "./error-en.html"
+            },
+
+            defaultRenderers = {
+                circlePoint: {
+                    geometryType: "esriGeometryPoint",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSMS",
+                            style: "esriSMSCircle",
+                            color: [67, 100, 255, 200],
+                            size: 7
+                        }
+                    }
+                },
+                solidLine: {
+                    geometryType: "esriGeometryPolyline",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSLS",
+                            style: "esriSLSSolid",
+                            color: [90, 90, 90, 200],
+                            width: 2
+                        }
+                    }
+                },
+                outlinedPoly: {
+                    geometryType: "esriGeometryPolygon",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSFS",
+                            style: "esriSFSSolid",
+                            color: [76, 76, 125, 200],
+                            outline: {
+                                type: "esriSLS",
+                                style: "esriSLSSolid",
+                                color: [110, 110, 110, 255],
+                                width: 1
+                            }
+                        }
+                    }
+                }
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -95,6 +139,7 @@ define(["dojo/_base/array", "utils/util"],
             },
 
             defineProjections: defineProjections,
+            DefaultRenderers: defaultRenderers,
 
             layerType: {
                 Basemap: "basemap",

@@ -8,61 +8,18 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage"
     ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage
         ) {
         "use strict";
 
-        var defaultRenderers = {
-            circlePoint: {
-                geometryType: "esriGeometryPoint",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSMS",
-                        style: "esriSMSCircle",
-                        color: [67, 100, 255, 200],
-                        size: 7
-                    }
-                }
-            },
-            solidLine: {
-                geometryType: "esriGeometryPolyline",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSLS",
-                        style: "esriSLSSolid",
-                        color: [90, 90, 90, 200],
-                        width: 2
-                    }
-                }
-            },
-            outlinedPoly: {
-                geometryType: "esriGeometryPolygon",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSFS",
-                        style: "esriSFSSolid",
-                        color: [76,76,125,200],
-                        outline: {
-                            type: "esriSLS",
-                            style: "esriSLSSolid",
-                            color: [110,110,110,255],
-                            width: 1
-                        }
-                    }
-                }
-            }
-        },
-        featureTypeToRenderer = {
-            Point: "circlePoint", MultiPoint: "circlePoint",
-            LineString: "solidLine", MultiLineString: "solidLine",
-            Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
-        };
+        var featureTypeToRenderer = {
+                Point: "circlePoint", MultiPoint: "circlePoint",
+                LineString: "solidLine", MultiLineString: "solidLine",
+                Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
+            };
 
         /**
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
@@ -118,6 +75,18 @@ define([
         }
 
         /**
+        * Peek at the CSV output (useful for checking headers).
+        *
+        * @param {string} data a string containing the CSV (or any DSV) data
+        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess a delimiter and
+        * this parameter is required
+        * @returns {Array} an array of arrays containing the parsed CSV
+        */
+        function csvPeek(data, delimiter) {
+            return csv2geojson.dsv(delimiter).parseRows(data);
+        }
+
+        /**
         * Converts a GeoJSON object into a FeatureLayer.  Expects GeoJSON to be formed as a FeatureCollection
         * containing a uniform feature type (FeatureLayer type will be set according to the type of the first
         * feature entry).  Accepts the following options:
@@ -133,7 +102,8 @@ define([
         * @returns {FeatureLayer} An ESRI FeatureLayer
         */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj, defaultRenderers = GlobalStorage.DefaultRenderers;
+
             layerDefinition = {
                 objectIdField: "OBJECTID",
                 fields: [{
@@ -270,6 +240,7 @@ define([
         return {
             loadDataSet: loadDataSet,
             makeGeoJsonLayer: makeGeoJsonLayer,
+            csvPeek: csvPeek,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
             buildGeoJson: buildGeoJson
