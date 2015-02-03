@@ -3,7 +3,7 @@
         "tileSchema": {
             "NRCAN_Lambert_3978": "Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "Lambert 79",
-            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
+            "ESRI_World_AuxMerc_3857": "Auxiliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -249,7 +249,8 @@
     },
 
     "advancedToolbar": {
-        "advancedTitle": "Advanced"
+        "advancedTitle": "Advanced",
+        "title": "Tools"
     },
 
     "bookmarkLink": {

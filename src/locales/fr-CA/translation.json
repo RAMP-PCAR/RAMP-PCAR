@@ -3,7 +3,7 @@
         "tileSchema": {
             "NRCAN_Lambert_3978": "[fr] Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "[fr] Lambert 79",
-            "ESRI_World_AuxMerc_3857": "Auxilliary Mercator"
+            "ESRI_World_AuxMerc_3857": "[fr] Auxiliary Mercator"
         },
         "basemaps": {
             "baseNrCan": {
@@ -23,9 +23,9 @@
                 "description": "[fr] NrCan CBMT_CBCT_HS"
             },
             "baseCBMT_CBCT_GEOM_3978": {
-                "name": "Road Networks",
-                "altText": "Topographic Map",
-                "description": "NrCan CBMT_CBCT_GEOM"
+                "name": "[fr] Road Networks",
+                "altText": "[fr] Topographic Map",
+                "description": "[fr] NrCan CBMT_CBCT_GEOM"
             },
             "baseE2M": {
                 "name": "[fr] Canada Topographic",
@@ -249,7 +249,8 @@
     },
 
     "advancedToolbar": {
-        "advancedTitle": "Avancé"
+        "advancedTitle": "Avancé",
+        "title": "[fr] Tools"
     },
 
     "bookmarkLink": {
