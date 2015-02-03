@@ -549,6 +549,13 @@
         }
     },
 
+    "serverError": {
+        "basemapNotAvailable": {
+            "title": "Error: Basemap service not available",
+            "detail": "Basemap service not available; map failed to initialize properly."
+        }
+    },
+
     "_unused": {
         "altMaptip_image": "Feature icon",
         "showHeaders": "Show Headers",
