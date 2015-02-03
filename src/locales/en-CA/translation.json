@@ -355,7 +355,7 @@
         "controlsMatrix": {
             "metadata": "Metadata",
             "settings": "Settings",
-            "error": "Remove",
+            "error": "Error",
             "reload": "Reload",
             "remove": "Remove"
         }

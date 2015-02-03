@@ -222,7 +222,7 @@
     "addDataset": {
         "title": "[fr] Add Dataset",
         "cancel": "[fr] Cancel",
-        "load": "[fr] Load",
+        "load": "Charger",
         "dataSource": "[fr] Data Source",
         "dataSourceService": "[fr] Service",
         "dataSourceFile": "[fr] File",
@@ -355,7 +355,7 @@
         "controlsMatrix": {
             "metadata": "Métadonnées",
             "settings": "Paramètres",
-            "error": "[fr] Remove",
+            "error": "[fr] Error",
             "reload": "[fr] Reload",
             "remove": "[fr] Remove"
         }
