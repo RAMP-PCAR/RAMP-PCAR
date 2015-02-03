@@ -2,30 +2,30 @@
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
-* 
+*
 * @module RAMP
 * @submodule DataLoader
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage"
-    ],
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
+],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage, RampMap
         ) {
         "use strict";
 
         var featureTypeToRenderer = {
-                Point: "circlePoint", MultiPoint: "circlePoint",
-                LineString: "solidLine", MultiLineString: "solidLine",
-                Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
-            };
+            Point: "circlePoint", MultiPoint: "circlePoint",
+            LineString: "solidLine", MultiLineString: "solidLine",
+            Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
+        };
 
         /**
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
         * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
         * into a string or an ArrayBuffer.
-        * 
+        *
         * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
         *                      {string} type as "text" or "binary" (text by default)
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
@@ -43,14 +43,12 @@ define([
                 } else {
                     promise = Util.readFileAsText(args.file);
                 }
-
             } else if (args.url) {
                 try {
                     promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
                 } catch (e) {
                     def.reject(e);
                 }
-
             } else {
                 throw new Error("One of url or file should be specified");
             }
@@ -62,8 +60,7 @@ define([
         /**
         * Performs in place assignment of integer ids for a GeoJSON FeatureCollection.
         */
-        function assignIds(geoJson)
-        {
+        function assignIds(geoJson) {
             if (geoJson.type !== 'FeatureCollection') {
                 throw new Error("Assignment can only be performed on FeatureCollections");
             }
@@ -144,7 +141,9 @@ define([
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
-            layer.ramp = { type: "newtype?" };
+
+            RampMap.enhanceLayer(layer, {}, true);
+            layer.ramp.type = "newtype?";
             return layer;
         }
 
