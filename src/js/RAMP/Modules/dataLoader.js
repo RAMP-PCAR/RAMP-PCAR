@@ -161,6 +161,7 @@ define([
             //add custom properties and event handlers to layer object
             RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
+            layer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
