@@ -1196,6 +1196,47 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         .on("mouseup", { button: button }, mouseUp)
                     ;
                 });
+            },
+
+            /**
+            * Detects either cell or line delimiter in a given csv data.
+            *
+            * @method detectDelimiter
+            * @static
+            * @param {String} data csv content
+            * @param {String} [type] Type of the delimiter to detect. Possible values "cell" or "line". Defaults to "cell".
+            * @return {String} Detected delimiter
+            */
+            detectDelimiter: function (data, type) {
+                var count = 0,
+                    detected,
+
+                    escapeDelimiters = ['|', '^'],
+                    delimiters = {
+                        cell: [',', ';', '\t', '|', '^'],
+                        line: ['\r\n', '\r', '\n']
+                    };
+
+                type = type !== "cell" && type !== "line" ? "cell" : type;
+
+                delimiters[type].forEach(function (delimiter) {
+                    var needle = delimiter,
+                        matches;
+
+                    if (escapeDelimiters.indexOf(delimiter) !== -1) {
+                        needle = '\\' + needle;
+                    }
+
+                    matches = data.match(new RegExp(needle, 'g'));
+                    if (matches && matches.length > count) {
+                        count = matches.length;
+                        detected = delimiter;
+                    }
+                });
+
+                console.log("Cell delimiter detected: ", (detected || delimiters[type][0]));
+
+                return (detected || delimiters[type][0]);
             }
         };
     });

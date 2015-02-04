@@ -40,10 +40,6 @@ define([
                 }
             },
 
-            ESCAPE_DELIMITERS = ['|', '^'],
-            CELL_DELIMITERS = [',', ';', '\t', '|', '^'],
-            //LINE_DELIMITERS = ['\r\n', '\r', '\n'],
-
             symbologyPreset = {},
 
             /*hc = {
@@ -555,7 +551,7 @@ define([
 
                                     case "option-csv":
                                         var rows,
-                                            delimiter = detectDelimiter(data, CELL_DELIMITERS),
+                                            delimiter = UtilMisc.detectDelimiter(data),
                                             headers = {};
 
                                         rows = DataLoader.csvPeek(data, delimiter);
@@ -940,30 +936,6 @@ define([
                 color += letters[Math.floor(Math.random() * 16)];
             }
             return color;
-        }
-
-        function detectDelimiter(string, delimiters) {
-            var count = 0,
-                detected;
-
-            delimiters.forEach(function (delimiter) {
-                var needle = delimiter,
-                    matches;
-
-                if (ESCAPE_DELIMITERS.indexOf(delimiter) !== -1) {
-                    needle = '\\' + needle;
-                }
-
-                matches = string.match(new RegExp(needle, 'g'));
-                if (matches && matches.length > count) {
-                    count = matches.length;
-                    detected = delimiter;
-                }
-            });
-
-            console.log("Cell delimiter detected: ", (detected || delimiters[0]));
-
-            return (detected || delimiters[0]);
         }
 
         return {
