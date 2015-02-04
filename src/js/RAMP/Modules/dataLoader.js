@@ -8,10 +8,10 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array"
     ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray
         ) {
         "use strict";
 
@@ -101,6 +101,38 @@ define([
             promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
             return def.promise;
         }
+
+        /**
+        * 
+        */
+        function scrapeLayerData(featureLayerEndpoint) {
+            var def = new Deferred(), promise;
+
+            try {
+                promise = (new EsriRequest({ url: args.url })).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            promise.then(
+                function (data) {
+                    var res = {
+                        layerId: data.id,
+                        layerName: data.name,
+                        geometryType: data.geometryType,
+                        fields: dojoArray.map(data.fields, function (x) { return x.name })
+                    }, fl;
+
+                    fl = new FeatureLayer(featureLayerEndpoint, { id: LayerLoader.nextId(), mode: FeatureLayer.MODE_SNAPSHOT });
+                    def.resolve(fl);
+                },
+                function (error) { def.reject(error); }
+            );
+
+            return def.promise;
+        }
+
+
 
         /**
         * Performs in place assignment of integer ids for a GeoJSON FeatureCollection.
@@ -269,6 +301,7 @@ define([
 
         return {
             loadDataSet: loadDataSet,
+            scrapeLayerData: scrapeLayerData,
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
