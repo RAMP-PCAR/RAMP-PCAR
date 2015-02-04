@@ -160,7 +160,7 @@ define([
 
             //add custom properties and event handlers to layer object
             RampMap.enhanceLayer(layer, newConfig, true);
-            layer.ramp.type = "newtype?";
+            layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
