@@ -42,50 +42,6 @@ define([
 
             symbologyPreset = {},
 
-            /*hc = {
-                layerAttributes: "*",
-                minScale: 0,
-                maxScale: 0,
-                settings: {
-                    panelEnabled: true,
-                    opacity: {
-                        enabled: true,
-                        default: 0.7
-                    },
-                    visible: true,
-                    boundingBoxVisible: false
-                },
-                datagrid: {
-                    rowsPerPage: 50,
-                    gridColumns: [
-
-                    ]
-                },
-                templates: {
-                    detail: "default_feature_details",
-                    hover: "feature_hover_maptip_template",
-                    anchor: "anchored_map_tip",
-                    summary: "default_grid_summary_row"
-                },
-                id: "oilAreaOverlay",
-                displayName: "CESI Oil Area Overlay",
-                url: "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
-                symbology: {
-                    type: "simple",
-                    imageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
-                },
-                layerExtent: {
-                    xmin: -2566693.97839747,
-                    ymin: -1104728.00466316,
-                    xmax: 4021444.19787888,
-                    ymax: 3657781.52035589,
-                    spatialReference: {
-                        wkid: 3978
-                    }
-                },
-                isStatic: true
-            },*/
-
             transitionDuration = 0.4;
 
         filter_manager_template = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
@@ -435,7 +391,7 @@ define([
                             promise.then(function (event) {
                                 var serviceType = loadSteps[stepId].getServiceType(),
                                     optionStepContent,
-                                    data = event;
+                                    data = event; // a complete feature or wms layer object which has not been added to map yet
 
                                 option = options.find("> ." + serviceType + ":first");
                                 optionStepContent = option.find("> .step-content");
@@ -458,7 +414,7 @@ define([
                                         //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addDataset({
+                                            addFeatureDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#featureStyleAttrlist").val(),
@@ -475,7 +431,7 @@ define([
                                         );
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addDataset({
+                                            addWMSDataset({
                                                 data: data,
                                                 parser: optionStepContent.find("#wmsParserAttrlist").val()
                                             });
@@ -485,11 +441,6 @@ define([
                                 }
 
                                 loadURLStep.successLoadUrlStep();
-
-                                /*var fl;
-                                hc.url = loadSteps[stepId].getUrl();
-                                fl = Map.makeFeatureLayer(hc, true);
-                                LayerLoader.loadLayer(fl);*/
 
                             }, function () {
                                 loadURLStep.errorLoadUrlStep();
@@ -515,7 +466,7 @@ define([
                             promise.then(function (event) {
                                 var fileType = loadSteps[stepId].getFileType(),
                                     optionStepContent,
-                                    data = event;
+                                    data = event; // either a {string} or {ArrayBuffer}; string for CSV and GeoJSON;
 
                                 //console.log(event);
                                 option = options.find("> ." + fileType + ":first");
@@ -539,7 +490,7 @@ define([
                                         //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addDataset({
+                                            addGeoJSONDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
@@ -618,7 +569,7 @@ define([
                                         //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addDataset({
+                                            addShapefileDataset({
                                                 data: data,
                                                 primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#shapefileStyleAttrlist").val(),
@@ -633,17 +584,6 @@ define([
                             }, function () {
                                 loadURLStep.errorLoadUrlStep();
                             });
-
-                            break;
-
-                        case "wmsURLcancel":
-                            //cancelLoadUrlStep();
-
-                            break;
-
-                        case "wmsURL":
-                            //beforeLoadUrlStep();
-                            //successLoadUrlStep();
 
                             break;
                     }
@@ -676,21 +616,26 @@ define([
             });
         }
 
-        function addDataset(obj) {
+        function addFeatureDataset(obj) {
+            //TODO: set symbology and colour on feature layer (obj.data)
+            
             console.log(obj);
+
+            LayerLoader.loadLayer(obj.data);
 
             mainPopup.close();
         }
 
-        //function addFeatureDataset(obj) {
-        //    var promise;
+        function addWMSDataset(obj) {
+            //TODO: set request parser for (obj.data)
 
-        //}
+            console.log(obj);
 
-        //function addWMSDataset(obj) {
-        //    var promise;
+            LayerLoader.loadLayer(obj.data);
 
-        //}
+            mainPopup.close();
+
+        }
 
         function addCSVDataset(obj) {
             var promise;
@@ -704,42 +649,42 @@ define([
             promise.then(function (event) {
                 var fl = event;
 
-                //fl = Map.makeFeatureLayer(hc, true);
+                //TODO: set symbology and colour on feature layer (obj.data)
                 LayerLoader.loadLayer(fl);
 
                 mainPopup.close();
             });
         }
 
-        //function addGeoJSONDataset(obj) {
-        //    var promise;
+        function addGeoJSONDataset(obj) {
+            var promise;
 
-        //    promise = DataLoader.buildGeoJson(obj.data);
+            promise = DataLoader.buildGeoJson(obj.data);
 
-        //    promise.then(function (event) {
-        //        var fl = event;
+            promise.then(function (event) {
+                var fl = event;
 
-        //        //fl = Map.makeFeatureLayer(hc, true);
-        //        LayerLoader.loadLayer(fl);
+                //TODO: set symbology and colour on feature layer (obj.data)
+                LayerLoader.loadLayer(fl);
 
-        //        mainPopup.close();
-        //    });
-        //}
+                mainPopup.close();
+            });
+        }
 
-        //function addShapefileDataset(obj) {
-        //    var promise;
+        function addShapefileDataset(obj) {
+            var promise;
 
-        //    promise = DataLoader.buildShapefile(obj.data);
+            promise = DataLoader.buildShapefile(obj.data);
 
-        //    promise.then(function (event) {
-        //        var fl = event;
+            promise.then(function (event) {
+                var fl = event;
 
-        //        //fl = Map.makeFeatureLayer(hc, true);
-        //        LayerLoader.loadLayer(fl);
+                //TODO: set symbology and colour on feature layer (obj.data)
+                LayerLoader.loadLayer(fl);
 
-        //        mainPopup.close();
-        //    });
-        //}
+                mainPopup.close();
+            });
+        }
 
         function reset() {
             var section;
@@ -751,9 +696,8 @@ define([
 
             rootNode
                 .find(".add-dataset-content")
-                .replaceWith(section);
-
-            rootNode
+                .replaceWith(section)
+                .end()
                 .find("input.color")
                 .each(function (i, picker) {
                     var node = $(picker),
