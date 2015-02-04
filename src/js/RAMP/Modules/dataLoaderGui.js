@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n */
 
 define([
     /* Dojo */
@@ -977,8 +977,9 @@ define([
                 );
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
-                    function (key, value) {
-                        symbologyPreset[key] = value.title;
+                    function (key) {
+                        symbologyPreset[key] = i18n.t("presets.defaultRenderers." + key);
+                        //symbologyPreset[key] = value.title;
                     }
                 );
             }

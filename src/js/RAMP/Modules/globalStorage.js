@@ -52,7 +52,6 @@ define(["dojo/_base/array", "utils/util"],
 
             defaultRenderers = {
                 circlePoint: {
-                    title: "Circle Point",
                     geometryType: "esriGeometryPoint",
                     renderer: {
                         type: "simple",
@@ -65,7 +64,6 @@ define(["dojo/_base/array", "utils/util"],
                     }
                 },
                 solidLine: {
-                    title: "Solid Line",
                     geometryType: "esriGeometryPolyline",
                     renderer: {
                         type: "simple",
@@ -78,7 +76,6 @@ define(["dojo/_base/array", "utils/util"],
                     }
                 },
                 outlinedPoly: {
-                    title: "Outlined Polygon",
                     geometryType: "esriGeometryPolygon",
                     renderer: {
                         type: "simple",
