@@ -756,12 +756,18 @@ define([
             rootNode
                 .find("input.color")
                 .each(function (i, picker) {
-                    var node = $(picker);
+                    var node = $(picker),
+                        swatch = node.parents(".color-picker-container:first").find("> .color-picker-swatch");
+
                     picker = new jscolor.color(picker, {
                         pickerPosition: "top",
                         styleElement: node.attr("id") + "Swatch"
                     });
                     picker.fromString((new RColor()).get(true).slice(1));
+
+                    swatch.on("click", function () {
+                        picker.showPicker();
+                    });
                 }
             );
 
