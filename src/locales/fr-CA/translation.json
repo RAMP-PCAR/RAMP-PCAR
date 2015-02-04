@@ -58,6 +58,9 @@
     "advancedToolbar": {
         "advancedTitle": "Avancé", 
         "title": "Outils"
+    },
+    "basemapSelector": { 
+        "refreshRequired": "[fr] Page refresh required"
     }, 
     "bookmarkLink": {
         "description": "Lien vers le visualiseur de cartes", 
