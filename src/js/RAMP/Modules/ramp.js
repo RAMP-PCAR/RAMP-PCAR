@@ -100,17 +100,6 @@ define([
             },
 
             /**
-             * Gets the defined symbology from a layer's web service
-             * @method _getSymbolConfig
-             * @param {String} layerUrl A URL to the feature layer service
-             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-             * @returns {esri/layer/symbology} The defined symbology from the layer definition
-             */
-            _getSymbolConfig: function (layerUrl, wmsName) {
-                return this.getLayerConfig(layerUrl, wmsName).symbology;
-            },
-
-            /**
             * Given a feature object or a graphic object (or any object that has a getLayer method and an
             * attributes field) return the object containing the image URL and legend text for that
             * feature/graphic object.
@@ -120,7 +109,7 @@ define([
             * @method getSymbolForFeature
             */
             getSymbolForFeature: function (feature) {
-                var layerConfig = this.getLayerConfig(feature.getLayer().url);
+                var layerConfig = feature.getLayer().ramp.config;
 
                 //as this function is used by templating, we piggyback the logic here
                 return UtilTmpl.getGraphicIcon(feature, layerConfig);

@@ -53,7 +53,7 @@ define([
 "esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager", 
+"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -67,7 +67,7 @@ define([
     SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager, 
+    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
@@ -748,17 +748,17 @@ define([
             },
 
             /**
-            * Return the feature layer corresponding to the given url.
+            * Return the feature layer corresponding to the given id.
             *
             * @method getFeatureLayer
             * @private
-            * @param {String} featureUrl the url of the feature layer
+            * @param {String} featureId the id of the feature layer
             * @return {Esri/layers/FeatureLayer} feature layer
             */
-            getFeatureLayer: function (featureUrl) {
+            getFeatureLayer: function (featureId) {
                 return UtilArray.find(featureLayers,
                     function (featureLayer) {
-                        return featureLayer.url === featureUrl;
+                        return featureLayer.id === featureId;
                     });
             },
 
