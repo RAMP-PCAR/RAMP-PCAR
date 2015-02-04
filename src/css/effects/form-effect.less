@@ -58,3 +58,20 @@
         }
     }
 }
+
+.color-picker-container {
+    display: table;
+
+    & > .input-group {
+        display: table-cell !important;
+        width: 80% !important;
+        padding-right: 10px;
+    }
+
+    .color-picker-swatch {
+        display: table-cell;
+        margin-left: 10px;
+        width: 20%;
+        border: 1px solid black;
+    }
+}

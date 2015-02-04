@@ -389,9 +389,12 @@
         "a_d_colour_picker":"
             <h3 class='h6'>{%= o.header %}</h3>
 
-            <div class='input-group' data-list-id='{%= o.listId %}'>
-                <label class='wb-inv' for='{%= o.listId %}picker'>{%= o.label %}:</label>
-                <input name='input' class='color {pickerPosition: top} form-control picker-control input-sm' id='{%= o.listId %}picker' data-role='none'/>
+            <div class='color-picker-container'>
+                <div class='input-group' data-list-id='{%= o.listId %}'>
+                    <label class='wb-inv' for='{%= o.listId %}picker'>{%= o.label %}:</label>
+                    <input name='input' class='color form-control picker-control input-sm' id='{%= o.listId %}picker' data-role='none'/>
+                </div>
+                <div class='color-picker-swatch' role='presentation' id='{%= o.listId %}pickerSwatch'></div>
             </div>
         ",
 

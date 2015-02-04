@@ -755,9 +755,12 @@ define([
 
             rootNode
                 .find("input.color")
-                .addClass("{pickerPosition: 'top', styleElement:'myStyle'}")
                 .each(function (i, picker) {
-                    picker = new jscolor.color(picker, {});
+                    var node = $(picker);
+                    picker = new jscolor.color(picker, {
+                        pickerPosition: "top",
+                        styleElement: node.attr("id") + "Swatch"
+                    });
                     picker.fromString((new RColor()).get(true).slice(1));
                 }
             );
