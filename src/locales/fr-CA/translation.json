@@ -11,31 +11,31 @@
         "timePeriod": "Période"
     }, 
     "addDataset": {
-        "addDatasetButton": "[fr] Add Dataset", 
-        "cancel": "[fr] Cancel", 
-        "colour": "[fr] Colour", 
-        "csv": "[fr] CSV", 
-        "dataSource": "[fr] Data Source", 
-        "dataSourceFile": "[fr] File", 
-        "dataSourceService": "[fr] Service", 
-        "fileOrURL": "[fr] File or URL", 
-        "fileOrURLPlaceholder": "[fr] Local file or URL", 
-        "fileType": "[fr] File Type", 
-        "geojson": "[fr] GeoJSON", 
-        "latitude": "[fr] Latitude", 
+        "addDatasetButton": "Ajouter le DataSet", 
+        "cancel": "Annuler", 
+        "colour": "Couleur", 
+        "csv": "CSV", 
+        "dataSource": "Source de données", 
+        "dataSourceFile": "Fichier", 
+        "dataSourceService": "Service", 
+        "fileOrURL": "Fichier ou URL", 
+        "fileOrURLPlaceholder": "Fichier ou URL local", 
+        "fileType": "Type de fichier", 
+        "geojson": "GéoJSON", 
+        "latitude": "Latitude", 
         "load": "Charger", 
-        "longitude": "[fr] Longitude", 
-        "primaryAttribute": "[fr] Primary Attribute", 
-        "requestParser": "[fr] Request Parser", 
-        "serviceLayerURL": "[fr] Service Layer URL", 
-        "serviceLayerURLPlaceholder": "[fr] ESRI MapServer or Feature layer or WMS layer", 
-        "serviceType": "[fr] Service Type", 
-        "serviceTypeFeature": "[fr] Feature", 
-        "serviceTypeWMS": "[fr] WMS", 
-        "shapefile": "[fr] Shapefile", 
-        "style": "[fr] Style", 
-        "symbology": "[fr] Symbology", 
-        "title": "[fr] Add Dataset"
+        "longitude": "Longitude", 
+        "primaryAttribute": "Attribut primaire", 
+        "requestParser": "Analyseur de demande", 
+        "serviceLayerURL": "URL de la couche de service", 
+        "serviceLayerURLPlaceholder": "Serveur de carte ESRI ou couche Fonctionnalité ou couche WMS", 
+        "serviceType": "Type de service", 
+        "serviceTypeFeature": "Fonction", 
+        "serviceTypeWMS": "WMS", 
+        "shapefile": "ShapeFile", 
+        "style": "Style", 
+        "symbology": "Symbologie", 
+        "title": "Ajouter le DataSet"
     }, 
     "addLayer": {
         "addLayer-Opacity-label": "Opacité :", 
@@ -57,7 +57,7 @@
     }, 
     "advancedToolbar": {
         "advancedTitle": "Avancé", 
-        "title": "[fr] Tools"
+        "title": "Outils"
     }, 
     "bookmarkLink": {
         "description": "Lien vers le visualiseur de cartes", 
@@ -71,119 +71,119 @@
     "config": {
         "basemaps": {
             "baseCBME_CBCE_HS_RO_3978": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] NrCan CBMT_CBCT_HS", 
-                "name": "[fr] Shaded Relief"
+                "altText": "Carte topographique", 
+                "description": "CBMT_CBCT_HS de RNCan", 
+                "name": "Relief par ombres portées"
             }, 
             "baseCBMT_CBCT_GEOM_3978": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] NrCan CBMT_CBCT_GEOM", 
-                "name": "[fr] Road Networks"
+                "altText": "Carte topographique", 
+                "description": "NrCan CBMT_CBCT_GEOM", 
+                "name": "Réseaux routiers"
             }, 
             "baseE2M": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] Earth 2 Map", 
-                "name": "[fr] Canada Topographic"
+                "altText": "Carte topographique", 
+                "description": "De la terre à la carte", 
+                "name": "Carte topographique du Canada"
             }, 
             "baseEsriPhysical": {
-                "altText": "[fr] Satellite Map", 
-                "description": "[fr] ESRI World_Physical_Map", 
-                "name": "[fr] Physical Earth"
+                "altText": "Carte satellite", 
+                "description": "World_Physical_Map de l'ESRI", 
+                "name": "Les aspects physiques de la Terre"
             }, 
             "baseEsriRelief": {
-                "altText": "[fr] Satellite Map", 
-                "description": "[fr] ESRI World_Shaded_Relief", 
-                "name": "[fr] Shaded Relief"
+                "altText": "Carte satellite", 
+                "description": "World_Shaded_Relief de l'ESRI", 
+                "name": "Relief par ombres portées"
             }, 
             "baseEsriStreet": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] ESRI World_Street_Map", 
-                "name": "[fr] Streets"
+                "altText": "Carte topographique", 
+                "description": "World_Street_Map de l'ESRI", 
+                "name": "Rues"
             }, 
             "baseEsriTerrain": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] ESRI World_Terrain_Base", 
-                "name": "[fr] Terrain"
+                "altText": "Carte topographique", 
+                "description": "CBCT3978 d'ESRI", 
+                "name": "Terrain"
             }, 
             "baseEsriTopo": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] ESRI World_Topo_Map", 
-                "name": "[fr] Topographic"
+                "altText": "Carte topographique", 
+                "description": "World_Topo_Map de l'ESRI", 
+                "name": "Topographique"
             }, 
             "baseEsriWorld": {
-                "altText": "[fr] Satellite Map", 
-                "description": "[fr] ESRI World_Imagery", 
-                "name": "[fr] World Imagery"
+                "altText": "Carte satellite", 
+                "description": "World_Imagery d'ESRI", 
+                "name": "World Imagery"
             }, 
             "baseNrCan": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] NrCan CBCT3978", 
-                "name": "[fr] Canada Atlas"
+                "altText": "Carte topographique", 
+                "description": "CBMT_CBCT_GEOM de RNCan", 
+                "name": "L'Atlas du Canada"
             }, 
             "baseSimple": {
-                "altText": "[fr] Topographic Map", 
-                "description": "[fr] NrCan Simple", 
-                "name": "[fr] Water Bodies"
+                "altText": "Carte topographique", 
+                "description": "RNCan simple", 
+                "name": "Plans d'eau"
             }
         }, 
         "layers": {
             "feature": {
                 "MW_E": {
-                    "displayName": "[fr] Smelters and refineries"
+                    "displayName": "Les fonderies et affineries"
                 }, 
                 "_17e537a6": {
-                    "displayName": "[fr] BBS Routes"
+                    "displayName": "Voies du BBS"
                 }, 
                 "_708985e5": {
-                    "displayName": "[fr] Water Regions"
+                    "displayName": "Régions de l'eau"
                 }, 
                 "_b6b6d5a6": {
-                    "displayName": "[fr] CESI Water Quality Indicators"
+                    "displayName": "Indices de qualité de l'eau des ICDE"
                 }, 
                 "cesi_ozone": {
-                    "displayName": "[fr] CESI Air Ozone"
+                    "displayName": "Ozone de l’air des ICDE"
                 }, 
                 "dog_guts": {
-                    "displayName": "[fr] Bird Habitats"
+                    "displayName": "Les habitats d'oiseaux"
                 }, 
                 "layer_dd1m3": {
-                    "displayName": "[fr] Monitoring Sites"
+                    "displayName": "Sites de surveillance"
                 }, 
                 "layer_g5h6i": {
-                    "displayName": "[fr] EC Projects"
+                    "displayName": "Projets d'EC"
                 }, 
                 "layer_sea_parks": {
-                    "displayName": "[fr] Sea Parks"
+                    "displayName": "Parcs marins"
                 }, 
                 "oilAreaOverlay": {
-                    "displayName": "[fr] CESI Oil Area Overlay"
+                    "displayName": "Surimpression de la zone de pétrole des ICDE"
                 }, 
                 "oilSandsRegions": {
-                    "displayName": "[fr] Oil Sands Regions"
+                    "displayName": "Régions des sables bitumineux"
                 }
             }, 
             "wms": {
                 "aglands": {
-                    "displayName": "[fr] Pastures - 2000"
+                    "displayName": "Pâturages - 2000"
                 }, 
                 "dog_guts": {
-                    "displayName": "[fr] Bird Habitats"
+                    "displayName": "Les habitats d'oiseaux"
                 }, 
                 "limits": {
-                    "displayName": "[fr] Limits"
+                    "displayName": "Limites"
                 }, 
                 "nasa_modis": {
-                    "displayName": "[fr] Arctic Airports"
+                    "displayName": "Les aéroports de l'arctique"
                 }, 
                 "wms6": {
-                    "displayName": "[fr] Railway Network"
+                    "displayName": "Réseau de chemins de fers"
                 }
             }
         }, 
         "tileSchema": {
-            "ESRI_World_AuxMerc_3857": "[fr] Auxiliary Mercator", 
-            "NRCAN_Lambert_3978": "[fr] Canada Atlas Lambert", 
-            "NRCAN_Lambert_3979": "[fr] Lambert 79"
+            "ESRI_World_AuxMerc_3857": "Mercator auxiliaire", 
+            "NRCAN_Lambert_3978": "Atlas du Canada en format Lambert", 
+            "NRCAN_Lambert_3979": "Lambert 79"
         }
     }, 
     "datagrid": {
@@ -223,8 +223,8 @@
             "sZeroRecords": "Aucun enregistrement correspondant trouvé"
         }, 
         "notices": {
-            "offScaleFullData": "[fr] Data is not visible at this zoom level.", 
-            "offScaleSummary": "[fr] Some data is not visible at this zoom level."
+            "offScaleFullData": "Les données ne sont pas visibles à ce niveau du Zoom", 
+            "offScaleSummary": "Quelques données ne sont pas visibles à ce niveau du Zoom"
         }, 
         "sort": "Sorte", 
         "zoomBack": "Zoom arrière", 
@@ -233,10 +233,10 @@
     "filterManager": {
         "allData": "Toutes les données", 
         "controlsMatrix": {
-            "error": "[fr] Error", 
+            "error": "Erreur", 
             "metadata": "Métadonnées", 
-            "reload": "[fr] Reload", 
-            "remove": "[fr] Remove", 
+            "reload": "Recharger", 
+            "remove": "Supprimer", 
             "settings": "Paramètres"
         }, 
         "datasetsTabTitle": "Ensembles de données", 
@@ -253,9 +253,9 @@
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche", 
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche", 
         "notices": {
-            "error": "[fr] Error", 
-            "offScale": "[fr] No data visible at this zoom level", 
-            "update": "[fr] Updating"
+            "error": "Erreur", 
+            "offScale": "Aucune donnée n'est visible à ce niveau du Zoom", 
+            "update": "Mise à jour"
         }, 
         "settings": "Paramètres", 
         "settingsLayerSettings": "Paramètres de la couche", 
@@ -264,7 +264,7 @@
         "showAllFeatures": "Afficher tout", 
         "showBounds": "Afficher les limites de {0}", 
         "showFeatures": "Afficher {0}", 
-        "zoomToData": "[fr] Zoom to data"
+        "zoomToData": "Zoomer sur les données"
     }, 
     "gui": {
         "actions": {
@@ -498,12 +498,12 @@
         "siteTitle": "Plateforme de cartographie accessible et réutilisable", 
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)"
     }, 
-	"serverError": {
+    "serverError": {
         "basemapNotAvailable": {
-            "detail": "[fr] Basemap service not available; map failed to initialize properly.",
-            "title": "[fr] Error: Basemap service not available"
+            "detail": "Le service de fond de carte n'est pas disponible; la carte n'a pas initialisé correctement.", 
+            "title": "Erreur: le service de fond de carte n'est pas disponible"
         }
-    },
+    }, 
     "tools": {
         "basetool": {
             "clearmap": "Effacer", 
