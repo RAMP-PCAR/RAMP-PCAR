@@ -147,6 +147,7 @@ define([
                 timeID = "user" + d.toISOString().substring(11, 19).replace(/:/g, ""),
                 newConfig = {
                     id: timeID,
+                    url: timeID,
                     displayName: "TemporaryName",  //TODO can we use file name here?
                     nameField: "",   //TODO how to we get field from input screen?
                     symbology: {
@@ -162,6 +163,7 @@ define([
             RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
             layer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            layer.url = timeID; //need to have a url, so we can look up from graphic. //TODO  consider changing this to use custom .ramp property, stop using URL (its bad anyway)
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
