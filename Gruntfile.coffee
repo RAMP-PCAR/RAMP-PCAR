@@ -1256,6 +1256,19 @@ module.exports = (grunt) ->
                     'build/**/*.*'
                     'tarball/**/*.*'
                 ]
+        
+        "github-release":
+            options: 
+                repository: process.env.HOME_REPO # Path to repository 
+                ###
+                auth:    # Auth credentials 
+                    user: 'dolbyzerr'
+                    password: ''
+                ###
+                release:
+                    draft: true                
+                files: 
+                    src: ['tarbal/*.*'] # Files that you want to attach to Release 
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1274,6 +1287,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-gh-pages'
+    @loadNpmTasks 'grunt-github-releaser'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
