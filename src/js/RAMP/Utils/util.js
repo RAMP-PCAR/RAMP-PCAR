@@ -1234,7 +1234,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     }
                 });
 
-                console.log("Cell delimiter detected: ", (detected || delimiters[type][0]));
+                console.log(type + " delimiter detected: '" + (detected || delimiters[type][0]) + "'");
 
                 return (detected || delimiters[type][0]);
             }

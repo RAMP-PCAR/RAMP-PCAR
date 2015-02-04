@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor */
 
 define([
     /* Dojo */
@@ -753,6 +753,15 @@ define([
                 .find(".add-dataset-content")
                 .replaceWith(section);
 
+            rootNode
+                .find("input.color")
+                .addClass("{pickerPosition: 'top', styleElement:'myStyle'}")
+                .each(function (i, picker) {
+                    picker = new jscolor.color(picker, {});
+                    picker.fromString((new RColor()).get(true).slice(1));
+                }
+            );
+
             UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
             loadSteps.loadServiceStep = (function () {
@@ -929,23 +938,9 @@ define([
             }());
         }
 
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF'.split(''),
-                color = '';
-            for (var i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
         return {
             init: function () {
                 reset();
-
-                rootNode.find("input.color").each(function (i, picker) {
-                    picker = new jscolor.color(picker, {});
-                    picker.fromString(getRandomColor());
-                });
 
                 mainPopup = PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
                     function (d) {
