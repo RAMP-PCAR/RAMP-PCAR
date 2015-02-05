@@ -1277,7 +1277,7 @@ module.exports = (grunt) ->
                     draft: true
                     tag_name: process.env.TRAVIS_TAG         
                 files: 
-                    src: ['tarbal/*.*'] # Files that you want to attach to Release 
+                    src: ['tarball/*.*'] # Files that you want to attach to Release 
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
