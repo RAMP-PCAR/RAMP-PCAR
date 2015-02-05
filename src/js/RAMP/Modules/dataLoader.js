@@ -2,16 +2,16 @@
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
-*
+* 
 * @module RAMP
 * @submodule DataLoader
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
-],
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
+    ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage, RampMap
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray, GlobalStorage, RampMap
         ) {
         "use strict";
 
@@ -25,7 +25,7 @@ define([
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
         * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
         * into a string or an ArrayBuffer.
-        *
+        * 
         * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
         *                      {string} type as "text" or "binary" (text by default)
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
@@ -54,6 +54,43 @@ define([
             }
 
             promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
+            return def.promise;
+        }
+
+        /**
+        * Fetch relevant data from a single feature layer endpoint.  Returns a promise which
+        * resolves with a partial list of properites extracted from the endpoint.
+        *
+        * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
+        * @returns {Promise} a promise resolving with an object containing basic properties for the layer
+        */
+        function getFeatureLayer(featureLayerEndpoint) {
+            var def = new Deferred(), promise;
+
+            try {
+                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json'})).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            promise.then(
+                function (data) {
+                    var res = {
+                        layerId: data.id,
+                        layerName: data.name,
+                        layerUrl: featureLayerEndpoint,
+                        geometryType: data.geometryType,
+                        fields: dojoArray.map(data.fields, function (x) { return x.name; })
+                    };
+
+                    def.resolve(res);
+                },
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
+            );
+
             return def.promise;
         }
 
@@ -263,6 +300,7 @@ define([
 
         return {
             loadDataSet: loadDataSet,
+            getFeatureLayer: getFeatureLayer,
             makeGeoJsonLayer: makeGeoJsonLayer,
             csvPeek: csvPeek,
             buildCsv: buildCsv,
