@@ -115,8 +115,9 @@ define([
 
             if (opts) {
                 if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
-                    layerDefinition.drawingInfo = { renderer: defaultRenderers[opts.renderer].renderer };
-                    fs.geometryType = defaultRenderers[opts.renderer].geometryType;
+                    layerDefinition.drawingInfo = defaultRenderers[opts.renderer];
+                    // fs is not defined at this point
+                    //fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
                 if (opts.sourceProjection) {
                     srcProj = opts.sourceProjection;
@@ -149,10 +150,10 @@ define([
                     id: timeID,
                     url: timeID,
                     displayName: "TemporaryName",  //TODO can we use file name here?
-                    nameField: "",   //TODO how to we get field from input screen?
+                    nameField: opts.primary, //"",   //TODO how to we get field from input screen?
                     symbology: {
                         type: "simple",
-                        imageUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
+                        imageUrl: opts.icon // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
                     }
                 };
 
@@ -204,7 +205,7 @@ define([
                     }
                     console.log('csv parsed');
                     console.log(data);
-                    jsonLayer = makeGeoJsonLayer(data);
+                    jsonLayer = makeGeoJsonLayer(data, opts);
                     def.resolve(jsonLayer);
                 });
             } catch (e) {
