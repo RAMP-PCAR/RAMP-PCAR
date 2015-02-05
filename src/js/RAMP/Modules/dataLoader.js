@@ -116,6 +116,7 @@ define([
             if (opts) {
                 if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
                     layerDefinition.drawingInfo = defaultRenderers[opts.renderer];
+                    layerDefinition.drawingInfo.renderer.symbol.color = opts.colour;
                     // fs is not defined at this point
                     //fs.geometryType = defaultRenderers[opts.renderer].geometryType;
                 }
