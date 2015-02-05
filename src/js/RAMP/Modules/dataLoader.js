@@ -150,7 +150,7 @@ define([
                 newConfig = {
                     id: timeID,
                     url: timeID,
-                    displayName: "TemporaryName",  //TODO can we use file name here?
+                    displayName: opts.datasetName, //"TemporaryName",  //TODO can we use file name here?
                     nameField: opts.primary, //"",   //TODO how to we get field from input screen?
                     symbology: {
                         type: "simple",

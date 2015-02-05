@@ -455,6 +455,8 @@ define([
                             break;
 
                         case "fileOrURL":
+                            var fileName = loadSteps[stepId].getFile() ? loadSteps[stepId].getFile().name : loadSteps[stepId].getFileUrl().split("/").pop();
+
                             loadURLStep.init();
                             loadURLStep.beforeLoadUrlStep();
 
@@ -513,6 +515,8 @@ define([
 
                                         console.log(headers);
 
+                                        optionStepContent.find("#csvDatasetNameAttrtextField").val(fileName);
+
                                         setSelectOptions(
                                             optionStepContent.find("#csvPrimaryAttrlist"),
                                             headers
@@ -542,6 +546,7 @@ define([
                                             addCSVDataset({
                                                 data: data,
                                                 delimiter: delimiter,
+                                                datasetName: optionStepContent.find("#csvDatasetNameAttrtextField").val(),
                                                 primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
@@ -681,7 +686,8 @@ define([
                     255
                 ],
                 nameField: obj.primary,
-                icon: iconTemplate
+                icon: iconTemplate,
+                datasetName: obj.datasetName
             });
 
             promise.then(function (event) {
