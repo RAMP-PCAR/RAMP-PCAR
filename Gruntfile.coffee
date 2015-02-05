@@ -398,7 +398,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'release'
-        'INTERNAL Default task create both an unminified development and a minified distribution packages.'
+        'INTERNAL Uploads release builds to GitHub releases.'
         () ->
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
                 grunt.task.run 'github-release'

@@ -18,4 +18,5 @@ script:
   - grunt
 
 after_success: 
+  - grunt gh-pages:travis
   - grunt release
