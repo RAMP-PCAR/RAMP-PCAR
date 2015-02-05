@@ -545,7 +545,6 @@ define([
                                                 primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
-                                                style: optionStepContent.find("#csvStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#csvColourAttrpicker").val()
                                             });
                                         });
@@ -664,7 +663,7 @@ define([
 
         function addCSVDataset(obj) {
             var promise,
-                iconTemplate = _template("a_d_icon_" + obj.style, obj);
+                iconTemplate = _template("a_d_icon_circlePoint", obj);
 
             console.log(iconTemplate);
 
@@ -673,7 +672,7 @@ define([
                 lonfield: obj.lon,
                 delimiter: obj.delimiter,
 
-                renderer: obj.style,
+                renderer: "circlePoint",
                 colour: obj.colour,
                 nameField: obj.primary,
                 icon: iconTemplate
@@ -730,7 +729,9 @@ define([
             rootNode
                 .find(".add-dataset-content")
                 .replaceWith(section)
-                .end()
+            ;
+
+            rootNode
                 .find("input.color")
                 .each(function (i, picker) {
                     var node = $(picker),
@@ -740,13 +741,14 @@ define([
                         pickerPosition: "top",
                         styleElement: node.attr("id") + "Swatch"
                     });
+
                     picker.fromString((new RColor()).get(true).slice(1));
 
                     swatch.on("click", function () {
                         picker.showPicker();
                     });
-                }
-            );
+                })
+            ;
 
             UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
