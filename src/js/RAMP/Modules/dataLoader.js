@@ -99,7 +99,10 @@ define([
         * @returns {FeatureLayer} An ESRI FeatureLayer
         */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj, defaultRenderers = GlobalStorage.DefaultRenderers;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj,
+                defaultRenderers = GlobalStorage.DefaultRenderers,
+                d = new Date(),
+                layerID = "user" + d.toISOString().substring(11, 19).replace(/:/g, "");
 
             layerDefinition = {
                 objectIdField: "OBJECTID",
@@ -140,17 +143,14 @@ define([
             console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
-            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT, id: layerID });
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
 
             //make a minimal config object for this layer
-            var d = new Date(),
-                timeID = "user" + d.toISOString().substring(11, 19).replace(/:/g, ""),
-                newConfig = {
-                    id: timeID,
-                    url: timeID,
-                    displayName: opts.datasetName, //"TemporaryName",  //TODO can we use file name here?
+            var newConfig = {
+                id: layerID,
+                displayName: opts.datasetName, //"TemporaryName",  //TODO can we use file name here?
                     nameField: opts.primary, //"",   //TODO how to we get field from input screen?
                     symbology: {
                         type: "simple",
@@ -165,7 +165,6 @@ define([
             RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
             layer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
-            layer.url = timeID; //need to have a url, so we can look up from graphic. //TODO  consider changing this to use custom .ramp property, stop using URL (its bad anyway)
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
