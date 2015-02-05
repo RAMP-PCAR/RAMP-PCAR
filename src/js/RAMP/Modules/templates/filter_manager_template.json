@@ -575,6 +575,14 @@
                                     <div class='step-options'>
                                         <div class='step step-3 option-geojson' id='geojsonAttrStep'>
                                             <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'geojsonDatasetNameAttr'
+                                                    }); 
+                                                %}
+
                                                 {% include('a_d_list_step', {
                                                     header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
@@ -656,6 +664,14 @@
 
                                         <div class='step step-3 option-shapefile' id='shapefileAttrStep'>
                                             <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'shapefileDatasetNameAttr'
+                                                    }); 
+                                                %}
+
                                                 {% include('a_d_list_step', {
                                                     header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [

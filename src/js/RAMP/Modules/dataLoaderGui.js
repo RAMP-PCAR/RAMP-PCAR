@@ -476,6 +476,9 @@ define([
 
                                 switch (fileType) {
                                     case "option-geojson":
+
+                                        optionStepContent.find("#geojsonDatasetNameAttrtextField").val(fileName);
+
                                         setSelectOptions(
                                             optionStepContent.find("#geojsonPrimaryAttrlist"),
                                             { selectOne: "Select One" }
@@ -494,6 +497,7 @@ define([
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addGeoJSONDataset({
                                                 data: data,
+                                                datasetName: optionStepContent.find("#geojsonDatasetNameAttrtextField").val(),
                                                 primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#geojsonStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#geojsonColourAttrpicker").val()
@@ -512,8 +516,6 @@ define([
                                         rows[0].forEach(function (row) {
                                             headers[row] = row;
                                         });
-
-                                        console.log(headers);
 
                                         optionStepContent.find("#csvDatasetNameAttrtextField").val(fileName);
 
@@ -557,6 +559,9 @@ define([
                                         break;
 
                                     case "option-shapefile":
+
+                                        optionStepContent.find("#shapefileDatasetNameAttrtextField").val(fileName);
+
                                         setSelectOptions(
                                             optionStepContent.find("#shapefilePrimaryAttrlist"),
                                             { selectOne: "Select One" }
@@ -575,6 +580,7 @@ define([
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addShapefileDataset({
                                                 data: data,
+                                                datasetName: optionStepContent.find("#shapefileDatasetNameAttrtextField").val(),
                                                 primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
                                                 style: optionStepContent.find("#shapefileStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#shapefileColourAttrpicker").val()
