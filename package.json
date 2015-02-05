@@ -43,6 +43,7 @@
         "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-yuidoc": "~0.5.2",
         "grunt-gh-pages": "~0.9.1",
+        "grunt-github-releaser": "~0.1.17",
         "grunt-replace": "~0.8.0",
         "grunt-docco": "~0.3.3",
         "grunt-hub": "~0.7.0",
