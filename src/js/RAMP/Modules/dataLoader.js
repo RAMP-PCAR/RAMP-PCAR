@@ -2,14 +2,14 @@
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
-* 
+*
 * @module RAMP
 * @submodule DataLoader
 */
 
 define([
         "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
-    ],
+],
     function (
             Deferred, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray, GlobalStorage, RampMap
         ) {
@@ -25,7 +25,7 @@ define([
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
         * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
         * into a string or an ArrayBuffer.
-        * 
+        *
         * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
         *                      {string} type as "text" or "binary" (text by default)
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
@@ -68,7 +68,7 @@ define([
             var def = new Deferred(), promise;
 
             try {
-                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json'})).promise;
+                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json' })).promise;
             } catch (e) {
                 def.reject(e);
             }
@@ -187,13 +187,13 @@ define([
             //make a minimal config object for this layer
             var newConfig = {
                 id: layerID,
-                displayName: opts.datasetName, //"TemporaryName",  //TODO can we use file name here?
-                nameField: opts.nameField, //"",   //TODO how to we get field from input screen?
+                displayName: opts.datasetName,
+                nameField: opts.nameField,
                 symbology: {
                     type: "simple",
-                    imageUrl: opts.icon // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
+                    imageUrl: opts.icon
                 }
-                };
+            };
 
             //backfill the rest of the config object with default values
             newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
@@ -202,6 +202,7 @@ define([
             RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
             layer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            layer.type = "Feature Layer"; //required to visible layer function
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
