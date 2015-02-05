@@ -683,7 +683,7 @@ define([
                 latfield: obj.lat,
                 lonfield: obj.lon,
                 delimiter: obj.delimiter,
-
+                primary: obj.primary,
                 renderer: "circlePoint",
                 colour: [
                     rgbColour.r,
