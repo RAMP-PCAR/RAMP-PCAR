@@ -115,7 +115,14 @@ define([
                                          })
                     // remove hard breaks and tabs
                     .replace(/[\n\r\t]/g, "")
-                    .replace(/>\s*?</g, "><");
+                    .replace(/>\s*?</g, "><")
+
+                    // strip spaces between html and other tags
+                    .replace(/%}\s*?</g, "%}<")
+                    .replace(/>\s*?{%/g, ">{%")
+
+                    .replace(/"\s*?</g, '"<')
+                    .replace(/>\s*?"/g, '>"');
             }
         };
     });
