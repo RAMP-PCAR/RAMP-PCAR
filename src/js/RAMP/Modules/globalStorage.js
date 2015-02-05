@@ -103,6 +103,7 @@ define(["dojo/_base/array", "utils/util"],
             // wgs84 and aux mercator are built in, add Canada Lambert and Canada Atlas Lambert
             proj4.defs("EPSG:3978", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
             proj4.defs("EPSG:3979", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            proj4.defs("EPSG:102100", proj4.defs('EPSG:3857'));
         }
 
         function applyConfigDefaults(configObj) {
