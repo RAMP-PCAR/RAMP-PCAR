@@ -396,6 +396,14 @@ module.exports = (grunt) ->
             grunt.task.run tasks
     )
 
+    @registerTask(
+        'release'
+        'INTERNAL Default task create both an unminified development and a minified distribution packages.'
+        () ->
+            if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
+                grunt.task.run 'github-release'
+    )
+
     smartExpand = ( cwd, arr, extra ) ->    
         # determine file order here and concat to arr
         extra = extra or []
@@ -1257,7 +1265,7 @@ module.exports = (grunt) ->
                     'tarball/**/*.*'
                 ]
         
-        "github-release":
+        'github-release':
             options: 
                 repository: process.env.HOME_REPO # Path to repository 
                 ###
@@ -1266,7 +1274,8 @@ module.exports = (grunt) ->
                     password: ''
                 ###
                 release:
-                    draft: true                
+                    draft: true
+                    tag_name: process.env.TRAVIS_TAG         
                 files: 
                     src: ['tarbal/*.*'] # Files that you want to attach to Release 
 
