@@ -1266,7 +1266,7 @@ module.exports = (grunt) ->
                 ]
         
         'github-release':
-            options: 
+            options:
                 repository: process.env.HOME_REPO
                 auth:
                     user: 'ramp-pcar-bot'
@@ -1275,8 +1275,8 @@ module.exports = (grunt) ->
                     draft: false
                     prerelease: true
                     tag_name: process.env.TRAVIS_TAG
-            files: 
-                src: ['tarball/*.*'] # Files that you want to attach to Release 
+            files:
+                src: ['tarball/*.*']
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
