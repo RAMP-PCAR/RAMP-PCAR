@@ -8,10 +8,10 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
+        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array", "ramp/globalStorage", "ramp/map"
 ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, Util, dojoArray, GlobalStorage, RampMap
+            Deferred, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray, GlobalStorage, RampMap
         ) {
         "use strict";
 
@@ -54,6 +54,43 @@ define([
             }
 
             promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
+            return def.promise;
+        }
+
+        /**
+        * Fetch relevant data from a single feature layer endpoint.  Returns a promise which
+        * resolves with a partial list of properites extracted from the endpoint.
+        *
+        * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
+        * @returns {Promise} a promise resolving with an object containing basic properties for the layer
+        */
+        function getFeatureLayer(featureLayerEndpoint) {
+            var def = new Deferred(), promise;
+
+            try {
+                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json' })).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            promise.then(
+                function (data) {
+                    var res = {
+                        layerId: data.id,
+                        layerName: data.name,
+                        layerUrl: featureLayerEndpoint,
+                        geometryType: data.geometryType,
+                        fields: dojoArray.map(data.fields, function (x) { return x.name; })
+                    };
+
+                    def.resolve(res);
+                },
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
+            );
+
             return def.promise;
         }
 
@@ -151,10 +188,10 @@ define([
             var newConfig = {
                 id: layerID,
                 displayName: opts.datasetName,
-                nameField: opts.primary,
+                nameField: opts.nameField,
                 symbology: {
                     type: "simple",
-                    imageUrl: opts.icon 
+                    imageUrl: opts.icon
                 }
             };
 
@@ -264,6 +301,7 @@ define([
 
         return {
             loadDataSet: loadDataSet,
+            getFeatureLayer: getFeatureLayer,
             makeGeoJsonLayer: makeGeoJsonLayer,
             csvPeek: csvPeek,
             buildCsv: buildCsv,

@@ -61,6 +61,19 @@ define([
     UtilMisc) {
         "use strict";
 
+        var idCounter = 0;
+
+        /**
+        * Get an auto-generated layer id.  This works because javascript is single threaded: if this gets called
+        * from a web-worker at some point it will need to be synchronized.
+        *
+        * @returns {String} an auto-generated layer id
+        */
+        function nextId() {
+            idCounter += 1;
+            return 'rampAutoId_' + idCounter;
+        }
+
         /**
         * Will set a layerId's layer selector state to a new state.
         *
@@ -488,6 +501,9 @@ define([
             */
             loadLayer: function (layer, reloadIndex) {
                 _loadLayer(layer, reloadIndex);
-            }
+            },
+
+            nextId: nextId
+
         };
     });
