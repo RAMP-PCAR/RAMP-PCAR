@@ -545,7 +545,6 @@ define([
                                                 primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
-                                                style: optionStepContent.find("#csvStyleAttrlist").val(),
                                                 colour: optionStepContent.find("#csvColourAttrpicker").val()
                                             });
                                         });
@@ -647,24 +646,25 @@ define([
             return tmpl(key, data);
         }
 
-        //function hexToRgb(hex) {
-        //    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-        //    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-        //    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-        //        return r + r + g + g + b + b;
-        //    });
+        function hexToRgb(hex) {
+            // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                return r + r + g + g + b + b;
+            });
 
-        //    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        //    return result ? {
-        //        r: parseInt(result[1], 16),
-        //        g: parseInt(result[2], 16),
-        //        b: parseInt(result[3], 16)
-        //    } : null;
-        //}
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
 
         function addCSVDataset(obj) {
             var promise,
-                iconTemplate = _template("a_d_icon_" + obj.style, obj);
+                rgbColour = hexToRgb(obj.colour),
+                iconTemplate = _template("a_d_icon_circlePoint", obj);
 
             console.log(iconTemplate);
 
@@ -673,8 +673,13 @@ define([
                 lonfield: obj.lon,
                 delimiter: obj.delimiter,
 
-                renderer: obj.style,
-                colour: obj.colour,
+                renderer: "circlePoint",
+                colour: [
+                    rgbColour.r,
+                    rgbColour.g,
+                    rgbColour.b,
+                    255
+                ],
                 nameField: obj.primary,
                 icon: iconTemplate
             });
@@ -730,7 +735,9 @@ define([
             rootNode
                 .find(".add-dataset-content")
                 .replaceWith(section)
-                .end()
+            ;
+
+            rootNode
                 .find("input.color")
                 .each(function (i, picker) {
                     var node = $(picker),
@@ -740,13 +747,14 @@ define([
                         pickerPosition: "top",
                         styleElement: node.attr("id") + "Swatch"
                     });
+
                     picker.fromString((new RColor()).get(true).slice(1));
 
                     swatch.on("click", function () {
                         picker.showPicker();
                     });
-                }
-            );
+                })
+            ;
 
             UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
 
