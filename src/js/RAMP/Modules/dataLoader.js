@@ -137,9 +137,8 @@ define([
         */
         function makeGeoJsonLayer(geoJson, opts) {
             var esriJson, layerDefinition, layer, fs, targetWkid, srcProj,
-                defaultRenderers = GlobalStorage.DefaultRenderers,
-                d = new Date(),
-                layerID = "user" + d.toISOString().substring(11, 19).replace(/:/g, "");
+                defaultRenderers = GlobalStorage.DefaultRenderers,               
+                layerID = LayerLoader.nextId();
 
             layerDefinition = {
                 objectIdField: "OBJECTID",
