@@ -150,13 +150,13 @@ define([
             //make a minimal config object for this layer
             var newConfig = {
                 id: layerID,
-                displayName: opts.datasetName, //"TemporaryName",  //TODO can we use file name here?
-                    nameField: opts.primary, //"",   //TODO how to we get field from input screen?
-                    symbology: {
-                        type: "simple",
-                        imageUrl: opts.icon // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
-                    }
-                };
+                displayName: opts.datasetName,
+                nameField: opts.primary,
+                symbology: {
+                    type: "simple",
+                    imageUrl: opts.icon 
+                }
+            };
 
             //backfill the rest of the config object with default values
             newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
@@ -165,6 +165,7 @@ define([
             RampMap.enhanceLayer(layer, newConfig, true);
             layer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
             layer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            layer.type = "Feature Layer"; //required to visible layer function
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
