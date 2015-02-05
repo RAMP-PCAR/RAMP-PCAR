@@ -109,6 +109,41 @@ define([
         }
 
         /**
+        * Will generate a generic datagrid config node for a set of layer attributes.
+        *
+        * @param {Array} fields an array of attribute fields for a layer
+        * @returns {Object} an JSON config object for feature datagrid
+        */
+        function createDatagridConfig(fields) {
+            function makeField(id, fn, wd, ttl, tp) {
+                return {
+                    id: id,
+                    fieldName: fn,
+                    width: wd,
+                    orderable: false,
+                    type: 'string',
+                    alignment: 0,
+                    title: ttl,
+                    columnTemplate: tp
+                };
+            }
+
+            var dg = {
+                rowsPerPage: 50,
+                gridColumns: []
+            };
+
+            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon'));
+            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
+
+            dojoArray.forEach(fields, function (field, idx) {
+                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', field, 'title_span'));
+            });
+
+            return dg;
+        }
+
+        /**
         * Peek at the CSV output (useful for checking headers).
         *
         * @param {string} data a string containing the CSV (or any DSV) data
@@ -137,7 +172,7 @@ define([
         */
         function makeGeoJsonLayer(geoJson, opts) {
             var esriJson, layerDefinition, layer, fs, targetWkid, srcProj,
-                defaultRenderers = GlobalStorage.DefaultRenderers,               
+                defaultRenderers = GlobalStorage.DefaultRenderers,
                 layerID = LayerLoader.nextId();
 
             layerDefinition = {
@@ -191,7 +226,8 @@ define([
                 symbology: {
                     type: "simple",
                     imageUrl: opts.icon
-                }
+                },
+                datagrid: createDatagridConfig(opts.fields)
             };
 
             //backfill the rest of the config object with default values
