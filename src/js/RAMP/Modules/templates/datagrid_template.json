@@ -118,7 +118,7 @@
                                                                 <select name='select' class='form-control input-sm' id='datasetSelector' data-role='none'>
                                                                     {% for (var i = 0; i < o.datasets.length; i++) {  %}
                                                                    
-                                                                        <option value='{%=o.datasets[i].url%}'>{%=o.datasets[i].displayName%}</option>
+                                                                        <option value='{%=o.datasets[i].id%}'>{%=o.datasets[i].displayName%}</option>
                                                             
                                                                     {% } %}
 
