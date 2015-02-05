@@ -60,32 +60,7 @@ define([
             loadStrings: function () {
                 // doesn't seem to be doing a lot, this function
             },
-
-            /**
-            * Returns the feature layer config for the given url
-            *
-            * @param {String} url
-            * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-            * @method getLayerConfig
-            */
-            getLayerConfig: function (url, wmsName) {
-                if (!GlobalStorage.urlCfg) {
-                    GlobalStorage.urlCfg = {};
-                }
-
-                var res = UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature), function (layerConfig) {
-                    if (wmsName == null) {
-                        return layerConfig.url === url;
-                    } else {
-                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerName === wmsName);
-                    }
-                });
-
-                GlobalStorage.urlCfg[url] = res;
-
-                return GlobalStorage.urlCfg[url];
-            },
-
+          
             /**
             * Returns the feature layer config for the given id
             *
