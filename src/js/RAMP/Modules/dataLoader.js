@@ -103,13 +103,17 @@ define([
         }
 
         /**
-        * 
+        * Fetch relevant data from a single feature layer endpoint.  Returns a promise which
+        * resolves with a partial list of properites extracted from the endpoint.
+        *
+        * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
+        * @returns {Promise} a promise resolving with an object containing basic properties for the layer
         */
-        function scrapeLayerData(featureLayerEndpoint) {
+        function getFeatureLayer(featureLayerEndpoint) {
             var def = new Deferred(), promise;
 
             try {
-                promise = (new EsriRequest({ url: args.url })).promise;
+                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json'})).promise;
             } catch (e) {
                 def.reject(e);
             }
@@ -119,20 +123,21 @@ define([
                     var res = {
                         layerId: data.id,
                         layerName: data.name,
+                        layerUrl: featureLayerEndpoint,
                         geometryType: data.geometryType,
-                        fields: dojoArray.map(data.fields, function (x) { return x.name })
-                    }, fl;
+                        fields: dojoArray.map(data.fields, function (x) { return x.name; })
+                    };
 
-                    fl = new FeatureLayer(featureLayerEndpoint, { id: LayerLoader.nextId(), mode: FeatureLayer.MODE_SNAPSHOT });
-                    def.resolve(fl);
+                    def.resolve(res);
                 },
-                function (error) { def.reject(error); }
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
             );
 
             return def.promise;
         }
-
-
 
         /**
         * Performs in place assignment of integer ids for a GeoJSON FeatureCollection.
@@ -301,7 +306,7 @@ define([
 
         return {
             loadDataSet: loadDataSet,
-            scrapeLayerData: scrapeLayerData,
+            getFeatureLayer: getFeatureLayer,
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
