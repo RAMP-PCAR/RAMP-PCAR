@@ -15,6 +15,7 @@
         "cancel": "Annuler", 
         "colour": "Couleur", 
         "csv": "CSV", 
+        "datasetName": "[fr] Dataset Name",
         "dataSource": "Source de données", 
         "dataSourceFile": "Fichier", 
         "dataSourceService": "Service", 
