@@ -1267,17 +1267,15 @@ module.exports = (grunt) ->
         
         'github-release':
             options: 
-                repository: process.env.HOME_REPO # Path to repository 
-                ###
-                auth:    # Auth credentials 
-                    user: 'dolbyzerr'
-                    password: ''
-                ###
+                repository: process.env.HOME_REPO
+                auth:
+                    password: process.env.GH_TOKEN
                 release:
-                    draft: true
-                    tag_name: process.env.TRAVIS_TAG         
-                files: 
-                    src: ['tarball/*.*'] # Files that you want to attach to Release 
+                    draft: false
+                    prerelease: true
+                    tag_name: process.env.TRAVIS_TAG
+            files: 
+                src: ['tarball/*.*'] # Files that you want to attach to Release 
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
