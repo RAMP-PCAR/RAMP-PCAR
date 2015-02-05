@@ -8,10 +8,10 @@
 */
 
 define([
-        "dojo/Deferred", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array"
+        "dojo/Deferred", "dojo/query", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array"
     ],
     function (
-            Deferred, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray
+            Deferred, query, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray
         ) {
         "use strict";
 
@@ -137,6 +137,59 @@ define([
             );
 
             return def.promise;
+        }
+
+        function getWmsLayerList(wmsEndpoint) {
+            var def = new Deferred(), promise;
+
+            try {
+                promise = (new EsriRequest({ url: wmsEndpoint + '?service=WMS&version=1.3&request=GetCapabilities', handleAs: 'xml' })).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            // there might already be a way to do this in the parsing API
+            // I don't know XML parsing well enough (and I don't want to)
+            function getImmediateChild(node, childName) {
+                var i;
+                for (i = 0; i < node.childNodes.length; ++i) {
+                    if (node.childNodes[i].nodeName === childName) {
+                        return node.childNodes[i];
+                    }
+                }
+                return undefined;
+            }
+
+            promise.then(
+                function (data) {
+                    var layers, res = {};
+
+                    try {
+                        layers = dojoArray.map(query('Layer > Name',data), function (nameNode) { return nameNode.parentNode; });
+                        res.layers = dojoArray.map(layers, function (x) {
+                            var name = getImmediateChild(x, 'Name').textContent,
+                                titleNode = getImmediateChild(x, 'Title');
+                            return {
+                                name: name,
+                                desc: titleNode ? titleNode.textContent : name,
+                                queryable: x.getAttribute('queryable') === '1'
+                            };
+                        });
+                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent; });
+                    } catch (e) {
+                        def.reject(e);
+                    }
+
+                    def.resolve(res);
+                },
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
+            );
+
+            return def.promise;
+
         }
 
         /**
@@ -307,6 +360,7 @@ define([
         return {
             loadDataSet: loadDataSet,
             getFeatureLayer: getFeatureLayer,
+            getWmsLayerList: getWmsLayerList,
             makeGeoJsonLayer: makeGeoJsonLayer,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
