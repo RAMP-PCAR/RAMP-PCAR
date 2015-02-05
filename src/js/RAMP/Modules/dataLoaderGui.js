@@ -542,11 +542,11 @@ define([
                                             addCSVDataset({
                                                 data: data,
                                                 delimiter: delimiter,
-                                                primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
+                                                primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
                                                 lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
                                                 lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
-                                                style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
+                                                style: optionStepContent.find("#csvStyleAttrlist").val(),
+                                                colour: optionStepContent.find("#csvColourAttrpicker").val()
                                             });
                                         });
 
@@ -637,8 +637,21 @@ define([
 
         }
 
+        function _template(key, data) {
+            tmpl.cache = {};
+            tmpl.templates = filter_manager_template;
+
+            data = data || {};
+            data.fn = TmplUtil;
+
+            return tmpl(key, data);
+        }
+
         function addCSVDataset(obj) {
-            var promise;
+            var promise,
+                iconTemplate = _template("a_d_icon_" + obj.style, obj);
+
+            console.log(iconTemplate);
 
             promise = DataLoader.buildCsv(obj.data, {
                 latfield: obj.lat,
