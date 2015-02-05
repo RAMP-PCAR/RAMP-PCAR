@@ -398,6 +398,14 @@
             </div>
         ",
 
+        "a_d_text_field":"
+            <h3 class='h6'>{%= o.header %}</h3>
+
+            <div class='input-group' data-list-id='{%= o.listId %}'>
+                <label class='wb-inv' for='{%= o.listId %}textField'>{%= o.label %}:</label>
+                <input name='input' class='form-control input-sm' id='{%= o.listId %}textField' data-role='none'/>
+            </div>
+        ",
 
         "a_d_load_file_or_URL_step": "
             <h3 class='h6'>{%= o.header %}</h3> 
@@ -601,6 +609,14 @@
 
                                         <div class='step step-3 option-csv' id='csvAttrStep'>
                                             <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'csvDatasetNameAttr'
+                                                    }); 
+                                                %} 
+
                                                 {% include('a_d_list_step', {
                                                     header: i18n.t('addDataset.primaryAttribute'),
                                                     lists: [
