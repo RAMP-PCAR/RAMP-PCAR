@@ -139,6 +139,18 @@ define([
             return def.promise;
         }
 
+        /**
+        * Fetch layer data from a WMS endpoint.  This method will execute a WMS GetCapabilities
+        * request against the specified URL, it requests WMS 1.3 and it is capable of parsing
+        * 1.3 or 1.1.1 responses.  It returns a promise which will resolve with basic layer
+        * metadata and querying information.
+        * 
+        * metadata response format:
+        *   { queryTypes: [mimeType], layers: [{name, desc, queryable(bool)}] }
+        *
+        * @param {string} wmsEndpoint a URL pointing to a WMS server (it must not include a query string)
+        * @returns {Promise} a promise resolving with a metadata object (as specified above)
+        */
         function getWmsLayerList(wmsEndpoint) {
             var def = new Deferred(), promise;
 
@@ -189,7 +201,6 @@ define([
             );
 
             return def.promise;
-
         }
 
         /**
