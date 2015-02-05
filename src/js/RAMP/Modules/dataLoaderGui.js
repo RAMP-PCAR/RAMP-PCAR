@@ -403,10 +403,10 @@ define([
                                             { selectOne: "Select One" }
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#featureStyleAttrlist"),
-                                            symbologyPreset
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#featureStyleAttrlist"),
+                                        //    symbologyPreset
+                                        //);
 
                                         //setSelectOptions(
                                         //    optionStepContent.find("#featureColourAttrlist"),
@@ -416,9 +416,9 @@ define([
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addFeatureDataset({
                                                 data: data,
-                                                primary: optionStepContent.find("#featurePrimaryAttrlist").val(),
-                                                style: optionStepContent.find("#featureStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#featureColourAttrpicker").val()
+                                                primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
+                                                //style: optionStepContent.find("#featureStyleAttrlist").val(),
+                                                //colour: optionStepContent.find("#featureColourAttrpicker").val()
                                             });
                                         });
 

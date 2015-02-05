@@ -508,24 +508,6 @@
                                                     ]                                                                    
                                                 }); %}
 
-                                                {% include('a_d_list_step', {
-                                                    header: i18n.t('addDataset.symbology'),
-                                                    lists: [
-                                                        {
-                                                            label:  i18n.t('addDataset.style'),
-                                                            listId: 'featureStyleAttr'
-                                                        }
-                                                    ]                                                                    
-                                                }); %}
-
-                                                {% include('a_d_colour_picker', 
-                                                    {
-                                                        header: i18n.t('addDataset.colour'),
-                                                        label:  i18n.t('addDataset.colour'),
-                                                        listId: 'featureColourAttr'
-                                                    }); 
-                                                %}                                                                
-
                                                 {% include('a_d_add_dataset_button', o); %}
                                             </div>
                                         </div>
