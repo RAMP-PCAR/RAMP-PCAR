@@ -28,7 +28,7 @@
                     </div>",
                     
     // Details button
-    "details_button":"<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>",
+    "details_button":"<button class='button button-none button-small font-xsmall details' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>",
 
     // Url
     "url": "<a src='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=i18n.t('datagrid.details')%}</a>"

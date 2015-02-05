@@ -420,8 +420,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     oneLayer = one.getLayer();
                     twoLayer = two.getLayer();
                     objectIdField = oneLayer.objectIdField;
-                    oneKey = oneLayer.url + one.attributes[objectIdField];
-                    twoKey = twoLayer.url + two.attributes[objectIdField];
+                    oneKey = oneLayer.sourceLayerId + one.attributes[objectIdField];
+                    twoKey = twoLayer.sourceLayerId + two.attributes[objectIdField];
                 }
 
                 return oneKey === twoKey;

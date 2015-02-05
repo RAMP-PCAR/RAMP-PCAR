@@ -27,9 +27,9 @@
                                     </div>
                                     <div class='record-controls wb-invisible'>
                                         <div class='btn-group margin-top-none'>
-                                                <button class='btn button-none btn-xs xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>
+                                                <button class='btn button-none btn-xs xsmall details' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>
                                                 <span class='separator' role='presentation'></span>
-                                                <button class='btn button-none btn-xs xsmall zoomto' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.zoomTo')%}</button>
+                                                <button class='btn button-none btn-xs xsmall zoomto' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.zoomTo')%}</button>
                                         </div>
                                     </div>
                                     <div class='clearfix'>
@@ -49,9 +49,9 @@
                                     </div>
                                     <div class='record-controls wb-invisible'>
                                         <div class='btn-group margin-top-none'>
-                                                <button class='btn button-none btn-xs xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>
+                                                <button class='btn button-none btn-xs xsmall details' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>
                                                 <span class='separator' role='presentation'></span>
-                                                <button class='btn button-none btn-xs xsmall zoomto' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.zoomTo')%}</button>
+                                                <button class='btn button-none btn-xs xsmall zoomto' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.zoomTo')%}</button>
                                         </div>
                                     </div>
                                     <div class='clearfix'>
@@ -118,7 +118,7 @@
                                                                 <select name='select' class='form-control input-sm' id='datasetSelector' data-role='none'>
                                                                     {% for (var i = 0; i < o.datasets.length; i++) {  %}
                                                                    
-                                                                        <option value='{%=o.datasets[i].url%}'>{%=o.datasets[i].displayName%}</option>
+                                                                        <option value='{%=o.datasets[i].id%}'>{%=o.datasets[i].displayName%}</option>
                                                             
                                                                     {% } %}
 
