@@ -756,10 +756,7 @@ define([
             * @return {Esri/layers/FeatureLayer} feature layer
             */
             getFeatureLayer: function (featureId) {
-                return UtilArray.find(featureLayers,
-                    function (featureLayer) {
-                        return featureLayer.id === featureId;
-                    });
+                return map.getLayer(featureId);
             },
 
             /**
