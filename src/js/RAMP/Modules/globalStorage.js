@@ -162,6 +162,10 @@ define(["dojo/_base/array", "utils/util"],
                 Zoomlight: "zoomlight_layer"
             },
 
-            layerSelectorGroups: []
+            // specifies knows layer groups in the reversed order;
+            layerSelectorGroups: [
+                "wms_layer",
+                "feature_layer"
+            ]
         };
     });

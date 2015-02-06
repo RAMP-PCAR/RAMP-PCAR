@@ -524,16 +524,6 @@
                                                     ]                                                                    
                                                 }); %}
 
-                                                {% include('a_d_list_step', {
-                                                    header: i18n.t('addDataset.requestParser'),
-                                                    lists: [
-                                                        {
-                                                            label:  i18n.t('addDataset.requestParser'),
-                                                            listId: 'wmsParserAttr'
-                                                        }
-                                                    ]                                                                    
-                                                }); %}
-
                                                 {% include('a_d_add_dataset_button', o); %}
                                             </div>
                                         </div>
