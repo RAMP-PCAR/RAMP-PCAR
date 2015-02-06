@@ -501,23 +501,27 @@ define([
 
                                 switch (fileType) {
                                     case "option-geojson":
+                                        var fieldOptions = {};
+
                                         pr = DataLoader.buildGeoJson(data);
 
                                         pr.then(function (event) {
                                             console.log(event);
                                             featureLayer = event;
 
+                                            featureLayer.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
+
                                             optionStepContent.find("#geojsonDatasetNameAttrtextField").val(fileName);
 
                                             setSelectOptions(
                                                 optionStepContent.find("#geojsonPrimaryAttrlist"),
-                                                { selectOne: "Select One" }
+                                                fieldOptions
                                             );
 
-                                            setSelectOptions(
-                                                optionStepContent.find("#geojsonStyleAttrlist"),
-                                                symbologyPreset
-                                            );
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#geojsonStyleAttrlist"),
+                                            //    symbologyPreset
+                                            //);
 
                                             //setSelectOptions(
                                             //    optionStepContent.find("#geojsonColourAttrlist"),
@@ -767,18 +771,25 @@ define([
         }
 
         function addGeoJSONDataset(obj) {
-            var promise;
+            var rgbColour = UtilMisc.hexToRgb(obj.colour),
+                iconTemplate = _template("a_d_icon_" + obj.featureLayer.renderer._RAMP_rendererType, obj);
 
-            promise = DataLoader.buildGeoJson(obj.data);
-
-            promise.then(function (event) {
-                var fl = event;
-
-                //TODO: set symbology and colour on feature layer (obj.data)
-                LayerLoader.loadLayer(fl);
-
-                mainPopup.close();
+            DataLoader.enhanceFileFeatureLayer(obj.featureLayer, {
+                //renderer: obj.style,
+                colour: [
+                    rgbColour.r,
+                    rgbColour.g,
+                    rgbColour.b,
+                    255
+                ],
+                nameField: obj.primary,
+                icon: iconTemplate,
+                datasetName: obj.datasetName
             });
+
+            LayerLoader.loadLayer(obj.featureLayer);
+
+            mainPopup.close();
         }
 
         function addShapefileDataset(obj) {
