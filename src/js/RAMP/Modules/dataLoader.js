@@ -340,6 +340,9 @@ define([
                 }
 
                 featureLayer.renderer = new SimpleRenderer(rend);
+            } else if (opts.colour) { // change only color of the renderer
+                // SZ_HACK
+                featureLayer.renderer.symbol.color = opts.colour;
             }
         }
 
