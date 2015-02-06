@@ -489,6 +489,8 @@ define([
                             promise.then(function (event) {
                                 var fileType = loadSteps[stepId].getFileType(),
                                     optionStepContent,
+                                    pr,
+                                    featureLayer,
                                     data = event; // either a {string} or {ArrayBuffer}; string for CSV and GeoJSON;
 
                                 //console.log(event);
@@ -497,32 +499,39 @@ define([
 
                                 switch (fileType) {
                                     case "option-geojson":
+                                        pr = DataLoader.buildGeoJson(data);
 
-                                        optionStepContent.find("#geojsonDatasetNameAttrtextField").val(fileName);
+                                        pr.then(function (event) {
+                                            console.log(event);
+                                            featureLayer = event;
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#geojsonPrimaryAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                            optionStepContent.find("#geojsonDatasetNameAttrtextField").val(fileName);
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#geojsonStyleAttrlist"),
-                                            symbologyPreset
-                                        );
+                                            setSelectOptions(
+                                                optionStepContent.find("#geojsonPrimaryAttrlist"),
+                                                { selectOne: "Select One" }
+                                            );
 
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#geojsonColourAttrlist"),
-                                        //    { selectOne: "Select One" }
-                                        //);
+                                            setSelectOptions(
+                                                optionStepContent.find("#geojsonStyleAttrlist"),
+                                                symbologyPreset
+                                            );
 
-                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addGeoJSONDataset({
-                                                data: data,
-                                                datasetName: optionStepContent.find("#geojsonDatasetNameAttrtextField").val(),
-                                                primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
-                                                style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#geojsonColourAttrpicker").val()
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#geojsonColourAttrlist"),
+                                            //    { selectOne: "Select One" }
+                                            //);
+
+                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                                addGeoJSONDataset({
+                                                    data: data,
+                                                    datasetName: optionStepContent.find("#geojsonDatasetNameAttrtextField").val(),
+                                                    primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
+                                                    style: optionStepContent.find("#geojsonStyleAttrlist").val(),
+                                                    colour: optionStepContent.find("#geojsonColourAttrpicker").val()
+                                                });
                                             });
+
                                         });
 
                                         break;
@@ -581,31 +590,36 @@ define([
                                         break;
 
                                     case "option-shapefile":
+                                        pr = DataLoader.buildShapefile(data);
 
-                                        optionStepContent.find("#shapefileDatasetNameAttrtextField").val(fileName);
+                                        pr.then(function (event) {
+                                            featureLayer = event;
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#shapefilePrimaryAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                            optionStepContent.find("#shapefileDatasetNameAttrtextField").val(fileName);
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#shapefileStyleAttrlist"),
-                                            symbologyPreset
-                                        );
+                                            setSelectOptions(
+                                                optionStepContent.find("#shapefilePrimaryAttrlist"),
+                                                { selectOne: "Select One" }
+                                            );
 
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#shapefileColourAttrlist"),
-                                        //    { selectOne: "Select One" }
-                                        //);
+                                            setSelectOptions(
+                                                optionStepContent.find("#shapefileStyleAttrlist"),
+                                                symbologyPreset
+                                            );
 
-                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addShapefileDataset({
-                                                data: data,
-                                                datasetName: optionStepContent.find("#shapefileDatasetNameAttrtextField").val(),
-                                                primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
-                                                style: optionStepContent.find("#shapefileStyleAttrlist").val(),
-                                                colour: optionStepContent.find("#shapefileColourAttrpicker").val()
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#shapefileColourAttrlist"),
+                                            //    { selectOne: "Select One" }
+                                            //);
+
+                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                                addShapefileDataset({
+                                                    data: data,
+                                                    datasetName: optionStepContent.find("#shapefileDatasetNameAttrtextField").val(),
+                                                    primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
+                                                    style: optionStepContent.find("#shapefileStyleAttrlist").val(),
+                                                    colour: optionStepContent.find("#shapefileColourAttrpicker").val()
+                                                });
                                             });
                                         });
 
@@ -707,10 +721,14 @@ define([
             promise.then(function (event) {
                 var fl = event;
 
-                //TODO: set symbology and colour on feature layer (obj.data)
-                LayerLoader.loadLayer(fl);
+                promise = DataLoader.enhance(fl, {});
 
-                mainPopup.close();
+                promise.then(function (fl) {
+                    //TODO: set symbology and colour on feature layer (obj.data)
+                    LayerLoader.loadLayer(fl);
+
+                    mainPopup.close();
+                });
             });
         }
 
