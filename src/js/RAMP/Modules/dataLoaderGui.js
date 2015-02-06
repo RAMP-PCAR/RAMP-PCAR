@@ -737,30 +737,31 @@ define([
                 lonfield: obj.lon,
                 delimiter: obj.delimiter,
 
-                fields: obj.fields,
-                renderer: "circlePoint",
-                colour: [
-                    rgbColour.r,
-                    rgbColour.g,
-                    rgbColour.b,
-                    255
-                ],
-                nameField: obj.primary,
-                icon: iconTemplate,
-                datasetName: obj.datasetName
+                fields: obj.fields
             });
 
             promise.then(function (event) {
                 var fl = event;
 
-                promise = DataLoader.enhance(fl, {});
-
-                promise.then(function (fl) {
-                    //TODO: set symbology and colour on feature layer (obj.data)
-                    LayerLoader.loadLayer(fl);
-
-                    mainPopup.close();
+                DataLoader.enhanceFileFeatureLayer(fl, {
+                    renderer: "circlePoint",
+                    colour: [
+                        rgbColour.r,
+                        rgbColour.g,
+                        rgbColour.b,
+                        255
+                    ],
+                    nameField: obj.primary,
+                    icon: iconTemplate,
+                    datasetName: obj.datasetName,
+                    fields: obj.fields
                 });
+
+                //TODO: set symbology and colour on feature layer (obj.data)
+                LayerLoader.loadLayer(fl);
+
+                mainPopup.close();
+
             });
         }
 
