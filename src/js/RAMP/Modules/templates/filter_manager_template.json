@@ -664,16 +664,6 @@
                                                     ]                                                                    
                                                 }); %}
 
-                                                {% include('a_d_list_step', {
-                                                    header: i18n.t('addDataset.symbology'),
-                                                    lists: [
-                                                        {
-                                                            label:  i18n.t('addDataset.style'),
-                                                            listId: 'shapefileStyleAttr'
-                                                        }
-                                                    ]                                                                    
-                                                }); %} 
-
                                                 {% include('a_d_colour_picker', 
                                                     {
                                                         header: i18n.t('addDataset.colour'),
