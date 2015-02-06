@@ -24,6 +24,7 @@
         "fileType": "File Type",
         "geojson": "GeoJSON",
         "latitude": "Latitude",
+        "layerName": "Layer Name",
         "load": "Load",
         "longitude": "Longitude",
         "primaryAttribute": "Primary Attribute",
