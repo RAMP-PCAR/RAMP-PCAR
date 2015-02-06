@@ -383,6 +383,7 @@ define([
                         case "serviceURL":
                             var serviceType = loadSteps[stepId].getServiceType(),
                                 optionStepContent,
+                                //fieldOptions = {},
                                 data; // a complete feature or wms layer object which has not been added to map yet
 
                             option = options.find("> ." + serviceType + ":first");
@@ -394,16 +395,15 @@ define([
                             switch (serviceType) {
                                 case "option-feature":
 
-                                    promise = DataLoader.loadDataSet({
-                                        url: loadSteps[stepId].getUrl()
-                                    });
+                                    promise = DataLoader.getFeatureLayer(loadSteps[stepId].getUrl());
 
                                     promise.then(function (event) {
                                         data = event;
+                                        //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
 
                                         setSelectOptions(
                                             optionStepContent.find("#featurePrimaryAttrlist"),
-                                            { selectOne: "Select One" }
+                                            data.fields
                                         );
 
                                         //setSelectOptions(
@@ -676,9 +676,9 @@ define([
         function addFeatureDataset(obj) {
             //TODO: set symbology and colour on feature layer (obj.data)
 
-            //console.log(obj);
+            console.log(obj);
 
-            LayerLoader.loadLayer(obj.data);
+            //LayerLoader.loadLayer(obj.data);
 
             mainPopup.close();
         }

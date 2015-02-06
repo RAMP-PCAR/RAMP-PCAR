@@ -65,7 +65,7 @@ define([
 
         /**
         * Fetch relevant data from a single feature layer endpoint.  Returns a promise which
-        * resolves with a partial list of properites extracted from the endpoint.
+        * resolves with a partial list of properties extracted from the endpoint.
         *
         * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
         * @returns {Promise} a promise resolving with an object containing basic properties for the layer
