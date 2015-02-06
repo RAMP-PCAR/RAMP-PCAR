@@ -129,6 +129,12 @@ define(["dojo/_base/array", "utils/util"],
             return layer;
         }
 
+        function applyWMSDefaults(wmsLayer) {
+            var layer = applyDefaults(wmsLayerDefaults, wmsLayer);
+
+            return layer;
+        }
+
         return {
             init: function (configObj) {
                 var config = applyConfigDefaults(configObj);
@@ -143,6 +149,7 @@ define(["dojo/_base/array", "utils/util"],
             defineProjections: defineProjections,
             DefaultRenderers: defaultRenderers,
             applyFeatureDefaults: applyFeatureDefaults,
+            applyWMSDefaults: applyWMSDefaults,
 
             layerType: {
                 Basemap: "basemap",
