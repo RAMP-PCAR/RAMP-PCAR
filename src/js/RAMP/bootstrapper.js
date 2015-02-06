@@ -52,7 +52,7 @@ require([
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
     "ramp/theme", "ramp/layerLoader",
 
