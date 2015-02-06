@@ -315,7 +315,15 @@ define([
                                 idArray = layerList
                                     .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                                     .map(function (i, elm) { return elm.id; }), // get ids
-                                index = dojoArray.indexOf(idArray, layerId);
+                                cleanIdArray = idArray.filter(function (i, elm) {
+                                    //check if layer is in error state.  error layers should not be part of the count
+                                    return (getLayerItem(elm).state !== LayerItem.state.ERROR);
+                                }),
+                                index = dojoArray.indexOf(cleanIdArray, layerId);
+
+                            if (index < 0) {
+                                return;
+                            }
 
                             topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
                                 origin: "rampPopup,datagrid"
