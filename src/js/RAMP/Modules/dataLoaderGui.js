@@ -547,6 +547,7 @@ define([
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addCSVDataset({
                                                 data: data,
+                                                fields: rows[0],
                                                 delimiter: delimiter,
                                                 datasetName: optionStepContent.find("#csvDatasetNameAttrtextField").val(),
                                                 primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
@@ -669,6 +670,7 @@ define([
                 lonfield: obj.lon,
                 delimiter: obj.delimiter,
 
+                fields: obj.fields,
                 renderer: "circlePoint",
                 colour: [
                     rgbColour.r,
