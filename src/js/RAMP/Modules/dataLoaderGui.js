@@ -681,7 +681,7 @@ define([
                 nameField: obj.data.fields[parseInt(obj.primary)],
                 symbology: {
                     type: "simple",
-                    imageUrl: "assets/images/wms.png"  //FOR NOW, until renderer trick is wired in
+                    imageUrl: "assets/images/sampleIcons/09.png"  //FOR NOW, until renderer trick is wired in
                 },
                 datagrid: DataLoader.createDatagridConfig(obj.data.fields),
                 url: obj.data.layerUrl
