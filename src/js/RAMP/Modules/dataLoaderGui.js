@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n, RAMP */
 
 define([
     /* Dojo */
@@ -17,7 +17,7 @@ define([
     function (
         lang, Deferred,
         filter_manager_template,
-        PopupManager, DataLoader, Theme, Map, LayerLoader, GlobalStorage,
+        PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -447,15 +447,17 @@ define([
                                             layerOptions
                                         );
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#wmsParserAttrlist"),
-                                            { selectOne: "Select One" }
-                                        );
+                                        //setSelectOptions(
+                                        //    optionStepContent.find("#wmsParserAttrlist"),
+                                        //    { selectOne: "Select One" }
+                                        //);
 
                                         optionStepContent.find(".btn-add-dataset").on("click", function () {
                                             addWMSDataset({
                                                 data: data,
-                                                parser: optionStepContent.find("#wmsParserAttrlist").val()
+                                                url: loadSteps[stepId].getUrl(),
+                                                layerName: optionStepContent.find("#wmsLayerNameAttrlist").val()
+                                                //parser: optionStepContent.find("#wmsParserAttrlist").val()
                                             });
                                         });
                                         loadURLStep.successLoadUrlStep();
@@ -674,10 +676,40 @@ define([
 
         function addWMSDataset(obj) {
             //TODO: set request parser for (obj.data)
+            var wmsConfig,
+                wmslayer,
+                layer;
+
+            layer = UtilArray.find(obj.data.layers,
+                function (l) {
+                    return l.name === obj.layerName;
+                });
+
+            wmsConfig = {
+                id: LayerLoader.nextId(),
+                displayName: layer.desc,
+                format: "png",
+                layerName: obj.layerName,
+                imageUrl: "assets/images/wms.png",
+                url: obj.url,
+                legendMimeType: "image/jpeg"
+            };
+
+            if (layer.queryable) {
+                wmsConfig.featureInfo = {
+                    parser: "stringParse",
+                    mimeType: "text/plain"
+                };
+            }
+
+            wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
+
+            wmslayer = RampMap.makeWmsLayer(wmsConfig, true);
+            RAMP.config.layers.wms.push(wmsConfig);
 
             console.log(obj);
 
-            LayerLoader.loadLayer(obj.data);
+            LayerLoader.loadLayer(wmslayer);
 
             mainPopup.close();
 
