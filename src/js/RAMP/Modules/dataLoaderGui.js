@@ -324,7 +324,6 @@ define([
                     optionsLeftShift = optionStepContent.length > 0 ? optionStepContent.position().left : -1;
 
                     if (optionsLeftShift !== -1 && optionsLeftShift !== options.position().left) {
-
                         tl
                             .addLabel("leftShiftStart")
 
@@ -422,11 +421,9 @@ define([
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
                                                 //style: optionStepContent.find("#featureStyleAttrlist").val(),
                                                 //colour: optionStepContent.find("#featureColourAttrpicker").val()
-
                                             });
                                         });
                                         loadURLStep.successLoadUrlStep();
-
                                     }, function () {
                                         loadURLStep.errorLoadUrlStep();
                                     });
@@ -461,7 +458,6 @@ define([
                                             });
                                         });
                                         loadURLStep.successLoadUrlStep();
-
                                     }, function () {
                                         loadURLStep.errorLoadUrlStep();
                                     });
@@ -538,7 +534,6 @@ define([
                                                     colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                                 });
                                             });
-
                                         });
 
                                         break;
@@ -678,7 +673,29 @@ define([
 
             console.log(obj);
 
-            //LayerLoader.loadLayer(obj.data);
+            //make config.
+
+            var newConfig = {
+                id: LayerLoader.nextId(),
+                displayName: obj.data.layerName,
+                nameField: obj.data.fields[parseInt(obj.primary)],
+                symbology: {
+                    type: "simple",
+                    imageUrl: "assets/images/wms.png"  //FOR NOW, until renderer trick is wired in
+                },
+                datagrid: DataLoader.createDatagridConfig(obj.data.fields),
+                url: obj.data.layerUrl
+            }, featureLayer;
+
+            newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+            //make layer
+            featureLayer = RampMap.makeFeatureLayer(newConfig, true);
+            RAMP.config.layers.feature.push(newConfig);
+
+            //console.log(obj);
+
+            LayerLoader.loadLayer(featureLayer);
 
             mainPopup.close();
         }
@@ -721,7 +738,6 @@ define([
             LayerLoader.loadLayer(wmslayer);
 
             mainPopup.close();
-
         }
 
         function _template(key, data) {
@@ -770,7 +786,6 @@ define([
                 LayerLoader.loadLayer(fl);
 
                 mainPopup.close();
-
             });
         }
 
@@ -868,14 +883,12 @@ define([
                 function checkStepStatus() {
                     if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
                         if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
-
                             choiceButtons
                                 .removeClass("button-pressed")
                                 .filter("button[data-option='option-feature']")
                                 .addClass("button-pressed");
 
                             serviceType = "option-feature";
-
                         } else if (serviceUrl.match(/wms/ig)) {
                             console.log("Z: wms?");
                         }
@@ -912,7 +925,6 @@ define([
                         return serviceUrl;
                     }
                 };
-
             }());
 
             loadSteps.loadFileStep = (function () {
@@ -944,7 +956,6 @@ define([
                                 .removeClass("button-pressed")
                                 .filter("button[data-option='option-csv']")
                                 .addClass("button-pressed");
-
                         } else if (fileName.endsWith(".json")) {
                             fileType = "option-geojson";
 
@@ -952,7 +963,6 @@ define([
                                 .removeClass("button-pressed")
                                 .filter("button[data-option='option-geojson']")
                                 .addClass("button-pressed");
-
                         } else {
                             fileType = null;
                             choiceButtons
@@ -1022,7 +1032,6 @@ define([
                         return file;
                     }
                 };
-
             }());
         }
 

@@ -2,7 +2,7 @@
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
-* 
+*
 * @module RAMP
 * @submodule DataLoader
 */
@@ -12,7 +12,7 @@ define([
         "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "esri/renderers/SimpleRenderer",
         "ramp/layerLoader", "ramp/globalStorage", "ramp/map",
         "utils/util"
-    ],
+],
     function (
             Deferred, query, dojoArray,
             EsriRequest, SpatialReference, FeatureLayer, SimpleRenderer,
@@ -31,7 +31,7 @@ define([
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
         * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
         * into a string or an ArrayBuffer.
-        * 
+        *
         * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
         *                      {string} type as "text" or "binary" (text by default)
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
@@ -51,7 +51,6 @@ define([
                 }
 
                 promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
-
             } else if (args.url) {
                 try {
                     promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
@@ -79,7 +78,6 @@ define([
                     },
                     function (error) { def.reject(error); }
                 );
-
             } else {
                 throw new Error("One of url or file should be specified");
             }
@@ -129,7 +127,7 @@ define([
         * request against the specified URL, it requests WMS 1.3 and it is capable of parsing
         * 1.3 or 1.1.1 responses.  It returns a promise which will resolve with basic layer
         * metadata and querying information.
-        * 
+        *
         * metadata response format:
         *   { queryTypes: [mimeType], layers: [{name, desc, queryable(bool)}] }
         *
@@ -486,6 +484,7 @@ define([
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
             buildGeoJson: buildGeoJson,
-            enhanceFileFeatureLayer: enhanceFileFeatureLayer
+            enhanceFileFeatureLayer: enhanceFileFeatureLayer,
+            createDatagridConfig: createDatagridConfig
         };
     });
