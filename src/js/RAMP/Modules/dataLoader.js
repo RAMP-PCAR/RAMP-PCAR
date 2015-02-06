@@ -283,6 +283,10 @@ define([
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
 
+            // TODO : refactor the hack
+            // SZ_HACK
+            layer.renderer._RAMP_rendererType = featureTypeToRenderer[geoJson.features[0].geometry.type];
+
             //SZ TESTING -- this will be removed when the UI separates the layer creation an layer enhancement
             //enhanceFileFeatureLayer(layer, opts);
 
