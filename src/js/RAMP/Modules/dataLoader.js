@@ -1,4 +1,4 @@
-﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP */
+﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
 
 /**
 * A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
@@ -87,6 +87,8 @@ define([
                     promise = Util.readFileAsText(args.file);
                 }
 
+                promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
+
             } else if (args.url) {
                 try {
                     promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
@@ -94,11 +96,31 @@ define([
                     def.reject(e);
                 }
 
+                promise.then(
+                    function (data) {
+                        // http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+                        function str2ab(str) {
+                            var buf = new ArrayBuffer(str.length * 2), // 2 bytes for each char
+                                bufView = new Uint16Array(buf);
+                            for (var i = 0, strLen = str.length; i < strLen; i++) {
+                                bufView[i] = str.charCodeAt(i);
+                            }
+                            return buf;
+                        }
+
+                        if (args.type === 'binary') {
+                            def.resolve(str2ab(data));
+                            return;
+                        }
+                        def.resolve(data);
+                    },
+                    function (error) { def.reject(error); }
+                );
+
             } else {
                 throw new Error("One of url or file should be specified");
             }
 
-            promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
             return def.promise;
         }
 
@@ -219,6 +241,20 @@ define([
         }
 
         /**
+         * Extracts fields from the first feature in the feature collection, does no
+         * guesswork on property types and calls everything a string.
+         */
+        function extractFields(geoJson) {
+            if (geoJson.features.length < 1) {
+                throw new Error("Field extraction requires at least one feature");
+            }
+
+            return dojoArray.map(Object.keys(geoJson.features[0].properties), function (prop) {
+                return { name: prop, type: "esriFieldTypeString" };
+            });
+        }
+
+        /**
         * Converts a GeoJSON object into a FeatureLayer.  Expects GeoJSON to be formed as a FeatureCollection
         * containing a uniform feature type (FeatureLayer type will be set according to the type of the first
         * feature entry).  Accepts the following options:
@@ -261,6 +297,10 @@ define([
                 if (opts.fields) {
                     layerDefinition.fields = layerDefinition.fields.concat(opts.fields);
                 }
+            }
+
+            if (layerDefinition.fields.length === 1) {
+                layerDefinition.fields = layerDefinition.fields.concat(extractFields(geoJson));
             }
 
             console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
