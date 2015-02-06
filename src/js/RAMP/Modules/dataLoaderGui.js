@@ -527,9 +527,10 @@ define([
                                             optionStepContent.find(".btn-add-dataset").on("click", function () {
                                                 addGeoJSONDataset({
                                                     data: data,
+                                                    featureLayer: featureLayer,
                                                     datasetName: optionStepContent.find("#geojsonDatasetNameAttrtextField").val(),
                                                     primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
-                                                    style: optionStepContent.find("#geojsonStyleAttrlist").val(),
+                                                    //style: optionStepContent.find("#geojsonStyleAttrlist").val(),
                                                     colour: optionStepContent.find("#geojsonColourAttrpicker").val()
                                                 });
                                             });
