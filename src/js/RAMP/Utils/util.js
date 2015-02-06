@@ -1263,6 +1263,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             *
             * @method hexToRgb
             * @static
+            * @param {String} hex hex colour code
             * @return {Object} ojbect containing r, g, and b components of the supplied colour
             */
             hexToRgb: function (hex) {
@@ -1278,6 +1279,21 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     g: parseInt(result[2], 16),
                     b: parseInt(result[3], 16)
                 } : null;
+            },
+
+            /**
+            * Converts RGB colour to HEX.
+            * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
+            *
+            * @method rgbToHex
+            * @static 
+            * @param {Number} r r component
+            * @param {Number} g g component
+            * @param {Number} b b component
+            * @return {Object} hex colour code 
+            */
+            rgbToHex: function (r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
             }
         };
     });
