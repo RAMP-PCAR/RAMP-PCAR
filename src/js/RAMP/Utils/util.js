@@ -35,7 +35,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
         * call different file read methods.
         *
         * @method _wrapFileCallInPromise
-        * @static
+        * @private
         * @param {String} readMethod a string indicating the FileReader method to call
         * @return {Function} a function which accepts a {File} object and returns a Promise
         */
@@ -601,6 +601,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /*
             * Create a new extent based on the current map size, a point (X/Y coordinates), and a pixel tolerance value.
             * @method pointToExtent
+            * @static
             * @param {Object} map The map control
             * @param {Object} point The location on screen (X/Y coordinates)
             * @param {Number} toleranceInPixel A value indicating how many screen pixels the extent should be from the point
@@ -622,6 +623,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * Create boudingbox graphic for a bounding box extent
             *
             * @method createGraphic
+            * @static
             * @param  {esri/geometry/Extent} extent of a bounding box
             * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
             */
@@ -922,6 +924,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsText and returns a promise.
             *
+            * @method readFileAsText
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
@@ -930,6 +934,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsBinaryString and returns a promise.
             *
+            * @method readFileAsBinary
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
@@ -938,6 +944,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsArrayBuffer and returns a promise.
             *
+            * @method readFileAsArrayBuffer
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends an ArrayBuffer containing the file output if successful
             */
@@ -1109,6 +1117,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
              *      
              * 
              * @method resetTimelines
+             * @static
              * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
              * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
              */
@@ -1131,6 +1140,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * Checks if two spatial reference objects are equivalent.  Handles both wkid and wkt definitions
             *
             * @method isSpatialRefEqual
+            * @static
             * @param {Esri/SpatialReference} sr1 First {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
             * @param {Esri/SpatialReference} sr2 Second {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
             * @return {Boolean} true if the two spatial references are equivalent.  False otherwise.
@@ -1148,6 +1158,14 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 }
             },
 
+            /**
+            * Checks if the given dom node is present in the dom.
+            *
+            * @method containsInDom
+            * @static
+            * @param {Object} el DOM node to check
+            * @return {Boolean} true if the given node is in the dom
+            */
             containsInDom: function (el) {
                 return $.contains(document.documentElement, el);
             },
