@@ -485,12 +485,14 @@ define([
 
                             promise = DataLoader.loadDataSet({
                                 url: loadSteps[stepId].getFileUrl(),
-                                file: loadSteps[stepId].getFile()
+                                file: loadSteps[stepId].getFile(),
+                                type: loadSteps[stepId].getFileType() === "option-shapefile" ? "binary" : "text"
                             });
 
                             promise.then(function (event) {
                                 var fileType = loadSteps[stepId].getFileType(),
                                     optionStepContent,
+                                    fieldOptions = {},
                                     pr,
                                     featureLayer,
                                     data = event; // either a {string} or {ArrayBuffer}; string for CSV and GeoJSON;
