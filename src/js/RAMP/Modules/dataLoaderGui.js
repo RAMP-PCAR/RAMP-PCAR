@@ -381,23 +381,26 @@ define([
                             break;
 
                         case "serviceURL":
+                            var serviceType = loadSteps[stepId].getServiceType(),
+                                optionStepContent,
+                                data; // a complete feature or wms layer object which has not been added to map yet
+
+                            option = options.find("> ." + serviceType + ":first");
+                            optionStepContent = option.find("> .step-content");
+
                             loadURLStep.init();
                             loadURLStep.beforeLoadUrlStep();
 
-                            promise = DataLoader.loadDataSet({
-                                url: loadSteps[stepId].getUrl()
-                            });
+                            switch (serviceType) {
+                                case "option-feature":
 
-                            promise.then(function (event) {
-                                var serviceType = loadSteps[stepId].getServiceType(),
-                                    optionStepContent,
-                                    data = event; // a complete feature or wms layer object which has not been added to map yet
+                                    promise = DataLoader.loadDataSet({
+                                        url: loadSteps[stepId].getUrl()
+                                    });
 
-                                option = options.find("> ." + serviceType + ":first");
-                                optionStepContent = option.find("> .step-content");
+                                    promise.then(function (event) {
+                                        data = event;
 
-                                switch (serviceType) {
-                                    case "option-feature":
                                         setSelectOptions(
                                             optionStepContent.find("#featurePrimaryAttrlist"),
                                             { selectOne: "Select One" }
@@ -419,12 +422,31 @@ define([
                                                 primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
                                                 //style: optionStepContent.find("#featureStyleAttrlist").val(),
                                                 //colour: optionStepContent.find("#featureColourAttrpicker").val()
+
                                             });
                                         });
+                                        loadURLStep.successLoadUrlStep();
 
-                                        break;
+                                    }, function () {
+                                        loadURLStep.errorLoadUrlStep();
+                                    });
 
-                                    case "option-wms":
+                                    break;
+
+                                case "option-wms":
+                                    promise = DataLoader.getWmsLayerList(loadSteps[stepId].getUrl());
+
+                                    promise.then(function (event) {
+                                        var layerOptions = {};
+
+                                        data = event;
+                                        event.layers.forEach(function (l) { layerOptions[l.name] = l.desc; });
+
+                                        setSelectOptions(
+                                            optionStepContent.find("#wmsLayerNameAttrlist"),
+                                            layerOptions
+                                        );
+
                                         setSelectOptions(
                                             optionStepContent.find("#wmsParserAttrlist"),
                                             { selectOne: "Select One" }
@@ -436,15 +458,14 @@ define([
                                                 parser: optionStepContent.find("#wmsParserAttrlist").val()
                                             });
                                         });
+                                        loadURLStep.successLoadUrlStep();
 
-                                        break;
-                                }
+                                    }, function () {
+                                        loadURLStep.errorLoadUrlStep();
+                                    });
 
-                                loadURLStep.successLoadUrlStep();
-
-                            }, function () {
-                                loadURLStep.errorLoadUrlStep();
-                            });
+                                    break;
+                            }
 
                             break;
 

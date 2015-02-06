@@ -515,6 +515,16 @@
                                         <div class='step step-3 option-wms' id='wmsAttrStep'>
                                             <div class='step-content load-url-step'>
                                                 {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.layerName'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.layerName'),
+                                                            listId: 'wmsLayerNameAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_list_step', {
                                                     header: i18n.t('addDataset.requestParser'),
                                                     lists: [
                                                         {
