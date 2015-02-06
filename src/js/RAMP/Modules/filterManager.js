@@ -654,7 +654,8 @@ define([
                 return {
                     init: function () {
                         var section,
-                            layerGroup;
+                            layerGroup,
+                            that = this;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
                         section = tmpl('filter_manager_template2', { config: RAMP.config });
@@ -682,7 +683,7 @@ define([
                             });
 
                             layerGroups[layerType] = layerGroup;
-                            this.addLayerGroup(layerGroup.node);
+                            that.addLayerGroup(layerGroup.node);
                         });
 
                         layerToggles.init();
