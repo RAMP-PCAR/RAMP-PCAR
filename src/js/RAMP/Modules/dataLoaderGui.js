@@ -503,12 +503,10 @@ define([
 
                                 switch (fileType) {
                                     case "option-geojson":
-                                        var fieldOptions = {};
-
                                         pr = DataLoader.buildGeoJson(data);
 
                                         pr.then(function (event) {
-                                            console.log(event);
+                                            //console.log(event);
                                             featureLayer = event;
 
                                             featureLayer.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
@@ -599,22 +597,25 @@ define([
                                         break;
 
                                     case "option-shapefile":
+
                                         pr = DataLoader.buildShapefile(data);
 
                                         pr.then(function (event) {
                                             featureLayer = event;
 
+                                            featureLayer.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
+
                                             optionStepContent.find("#shapefileDatasetNameAttrtextField").val(fileName);
 
                                             setSelectOptions(
                                                 optionStepContent.find("#shapefilePrimaryAttrlist"),
-                                                { selectOne: "Select One" }
+                                                fieldOptions
                                             );
 
-                                            setSelectOptions(
-                                                optionStepContent.find("#shapefileStyleAttrlist"),
-                                                symbologyPreset
-                                            );
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#shapefileStyleAttrlist"),
+                                            //    symbologyPreset
+                                            //);
 
                                             //setSelectOptions(
                                             //    optionStepContent.find("#shapefileColourAttrlist"),
@@ -624,9 +625,10 @@ define([
                                             optionStepContent.find(".btn-add-dataset").on("click", function () {
                                                 addShapefileDataset({
                                                     data: data,
+                                                    featureLayer: featureLayer,
                                                     datasetName: optionStepContent.find("#shapefileDatasetNameAttrtextField").val(),
                                                     primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
-                                                    style: optionStepContent.find("#shapefileStyleAttrlist").val(),
+                                                    //style: optionStepContent.find("#shapefileStyleAttrlist").val(),
                                                     colour: optionStepContent.find("#shapefileColourAttrpicker").val()
                                                 });
                                             });
@@ -674,7 +676,7 @@ define([
         function addFeatureDataset(obj) {
             //TODO: set symbology and colour on feature layer (obj.data)
 
-            console.log(obj);
+            //console.log(obj);
 
             LayerLoader.loadLayer(obj.data);
 
@@ -714,7 +716,7 @@ define([
             wmslayer = RampMap.makeWmsLayer(wmsConfig, true);
             RAMP.config.layers.wms.push(wmsConfig);
 
-            console.log(obj);
+            //console.log(obj);
 
             LayerLoader.loadLayer(wmslayer);
 
@@ -737,7 +739,7 @@ define([
                 rgbColour = UtilMisc.hexToRgb(obj.colour),
                 iconTemplate = _template("a_d_icon_circlePoint", obj);
 
-            console.log(iconTemplate);
+            //console.log(iconTemplate);
 
             promise = DataLoader.buildCsv(obj.data, {
                 latfield: obj.lat,
@@ -795,18 +797,25 @@ define([
         }
 
         function addShapefileDataset(obj) {
-            var promise;
+            var rgbColour = UtilMisc.hexToRgb(obj.colour),
+                iconTemplate = _template("a_d_icon_" + obj.featureLayer.renderer._RAMP_rendererType, obj);
 
-            promise = DataLoader.buildShapefile(obj.data);
-
-            promise.then(function (event) {
-                var fl = event;
-
-                //TODO: set symbology and colour on feature layer (obj.data)
-                LayerLoader.loadLayer(fl);
-
-                mainPopup.close();
+            DataLoader.enhanceFileFeatureLayer(obj.featureLayer, {
+                //renderer: obj.style,
+                colour: [
+                    rgbColour.r,
+                    rgbColour.g,
+                    rgbColour.b,
+                    255
+                ],
+                nameField: obj.primary,
+                icon: iconTemplate,
+                datasetName: obj.datasetName
             });
+
+            LayerLoader.loadLayer(obj.featureLayer);
+
+            mainPopup.close();
         }
 
         function reset() {

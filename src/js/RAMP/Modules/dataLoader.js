@@ -271,12 +271,12 @@ define([
             }
 
             console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
-            console.log(geoJson);
+            //console.log(geoJson);
             Terraformer.Proj.convert(geoJson, 'EPSG:' + targetWkid, srcProj);
-            console.log(geoJson);
+            //console.log(geoJson);
             esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: targetWkid });
             console.log('geojson -> esrijson converted');
-            console.log(esriJson);
+            //console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT, id: layerID });
