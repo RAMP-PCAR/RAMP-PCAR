@@ -188,6 +188,11 @@ define([
             //add layer to map, triggering the loading process.  should add at correct position
             map.addLayer(layer, insertIdx);
 
+            //this will force a recreation of the highlighting graphic group.
+            //if not done, can cause mouse interactions to get messy if adding more than
+            //one layer at one time
+            topic.publish(EventManager.Map.REORDER_END);
+
             //wire up event handlers to the layer
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
