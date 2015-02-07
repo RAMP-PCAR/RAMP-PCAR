@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP, window */
+﻿/*global define, esri, i18n, console, $, RAMP, Terraformer, window */
 
 /**
 *
@@ -966,10 +966,46 @@ define([
             * @param  {Object} config config object for the layer
             * @param  {Boolean} userLayer optional.  indicates if layer was added by a user.  default value is false
             */
-
             enhanceLayer: function (layer, config, userLayer) {
                 //call the private function
                 prepLayer(layer, config, userLayer);
+            },
+
+            /**
+            * Will project an extent to a desired spatial reference, using client side projection library.
+            * Avoids the need for Esri Geometry Service
+            *
+            * @method enhanceLayer
+            * @param  {Esri/Extent} extent extent to be projected
+            * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+            * @return {Esri/Extent} extent in the desired projection
+            */
+            localProjectExtent: function (extent, sr) {
+                //TODO can we handle WKT?
+
+                var geoJson = {
+                    type: "FeatureCollection",
+                    features: [
+                        {
+                            type: "Feature",
+                            geometry: {
+                                type: "Polygon",
+                                coordinates: [
+                                  [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin],
+                                    [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]]
+                                ]
+                            }
+                        }
+                    ]
+                };
+
+                //reproject the extent
+                Terraformer.Proj.convert(geoJson, 'EPSG:' + sr.wkid, 'EPSG:' + extent.spatialReference.wkid);
+
+                var coords = geoJson.features[0].geometry.coordinates,
+                    projExtent = new EsriExtent(coords[0][0][0], coords[0][0][1], coords[0][2][0], coords[0][2][1], sr);
+
+                return projExtent;
             },
 
             /*

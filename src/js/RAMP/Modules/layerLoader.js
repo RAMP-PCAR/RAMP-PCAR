@@ -244,6 +244,10 @@ define([
                             } else {
                                 //layer is in different projection.  reproject to basemap
 
+                                boundingBox.add(UtilMisc.createGraphic(RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference)));
+
+                                //comment for now
+                                /*
                                 var params = new ProjectParameters(),
                                     gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
                                 params.geometries = [boundingBoxExtent];
@@ -252,6 +256,7 @@ define([
                                 gsvc.project(params, function (projectedExtents) {
                                     boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
                                 });
+                                */
                             }
                         }
 
@@ -509,6 +514,5 @@ define([
             },
 
             nextId: nextId
-
         };
     });
