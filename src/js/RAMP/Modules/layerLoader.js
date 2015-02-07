@@ -244,7 +244,8 @@ define([
                             } else {
                                 //layer is in different projection.  reproject to basemap
 
-                                boundingBox.add(UtilMisc.createGraphic(RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference)));
+                                var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
+                                boundingBox.add(UtilMisc.createGraphic(box));
 
                                 //comment for now
                                 /*
