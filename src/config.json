@@ -391,7 +391,7 @@
                 }
             },
             {
-                "id": "layer_g5h6i",
+                "id": "ecogeo",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
@@ -485,7 +485,7 @@
                 }
             },
             {
-                "id": "layer_dd1m3",
+                "id": "josm",
                 "displayName": "@@config.layers.feature.layer_dd1m3.displayName",
                 "nameField": "siteShortName_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/OilSands/MapServer/0",
@@ -810,7 +810,7 @@
                 "legendMimeType": "image/jpeg"
             },
             {
-                "id": "wms6",
+                "id": "railroad",
                 "displayName": "@@config.layers.wms.wms6.displayName",
                 "format": "png",
                 "layerName": "railway.track",
