@@ -339,6 +339,19 @@ define([
 
                     break;
                 case "classBreaks":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field = renderer.field;
+                    symb.minValue = renderer.minValue;
+                    symb.rangeMaps = dojoArray.map(renderer.classBreakInfos, function (cbi) {
+                        return {
+                            label: cbi.label,
+                            maxValue: cbi.classMaxValue,
+                            imageUrl: legendLookup[cbi.label]
+                        };
+                    });
+
                     break;
                 default:
                     //Renderer we dont support
