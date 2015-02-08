@@ -394,36 +394,46 @@ define([
                             switch (serviceType) {
                                 case "option-feature":
 
+                                    //get data from feature layer endpoint
                                     promise = DataLoader.getFeatureLayer(loadSteps[stepId].getUrl());
 
                                     promise.then(function (event) {
                                         data = event;
-                                        //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
 
-                                        setSelectOptions(
-                                            optionStepContent.find("#featurePrimaryAttrlist"),
-                                            data.fields
-                                        );
+                                        //get data from feature layer's legend endpoint
+                                        var legendPromise = DataLoader.getFeatureLayerLegend(loadSteps[stepId].getUrl());
+                                        legendPromise.then(function (legendLookup) {
+                                            data.legendLookup = legendLookup;
 
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#featureStyleAttrlist"),
-                                        //    symbologyPreset
-                                        //);
+                                            //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
 
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#featureColourAttrlist"),
-                                        //    { selectOne: "Select One" }
-                                        //);
+                                            setSelectOptions(
+                                                optionStepContent.find("#featurePrimaryAttrlist"),
+                                                data.fields
+                                            );
 
-                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addFeatureDataset({
-                                                data: data,
-                                                primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
-                                                //style: optionStepContent.find("#featureStyleAttrlist").val(),
-                                                //colour: optionStepContent.find("#featureColourAttrpicker").val()
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#featureStyleAttrlist"),
+                                            //    symbologyPreset
+                                            //);
+
+                                            //setSelectOptions(
+                                            //    optionStepContent.find("#featureColourAttrlist"),
+                                            //    { selectOne: "Select One" }
+                                            //);
+
+                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
+                                                addFeatureDataset({
+                                                    data: data,
+                                                    primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
+                                                    //style: optionStepContent.find("#featureStyleAttrlist").val(),
+                                                    //colour: optionStepContent.find("#featureColourAttrpicker").val()
+                                                });
                                             });
+                                            loadURLStep.successLoadUrlStep();
+                                        }, function () {
+                                            loadURLStep.errorLoadUrlStep();
                                         });
-                                        loadURLStep.successLoadUrlStep();
                                     }, function () {
                                         loadURLStep.errorLoadUrlStep();
                                     });
@@ -679,11 +689,8 @@ define([
                 id: LayerLoader.nextId(),
                 displayName: obj.data.layerName,
                 nameField: obj.data.fields[parseInt(obj.primary)],
-                symbology: {
-                    type: "simple",
-                    imageUrl: "assets/images/sampleIcons/09.png"  //FOR NOW, until renderer trick is wired in
-                },
                 datagrid: DataLoader.createDatagridConfig(obj.data.fields),
+                symbology: DataLoader.createSymbologyConfig(obj.data.renderer, obj.data.legendLookup),                
                 url: obj.data.layerUrl
             }, featureLayer;
 
