@@ -323,6 +323,20 @@ define([
                     break;
 
                 case "uniqueValue":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field1 = renderer.field1;
+                    symb.field2 = renderer.field2;
+                    symb.field3 = renderer.field3;
+                    symb.valueMaps = dojoArray.map(renderer.uniqueValueInfos, function (uvi) {
+                        return {
+                            label: uvi.label,
+                            value: uvi.value,
+                            imageUrl: legendLookup[uvi.label]
+                        };
+                    });
+
                     break;
                 case "classBreaks":
                     break;
