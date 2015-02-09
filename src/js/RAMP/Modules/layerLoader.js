@@ -106,17 +106,15 @@ define([
         * @param {String} layerId config id of the layer
         */
         function removeFromMap(layerId) {
-            var bbLayer = RampMap.getBoundingBoxMapping()[layerId],
-                layer = map._layers[layerId],
-                inMap;  //map.getLayer is not reliable, so we use this
+            var map = RampMap.getMap(),
+                bbLayer = RampMap.getBoundingBoxMapping()[layerId],
+                layer = map._layers[layerId];
 
-            if (layer) {
-                inMap = true;
+            if (layer) {                
                 map.removeLayer(layer);
             } else {
-                //layer was kicked out of the map.  grab it from the registry
-                inMap = false;
-                layer = RAMP.layerRegistry[evt.layerId];
+                //layer was kicked out of the map.  grab it from the registry                
+                layer = RAMP.layerRegistry[layerId];
             }
 
             //if bounding box exists, and is in the map, remove it too
@@ -367,23 +365,8 @@ define([
 
                 var layerId = evt.layer.id;
 
-                //derive section layer is in and the config collection it is in
-                switch (layer.ramp.type) {
-                    case GlobalStorage.layerType.wms:
-                        layerSection = GlobalStorage.layerType.wms;
-                        configCollection = RAMP.config.layers.wms;                       
-                        break;
-
-                    case GlobalStorage.layerType.feature:
-                    case GlobalStorage.layerType.Static:
-                        layerSection = GlobalStorage.layerType.feature;
-                        configCollection = RAMP.config.layers.feature;                      
-                        break;
-                }
-
-                //get that failed layer outta here           
+                //get that failed layer outta here
                 removeFromMap(layerId);
-             
 
                 //if layer is in layer selector, update the status
                 if (evt.layer.ramp.load.inLS) {
@@ -448,20 +431,14 @@ define([
             onLayerRemove: function (evt) {
                 var map = RampMap.getMap(),
                     layer,
-                    bbLayer,
                     configIdx,
                     layerSection,
-                    configCollection,
-                    inMap;
+                    configCollection;
 
-                bbLayer = RampMap.getBoundingBoxMapping()[evt.layerId];
                 layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
-                if (layer) {
-                    inMap = true;
-                } else {
+                if (UtilMisc.isUndefined(layer)) {
                     //layer was kicked out of the map.  grab it from the registry
-                    inMap = false;
                     layer = RAMP.layerRegistry[evt.layerId];
                 }
 
@@ -470,38 +447,19 @@ define([
                     case GlobalStorage.layerType.wms:
                         layerSection = GlobalStorage.layerType.wms;
                         configCollection = RAMP.config.layers.wms;
-                        if (layer.ramp.load.inCount) {
-                            RAMP.layerCounts.wms -= 1;
-                            layer.ramp.load.inCount = false;
-                        }
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
                         layerSection = GlobalStorage.layerType.feature;
                         configCollection = RAMP.config.layers.feature;
-                        if (layer.ramp.load.inCount) {
-                            RAMP.layerCounts.feature -= 1;
-                            layer.ramp.load.inCount = false;
-                        }
                         break;
                 }
 
                 //remove item from layer selector
                 FilterManager.removeLayer(layerSection, evt.layerId);
 
-                //remove layer from map
-                if (inMap) {
-                    map.removeLayer(layer);
-                }
-
-                //if bounding box exists, and is in the map, remove it too
-                if (bbLayer) {
-                    if (map._layers[bbLayer.id]) {
-                        map.removeLayer(bbLayer);
-                        RAMP.layerCounts.bb -= 1;
-                    }
-                }
+                removeFromMap(evt.layerId);
 
                 //remove node from config
                 configIdx = configCollection.indexOf(layer.ramp.config);
