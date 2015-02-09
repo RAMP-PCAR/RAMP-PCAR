@@ -110,10 +110,10 @@ define([
                 bbLayer = RampMap.getBoundingBoxMapping()[layerId],
                 layer = map._layers[layerId];
 
-            if (layer) {                
+            if (layer) {
                 map.removeLayer(layer);
             } else {
-                //layer was kicked out of the map.  grab it from the registry                
+                //layer was kicked out of the map.  grab it from the registry
                 layer = RAMP.layerRegistry[layerId];
             }
 
@@ -512,8 +512,8 @@ define([
                             .map(function (i, elm) { return elm.id; });
 
                 cleanIdArray = idArray.filter(function (i, elm) {
-                    //check if layer is in error state.  error layers should not be part of the count
-                    return (FilterManager.getLayerState(elm) !== LayerItem.state.ERROR);
+                    //check if layer is in error state.  error layers should not be part of the count.  exception being the layer we are reloading
+                    return ((FilterManager.getLayerState(elm) !== LayerItem.state.ERROR) || (elm === evt.layerId));
                 });
 
                 //find where our index is
@@ -545,6 +545,7 @@ define([
                 }
 
                 //load the layer at the previous index
+                console.log("Reloading Layer at index " + layerIndex.toString());
                 _loadLayer(newLayer, layerIndex);
             },
 
