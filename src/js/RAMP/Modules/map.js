@@ -607,7 +607,8 @@ define([
                 user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
                 load: {
                     state: "loading",
-                    inLS: false  //layer has entry in layer selector
+                    inLS: false,  //layer has entry in layer selector
+                    inCount: false  //layer is included in the layer counts
                 }
             };
 

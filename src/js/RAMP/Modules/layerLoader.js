@@ -99,6 +99,58 @@ define([
         }
 
         /**
+        * Will remove a layer from the map, and adjust counts.
+        *
+        * @method onLayerError
+        * @private
+        * @param {String} layerId config id of the layer
+        */
+        function removeFromMap(layerId) {
+            var bbLayer = RampMap.getBoundingBoxMapping()[layerId],
+                layer = map._layers[layerId],
+                inMap;  //map.getLayer is not reliable, so we use this
+
+            if (layer) {
+                inMap = true;
+                map.removeLayer(layer);
+            } else {
+                //layer was kicked out of the map.  grab it from the registry
+                inMap = false;
+                layer = RAMP.layerRegistry[evt.layerId];
+            }
+
+            //if bounding box exists, and is in the map, remove it too
+            if (bbLayer) {
+                if (map._layers[bbLayer.id]) {
+                    map.removeLayer(bbLayer);
+                    RAMP.layerCounts.bb -= 1;
+                }
+            }
+
+            //just incase its really weird and layer is not in the registry
+            if (layer) {
+                //adjust layer counts
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        if (layer.ramp.load.inCount) {
+                            RAMP.layerCounts.wms -= 1;
+                            layer.ramp.load.inCount = false;
+                        }
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+
+                        if (layer.ramp.load.inCount) {
+                            RAMP.layerCounts.feature -= 1;
+                            layer.ramp.load.inCount = false;
+                        }
+                        break;
+                }
+            }
+        }
+
+        /**
         * This function initiates the loading of an ESRI layer object to the map.
         * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
         * Note: a point of confusion.  The layer objects "load" event may have already finished by the time this function is called.
@@ -127,7 +179,6 @@ define([
                     layerSection = GlobalStorage.layerType.wms;
                     if (UtilMisc.isUndefined(reloadIndex)) {
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
-                        RAMP.layerCounts.wms += 1;
 
                         // generate wms legend image url and store in the layer config
                         if (layerConfig.legendMimeType) {
@@ -145,6 +196,9 @@ define([
                         insertIdx = reloadIndex;
                     }
 
+                    RAMP.layerCounts.wms += 1;
+                    layer.ramp.load.inCount = true;
+
                     break;
 
                 case GlobalStorage.layerType.feature:
@@ -153,10 +207,12 @@ define([
                     if (UtilMisc.isUndefined(reloadIndex)) {
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
-                        RAMP.layerCounts.feature += 1;
                     } else {
                         insertIdx = reloadIndex;
                     }
+                    RAMP.layerCounts.feature += 1;
+                    layer.ramp.load.inCount = true;
+
                     break;
             }
 
@@ -309,6 +365,27 @@ define([
 
                 evt.layer.ramp.load.state = "error";
 
+                var layerId = evt.layer.id;
+
+                //derive section layer is in and the config collection it is in
+                switch (layer.ramp.type) {
+                    case GlobalStorage.layerType.wms:
+                        layerSection = GlobalStorage.layerType.wms;
+                        configCollection = RAMP.config.layers.wms;                       
+                        break;
+
+                    case GlobalStorage.layerType.feature:
+                    case GlobalStorage.layerType.Static:
+                        layerSection = GlobalStorage.layerType.feature;
+                        configCollection = RAMP.config.layers.feature;                      
+                        break;
+                }
+
+                //get that failed layer outta here           
+                removeFromMap(layerId);
+             
+
+                //if layer is in layer selector, update the status
                 if (evt.layer.ramp.load.inLS) {
                     updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
                 }
@@ -393,14 +470,20 @@ define([
                     case GlobalStorage.layerType.wms:
                         layerSection = GlobalStorage.layerType.wms;
                         configCollection = RAMP.config.layers.wms;
-                        RAMP.layerCounts.wms -= 1;
+                        if (layer.ramp.load.inCount) {
+                            RAMP.layerCounts.wms -= 1;
+                            layer.ramp.load.inCount = false;
+                        }
                         break;
 
                     case GlobalStorage.layerType.feature:
                     case GlobalStorage.layerType.Static:
                         layerSection = GlobalStorage.layerType.feature;
                         configCollection = RAMP.config.layers.feature;
-                        RAMP.layerCounts.feature -= 1;
+                        if (layer.ramp.load.inCount) {
+                            RAMP.layerCounts.feature -= 1;
+                            layer.ramp.load.inCount = false;
+                        }
                         break;
                 }
 
@@ -412,9 +495,12 @@ define([
                     map.removeLayer(layer);
                 }
 
-                //if bounding box, remove it too
+                //if bounding box exists, and is in the map, remove it too
                 if (bbLayer) {
-                    map.removeLayer(bbLayer);
+                    if (map._layers[bbLayer.id]) {
+                        map.removeLayer(bbLayer);
+                        RAMP.layerCounts.bb -= 1;
+                    }
                 }
 
                 //remove node from config
@@ -440,7 +526,8 @@ define([
                     layerIndex,
                     inMap,
                     layerList,
-                    idArray;
+                    idArray,
+                    cleanIdArray;
 
                 layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
@@ -465,8 +552,14 @@ define([
                 idArray = layerList
                             .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                             .map(function (i, elm) { return elm.id; });
+
+                cleanIdArray = idArray.filter(function (i, elm) {
+                    //check if layer is in error state.  error layers should not be part of the count
+                    return (FilterManager.getLayerState(elm) !== LayerItem.state.ERROR);
+                });
+
                 //find where our index is
-                layerIndex = dojoArray.indexOf(idArray, evt.layerId);
+                layerIndex = dojoArray.indexOf(cleanIdArray, evt.layerId);
 
                 if (layer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
@@ -509,6 +602,5 @@ define([
             },
 
             nextId: nextId
-
         };
     });
