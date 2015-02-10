@@ -1,10 +1,24 @@
 ﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
 
 /**
-* A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
+* A module for loading from web services and local files.  Fetches data via File API (IE9 is currently not supported) or
+* via XmlHttpRequest.  Handles GeoJSON, Shapefiles and CSV currently.  Includes utilities for parsing files into GeoJSON
+* (currently the selected intermediate format) and converting GeoJSON into FeatureLayers for consumption by the ESRI JS
+* API.
 *
 * @module RAMP
 * @submodule DataLoader
+* @uses dojo/Deferred 
+* @uses dojo/query
+* @uses dojo/_base/array
+* @uses esri/request
+* @uses esri/SpatialReference
+* @uses esri/layers/FeatureLayer
+* @uses esri/renderers/SimpleRenderer
+* @uses ramp/layerLoader
+* @uses ramp/globalStorage
+* @uses ramp/map
+* @uses utils/util
 */
 
 define([
@@ -21,6 +35,11 @@ define([
         ) {
         "use strict";
 
+        /**
+        * Maps GeoJSON geometry types to a set of default renders defined in GlobalStorage.DefaultRenders
+        * @property featureTypeToRenderer {Object}
+        * @private
+        */
         var featureTypeToRenderer = {
             Point: "circlePoint", MultiPoint: "circlePoint",
             LineString: "solidLine", MultiLineString: "solidLine",
@@ -63,11 +82,20 @@ define([
                         // http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
                         function str2ab(str) {
                             var buf = new ArrayBuffer(str.length * 2), // 2 bytes for each char
-                                bufView = new Uint16Array(buf);
-                            for (var i = 0, strLen = str.length; i < strLen; i++) {
-                                bufView[i] = str.charCodeAt(i);
+                                bufView = new Uint16Array(buf),
+                                i = 0, j = 0, strLen = str.length, code;
+
+                            while (i < strLen) {
+                                // jshint bitwise:false
+                                code = str.charCodeAt(i++);
+                                if (code & 0xff00) {
+                                    bufView[j++] = (0xff00 & code) >> 8;
+                                }
+                                bufView[j++] = 0xff & code;
+                                // jshint bitwise:true
                             }
-                            return buf;
+
+                            return buf.slice(0,j);
                         }
 
                         if (args.type === 'binary') {
