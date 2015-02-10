@@ -164,7 +164,7 @@ require([
                         id: "serviceType",
                         type: "ChoiceBrick",
                         config: {
-                            template: "template_name", //optional, has a default
+                            //template: "template_name", //optional, has a default
                             header: "Service Type", //optional, has a default
                             choices: [
                                 {

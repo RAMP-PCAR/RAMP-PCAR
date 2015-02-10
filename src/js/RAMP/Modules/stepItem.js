@@ -41,14 +41,14 @@ define([
     "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
 
     /* Text */
-    "dojo/text!./templates/layer_selector_template.json",
+    "dojo/text!./templates/filter_manager_template.json",
 
     /* Util */
     "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         Evented, declare, lang,
-        layer_selector_template,
+        filter_manager_template,
         TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
@@ -56,13 +56,12 @@ define([
         var LayerItem,
             ALL_STATES_CLASS,
 
-            templates = JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+            templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template)),
+
+            bricks,
 
             Brick,
-            ChoiceBrick,
-            bricks = {
-                ChoiceBrick: ChoiceBrick
-            };
+            ChoiceBrick;
 
         Brick = Base.extend({
             initialize: function (id, config) {
@@ -74,12 +73,8 @@ define([
                     }
                 );
 
-                this.node = this.template(this.template, this);
+                this.node = $(_template(this.template, this));
 
-            },
-
-            template: function (key, data) {
-                this.node = $(_template(key, data));
             },
 
             isValid: function () {
@@ -147,6 +142,10 @@ define([
             }
         });
 
+        bricks = {
+            ChoiceBrick: ChoiceBrick
+        };
+
         /**
              * Populates a template specified by the key with the supplied data.
              *
@@ -157,13 +156,13 @@ define([
              * @return {String} a string template filled with supplied data
              */
         function _template(key, data) {
+            var d = lang.clone(data) || {};
             tmpl.cache = {};
             tmpl.templates = templates;
 
-            data = data || {};
-            data.fn = TmplUtil;
+            d.fn = TmplUtil;
 
-            return tmpl(key, data);
+            return tmpl(key, d);
         }
 
         LayerItem = declare([Evented], {
@@ -282,7 +281,7 @@ define([
                          * @type Object
                          * @default layer_selector_template.json
                          */
-                        templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+                        templates: null, // JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
                         /**
                          * State of this LayerItem; can be overwritten by `options.state`.
@@ -291,7 +290,7 @@ define([
                          * @type String
                          * @default LayerItem.state.DEFAULT
                          */
-                        state: LayerItem.state.DEFAULT,
+                        state: "", //LayerItem.state.DEFAULT,
 
                         /**
                          * Specifies type of this LayerItem and the name of the layer item template to use; can be overwritten by `options.type`.

@@ -317,6 +317,8 @@
             </div>
         ",
 
+        "default_choice_brick_template": " ",
+
         "a_d_options_bg": "
             <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
         ",
