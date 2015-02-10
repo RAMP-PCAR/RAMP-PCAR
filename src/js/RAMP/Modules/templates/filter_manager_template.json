@@ -234,7 +234,10 @@
                 <div class='global-details'>
                     <div class='global-controls'>
                         <ul class='btn-group margin-top-none'>
-                            {%=i18n.t('filterManager.allData')%}
+                            <button class='btn btn-sm button-none' id='addDatasetToggle'> 
+                                <i class='fa fa-plus'></i>
+                                <span class='on-right'>{%= i18n.t('addDataset.title') %}</span>
+                             </button>
                         </ul>
                     </div>
                 </div>
@@ -314,7 +317,398 @@
             </div>
         ",
 
+        "a_d_options_bg": "
+            <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+        ",
+
+        "a_d_choice_button": "
+            <button class='btn btn-sm btn-default btn-option {%= o.state %}' data-option='{%= o.option %}'>{%= o.optionName %}</button>
+        ",        
+
+        "a_d_choice_step":"
+                <h3 class='h6'>{%= o.header %}</h3>
+                <div class='btn-group choice-group' data-choice-id='{%= o.choiceId %}'>
+                    {%              
+                        for (var option in o.options ) {
+                            if (o.options.hasOwnProperty(option)) {
+                                include('a_d_choice_button', {
+                                    state: o.active ? 'btn-action' : '',
+                                    option: option,
+                                    optionName: o.options[option]
+                                });
+                            }
+                        }
+                    %}
+                </div>
+        ",
+
+        "a_d_double_list_list":"
+
+                <div class='input-group list-group' data-list-id='{%= o.listId %}'>
+                    <h3 class='h6'>{%= o.header %}</h3>
+                    <label class='wb-inv' for='{%= o.listId %}list'>{%= o.label %}:</label>
+                    <select name='select' class='form-control list-control input-sm' id='{%= o.listId %}list' data-role='none'>
+                        <option value=''>blah</option>
+                    </select>
+                </div>
+        ",
+
+        "a_d_double_list_step":"
+                <div class='double-list-container'>
+                    {%     
+                        o.lists.forEach(function(list) {
+                            include('a_d_double_list_list', list);
+                        });
+                    %}
+                </div>
+        ",
+
+        "a_d_list_list":"
+                {% if(o.header) { %}
+                    <h4 class='h6 smaller'>{%= o.header %}</h3>
+                {% } %}
+
+                <div class='input-group list-group' data-list-id='{%= o.listId %}'>
+                    <label class='wb-inv' for='{%= o.listId %}list'>{%= o.label %}:</label>
+                    <select name='select' class='form-control list-control input-sm' id='{%= o.listId %}list' data-role='none'>
+                        <option value=''>blah</option>
+                    </select>
+                </div>
+        ",        
+
+        "a_d_list_step":"
+                <h3 class='h6'>{%= o.header %}</h3>
+
+                {%     
+                    o.lists.forEach(function(list) {
+                        include('a_d_list_list', list);
+                    });
+                %}
+        ",
+
+        "a_d_colour_picker":"
+            <h3 class='h6'>{%= o.header %}</h3>
+
+            <div class='color-picker-container'>
+                <div class='input-group' data-list-id='{%= o.listId %}'>
+                    <label class='wb-inv' for='{%= o.listId %}picker'>{%= o.label %}:</label>
+                    <input name='input' class='color form-control picker-control input-sm' id='{%= o.listId %}picker' data-role='none'/>
+                </div>
+                <div class='color-picker-swatch' role='presentation' id='{%= o.listId %}pickerSwatch'></div>
+            </div>
+        ",
+
+        "a_d_text_field":"
+            <h3 class='h6'>{%= o.header %}</h3>
+
+            <div class='input-group' data-list-id='{%= o.listId %}'>
+                <label class='wb-inv' for='{%= o.listId %}textField'>{%= o.label %}:</label>
+                <input name='input' class='form-control input-sm' id='{%= o.listId %}textField' data-role='none'/>
+            </div>
+        ",
+
+        "a_d_load_file_or_URL_step": "
+            <h3 class='h6'>{%= o.header %}</h3> 
+
+            <div class='input-group'>
+                <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                <div class='input-group-btn browse-files'>
+                    <div class='input-container'>
+                        <input type='file' data-role='upload'>
+                    </div>
+                    <span class='btn btn-default btn-sm browse-button' id='{%= o.idPrefix %}pseudoBrowse'>
+                        <i class='fa fa-file'></i>
+                        <i class='fa fa-file-o'></i>
+                        <span class='on-right wb-inv'>Browse</span>
+                    </span>                                                                                                
+                </div>
+
+                <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                
+                <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+                <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                <span class='input-group-btn'>
+                    <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>{%= i18n.t('addDataset.load') %}</button>
+                    <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>{%= i18n.t('addDataset.cancel') %}</button>
+                </span>
+            </div>
+        ",
+
+        "a_d_load_URL_step": "
+                <h3 class='h6'>{%= o.header %}</h3> 
+
+                <div class='input-group'>
+                    <label class='wb-inv' for='{%= o.idPrefix %}input'>{%= o.label %}</label>
+                    <input name='input' class='form-control load-url-control input-sm' id='{%= o.idPrefix %}input' data-role='none' placeholder='{%= o.placeholder %}'/>
+                    <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+                    <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    <span class='input-group-btn wb-in'>
+                        <button id='{%= o.idPrefix %}inputSubmit' class='btn btn-primary btn-sm btn-option btn-action btn-load disabled' data-action='{%= o.idPrefix %}' type='button'>{%= i18n.t('addDataset.load') %}</button>
+                        <button id='{%= o.idPrefix %}cancel' class='btn btn-info btn-sm btn-option btn-action btn-cancel' data-action='{%= o.idPrefix %}cancel' type='button'>{%= i18n.t('addDataset.cancel') %}</button>
+                    </span>
+                </div>
+        ",
+
+        "a_d_add_dataset_button": "
+            <div class='btn-add-dataset-container'>
+                <button class='btn btn-primary btn-add-dataset'>{%= i18n.t('addDataset.addDatasetButton') %}</button>
+            </div>
+        ",
+
+        "add_dataset_content_template": "
+            <div class='add-dataset-content'> 
+                <div class='step step-1 current-step'>
+                    <div class='step-content'>
+                        {% include('a_d_choice_step', {
+                            header: i18n.t('addDataset.dataSource'),
+                            active: true,
+                            options: {
+                                'option-service': i18n.t('addDataset.dataSourceService'),
+                                'option-file': i18n.t('addDataset.dataSourceFile')
+                            }
+                        }); %}
+                    </div>
+
+                    <div class='step-options-container'>
+                        {% include('a_d_options_bg', o); %}
+
+                        <div class='step-options'>
+                            <div class='step step-2 option-service' id='loadServiceStep'>
+                                <div class='step-content load-url-step'>
+                                    {% include('a_d_choice_step', {
+                                        header: i18n.t('addDataset.serviceType'),
+                                        choiceId: 'serviceType',
+                                        options: {
+                                            'option-feature': i18n.t('addDataset.serviceTypeFeature'),
+                                            'option-wms': i18n.t('addDataset.serviceTypeWMS')
+                                        }
+                                    }); %}
+
+                                    {% include('a_d_load_URL_step', {
+                                        header: i18n.t('addDataset.serviceLayerURL'),
+                                        label:  i18n.t('addDataset.serviceLayerURL'),
+                                        idPrefix: 'serviceURL',
+                                        placeholder: i18n.t('addDataset.serviceLayerURLPlaceholder')
+                                    }); %}
+                                </div>
+
+                                <div class='step-options-container'>
+                                    {% include('a_d_options_bg', o); %}
+
+                                    <div class='step-options'>
+                                        <div class='step step-3 option-feature' id='featureAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.primaryAttribute'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
+                                                            listId: 'featurePrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_add_dataset_button', o); %}
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-wms' id='wmsAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.layerName'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.layerName'),
+                                                            listId: 'wmsLayerNameAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_add_dataset_button', o); %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class='step step-2 option-file' id='loadFileStep'>
+                                    <div class='step-content load-file-step'>
+                                        {% include('a_d_choice_step', {
+                                            header: i18n.t('addDataset.fileType'),
+                                            choiceId: 'fileType',
+                                            options: {
+                                                'option-geojson': i18n.t('addDataset.geojson'),
+                                                'option-csv': i18n.t('addDataset.csv'),
+                                                'option-shapefile': i18n.t('addDataset.shapefile')
+                                            }
+                                        }); %}
+
+                                        {% include('a_d_load_file_or_URL_step', {
+                                            header: i18n.t('addDataset.fileOrURL'),
+                                            label:  i18n.t('addDataset.fileOrURL'),
+                                            idPrefix: 'fileOrURL',
+                                            placeholder: i18n.t('addDataset.fileOrURLPlaceholder')
+                                        }); %}
+                                    </div>
+
+                                <div class='step-options-container'>
+                                    {% include('a_d_options_bg', o); %}
+
+                                    <div class='step-options'>
+                                        <div class='step step-3 option-geojson' id='geojsonAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'geojsonDatasetNameAttr'
+                                                    }); 
+                                                %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.primaryAttribute'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
+                                                            listId: 'geojsonPrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'geojsonColourAttr'
+                                                    }); 
+                                                %} 
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-csv' id='csvAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'csvDatasetNameAttr'
+                                                    }); 
+                                                %} 
+
+                                                {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.primaryAttribute'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
+                                                            listId: 'csvPrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+                                                
+                                                {% include('a_d_double_list_step', {
+                                                    lists: [
+                                                        {
+                                                            header: i18n.t('addDataset.latitude'),
+                                                            label:  i18n.t('addDataset.latitude'),
+                                                            listId: 'csvLatitudeAttr'
+                                                        },
+                                                        {
+                                                            header: i18n.t('addDataset.longitude'),
+                                                            label:  i18n.t('addDataset.longitude'),
+                                                            listId: 'csvLongitudeAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+            
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'csvColourAttr'
+                                                    }); 
+                                                %} 
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                                                                                
+                                            </div>
+                                        </div>
+
+                                        <div class='step step-3 option-shapefile' id='shapefileAttrStep'>
+                                            <div class='step-content load-url-step'>
+                                                {% include('a_d_text_field', 
+                                                    {
+                                                        header: i18n.t('addDataset.datasetName'),
+                                                        label:  i18n.t('addDataset.datasetName'),
+                                                        listId: 'shapefileDatasetNameAttr'
+                                                    }); 
+                                                %}
+
+                                                {% include('a_d_list_step', {
+                                                    header: i18n.t('addDataset.primaryAttribute'),
+                                                    lists: [
+                                                        {
+                                                            label:  i18n.t('addDataset.primaryAttribute'),
+                                                            listId: 'shapefilePrimaryAttr'
+                                                        }
+                                                    ]                                                                    
+                                                }); %}
+
+                                                {% include('a_d_colour_picker', 
+                                                    {
+                                                        header: i18n.t('addDataset.colour'),
+                                                        label:  i18n.t('addDataset.colour'),
+                                                        listId: 'shapefileColourAttr'
+                                                    }); 
+                                                %} 
+
+                                                {% include('a_d_add_dataset_button', o); %}                                                                                                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>                 
+                    </div>                   
+                </div>
+            </div>
+        ",
+
+        "a_d_icon_solidLine": "
+            data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect fill='#{%= o.colour %}' x='3' y='14' width='24' height='2'></rect></svg>
+        ",
+
+        "a_d_icon_outlinedPoly": "
+            data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><rect fill='#{%= o.colour %}' x='4' y='4' width='22' height='22'></rect></svg>
+        ",
+
+
+        "a_d_icon_circlePoint": "
+            data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><circle cx='15' cy='15' r='5' fill='#{%= o.colour %}' /></svg>
+        ",
+
+
+        "add_dataset_template": "            
+            <div id='add-dataset-section-container' tabindex='-1'>
+                <div id='add-dataset-section'>
+                    <section>
+                        <h2 class='mrgn-tp-sm mrgn-bttm-sm h5'>
+                            {%= i18n.t('addDataset.title') %}
+                        </h2>
+
+                        <button class='button-none button-close _tooltip' title='{%= i18n.t('gui.actions.close') %}'>
+                            <span class='wb-invisible'>{%= i18n.t('gui.actions.close') %}</span>
+                        </button>
+
+                        <div class='add-dataset-content'> </div>
+                    </section>
+                </div>
+            </div>
+        ",
+
         "filter_manager_template2": "
+            
             <div id='categories'>
                 <div id='filterGlobalToggles' class='global-toggles'>
                     {% include('filter_global_row_template', o.config.templates);%}
@@ -323,8 +717,8 @@
                 <ul id='layerList' role='listbox' aria-label='{%= i18n.t('filterManager.layerListLabel') %}'>
                    
                 </ul>
-                <div class='clearBoth'>
-                </div>
             </div>
+
+            {% include('add_dataset_template', o); %}
         "
 }

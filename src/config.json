@@ -391,7 +391,7 @@
                 }
             },
             {
-                "id": "layer_g5h6i",
+                "id": "ecogeo",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
                 "nameField": "prj_nam_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
@@ -484,8 +484,62 @@
                     }
                 }
             },
+             {
+                "id": "citycode",
+                "displayName": "CITY CODE",
+                "nameField": "name",
+                "url": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Common/CommonGIS/MapServer/2",
+                "metadataUrl": "http://intranet.ecdmp-stage.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id=1c0eb1b2-93ae-49ae-a3ce-e495d8fd767b&_=1417717957845",
+                "catalogueUrl": "http://www.google.ca",
+                "minScale": 0,
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "detailsCol",
+                            "fieldName": "prj_nam_en",
+                            "width": "60px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 0,
+                            "title": "Details",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "name",
+                            "width": "250px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Name",
+                            "columnTemplate": "title_span"
+                        }
+                    ]
+                },
+                "symbology": {                   
+                    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//AAAAACehEj6cBQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAACVJREFUKJFjYBgFOAAjIyMuGSYmJuxyIBkccuRJ4bELnwtHCAAATxgAO4yg4nkAAAAASUVORK5CYII=",
+                    "type": "simple"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.9
+                    }
+                }                
+            },
             {
-                "id": "layer_dd1m3",
+                "id": "josm",
                 "displayName": "@@config.layers.feature.layer_dd1m3.displayName",
                 "nameField": "siteShortName_en",
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/OilSands/MapServer/0",
@@ -810,7 +864,7 @@
                 "legendMimeType": "image/jpeg"
             },
             {
-                "id": "wms6",
+                "id": "railroad",
                 "displayName": "@@config.layers.wms.wms6.displayName",
                 "format": "png",
                 "layerName": "railway.track",

@@ -32,7 +32,7 @@
             <div class='basemap-list-pane'>
                 {% if(!o.isActive) { %}
                     <div class='basemap-info-notice simple'>
-                        <p>Page refresh required</p>
+                        <p>{%= i18n.t('basemapSelector.refreshRequired')%}</p>
                     </div>
                 {% } %}
 

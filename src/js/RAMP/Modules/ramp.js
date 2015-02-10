@@ -60,32 +60,7 @@ define([
             loadStrings: function () {
                 // doesn't seem to be doing a lot, this function
             },
-
-            /**
-            * Returns the feature layer config for the given url
-            *
-            * @param {String} url
-            * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-            * @method getLayerConfig
-            */
-            getLayerConfig: function (url, wmsName) {
-                if (!GlobalStorage.urlCfg) {
-                    GlobalStorage.urlCfg = {};
-                }
-
-                var res = UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature), function (layerConfig) {
-                    if (wmsName == null) {
-                        return layerConfig.url === url;
-                    } else {
-                        return (layerConfig.url.indexOf(url) >= 0 && layerConfig.layerName === wmsName);
-                    }
-                });
-
-                GlobalStorage.urlCfg[url] = res;
-
-                return GlobalStorage.urlCfg[url];
-            },
-
+          
             /**
             * Returns the feature layer config for the given id
             *
@@ -100,17 +75,6 @@ define([
             },
 
             /**
-             * Gets the defined symbology from a layer's web service
-             * @method _getSymbolConfig
-             * @param {String} layerUrl A URL to the feature layer service
-             * @param {String} wmsName WMS Layer name.  Optional.  Should only be provided if attempting to get a WMS layer.
-             * @returns {esri/layer/symbology} The defined symbology from the layer definition
-             */
-            _getSymbolConfig: function (layerUrl, wmsName) {
-                return this.getLayerConfig(layerUrl, wmsName).symbology;
-            },
-
-            /**
             * Given a feature object or a graphic object (or any object that has a getLayer method and an
             * attributes field) return the object containing the image URL and legend text for that
             * feature/graphic object.
@@ -120,7 +84,7 @@ define([
             * @method getSymbolForFeature
             */
             getSymbolForFeature: function (feature) {
-                var layerConfig = this.getLayerConfig(feature.getLayer().url);
+                var layerConfig = feature.getLayer().ramp.config;
 
                 //as this function is used by templating, we piggyback the logic here
                 return UtilTmpl.getGraphicIcon(feature, layerConfig);

@@ -420,8 +420,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     oneLayer = one.getLayer();
                     twoLayer = two.getLayer();
                     objectIdField = oneLayer.objectIdField;
-                    oneKey = oneLayer.url + one.attributes[objectIdField];
-                    twoKey = twoLayer.url + two.attributes[objectIdField];
+                    oneKey = oneLayer.sourceLayerId + one.attributes[objectIdField];
+                    twoKey = twoLayer.sourceLayerId + two.attributes[objectIdField];
                 }
 
                 return oneKey === twoKey;
@@ -1008,7 +1008,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", ".sort-handle", function (event) { 
+                        .on("keyup", ".sort-handle", function (event) {
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -1103,7 +1103,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         });
                 });
             },
-                        
+
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter
@@ -1168,6 +1168,132 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             */
             containsInDom: function (el) {
                 return $.contains(document.documentElement, el);
-            }			
+            },
+
+            styleBrowseFilesButton: function (nodes) {
+                var input,
+                    button;
+
+                function focusIn(event) {
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover");
+                }
+
+                function focusOut(event) {
+                    event.data.button.removeClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseEnter(event) {
+                    event.data.button.not(".disabled").addClass("btn-hover");
+                }
+
+                function mouseLeave(event) {
+                    event.data.button.removeClass("btn-hover btn-active");
+                }
+
+                function mouseDown(event) {
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseUp(event) {
+                    event.data.button.removeClass("btn-active");
+                }
+
+                nodes.each(function (i, node) {
+                    node = $(node);
+                    input = node.find("input[type='file']");
+                    button = node.find(".browse-button");
+
+                    input
+                        .on("focusin", { button: button }, focusIn)
+                        .on("focusout", { button: button }, focusOut)
+
+                        .on("mouseenter", { button: button }, mouseEnter)
+                        .on("mouseleave", { button: button }, mouseLeave)
+
+                        .on("mousedown", { button: button }, mouseDown)
+                        .on("mouseup", { button: button }, mouseUp)
+                    ;
+                });
+            },
+
+            /**
+            * Detects either cell or line delimiter in a given csv data.
+            *
+            * @method detectDelimiter
+            * @static
+            * @param {String} data csv content
+            * @param {String} [type] Type of the delimiter to detect. Possible values "cell" or "line". Defaults to "cell".
+            * @return {String} Detected delimiter
+            */
+            detectDelimiter: function (data, type) {
+                var count = 0,
+                    detected,
+
+                    escapeDelimiters = ['|', '^'],
+                    delimiters = {
+                        cell: [',', ';', '\t', '|', '^'],
+                        line: ['\r\n', '\r', '\n']
+                    };
+
+                type = type !== "cell" && type !== "line" ? "cell" : type;
+
+                delimiters[type].forEach(function (delimiter) {
+                    var needle = delimiter,
+                        matches;
+
+                    if (escapeDelimiters.indexOf(delimiter) !== -1) {
+                        needle = '\\' + needle;
+                    }
+
+                    matches = data.match(new RegExp(needle, 'g'));
+                    if (matches && matches.length > count) {
+                        count = matches.length;
+                        detected = delimiter;
+                    }
+                });
+
+                console.log(type + " delimiter detected: '" + (detected || delimiters[type][0]) + "'");
+
+                return (detected || delimiters[type][0]);
+            },
+
+            /**
+            * Converts HEX colour to RGB.
+            * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
+            *
+            * @method hexToRgb
+            * @static
+            * @param {String} hex hex colour code
+            * @return {Object} ojbect containing r, g, and b components of the supplied colour
+            */
+            hexToRgb: function (hex) {
+                // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+                var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+                hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                    return r + r + g + g + b + b;
+                });
+
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            },
+
+            /**
+            * Converts RGB colour to HEX.
+            * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
+            *
+            * @method rgbToHex
+            * @static 
+            * @param {Number} r r component
+            * @param {Number} g g component
+            * @param {Number} b b component
+            * @return {Object} hex colour code 
+            */
+            rgbToHex: function (r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
         };
     });

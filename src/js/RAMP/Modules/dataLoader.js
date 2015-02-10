@@ -1,64 +1,46 @@
-﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP */
+﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
 
 /**
-* A module for loading from web services and local files.  Fetches and prepares data for consumption by the ESRI JS API.
-* 
+* A module for loading from web services and local files.  Fetches data via File API (IE9 is currently not supported) or
+* via XmlHttpRequest.  Handles GeoJSON, Shapefiles and CSV currently.  Includes utilities for parsing files into GeoJSON
+* (currently the selected intermediate format) and converting GeoJSON into FeatureLayers for consumption by the ESRI JS
+* API.
+*
 * @module RAMP
 * @submodule DataLoader
+* @uses dojo/Deferred 
+* @uses dojo/query
+* @uses dojo/_base/array
+* @uses esri/request
+* @uses esri/SpatialReference
+* @uses esri/layers/FeatureLayer
+* @uses esri/renderers/SimpleRenderer
+* @uses ramp/layerLoader
+* @uses ramp/globalStorage
+* @uses ramp/map
+* @uses utils/util
 */
 
 define([
-        "dojo/Deferred", "dojo/query", "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "ramp/layerLoader", "utils/util", "dojo/_base/array"
-    ],
+        "dojo/Deferred", "dojo/query", "dojo/_base/array",
+        "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "esri/renderers/SimpleRenderer",
+        "ramp/layerLoader", "ramp/globalStorage", "ramp/map",
+        "utils/util"
+],
     function (
-            Deferred, query, EsriRequest, SpatialReference, FeatureLayer, LayerLoader, Util, dojoArray
+            Deferred, query, dojoArray,
+            EsriRequest, SpatialReference, FeatureLayer, SimpleRenderer,
+            LayerLoader, GlobalStorage, RampMap,
+            Util
         ) {
         "use strict";
 
-        var defaultRenderers = {
-            circlePoint: {
-                geometryType: "esriGeometryPoint",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSMS",
-                        style: "esriSMSCircle",
-                        color: [67, 100, 255, 200],
-                        size: 7
-                    }
-                }
-            },
-            solidLine: {
-                geometryType: "esriGeometryPolyline",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSLS",
-                        style: "esriSLSSolid",
-                        color: [90, 90, 90, 200],
-                        width: 2
-                    }
-                }
-            },
-            outlinedPoly: {
-                geometryType: "esriGeometryPolygon",
-                renderer: {
-                    type: "simple",
-                    symbol: {
-                        type: "esriSFS",
-                        style: "esriSFSSolid",
-                        color: [76,76,125,200],
-                        outline: {
-                            type: "esriSLS",
-                            style: "esriSLSSolid",
-                            color: [110,110,110,255],
-                            width: 1
-                        }
-                    }
-                }
-            }
-        },
-        featureTypeToRenderer = {
+        /**
+        * Maps GeoJSON geometry types to a set of default renders defined in GlobalStorage.DefaultRenders
+        * @property featureTypeToRenderer {Object}
+        * @private
+        */
+        var featureTypeToRenderer = {
             Point: "circlePoint", MultiPoint: "circlePoint",
             LineString: "solidLine", MultiLineString: "solidLine",
             Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
@@ -68,7 +50,7 @@ define([
         * Loads a dataset using async calls, returns a promise which resolves with the dataset requested.
         * Datasets may be loaded from URLs or via the File API and depending on the options will be loaded
         * into a string or an ArrayBuffer.
-        * 
+        *
         * @param {Object} args Arguments object, should contain either {string} url or {File} file and optionally
         *                      {string} type as "text" or "binary" (text by default)
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
@@ -87,6 +69,7 @@ define([
                     promise = Util.readFileAsText(args.file);
                 }
 
+                promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
             } else if (args.url) {
                 try {
                     promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
@@ -94,17 +77,45 @@ define([
                     def.reject(e);
                 }
 
+                promise.then(
+                    function (data) {
+                        // http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+                        function str2ab(str) {
+                            var buf = new ArrayBuffer(str.length * 2), // 2 bytes for each char
+                                bufView = new Uint16Array(buf),
+                                i = 0, j = 0, strLen = str.length, code;
+
+                            while (i < strLen) {
+                                // jshint bitwise:false
+                                code = str.charCodeAt(i++);
+                                if (code & 0xff00) {
+                                    bufView[j++] = (0xff00 & code) >> 8;
+                                }
+                                bufView[j++] = 0xff & code;
+                                // jshint bitwise:true
+                            }
+
+                            return buf.slice(0,j);
+                        }
+
+                        if (args.type === 'binary') {
+                            def.resolve(str2ab(data));
+                            return;
+                        }
+                        def.resolve(data);
+                    },
+                    function (error) { def.reject(error); }
+                );
             } else {
                 throw new Error("One of url or file should be specified");
             }
 
-            promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
             return def.promise;
         }
 
         /**
         * Fetch relevant data from a single feature layer endpoint.  Returns a promise which
-        * resolves with a partial list of properites extracted from the endpoint.
+        * resolves with a partial list of properties extracted from the endpoint.
         *
         * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
         * @returns {Promise} a promise resolving with an object containing basic properties for the layer
@@ -113,7 +124,7 @@ define([
             var def = new Deferred(), promise;
 
             try {
-                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json'})).promise;
+                promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json' })).promise;
             } catch (e) {
                 def.reject(e);
             }
@@ -121,12 +132,65 @@ define([
             promise.then(
                 function (data) {
                     var res = {
-                        layerId: data.id,
+                        layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
                         layerName: data.name,
                         layerUrl: featureLayerEndpoint,
                         geometryType: data.geometryType,
-                        fields: dojoArray.map(data.fields, function (x) { return x.name; })
+                        fields: dojoArray.map(data.fields, function (x) { return x.name; }),
+                        renderer: data.drawingInfo.renderer
                     };
+
+                    def.resolve(res);
+                },
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
+            );
+
+            return def.promise;
+        }
+
+        /**
+        * Fetch relevant data from a legend related to a feature layer endpoint.  Returns a promise which
+        * resolves with a partial list of properties extracted from the endpoint.
+        *
+        * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
+        * @returns {Promise} a promise resolving with an object mapping legend labels to data URLs for those labels
+        */
+        function getFeatureLayerLegend(featureLayerEndpoint) {
+            var def = new Deferred(), promise, legendUrl, idx, layerIdx;
+
+            //snip off last slash if there
+            idx = featureLayerEndpoint.indexOf('/', featureLayerEndpoint.length - 1);
+            if (idx > -1) {
+                legendUrl = featureLayerEndpoint.substring(0, idx - 1);
+            } else {
+                legendUrl = featureLayerEndpoint;
+            }
+
+            //snip off & store layer index, add legend to url
+            idx = legendUrl.lastIndexOf('/');
+            layerIdx = parseInt(legendUrl.substring(idx + 1));
+            legendUrl = legendUrl.substring(0, idx) + '/legend?f=json';
+
+            try {
+                promise = (new EsriRequest({ url: legendUrl })).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            promise.then(
+                function (data) {
+                    //find our layer in the legend
+                    var res = {};
+                    dojoArray.forEach(data.layers, function (layer) {
+                        if (layer.layerId === layerIdx) {
+                            dojoArray.forEach(layer.legend, function (legendItem) {
+                                res[legendItem.label] = "data:" + legendItem.contentType + ';base64,' + legendItem.imageData;
+                            });
+                        }
+                    });
 
                     def.resolve(res);
                 },
@@ -144,7 +208,7 @@ define([
         * request against the specified URL, it requests WMS 1.3 and it is capable of parsing
         * 1.3 or 1.1.1 responses.  It returns a promise which will resolve with basic layer
         * metadata and querying information.
-        * 
+        *
         * metadata response format:
         *   { queryTypes: [mimeType], layers: [{name, desc, queryable(bool)}] }
         *
@@ -177,7 +241,7 @@ define([
                     var layers, res = {};
 
                     try {
-                        layers = dojoArray.map(query('Layer > Name',data), function (nameNode) { return nameNode.parentNode; });
+                        layers = dojoArray.map(query('Layer > Name', data), function (nameNode) { return nameNode.parentNode; });
                         res.layers = dojoArray.map(layers, function (x) {
                             var name = getImmediateChild(x, 'Name').textContent,
                                 titleNode = getImmediateChild(x, 'Title');
@@ -206,8 +270,7 @@ define([
         /**
         * Performs in place assignment of integer ids for a GeoJSON FeatureCollection.
         */
-        function assignIds(geoJson)
-        {
+        function assignIds(geoJson) {
             if (geoJson.type !== 'FeatureCollection') {
                 throw new Error("Assignment can only be performed on FeatureCollections");
             }
@@ -216,6 +279,127 @@ define([
                     val.id = idx;
                 }
             });
+        }
+
+        /**
+         * Extracts fields from the first feature in the feature collection, does no
+         * guesswork on property types and calls everything a string.
+         */
+        function extractFields(geoJson) {
+            if (geoJson.features.length < 1) {
+                throw new Error("Field extraction requires at least one feature");
+            }
+
+            return dojoArray.map(Object.keys(geoJson.features[0].properties), function (prop) {
+                return { name: prop, type: "esriFieldTypeString" };
+            });
+        }
+
+        /**
+        * Will generate a generic datagrid config node for a set of layer attributes.
+        *
+        * @param {Array} fields an array of attribute fields for a layer
+        * @returns {Object} an JSON config object for feature datagrid
+        */
+        function createDatagridConfig(fields) {
+            function makeField(id, fn, wd, ttl, tp) {
+                return {
+                    id: id,
+                    fieldName: fn,
+                    width: wd,
+                    orderable: false,
+                    type: 'string',
+                    alignment: 0,
+                    title: ttl,
+                    columnTemplate: tp
+                };
+            }
+
+            var dg = {
+                rowsPerPage: 50,
+                gridColumns: []
+            };
+
+            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon'));
+            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
+
+            dojoArray.forEach(fields, function (field, idx) {
+                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', field, 'title_span'));
+            });
+
+            return dg;
+        }
+
+        /**
+        * Will generate a symbology config node for a ESRI feature service.
+        * Uses the information from the feature layers renderer JSON definition
+        *
+        * @param {Object} renderer renderer object from feature layer endpoint
+        * @param {Object} legendLookup object that maps legend label to data url of legend image
+        * @returns {Object} an JSON config object for feature symbology
+        */
+        function createSymbologyConfig(renderer, legendLookup) {
+            var symb = {
+                type: renderer.type
+            };
+
+            switch (symb.type) {
+                case "simple":
+                    symb.label = renderer.label;
+                    symb.imageUrl = legendLookup[renderer.label];
+
+                    break;
+
+                case "uniqueValue":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field1 = renderer.field1;
+                    symb.field2 = renderer.field2;
+                    symb.field3 = renderer.field3;
+                    symb.valueMaps = dojoArray.map(renderer.uniqueValueInfos, function (uvi) {
+                        return {
+                            label: uvi.label,
+                            value: uvi.value,
+                            imageUrl: legendLookup[uvi.label]
+                        };
+                    });
+
+                    break;
+                case "classBreaks":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field = renderer.field;
+                    symb.minValue = renderer.minValue;
+                    symb.rangeMaps = dojoArray.map(renderer.classBreakInfos, function (cbi) {
+                        return {
+                            label: cbi.label,
+                            maxValue: cbi.classMaxValue,
+                            imageUrl: legendLookup[cbi.label]
+                        };
+                    });
+
+                    break;
+                default:
+                    //Renderer we dont support
+                    console.log('encountered unsupported renderer type: ' + symb.type);
+                    //TODO make a stupid basic renderer to prevent things from breaking?
+            }
+
+            return symb;
+        }
+
+        /**
+        * Peek at the CSV output (useful for checking headers).
+        *
+        * @param {string} data a string containing the CSV (or any DSV) data
+        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess a delimiter and
+        * this parameter is required
+        * @returns {Array} an array of arrays containing the parsed CSV
+        */
+        function csvPeek(data, delimiter) {
+            return csv2geojson.dsv(delimiter).parseRows(data);
         }
 
         /**
@@ -228,13 +412,17 @@ define([
         *   - targetWkid: an integer for an ESRI wkid, defaults to map wkid if not specified
         *   - fields: an array of fields to be appended to the FeatureLayer layerDefinition (OBJECTID is set by default)
         *
+        * @method makeGeoJsonLayer
         * @param {Object} geoJson An object following the GeoJSON specification, should be a FeatureCollection with
         * Features of only one type
         * @param {Object} opts An object for supplying additional parameters
         * @returns {FeatureLayer} An ESRI FeatureLayer
         */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj;
+            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj,
+                defaultRenderers = GlobalStorage.DefaultRenderers,
+                layerID = LayerLoader.nextId();
+
             layerDefinition = {
                 objectIdField: "OBJECTID",
                 fields: [{
@@ -248,10 +436,6 @@ define([
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
 
             if (opts) {
-                if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
-                    layerDefinition.drawingInfo = { renderer: defaultRenderers[opts.renderer].renderer };
-                    fs.geometryType = defaultRenderers[opts.renderer].geometryType;
-                }
                 if (opts.sourceProjection) {
                     srcProj = opts.sourceProjection;
                 }
@@ -263,20 +447,84 @@ define([
                 }
             }
 
+            if (layerDefinition.fields.length === 1) {
+                layerDefinition.fields = layerDefinition.fields.concat(extractFields(geoJson));
+            }
+
             console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
-            console.log(geoJson);
+            //console.log(geoJson);
             Terraformer.Proj.convert(geoJson, 'EPSG:' + targetWkid, srcProj);
-            console.log(geoJson);
+            //console.log(geoJson);
             esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: targetWkid });
             console.log('geojson -> esrijson converted');
-            console.log(esriJson);
+            //console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
-            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT });
+            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT, id: layerID });
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
-            layer.ramp = { type: "newtype?" };
+
+            // TODO : refactor the hack
+            // SZ_HACK
+            layer.renderer._RAMP_rendererType = featureTypeToRenderer[geoJson.features[0].geometry.type];
+
+            //SZ TESTING -- this will be removed when the UI separates the layer creation an layer enhancement
+            //enhanceFileFeatureLayer(layer, opts);
+
             return layer;
+        }
+
+        /**
+        * Will take a feature layer built from user supplied data, and apply extra user options (such as symbology,
+        * display field), and generate a config node for the layer.  Accepts the following options:
+        *   - renderer: a string identifying one of the properties in defaultRenders
+        *   - color: color of the renderer
+        *   - icon: icon to display in grid and maptips
+        *   - nameField: descriptive name field for the layer
+        *   - datasetName: description of the name field
+        *
+        * @method enhanceFileFeatureLayer
+        * @param {Object} featureLayer a feature layer object generated by makeGeoJsonLayer
+        * @param {Object} opts An object for supplying additional parameters
+        */
+        function enhanceFileFeatureLayer(featureLayer, opts) {
+            //make a minimal config object for this layer
+            var newConfig = {
+                    id: featureLayer.id,
+                    displayName: opts.datasetName,
+                    nameField: opts.nameField,
+                    symbology: {
+                        type: "simple",
+                        imageUrl: opts.icon
+                    },
+                    datagrid: createDatagridConfig(opts.fields)
+                },
+                defaultRenderers = GlobalStorage.DefaultRenderers;
+
+            //backfill the rest of the config object with default values
+            newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+            //add custom properties and event handlers to layer object
+            RampMap.enhanceLayer(featureLayer, newConfig, true);
+            featureLayer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
+            featureLayer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            featureLayer.type = "Feature Layer"; //required to visible layer function
+
+            //plop config in global config object so everyone can access it.
+            RAMP.config.layers.feature.push(newConfig);
+
+            //apply new renderer if one is defined
+            if (opts.renderer && defaultRenderers.hasOwnProperty(opts.renderer)) {
+                var rend = defaultRenderers[opts.renderer].renderer;
+                if (opts.colour) {
+                    rend.symbol.color = opts.colour;
+                }
+
+                featureLayer.renderer = new SimpleRenderer(rend);
+            } else if (opts.colour) { // change only color of the renderer
+                // SZ_HACK
+                featureLayer.renderer.symbol.color = opts.colour;
+            }
         }
 
         /**
@@ -312,7 +560,7 @@ define([
                     }
                     console.log('csv parsed');
                     console.log(data);
-                    jsonLayer = makeGeoJsonLayer(data);
+                    jsonLayer = makeGeoJsonLayer(data, opts);
                     def.resolve(jsonLayer);
                 });
             } catch (e) {
@@ -331,7 +579,8 @@ define([
             var def = new Deferred();
 
             try {
-                shp(shpData).then(function (geojson) {
+                // window.crypto.subtle.digest({ name: "SHA-256" }, shpData).then(function (h) { var u8 = new Uint16Array(h); console.log(u8); });
+                shp.getShapefile(shpData).then(function (geojson) {
                     var jsonLayer;
                     try {
                         jsonLayer = makeGeoJsonLayer(geojson);
@@ -371,10 +620,15 @@ define([
         return {
             loadDataSet: loadDataSet,
             getFeatureLayer: getFeatureLayer,
+            getFeatureLayerLegend: getFeatureLayerLegend,
             getWmsLayerList: getWmsLayerList,
             makeGeoJsonLayer: makeGeoJsonLayer,
+            csvPeek: csvPeek,
             buildCsv: buildCsv,
             buildShapefile: buildShapefile,
-            buildGeoJson: buildGeoJson
+            buildGeoJson: buildGeoJson,
+            enhanceFileFeatureLayer: enhanceFileFeatureLayer,
+            createDatagridConfig: createDatagridConfig,
+            createSymbologyConfig: createSymbologyConfig
         };
     });

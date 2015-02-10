@@ -14,8 +14,8 @@
 * @class Theme
 */
 
-define(["utils/util"],
-    function (UtilMisc) {
+define(["dojo/_base/lang", "utils/util"],
+    function (lang, UtilMisc) {
         "use strict";
 
         var body = $("body"),
@@ -148,7 +148,7 @@ define(["utils/util"],
              * @return {Object}         This
              * @chainable
              */
-            tooltipster: function (target, type, action) {
+            tooltipster: function (target, type, action, options) {
                 var attr;
                 target = target || $("body");
 
@@ -202,10 +202,14 @@ define(["utils/util"],
                                     node.attr("title", node.data("tooltip"));
                                 }
                                 
-                                node.tooltipster({
-                                    theme: node.data("tooltip-theme") || attr.theme,
-                                    delay: attr.delay
-                                });
+                                node.tooltipster(
+                                    lang.mixin({
+                                            theme: node.data("tooltip-theme") || attr.theme,
+                                            delay: attr.delay
+                                        },
+                                        options
+                                    )
+                                );
                             })
                             .removeAttr("title");
                         break;

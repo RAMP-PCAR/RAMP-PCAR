@@ -52,10 +52,10 @@ require([
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme", "ramp/layerLoader",
-
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader",
+    
 /* Utils */
     "utils/util",
 
@@ -72,7 +72,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader,
 
     /* Utils */
         UtilMisc
@@ -130,6 +130,8 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
+
+                DataLoadedGui.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {

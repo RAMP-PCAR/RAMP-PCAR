@@ -92,13 +92,13 @@ define([
             featureOidField = "feature-oid",
 
             /**
-            * Name of the attribute used to store the feature url
+            * Name of the attribute used to store the layer id
             * in the details and zoomTo buttons
             *
             * @private
-            * @property featureUrlField
+            * @property layerIdField
             */
-            featureUrlField = "feature-url",
+            layerIdField = "layer-id",
 
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
@@ -128,7 +128,7 @@ define([
             lastExtent,
 
             // invisibleLayer toggle counter
-            invisibleLayerToggleOn = [], 
+            invisibleLayerToggleOn = [],
 
             /**
             * Total number of features in all the visible layers on the map
@@ -161,11 +161,11 @@ define([
                             return graphic !== null;
                         },
 
-                        isEqual: function (url, oid) {
-                            var thisUrl = graphic.getLayer().url,
+                        isEqual: function (layerId, oid) {
+                            var thisId = graphic.getLayer().id,
                                 thisOid = GraphicExtension.getOid(graphic);
 
-                            return (thisUrl === url) && (thisOid === oid);
+                            return (thisId === layerId) && (thisOid === oid);
                         },
 
                         /**
@@ -214,10 +214,10 @@ define([
                         */
                         refresh: function () {
                             if (graphic) {
-                                var url = graphic.getLayer().url,
+                                var layerId = graphic.getLayer().id,
                                     id = GraphicExtension.getOid(graphic);
-                                if ((url in featureToPage) && (id in featureToPage[url])) {
-                                    index = featureToPage[url][id];
+                                if ((layerId in featureToPage) && (id in featureToPage[layerId])) {
+                                    index = featureToPage[layerId][id];
                                 } else {
                                     index = -1;
                                 }
@@ -277,7 +277,7 @@ define([
                     sectionNode,
                     tabNode = $("details[data-panel-name=datagrid]"),
 
-                    selectedDatasetUrl,
+                    selectedDatasetId,
 
                     datagridStatusLine,
                     datagridGlobalToggles,
@@ -325,14 +325,15 @@ define([
 
                     var obj = row.last(),
                         datagridMode = ui.getDatagridMode(),
-                        tmplData;
+                        tmplData,
+                        layerConfig = obj.feature.getLayer().ramp.config;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (utilMisc.isUndefined(obj[datagridMode])) {
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
 
-                            var sumTemplate = tmplData.lyr.templates.summary;
+                            var sumTemplate = layerConfig.templates.summary;
 
                             tmpl.cache = {};
 
@@ -348,13 +349,13 @@ define([
 
                             //make array containing values for each column in the full grid
                             // retrieve extendedGrid config object
-                            var extendedGrid = getGridConfig(obj.featureUrl).gridColumns;
+                            var extendedGrid = layerConfig.datagrid.gridColumns;
 
                             tmpl.cache = {};
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, obj.featureUrl);
+                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
 
                             dojoArray.forEach(extendedGrid, function (col, i) {
                                 // add columnIdx property, and set initial value
@@ -416,7 +417,7 @@ define([
                         //layout for variable column (extended grid)
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetUrl() === null ? [{ title: "" }] : dojoArray.map(getGridConfig(ui.getSelectedDatasetUrl()).gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns, function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -535,12 +536,12 @@ define([
                 function setButtonEvents() {
                     sectionNode.on("click", "button.details", function () {
                         var buttonNode = $(this),
-                            url = buttonNode.data(featureUrlField),
+                            layerId = buttonNode.data(layerIdField),
                             oid = buttonNode.data(featureOidField);  //TODO: replace with better selector
 
                         highlightRow.focusedButton = "button.details";
 
-                        if (highlightRow.isActive() && highlightRow.isEqual(url, oid)) {
+                        if (highlightRow.isActive() && highlightRow.isEqual(layerId, oid)) {
                             DatagridClickHandler.onDetailDeselect(datagridMode);
                         } else {
                             var graphic = getGraphicFromButton(buttonNode);
@@ -569,10 +570,10 @@ define([
                                 // before the extent change, it won't work since the datagrid gets
                                 // repopulated after an extent change
                                 utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
-                                    // Find the first node with the same oid, featureUrl
+                                    // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                                    featureUrlField, zoomToGraphic.getLayer().url));
+                                                    layerIdField, zoomToGraphic.getLayer().id));
                                     newNode.text(i18n.t("datagrid.zoomBack"));
                                 });
                             });
@@ -584,7 +585,7 @@ define([
                             utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                         featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                        featureUrlField, zoomToGraphic.getLayer().url));
+                                        layerIdField, zoomToGraphic.getLayer().id));
                                 newNode.focus();
                             });
                         }
@@ -623,7 +624,7 @@ define([
                     sectionNode.on("change", "#datasetSelector", function () {
                         var controlNode = $(this),
                             optionSelected = controlNode.find("option:selected"),
-                            state = (optionSelected[0].value === selectedDatasetUrl);
+                            state = (optionSelected[0].value === selectedDatasetId);
 
                         updateDatasetSelectorState(state, true);
                     });
@@ -632,9 +633,9 @@ define([
                         var optionSelected = datasetSelector.find("option:selected");
 
                         if (optionSelected.length > 0) {
-                            selectedDatasetUrl = optionSelected[0].value;
+                            selectedDatasetId = optionSelected[0].value;
                         } else {
-                            selectedDatasetUrl = "";
+                            selectedDatasetId = "";
                         }
 
                         refreshTable();
@@ -867,7 +868,7 @@ define([
 
                     layer = dojoArray.filter(RAMP.config.layers.feature,
                         function (layer) {
-                            return layer.url === selectedDatasetUrl;
+                            return layer.id === selectedDatasetId;
                         });
 
                     if (extendedTabTitle && layer.length > 0) {
@@ -1146,10 +1147,10 @@ define([
                         return datagridMode;
                     },
 
-                    getSelectedDatasetUrl: function () {
-                        if (!selectedDatasetUrl) {
+                    getSelectedDatasetId: function () {
+                        if (!selectedDatasetId) {
                             if (datasetSelector.find("option:selected").length > 0) {
-                                selectedDatasetUrl = datasetSelector.find("option:selected")[0].value;
+                                selectedDatasetId = datasetSelector.find("option:selected")[0].value;
                             } else {
                                 var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = RAMP.map.getLayer(layerConfig.id);
@@ -1160,13 +1161,13 @@ define([
                                         return false;
                                     }
                                 });
-                                selectedDatasetUrl = firstVisibleLayer === null ? null : firstVisibleLayer.url;
+                                selectedDatasetId = firstVisibleLayer === null ? null : firstVisibleLayer.id;
                             }
                         } else {
-                            datasetSelector.find("option[value='" + selectedDatasetUrl + "']").prop('selected', true);
+                            datasetSelector.find("option[value='" + selectedDatasetId + "']").prop('selected', true);
                         }
 
-                        return selectedDatasetUrl;
+                        return selectedDatasetId;
                     },
 
                     /**
@@ -1209,7 +1210,7 @@ define([
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
                                 }),
 
-                            selectedDatasetUrl,
+                            selectedDatasetId,
                             index;
 
                         if (this.isReady()) {
@@ -1218,9 +1219,9 @@ define([
 
                             if (datagridMode === GRID_MODE_FULL) {
                                 // check if the selected layer is off scale at the current extent
-                                selectedDatasetUrl = ui.getSelectedDatasetUrl();
+                                selectedDatasetId = ui.getSelectedDatasetId();
                                 index = UtilArray.indexOf(invisibleLayers, function (il) {
-                                    return il.url === selectedDatasetUrl;
+                                    return il.id === selectedDatasetId;
                                 });
 
                                 if (index !== -1) {
@@ -1229,14 +1230,13 @@ define([
                             } else {
                                 if (invisibleLayers.length > 0) {
                                     data.layers = invisibleLayers.map(function (il) {
-                                        return il.ramp.config;                                        
+                                        return il.ramp.config;
                                     });
 
                                     // display notice only if invisibleLayer has eyeToggle on
                                     if (invisibleLayerToggleOn.length > 0) {
                                         notice = tmpl("datagrid_info_notice", data);
                                     }
-                                    
                                 }
                             }
 
@@ -1271,7 +1271,7 @@ define([
 
         /**
         * Caches the sorted data from datatables for feature click events to consume.  Builds featureToPage as a
-        * mapping of (layerName,featureId) => page where layerName and featureId are strings and page is a zero based int.
+        * mapping of (layerName,layerId) => page where layerName and layerId are strings and page is a zero based int.
         *
         * @method cacheSortedData
         * @private
@@ -1280,7 +1280,7 @@ define([
             var elements = oTable.rows().data();
             featureToPage = {};
             $.each(elements, function (idx, val) {
-                var layer = val.last().featureUrl,
+                var layer = val.last().layerId,
                     fid = GraphicExtension.getOid(val.last().feature);
 
                 if (!(layer in featureToPage)) {
@@ -1289,17 +1289,6 @@ define([
                 }
                 featureToPage[layer][fid] = idx;
             });
-        }
-
-        /**
-        * Returns the config Object for the given featureLayerUrl
-        *
-        * @method getGridConfig
-        * @param {String} url
-        * @return {Object} grid config
-        */
-        function getGridConfig(url) {
-            return Ramp.getLayerConfig(url).datagrid;
         }
 
         /**
@@ -1343,7 +1332,7 @@ define([
 
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
-                    return layer.url === ui.getSelectedDatasetUrl();
+                    return layer.id === ui.getSelectedDatasetId();
                 });
 
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
@@ -1375,7 +1364,7 @@ define([
 
                     if (features.features.length > 0) {
                         var layer = features.features[0].getLayer();
-                        visibleFeatures[layer.url] = features.features;
+                        visibleFeatures[layer.id] = features.features;
                     }
                 });
             });
@@ -1410,20 +1399,20 @@ define([
         * return {Array} an array representing the data the given feature contains.
         */
         function getDataObject(feature) {
-            var url = feature.getLayer().url,
+            var layerConfig = feature.getLayer().ramp.config,
                 innerArray;
             //attribute = feature.attributes;
 
             //Remember, case sensitivity MATTERS in the attribute name.
 
             if (ui.getDatagridMode() === GRID_MODE_SUMMARY) {
-                innerArray = [feature.attributes[Ramp.getLayerConfig(url).nameField]];
+                innerArray = [feature.attributes[layerConfig.nameField]];
             } else {
                 //make array containing values for each column in the full grid
                 innerArray = [];
 
                 // retrieve extendedGrid config object
-                var extendedGrid = getGridConfig(url).gridColumns;
+                var extendedGrid = layerConfig.datagrid.gridColumns;
 
                 // process each column and add to row
                 dojoArray.forEach(extendedGrid, function (column) {
@@ -1437,8 +1426,8 @@ define([
             // Includes fields that are useful which are not derived from the config.featureSources
             // this should not draw, as there will be no column defined for it
             innerArray.push({
-                featureUrl: url,
-                layerName: Ramp.getLayerConfig(url).displayName,
+                layerId: layerConfig.id,
+                layerName: layerConfig.displayName,
                 feature: feature
             });
 
@@ -1454,7 +1443,7 @@ define([
         *
         * @method fetchRecords
         * @param {Array} visibleFeatures a dictionary mapping
-        * service url to an array of feature objects
+        * layer id to an array of feature objects
         * @private
         */
         function fetchRecords(visibleFeatures) {
@@ -1514,11 +1503,11 @@ define([
         * @return {Object}   the graphic object of the feature layer.
         */
         function getGraphicFromButton(buttonNode) {
-            var featureUrl = buttonNode.data(featureUrlField),
+            var layerId = buttonNode.data(layerIdField),
             // Need to parse the index into an integer since it
             // comes as a String
                 oid = parseInt(buttonNode.data(featureOidField)),
-                featureLayer = RampMap.getFeatureLayer(featureUrl),
+                featureLayer = RampMap.getFeatureLayer(layerId),
 
                 graphic = UtilArray.binaryFind(featureLayer.graphics,
                     function (a_graphic) {
@@ -1544,14 +1533,13 @@ define([
                 if (event.id !== null) {
                     var idx = dojoArray.indexOf(invisibleLayerToggleOn, event.id);
                     if (idx === -1 && event.state) {
-                        // add 
+                        // add
                         invisibleLayerToggleOn.push(event.id);
                     }else if (idx !== -1 && !event.state) {
                         // remove
                         invisibleLayerToggleOn.splice(idx,1);
                     }
                 }
-                
             });
 
             /* UI EVENTS */
@@ -1593,11 +1581,11 @@ define([
                         //in this case, a slow loading layer updated after the user has switched to the extended grid view.
                         //add layer to selection combo box (as it would not have been added when the pane was generated)
                         var layerConfig = Ramp.getLayerConfigWithId(evt.layer.id),
-                            optElem = document.createElement("option"),  // "<option value='" + layerConfig.url + "'>" + layerConfig.displayName + "</option>",
+                            optElem = document.createElement("option"),  // "<option value='" + layerConfig.id + "'>" + layerConfig.displayName + "</option>",
                             datasetSelector = $("#datasetSelector");
 
                         optElem.text = layerConfig.displayName;
-                        optElem.value = layerConfig.url;
+                        optElem.value = layerConfig.id;
                         datasetSelector.add(optElem);
                     }
                 }

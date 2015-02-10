@@ -138,7 +138,7 @@ define([
             // Highlights the selected point by adding a graphic object to the highLight layer
             highlightedGraphic = newGraphic;
             // Needed to find the symbol in maptip
-            highlightLayer.url = graphic.getLayer().url;
+            highlightLayer.sourceLayerId = graphic.getLayer().id;
             highlightLayer.objectIdField = graphic.getLayer().objectIdField;
 
             highlightLayer.add(newGraphic);
@@ -215,7 +215,7 @@ define([
             zoomlightGraphic = newGraphic;
 
             zoomlightLayer.clear();
-            zoomlightLayer.url = graphic.getLayer().url;
+            zoomlightLayer.sourceLayerId = graphic.getLayer().id;
             zoomlightLayer.objectIdField = graphic.getLayer().objectIdField;
             zoomlightLayer.add(newGraphic);
 
@@ -312,8 +312,8 @@ define([
                     zgLayer = zoomlightGraphic.getLayer();
                     hgLayer = highlightedGraphic.getLayer();
                     objectIdField = zgLayer.objectIdField;
-                    zgKey = zgLayer.url + zoomlightGraphic.attributes[objectIdField];
-                    hgKey = hgLayer.url + highlightedGraphic.attributes[objectIdField];
+                    zgKey = zgLayer.sourceLayerId + zoomlightGraphic.attributes[objectIdField];
+                    hgKey = hgLayer.sourceLayerId + highlightedGraphic.attributes[objectIdField];
                 }
 
                 if (zgKey !== hgKey) {

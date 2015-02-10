@@ -37,6 +37,20 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
+        'quietbuild'
+        'Run build without jscs.'
+        [
+            'clean:build'
+            'copy:build'
+            'assemble'
+            'notify:page'
+            'js:quietbuild'
+            'css:build'
+            'notify:build'
+        ]
+    )
+
+    @registerTask(
         'copy:build'
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
@@ -62,6 +76,7 @@ module.exports = (grunt) ->
                     [
                         'src/js/lib/jquery.dataTables.pagination.ramp.js'
                         'src/js/lib/jquery.ui.navigation.ramp.js'
+                        'src/js/lib/jscolor.js'
                     ]
                 )
             )
@@ -71,6 +86,35 @@ module.exports = (grunt) ->
             grunt.task.run [
                 'hint'
                 'jsstyle'
+                'concat:jsLib'
+                'copy:jsCore'
+                'copy:jsPlugins'
+                'replace:jsCoreBuild'
+                'notify:js'               
+            ]        
+    )
+
+    @registerTask(
+        'js:quietbuild'
+        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
+        ->
+            grunt.config(
+                'concat.jsLib.src'
+                smartExpand(
+                    'lib/'
+                    grunt.config 'pkg.ramp.concat.jsLib'
+                    [
+                        'src/js/lib/jquery.dataTables.pagination.ramp.js'
+                        'src/js/lib/jquery.ui.navigation.ramp.js'
+                        'src/js/lib/jscolor.js'
+                    ]
+                )
+            )
+
+            #console.log(grunt.config('concat.jsLib'))
+
+            grunt.task.run [
+                'hint'
                 'concat:jsLib'
                 'copy:jsCore'
                 'copy:jsPlugins'
@@ -166,6 +210,16 @@ module.exports = (grunt) ->
         'Creates an unminified development package, starts a node server the specified port, watches for modified JS, CSS and other files, and reloads HTML page on change.'
         [
             'build'
+            'connect:build'
+            'watch'
+        ]
+    )
+
+    @registerTask(
+        'jscs:shutyoface'
+        'A nice quiet build to test stuff without JSCS complaining on every keypress.'
+        [
+            'quietbuild'
             'connect:build'
             'watch'
         ]
@@ -393,6 +447,14 @@ module.exports = (grunt) ->
             #console.log grunt.config 'replace'
             #console.log tasks
             grunt.task.run tasks
+    )
+
+    @registerTask(
+        'release'
+        'INTERNAL Uploads release builds to GitHub releases.'
+        () ->
+            if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
+                grunt.task.run 'github-release'
     )
 
     smartExpand = ( cwd, arr, extra ) ->    
@@ -1255,6 +1317,19 @@ module.exports = (grunt) ->
                     'build/**/*.*'
                     'tarball/**/*.*'
                 ]
+        
+        'github-release':
+            options:
+                repository: process.env.HOME_REPO
+                auth:
+                    user: 'ramp-pcar-bot'
+                    password: process.env.GH_TOKEN
+                release:
+                    draft: false
+                    prerelease: true
+                    tag_name: process.env.TRAVIS_TAG
+            files:
+                src: ['tarball/*.*']
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1273,6 +1348,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-gh-pages'
+    @loadNpmTasks 'grunt-github-releaser'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'

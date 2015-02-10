@@ -132,22 +132,29 @@ define([
         * @param  {String} interactive indicates whether the maptip should have a close button
         */
         function getMaptipContent(graphic, interactive) {
-            var layerUrl = graphic.getLayer().url,
-                templateKey = "",
-                datawrapper,
-                maptipContent;
+            //the graphic might be in a highlight layer, if so we need the source layer id
+            var layerId = graphic.getLayer().sourceLayerId;
+            if (!layerId) {
+                //graphic was not in a highlight layer
+                layerId = graphic.getLayer().id;
+            }
+
+            var layerConfig = Ramp.getLayerConfigWithId(layerId),
+               templateKey = "",
+               datawrapper,
+               maptipContent;
 
             tmpl.cache = {};
 
             if (interactive === true) {
-                templateKey = Ramp.getLayerConfig(layerUrl).templates.anchor;
+                templateKey = layerConfig.templates.anchor;
                 tmpl.templates = anchortips_template_json;
             } else {
-                templateKey = Ramp.getLayerConfig(layerUrl).templates.hover;
+                templateKey = layerConfig.templates.hover;
                 tmpl.templates = hovertips_template_json;
             }
 
-            datawrapper = TmplHelper.dataBuilder(graphic, layerUrl);
+            datawrapper = TmplHelper.dataBuilder(graphic, layerConfig);
             maptipContent = tmpl(templateKey, datawrapper);
 
             return maptipContent;
