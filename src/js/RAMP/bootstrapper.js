@@ -325,16 +325,16 @@ require([
                 // the available screen size may still be changing (e.g. due to fullscreen
                 // or subpanel closing)
                 topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    // Create the panel that the bookmark link sits in
+                    // can only do this after the gui loads
+                    BookmarkLink.createUI();
+
                     LayerLoader.init();
                     initializeMap();
                 });
 
                 gui.load(null, null, function () { });
-
-                // Create the panel that the bookmark link sits in
-                // can only do this after the gui loads
-                BookmarkLink.createUI();
-
+                
                 Ramp.loadStrings();
             });
 
