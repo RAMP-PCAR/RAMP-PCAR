@@ -983,12 +983,32 @@ define([
             localProjectExtent: function (extent, sr) {
                 //TODO can we handle WKT?
 
-                var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax]],
-                    projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals;
+                // FIXME using modern functions during prototyping, make sure these are universally supported before finalizing
+
+                function interpolate(p0, p1, steps) {
+                    var mid, i0, i1;
+
+                    if (steps === 0) { return [p0, p1]; }
+
+                    mid = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+                    if (steps === 1) {
+                        return [p0, mid, p1];
+                    }
+                    if (steps > 1) {
+                        i0 = interpolate(p0, mid, steps - 1);
+                        i1 = interpolate(mid, p1, steps - 1);
+                        return i0.concat(i1.slice(1));
+                    }
+                }
+
+                var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
+                    projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [];
+
+                [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 2).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
 
                 //reproject the extent
                 projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
-                transformed = points.map(function (x) { return projConvert.forward(x); });
+                transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
 
                 xvals = transformed.map(function (x) { return x[0]; });
                 yvals = transformed.map(function (x) { return x[1]; });
