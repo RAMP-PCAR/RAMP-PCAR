@@ -247,7 +247,8 @@ define([
                                 var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
                                 boundingBox.add(UtilMisc.createGraphic(box));
 
-                                //comment for now
+                                //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
+                                /*
                                 var params = new ProjectParameters(),
                                     gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
                                 params.geometries = [boundingBoxExtent];
@@ -257,6 +258,7 @@ define([
                                     console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
                                     console.log('proj4 says: ' + JSON.stringify(box));
                                 });
+                                */
                             }
                         }
 

@@ -418,6 +418,61 @@ define([
         }
 
         /**
+        * Will project an extent to a desired spatial reference, using client side projection library.
+        * Avoids the need for Esri Geometry Service
+        *
+        * @method localProjectExtent
+        * @private
+        * @param  {Esri/Extent} extent extent to be projected
+        * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+        * @return {Esri/Extent} extent in the desired projection
+        */
+        function localProjectExtent(extent, sr) {
+            //TODO can we handle WKT?
+
+            // FIXME using modern functions during prototyping, make sure these are universally supported before finalizing
+
+            function interpolate(p0, p1, steps) {
+                var mid, i0, i1;
+
+                if (steps === 0) { return [p0, p1]; }
+
+                mid = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
+                if (steps === 1) {
+                    return [p0, mid, p1];
+                }
+                if (steps > 1) {
+                    i0 = interpolate(p0, mid, steps - 1);
+                    i1 = interpolate(mid, p1, steps - 1);
+                    return i0.concat(i1.slice(1));
+                }
+            }
+
+            var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
+                projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [];
+
+            [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 2).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
+
+            //reproject the extent
+            projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
+            transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
+
+            xvals = transformed.map(function (x) { return x[0]; });
+            yvals = transformed.map(function (x) { return x[1]; });
+
+            x0 = Math.min.apply(null, xvals);
+            x1 = Math.max.apply(null, xvals);
+
+            y0 = Math.min.apply(null, yvals);
+            y1 = Math.max.apply(null, yvals);
+
+            projExtent = new EsriExtent(x0, y0, x1, y1, sr);
+            console.log('localProjectExtent complete: ' + JSON.stringify(projExtent));
+
+            return projExtent;
+        }
+
+        /**
         * project an extent to a new spatial reference, if required
         * when projection is finished, call another function and pass the result to it.
         *
@@ -428,7 +483,7 @@ define([
         * @param {Function} callWhenDone function to call when extent is projected.  expects geometry parameter
         */
         function projectExtent(extent, sr, callWhenDone) {
-            var geomSrv, geomParams, realExtent;
+            var realExtent;
 
             //convert configuration extent to proper esri extent object
             realExtent = new EsriExtent(extent);
@@ -440,6 +495,12 @@ define([
             } else {
                 //need to re-project the extent
 
+                var projectedExtent = localProjectExtent(realExtent, sr);
+                callWhenDone([projectedExtent]);
+
+                //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
+                /*
+                var geomSrv, geomParams;
                 geomSrv = new GeometryService(RAMP.config.geometryServiceUrl);
                 geomParams = new ProjectParameters();
                 geomParams.geometries = [realExtent];
@@ -449,6 +510,7 @@ define([
                     //after service returns, continue to next step
                     callWhenDone(projectedExtents);
                 });
+                */
             }
         }
 
@@ -975,55 +1037,12 @@ define([
             * Will project an extent to a desired spatial reference, using client side projection library.
             * Avoids the need for Esri Geometry Service
             *
-            * @method enhanceLayer
+            * @method localProjectExtent
             * @param  {Esri/Extent} extent extent to be projected
             * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
             * @return {Esri/Extent} extent in the desired projection
             */
-            localProjectExtent: function (extent, sr) {
-                //TODO can we handle WKT?
-
-                // FIXME using modern functions during prototyping, make sure these are universally supported before finalizing
-
-                function interpolate(p0, p1, steps) {
-                    var mid, i0, i1;
-
-                    if (steps === 0) { return [p0, p1]; }
-
-                    mid = [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2];
-                    if (steps === 1) {
-                        return [p0, mid, p1];
-                    }
-                    if (steps > 1) {
-                        i0 = interpolate(p0, mid, steps - 1);
-                        i1 = interpolate(mid, p1, steps - 1);
-                        return i0.concat(i1.slice(1));
-                    }
-                }
-
-                var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
-                    projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [];
-
-                [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 2).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
-
-                //reproject the extent
-                projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
-                transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
-
-                xvals = transformed.map(function (x) { return x[0]; });
-                yvals = transformed.map(function (x) { return x[1]; });
-
-                x0 = Math.min.apply(null, xvals);
-                x1 = Math.max.apply(null, xvals);
-
-                y0 = Math.min.apply(null, yvals);
-                y1 = Math.max.apply(null, yvals);
-
-                projExtent = new EsriExtent(x0, y0, x1, y1, sr);
-                console.log('localProjectExtent complete: ' + JSON.stringify(projExtent));
-
-                return projExtent;
-            },
+            localProjectExtent: localProjectExtent,
 
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
