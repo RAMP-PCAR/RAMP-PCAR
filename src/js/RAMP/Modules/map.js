@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP, Terraformer, window */
+﻿/*global define, esri, i18n, console, $, RAMP, proj4, window */
 
 /**
 *
@@ -983,27 +983,24 @@ define([
             localProjectExtent: function (extent, sr) {
                 //TODO can we handle WKT?
 
-                var geoJson = {
-                    type: "FeatureCollection",
-                    features: [
-                        {
-                            type: "Feature",
-                            geometry: {
-                                type: "Polygon",
-                                coordinates: [
-                                  [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin],
-                                    [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]]
-                                ]
-                            }
-                        }
-                    ]
-                };
+                var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax]],
+                    projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals;
 
                 //reproject the extent
-                Terraformer.Proj.convert(geoJson, 'EPSG:' + sr.wkid, 'EPSG:' + extent.spatialReference.wkid);
+                projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
+                transformed = points.map(function (x) { return projConvert.forward(x); });
 
-                var coords = geoJson.features[0].geometry.coordinates,
-                    projExtent = new EsriExtent(coords[0][0][0], coords[0][0][1], coords[0][2][0], coords[0][2][1], sr);
+                xvals = transformed.map(function (x) { return x[0]; });
+                yvals = transformed.map(function (x) { return x[1]; });
+
+                x0 = Math.min.apply(null, xvals);
+                x1 = Math.max.apply(null, xvals);
+
+                y0 = Math.min.apply(null, yvals);
+                y1 = Math.max.apply(null, yvals);
+
+                projExtent = new EsriExtent(x0, y0, x1, y1, sr);
+                console.log('localProjectExtent complete: ' + JSON.stringify(projExtent));
 
                 return projExtent;
             },

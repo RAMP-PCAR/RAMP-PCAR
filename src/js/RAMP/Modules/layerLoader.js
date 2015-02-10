@@ -248,16 +248,15 @@ define([
                                 boundingBox.add(UtilMisc.createGraphic(box));
 
                                 //comment for now
-                                /*
                                 var params = new ProjectParameters(),
                                     gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
                                 params.geometries = [boundingBoxExtent];
                                 params.outSR = map.spatialReference;
 
                                 gsvc.project(params, function (projectedExtents) {
-                                    boundingBox.add(UtilMisc.createGraphic(projectedExtents[0]));
+                                    console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
+                                    console.log('proj4 says: ' + JSON.stringify(box));
                                 });
-                                */
                             }
                         }
 
