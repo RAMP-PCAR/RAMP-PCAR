@@ -69,7 +69,8 @@ define([
                 lang.mixin(this,
                     config,
                     {
-                        id: id
+                        id: id,
+                        _listeners: []
                     }
                 );
 
@@ -77,12 +78,32 @@ define([
 
             },
 
+            _notifyChange: function () {
+                var data = this.getData();
+
+                this._listeners.forEach(function (listener) {
+                    listener.call(this, data);
+                });
+            },
+
+            onChange: function (listener) {
+                this._listeners.push(listener);
+            },
+
             isValid: function () {
                 return true;
             },
 
-            getData: function () {
-                return {};
+            getData: function (payload, wrap) {
+                var result;
+
+                if (wrap) {
+                    result[this.id] = payload;
+                } else {
+                    result = payload;
+                }
+
+                return result;
             }
         });
 
@@ -121,11 +142,9 @@ define([
                     .filter("[data-key='" + choiceKey + "']")
                     .addClass("button-pressed");
 
-                if (this.onChange) {
-                    this.onChange.call(this);
-                }
-
                 console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
+
+                this._notifyChange();
             },
 
             isUserSelected: function () {
@@ -136,11 +155,13 @@ define([
                 return this.selectedChoice !== "";
             },
 
-            getData: function () {
-                var data = {};
-                data[this.id] = this.selectedChoice;
+            getData: function (wrap) {
+                var payload = {
+                        selectedChoice: this.selectedChoice,
+                        userSelected: this.userSelected
+                    };
 
-                return data;
+                return Brick.getData(payload, wrap);
             }
         });
 
@@ -315,12 +336,12 @@ define([
                 this._contentNode = this.node.find("> .step-content");
                 this._optionsContainerNode = this.node.find("> .step-options-container");
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
-                
+
                 this.content.forEach(function (contentItem) {
                     var contentBrick = bricks[contentItem.type].new(contentItem.id, contentItem.config);
 
-                    that._addContentBrick(contentBrick);
-                    
+                    that._addContentBrick(contentItem, contentBrick);
+
                 });
 
                 //this._imageBoxNode = this.node.find(".layer-details > div:first");
@@ -340,8 +361,16 @@ define([
                 console.debug("-->", this.state);
             },
 
-            _addContentBrick: function (contentBrick) {
+            _addContentBrick: function (contentItem, contentBrick) {
+                var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
+
+                if (contentItem.onChange) {
+                    contentBrick.onChange(function (data) {
+                        contentItem.onChange.call(that, data);
+                    });
+                }
+
                 this._contentNode.append(contentBrick.node);
             },
 

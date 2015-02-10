@@ -55,7 +55,7 @@ require([
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
     "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
-    
+
 /* Utils */
     "utils/util",
 
@@ -169,6 +169,13 @@ require([
                                         value: "WMS"
                                     }
                                 ]
+                            },
+
+                            onChange: function (data) {
+                                if (data.userSelected) {
+                                    this.contentBricks.serviceType
+                                        .setChoice("wms");
+                                }
                             }
                         }
                     ]
@@ -334,7 +341,7 @@ require([
                 });
 
                 gui.load(null, null, function () { });
-                
+
                 Ramp.loadStrings();
             });
 
