@@ -70,7 +70,7 @@ define([
                     config,
                     {
                         id: id,
-                        _listeners: []
+                        _listeners: {}
                     }
                 );
 
@@ -78,16 +78,23 @@ define([
 
             },
 
-            _notifyChange: function () {
-                var data = this.getData();
+            _notify: function (eventName, data) {
 
-                this._listeners.forEach(function (listener) {
+                if (!this._listeners[eventName]) {
+                    this._listeners[eventName] = [];
+                }
+                this._listeners[eventName].forEach(function (listener) {
                     listener.call(this, data);
                 });
             },
 
-            onChange: function (listener) {
-                this._listeners.push(listener);
+            on: function (eventName, listener) {
+                if (!this._listeners[eventName]) {
+                    this._listeners[eventName] = [];
+                }
+                this._listeners[eventName].push(listener);
+
+                return this;
             },
 
             isValid: function () {
@@ -95,7 +102,7 @@ define([
             },
 
             getData: function (payload, wrap) {
-                var result;
+                var result = {};
 
                 if (wrap) {
                     result[this.id] = payload;
@@ -104,6 +111,14 @@ define([
                 }
 
                 return result;
+            },
+
+            disable: function (disable) {
+                if (disable) {
+                    this.node.find("button").attr("disabled", true);
+                } else {
+                    this.node.find("button").attr("disabled", false);
+                }
             }
         });
 
@@ -144,7 +159,7 @@ define([
 
                 console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
 
-                this._notifyChange();
+                this._notify("change", this.getData());
             },
 
             isUserSelected: function () {
@@ -157,11 +172,11 @@ define([
 
             getData: function (wrap) {
                 var payload = {
-                        selectedChoice: this.selectedChoice,
-                        userSelected: this.userSelected
-                    };
+                    selectedChoice: this.selectedChoice,
+                    userSelected: this.userSelected
+                };
 
-                return Brick.getData(payload, wrap);
+                return Brick.getData.call(this, payload, wrap);
             }
         });
 
@@ -365,13 +380,38 @@ define([
                 var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
 
-                if (contentItem.onChange) {
-                    contentBrick.onChange(function (data) {
-                        contentItem.onChange.call(that, data);
+                if (contentItem.on) {
+                    contentItem.on.forEach(function (o) {
+                        contentBrick.on(o.eventName, function (data) {
+                            o.callback.call(that, data);
+
+                            if (o.expose) {
+                                that._doInternalCheck();
+                                that.emit(contentBrick.id + "/" + o.eventName, data);
+                            }
+                        });
                     });
                 }
 
+                contentBrick.on("change", function () {
+                    that._doInternalCheck();
+                });
+
                 this._contentNode.append(contentBrick.node);
+            },
+
+            _doInternalCheck: function () {
+                console.log(this.getData(), "internal check");
+            },
+
+            getData: function () {
+                var data = {};
+
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    lang.mixin(data, brick.getData(true));
+                });
+
+                return data;
             },
 
             /**

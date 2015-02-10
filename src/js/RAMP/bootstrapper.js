@@ -171,17 +171,27 @@ require([
                                 ]
                             },
 
-                            onChange: function (data) {
-                                if (data.userSelected) {
-                                    this.contentBricks.serviceType
-                                        .setChoice("wms");
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (data) {
+                                        if (data.userSelected) {
+                                            this.contentBricks.serviceType
+                                                .setChoice("wms");
+                                        }
+                                    }
                                 }
-                            }
+                            ]
                         }
                     ]
                 });
 
-                a = null;
+                a.on("serviceType/change", function (event) {
+                    console.log(event);
+
+                    console.log("Step data:", a.getData());
+                });
             });
 
             RampMap.init();
