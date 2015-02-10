@@ -1,0 +1,510 @@
+﻿/* global define, tmpl, $, console, Base */
+
+/**
+* @module RAMP
+* @submodule FilterManager
+* @main FilterManager
+*/
+
+/**
+* Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic changing of the layer item state. 
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "TmplUtil"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+*  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
+* 
+* @class StepItem
+* @constructor
+* @uses dojo/Evented
+* @uses dojo/_base/declare
+* @uses dojo/lang
+* 
+* @param {Object} config a config definition of the layer
+* @param {Object} [options] Additional options
+* 
+* @param {String} [options.state] Specifies the initial state of the LyerItem; must be one of the `LayerItem.state` defaults
+* @param {String} [options.type] Specifies type of this LayerItem and the name of the layer item template to use
+* 
+* @param {Object} [options.stateMatrix] additional state matrix records to be mixed into the default
+* @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed into the default
+* 
+* @return {StepItem} A control object representing a layer allowing to dynamically change its state.
+*/
+
+define([
+    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+
+    /* Text */
+    "dojo/text!./templates/layer_selector_template.json",
+
+    /* Util */
+    "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+],
+    function (
+        Evented, declare, lang,
+        layer_selector_template,
+        TmplHelper, TmplUtil, UtilArray, UtilDict
+    ) {
+        "use strict";
+
+        var LayerItem,
+            ALL_STATES_CLASS,
+
+            Brick,
+            ChoiceBrick;
+
+        Brick = Base.extend({
+            initialize: function (id, config) {
+
+                lang.mixin(this,
+                    config,
+                    {
+                        id: id
+                    }
+                );
+
+                this.node = this.template(this.template, this);
+
+            },
+
+            template: function (key, data) {
+                tmpl(key, data);
+            },
+
+            isValid: function () {
+                return true;
+            },
+
+            getData: function () {
+                return {};
+            }
+        });
+
+        ChoiceBrick = Brick.extend({
+            initialize: function (id, config) {
+
+                lang.mixin(this,
+                    {
+                        template: "choiceBrickDefaultTemplate"
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this, {
+                    selectedChoice: "",
+                    userSelected: false
+                }
+                );
+
+                this.choiceButtons = this.node.find(".btn-choice");
+
+                this.choiceButtons.on("click", "button:not(.button-pressed)", function (event) {
+                    var choiceName = $(event.currentTarget).data("choice");
+                    this.setChoice(choiceName, true);
+
+                });
+            },
+
+            setChoice: function (choiceName, userSelected) {
+                this.userSelected = userSelected ? true : false;
+                this.selectedChoice = choiceName;
+
+                this.choiceButtons
+                    .removeClass("button-pressed")
+                    .filter(choiceName)
+                    .addClass("button-pressed");
+
+                if (this.config.onChange) {
+                    this.config.onChange.call(this);
+                }
+            },
+
+            isUserSelected: function () {
+                return this.userSelected;
+            },
+
+            isValid: function () {
+                return this.selectedChoice !== "";
+            },
+
+            getData: function () {
+                var data = {};
+                data[this.id] = this.selectedChoice;
+
+                return data;
+            }
+        });
+
+        LayerItem = declare([Evented], {
+            constructor: function (config, options) {
+                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                lang.mixin(this,
+                    {
+                        /**
+                         * Layer id. Upon initialization, `id` can be overwritten by `config.id` value. 
+                         *
+                         * @property id
+                         * @type String
+                         * @default null
+                         */
+                        id: null,
+
+                        /**
+                         * A node of the LayerItem.
+                         *
+                         * @property node
+                         * @type JObject
+                         * @default null
+                         */
+                        node: null,
+
+                        /**
+                         * A copy of the layer config supplied during LayerItem creation; is set to `config` value.
+                         *
+                         * @property _config
+                         * @private
+                         * @type Object
+                         * @default null
+                         */
+                        _config: null,
+
+                        /**
+                         * A node of the image container.
+                         *
+                         * @property _imageContainerNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _imageContainerNode: null,
+
+                        /**
+                         * A node of the layer display name.
+                         *
+                         * @property _displayNameNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _displayNameNode: null,
+
+                        /**
+                         * A node of the layer controls.
+                         *
+                         * @property _controlsNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _controlsNode: null,
+
+                        /**
+                         * A node of the layer toggles.
+                         *
+                         * @property _togglesNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _togglesNode: null,
+
+                        /**
+                         * A dictionary of control nodes available for this layer.
+                         *
+                         * @property _controlStore
+                         * @private
+                         * @type Object
+                         * @default {}
+                         */
+                        _controlStore: {},
+
+                        /**
+                         * A dictionary of toggle nodes available for this layer.
+                         *
+                         * @property _toggleStore
+                         * @private
+                         * @type Object
+                         * @default {}
+                         */
+                        _toggleStore: {},
+
+                        /**
+                         * A dictionary of notice nodes available for this layer.
+                         *
+                         * @property _noticeStore
+                         * @private
+                         * @type Object
+                         * @default {}
+                         */
+                        _noticeStore: {},
+
+                        /**
+                         * Templates to be used in construction of the layer nodes.
+                         *
+                         * @property templates
+                         * @type Object
+                         * @default layer_selector_template.json
+                         */
+                        templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+
+                        /**
+                         * State of this LayerItem; can be overwritten by `options.state`.
+                         *
+                         * @property state
+                         * @type String
+                         * @default LayerItem.state.DEFAULT
+                         */
+                        state: LayerItem.state.DEFAULT,
+
+                        /**
+                         * Specifies type of this LayerItem and the name of the layer item template to use; can be overwritten by `options.type`.
+                         *
+                         * @property type
+                         * @type String
+                         * @default null
+                         */
+                        type: null
+                    },
+                    options,
+                    {
+                        id: config.id,
+
+                        _config: config,
+
+                        /**
+                         * Specifies a state matrix for this particular LayerItem. The default is mixed with `options.stateMatrix` upon initialization.
+                         * The state matrix prescribes what controls, toggles, and notices are present in specific states. 
+                         * 
+                         * @property stateMatrix
+                         * @type Object
+                         * @default LayerItem.stateMatrix
+                         */
+                        stateMatrix: lang.mixin(
+                            lang.clone(LayerItem.stateMatrix),
+                            options.stateMatrix
+                        ),
+
+                        /**
+                         * Specifies a state transition matrix for this particular LayerItem. The default is mixed with `options.transitionMatrix` upon initialization.
+                         * The state transition matrix prescribes the direction of state changes for specific states.
+                         *
+                         * @property transitionMatrix
+                         * @type Object
+                         * @default LayerItem.transitionMatrix
+                         */
+                        transitionMatrix: lang.mixin(
+                            lang.clone(LayerItem.transitionMatrix),
+                            options.transitionMatrix
+                        )
+                    }
+                );
+
+                this.node = $(this._template(this.type, this._config));
+                this._imageBoxNode = this.node.find(".layer-details > div:first");
+                this._displayNameNode = this.node.find(".layer-name > span");
+                this._controlsNode = this.node.find(".layer-controls-group");
+                this._togglesNode = this.node.find(".layer-checkboxes");
+                this._noticesNode = this.node.find(".layer-notices");
+
+                this._generateParts("controls", "layer_control_", this._controlStore);
+                this._generateParts("toggles", "layer_toggle_", this._toggleStore);
+                this._generateParts("notices", "layer_notice_", this._noticeStore);
+
+                this.setState(this.state, null, true);
+
+                console.debug("-->", this.state, options);
+            },
+
+            /**
+             * Generates control, toggle, and notice nodes for the LayerItem object to be used in different states.
+             *
+             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
+             * @param {String} templateKey a template name prefix for the template parts
+             * @param {Object} partStore a dictionary to store generated nodes
+             * @method _generateParts
+             * @private
+             */
+            _generateParts: function (partType, templateKey, partStore) {
+                var that = this,
+
+                    stateKey,
+                    partKeys = [],
+                    part;
+
+                Object
+                    .getOwnPropertyNames(LayerItem.state)
+                    .forEach(function (s) {
+                        stateKey = LayerItem.state[s];
+                        partKeys = partKeys.concat(that.stateMatrix[stateKey][partType]);
+                    });
+
+                partKeys = UtilArray.unique(partKeys);
+
+                partKeys.forEach(function (pKey) {
+                    part = that._generatePart(templateKey, pKey);
+
+                    partStore[pKey] = (part);
+                });
+            },
+
+            /**
+             * Generates a control given the template name and additional data object to pass to the template engine.
+             *
+             * @param {String} templateKey a template name prefix for the template parts
+             * @param {String} pKey name of the template to build
+             * @param {Object} [data] optional data to pass to template engine; used to update strings on notice objects
+             * @method _generatePart
+             * @private
+             * @return Created part node
+             */
+            _generatePart: function (templateKey, pKey, data) {
+                var part = $(this._template(templateKey + pKey,
+                    {
+                        id: this.id,
+                        config: this._config,
+                        nameKey: pKey,
+                        data: data
+                    }
+                ));
+
+                return part;
+            },
+
+            /**
+             * Changes the state of the LayerItem and update its UI representation.
+             *
+             * @param {String} state name of the state to be set
+             * @param {Object} [options] additional options
+             * @param {Object} [options.notices] custom information to be displayed in a notice for the current state if needed; object structure is not set; look at the appropriate template; 
+             * @example
+             *      {
+             *          notices: {
+             *              error: {
+             *                  message: "I'm error"
+             *              },
+             *              scale: {
+             *                  message: "All your base are belong to us"
+             *              }
+             *          }
+             *      }
+             * @param {Boolean} force if `true`, forces the state change even if it's no allowed by the `transitionMatrix`
+             * @method setState
+             */
+            setState: function (state, options, force) {
+                var allowedStates = this.transitionMatrix[this.state],
+                    notice,
+
+                    that = this;
+
+                if (allowedStates.indexOf(state) !== -1 || force) {
+
+                    this.state = state;
+                    //lang.mixin(this, options);
+
+                    // set state class on the layerItem root node
+                    this.node
+                        .removeClass(ALL_STATES_CLASS)
+                        .addClass(this.state);
+
+                    // regenerate notice controls if extra data is provided
+                    if (options) {
+                        if (options.notices) {
+
+                            UtilDict.forEachEntry(options.notices, function (pKey, data) {
+                                notice = that._generatePart("layer_notice_", pKey, data);
+
+                                that._noticeStore[pKey] = (notice);
+                            });
+                        }
+                    }
+
+                    this._setParts("controls", this._controlStore, this._controlsNode);
+                    this._setParts("toggles", this._toggleStore, this._togglesNode);
+                    this._setParts("notices", this._noticeStore, this._noticesNode);
+
+                    switch (this.state) {
+                        case LayerItem.state.DEFAULT:
+                            console.log(LayerItem.state.DEFAULT);
+                            break;
+
+                        case LayerItem.state.LOADING:
+                            this.node.attr("aria-busy", true); // indicates that the region is loading
+
+                            console.log(LayerItem.state.LOADING);
+                            break;
+
+                        case LayerItem.state.LOADED:
+                            this.node.attr("aria-busy", false); // indicates that the loading is complete
+                            this.setState(LayerItem.state.DEFAULT);
+
+                            console.log(LayerItem.state.LOADED);
+                            break;
+
+                        case LayerItem.state.ERROR:
+                            console.log(LayerItem.state.ERROR);
+                            break;
+
+                        case LayerItem.state.OFF_SCALE:
+                            console.log(LayerItem.state.OFF_SCALE);
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+
+            /**
+             * Sets controls, toggles, and notices of the LayerItem according to its state.
+             *
+             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
+             * @param {Object} partStore a dictionary to store generated nodes
+             * @param {JObject} target a jQuery node where the nodes should be appended
+             * @method _setParts
+             * @private
+             */
+            _setParts: function (partType, partStore, target) {
+                var controls = [];
+
+                this.stateMatrix[this.state][partType].forEach(function (pKey) {
+                    controls.push(partStore[pKey]);
+                });
+
+                target
+                    .empty()
+                    .append(controls);
+            },
+
+            /**
+             * Populates a template specified by the key with the supplied data.
+             *
+             * @param {String} key template name
+             * @param {Object} data data to be inserted into the template
+             * @method _template
+             * @private
+             * @return {String} a string template filled with supplied data
+             */
+            _template: function (key, data) {
+                tmpl.cache = {};
+                tmpl.templates = this.templates;
+
+                data = data || {};
+                data.fn = TmplUtil;
+
+                return tmpl(key, data);
+            }
+        });
+
+        return LayerItem;
+    });
