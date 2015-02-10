@@ -317,7 +317,38 @@
             </div>
         ",
 
-        "default_choice_brick_template": " ",
+        "default_step_template": "
+            <div class='step step-{%= o.stepCount %}' id=''>
+                <div class='step-content'>
+                    
+                </div>
+
+                <div class='step-options-container'>
+                    <div class='options-bg' role='presentation'><div class='bg-border'></div></div>
+
+                    <div class='step-options'>
+                        
+                    </div>
+                </div>
+            </div>
+        ",
+
+        "default_choice_brick_template": "
+            <div class='choice-brick-container'>
+                <h3 class='h6'>{%= o.header %}</h3>
+                <div class='btn-group choice-group'>
+                    {%  
+                        o.choices.forEach(function(choice) {
+                            include('default_choice_brick_button_template', choice);
+                        });
+                    %}
+                </div>
+            </div>
+        ",
+
+        "default_choice_brick_button_template": "
+            <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
+        ",
 
         "a_d_options_bg": "
             <div class='options-bg' role='presentation'><div class='bg-border'></div></div>

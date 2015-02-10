@@ -88,6 +88,7 @@ define([
 
         ChoiceBrick = Brick.extend({
             initialize: function (id, config) {
+                var that = this;
 
                 lang.mixin(this,
                     {
@@ -105,25 +106,26 @@ define([
 
                 this.choiceButtons = this.node.find(".btn-choice");
 
-                this.choiceButtons.on("click", "button:not(.button-pressed)", function (event) {
-                    var choiceName = $(event.currentTarget).data("choice");
-                    this.setChoice(choiceName, true);
-
+                this.node.on("click", ".btn-choice:not(.button-pressed)", function (event) {
+                    var choiceKey = $(event.currentTarget).data("key");
+                    that.setChoice(choiceKey, true);
                 });
             },
 
-            setChoice: function (choiceName, userSelected) {
+            setChoice: function (choiceKey, userSelected) {
                 this.userSelected = userSelected ? true : false;
-                this.selectedChoice = choiceName;
+                this.selectedChoice = choiceKey;
 
                 this.choiceButtons
                     .removeClass("button-pressed")
-                    .filter(choiceName)
+                    .filter("[data-key='" + choiceKey + "']")
                     .addClass("button-pressed");
 
-                if (this.config.onChange) {
-                    this.config.onChange.call(this);
+                if (this.onChange) {
+                    this.onChange.call(this);
                 }
+
+                console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
             },
 
             isUserSelected: function () {
@@ -147,14 +149,14 @@ define([
         };
 
         /**
-             * Populates a template specified by the key with the supplied data.
-             *
-             * @param {String} key template name
-             * @param {Object} data data to be inserted into the template
-             * @method _template
-             * @private
-             * @return {String} a string template filled with supplied data
-             */
+        * Populates a template specified by the key with the supplied data.
+        *
+        * @param {String} key template name
+        * @param {Object} data data to be inserted into the template
+        * @method _template
+        * @private
+        * @return {String} a string template filled with supplied data
+        */
         function _template(key, data) {
             var d = lang.clone(data) || {};
             tmpl.cache = {};
@@ -167,6 +169,8 @@ define([
 
         LayerItem = declare([Evented], {
             constructor: function (config) {
+                var that = this;
+
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -203,6 +207,9 @@ define([
                          * @default null
                          */
                         _config: null,
+
+                        _contentNode: null,
+                        _optionsNode: null,
 
                         /**
                          * A node of the image container.
@@ -304,13 +311,18 @@ define([
                     config
                 );
 
+                this.node = $(_template(this.template, this._config));
+                this._contentNode = this.node.find("> .step-content");
+                this._optionsContainerNode = this.node.find("> .step-options-container");
+                this._optionsNode = this._optionsContainerNode.find("> .step-options");
+                
                 this.content.forEach(function (contentItem) {
                     var contentBrick = bricks[contentItem.type].new(contentItem.id, contentItem.config);
 
-                    this.contentBricks[contentItem.id] = contentBrick;
+                    that._addContentBrick(contentBrick);
+                    
                 });
 
-                //this.node = $(this._template(this.type, this._config));
                 //this._imageBoxNode = this.node.find(".layer-details > div:first");
                 //this._displayNameNode = this.node.find(".layer-name > span");
                 //this._controlsNode = this.node.find(".layer-controls-group");
@@ -323,7 +335,14 @@ define([
 
                 //this.setState(this.state, null, true);
 
+                $("#add-dataset-section > section").append(this.node);
+
                 console.debug("-->", this.state);
+            },
+
+            _addContentBrick: function (contentBrick) {
+                this.contentBricks[contentBrick.id] = contentBrick;
+                this._contentNode.append(contentBrick.node);
             },
 
             /**
