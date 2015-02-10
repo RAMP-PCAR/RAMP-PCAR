@@ -462,15 +462,15 @@ define([
         function enhanceFileFeatureLayer(featureLayer, opts) {
             //make a minimal config object for this layer
             var newConfig = {
-                id: featureLayer.id,
-                displayName: opts.datasetName,
-                nameField: opts.nameField,
-                symbology: {
-                    type: "simple",
-                    imageUrl: opts.icon
+                    id: featureLayer.id,
+                    displayName: opts.datasetName,
+                    nameField: opts.nameField,
+                    symbology: {
+                        type: "simple",
+                        imageUrl: opts.icon
+                    },
+                    datagrid: createDatagridConfig(opts.fields)
                 },
-                datagrid: createDatagridConfig(opts.fields)
-            },
                 defaultRenderers = GlobalStorage.DefaultRenderers;
 
             //backfill the rest of the config object with default values
@@ -551,7 +551,8 @@ define([
             var def = new Deferred();
 
             try {
-                shp(shpData).then(function (geojson) {
+                // window.crypto.subtle.digest({ name: "SHA-256" }, shpData).then(function (h) { var u8 = new Uint16Array(h); console.log(u8); });
+                shp.getShapefile(shpData).then(function (geojson) {
                     var jsonLayer;
                     try {
                         jsonLayer = makeGeoJsonLayer(geojson);
