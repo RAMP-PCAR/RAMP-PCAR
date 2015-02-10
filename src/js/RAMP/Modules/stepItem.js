@@ -56,8 +56,13 @@ define([
         var LayerItem,
             ALL_STATES_CLASS,
 
+            templates = JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+
             Brick,
-            ChoiceBrick;
+            ChoiceBrick,
+            bricks = {
+                ChoiceBrick: ChoiceBrick
+            };
 
         Brick = Base.extend({
             initialize: function (id, config) {
@@ -74,7 +79,7 @@ define([
             },
 
             template: function (key, data) {
-                tmpl(key, data);
+                this.node = $(_template(key, data));
             },
 
             isValid: function () {
@@ -91,7 +96,7 @@ define([
 
                 lang.mixin(this,
                     {
-                        template: "choiceBrickDefaultTemplate"
+                        template: "default_choice_brick_template"
                     }
                 );
 
@@ -142,8 +147,27 @@ define([
             }
         });
 
+        /**
+             * Populates a template specified by the key with the supplied data.
+             *
+             * @param {String} key template name
+             * @param {Object} data data to be inserted into the template
+             * @method _template
+             * @private
+             * @return {String} a string template filled with supplied data
+             */
+        function _template(key, data) {
+            tmpl.cache = {};
+            tmpl.templates = templates;
+
+            data = data || {};
+            data.fn = TmplUtil;
+
+            return tmpl(key, data);
+        }
+
         LayerItem = declare([Evented], {
-            constructor: function (config, options) {
+            constructor: function (config) {
                 // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -155,6 +179,12 @@ define([
                          * @default null
                          */
                         id: null,
+
+                        expose: [],
+                        content: null,
+                        contentBricks: {},
+
+                        template: "default_step_template",
 
                         /**
                          * A node of the LayerItem.
@@ -272,54 +302,29 @@ define([
                          */
                         type: null
                     },
-                    options,
-                    {
-                        id: config.id,
-
-                        _config: config,
-
-                        /**
-                         * Specifies a state matrix for this particular LayerItem. The default is mixed with `options.stateMatrix` upon initialization.
-                         * The state matrix prescribes what controls, toggles, and notices are present in specific states. 
-                         * 
-                         * @property stateMatrix
-                         * @type Object
-                         * @default LayerItem.stateMatrix
-                         */
-                        stateMatrix: lang.mixin(
-                            lang.clone(LayerItem.stateMatrix),
-                            options.stateMatrix
-                        ),
-
-                        /**
-                         * Specifies a state transition matrix for this particular LayerItem. The default is mixed with `options.transitionMatrix` upon initialization.
-                         * The state transition matrix prescribes the direction of state changes for specific states.
-                         *
-                         * @property transitionMatrix
-                         * @type Object
-                         * @default LayerItem.transitionMatrix
-                         */
-                        transitionMatrix: lang.mixin(
-                            lang.clone(LayerItem.transitionMatrix),
-                            options.transitionMatrix
-                        )
-                    }
+                    config
                 );
 
-                this.node = $(this._template(this.type, this._config));
-                this._imageBoxNode = this.node.find(".layer-details > div:first");
-                this._displayNameNode = this.node.find(".layer-name > span");
-                this._controlsNode = this.node.find(".layer-controls-group");
-                this._togglesNode = this.node.find(".layer-checkboxes");
-                this._noticesNode = this.node.find(".layer-notices");
+                this.content.forEach(function (contentItem) {
+                    var contentBrick = bricks[contentItem.type].new(contentItem.id, contentItem.config);
 
-                this._generateParts("controls", "layer_control_", this._controlStore);
-                this._generateParts("toggles", "layer_toggle_", this._toggleStore);
-                this._generateParts("notices", "layer_notice_", this._noticeStore);
+                    this.contentBricks[contentItem.id] = contentBrick;
+                });
 
-                this.setState(this.state, null, true);
+                //this.node = $(this._template(this.type, this._config));
+                //this._imageBoxNode = this.node.find(".layer-details > div:first");
+                //this._displayNameNode = this.node.find(".layer-name > span");
+                //this._controlsNode = this.node.find(".layer-controls-group");
+                //this._togglesNode = this.node.find(".layer-checkboxes");
+                //this._noticesNode = this.node.find(".layer-notices");
 
-                console.debug("-->", this.state, options);
+                //this._generateParts("controls", "layer_control_", this._controlStore);
+                //this._generateParts("toggles", "layer_toggle_", this._toggleStore);
+                //this._generateParts("notices", "layer_notice_", this._noticeStore);
+
+                //this.setState(this.state, null, true);
+
+                console.debug("-->", this.state);
             },
 
             /**
@@ -484,25 +489,6 @@ define([
                 target
                     .empty()
                     .append(controls);
-            },
-
-            /**
-             * Populates a template specified by the key with the supplied data.
-             *
-             * @param {String} key template name
-             * @param {Object} data data to be inserted into the template
-             * @method _template
-             * @private
-             * @return {String} a string template filled with supplied data
-             */
-            _template: function (key, data) {
-                tmpl.cache = {};
-                tmpl.templates = this.templates;
-
-                data = data || {};
-                data.fn = TmplUtil;
-
-                return tmpl(key, data);
             }
         });
 

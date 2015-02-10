@@ -153,6 +153,36 @@ require([
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
             theme.tooltipster();
 
+            var a = new StepItem({
+                id: "serviceTypeStep",
+                expose: ["serviceType"],
+
+                template: "step_template", //optional, has a default
+
+                content: [
+                    {
+                        id: "serviceType",
+                        type: "ChoiceBrick",
+                        config: {
+                            template: "template_name", //optional, has a default
+                            header: "Service Type", //optional, has a default
+                            choices: [
+                                {
+                                    key: "feature",
+                                    value: "Feature"
+                                },
+                                {
+                                    key: "wms",
+                                    value: "WMS"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            });
+
+            a = null;
+
             /* End - RAMP Events */
         }
         /* End - Bootstrapper functions */
