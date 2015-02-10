@@ -67,6 +67,9 @@ define([
             initialize: function (id, config) {
 
                 lang.mixin(this,
+                    {
+                        required: []
+                    },
                     config,
                     {
                         id: id,
@@ -398,10 +401,21 @@ define([
                 });
 
                 this._contentNode.append(contentBrick.node);
+
+                this._doInternalCheck();
             },
 
             _doInternalCheck: function () {
-                console.log(this.getData(), "internal check");
+                var flag,
+                    that = this;
+
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    flag = brick.required.every(function (req) {
+                        return that.contentBricks[req].isValid();
+                    });
+
+                    brick.disable(!flag);
+                });                
             },
 
             getData: function () {

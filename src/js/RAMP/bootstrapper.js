@@ -183,6 +183,28 @@ require([
                                     }
                                 }
                             ]
+                        },
+                        {
+                            id: "reqCheck",
+                            type: "ChoiceBrick",
+                            config: {
+                                header: "test", //optional, has a default
+                                choices: [
+                                    {
+                                        key: "f",
+                                        value: "First"
+                                    },
+                                    {
+                                        key: "s",
+                                        value: "Second"
+                                    },
+                                    {
+                                        key: "t",
+                                        value: "Third"
+                                    }
+                                ],
+                                required: ["serviceType"]
+                            }
                         }
                     ]
                 });
