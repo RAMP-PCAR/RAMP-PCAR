@@ -142,8 +142,8 @@ define(["dojo/_base/array", "utils/util"],
                 RAMP.config = config;
 
                 this.layerSelectorGroups = [
-                    this.layerType.feature,
-                    this.layerType.wms
+                    this.layerType.wms,
+                    this.layerType.feature
                 ];
             },
 
@@ -165,8 +165,6 @@ define(["dojo/_base/array", "utils/util"],
 
             // specifies knows layer groups in the reversed order;
             layerSelectorGroups: [
-                "wms_layer",
-                "feature_layer"
             ]
         };
     });

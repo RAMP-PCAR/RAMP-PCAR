@@ -104,12 +104,65 @@ define([
             promise.then(
                 function (data) {
                     var res = {
-                        layerId: data.id,
+                        layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
                         layerName: data.name,
                         layerUrl: featureLayerEndpoint,
                         geometryType: data.geometryType,
-                        fields: dojoArray.map(data.fields, function (x) { return x.name; })
+                        fields: dojoArray.map(data.fields, function (x) { return x.name; }),
+                        renderer: data.drawingInfo.renderer
                     };
+
+                    def.resolve(res);
+                },
+                function (error) {
+                    console.log(error);
+                    def.reject(error);
+                }
+            );
+
+            return def.promise;
+        }
+
+        /**
+        * Fetch relevant data from a legend related to a feature layer endpoint.  Returns a promise which
+        * resolves with a partial list of properties extracted from the endpoint.
+        *
+        * @param {string} featureLayerEndpoint a URL pointing to an ESRI Feature Layer
+        * @returns {Promise} a promise resolving with an object mapping legend labels to data URLs for those labels
+        */
+        function getFeatureLayerLegend(featureLayerEndpoint) {
+            var def = new Deferred(), promise, legendUrl, idx, layerIdx;
+
+            //snip off last slash if there
+            idx = featureLayerEndpoint.indexOf('/', featureLayerEndpoint.length - 1);
+            if (idx > -1) {
+                legendUrl = featureLayerEndpoint.substring(0, idx - 1);
+            } else {
+                legendUrl = featureLayerEndpoint;
+            }
+
+            //snip off & store layer index, add legend to url
+            idx = legendUrl.lastIndexOf('/');
+            layerIdx = parseInt(legendUrl.substring(idx + 1));
+            legendUrl = legendUrl.substring(0, idx) + '/legend?f=json';
+
+            try {
+                promise = (new EsriRequest({ url: legendUrl })).promise;
+            } catch (e) {
+                def.reject(e);
+            }
+
+            promise.then(
+                function (data) {
+                    //find our layer in the legend
+                    var res = {};
+                    dojoArray.forEach(data.layers, function (layer) {
+                        if (layer.layerId === layerIdx) {
+                            dojoArray.forEach(layer.legend, function (legendItem) {
+                                res[legendItem.label] = "data:" + legendItem.contentType + ';base64,' + legendItem.imageData;
+                            });
+                        }
+                    });
 
                     def.resolve(res);
                 },
@@ -247,6 +300,66 @@ define([
             });
 
             return dg;
+        }
+
+        /**
+        * Will generate a symbology config node for a ESRI feature service.
+        * Uses the information from the feature layers renderer JSON definition
+        *
+        * @param {Object} renderer renderer object from feature layer endpoint
+        * @param {Object} legendLookup object that maps legend label to data url of legend image
+        * @returns {Object} an JSON config object for feature symbology
+        */
+        function createSymbologyConfig(renderer, legendLookup) {
+            var symb = {
+                type: renderer.type
+            };
+
+            switch (symb.type) {
+                case "simple":
+                    symb.label = renderer.label;
+                    symb.imageUrl = legendLookup[renderer.label];
+
+                    break;
+
+                case "uniqueValue":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field1 = renderer.field1;
+                    symb.field2 = renderer.field2;
+                    symb.field3 = renderer.field3;
+                    symb.valueMaps = dojoArray.map(renderer.uniqueValueInfos, function (uvi) {
+                        return {
+                            label: uvi.label,
+                            value: uvi.value,
+                            imageUrl: legendLookup[uvi.label]
+                        };
+                    });
+
+                    break;
+                case "classBreaks":
+                    if (renderer.defaultLabel) {
+                        symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
+                    }
+                    symb.field = renderer.field;
+                    symb.minValue = renderer.minValue;
+                    symb.rangeMaps = dojoArray.map(renderer.classBreakInfos, function (cbi) {
+                        return {
+                            label: cbi.label,
+                            maxValue: cbi.classMaxValue,
+                            imageUrl: legendLookup[cbi.label]
+                        };
+                    });
+
+                    break;
+                default:
+                    //Renderer we dont support
+                    console.log('encountered unsupported renderer type: ' + symb.type);
+                    //TODO make a stupid basic renderer to prevent things from breaking?
+            }
+
+            return symb;
         }
 
         /**
@@ -478,6 +591,7 @@ define([
         return {
             loadDataSet: loadDataSet,
             getFeatureLayer: getFeatureLayer,
+            getFeatureLayerLegend: getFeatureLayerLegend,
             getWmsLayerList: getWmsLayerList,
             makeGeoJsonLayer: makeGeoJsonLayer,
             csvPeek: csvPeek,
@@ -485,6 +599,7 @@ define([
             buildShapefile: buildShapefile,
             buildGeoJson: buildGeoJson,
             enhanceFileFeatureLayer: enhanceFileFeatureLayer,
-            createDatagridConfig: createDatagridConfig
+            createDatagridConfig: createDatagridConfig,
+            createSymbologyConfig: createSymbologyConfig
         };
     });
