@@ -44,12 +44,12 @@ define([
     "dojo/text!./templates/filter_manager_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         Evented, declare, lang,
         filter_manager_template,
-        TmplHelper, TmplUtil, UtilArray, UtilDict
+        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
 
@@ -61,7 +61,8 @@ define([
             bricks,
 
             Brick,
-            ChoiceBrick;
+            ChoiceBrick,
+            SimpleInputBrick;
 
         Brick = Base.extend({
             initialize: function (id, config) {
@@ -137,10 +138,11 @@ define([
 
                 Brick.initialize.call(this, id, config);
 
-                lang.mixin(this, {
-                    selectedChoice: "",
-                    userSelected: false
-                }
+                lang.mixin(this,
+                    {
+                        selectedChoice: "",
+                        userSelected: false
+                    }
                 );
 
                 this.choiceButtons = this.node.find(".btn-choice");
@@ -152,17 +154,21 @@ define([
             },
 
             setChoice: function (choiceKey, userSelected) {
-                this.userSelected = userSelected ? true : false;
-                this.selectedChoice = choiceKey;
+                // only set choice if it differs from the current one
+                if (choiceKey !== this.selectedChoice || (userSelected ? true : false) !== this.userSelected) {
 
-                this.choiceButtons
-                    .removeClass("button-pressed")
-                    .filter("[data-key='" + choiceKey + "']")
-                    .addClass("button-pressed");
+                    this.userSelected = userSelected ? true : false;
+                    this.selectedChoice = choiceKey;
 
-                console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
+                    this.choiceButtons
+                        .removeClass("button-pressed")
+                        .filter("[data-key='" + choiceKey + "']")
+                        .addClass("button-pressed");
 
-                this._notify("change", this.getData());
+                    console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
+
+                    this._notify("change", this.getData());
+                }
             },
 
             isUserSelected: function () {
@@ -183,8 +189,67 @@ define([
             }
         });
 
+        SimpleInputBrick = Brick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_simpleinput_brick_template",
+                        guid: UtilMisc.guid(),
+                        label: config.header
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        inputValue: "",
+                        userEntered: false
+                    }
+                );
+
+                this.inputNode = this.node.find("input");
+
+                this.inputNode.on("input", function (event) {
+                    var value = $(event.target).val();
+                    that.setInputValue(value, true);
+                });
+            },
+
+            setInputValue: function (value, userEntered) {
+                this.userEntered = userEntered ? true : false;
+                this.inputValue = value;
+
+                this.inputNode.val(value);
+
+                console.log("SimpleInputBrick-" + this.id, ":", this.inputValue, "; userEntered:", this.userEntered);
+
+                this._notify("change", this.getData());
+            },
+
+            isUserEntered: function () {
+                return this.userEntered;
+            },
+
+            isValid: function () {
+                return this.inputValue !== "";
+            },
+
+            getData: function (wrap) {
+                var payload = {
+                    inputValue: this.inputValue,
+                    userEntered: this.userEntered
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
         bricks = {
-            ChoiceBrick: ChoiceBrick
+            ChoiceBrick: ChoiceBrick,
+            SimpleInputBrick: SimpleInputBrick
         };
 
         /**
@@ -415,7 +480,7 @@ define([
                     });
 
                     brick.disable(!flag);
-                });                
+                });
             },
 
             getData: function () {

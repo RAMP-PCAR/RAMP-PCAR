@@ -158,7 +158,7 @@ require([
                             type: "ChoiceBrick",
                             config: {
                                 //template: "template_name", //optional, has a default
-                                header: "Service Type", //optional, has a default
+                                header: "Service Type",
                                 choices: [
                                     {
                                         key: "feature",
@@ -177,8 +177,39 @@ require([
                                     expose: true,
                                     callback: function (data) {
                                         if (data.userSelected) {
-                                            this.contentBricks.serviceType
-                                                .setChoice("wms");
+                                            this.contentBricks.reqCheck
+                                                .setChoice("s");
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            id: "serviceURL",
+                            type: "SimpleInputBrick",
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "Service URL",
+                                //label: "Service URL", // optional, equals to header by default
+                                placeholder: "ESRI MapServer or Feature layer or WMS layer"
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (data) {
+                                        var value = data.inputValue,
+                                            choiceBrick = this.contentBricks.serviceType,
+                                            guess = "";
+
+                                        if (!choiceBrick.isUserSelected()) {
+
+                                            if (value.match(/ArcGIS\/rest\/services/ig)) {
+                                                guess = "feature";
+                                            } else if (value.match(/wms/ig)) {
+                                                guess = "wms";
+                                            }
+                                            this.contentBricks.serviceType.setChoice(guess);
                                         }
                                     }
                                 }
@@ -203,16 +234,18 @@ require([
                                         value: "Third"
                                     }
                                 ],
-                                required: ["serviceType"]
+                                required: ["serviceType", "serviceURL"] // optional: indicates what other bricks must be valid before this brick gets enabled
                             }
                         }
                     ]
                 });
 
                 a.on("serviceType/change", function (event) {
-                    console.log(event);
+                    console.log("serviceType/change", event, "Step data:", a.getData());
+                });
 
-                    console.log("Step data:", a.getData());
+                a.on("serviceURL/change", function (event) {
+                    console.log("serviceURL/change", event, "Step data:", a.getData());
                 });
             });
 
