@@ -430,8 +430,7 @@ define([
         function localProjectExtent(extent, sr) {
             //TODO can we handle WKT?
 
-            // FIXME using modern functions during prototyping, make sure these are universally supported before finalizing
-
+            // interpolates two points by splitting the line in half recursively
             function interpolate(p0, p1, steps) {
                 var mid, i0, i1;
 
@@ -451,7 +450,9 @@ define([
             var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
                 projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [];
 
-            [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 2).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
+            // interpolate each edge by splitting it in half 3 times (since lines are not guaranteed to project to lines we need to consider
+            // max / min points in the middle of line segments)
+            [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 3).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
 
             //reproject the extent
             projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
