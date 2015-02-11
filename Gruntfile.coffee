@@ -453,8 +453,13 @@ module.exports = (grunt) ->
         'release'
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
+            tasks = [
+                'github-release'
+                'gh-pages'
+            ]
+        
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
-                grunt.task.run 'github-release'
+                grunt.task.run tasks
     )
 
     smartExpand = ( cwd, arr, extra ) ->    
