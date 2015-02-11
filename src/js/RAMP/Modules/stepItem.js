@@ -58,7 +58,7 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template)),
 
-            bricks,
+            bricks_types,
 
             Brick,
             ButtonBrick,
@@ -154,6 +154,56 @@ define([
             },
 
             getData: function (wrap) {
+                var payload = {
+                    selectedChoice: this.selectedChoice,
+                    userSelected: this.userSelected
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
+        MultiBrick = Brick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_multi_brick_template"
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        multiContainer: this.node.find("multi-container"),
+                        innerBricks: []
+                    }
+                );
+
+                this.content.forEach(function (contentItem) {
+                    var contentBrick = bricks_types[contentItem.type].new(contentItem.id, contentItem.config);
+
+                    that.innerBricks.push({
+                        contentItem: contentItem,
+                        contentBrick: contentBrick
+                    });
+                });
+
+                this.node.on("click", "button", function () {
+                    that._notify("click", null);
+                });
+            },
+
+            isValid: function () {
+                return this.innerBricks.every(function (innerBrick) {
+                    return innerBrick.isValid();
+                });
+            },
+
+            getData: function (wrap) {
+                //TODO: fill
                 var payload = {
                     selectedChoice: this.selectedChoice,
                     userSelected: this.userSelected
@@ -284,7 +334,7 @@ define([
             }
         });
 
-        bricks = {
+        bricks_types = {
             ButtonBrick: ButtonBrick,
             MultiBrick: MultiBrick,
             ChoiceBrick: ChoiceBrick,
@@ -460,9 +510,15 @@ define([
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
 
                 this.content.forEach(function (contentItem) {
-                    var contentBrick = bricks[contentItem.type].new(contentItem.id, contentItem.config);
+                    var contentBrick = bricks_types[contentItem.type].new(contentItem.id, contentItem.config);
 
-                    that._addContentBrick(contentItem, contentBrick);
+                    if (bricks_types.MultiBrick.isPrototypeOf(contentBrick)) {
+                        contentBrick.innerBricks.forEach(function (innerBrick) {
+                            that._addContentBrick(innerBrick.contentItem, innerBrick.contentBrick);
+                        });
+                    } else {
+                        that._addContentBrick(contentItem, contentBrick);
+                    }
                 });
 
                 //this._imageBoxNode = this.node.find(".layer-details > div:first");

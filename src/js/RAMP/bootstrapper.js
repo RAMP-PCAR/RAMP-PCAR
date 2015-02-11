@@ -216,6 +216,53 @@ require([
                             ]
                         },
                         {
+                            id: "nanes_",
+                            type: "MultiBrick",
+                            config: {
+                                //template: "template_name", //optional, defaults to
+                                header: "Service URL", //optional, omitted if not specified
+                                content: [
+                                    {
+                                        id: "okButton",
+                                        type: "ButtonBrick",
+                                        config: {
+                                            label: "Ok"
+                                        }
+                                    },
+                                    {
+                                        id: "cancelButton",
+                                        type: "ButtonBrick",
+                                        config: {
+                                            label: "Cancel", //optional, defaults to "Ok"
+                                            buttonClass: "btn-default"
+                                        }
+                                    }
+                                ],
+                                placeholder: "ESRI MapServer or Feature layer or WMS layer"
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (data) {
+                                        var value = data.inputValue,
+                                            choiceBrick = this.contentBricks.serviceType,
+                                            guess = "";
+
+                                        if (!choiceBrick.isUserSelected()) {
+
+                                            if (value.match(/ArcGIS\/rest\/services/ig)) {
+                                                guess = "feature";
+                                            } else if (value.match(/wms/ig)) {
+                                                guess = "wms";
+                                            }
+                                            this.contentBricks.serviceType.setChoice(guess);
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             id: "okButton",
                             type: "ButtonBrick",
                             config: {

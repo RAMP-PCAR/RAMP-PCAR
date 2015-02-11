@@ -346,6 +346,19 @@
             </div>
         ",
 
+        "default_multi_brick_template": "
+            <div class='multi-brick-container'>
+
+                {% if(o.header) { %}
+                    <h3 class='h6'>{%= o.header %}</h3>
+                {% } %}
+
+                <div class='multi-container'>
+                    
+                </div>
+            </div>
+        ",
+
         "default_choice_brick_template": "
             <div class='choice-brick-container'>
                 <h3 class='h6'>{%= o.header %}</h3>
