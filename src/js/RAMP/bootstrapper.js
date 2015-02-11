@@ -175,9 +175,9 @@ require([
                                 {
                                     eventName: "change",
                                     expose: true,
-                                    callback: function (data) {
+                                    callback: function (step, data) {
                                         if (data.userSelected) {
-                                            this.contentBricks.reqCheck
+                                            step.contentBricks.reqCheck
                                                 .setChoice("s");
                                         }
                                     }
@@ -214,6 +214,15 @@ require([
                                     }
                                 }
                             ]
+                        },
+                        {
+                            id: "okButton",
+                            type: "ButtonBrick",
+                            config: {
+                                //header: "test", //optional, omitted if not specified
+                                label: "Done"//, //optional, defaults to "Ok"
+                                //buttonClass: "btn-primary" //optional, defaults to "btn-primary"                                
+                            }
                         },
                         {
                             id: "reqCheck",

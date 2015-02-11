@@ -61,6 +61,8 @@ define([
             bricks,
 
             Brick,
+            ButtonBrick,
+            MultiBrick,
             ChoiceBrick,
             SimpleInputBrick;
 
@@ -108,6 +110,8 @@ define([
             getData: function (payload, wrap) {
                 var result = {};
 
+                payload = payload || {};
+
                 if (wrap) {
                     result[this.id] = payload;
                 } else {
@@ -123,6 +127,39 @@ define([
                 } else {
                     this.node.find("button").attr("disabled", false);
                 }
+            }
+        });
+
+        ButtonBrick = Brick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_button_brick_template",
+                        buttonClass: "btn-primary",
+                        label: "Ok"
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                this.node.on("click", "button", function () {
+                    that._notify("click", null);
+                });
+            },
+
+            isValid: function () {
+                return true;
+            },
+
+            getData: function (wrap) {
+                var payload = {
+                    selectedChoice: this.selectedChoice,
+                    userSelected: this.userSelected
+                };
+
+                return Brick.getData.call(this, payload, wrap);
             }
         });
 
@@ -248,6 +285,8 @@ define([
         });
 
         bricks = {
+            ButtonBrick: ButtonBrick,
+            MultiBrick: MultiBrick,
             ChoiceBrick: ChoiceBrick,
             SimpleInputBrick: SimpleInputBrick
         };
@@ -451,7 +490,7 @@ define([
                 if (contentItem.on) {
                     contentItem.on.forEach(function (o) {
                         contentBrick.on(o.eventName, function (data) {
-                            o.callback.call(that, data);
+                            o.callback.call(contentBrick, that, data);
 
                             // if event is exposed; emit it
                             if (o.expose) {
