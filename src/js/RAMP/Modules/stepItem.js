@@ -424,7 +424,6 @@ define([
                     var contentBrick = bricks[contentItem.type].new(contentItem.id, contentItem.config);
 
                     that._addContentBrick(contentItem, contentBrick);
-
                 });
 
                 //this._imageBoxNode = this.node.find(".layer-details > div:first");
@@ -448,11 +447,13 @@ define([
                 var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
 
+                // set brick events if specified
                 if (contentItem.on) {
                     contentItem.on.forEach(function (o) {
                         contentBrick.on(o.eventName, function (data) {
                             o.callback.call(that, data);
 
+                            // if event is exposed; emit it
                             if (o.expose) {
                                 that._doInternalCheck();
                                 that.emit(contentBrick.id + "/" + o.eventName, data);
@@ -461,6 +462,7 @@ define([
                     });
                 }
 
+                // do a check of all the bricks in case some of them depend on validity of other bricks in this step
                 contentBrick.on("change", function () {
                     that._doInternalCheck();
                 });
@@ -479,6 +481,7 @@ define([
                         return that.contentBricks[req].isValid();
                     });
 
+                    // disable or enable a brick based on sum validity of its dependencies
                     brick.disable(!flag);
                 });
             },
