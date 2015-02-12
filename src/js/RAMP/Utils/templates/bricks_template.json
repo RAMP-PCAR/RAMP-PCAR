@@ -69,5 +69,41 @@
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
             <input name='input' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
         </div>
+    ",
+
+    "default_simpleinput_brick_template": "
+        
+        {% if(o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
+
+        <div class='input-group'>
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+        </div>
+    ",
+
+    "default_fileinput_brick_template": "
+        
+        {% if(o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
+
+        <div class='input-group'>
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            
+            <div class='input-group-btn browse-files'>
+                <div class='input-container'>
+                    <input type='file' data-role='upload'>
+                </div>
+                <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
+                    <i class='fa fa-file'></i>
+                    <i class='fa fa-file-o'></i>
+                    <span class='on-right wb-inv'>Browse</span>
+                </span>                                                                                                
+            </div>
+
+            <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+        </div>
     "
 }
