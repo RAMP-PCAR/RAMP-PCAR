@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
-    "proxyUrl": "http://corsproxy.zz9.ca/proxy.php",
+    "proxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -643,13 +643,22 @@
         ],
         "wms": [
             {
-                "id": "nasa_modis",
-                "displayName": "@@config.layers.wms.nasa_modis.displayName",
-                "format": "image/jpeg",
-                "layerName": "36",
+                "id": "geomet_temp",
+                "displayName": "@@config.layers.wms.geomet_temp.displayName",
+                "format": "png",
+                "layerName": "GDPS.ETA_TT",
                 "imageUrl": "assets/images/wms.png",
-                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
+                "url": "http://geo.weather.gc.ca/geomet/",
                 "legendMimeType": "image/jpeg"
+            },
+            {
+                "id": "GEONAMES_cgns",
+                "layerName": "GEONAMES:cgns",
+                "format": "png",
+                "displayName": "test",
+                "imageUrl": "assets/images/wms.png",
+                "legendMimeType": "image/jpeg",
+                "url": "http://cgns.nrcan.gc.ca/wmsu/cubeserv.cgi"
             },
             {
                 "id": "railroad",

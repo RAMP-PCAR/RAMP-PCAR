@@ -177,8 +177,8 @@
                 "limits": {
                     "displayName": "Limites"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Les aéroports de l'arctique"
+                "geomet_temp": {
+                    "displayName": "Température de l'air (°C)"
                 }, 
                 "wms6": {
                     "displayName": "Réseau de chemins de fers"

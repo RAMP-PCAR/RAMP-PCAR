@@ -177,8 +177,8 @@
                 "limits": {
                     "displayName": "Limits"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Arctic Airports"
+                "geomet_temp": {
+                    "displayName": "Air temperature (°C)"
                 }, 
                 "wms6": {
                     "displayName": "Railway Network"
