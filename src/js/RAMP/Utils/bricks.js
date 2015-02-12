@@ -201,6 +201,8 @@ define([
         OkCancelButtonBrick = MultiBrick.extend({
             initialize: function (id, config) {
                 var that = this,
+                    okButtonId = "okButton",
+                    cancelButtonId = "cancelButton",
                     newConfig;
 
                 newConfig =
@@ -210,7 +212,7 @@ define([
                         header: config.header,
                         content: [
                             {
-                                id: "okButton",
+                                id: okButtonId,
                                 type: ButtonBrick,
                                 config: {
                                     label: config.okLabel,
@@ -218,7 +220,7 @@ define([
                                 }
                             },
                             {
-                                id: "cancelButton",
+                                id: cancelButtonId,
                                 type: ButtonBrick,
                                 config: {
                                     label: config.cancelLabel,
@@ -233,18 +235,30 @@ define([
 
                 lang.mixin(this,
                     {
-                        okButtonNode: this.node.find(".ok-btn"),
-                        cancelButtonNode: this.node.find(".cancel-btn")
+                        //okButtonNode: this.node.find(".ok-btn"),
+                        //cancelButtonNode: this.node.find(".cancel-btn"),
+                        okButton: this.contentBricks[okButtonId],
+                        cancelButton: this.contentBricks[cancelButtonId]
                     }
                 );
 
-                this.okButtonNode.on("click", function () {
+                this.okButton.on("click", function () {
+                    that._notify("okClick", null);
+                    that._notify("click", null);
+                });
+
+                this.cancelButton.on("click", function () {
+                    that._notify("cancelClick", null);
+                    that._notify("click", null);
+                });
+
+                /*this.okButtonNode.on("click", function () {
                     that._notify("click", null);
                 });
 
                 this.cancelButtonNode.on("click", function () {
                     that._notify("click", null);
-                });
+                });*/
             },
 
             isValid: function () {

@@ -264,9 +264,24 @@ require([
                                     eventName: "click",
                                     expose: true,
                                     callback: function (step, data) {
-                                        console.log(this, step, data);
+                                        console.log("Just Click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "okClick",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log("Ok click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "cancelClick",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log("Cancel click:", this, step, data);
                                     }
                                 }
+
                             ]
                         },
                         {
