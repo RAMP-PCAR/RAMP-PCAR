@@ -252,7 +252,8 @@ define([
                     contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
                 // if it's a multiBrick, add individual bricks from its content to the main content and wire them as separate bricks
-                if (Bricks.MultiBrick.isPrototypeOf(contentBrick)) {
+                //if (Bricks.MultiBrick.isPrototypeOf(contentBrick)) {
+                if (Bricks.MultiBrick === contentItem.type) {
 
                     contentBrick.content.forEach(function (contentItem) {
                         that._wireBrickUp(contentItem, contentBrick.contentBricks[contentItem.id]);

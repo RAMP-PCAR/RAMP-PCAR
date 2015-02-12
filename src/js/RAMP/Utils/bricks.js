@@ -23,18 +23,22 @@ define([
     "utils/util", "utils/tmplHelper", "utils/array", "utils/dictionary"
 ],
     function (lang,
-        
+
         bricks_template,
 
         UtilMisc, TmplHelper, UtilArray, UtilDict) {
         "use strict";
 
         var Brick,
+
             ButtonBrick,
+            OkCancelButtonBrick,
+
             MultiBrick,
+
             ChoiceBrick,
             SimpleInputBrick,
-                
+
             templates = JSON.parse(TmplHelper.stringifyTemplate(bricks_template));
 
         console.log(UtilDict);
@@ -49,16 +53,17 @@ define([
 
                 lang.mixin(this,
                     {
-                        required: []
+                        required: [],
+                        baseTemplate: "default_base_template"
                     },
                     config,
                     {
                         id: id,
-                        _listeners: {}
+                        _listeners: {}                        
                     }
                 );
 
-                this.node = template(this.template, this);
+                this.node = template(this.baseTemplate, this);
 
             },
 
@@ -108,39 +113,6 @@ define([
             }
         });
 
-        ButtonBrick = Brick.extend({
-            initialize: function (id, config) {
-                var that = this;
-
-                lang.mixin(this,
-                    {
-                        template: "default_button_brick_template",
-                        buttonClass: "btn-primary",
-                        label: "Ok"
-                    }
-                );
-
-                Brick.initialize.call(this, id, config);
-
-                this.node.on("click", "button", function () {
-                    that._notify("click", null);
-                });
-            },
-
-            isValid: function () {
-                return true;
-            },
-
-            getData: function (wrap) {
-                var payload = {
-                    selectedChoice: this.selectedChoice,
-                    userSelected: this.userSelected
-                };
-
-                return Brick.getData.call(this, payload, wrap);
-            }
-        });
-
         MultiBrick = Brick.extend({
             initialize: function (id, config) {
                 var that = this;
@@ -148,6 +120,7 @@ define([
                 lang.mixin(this,
                     {
                         template: "default_multi_brick_template",
+                        containerClass: "multi-brick-container",
                         content: []
                     }
                 );
@@ -191,13 +164,114 @@ define([
             }*/
         });
 
+        ButtonBrick = Brick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_button_brick_template",
+                        containerClass: "button-brick-container",
+                        buttonClass: "btn-primary",
+                        label: "Ok"
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                this.node.on("click", "button", function () {
+                    that._notify("click", null);
+                });
+            },
+
+            isValid: function () {
+                return true;
+            },
+
+            getData: function (wrap) {
+                var payload = {
+                    selectedChoice: this.selectedChoice,
+                    userSelected: this.userSelected
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
+        OkCancelButtonBrick = MultiBrick.extend({
+            initialize: function (id, config) {
+                var that = this,
+                    newConfig;
+
+                newConfig =
+                    {
+                        //template: "default_okcancelbutton_brick_template",
+                        containerClass: "okcancelbutton-brick-container",
+                        header: config.header,
+                        content: [
+                            {
+                                id: "okButton",
+                                type: ButtonBrick,
+                                config: {
+                                    label: config.okLabel,
+                                    buttonClass: "ok-btn " + config.okButtonClass
+                                }
+                            },
+                            {
+                                id: "cancelButton",
+                                type: ButtonBrick,
+                                config: {
+                                    label: config.cancelLabel,
+                                    buttonClass: "cancel-btn " + config.cancelButtonClass
+                                }
+                            }
+                        ]
+
+                    };
+
+                MultiBrick.initialize.call(this, id, newConfig);
+
+                lang.mixin(this,
+                    {
+                        okButtonNode: this.node.find(".ok-btn"),
+                        cancelButtonNode: this.node.find(".cancel-btn")
+                    }
+                );
+
+                this.okButtonNode.on("click", function () {
+                    that._notify("click", null);
+                });
+
+                this.cancelButtonNode.on("click", function () {
+                    that._notify("click", null);
+                });
+            },
+
+            isValid: function () {
+                return this.okButtonBrick.isValid() && this.cancelButtonBrick.isValid();
+
+                // MultiBrick.isValid.call(this); ??
+            }/*,
+
+            getData: function (wrap) {
+                var payload = {};
+
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    lang.mixin(payload, brick.getData(true));
+                });
+
+                return Brick.getData.call(this, payload, wrap);
+            }*/
+        });
+
         ChoiceBrick = Brick.extend({
             initialize: function (id, config) {
                 var that = this;
 
                 lang.mixin(this,
                     {
-                        template: "default_choice_brick_template"
+                        template: "default_choice_brick_template",
+                        containerClass: "choice-brick-container"
                     }
                 );
 
@@ -261,6 +335,7 @@ define([
                 lang.mixin(this,
                     {
                         template: "default_simpleinput_brick_template",
+                        containerClass: "simpleinput-brick-container",
                         guid: UtilMisc.guid(),
                         label: config.header
                     }
@@ -314,8 +389,11 @@ define([
 
         return {
 
-            ButtonBrick: ButtonBrick,
             MultiBrick: MultiBrick,
+
+            ButtonBrick: ButtonBrick,
+            OkCancelButtonBrick: OkCancelButtonBrick,
+
             ChoiceBrick: ChoiceBrick,
             SimpleInputBrick: SimpleInputBrick
         };

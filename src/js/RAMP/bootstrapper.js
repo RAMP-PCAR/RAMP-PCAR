@@ -197,9 +197,9 @@ require([
                                 {
                                     eventName: "change",
                                     expose: true,
-                                    callback: function (data) {
+                                    callback: function (step, data) {
                                         var value = data.inputValue,
-                                            choiceBrick = this.contentBricks.serviceType,
+                                            choiceBrick = step.contentBricks.serviceType,
                                             guess = "";
 
                                         if (!choiceBrick.isUserSelected()) {
@@ -209,7 +209,7 @@ require([
                                             } else if (value.match(/wms/ig)) {
                                                 guess = "wms";
                                             }
-                                            this.contentBricks.serviceType.setChoice(guess);
+                                            step.contentBricks.serviceType.setChoice(guess);
                                         }
                                     }
                                 }
@@ -238,28 +238,7 @@ require([
                                         }
                                     }
                                 ]
-                            },
-                            on: [
-                                {
-                                    eventName: "change",
-                                    expose: true,
-                                    callback: function (data) {
-                                        var value = data.inputValue,
-                                            choiceBrick = this.contentBricks.serviceType,
-                                            guess = "";
-
-                                        if (!choiceBrick.isUserSelected()) {
-
-                                            if (value.match(/ArcGIS\/rest\/services/ig)) {
-                                                guess = "feature";
-                                            } else if (value.match(/wms/ig)) {
-                                                guess = "wms";
-                                            }
-                                            this.contentBricks.serviceType.setChoice(guess);
-                                        }
-                                    }
-                                }
-                            ]
+                            }
                         },
                         {
                             id: "okButton",
@@ -269,6 +248,26 @@ require([
                                 label: "Done"//, //optional, defaults to "Ok"
                                 //buttonClass: "btn-primary" //optional, defaults to "btn-primary"                                
                             }
+                        },
+                        {
+                            id: "okCancelButton1",
+                            type: Bricks.OkCancelButtonBrick,
+                            config: {
+                                okLabel: "Ok-hozey",
+                                okButtonClass: "btn-primary",
+
+                                cancelLabel: "Nope!",
+                                cancelButtonClass: "btn-default"
+                            },
+                            on: [
+                                {
+                                    eventName: "click",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log(this, step, data);
+                                    }
+                                }
+                            ]
                         },
                         {
                             id: "reqCheck",

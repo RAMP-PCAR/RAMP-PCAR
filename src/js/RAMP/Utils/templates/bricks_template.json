@@ -10,42 +10,48 @@
  *
  */
 {
+    "default_base_template": "
+        <div class='brick {%= o.containerClass %}'>
+
+            {% include(o.template, o); %}
+
+        </div>
+    ",
+
     "default_button_brick_template": "
-        <div class='brick button-brick-container'>
 
-            {% if(o.header) { %}
-                <h3 class='h6'>{%= o.header %}</h3>
-            {% } %}
+        {% if(o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
 
-            <div class='button-container'>
-                <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
-            </div>
+        <div class='button-container'>
+            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
         </div>
     ",
 
     "default_multi_brick_template": "
-        <div class='brick multi-brick-container'>
 
-            {% if(o.header) { %}
-                <h3 class='h6'>{%= o.header %}</h3>
-            {% } %}
+        {% if(o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
 
-            <div class='multi-container'>
-                
-            </div>
+        <div class='multi-container'>
+            
         </div>
     ",
 
     "default_choice_brick_template": "
-        <div class='brick choice-brick-container'>
+        
+        {% if(o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
-            <div class='btn-group choice-group'>
-                {%  
-                    o.choices.forEach(function(choice) {
-                        include('default_choice_brick_button_template', choice);
-                    });
-                %}
-            </div>
+        {% } %}
+
+        <div class='btn-group choice-group'>
+            {%  
+                o.choices.forEach(function(choice) {
+                    include('default_choice_brick_button_template', choice);
+                });
+            %}
         </div>
     ",
 
@@ -54,13 +60,14 @@
     ",
 
     "default_simpleinput_brick_template": "
-        <div class='brick simpleinput-brick-container'>
+        
+        {% if(o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
 
-            <div class='input-group'>
-                <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
-                <input name='input' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
-            </div>
+        <div class='input-group'>
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            <input name='input' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
         </div>
     "
 }
