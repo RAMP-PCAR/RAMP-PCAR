@@ -333,59 +333,7 @@
             </div>
         ",
 
-        "default_button_brick_template": "
-            <div class='brick button-brick-container'>
-
-                {% if(o.header) { %}
-                    <h3 class='h6'>{%= o.header %}</h3>
-                {% } %}
-
-                <div class='button-container'>
-                    <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
-                </div>
-            </div>
-        ",
-
-        "default_multi_brick_template": "
-            <div class='brick multi-brick-container'>
-
-                {% if(o.header) { %}
-                    <h3 class='h6'>{%= o.header %}</h3>
-                {% } %}
-
-                <div class='multi-container'>
-                    
-                </div>
-            </div>
-        ",
-
-        "default_choice_brick_template": "
-            <div class='brick choice-brick-container'>
-                <h3 class='h6'>{%= o.header %}</h3>
-                <div class='btn-group choice-group'>
-                    {%  
-                        o.choices.forEach(function(choice) {
-                            include('default_choice_brick_button_template', choice);
-                        });
-                    %}
-                </div>
-            </div>
-        ",
-
-        "default_choice_brick_button_template": "
-            <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
-        ",
-
-        "default_simpleinput_brick_template": "
-            <div class='brick simpleinput-brick-container'>
-                <h3 class='h6'>{%= o.header %}</h3>
-
-                <div class='input-group'>
-                    <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
-                    <input name='input' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
-                </div>
-            </div>
-        ",
+        
 
         "a_d_options_bg": "
             <div class='options-bg' role='presentation'><div class='bg-border'></div></div>

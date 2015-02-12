@@ -41,7 +41,7 @@ define([
 
         function template(key, data) {
             /*jshint validthis: true */
-            TmplHelper.template.call(this, key, data, templates); // -> No Strict violation!
+            return $(TmplHelper.template.call(this, key, data, templates)); // -> No Strict violation!
         }
 
         Brick = Base.extend({
@@ -58,7 +58,7 @@ define([
                     }
                 );
 
-                this.node = $(template(this.template, this));
+                this.node = template(this.template, this);
 
             },
 

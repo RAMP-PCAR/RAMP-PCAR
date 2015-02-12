@@ -57,7 +57,7 @@ require([
     "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
 
 /* Utils */
-    "utils/util",
+    "utils/util", "utils/bricks",
 
 /* Plugins */
     "utils/prototype!", "utils/functionMangler!"],
@@ -75,7 +75,7 @@ require([
     Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
 
     /* Utils */
-        UtilMisc
+        UtilMisc, Bricks
     ) {
         "use strict";
 
@@ -155,7 +155,7 @@ require([
                     content: [
                         {
                             id: "serviceType",
-                            type: "ChoiceBrick",
+                            type: Bricks.ChoiceBrick,
                             config: {
                                 //template: "template_name", //optional, has a default
                                 header: "Service Type",
@@ -186,7 +186,7 @@ require([
                         },
                         {
                             id: "serviceURL",
-                            type: "SimpleInputBrick",
+                            type: Bricks.SimpleInputBrick,
                             config: {
                                 //template: "template_name", //optional, has a default
                                 header: "Service URL",
@@ -217,21 +217,21 @@ require([
                         },
                         {
                             id: "nanes_",
-                            type: "MultiBrick",
+                            type: Bricks.MultiBrick,
                             config: {
                                 //template: "template_name", //optional, defaults to
                                 header: "Service URL", //optional, omitted if not specified
                                 content: [
                                     {
                                         id: "okButton",
-                                        type: "ButtonBrick",
+                                        type: Bricks.ButtonBrick,
                                         config: {
                                             label: "Ok"
                                         }
                                     },
                                     {
                                         id: "cancelButton",
-                                        type: "ButtonBrick",
+                                        type: Bricks.ButtonBrick,
                                         config: {
                                             label: "Cancel", //optional, defaults to "Ok"
                                             buttonClass: "btn-default"
@@ -263,7 +263,7 @@ require([
                         },
                         {
                             id: "okButton",
-                            type: "ButtonBrick",
+                            type: Bricks.ButtonBrick,
                             config: {
                                 //header: "test", //optional, omitted if not specified
                                 label: "Done"//, //optional, defaults to "Ok"
@@ -272,7 +272,7 @@ require([
                         },
                         {
                             id: "reqCheck",
-                            type: "ChoiceBrick",
+                            type: Bricks.ChoiceBrick,
                             config: {
                                 header: "test", //optional, has a default
                                 choices: [
