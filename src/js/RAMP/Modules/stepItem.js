@@ -169,7 +169,8 @@ define([
 
                 lang.mixin(this,
                     {
-                        template: "default_multi_brick_template"
+                        template: "default_multi_brick_template",
+                        content: []
                     }
                 );
 
@@ -177,24 +178,19 @@ define([
 
                 lang.mixin(this,
                     {
-                        multiContainer: this.node.find("multi-container"),
-                        innerBricks: []
+                        multiContainer: this.node.find(".multi-container"),
+                        contentBricks: {}
                     }
                 );
 
                 this.content.forEach(function (contentItem) {
                     var contentBrick = bricks_types[contentItem.type].new(contentItem.id, contentItem.config);
 
-                    that.innerBricks.push({
-                        contentItem: contentItem,
-                        contentBrick: contentBrick
-                    });
-                });
+                    that.contentBricks[contentBrick.id] = contentBrick;
 
-                this.node.on("click", "button", function () {
-                    that._notify("click", null);
+                    that.multiContainer.append(contentBrick.node);
                 });
-            },
+            }/*,
 
             isValid: function () {
                 return this.innerBricks.every(function (innerBrick) {
@@ -202,15 +198,19 @@ define([
                 });
             },
 
+            getInnerBricks: function () {
+
+            },
+
             getData: function (wrap) {
-                //TODO: fill
-                var payload = {
-                    selectedChoice: this.selectedChoice,
-                    userSelected: this.userSelected
-                };
+                var payload = {};
+
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    lang.mixin(payload, brick.getData(true));
+                });
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            }*/
         });
 
         ChoiceBrick = Brick.extend({
@@ -510,15 +510,7 @@ define([
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
 
                 this.content.forEach(function (contentItem) {
-                    var contentBrick = bricks_types[contentItem.type].new(contentItem.id, contentItem.config);
-
-                    if (bricks_types.MultiBrick.isPrototypeOf(contentBrick)) {
-                        contentBrick.innerBricks.forEach(function (innerBrick) {
-                            that._addContentBrick(innerBrick.contentItem, innerBrick.contentBrick);
-                        });
-                    } else {
-                        that._addContentBrick(contentItem, contentBrick);
-                    }
+                    that._addContentBrick(contentItem);
                 });
 
                 //this._imageBoxNode = this.node.find(".layer-details > div:first");
@@ -538,7 +530,27 @@ define([
                 console.debug("-->", this.state);
             },
 
-            _addContentBrick: function (contentItem, contentBrick) {
+            _addContentBrick: function (contentItem) {
+                var that = this,
+                    contentBrick = bricks_types[contentItem.type].new(contentItem.id, contentItem.config);
+
+                // if it's a multiBrick, add individual bricks from its content to the main content and wire them as separate bricks
+                if (bricks_types.MultiBrick.isPrototypeOf(contentBrick)) {
+
+                    contentBrick.content.forEach(function (contentItem) {
+                        that._wireBrickUp(contentItem, contentBrick.contentBricks[contentItem.id]);
+                    });
+
+                } else {
+                    that._wireBrickUp(contentItem, contentBrick);
+                }
+
+                this._contentNode.append(contentBrick.node);
+
+                this._doInternalCheck();
+            },
+
+            _wireBrickUp: function (contentItem, contentBrick) {
                 var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
 
@@ -561,10 +573,6 @@ define([
                 contentBrick.on("change", function () {
                     that._doInternalCheck();
                 });
-
-                this._contentNode.append(contentBrick.node);
-
-                this._doInternalCheck();
             },
 
             _doInternalCheck: function () {

@@ -237,8 +237,7 @@ require([
                                             buttonClass: "btn-default"
                                         }
                                     }
-                                ],
-                                placeholder: "ESRI MapServer or Feature layer or WMS layer"
+                                ]
                             },
                             on: [
                                 {
