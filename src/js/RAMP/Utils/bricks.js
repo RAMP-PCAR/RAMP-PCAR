@@ -141,16 +141,16 @@ define([
 
                     that.multiContainer.append(contentBrick.node);
                 });
-            }/*,
-
-            isValid: function () {
-                return this.innerBricks.every(function (innerBrick) {
-                    return innerBrick.isValid();
-                });
             },
 
-            getInnerBricks: function () {
+            isValid: function () {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    if (!brick.isValid()) {
+                        return false;
+                    }
+                });
 
+                return true;
             },
 
             getData: function (wrap) {
@@ -161,7 +161,7 @@ define([
                 });
 
                 return Brick.getData.call(this, payload, wrap);
-            }*/
+            }
         });
 
         ButtonBrick = Brick.extend({
@@ -189,10 +189,7 @@ define([
             },
 
             getData: function (wrap) {
-                var payload = {
-                    selectedChoice: this.selectedChoice,
-                    userSelected: this.userSelected
-                };
+                var payload = {};
 
                 return Brick.getData.call(this, payload, wrap);
             }
@@ -216,6 +213,7 @@ define([
                                 type: ButtonBrick,
                                 config: {
                                     label: config.okLabel,
+                                    containerClass: "ok-button-brick-container",
                                     buttonClass: "ok-btn " + config.okButtonClass
                                 }
                             },
@@ -224,6 +222,7 @@ define([
                                 type: ButtonBrick,
                                 config: {
                                     label: config.cancelLabel,
+                                    containerClass: "cancel-button-brick-container",
                                     buttonClass: "cancel-btn " + config.cancelButtonClass
                                 }
                             }
@@ -237,17 +236,17 @@ define([
                     {
                         //okButtonNode: this.node.find(".ok-btn"),
                         //cancelButtonNode: this.node.find(".cancel-btn"),
-                        okButton: this.contentBricks[okButtonId],
-                        cancelButton: this.contentBricks[cancelButtonId]
+                        okButtonBrick: this.contentBricks[okButtonId],
+                        cancelButtonBrick: this.contentBricks[cancelButtonId]
                     }
                 );
 
-                this.okButton.on("click", function () {
+                this.okButtonBrick.on("click", function () {
                     that._notify("okClick", null);
                     that._notify("click", null);
                 });
 
-                this.cancelButton.on("click", function () {
+                this.cancelButtonBrick.on("click", function () {
                     that._notify("cancelClick", null);
                     that._notify("click", null);
                 });
@@ -262,20 +261,22 @@ define([
             },
 
             isValid: function () {
-                return this.okButtonBrick.isValid() && this.cancelButtonBrick.isValid();
+                //return this.okButtonBrick.isValid() && this.cancelButtonBrick.isValid();
+
+                return MultiBrick.isValid.call(this);
 
                 // MultiBrick.isValid.call(this); ??
-            }/*,
+            },
 
             getData: function (wrap) {
-                var payload = {};
+                /*var payload = {};
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     lang.mixin(payload, brick.getData(true));
-                });
+                });*/
 
-                return Brick.getData.call(this, payload, wrap);
-            }*/
+                return MultiBrick.getData.call(this, wrap);
+            }
         });
 
         ChoiceBrick = Brick.extend({

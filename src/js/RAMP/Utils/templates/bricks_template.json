@@ -24,7 +24,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
-        <div class='button-container'>
+        <div class='button-content'>
             <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
         </div>
     ",
