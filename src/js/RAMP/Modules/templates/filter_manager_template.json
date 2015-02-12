@@ -334,7 +334,7 @@
         ",
 
         "default_button_brick_template": "
-            <div class='button-brick-container'>
+            <div class='brick button-brick-container'>
 
                 {% if(o.header) { %}
                     <h3 class='h6'>{%= o.header %}</h3>
@@ -347,7 +347,7 @@
         ",
 
         "default_multi_brick_template": "
-            <div class='multi-brick-container'>
+            <div class='brick multi-brick-container'>
 
                 {% if(o.header) { %}
                     <h3 class='h6'>{%= o.header %}</h3>
@@ -360,7 +360,7 @@
         ",
 
         "default_choice_brick_template": "
-            <div class='choice-brick-container'>
+            <div class='brick choice-brick-container'>
                 <h3 class='h6'>{%= o.header %}</h3>
                 <div class='btn-group choice-group'>
                     {%  
@@ -377,7 +377,7 @@
         ",
 
         "default_simpleinput_brick_template": "
-            <div class='simpleinput-brick-container'>
+            <div class='brick simpleinput-brick-container'>
                 <h3 class='h6'>{%= o.header %}</h3>
 
                 <div class='input-group'>

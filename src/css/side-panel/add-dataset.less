@@ -7,6 +7,20 @@
 #add-dataset-section-container {
     //visibility: hidden;
 
+    .multi-brick-container {
+        display: table;
+        table-layout: fixed;
+
+        .multi-container {
+            display: table-row;
+
+            &> div {
+                display: table-cell;
+            }
+        }
+    }
+
+
     bottom: 0;
     left: 0;
     right: 0;
@@ -62,6 +76,10 @@
 
             .add-dataset-content {
                 //border-top: 1px solid @very-light-grey-color;
+            }
+
+            .brick {
+                width: 85%;
             }
 
             .step {
