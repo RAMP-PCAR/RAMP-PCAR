@@ -37,7 +37,9 @@ define([
             MultiBrick,
 
             ChoiceBrick,
+
             SimpleInputBrick,
+            FileInputBrick,
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(bricks_template));
 
@@ -59,7 +61,7 @@ define([
                     config,
                     {
                         id: id,
-                        _listeners: {}                        
+                        _listeners: {}
                     }
                 );
 
@@ -67,13 +69,14 @@ define([
 
             },
 
-            _notify: function (eventName, data) {
+            notify: function (eventName, data) {
+                var that = this;
 
                 if (!this._listeners[eventName]) {
                     this._listeners[eventName] = [];
                 }
                 this._listeners[eventName].forEach(function (listener) {
-                    listener.call(this, data);
+                    listener.call(that, data);
                 });
             },
 
@@ -180,7 +183,7 @@ define([
                 Brick.initialize.call(this, id, config);
 
                 this.node.on("click", "button", function () {
-                    that._notify("click", null);
+                    that.notify("click", null);
                 });
             },
 
@@ -226,54 +229,36 @@ define([
                                     buttonClass: "cancel-btn " + config.cancelButtonClass
                                 }
                             }
-                        ]
-
+                        ],
+                        required: config.required || [] // make sure required is at least an empty array
                     };
 
                 MultiBrick.initialize.call(this, id, newConfig);
 
                 lang.mixin(this,
                     {
-                        //okButtonNode: this.node.find(".ok-btn"),
-                        //cancelButtonNode: this.node.find(".cancel-btn"),
                         okButtonBrick: this.contentBricks[okButtonId],
                         cancelButtonBrick: this.contentBricks[cancelButtonId]
                     }
                 );
 
                 this.okButtonBrick.on("click", function () {
-                    that._notify("okClick", null);
-                    that._notify("click", null);
+                    that.notify("okClick", null);
+                    that.notify("click", null);
                 });
 
                 this.cancelButtonBrick.on("click", function () {
-                    that._notify("cancelClick", null);
-                    that._notify("click", null);
+                    that.notify("cancelClick", null);
+                    that.notify("click", null);
                 });
-
-                /*this.okButtonNode.on("click", function () {
-                    that._notify("click", null);
-                });
-
-                this.cancelButtonNode.on("click", function () {
-                    that._notify("click", null);
-                });*/
             },
 
             isValid: function () {
-                //return this.okButtonBrick.isValid() && this.cancelButtonBrick.isValid();
 
                 return MultiBrick.isValid.call(this);
-
-                // MultiBrick.isValid.call(this); ??
             },
 
             getData: function (wrap) {
-                /*var payload = {};
-
-                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
-                    lang.mixin(payload, brick.getData(true));
-                });*/
 
                 return MultiBrick.getData.call(this, wrap);
             }
@@ -321,7 +306,7 @@ define([
 
                     console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
 
-                    this._notify("change", this.getData());
+                    this.notify("change", this.getData());
                 }
             },
 
@@ -361,11 +346,10 @@ define([
                 lang.mixin(this,
                     {
                         inputValue: "",
-                        userEntered: false
+                        userEntered: false,
+                        inputNode: this.node.find("input[type='text']")
                     }
                 );
-
-                this.inputNode = this.node.find("input");
 
                 this.inputNode.on("input", function (event) {
                     var value = $(event.target).val();
@@ -379,9 +363,7 @@ define([
 
                 this.inputNode.val(value);
 
-                console.log("SimpleInputBrick-" + this.id, ":", this.inputValue, "; userEntered:", this.userEntered);
-
-                this._notify("change", this.getData());
+                this.notify("change", this.getData());
             },
 
             isUserEntered: function () {
@@ -402,6 +384,78 @@ define([
             }
         });
 
+        FileInputBrick = SimpleInputBrick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(config,
+                    {
+                        template: "default_fileinput_brick_template",
+                        containerClass: "fileinput-brick-container",
+                        guid: UtilMisc.guid(),
+                        label: config.header
+                    }
+                );
+
+                SimpleInputBrick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        fileValue: null,
+                        userSelected: false,
+                        fileNode: this.node.find("input[type='file']"),
+                        filePseudoNode: this.node.find(".browse-button")
+                    }
+                );
+
+                this.fileNode.on("change", function (event) {
+                    var file = event.target.files[0];
+
+                    that.setFileValue(file, true);
+                });
+            },
+
+            setInputValue: function (value, userEntered) {
+                this.setFileValue(null, false);
+
+                SimpleInputBrick.setInputValue.call(this, value, userEntered);
+            },
+
+            setFileValue: function (value, userSelected) {
+                this.userSelected = userSelected ? true : false;
+                this.fileValue = value;
+                this.filePseudoNode.toggleClass("selected", this.fileValue ? true : false);
+
+                if (this.fileValue) {
+                    this.inputNode.val(this.fileValue.name);
+                    this.userEntered = false;
+
+                    this.notify("change", this.getData());
+                }
+            },
+
+            isUserSelected: function () {
+                return this.userSelected;
+            },
+
+            isValid: function () {
+                return SimpleInputBrick.isValid.call(this) || this.fileValue ? true : false;
+            },
+
+            getData: function (wrap) {
+                var payload = SimpleInputBrick.getData.call(this);
+
+                lang.mixin(payload,
+                    {
+                        fileValue: this.fileValue,
+                        userSelected: this.userSelected
+                    }
+                );
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
         return {
 
             MultiBrick: MultiBrick,
@@ -410,6 +464,8 @@ define([
             OkCancelButtonBrick: OkCancelButtonBrick,
 
             ChoiceBrick: ChoiceBrick,
-            SimpleInputBrick: SimpleInputBrick
+
+            SimpleInputBrick: SimpleInputBrick,
+            FileInputBrick: FileInputBrick
         };
     });

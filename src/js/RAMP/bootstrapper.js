@@ -216,6 +216,39 @@ require([
                             ]
                         },
                         {
+                            id: "fileOrULR",
+                            type: Bricks.FileInputBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "File or URL",
+                                //label: "Service URL", // optional, equals to header by default
+                                placeholder: "Local file or URL"
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log(this.id, this.isValid(), data);
+
+                                        //var value = data.inputValue,
+                                        //    choiceBrick = step.contentBricks.serviceType,
+                                        //    guess = "";
+
+                                        //if (!choiceBrick.isUserSelected()) {
+
+                                        //    if (value.match(/ArcGIS\/rest\/services/ig)) {
+                                        //        guess = "feature";
+                                        //    } else if (value.match(/wms/ig)) {
+                                        //        guess = "wms";
+                                        //    }
+                                        //    step.contentBricks.serviceType.setChoice(guess);
+                                        //}
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             id: "nanes_",
                             type: Bricks.MultiBrick,
                             config: {
@@ -245,8 +278,9 @@ require([
                             type: Bricks.ButtonBrick,
                             config: {
                                 //header: "test", //optional, omitted if not specified
-                                label: "Done"//, //optional, defaults to "Ok"
+                                label: "Done", //optional, defaults to "Ok"
                                 //buttonClass: "btn-primary" //optional, defaults to "btn-primary"                                
+                                required: ["fileOrULR"]
                             }
                         },
                         {
@@ -257,7 +291,8 @@ require([
                                 okButtonClass: "btn-primary",
 
                                 cancelLabel: "Nope!",
-                                cancelButtonClass: "btn-default"
+                                cancelButtonClass: "btn-default",
+                                required: ["fileOrULR"]
                             },
                             on: [
                                 {
