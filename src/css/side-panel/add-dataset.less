@@ -6,11 +6,39 @@
 
 #add-dataset-section-container {
     //visibility: hidden;
+    .multi-brick-container {
+        display: table;
+        table-layout: fixed;
+
+        .multi-container {
+            display: table-row;
+
+            & > div {
+                display: table-cell;
+            }
+        }
+    }
+
+    .okcancelbutton-brick-container {
+
+        .multi-container {
+            text-align: right;
+
+            .ok-button-brick-container {
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            .cancel-button-brick-container {
+                display: inline-block;
+                margin-left: 5px;
+            }
+        }
+    }
 
     .choice-brick-container {
         .choice-group {
             width: 100%;
-
             // trick: http://stackoverflow.com/a/12198561
             button:first-child:nth-last-child(1) {
                 width: 100%;
@@ -29,19 +57,6 @@
             button:first-child:nth-last-child(4),
             button:first-child:nth-last-child(4) ~ button {
                 width: 25%;
-            }
-        }
-    }
-
-    .multi-brick-container {
-        display: table;
-        table-layout: fixed;
-
-        .multi-container {
-            display: table-row;
-
-            & > div {
-                display: table-cell;
             }
         }
     }
