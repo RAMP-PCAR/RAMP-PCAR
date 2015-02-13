@@ -1300,6 +1300,22 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             resetFormElement: function (e) {
                 e.wrap('<form>').closest('form').get(0).reset();
                 e.unwrap();
+            },
+
+            setSelectOptions: function (select, options) {
+                var optionsNode = $();
+
+                options.forEach(function (option) {
+                    optionsNode.add("<option/>", {
+                        value: option.value,
+                        text: option.text
+                    });
+                });
+
+                select
+                    .empty()
+                    .append(optionsNode)
+                ;
             }
         };
     });
