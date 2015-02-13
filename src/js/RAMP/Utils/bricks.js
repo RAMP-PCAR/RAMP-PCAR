@@ -431,6 +431,8 @@ define([
                     this.userEntered = false;
 
                     this.notify("change", this.getData());
+                } else {
+                    UtilMisc.resetFormElement(this.fileNode);
                 }
             },
 

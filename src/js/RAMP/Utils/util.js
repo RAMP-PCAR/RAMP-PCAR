@@ -1295,6 +1295,11 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             */
             rgbToHex: function (r, g, b) {
                 return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            },
+
+            resetFormElement: function (e) {
+                e.wrap('<form>').closest('form').get(0).reset();
+                e.unwrap();
             }
         };
     });
