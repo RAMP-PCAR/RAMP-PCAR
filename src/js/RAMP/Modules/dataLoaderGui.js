@@ -9,7 +9,7 @@ define([
 
     /* Ramp */
 
-    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage",
+    "utils/popupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage",
 
     /* Util */
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"

@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
-    "proxyUrl": "proxy/dotNet/proxy.ashx",
+    "proxyUrl": "http://cp.zz9.ca/index",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -643,13 +643,32 @@
         ],
         "wms": [
             {
-                "id": "nasa_modis",
-                "displayName": "@@config.layers.wms.nasa_modis.displayName",
+                "id": "geomet_wind",
+                "displayName": "@@config.layers.wms.geomet_wind.displayName",
                 "format": "image/jpeg",
-                "layerName": "36",
+                "layerName": "GDPS.ETA_UU",
                 "imageUrl": "assets/images/wms.png",
-                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
-                "legendMimeType": "image/jpeg"
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "windParse"
+                },
+                "settings": {"opacity": {"default": 0.4}}
+            },
+            {
+                "id": "geomet_temp",
+                "displayName": "@@config.layers.wms.geomet_temp.displayName",
+                "format": "image/jpeg",
+                "layerName": "GDPS.ETA_TT",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "tempParse"
+                },
+                "settings": {"opacity": {"default": 0.3}}
             },
             {
                 "id": "railroad",
@@ -658,10 +677,6 @@
                 "layerName": "railway.track",
                 "imageUrl": "assets/images/wms.png",
                 "url": "http://maps.geogratis.gc.ca/wms/railway_en",
-                "featureInfo": {
-                    "parser": "stringParse",
-                    "mimeType": "text/plain"
-                },
                 "legendMimeType": "image/jpeg"
             }
         ]
@@ -684,6 +699,7 @@
         "stringParse.js",
         "htmlRawParse.js",
         "jsonRawParse.js",
+        "tempParse.js",
         "windParse.js"
     ],
 

@@ -275,7 +275,7 @@
                             "type": "object",
                             "properties": {
                                 "enabled": { "type": "boolean", "default": true },
-                                "opacity": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
+                                "default": { "type": "number", "default": 1, "minimum": 0, "maximum": 1 }
                             },
                             "additionalProperties": false
                         }
@@ -301,7 +301,7 @@
 
     "properties": {
 
-        "version": { "type": "string", "enum": [ "1.0.0" ] },
+        "version": { "type": "string", "enum": [ "1.0.0", "1.0.1" ] },
         "proxyUrl": { "type": "string" },
         "geometryServiceUrl": { "type": "string" },
         "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },

@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limits"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Arctic Airports"
+                "geomet_wind": {
+                    "displayName": "Wind speed"
+                }, 
+                "geomet_temp": {
+                    "displayName": "Air temperature"
                 }, 
                 "wms6": {
                     "displayName": "Railway Network"
@@ -440,6 +443,11 @@
     "map": {
         "loadingTitle": "Loading", 
         "scale": "Scale"
+    },
+    "mapClickHandler": { 
+        "getFiFailed": "GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "WMS GetFeatureInfo",
+        "getFiPanelTitle": "Query Results"
     },
     "page": {
         "footer": {

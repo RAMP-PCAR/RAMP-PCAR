@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limites"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Les aéroports de l'arctique"
+                "geomet_wind": {
+                    "displayName": "Vitesse du vent"
+                }, 
+                "geomet_temp": {
+                    "displayName": "Température de l'air"
                 }, 
                 "wms6": {
                     "displayName": "Réseau de chemins de fers"
@@ -440,6 +443,11 @@
     "map": {
         "loadingTitle": "Chargement", 
         "scale": "Échelle"
+    },
+    "mapClickHandler": { 
+        "getFiFailed": "[fr] GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "[fr] WMS GetFeatureInfo",
+        "getFiPanelTitle": "[fr] Query Results"
     },
     "page": {
         "footer": {
