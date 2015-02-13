@@ -242,7 +242,7 @@ define([
 
                 //this.setState(this.state, null, true);
 
-                $("#add-dataset-section > section").append(this.node);
+                //$("#add-dataset-section > section").append(this.node);
 
                 console.debug("-->", this.state);
             },
@@ -315,6 +315,10 @@ define([
                 });
 
                 return data;
+            },
+
+            addChild: function (stepItem) {
+                this._optionsNode.append(stepItem.node);
             },
 
             /**

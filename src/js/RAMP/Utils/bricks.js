@@ -45,8 +45,6 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(bricks_template));
 
-        console.log(UtilDict);
-
         function template(key, data) {
             /*jshint validthis: true */
             return $(TmplHelper.template.call(this, key, data, templates)); // -> No Strict violation!
