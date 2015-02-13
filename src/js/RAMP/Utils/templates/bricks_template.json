@@ -65,7 +65,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
-        <div class='input-group'>
+        <div class='form-group'>
             <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
             <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
                 <option value=''>Select One:</option>
@@ -79,7 +79,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
-        <div class='input-group'>
+        <div class='form-group'>
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
             <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
         </div>
@@ -92,7 +92,7 @@
         {% } %}
 
         <div class='color-picker-container'>
-            <div class='input-group'>
+            <div class='form-group'>
                 <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
                 <input name='input' type='text' class='color form-control input-sm' id='{%= o.guid %}' data-role='none'/>
             </div>
