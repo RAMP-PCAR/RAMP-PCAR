@@ -85,17 +85,23 @@
         </div>
     ",
 
-    "default_dropdown_brick_template": "
+    "default_colorpicker_brick_template": "
         
         {% if (o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
         <div class='input-group'>
-            <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
-            <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
-                <option value=''>Select One:</option>
-            </select>
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+        </div>
+
+        <div class='color-picker-container'>
+            <div class='input-group>
+                <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+                <input name='input' class='color form-control input-sm' id='{%= o.guid %}' data-role='none'/>
+            </div>
+            <div class='color-picker-swatch' role='presentation' id='{%= o.guid %}pickerSwatch'></div>
         </div>
     ",
 
