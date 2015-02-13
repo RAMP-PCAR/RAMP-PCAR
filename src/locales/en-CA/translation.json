@@ -444,6 +444,11 @@
         "loadingTitle": "Loading", 
         "scale": "Scale"
     },
+    "mapClickHandler": { 
+        "getFiFailed": "GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "WMS GetFeatureInfo",
+        "getFiPanelTitle": "Query Results"
+    },
     "page": {
         "footer": {
             "dateModifiedTitle": "Date Modified",

@@ -1,4 +1,4 @@
-﻿/* global define, RAMP, console, $ */
+﻿/* global define, RAMP, console, i18n, $ */
 
 /**
 * @module RAMP
@@ -66,8 +66,8 @@ define([
                     }
 
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                        panelName: "WMS Click Results",
-                        title: "WMS Click Results",
+                        panelName: i18n.t('mapClickHandler.getFiPanelName'),
+                        title: i18n.t('mapClickHandler.getFiPanelTitle'),
                         content: null,
                         origin: "wmsFeatureInfo",
                         target: $("#map-div"),
@@ -145,11 +145,13 @@ define([
                         console.log(errors);
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: ':(',  // FIXME
+                            content: "test content",
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'
                         });
+
+                        console.log('subpanel open done');
 
                     });
 

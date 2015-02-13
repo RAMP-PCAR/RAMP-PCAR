@@ -444,6 +444,11 @@
         "loadingTitle": "Chargement", 
         "scale": "Échelle"
     },
+    "mapClickHandler": { 
+        "getFiFailed": "[fr] GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "[fr] WMS GetFeatureInfo",
+        "getFiPanelTitle": "[fr] Query Results"
+    },
     "page": {
         "footer": {
             "dateModifiedTitle": "Date de modification",
