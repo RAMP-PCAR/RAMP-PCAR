@@ -59,6 +59,20 @@
         <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
     ",
 
+    "default_dropdown_brick_template": "
+        
+        {% if (o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
+
+        <div class='input-group'>
+            <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
+            <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
+                <option value=''>Select One:</option>
+            </select>
+        </div>
+    ",
+
     "default_simpleinput_brick_template": "
         
         {% if (o.header) { %}
@@ -96,7 +110,7 @@
             
             <div class='input-group-btn browse-files'>
                 <div class='input-container'>
-                    <input type='file' data-role='upload'>
+                    <input type='file' id='{%= o.guid %}realBrowse' data-role='upload'>
                 </div>
                 <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
                     <i class='fa fa-file'></i>

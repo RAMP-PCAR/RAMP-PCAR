@@ -348,7 +348,7 @@ define([
                     {
                         inputValue: "",
                         userEntered: false,
-                        inputNode: this.node.find("input[type='text']")
+                        inputNode: this.node.find("input[type='text']#" + this.guid)
                     }
                 );
 
@@ -473,10 +473,13 @@ define([
                     {
                         fileValue: null,
                         userSelected: false,
-                        fileNode: this.node.find("input[type='file']"),
-                        filePseudoNode: this.node.find(".browse-button")
+                        browseFilesContainer: this.node.find(".browse-files"),
+                        fileNode: this.node.find("input[type='file']#" + this.guid + "realBrowse"),
+                        filePseudoNode: this.node.find("#" + this.guid + "pseudoBrowse")
                     }
                 );
+
+                UtilMisc.styleBrowseFilesButton(this.browseFilesContainer);
 
                 this.fileNode.on("change", function (event) {
                     var file = event.target.files[0];
