@@ -460,6 +460,7 @@ define([
                 var that = this,
                     newConfig = {};
 
+                // mixin defaults with the given config
                 lang.mixin(newConfig,
                     {
                         template: "default_colorpicker_brick_template",
@@ -518,19 +519,21 @@ define([
 
         FileInputBrick = SimpleInputBrick.extend({
             initialize: function (id, config) {
-                var that = this;
+                var that = this,
+                    newConfig = {};
 
                 // mixin defaults with the given config
-                lang.mixin(config,
+                lang.mixin(newConfig,
                     {
                         template: "default_fileinput_brick_template",
                         containerClass: "fileinput-brick-container",
                         guid: UtilMisc.guid(),
                         label: config.header
-                    }
+                    },
+                    config
                 );
 
-                SimpleInputBrick.initialize.call(this, id, config);
+                SimpleInputBrick.initialize.call(this, id, newConfig);
 
                 lang.mixin(this,
                     {
