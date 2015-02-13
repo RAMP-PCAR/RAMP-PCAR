@@ -145,7 +145,7 @@ define([
                         console.log(errors);
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: "test content",
+                            content: String.format("<em>{0}</em>",i18n.t('mapClickHandler.getFiFailed')),
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'
