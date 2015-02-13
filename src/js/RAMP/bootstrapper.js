@@ -185,6 +185,38 @@ require([
                             ]
                         },
                         {
+                            id: "primaryAttribute",
+                            type: Bricks.DropDownBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "Primary Attribute",
+                                //label: "Service URL", // optional, equals to header by default
+                                options: [
+                                    {
+                                        value: "prop", text: "Property"
+                                    },
+                                    {
+                                        value: "lat", text: "Latitude"
+                                    },
+                                    {
+                                        value: "long", text: "Longitude"
+                                    },
+                                    {
+                                        value: "blh", text: "Muffins!"
+                                    }
+                                ]
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log(data);
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             id: "serviceURL",
                             type: Bricks.SimpleInputBrick,
                             config: {

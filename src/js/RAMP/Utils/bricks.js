@@ -38,6 +38,7 @@ define([
 
             ChoiceBrick,
 
+            DropDownBrick,
             SimpleInputBrick,
             FileInputBrick,
 
@@ -384,6 +385,75 @@ define([
             }
         });
 
+        DropDownBrick = Brick.extend({
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_dropdown_brick_template",
+                        containerClass: "dropdown-brick-container",
+                        guid: UtilMisc.guid(),
+                        label: config.header
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        dropDownValue: "",
+                        dropDownText: "",
+                        userSelected: false,
+                        selectNode: this.node.find("select#" + this.guid)
+                    }
+                );
+
+                this.selectNode.on("input", function () {
+                    var value = that.selectNode.val(),
+                        text = that.selectNode.find("option:selected").text();
+
+                    that.setDropDownValue(value, text, true);
+                });
+
+                if (this.options) {
+                    this.setDropDownOptions(this.options);
+                }
+            },
+
+            setDropDownValue: function (value, text, userSelected) {
+                this.userSelected = userSelected ? true : false;
+                this.dropDownValue = value;
+                this.dropDownText = text;
+
+                // to do set node if set manually
+
+                this.notify("change", this.getData());
+            },
+
+            setDropDownOptions: function (options, append) {
+                UtilMisc.setSelectOptions(this.selectNode, options, append);
+            },
+
+            isUserEntered: function () {
+                return this.userSelected;
+            },
+
+            isValid: function () {
+                return this.inputValue !== "";
+            },
+
+            getData: function (wrap) {
+                var payload = {
+                    dropDownValue: this.dropDownValue,
+                    dropDownText: this.dropDownText,
+                    userSelected: this.userSelected
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
         FileInputBrick = SimpleInputBrick.extend({
             initialize: function (id, config) {
                 var that = this;
@@ -467,6 +537,7 @@ define([
 
             ChoiceBrick: ChoiceBrick,
 
+            DropDownBrick: DropDownBrick,
             SimpleInputBrick: SimpleInputBrick,
             FileInputBrick: FileInputBrick
         };

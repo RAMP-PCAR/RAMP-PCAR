@@ -18,20 +18,9 @@
         </div>
     ",
 
-    "default_button_brick_template": "
-
-        {% if(o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
-
-        <div class='button-content'>
-            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
-        </div>
-    ",
-
     "default_multi_brick_template": "
 
-        {% if(o.header) { %}
+        {% if (o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
@@ -40,9 +29,20 @@
         </div>
     ",
 
+    "default_button_brick_template": "
+
+        {% if (o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
+
+        <div class='button-content'>
+            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
+        </div>
+    ",
+
     "default_choice_brick_template": "
         
-        {% if(o.header) { %}
+        {% if (o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
@@ -61,19 +61,7 @@
 
     "default_simpleinput_brick_template": "
         
-        {% if(o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
-
-        <div class='input-group'>
-            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
-            <input name='input' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
-        </div>
-    ",
-
-    "default_simpleinput_brick_template": "
-        
-        {% if(o.header) { %}
+        {% if (o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
@@ -83,9 +71,23 @@
         </div>
     ",
 
+    "default_dropdown_brick_template": "
+        
+        {% if (o.header) { %}
+            <h3 class='h6'>{%= o.header %}</h3>
+        {% } %}
+
+        <div class='input-group'>
+            <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
+            <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
+                <option value=''>Select One:</option>
+            </select>
+        </div>
+    ",
+
     "default_fileinput_brick_template": "
         
-        {% if(o.header) { %}
+        {% if (o.header) { %}
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
