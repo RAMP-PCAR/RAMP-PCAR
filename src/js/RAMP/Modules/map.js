@@ -683,6 +683,8 @@ define([
             layer.on('error', function (evt) {
                 //console.log("PREP LOAD FAIL " + evt.target.url);
                 evt.target.ramp.loadOk = false;
+                console.log('layer failed to load');
+                console.log(evt);
                 topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
                     layer: evt.target,
                     error: evt.error

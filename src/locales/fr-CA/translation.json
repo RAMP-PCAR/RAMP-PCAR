@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limites"
                 }, 
+                "geomet_wind": {
+                    "displayName": "Vitesse du vent"
+                }, 
                 "geomet_temp": {
-                    "displayName": "Température de l'air (°C)"
+                    "displayName": "Température de l'air"
                 }, 
                 "wms6": {
                     "displayName": "Réseau de chemins de fers"

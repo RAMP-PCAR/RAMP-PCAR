@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limits"
                 }, 
+                "geomet_wind": {
+                    "displayName": "Wind speed"
+                }, 
                 "geomet_temp": {
-                    "displayName": "Air temperature (°C)"
+                    "displayName": "Air temperature"
                 }, 
                 "wms6": {
                     "displayName": "Railway Network"
