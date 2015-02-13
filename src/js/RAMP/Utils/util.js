@@ -1302,20 +1302,19 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 e.unwrap();
             },
 
-            setSelectOptions: function (select, options) {
-                var optionsNode = $();
+            setSelectOptions: function (select, options, append) {
+                var optionsNode;
+
+                if (!append) {
+                    select.append(optionsNode);
+                }
 
                 options.forEach(function (option) {
-                    optionsNode.add("<option/>", {
+                    select.append($("<option/>", {
                         value: option.value,
                         text: option.text
-                    });
+                    }));
                 });
-
-                select
-                    .empty()
-                    .append(optionsNode)
-                ;
             }
         };
     });
