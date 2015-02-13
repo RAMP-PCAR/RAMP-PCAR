@@ -26,14 +26,14 @@ define([
 
             symbologyPreset = {},
 
-            steps,
+            //steps,
             choiceTree,
 
             transitionDuration = 0.4;
 
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
 
-        steps = {
+        choiceTree = {
             id: "sourceTypeStep",
             content: [
                 {
@@ -111,38 +111,29 @@ define([
             ]
         };
 
-        choiceTree = {
-            id: "sourceTypeStep",
-            content: "dfsf",
-            children: [
-                {
-                    
-                    id: "serviceTypeStep"
-                },
-                {
-                    id: "fileTypeStep"
-                }
-            ]
-        };
+        //choiceTree = {
+        //    id: "sourceTypeStep",
+        //    content: "dfsf",
+        //    children: [
+        //        {
+
+        //            id: "serviceTypeStep"
+        //        },
+        //        {
+        //            id: "fileTypeStep"
+        //        }
+        //    ]
+        //};
 
         function reset() {
-            //steps.forEach(function (step) {
-            //    var stepItem = new StepItem(step);
 
-            //    step.stepItem = stepItem;
-
-            //    rootNode
-            //            .find(".add-dataset-content")
-            //            .append(step.stepItem.node)
-            //    ;
-            //});
-
-            t.dfs(steps, function (node, par/*, ctrl*/) {
+            t.dfs(choiceTree, function (node, par/*, ctrl*/) {
                 var stepItem,
                     level = par ? par.level + 1 : 1;
-                    
+
                 node.level = level;
                 stepItem = new StepItem(node);
+                stepItem.on("curentStep", resetCurrentStep);
 
                 node.stepItem = stepItem;
 
@@ -152,11 +143,13 @@ define([
 
                 console.log(node);
             });
-            
+
             rootNode
                     .find(".add-dataset-content")
-                    .append(steps.stepItem.node)
+                    .append(choiceTree.stepItem.node)
             ;
+
+            getStep("sourceTypeStep").stepItem.currentStep(true);
 
             //var tree = new TreeModel(),
             //    root;
@@ -169,6 +162,20 @@ define([
             //    // Halt the traversal by returning false
             //    //if (node.model.id === 121) return false;
             //});
+        }
+
+        function resetCurrentStep(event) {
+            t.dfs(choiceTree, function (node) {
+                if (node.id !== event.id) {
+                    node.stepItem.currentStep(false);
+                }
+            });
+        }
+
+        function getStep(stepId) {
+            return t.find(choiceTree, function (node) {
+                return node.id === stepId;
+            });
         }
 
         return {

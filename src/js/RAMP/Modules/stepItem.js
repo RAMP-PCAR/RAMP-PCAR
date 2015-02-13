@@ -93,11 +93,20 @@ define([
                          */
                         id: null,
 
-                        expose: [],
                         content: null,
                         contentBricks: {},
 
                         template: "default_step_template",
+
+                        /**
+                         * A copy of the layer config supplied during LayerItem creation; is set to `config` value.
+                         *
+                         * @property _config
+                         * @private
+                         * @type Object
+                         * @default null
+                         */
+                        _config: config,
 
                         /**
                          * A node of the LayerItem.
@@ -108,115 +117,12 @@ define([
                          */
                         node: null,
 
-                        /**
-                         * A copy of the layer config supplied during LayerItem creation; is set to `config` value.
-                         *
-                         * @property _config
-                         * @private
-                         * @type Object
-                         * @default null
-                         */
-                        _config: null,
 
                         _contentNode: null,
+                        _optionsContainerNode: null,
                         _optionsNode: null,
 
-                        /**
-                         * A node of the image container.
-                         *
-                         * @property _imageContainerNode
-                         * @private
-                         * @type JObject
-                         * @default null
-                         */
-                        _imageContainerNode: null,
-
-                        /**
-                         * A node of the layer display name.
-                         *
-                         * @property _displayNameNode
-                         * @private
-                         * @type JObject
-                         * @default null
-                         */
-                        _displayNameNode: null,
-
-                        /**
-                         * A node of the layer controls.
-                         *
-                         * @property _controlsNode
-                         * @private
-                         * @type JObject
-                         * @default null
-                         */
-                        _controlsNode: null,
-
-                        /**
-                         * A node of the layer toggles.
-                         *
-                         * @property _togglesNode
-                         * @private
-                         * @type JObject
-                         * @default null
-                         */
-                        _togglesNode: null,
-
-                        /**
-                         * A dictionary of control nodes available for this layer.
-                         *
-                         * @property _controlStore
-                         * @private
-                         * @type Object
-                         * @default {}
-                         */
-                        _controlStore: {},
-
-                        /**
-                         * A dictionary of toggle nodes available for this layer.
-                         *
-                         * @property _toggleStore
-                         * @private
-                         * @type Object
-                         * @default {}
-                         */
-                        _toggleStore: {},
-
-                        /**
-                         * A dictionary of notice nodes available for this layer.
-                         *
-                         * @property _noticeStore
-                         * @private
-                         * @type Object
-                         * @default {}
-                         */
-                        _noticeStore: {},
-
-                        /**
-                         * Templates to be used in construction of the layer nodes.
-                         *
-                         * @property templates
-                         * @type Object
-                         * @default layer_selector_template.json
-                         */
-                        templates: null, // JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
-
-                        /**
-                         * State of this LayerItem; can be overwritten by `options.state`.
-                         *
-                         * @property state
-                         * @type String
-                         * @default LayerItem.state.DEFAULT
-                         */
-                        state: "", //LayerItem.state.DEFAULT,
-
-                        /**
-                         * Specifies type of this LayerItem and the name of the layer item template to use; can be overwritten by `options.type`.
-                         *
-                         * @property type
-                         * @type String
-                         * @default null
-                         */
-                        type: null
+                        state: ""
                     },
                     config
                 );
@@ -229,20 +135,6 @@ define([
                 this.content.forEach(function (contentItem) {
                     that._addContentBrick(contentItem);
                 });
-
-                //this._imageBoxNode = this.node.find(".layer-details > div:first");
-                //this._displayNameNode = this.node.find(".layer-name > span");
-                //this._controlsNode = this.node.find(".layer-controls-group");
-                //this._togglesNode = this.node.find(".layer-checkboxes");
-                //this._noticesNode = this.node.find(".layer-notices");
-
-                //this._generateParts("controls", "layer_control_", this._controlStore);
-                //this._generateParts("toggles", "layer_toggle_", this._toggleStore);
-                //this._generateParts("notices", "layer_notice_", this._noticeStore);
-
-                //this.setState(this.state, null, true);
-
-                //$("#add-dataset-section > section").append(this.node);
 
                 console.debug("-->", this.state);
             },
@@ -318,6 +210,17 @@ define([
 
             addChild: function (stepItem) {
                 this._optionsNode.append(stepItem.node);
+            },
+
+            currentStep: function(bool) {
+                if (bool) {
+
+                    this.node.addClass("current-step");
+
+                    this.emit("curentStep", { id: this.id });
+                } else {
+                    this.node.removeClass("current-step");
+                }
             },
 
             /**
