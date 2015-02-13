@@ -138,19 +138,24 @@ define([
             //});
 
             t.dfs(steps, function (node, par/*, ctrl*/) {
-                var stepItem = new StepItem(node);
+                var stepItem,
+                    level = par ? par.level + 1 : 1;
+                    
+                node.level = level;
+                stepItem = new StepItem(node);
 
                 node.stepItem = stepItem;
 
                 if (par) {
                     par.stepItem.addChild(stepItem);
                 }
-                //console.log(node, par, ctrl);
+
+                console.log(node);
             });
             
-                rootNode
-                        .find(".add-dataset-content")
-                        .append(steps.stepItem.node)
+            rootNode
+                    .find(".add-dataset-content")
+                    .append(steps.stepItem.node)
             ;
 
             //var tree = new TreeModel(),

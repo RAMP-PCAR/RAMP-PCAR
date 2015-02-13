@@ -402,6 +402,8 @@ require([
                 a.on("serviceURL/change", function (event) {
                     console.log("serviceURL/change", event, "Step data:", a.getData());
                 });
+
+                $("#add-dataset-section > section").append(a.node);
             });
 
             RampMap.init();

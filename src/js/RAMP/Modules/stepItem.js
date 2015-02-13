@@ -221,7 +221,7 @@ define([
                     config
                 );
 
-                this.node = $(_template(this.template, this._config));
+                this.node = $(_template(this.template, config));
                 this._contentNode = this.node.find("> .step-content");
                 this._optionsContainerNode = this.node.find("> .step-options-container");
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
@@ -252,7 +252,6 @@ define([
                     contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
                 // if it's a multiBrick, add individual bricks from its content to the main content and wire them as separate bricks
-                //if (Bricks.MultiBrick.isPrototypeOf(contentBrick)) {
                 if (Bricks.MultiBrick === contentItem.type) {
 
                     contentBrick.content.forEach(function (contentItem) {

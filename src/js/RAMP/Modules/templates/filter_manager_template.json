@@ -318,7 +318,7 @@
         ",
 
         "default_step_template": "
-            <div class='step step-{%= o.stepCount %}' id=''>
+            <div class='step step-{%= o.level %}' id=''>
                 <div class='step-content'>
                     
                 </div>
