@@ -1,4 +1,4 @@
-﻿/*global console, define, $, Base */
+﻿/*global console, define, $, jscolor, RColor, Base */
 
 /**
 * @module Utils
@@ -39,6 +39,7 @@ define([
             ChoiceBrick,
 
             DropDownBrick,
+            ColorPickerBrick,
             SimpleInputBrick,
             FileInputBrick,
 
@@ -454,10 +455,72 @@ define([
             }
         });
 
+        ColorPickerBrick = SimpleInputBrick.extend({
+            initialize: function (id, config) {
+                var that = this,
+                    newConfig = {};
+
+                lang.mixin(newConfig,
+                    {
+                        template: "default_colorpicker_brick_template",
+                        containerClass: "colorpicker-brick-container",
+                        guid: UtilMisc.guid(),
+                        label: config.header,
+
+                        pickerPosition: "top"
+                    },
+                    config
+                );
+
+                SimpleInputBrick.initialize.call(this, id, newConfig);
+
+                lang.mixin(this,
+                    {
+                        picker: null,
+                        pickerSwatch: this.node.find("#" + this.guid + "pickerSwatch")
+                    }
+                );
+
+                this.picker = new jscolor.color(this.inputNode[0], {
+                    pickerPosition: "top",
+                    styleElement: this.pickerSwatch[0], //this.guid + "pickerSwatch",
+                    onImmediateChange: function () {
+                        that.notify("change", that.getData());
+                    }
+                });
+
+                this.picker.fromString((new RColor()).get(true).slice(1));
+
+                this.pickerSwatch.on("click", function () {
+                    that.picker.showPicker();
+                });
+
+            },
+
+            setInputValue: function () {
+                // chill
+            },/*
+
+            isValid: function () {
+                // Todo: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
+            }*/
+
+            getData: function (wrap) {
+                var payload = {
+                    hex: this.picker.toString(),
+                    rgb: this.picker.rgb,
+                    hsv: this.picker.hsv
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
         FileInputBrick = SimpleInputBrick.extend({
             initialize: function (id, config) {
                 var that = this;
 
+                // mixin defaults with the given config
                 lang.mixin(config,
                     {
                         template: "default_fileinput_brick_template",
@@ -541,6 +604,7 @@ define([
             ChoiceBrick: ChoiceBrick,
 
             DropDownBrick: DropDownBrick,
+            ColorPickerBrick: ColorPickerBrick,
             SimpleInputBrick: SimpleInputBrick,
             FileInputBrick: FileInputBrick
         };

@@ -217,6 +217,25 @@ require([
                             ]
                         },
                         {
+                            id: "coloura",
+                            type: Bricks.ColorPickerBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "Primary Colour"//,
+                                //label: "Service URL", // optional, equals to header by default
+                                
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    expose: true,
+                                    callback: function (step, data) {
+                                        console.log(data);
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             id: "serviceURL",
                             type: Bricks.SimpleInputBrick,
                             config: {
