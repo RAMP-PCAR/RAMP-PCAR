@@ -28,6 +28,7 @@ define([
 
             //steps,
             choiceTree,
+            stepLookup = {},
 
             transitionDuration = 0.4;
 
@@ -43,15 +44,21 @@ define([
                         header: "Data Source",
                         choices: [
                             {
-                                key: "service",
+                                key: "serviceTypeStep",
                                 value: "Service"
                             },
                             {
-                                key: "file",
+                                key: "fileTypeStep",
                                 value: "File"
                             }
                         ]
-                    }
+                    },
+                    on: [
+                            {
+                                eventName: "change",
+                                expose: { as: "advance" }
+                            }
+                    ]
                 }
             ],
             children: [
@@ -105,6 +112,41 @@ define([
                                     }
                                 }
                             ]
+                        },
+                        {
+                            id: "serviceTypeOkCancel",
+                            type: Bricks.OkCancelButtonBrick,
+                            config: {
+                                okLabel: "Load",
+                                okButtonClass: "btn-primary",
+
+                                cancelLabel: "Cancel",
+                                cancelButtonClass: "btn-default btn-sm",
+                                required: ["serviceURL"]
+                            },
+                            on: [
+                                {
+                                    eventName: "click",
+                                    callback: function (step, data) {
+                                        console.log("Just Click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "okClick",
+                                    expose: { as: "advance" },
+                                    callback: function (step, data) {
+                                        console.log("Ok click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "cancelClick",
+                                    expose: { as: "retreat" },
+                                    callback: function (step, data) {
+                                        console.log("Cancel click:", this, step, data);
+                                    }
+                                }
+
+                            ]
                         }
                     ]
                 }
@@ -136,6 +178,7 @@ define([
                 stepItem.on("curentStep", resetCurrentStep);
 
                 node.stepItem = stepItem;
+                stepLookup[node.id] = stepItem;
 
                 if (par) {
                     par.stepItem.addChild(stepItem);
@@ -149,19 +192,13 @@ define([
                     .append(choiceTree.stepItem.node)
             ;
 
-            getStep("sourceTypeStep").stepItem.currentStep(true);
+            stepLookup.sourceTypeStep
+                .currentStep(true)
+                .on("advance", function (event) {
+                    console.log(event);
 
-            //var tree = new TreeModel(),
-            //    root;
-
-            //root = tree.parse(choiceTree);
-
-            //root.walk(function (node) {
-            //    console.log(node.parent);
-
-            //    // Halt the traversal by returning false
-            //    //if (node.model.id === 121) return false;
-            //});
+                    stepLookup.serviceTypeStep.node.show();
+                });
         }
 
         function resetCurrentStep(event) {
@@ -172,11 +209,11 @@ define([
             });
         }
 
-        function getStep(stepId) {
-            return t.find(choiceTree, function (node) {
-                return node.id === stepId;
-            });
-        }
+        //function getStep(stepId) {
+        //    return t.find(choiceTree, function (node) {
+        //        return node.id === stepId;
+        //    });
+        //}
 
         return {
             init: function () {

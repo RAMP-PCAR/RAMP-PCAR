@@ -1,4 +1,4 @@
-﻿/* global define, tmpl, $, console */
+﻿/* global define, $, console */
 
 /**
 * @module RAMP
@@ -58,25 +58,6 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-        /**
-        * Populates a template specified by the key with the supplied data.
-        *
-        * @param {String} key template name
-        * @param {Object} data data to be inserted into the template
-        * @method _template
-        * @private
-        * @return {String} a string template filled with supplied data
-        */
-        function _template(key, data) {
-            var d = lang.clone(data) || {};
-            tmpl.cache = {};
-            tmpl.templates = templates;
-
-            d.fn = TmplUtil;
-
-            return tmpl(key, d);
-        }
-
         LayerItem = declare([Evented], {
             constructor: function (config) {
                 var that = this;
@@ -116,8 +97,7 @@ define([
                          * @default null
                          */
                         node: null,
-
-
+                        
                         _contentNode: null,
                         _optionsContainerNode: null,
                         _optionsNode: null,
@@ -127,7 +107,7 @@ define([
                     config
                 );
 
-                this.node = $(_template(this.template, config));
+                this.node = $(TmplHelper.template(this.template, config, templates));
                 this._contentNode = this.node.find("> .step-content");
                 this._optionsContainerNode = this.node.find("> .step-options-container");
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
@@ -167,12 +147,19 @@ define([
                 if (contentItem.on) {
                     contentItem.on.forEach(function (o) {
                         contentBrick.on(o.eventName, function (data) {
-                            o.callback.call(contentBrick, that, data);
+                            // if there is a callback specified, call it in the context of the brick
+                            if (o.callback) {
+                                o.callback.call(contentBrick, that, data);
+                            }
 
                             // if event is exposed; emit it
                             if (o.expose) {
                                 that._doInternalCheck();
                                 that.emit(contentBrick.id + "/" + o.eventName, data);
+
+                                if (o.expose.as) {
+                                    that.emit(o.expose.as, data);
+                                }
                             }
                         });
                     });
@@ -210,9 +197,11 @@ define([
 
             addChild: function (stepItem) {
                 this._optionsNode.append(stepItem.node);
+
+                return this;
             },
 
-            currentStep: function(bool) {
+            currentStep: function (bool) {
                 if (bool) {
 
                     this.node.addClass("current-step");
@@ -221,6 +210,8 @@ define([
                 } else {
                     this.node.removeClass("current-step");
                 }
+
+                return this;
             },
 
             /**
@@ -266,13 +257,14 @@ define([
              * @return Created part node
              */
             _generatePart: function (templateKey, pKey, data) {
-                var part = $(this._template(templateKey + pKey,
+                var part = $(TmplHelper.template(templateKey + pKey,
                     {
                         id: this.id,
                         config: this._config,
                         nameKey: pKey,
                         data: data
-                    }
+                    },
+                    templates
                 ));
 
                 return part;
