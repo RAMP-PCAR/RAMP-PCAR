@@ -255,7 +255,11 @@ define([
                     shiftTimeline
                         .addLabel("leftShiftStart")
 
-                        .to(this._optionsBackgroundNode, this._transitionDuration, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
+                        .to(this._optionsBackgroundNode, this._transitionDuration, {
+                            height: targetChildStep.getContentOuterHeight(),
+                            "line-height": targetChildStep.getContentOuterHeight(),
+                            ease: "easeOutCirc"
+                        }, 0)
 
                         .fromTo(this._optionsNode, this._transitionDuration,
                             { left: -this._activeChildStep.getContentPosition().left },
@@ -342,7 +346,10 @@ define([
                         TweenLite.set(this._optionsContainerNode, { display: "block", top: -9999 });
 
                         tl
-                            .to(this._optionsBackgroundNode, 0, { height: targetChildStep.getContentOuterHeight() }, 0)
+                            .to(this._optionsBackgroundNode, 0, {
+                                height: targetChildStep.getContentOuterHeight(),
+                                "line-height": targetChildStep.getContentOuterHeight()
+                            }, 0)
 
                             .set(this._optionsNode, { left: 0 }, 0)
 
