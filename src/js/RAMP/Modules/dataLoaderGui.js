@@ -56,7 +56,12 @@ define([
                     on: [
                             {
                                 eventName: "change",
-                                expose: { as: "advance" }
+                                expose: { as: "advance" },
+                                callback: function (step, data) {
+                                    var tl = step.advance(data.selectedChoice);
+
+                                    tl.play();
+                                }
                             }
                     ]
                 }
