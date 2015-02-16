@@ -210,9 +210,42 @@ define([
                 return this;
             },
 
+            resolve: function () {
+
+            },
+
             advance: function (targetChildStepId) {
-                var tl = new TimelineLite({ paused: true }),
-                    targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep;
+                var advanceTimeline = new TimelineLite({ paused: true }),
+                    openStagger,
+                    //closeStagger,
+                    //closeTimelines = [],
+                    openTimelines = [];
+
+                //this.getCloseTimeline(closeTimelines, targetChildStepId);
+
+                this.getOpenTimeline(openTimelines, targetChildStepId);
+                openStagger = this._transitionDuration / 2 / openTimelines.length;
+
+                advanceTimeline.add(openTimelines, 0, "start", openStagger);
+
+                //openTimelines.forEach(function (tl) {
+                //    advanceTimeline.add(tl, 0);
+                //});
+
+                advanceTimeline.play();
+
+                return this;
+            },
+
+            getOpenTimeline: function (tls, targetChildStepId) {
+                var tl = new TimelineLite(),
+                    targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
+                    otherChildNodes = this.getChildNodes([targetChildStepId]);
+                //otherChildNodes = UtilArray.remove(this.getChildNodes(),
+                //    function (childNode) {
+                //        return childNode.id === targetChildStepId;
+                //    }
+                //);
 
                 if (targetChildStep) {
 
@@ -222,9 +255,10 @@ define([
                         .to(this._optionsBackgroundNode, 0, { height: targetChildStep.getContentOuterHeight() }, 0)
 
                         .set(this._optionsNode, { left: 0 }, 0)
-                        //.set(options, { left: -optionsLeftShift }, "advanceStart+=" + advanceStagger * (i))
+
+                        .set(otherChildNodes, { display: "none" }, 0)
                         .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
-                        .set(this._activeChildStep || $(), { display: "none" }, 0)
+                        //.set(this._activeChildStep || $(), { display: "none" }, 0) // probably not needed as they should be hidden already
 
                         .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
                         .fromTo(this._optionsContainerNode, this._transitionDuration,
@@ -234,46 +268,13 @@ define([
                         .set(this._optionsContainerNode, { height: "auto" }, 0)
                     ;
 
+                    tls.push(tl);
+
                     this._activeChildStep = targetChildStep;
+                    this._activeChildStep.getOpenTimeline(tls);
                 }
-                //tl.addLabel("advanceStart"); // add time label
 
-                //advanceOptionsContainers.forEach(function (aoc, i) {
-                //    var optionsBackground,
-                //        options,
-                //        optionStepContent;
-
-                //    aoc = $(aoc);
-
-                //    optionsBackground = aoc.find("> .options-bg");
-                //    options = aoc.find("> .step-options");
-                //    optionStepContent = options.find("> .active-option:first > .step-content");
-
-                //    TweenLite.set(aoc, { display: "block" }); // unhide options container
-
-                //    // re-detect the left offset if the block has been hidden before; otherwise it will be zero;
-                //    optionsLeftShift = optionStepContent.position().left;
-
-                //    tl
-                //        .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, "advanceStart+=" + advanceStagger * (i))
-
-                //        .set(options, { left: 0 }, "advanceStart+=" + advanceStagger * (i))
-                //        //.set(options, { left: -optionsLeftShift }, "advanceStart+=" + advanceStagger * (i))
-                //        .set(options.find("> .active-option"), { display: "inline-block" }, "advanceStart+=" + advanceStagger * (i))
-                //        .set(options.find("> .step:not(.active-option)"), { display: "none" }, "advanceStart+=" + advanceStagger * (i))
-
-                //        .to(aoc, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
-                //        .fromTo(aoc, transitionDuration,
-                //            { top: -aoc.height() },
-                //            { top: 0, ease: "easeOutCirc" },
-                //            "advanceStart+=" + advanceStagger * (i))
-                //        .set(aoc, { height: "auto" }, "advanceStart+=" + advanceStagger * (i))
-                //    ;
-
-                //    lastContainer = aoc;
-                //});
-
-                return tl;
+                return this;
             },
 
             open: function () {
@@ -288,6 +289,20 @@ define([
 
             getContentOuterHeight: function () {
                 return this._contentNode.outerHeight();
+            },
+
+            getChildNodes: function (except) {
+                var childNodes = [];
+
+                UtilDict.forEachEntry(this._childSteps,
+                    function (childId, childItem) {
+                        if (!except || except.indexOf(childItem.id) === -1) {
+                            childNodes.push(childItem.node);
+                        }
+                    }
+                );
+
+                return childNodes;
             },
 
             currentStep: function (bool) {
