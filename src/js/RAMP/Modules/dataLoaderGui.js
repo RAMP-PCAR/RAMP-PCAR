@@ -58,9 +58,9 @@ define([
                                 eventName: "change",
                                 expose: { as: "advance" },
                                 callback: function (step, data) {
-                                    var tl = step.advance(data.selectedChoice);
+                                    step.advance(data.selectedChoice);
 
-                                    tl.play();
+                                    //tls[0].play();
                                 }
                             }
                     ]
@@ -154,6 +154,86 @@ define([
                             ]
                         }
                     ]
+                },
+                {
+                    id: "fileTypeStep",
+                    content: [
+                        {
+                            id: "fileType",
+                            type: Bricks.ChoiceBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "File Type",
+                                choices: [
+                                    {
+                                        key: "feature",
+                                        value: "GeoJSON"
+                                    },
+                                    {
+                                        key: "wms",
+                                        value: "CSV"
+                                    },
+                                    {
+                                        key: "shapefile",
+                                        value: "Shapefile"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            id: "fileOrFileULR",
+                            type: Bricks.FileInputBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "File or URL",
+                                //label: "Service URL", // optional, equals to header by default
+                                placeholder: "Local file or URL"
+                            },
+                            on: [
+                                {
+                                    eventName: "change",
+                                    callback: function (step, data) {
+                                        console.log(this.id, this.isValid(), data);
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            id: "fileTypeOkCancel",
+                            type: Bricks.OkCancelButtonBrick,
+                            config: {
+                                okLabel: "Load",
+                                okButtonClass: "btn-primary",
+
+                                cancelLabel: "Cancel",
+                                cancelButtonClass: "btn-default btn-sm",
+                                required: ["fileOrFileULR"]
+                            },
+                            on: [
+                                {
+                                    eventName: "click",
+                                    callback: function (step, data) {
+                                        console.log("Just Click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "okClick",
+                                    expose: { as: "advance" },
+                                    callback: function (step, data) {
+                                        console.log("Ok click:", this, step, data);
+                                    }
+                                },
+                                {
+                                    eventName: "cancelClick",
+                                    expose: { as: "retreat" },
+                                    callback: function (step, data) {
+                                        console.log("Cancel click:", this, step, data);
+                                    }
+                                }
+
+                            ]
+                        }
+                    ]
                 }
             ]
         };
@@ -202,7 +282,7 @@ define([
                 .on("advance", function (event) {
                     console.log(event);
 
-                    stepLookup.serviceTypeStep.node.show();
+                    //stepLookup.serviceTypeStep.node.show();
                 });
         }
 
