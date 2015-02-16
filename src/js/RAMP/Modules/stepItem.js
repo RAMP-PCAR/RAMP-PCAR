@@ -117,7 +117,7 @@ define([
 
                 this._contentNode = this.node.find("> .step-content");
                 this._optionsContainerNode = this.node.find("> .step-options-container");
-                this._optionsBackgroundNode = this._optionsContainerNode.find("> options-bg");
+                this._optionsBackgroundNode = this._optionsContainerNode.find("> .options-bg");
                 this._optionsNode = this._optionsContainerNode.find("> .step-options");
 
                 this.content.forEach(function (contentItem) {
@@ -216,28 +216,116 @@ define([
 
             advance: function (targetChildStepId) {
                 var advanceTimeline = new TimelineLite({ paused: true }),
-                    openStagger,
-                    //closeStagger,
-                    //closeTimelines = [],
-                    openTimelines = [];
+                    closeTimeline,
+                    shiftTimeline,
+                    openTimeline,
+                    targetChildStep = this._childSteps[targetChildStepId],
+                    skipFirst = this._activeChildStep ? true : false,
 
-                //this.getCloseTimeline(closeTimelines, targetChildStepId);
+                    that = this;
 
-                this.getOpenTimeline(openTimelines, targetChildStepId);
-                openStagger = this._transitionDuration / 2 / openTimelines.length;
+                closeTimeline = this.makeCloseTimeline(skipFirst);
+                shiftTimeline = this.makeShiftTimeline(targetChildStepId);
+                openTimeline = this.makeOpenTimeline(targetChildStepId, skipFirst);
 
-                advanceTimeline.add(openTimelines, 0, "start", openStagger);
-
-                //openTimelines.forEach(function (tl) {
-                //    advanceTimeline.add(tl, 0);
-                //});
+                advanceTimeline
+                    .add(closeTimeline)
+                    .add(shiftTimeline)
+                    .add(openTimeline)
+                    .call(function () {
+                        that._activeChildStep = targetChildStep;
+                    })
+                ;
 
                 advanceTimeline.play();
 
                 return this;
             },
 
-            getOpenTimeline: function (tls, targetChildStepId) {
+            makeShiftTimeline: function (targetChildStepId) {
+                var shiftTimeline = new TimelineLite(),
+                    targetChildStep = this._childSteps[targetChildStepId],
+                    allChildNodes = this.getChildNodes(),
+                    otherChildNodes = this.getChildNodes([targetChildStepId]);
+
+                if (this._activeChildStep) {
+
+                    TweenLite.set(allChildNodes, { display: "inline-block" });
+
+                    shiftTimeline
+                        .addLabel("leftShiftStart")
+
+                        .to(this._optionsBackgroundNode, this._transitionDuration, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
+
+                        .fromTo(this._optionsNode, this._transitionDuration,
+                            { left: -this._activeChildStep.getContentPosition().left },
+                            { left: -targetChildStep.getContentPosition().left, ease: "easeOutCirc" }, 0)
+                        .set(otherChildNodes, { className: "-=active-option" }) // when shifting, active-option is changing
+                        .set(targetChildStep.node, { className: "+=active-option" })
+
+                        .set(this._optionsNode, { left: 0 })
+                        .set(otherChildNodes, { display: "none" })
+                    ;
+                }
+
+                return shiftTimeline;
+            },
+
+            makeCloseTimeline: function (skipFirst) {
+                var closeTimeline = new TimelineLite(),
+                    closeStagger,
+                    closeTimelines = [];
+
+                this.getCloseTimelines(closeTimelines, skipFirst);
+                closeTimelines = closeTimelines.reverse();
+
+                if (closeTimelines.length > 0) {
+                    closeStagger = this._transitionDuration / 2 / closeTimelines.length;
+                    closeTimeline.add(closeTimelines, "+=0", "start", closeStagger);
+                }
+
+                return closeTimeline;
+            },
+
+            getCloseTimelines: function (tls, skip) {
+                var tl = new TimelineLite();
+
+                if (this._activeChildStep) {
+
+                    if (!skip) {
+                        tl
+                            .to(this._optionsContainerNode, this._transitionDuration,
+                                { top: -this._activeChildStep.getContentOuterHeight(), ease: "easeOutCirc" },
+                                0)
+                            .set(this._activeChildStep, { className: "-=active-option" })
+                            .set(this._optionsContainerNode, { display: "none" })
+                        ;
+
+                        tls.push(tl);
+                    }
+
+                    this._activeChildStep.getCloseTimelines(tls);
+                }
+
+                return this;
+            },
+
+            makeOpenTimeline: function (targetChildStepId, skipFirst) {
+                var openTimeline = new TimelineLite(),
+                    openStagger,
+                    openTimelines = [];
+
+                this.getOpenTimelines(openTimelines, targetChildStepId, skipFirst);
+
+                if (openTimelines.length > 0) {
+                    openStagger = this._transitionDuration / 2 / openTimelines.length;
+                    openTimeline.add(openTimelines, "+=0", "start", openStagger);
+                }
+
+                return openTimeline;
+            },
+
+            getOpenTimelines: function (tls, targetChildStepId, skip) {
                 var tl = new TimelineLite(),
                     targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
                     otherChildNodes = this.getChildNodes([targetChildStepId]);
@@ -249,38 +337,34 @@ define([
 
                 if (targetChildStep) {
 
-                    TweenLite.set(this._optionsContainerNode, { display: "block", top: -9999 });
+                    if (!skip) {
 
-                    tl
-                        .to(this._optionsBackgroundNode, 0, { height: targetChildStep.getContentOuterHeight() }, 0)
+                        TweenLite.set(this._optionsContainerNode, { display: "block", top: -9999 });
 
-                        .set(this._optionsNode, { left: 0 }, 0)
+                        tl
+                            .to(this._optionsBackgroundNode, 0, { height: targetChildStep.getContentOuterHeight() }, 0)
 
-                        .set(otherChildNodes, { display: "none" }, 0)
-                        .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
-                        //.set(this._activeChildStep || $(), { display: "none" }, 0) // probably not needed as they should be hidden already
+                            .set(this._optionsNode, { left: 0 }, 0)
 
-                        .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
-                        .fromTo(this._optionsContainerNode, this._transitionDuration,
-                            { top: -this._optionsContainerNode.height() },
-                            { top: 0, ease: "easeOutCirc" },
-                            0)
-                        .set(this._optionsContainerNode, { height: "auto" }, 0)
-                    ;
+                            .set(otherChildNodes, { display: "none" }, 0)
+                            .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
+                            //.set(this._activeChildStep || $(), { display: "none" }, 0) // probably not needed as they should be hidden already
 
-                    tls.push(tl);
+                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
+                            .fromTo(this._optionsContainerNode, this._transitionDuration,
+                                { top: -this._optionsContainerNode.height() },
+                                { top: 0, ease: "easeOutCirc" },
+                                0)
+                            .set(this._optionsContainerNode, { height: "auto" }, 0)
+                        ;
 
-                    this._activeChildStep = targetChildStep;
-                    this._activeChildStep.getOpenTimeline(tls);
+                        tls.push(tl);
+                    }
+
+                    targetChildStep.getOpenTimelines(tls);
                 }
 
                 return this;
-            },
-
-            open: function () {
-                var tl = new TimelineLite({ paused: true });
-
-                return tl;
             },
 
             getContentPosition: function () {

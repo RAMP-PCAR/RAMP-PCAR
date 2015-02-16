@@ -59,8 +59,6 @@ define([
                                 expose: { as: "advance" },
                                 callback: function (step, data) {
                                     step.advance(data.selectedChoice);
-
-                                    //tls[0].play();
                                 }
                             }
                     ]
@@ -127,7 +125,7 @@ define([
 
                                 cancelLabel: "Cancel",
                                 cancelButtonClass: "btn-default btn-sm",
-                                required: ["serviceURL"]
+                                required: ["serviceType", "serviceURL"]
                             },
                             on: [
                                 {
@@ -141,6 +139,7 @@ define([
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
+                                        step.advance("dummyButton");
                                     }
                                 },
                                 {
@@ -151,6 +150,22 @@ define([
                                     }
                                 }
 
+                            ]
+                        }
+                    ],
+                    children: [
+                        {
+                            id: "dummyButton",
+                            content: [
+                                {
+                                    id: "okButton",
+                                    type: Bricks.ButtonBrick,
+                                    config: {
+                                        //header: "test", //optional, omitted if not specified
+                                        label: "Done" //optional, defaults to "Ok"
+                                        //buttonClass: "btn-primary" //optional, defaults to "btn-primary"
+                                    }
+                                }
                             ]
                         }
                     ]
@@ -207,7 +222,7 @@ define([
 
                                 cancelLabel: "Cancel",
                                 cancelButtonClass: "btn-default btn-sm",
-                                required: ["fileOrFileULR"]
+                                required: ["fileType", "fileOrFileULR"]
                             },
                             on: [
                                 {
