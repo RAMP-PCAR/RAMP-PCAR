@@ -210,8 +210,24 @@ define([
                 return this;
             },
 
-            resolve: function () {
+            retreat: function () {
+                var advanceTimeline = new TimelineLite({ paused: true }),
+                    closeTimeline,
 
+                    that = this;
+
+                closeTimeline = this.makeCloseTimeline();
+
+                advanceTimeline
+                    .add(closeTimeline)
+                    .call(function () {
+                        that._activeChildStep = null;
+                    })
+                ;
+
+                advanceTimeline.play();
+
+                return this;
             },
 
             advance: function (targetChildStepId) {
@@ -240,39 +256,6 @@ define([
                 advanceTimeline.play();
 
                 return this;
-            },
-
-            makeShiftTimeline: function (targetChildStepId) {
-                var shiftTimeline = new TimelineLite(),
-                    targetChildStep = this._childSteps[targetChildStepId],
-                    allChildNodes = this.getChildNodes(),
-                    otherChildNodes = this.getChildNodes([targetChildStepId]);
-
-                if (this._activeChildStep) {
-
-                    TweenLite.set(allChildNodes, { display: "inline-block" });
-
-                    shiftTimeline
-                        .addLabel("leftShiftStart")
-
-                        .to(this._optionsBackgroundNode, this._transitionDuration, {
-                            height: targetChildStep.getContentOuterHeight(),
-                            "line-height": targetChildStep.getContentOuterHeight(),
-                            ease: "easeOutCirc"
-                        }, 0)
-
-                        .fromTo(this._optionsNode, this._transitionDuration,
-                            { left: -this._activeChildStep.getContentPosition().left },
-                            { left: -targetChildStep.getContentPosition().left, ease: "easeOutCirc" }, 0)
-                        .set(otherChildNodes, { className: "-=active-option" }) // when shifting, active-option is changing
-                        .set(targetChildStep.node, { className: "+=active-option" })
-
-                        .set(this._optionsNode, { left: 0 })
-                        .set(otherChildNodes, { display: "none" })
-                    ;
-                }
-
-                return shiftTimeline;
             },
 
             makeCloseTimeline: function (skipFirst) {
@@ -312,6 +295,39 @@ define([
                 }
 
                 return this;
+            },
+
+            makeShiftTimeline: function (targetChildStepId) {
+                var shiftTimeline = new TimelineLite(),
+                    targetChildStep = this._childSteps[targetChildStepId],
+                    allChildNodes = this.getChildNodes(),
+                    otherChildNodes = this.getChildNodes([targetChildStepId]);
+
+                if (this._activeChildStep) {
+
+                    TweenLite.set(allChildNodes, { display: "inline-block" });
+
+                    shiftTimeline
+                        .addLabel("leftShiftStart")
+
+                        .to(this._optionsBackgroundNode, this._transitionDuration, {
+                            height: targetChildStep.getContentOuterHeight(),
+                            "line-height": targetChildStep.getContentOuterHeight(),
+                            ease: "easeOutCirc"
+                        }, 0)
+
+                        .fromTo(this._optionsNode, this._transitionDuration,
+                            { left: -this._activeChildStep.getContentPosition().left },
+                            { left: -targetChildStep.getContentPosition().left, ease: "easeOutCirc" }, 0)
+                        .set(otherChildNodes, { className: "-=active-option" }) // when shifting, active-option is changing
+                        .set(targetChildStep.node, { className: "+=active-option" })
+
+                        .set(this._optionsNode, { left: 0 })
+                        .set(otherChildNodes, { display: "none" })
+                    ;
+                }
+
+                return shiftTimeline;
             },
 
             makeOpenTimeline: function (targetChildStepId, skipFirst) {

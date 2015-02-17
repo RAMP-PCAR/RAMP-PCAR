@@ -147,6 +147,7 @@ define([
                                     expose: { as: "retreat" },
                                     callback: function (step, data) {
                                         console.log("Cancel click:", this, step, data);
+                                        step.retreat();
                                     }
                                 }
 
