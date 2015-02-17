@@ -1,4 +1,4 @@
-﻿/* global define, $, TweenLite, TimelineLite, console */
+﻿/* global define, $, TimelineLite, console */
 
 /**
 * @module RAMP
@@ -108,6 +108,7 @@ define([
 
                         state: "",
 
+                        _timeline: new TimelineLite({ paused: true }),
                         _transitionDuration: 0.4
                     },
                     config
@@ -211,40 +212,50 @@ define([
             },
 
             retreat: function () {
-                var advanceTimeline = new TimelineLite({ paused: true }),
-                    closeTimeline,
-
+                var closeTimeline,
                     that = this;
+
+                this._timeline
+
+                    .seek("+=0", false)
+                    .clear()
+                ;
 
                 closeTimeline = this.makeCloseTimeline();
 
-                advanceTimeline
+                this._timeline
                     .add(closeTimeline)
                     .call(function () {
                         that._activeChildStep = null;
                     })
                 ;
 
-                advanceTimeline.play();
+                this._timeline.play(0);
 
                 return this;
             },
 
             advance: function (targetChildStepId) {
-                var advanceTimeline = new TimelineLite({ paused: true }),
-                    closeTimeline,
+                var closeTimeline,
                     shiftTimeline,
                     openTimeline,
                     targetChildStep = this._childSteps[targetChildStepId],
-                    skipFirst = this._activeChildStep ? true : false,
+                    skipFirst,
 
                     that = this;
+
+                this._timeline
+                    .seek("+=0", false)
+                    .clear()
+                ;
+
+                skipFirst = this._activeChildStep ? true : false;
 
                 closeTimeline = this.makeCloseTimeline(skipFirst);
                 shiftTimeline = this.makeShiftTimeline(targetChildStepId);
                 openTimeline = this.makeOpenTimeline(targetChildStepId, skipFirst);
 
-                advanceTimeline
+                this._timeline
                     .add(closeTimeline)
                     .add(shiftTimeline)
                     .add(openTimeline)
@@ -253,7 +264,7 @@ define([
                     })
                 ;
 
-                advanceTimeline.play();
+                this._timeline.play(0);
 
                 return this;
             },
@@ -305,10 +316,8 @@ define([
 
                 if (this._activeChildStep) {
 
-                    TweenLite.set(allChildNodes, { display: "inline-block" });
-
                     shiftTimeline
-                        .addLabel("leftShiftStart")
+                        .set(allChildNodes, { display: "inline-block" })
 
                         .to(this._optionsBackgroundNode, this._transitionDuration, {
                             height: targetChildStep.getContentOuterHeight(),
@@ -349,36 +358,34 @@ define([
                 var tl = new TimelineLite(),
                     targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
                     otherChildNodes = this.getChildNodes([targetChildStepId]);
-                //otherChildNodes = UtilArray.remove(this.getChildNodes(),
-                //    function (childNode) {
-                //        return childNode.id === targetChildStepId;
-                //    }
-                //);
 
                 if (targetChildStep) {
 
                     if (!skip) {
 
-                        TweenLite.set(this._optionsContainerNode, { display: "block", top: -9999 });
-
                         tl
+                            .set(this._optionsContainerNode, { display: "block", top: -9999 }, 0)
+
+                            // make sure options' node is on the left
+                            .set(this._optionsNode, { left: 0 }, 0)
+
+                            // hide children other than target
+                            .set(otherChildNodes, { display: "none" }, 0)
+                            .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
+
+                            // animate step's background
                             .to(this._optionsBackgroundNode, 0, {
                                 height: targetChildStep.getContentOuterHeight(),
                                 "line-height": targetChildStep.getContentOuterHeight()
                             }, 0)
 
-                            .set(this._optionsNode, { left: 0 }, 0)
-
-                            .set(otherChildNodes, { display: "none" }, 0)
-                            .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
-                            //.set(this._activeChildStep || $(), { display: "none" }, 0) // probably not needed as they should be hidden already
-
-                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
+                            // animate height and position of the options' container node
+                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc", immediateRender: false }, 0)
                             .fromTo(this._optionsContainerNode, this._transitionDuration,
                                 { top: -this._optionsContainerNode.height() },
-                                { top: 0, ease: "easeOutCirc" },
+                                { top: 0, ease: "easeOutCirc", immediateRender: false },
                                 0)
-                            .set(this._optionsContainerNode, { height: "auto" }, 0)
+                            .set(this._optionsContainerNode, { height: "auto" })
                         ;
 
                         tls.push(tl);
