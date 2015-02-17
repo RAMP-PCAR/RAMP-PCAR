@@ -85,7 +85,7 @@ define([
                         node: null,
 
                         content: null,
-                        _contentBricks: {},
+                        contentBricks: {},
 
                         template: "default_step_template",
 
@@ -141,7 +141,7 @@ define([
 
             _wireBrickUp: function (contentItem, contentBrick) {
                 var that = this;
-                this._contentBricks[contentBrick.id] = contentBrick;
+                this.contentBricks[contentBrick.id] = contentBrick;
 
                 // set brick events if specified
                 if (contentItem.on) {
@@ -175,9 +175,9 @@ define([
                 var flag,
                     that = this;
 
-                UtilDict.forEachEntry(this._contentBricks, function (key, brick) {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     flag = brick.required.every(function (req) {
-                        return that._contentBricks[req].isValid();
+                        return that.contentBricks[req].isValid();
                     });
 
                     // disable or enable a brick based on sum validity of its dependencies
@@ -185,10 +185,172 @@ define([
                 });
             },
 
+            _makeCloseTimeline: function (skipFirst) {
+                var closeTimeline = new TimelineLite(),
+                    closeStagger,
+                    closeTimelines = [];
+
+                this._getCloseTimelines(closeTimelines, skipFirst);
+                closeTimelines = closeTimelines.reverse();
+
+                if (closeTimelines.length > 0) {
+                    closeStagger = this._transitionDuration / 2 / closeTimelines.length;
+                    closeTimeline.add(closeTimelines, "+=0", "start", closeStagger);
+                }
+
+                return closeTimeline;
+            },
+
+            _getCloseTimelines: function (tls, skip) {
+                var tl = new TimelineLite(),
+
+                    that = this;
+
+                if (this._activeChildStep) {
+
+                    if (!skip) {
+                        tl
+                            .call(function () {
+                                //that.currentLevel()
+                                that._notifyCurrentStepChange();
+                            })
+                            .to(this._optionsContainerNode, this._transitionDuration,
+                                { top: -this._activeChildStep.getContentOuterHeight(), ease: "easeOutCirc" },
+                                0)
+                            .set(this._activeChildStep, { className: "-=active-option" })
+                            .set(this._optionsContainerNode, { display: "none" })
+                        ;
+
+                        tls.push(tl);
+                    }
+
+                    this._activeChildStep._getCloseTimelines(tls);
+                }
+
+                return this;
+            },
+
+            _makeShiftTimeline: function (targetChildStepId) {
+                var shiftTimeline = new TimelineLite(),
+                    targetChildStep = this._childSteps[targetChildStepId],
+                    allChildNodes = this._getChildNodes(),
+                    otherChildNodes = this._getChildNodes([targetChildStepId]);
+
+                if (this._activeChildStep) {
+
+                    shiftTimeline
+                        .set(allChildNodes, { display: "inline-block" })
+
+                        .to(this._optionsBackgroundNode, this._transitionDuration, {
+                            height: targetChildStep.getContentOuterHeight(),
+                            "line-height": targetChildStep.getContentOuterHeight(),
+                            ease: "easeOutCirc"
+                        }, 0)
+
+                        .fromTo(this._optionsNode, this._transitionDuration,
+                            { left: -this._activeChildStep.getContentPosition().left },
+                            { left: -targetChildStep.getContentPosition().left, ease: "easeOutCirc" }, 0)
+                        .set(otherChildNodes, { className: "-=active-option" }) // when shifting, active-option is changing
+                        .set(targetChildStep.node, { className: "+=active-option" })
+
+                        .set(this._optionsNode, { left: 0 })
+                        .set(otherChildNodes, { display: "none" })
+                    ;
+                }
+
+                return shiftTimeline;
+            },
+
+            _makeOpenTimeline: function (targetChildStepId, skipFirst) {
+                var openTimeline = new TimelineLite(),
+                    openStagger,
+                    openTimelines = [];
+
+                this._getOpenTimelines(openTimelines, targetChildStepId, skipFirst);
+
+                if (openTimelines.length > 0) {
+                    openStagger = this._transitionDuration / 2 / openTimelines.length;
+                    openTimeline.add(openTimelines, "+=0", "start", openStagger);
+                }
+
+                return openTimeline;
+            },
+
+            _getOpenTimelines: function (tls, targetChildStepId, skip) {
+                var tl = new TimelineLite(),
+                    targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
+                    otherChildNodes = this._getChildNodes([targetChildStepId]);
+
+                if (targetChildStep) {
+
+                    if (!skip) {
+
+                        tl
+                            // set options contaner node to visible, otherwise you can't get its size
+                            .set(this._optionsContainerNode, { display: "block", top: -9999 }, 0)
+
+                            // make sure options' node is on the left
+                            .set(this._optionsNode, { left: 0 }, 0)
+
+                            // hide children other than target
+                            .set(otherChildNodes, { display: "none" }, 0)
+                            .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
+
+                            // make the targe step current
+                            .call(function () {
+                                targetChildStep._notifyCurrentStepChange();
+                            })
+
+                            // animate step's background
+                            .to(this._optionsBackgroundNode, 0, {
+                                height: targetChildStep.getContentOuterHeight(),
+                                "line-height": targetChildStep.getContentOuterHeight()
+                            }, 0)
+
+                            // animate height and position of the options' container node
+                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
+                            .fromTo(this._optionsContainerNode, this._transitionDuration,
+                                { top: -this._optionsContainerNode.height() },
+                                { top: 0, ease: "easeOutCirc" },
+                                0)
+                            .set(this._optionsContainerNode, { height: "auto" })
+                        ;
+
+                        tls.push(tl);
+                    }
+
+                    targetChildStep._getOpenTimelines(tls);
+                }
+
+                return this;
+            },            
+
+            _getChildNodes: function (except) {
+                var childNodes = [];
+
+                UtilDict.forEachEntry(this._childSteps,
+                    function (childId, childItem) {
+                        if (!except || except.indexOf(childItem.id) === -1) {
+                            childNodes.push(childItem.node);
+                        }
+                    }
+                );
+
+                return childNodes;
+            },
+
+            _notifyCurrentStepChange: function () {
+                this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
+            },
+
+            _emit: function (event, payload) {
+                this.emit(event, payload);
+            },
+
             getData: function () {
                 var data = {};
 
-                UtilDict.forEachEntry(this._contentBricks, function (key, brick) {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     lang.mixin(data, brick.getData(true));
                 });
 
@@ -207,12 +369,11 @@ define([
                     that = this;
 
                 this._timeline
-
                     .seek("+=0", false)
                     .clear()
                 ;
 
-                closeTimeline = this.makeCloseTimeline();
+                closeTimeline = this._makeCloseTimeline();
 
                 this._timeline
                     .add(closeTimeline)
@@ -242,9 +403,9 @@ define([
 
                 skipFirst = this._activeChildStep ? true : false;
 
-                closeTimeline = this.makeCloseTimeline(skipFirst);
-                shiftTimeline = this.makeShiftTimeline(targetChildStepId);
-                openTimeline = this.makeOpenTimeline(targetChildStepId, skipFirst);
+                closeTimeline = this._makeCloseTimeline(skipFirst);
+                shiftTimeline = this._makeShiftTimeline(targetChildStepId);
+                openTimeline = this._makeOpenTimeline(targetChildStepId, skipFirst);
 
                 this._timeline
                     .add(closeTimeline)
@@ -258,174 +419,6 @@ define([
                 this._timeline.play(0);
 
                 return this;
-            },
-
-            makeCloseTimeline: function (skipFirst) {
-                var closeTimeline = new TimelineLite(),
-                    closeStagger,
-                    closeTimelines = [];
-
-                this.getCloseTimelines(closeTimelines, skipFirst);
-                closeTimelines = closeTimelines.reverse();
-
-                if (closeTimelines.length > 0) {
-                    closeStagger = this._transitionDuration / 2 / closeTimelines.length;
-                    closeTimeline.add(closeTimelines, "+=0", "start", closeStagger);
-                }
-
-                return closeTimeline;
-            },
-
-            getCloseTimelines: function (tls, skip) {
-                var tl = new TimelineLite(),
-
-                    that = this;
-
-                if (this._activeChildStep) {
-
-                    if (!skip) {
-                        tl
-                            .call(function () {
-                                //that.currentLevel()
-                                that._notifyCurrentStepChange();
-                            })
-                            .to(this._optionsContainerNode, this._transitionDuration,
-                                { top: -this._activeChildStep.getContentOuterHeight(), ease: "easeOutCirc" },
-                                0)
-                            .set(this._activeChildStep, { className: "-=active-option" })
-                            .set(this._optionsContainerNode, { display: "none" })
-                        ;
-
-                        tls.push(tl);
-                    }
-
-                    this._activeChildStep.getCloseTimelines(tls);
-                }
-
-                return this;
-            },
-
-            makeShiftTimeline: function (targetChildStepId) {
-                var shiftTimeline = new TimelineLite(),
-                    targetChildStep = this._childSteps[targetChildStepId],
-                    allChildNodes = this.getChildNodes(),
-                    otherChildNodes = this.getChildNodes([targetChildStepId]);
-
-                if (this._activeChildStep) {
-
-                    shiftTimeline
-                        .set(allChildNodes, { display: "inline-block" })
-
-                        .to(this._optionsBackgroundNode, this._transitionDuration, {
-                            height: targetChildStep.getContentOuterHeight(),
-                            "line-height": targetChildStep.getContentOuterHeight(),
-                            ease: "easeOutCirc"
-                        }, 0)
-
-                        .fromTo(this._optionsNode, this._transitionDuration,
-                            { left: -this._activeChildStep.getContentPosition().left },
-                            { left: -targetChildStep.getContentPosition().left, ease: "easeOutCirc" }, 0)
-                        .set(otherChildNodes, { className: "-=active-option" }) // when shifting, active-option is changing
-                        .set(targetChildStep.node, { className: "+=active-option" })
-
-                        .set(this._optionsNode, { left: 0 })
-                        .set(otherChildNodes, { display: "none" })
-                    ;
-                }
-
-                return shiftTimeline;
-            },
-
-            makeOpenTimeline: function (targetChildStepId, skipFirst) {
-                var openTimeline = new TimelineLite(),
-                    openStagger,
-                    openTimelines = [];
-
-                this.getOpenTimelines(openTimelines, targetChildStepId, skipFirst);
-
-                if (openTimelines.length > 0) {
-                    openStagger = this._transitionDuration / 2 / openTimelines.length;
-                    openTimeline.add(openTimelines, "+=0", "start", openStagger);
-                }
-
-                return openTimeline;
-            },
-
-            getOpenTimelines: function (tls, targetChildStepId, skip) {
-                var tl = new TimelineLite(),
-                    targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
-                    otherChildNodes = this.getChildNodes([targetChildStepId]);
-
-                if (targetChildStep) {
-
-                    if (!skip) {
-
-                        tl
-                            .set(this._optionsContainerNode, { display: "block", top: -9999 }, 0)
-
-                            // make sure options' node is on the left
-                            .set(this._optionsNode, { left: 0 }, 0)
-
-                            // hide children other than target
-                            .set(otherChildNodes, { display: "none" }, 0)
-                            .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
-
-                            .call(function () {
-                                targetChildStep._notifyCurrentStepChange();
-                            })
-
-                            // animate step's background
-                            .to(this._optionsBackgroundNode, 0, {
-                                height: targetChildStep.getContentOuterHeight(),
-                                "line-height": targetChildStep.getContentOuterHeight()
-                            }, 0)
-
-                            // animate height and position of the options' container node
-                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
-                            .fromTo(this._optionsContainerNode, this._transitionDuration,
-                                { top: -this._optionsContainerNode.height() },
-                                { top: 0, ease: "easeOutCirc" },
-                                0)
-                            .set(this._optionsContainerNode, { height: "auto" })
-                        ;
-
-                        tls.push(tl);
-                    }
-
-                    targetChildStep.getOpenTimelines(tls);
-                }
-
-                return this;
-            },
-
-            getContentPosition: function () {
-                return this._contentNode.position();
-            },
-
-            getContentOuterHeight: function () {
-                return this._contentNode.outerHeight();
-            },
-
-            getChildNodes: function (except) {
-                var childNodes = [];
-
-                UtilDict.forEachEntry(this._childSteps,
-                    function (childId, childItem) {
-                        if (!except || except.indexOf(childItem.id) === -1) {
-                            childNodes.push(childItem.node);
-                        }
-                    }
-                );
-
-                return childNodes;
-            },
-
-            _notifyCurrentStepChange: function () {
-                this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
-            },
-
-            _emit: function (event, payload) {
-                this.emit(event, payload);
             },
 
             currentStep: function (level, stepId) {
@@ -445,7 +438,15 @@ define([
                         }
                     );
                 }
-            }
+            },
+
+            getContentPosition: function () {
+                return this._contentNode.position();
+            },
+
+            getContentOuterHeight: function () {
+                return this._contentNode.outerHeight();
+            }            
         });
 
         lang.mixin(StepItem,
