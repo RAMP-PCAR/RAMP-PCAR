@@ -55,7 +55,7 @@ define([
                     },
                     on: [
                             {
-                                eventName: "change",
+                                eventName: Bricks.ChoiceBrick.event.CHANGE,
                                 expose: { as: "advance" },
                                 callback: function (step, data) {
                                     step.advance(data.selectedChoice);
@@ -97,7 +97,7 @@ define([
                             },
                             on: [
                                 {
-                                    eventName: "change",
+                                    eventName: Bricks.SimpleInputBrick.event.CHANGE,
                                     callback: function (step, data) {
                                         var value = data.inputValue,
                                             serviceTypeBrick = step.contentBricks.serviceType,
@@ -129,13 +129,13 @@ define([
                             },
                             on: [
                                 {
-                                    eventName: "click",
+                                    eventName: Bricks.OkCancelButtonBrick.event.CLICK,
                                     callback: function (step, data) {
                                         console.log("Just Click:", this, step, data);
                                     }
                                 },
                                 {
-                                    eventName: "okClick",
+                                    eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
@@ -143,7 +143,7 @@ define([
                                     }
                                 },
                                 {
-                                    eventName: "cancelClick",
+                                    eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
                                     callback: function (step, data) {
                                         console.log("Cancel click:", this, step, data);
@@ -207,7 +207,7 @@ define([
                             },
                             on: [
                                 {
-                                    eventName: "change",
+                                    eventName: Bricks.FileInputBrick.event.CHANGE,
                                     callback: function (step, data) {
                                         console.log(this.id, this.isValid(), data);
                                     }
@@ -227,20 +227,20 @@ define([
                             },
                             on: [
                                 {
-                                    eventName: "click",
+                                    eventName: Bricks.OkCancelButtonBrick.event.CLICK,
                                     callback: function (step, data) {
                                         console.log("Just Click:", this, step, data);
                                     }
                                 },
                                 {
-                                    eventName: "okClick",
+                                    eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
                                     }
                                 },
                                 {
-                                    eventName: "cancelClick",
+                                    eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
                                     callback: function (step, data) {
                                         console.log("Cancel click:", this, step, data);

@@ -51,6 +51,10 @@ define([
         }
 
         Brick = Base.extend({
+            event: {
+                CHANGE: "brick/change"
+            },
+
             initialize: function (id, config) {
 
                 lang.mixin(this,
@@ -168,6 +172,12 @@ define([
         });
 
         ButtonBrick = Brick.extend({
+            event: lang.mixin({}, Brick.event,
+                {
+                    CLICK: "buttonBrick/click"
+                }
+            ),
+
             initialize: function (id, config) {
                 var that = this;
 
@@ -183,7 +193,7 @@ define([
                 Brick.initialize.call(this, id, config);
 
                 this.node.on("click", "button", function () {
-                    that.notify("click", null);
+                    that.notify(that.event.CLICK, null);
                 });
             },
 
@@ -199,6 +209,15 @@ define([
         });
 
         OkCancelButtonBrick = MultiBrick.extend({
+            event: lang.mixin({},
+                MultiBrick.event,
+                ButtonBrick.event,
+                {
+                    OK_CLICK: "okCancelButtonBrick/okClick",
+                    CANCEL_CLICK: "okCancelButtonBrick/cancelClick"
+                }
+            ),
+
             initialize: function (id, config) {
                 var that = this,
                     okButtonId = "okButton",
@@ -242,14 +261,14 @@ define([
                     }
                 );
 
-                this.okButtonBrick.on("click", function () {
-                    that.notify("okClick", null);
-                    that.notify("click", null);
+                this.okButtonBrick.on(this.event.CLICK, function () {
+                    that.notify(that.event.OK_CLICK, null);
+                    that.notify(that.event.CLICK, null);
                 });
 
-                this.cancelButtonBrick.on("click", function () {
-                    that.notify("cancelClick", null);
-                    that.notify("click", null);
+                this.cancelButtonBrick.on(this.event.CLICK, function () {
+                    that.notify(that.event.CANCEL_CLICK, null);
+                    that.notify(that.event.CLICK, null);
                 });
             },
 
@@ -306,7 +325,7 @@ define([
 
                     console.log("ChoiceBrick-" + this.id, ":", this.selectedChoice, "; userSelected:", this.userSelected);
 
-                    this.notify("change", this.getData());
+                    this.notify(this.event.CHANGE, this.getData());
                 }
             },
 
@@ -363,7 +382,7 @@ define([
 
                 this.inputNode.val(value);
 
-                this.notify("change", this.getData());
+                this.notify(this.event.CHANGE, this.getData());
             },
 
             isUserEntered: function () {
@@ -427,7 +446,7 @@ define([
 
                 // to do set node if set manually
 
-                this.notify("change", this.getData());
+                this.notify(this.event.CHANGE, this.getData());
             },
 
             setDropDownOptions: function (options, append) {
@@ -484,7 +503,7 @@ define([
                     pickerPosition: "top",
                     styleElement: this.pickerSwatch[0], //this.guid + "pickerSwatch",
                     onImmediateChange: function () {
-                        that.notify("change", that.getData());
+                        that.notify(that.event.CHANGE, that.getData());
                     }
                 });
 
@@ -567,7 +586,7 @@ define([
                     this.inputNode.val(this.fileValue.name);
                     this.userEntered = false;
 
-                    this.notify("change", this.getData());
+                    this.notify(this.event.CHANGE, this.getData());
                 } else {
                     UtilMisc.resetFormElement(this.fileNode);
                 }
@@ -596,6 +615,8 @@ define([
         });
 
         return {
+
+            Brick: Brick,
 
             MultiBrick: MultiBrick,
 

@@ -166,7 +166,7 @@ define([
                 }
 
                 // do a check of all the bricks in case some of them depend on validity of other bricks in this step
-                contentBrick.on("change", function () {
+                contentBrick.on(Bricks.Brick.event.CHANGE, function () {
                     that._doInternalCheck();
                 });
             },
