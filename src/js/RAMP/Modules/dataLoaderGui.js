@@ -276,7 +276,7 @@ define([
 
                 node.level = level;
                 stepItem = new StepItem(node);
-                stepItem.on("curentStep", resetCurrentStep);
+                stepItem.on("currentStepChange", setCurrentStep);
 
                 node.stepItem = stepItem;
                 stepLookup[node.id] = stepItem;
@@ -289,32 +289,18 @@ define([
             });
 
             rootNode
-                    .find(".add-dataset-content")
-                    .append(choiceTree.stepItem.node)
+                .find(".add-dataset-content")
+                .append(stepLookup.sourceTypeStep.node)
             ;
 
-            stepLookup.sourceTypeStep
-                .currentStep(true)
-                .on("advance", function (event) {
-                    console.log(event);
-
-                    //stepLookup.serviceTypeStep.node.show();
-                });
+            stepLookup.sourceTypeStep.currentStep(1);
         }
 
-        function resetCurrentStep(event) {
+        function setCurrentStep(event) {
             t.dfs(choiceTree, function (node) {
-                if (node.id !== event.id) {
-                    node.stepItem.currentStep(false);
-                }
+                node.stepItem.currentStep(event.level, event.id);
             });
         }
-
-        //function getStep(stepId) {
-        //    return t.find(choiceTree, function (node) {
-        //        return node.id === stepId;
-        //    });
-        //}
 
         return {
             init: function () {

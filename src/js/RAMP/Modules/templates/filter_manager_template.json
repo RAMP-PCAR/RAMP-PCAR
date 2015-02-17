@@ -719,7 +719,7 @@
                             <span class='wb-invisible'>{%= i18n.t('gui.actions.close') %}</span>
                         </button>
 
-                        <div class='add-dataset-content'> </div>
+                        <div class='add-dataset-content'></div>
                     </section>
                 </div>
             </div>

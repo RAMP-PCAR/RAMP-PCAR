@@ -53,12 +53,12 @@ define([
     ) {
         "use strict";
 
-        var LayerItem,
-            ALL_STATES_CLASS,
+        var StepItem,
+            //ALL_STATES_CLASS,
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-        LayerItem = declare([Evented], {
+        StepItem = declare([Evented], {
             constructor: function (config) {
                 var that = this;
 
@@ -73,30 +73,21 @@ define([
                          * @default null
                          */
                         id: null,
-
-                        content: null,
-                        contentBricks: {},
-
-                        template: "default_step_template",
+                        level: 0,
 
                         /**
-                         * A copy of the layer config supplied during LayerItem creation; is set to `config` value.
-                         *
-                         * @property _config
-                         * @private
-                         * @type Object
-                         * @default null
-                         */
-                        _config: config,
-
-                        /**
-                         * A node of the LayerItem.
+                         * A node of the StepItem.
                          *
                          * @property node
                          * @type JObject
                          * @default null
                          */
                         node: null,
+
+                        content: null,
+                        _contentBricks: {},
+
+                        template: "default_step_template",
 
                         _contentNode: null,
                         _optionsContainerNode: null,
@@ -150,7 +141,7 @@ define([
 
             _wireBrickUp: function (contentItem, contentBrick) {
                 var that = this;
-                this.contentBricks[contentBrick.id] = contentBrick;
+                this._contentBricks[contentBrick.id] = contentBrick;
 
                 // set brick events if specified
                 if (contentItem.on) {
@@ -184,9 +175,9 @@ define([
                 var flag,
                     that = this;
 
-                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                UtilDict.forEachEntry(this._contentBricks, function (key, brick) {
                     flag = brick.required.every(function (req) {
-                        return that.contentBricks[req].isValid();
+                        return that._contentBricks[req].isValid();
                     });
 
                     // disable or enable a brick based on sum validity of its dependencies
@@ -197,7 +188,7 @@ define([
             getData: function () {
                 var data = {};
 
-                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                UtilDict.forEachEntry(this._contentBricks, function (key, brick) {
                     lang.mixin(data, brick.getData(true));
                 });
 
@@ -286,12 +277,18 @@ define([
             },
 
             getCloseTimelines: function (tls, skip) {
-                var tl = new TimelineLite();
+                var tl = new TimelineLite(),
+
+                    that = this;
 
                 if (this._activeChildStep) {
 
                     if (!skip) {
                         tl
+                            .call(function () {
+                                //that.currentLevel()
+                                that._notifyCurrentStepChange();
+                            })
                             .to(this._optionsContainerNode, this._transitionDuration,
                                 { top: -this._activeChildStep.getContentOuterHeight(), ease: "easeOutCirc" },
                                 0)
@@ -373,6 +370,10 @@ define([
                             .set(otherChildNodes, { display: "none" }, 0)
                             .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
 
+                            .call(function () {
+                                targetChildStep._notifyCurrentStepChange();
+                            })
+
                             // animate step's background
                             .to(this._optionsBackgroundNode, 0, {
                                 height: targetChildStep.getContentOuterHeight(),
@@ -380,10 +381,10 @@ define([
                             }, 0)
 
                             // animate height and position of the options' container node
-                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc", immediateRender: false }, 0)
+                            .to(this._optionsContainerNode, 0, { height: targetChildStep.getContentOuterHeight(), ease: "easeOutCirc" }, 0)
                             .fromTo(this._optionsContainerNode, this._transitionDuration,
                                 { top: -this._optionsContainerNode.height() },
-                                { top: 0, ease: "easeOutCirc", immediateRender: false },
+                                { top: 0, ease: "easeOutCirc" },
                                 0)
                             .set(this._optionsContainerNode, { height: "auto" })
                         ;
@@ -419,184 +420,33 @@ define([
                 return childNodes;
             },
 
-            currentStep: function (bool) {
-                if (bool) {
+            _notifyCurrentStepChange: function () {
+                this._emit("currentStepChange", { id: this.id, level: this.level });
+            },
 
+            _emit: function (event, payload) {
+                this.emit(event, payload);
+            },
+
+            currentStep: function (level, stepId) {
+                var that = this;
+
+                if (this.level === 1 && level === 1) {
                     this.node.addClass("current-step");
-
-                    this.emit("curentStep", { id: this.id });
                 } else {
                     this.node.removeClass("current-step");
-                }
+                    this._optionsContainerNode.removeClass("current-step");
 
-                return this;
-            },
-
-            /**
-             * Generates control, toggle, and notice nodes for the LayerItem object to be used in different states.
-             *
-             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
-             * @param {String} templateKey a template name prefix for the template parts
-             * @param {Object} partStore a dictionary to store generated nodes
-             * @method _generateParts
-             * @private
-             */
-            _generateParts: function (partType, templateKey, partStore) {
-                var that = this,
-
-                    stateKey,
-                    partKeys = [],
-                    part;
-
-                Object
-                    .getOwnPropertyNames(LayerItem.state)
-                    .forEach(function (s) {
-                        stateKey = LayerItem.state[s];
-                        partKeys = partKeys.concat(that.stateMatrix[stateKey][partType]);
-                    });
-
-                partKeys = UtilArray.unique(partKeys);
-
-                partKeys.forEach(function (pKey) {
-                    part = that._generatePart(templateKey, pKey);
-
-                    partStore[pKey] = (part);
-                });
-            },
-
-            /**
-             * Generates a control given the template name and additional data object to pass to the template engine.
-             *
-             * @param {String} templateKey a template name prefix for the template parts
-             * @param {String} pKey name of the template to build
-             * @param {Object} [data] optional data to pass to template engine; used to update strings on notice objects
-             * @method _generatePart
-             * @private
-             * @return Created part node
-             */
-            _generatePart: function (templateKey, pKey, data) {
-                var part = $(TmplHelper.template(templateKey + pKey,
-                    {
-                        id: this.id,
-                        config: this._config,
-                        nameKey: pKey,
-                        data: data
-                    },
-                    templates
-                ));
-
-                return part;
-            },
-
-            /**
-             * Changes the state of the LayerItem and update its UI representation.
-             *
-             * @param {String} state name of the state to be set
-             * @param {Object} [options] additional options
-             * @param {Object} [options.notices] custom information to be displayed in a notice for the current state if needed; object structure is not set; look at the appropriate template; 
-             * @example
-             *      {
-             *          notices: {
-             *              error: {
-             *                  message: "I'm error"
-             *              },
-             *              scale: {
-             *                  message: "All your base are belong to us"
-             *              }
-             *          }
-             *      }
-             * @param {Boolean} force if `true`, forces the state change even if it's no allowed by the `transitionMatrix`
-             * @method setState
-             */
-            setState: function (state, options, force) {
-                var allowedStates = this.transitionMatrix[this.state],
-                    notice,
-
-                    that = this;
-
-                if (allowedStates.indexOf(state) !== -1 || force) {
-
-                    this.state = state;
-                    //lang.mixin(this, options);
-
-                    // set state class on the layerItem root node
-                    this.node
-                        .removeClass(ALL_STATES_CLASS)
-                        .addClass(this.state);
-
-                    // regenerate notice controls if extra data is provided
-                    if (options) {
-                        if (options.notices) {
-
-                            UtilDict.forEachEntry(options.notices, function (pKey, data) {
-                                notice = that._generatePart("layer_notice_", pKey, data);
-
-                                that._noticeStore[pKey] = (notice);
-                            });
+                    UtilDict.forEachEntry(this._childSteps,
+                        function (childId, childStep) {
+                            if (childId === stepId && childStep.level === level) {
+                                that._optionsContainerNode.addClass("current-step");
+                            }
                         }
-                    }
-
-                    this._setParts("controls", this._controlStore, this._controlsNode);
-                    this._setParts("toggles", this._toggleStore, this._togglesNode);
-                    this._setParts("notices", this._noticeStore, this._noticesNode);
-
-                    switch (this.state) {
-                        case LayerItem.state.DEFAULT:
-                            console.log(LayerItem.state.DEFAULT);
-                            break;
-
-                        case LayerItem.state.LOADING:
-                            this.node.attr("aria-busy", true); // indicates that the region is loading
-
-                            console.log(LayerItem.state.LOADING);
-                            break;
-
-                        case LayerItem.state.LOADED:
-                            this.node.attr("aria-busy", false); // indicates that the loading is complete
-                            this.setState(LayerItem.state.DEFAULT);
-
-                            console.log(LayerItem.state.LOADED);
-                            break;
-
-                        case LayerItem.state.ERROR:
-                            console.log(LayerItem.state.ERROR);
-                            break;
-
-                        case LayerItem.state.OFF_SCALE:
-                            console.log(LayerItem.state.OFF_SCALE);
-                            break;
-
-                        default:
-                            break;
-                    }
-
-                    return true;
-                } else {
-                    return false;
+                    );
                 }
-            },
-
-            /**
-             * Sets controls, toggles, and notices of the LayerItem according to its state.
-             *
-             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
-             * @param {Object} partStore a dictionary to store generated nodes
-             * @param {JObject} target a jQuery node where the nodes should be appended
-             * @method _setParts
-             * @private
-             */
-            _setParts: function (partType, partStore, target) {
-                var controls = [];
-
-                this.stateMatrix[this.state][partType].forEach(function (pKey) {
-                    controls.push(partStore[pKey]);
-                });
-
-                target
-                    .empty()
-                    .append(controls);
             }
         });
 
-        return LayerItem;
+        return StepItem;
     });
