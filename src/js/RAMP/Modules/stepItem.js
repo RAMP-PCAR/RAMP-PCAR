@@ -421,7 +421,7 @@ define([
             },
 
             _notifyCurrentStepChange: function () {
-                this._emit("currentStepChange", { id: this.id, level: this.level });
+                this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
             },
 
             _emit: function (event, payload) {
@@ -447,6 +447,34 @@ define([
                 }
             }
         });
+
+        lang.mixin(StepItem,
+            {
+                /**
+                 * Event names published by the StepItem
+                 *
+                 * @private
+                 * @property event
+                 * @type Object
+                 * @default null
+                 * @example
+                 *      {
+                 *          CURRENT_STEP_CHANGE: "stepItem/currentStepChange"
+                 *      }
+                 */
+                event: {
+                    /**
+                    * Published whenever a StepItem becomes a current step. A current step has a distinct visual style.
+                    *
+                    * @event CURRENT_STEP_CHANGE
+                    * @param event {Object}
+                    * @param event.level {Number} Level of the StepItem that became a current step
+                    * @param event.id {String} Id of the StepItem that became a current step
+                    */
+                    CURRENT_STEP_CHANGE: "stepItem/currentStepChange"
+                }
+            }
+        );
 
         return StepItem;
     });

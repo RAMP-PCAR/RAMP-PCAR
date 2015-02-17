@@ -254,20 +254,6 @@ define([
             ]
         };
 
-        //choiceTree = {
-        //    id: "sourceTypeStep",
-        //    content: "dfsf",
-        //    children: [
-        //        {
-
-        //            id: "serviceTypeStep"
-        //        },
-        //        {
-        //            id: "fileTypeStep"
-        //        }
-        //    ]
-        //};
-
         function reset() {
 
             t.dfs(choiceTree, function (node, par/*, ctrl*/) {
@@ -276,7 +262,7 @@ define([
 
                 node.level = level;
                 stepItem = new StepItem(node);
-                stepItem.on("currentStepChange", setCurrentStep);
+                stepItem.on(StepItem.event.CURRENT_STEP_CHANGE, setCurrentStep);
 
                 node.stepItem = stepItem;
                 stepLookup[node.id] = stepItem;
