@@ -6,12 +6,12 @@
 
 #add-dataset-section-container {
     //visibility: hidden;
+    //padding-top: 46px !important;
 
     bottom: 0;
     left: 0;
     right: 0;
     top: 0;
-    //padding-top: 46px !important;
     overflow-y: auto;
     position: absolute;
     margin: 0 !important;
@@ -20,34 +20,6 @@
     z-index: 10;
 
     #add-dataset-section {
-
-        .btn-group {
-            .btn-option,
-            .btn-choice {
-                border-color: @light-grey-color;
-                background-color: @very-light-grey-color;
-                min-width: 95px;
-                border-radius: 0;
-                color: #000;
-
-                &.focused,
-                &:focus, &:hover {
-                    background-color: #D4D4D4 !important;
-                    color: inherit !important;
-                }
-
-                &.button-pressed {
-                    border-color: @medium-dark-grey-color !important;
-                    background-color: #545454 !important;
-                    color: #FFF !important;
-                    box-shadow: @button-active-shadow;
-
-                    .separator {
-                        border-color: #FFF;
-                    }
-                }
-            }
-        }
 
         section {
             position: relative;
@@ -74,35 +46,7 @@
                     overflow: hidden;
                     background-color: #fff;
 
-                    h3 {
-                        margin: 21px 0 10px 0;
-
-                        &:first-child {
-                            margin: 2px 0 10px 0;
-                        }
-
-                        &.smaller {
-                            margin: 10px 0 5px 0;
-                        }
-                    }
-
-                    h4 {
-                        &.smaller {
-                            margin: 10px 0 5px 0;
-                        }
-                    }
-
                     > .brick {
-                        width: 85%;
-                    }
-
-                    .btn-group,
-                    .input-group {
-                        margin-bottom: 10px;
-                        display: table;
-                    }
-
-                    .input-group {
                         width: 85%;
                     }
 

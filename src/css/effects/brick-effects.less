@@ -1,9 +1,37 @@
-﻿.multi-brick-container {
+﻿.brick {
+    margin-bottom: 10px;
+
+    h3 {
+        margin: 21px 0 10px 0;
+
+        &.smaller {
+            margin: 10px 0 5px 0;
+        }
+    }
+
+    h4 {
+        &.smaller {
+            margin: 10px 0 5px 0;
+        }
+    }
+
+    &:first-child {
+        h3 {
+            margin: 2px 0 10px 0;
+        }
+    }
+}
+
+.multi-brick-container {
     display: table;
     table-layout: fixed;
 
     .multi-container {
         display: table-row;
+
+        & > .brick {
+            margin-bottom: 0;
+        }
 
         & > div {
             display: table-cell;
@@ -13,8 +41,14 @@
 
 .okcancelbutton-brick-container {
 
+    margin-top: 10px;
+
     .multi-container {
         text-align: right;
+
+        & > .brick {
+            margin-bottom: 0;
+        }
 
         .ok-button-brick-container {
             display: inline-block;
@@ -53,6 +87,15 @@
     }
 }
 
+.simpleinput-brick-container {
+    .form-group {
+
+        input {
+            width: 100%;
+        }
+    }
+}
+
 .colorpicker-brick-container {
     .color-picker-container {
         display: table;
@@ -62,6 +105,10 @@
             display: table-cell !important;
             width: 80% !important;
             padding-right: 10px;
+
+            input {
+                width: 100%;
+            }
         }
 
         .color-picker-swatch {
@@ -69,6 +116,15 @@
             margin-left: 10px;
             width: 20%;
             border: 1px solid black;
+        }
+    }
+}
+
+.dropdown-brick-container {
+    .form-group {
+
+        select {
+            width: 100%;
         }
     }
 }
