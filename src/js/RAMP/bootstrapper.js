@@ -310,6 +310,7 @@ require([
                                         id: "okButton",
                                         type: Bricks.ButtonBrick,
                                         config: {
+                                            header: "Blah",
                                             label: "Ok"
                                         }
                                     },
@@ -317,6 +318,7 @@ require([
                                         id: "cancelButton",
                                         type: Bricks.ButtonBrick,
                                         config: {
+                                            header: "Blah2",
                                             label: "Cancel", //optional, defaults to "Ok"
                                             buttonClass: "btn-default"
                                         }

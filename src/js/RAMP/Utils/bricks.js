@@ -174,11 +174,10 @@ define([
                     that.contentBricks[contentBrick.id] = contentBrick;
 
                     if (that.header) {
-                        contentBrick.node
-                            .replaceWith(
-                                contentBrick.node
-                                    .prop('outerHTML').replace("<h3", "<h4").replace("</h3>", "</h4>")
-                                )
+                        contentBrick.node = $(
+                            contentBrick.node
+                                .prop('outerHTML').replace("<h3", "<h4").replace("</h3>", "</h4>")
+                            )
                         ;
                     }
 
