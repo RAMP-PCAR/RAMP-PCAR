@@ -236,7 +236,7 @@ define([
                                 config: {
                                     label: config.okLabel,
                                     containerClass: "ok-button-brick-container",
-                                    buttonClass: "ok-btn " + config.okButtonClass
+                                    buttonClass: "ok-btn " + (config.okButtonClass || "btn-sm btn-primary")
                                 }
                             },
                             {
@@ -245,12 +245,16 @@ define([
                                 config: {
                                     label: config.cancelLabel,
                                     containerClass: "cancel-button-brick-container",
-                                    buttonClass: "cancel-btn " + config.cancelButtonClass
+                                    buttonClass: "cancel-btn " + (config.cancelButtonClass || "btn-sm button-none")
                                 }
                             }
                         ],
                         required: config.required || [] // make sure required is at least an empty array
                     };
+
+                if (config.reverseOrder) {
+                    newConfig.content.reverse();
+                }
 
                 MultiBrick.initialize.call(this, id, newConfig);
 

@@ -75,16 +75,25 @@
 
         & > .brick {
             margin-bottom: 0;
+
+            &:first-child {
+                display: inline-block;
+                margin-right: 5px;
+            }
+
+            &:last-child {
+                display: inline-block;
+                margin-left: 5px;
+            }
         }
 
         .ok-button-brick-container {
-            display: inline-block;
-            margin-right: 5px;
+            button {
+                min-width: 90px;
+            }
         }
 
         .cancel-button-brick-container {
-            display: inline-block;
-            margin-left: 5px;
         }
     }
 }
@@ -127,7 +136,6 @@
 
 .fileinput-brick-container {
     .simpleinput-brick-container;
-
     .simpleinput-brick-glyphs;
 }
 

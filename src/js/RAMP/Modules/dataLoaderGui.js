@@ -121,10 +121,8 @@ define([
                             type: Bricks.OkCancelButtonBrick,
                             config: {
                                 okLabel: "Load",
-                                okButtonClass: "btn-primary",
-
                                 cancelLabel: "Cancel",
-                                cancelButtonClass: "btn-default btn-sm",
+                                reverseOrder: true,
                                 required: ["serviceType", "serviceURL"]
                             },
                             on: [
@@ -219,10 +217,8 @@ define([
                             type: Bricks.OkCancelButtonBrick,
                             config: {
                                 okLabel: "Load",
-                                okButtonClass: "btn-primary",
-
                                 cancelLabel: "Cancel",
-                                cancelButtonClass: "btn-default btn-sm",
+                                reverseOrder: true,
                                 required: ["fileType", "fileOrFileULR"]
                             },
                             on: [
