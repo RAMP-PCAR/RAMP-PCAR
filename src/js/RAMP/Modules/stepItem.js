@@ -54,7 +54,7 @@ define([
         "use strict";
 
         var StepItem,
-            //ALL_STATES_CLASS,
+            ALL_STATES_CLASS,
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
@@ -97,7 +97,7 @@ define([
                         _childSteps: {},
                         _activeChildStep: null,
 
-                        state: "",
+                        _state: StepItem.state.DEFAULT,
 
                         _timeline: new TimelineLite({ paused: true }),
                         _transitionDuration: 0.4
@@ -116,7 +116,7 @@ define([
                     that._addContentBrick(contentItem);
                 });
 
-                console.debug("-->", this.state);
+                console.debug("-->", this._state);
             },
 
             _addContentBrick: function (contentItem) {
@@ -260,6 +260,7 @@ define([
                         tls.push(tl);
                     }
 
+                    this._notifyStateChange(StepItem.state.DEFAULT);
                     this._activeChildStep._getCloseTimelines(tls);
                 }
 
@@ -292,6 +293,8 @@ define([
                         .set(this._optionsNode, { left: 0 })
                         .set(otherChildNodes, { display: "none" })
                     ;
+
+                    this._notifyStateChange(this._state);
                 }
 
                 return shiftTimeline;
@@ -355,6 +358,7 @@ define([
                         tls.push(tl);
                     }
 
+                    this._notifyStateChange(StepItem.state.SUCCESS);
                     targetChildStep._getOpenTimelines(tls);
                 }
 
@@ -377,6 +381,30 @@ define([
 
             _notifyCurrentStepChange: function () {
                 this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
+            },
+
+            _notifyStateChange: function (state) {
+                var brickState;
+
+                this._state = state;
+
+                switch (state) {
+                    case StepItem.state.SUCCESS:
+                        brickState = Bricks.Brick.state.SUCCESS;
+                        break;
+                    case StepItem.state.ERROR:
+                        brickState = Bricks.Brick.state.ERROR;
+                        break;
+                    default:
+                        brickState = Bricks.Brick.state.DEFAULT;
+                        break;
+                }
+
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    brick.setState(brickState);
+                });
+
+                this._emit(StepItem.event.STATE_CHANGE, { id: this.id, level: this.level, state: this._state });
             },
 
             _emit: function (event, payload) {
@@ -410,6 +438,59 @@ define([
                         brick.clear();
                     });
                 }
+            },
+
+            setState: function (level, stepId, state) {
+                var that = this;
+
+                if (this.level === 1 && level === 1) {
+                    this.node
+                        .removeClass(ALL_STATES_CLASS)
+                        .addClass(state);
+                } else {
+                    UtilDict.forEachEntry(this._childSteps,
+                        function (childId, childStep) {
+                            if (childId === stepId && childStep.level === level) {
+                                that._optionsContainerNode
+                                    .removeClass(ALL_STATES_CLASS)
+                                    .addClass(state);
+                            }
+                        }
+                    );
+                }
+            },
+
+            currentStep: function (level, stepId) {
+                var that = this;
+
+                if (this.level === 1 && level === 1) {
+                    this.node.addClass(StepItem.currentStepClass);
+                } else {
+                    this.node.removeClass(StepItem.currentStepClass);
+                    this._optionsContainerNode.removeClass(StepItem.currentStepClass);
+
+                    UtilDict.forEachEntry(this._childSteps,
+                        function (childId, childStep) {
+                            if (childId === stepId && childStep.level === level) {
+                                that._optionsContainerNode.addClass(StepItem.currentStepClass);
+                            }
+                        }
+                    );
+                }
+            },
+
+            isValid: function () {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    if (!brick.isValid()) {
+                        return false;
+                    }
+                });
+
+                return true;
+            },
+
+            isCompleted: function () {
+                return this._state === StepItem.state.SUCCESS;
             },
 
             retreat: function () {
@@ -469,25 +550,6 @@ define([
                 return this;
             },
 
-            currentStep: function (level, stepId) {
-                var that = this;
-
-                if (this.level === 1 && level === 1) {
-                    this.node.addClass("current-step");
-                } else {
-                    this.node.removeClass("current-step");
-                    this._optionsContainerNode.removeClass("current-step");
-
-                    UtilDict.forEachEntry(this._childSteps,
-                        function (childId, childStep) {
-                            if (childId === stepId && childStep.level === level) {
-                                that._optionsContainerNode.addClass("current-step");
-                            }
-                        }
-                    );
-                }
-            },
-
             getContentPosition: function () {
                 return this._contentNode.position();
             },
@@ -499,6 +561,15 @@ define([
 
         lang.mixin(StepItem,
             {
+                currentStepClass: "current-step",
+
+                state: {
+                    SUCCESS: "step-state-success",
+                    ERROR: "step-state-error",
+                    DEFAULT: "step-state-default",
+                    LOADING: "step-state-loading"
+                },
+
                 /**
                  * Event names published by the StepItem
                  *
@@ -520,10 +591,19 @@ define([
                     * @param event.level {Number} Level of the StepItem that became a current step
                     * @param event.id {String} Id of the StepItem that became a current step
                     */
-                    CURRENT_STEP_CHANGE: "stepItem/currentStepChange"
+                    CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
+
+                    STATE_CHANGE: "stepItem/stateChange"
                 }
             }
         );
+
+        // a string with all possible StepItem state CSS classes joined by " "; used to clear any CSS state class from the node
+        ALL_STATES_CLASS =
+            Object
+                .getOwnPropertyNames(StepItem.state)
+                .map(function (key) { return StepItem.state[key]; })
+                .join(" ");
 
         return StepItem;
     });

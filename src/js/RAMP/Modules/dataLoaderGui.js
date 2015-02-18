@@ -160,7 +160,7 @@ define([
 
                                         console.log("Cancel click:", this, step, data);
 
-                                        if (step.state === "completed") {
+                                        if (step.isCompleted()) {
                                             step.retreat();
                                         } else {
                                             step.clearStep();
@@ -297,6 +297,7 @@ define([
                 node.level = level;
                 stepItem = new StepItem(node);
                 stepItem.on(StepItem.event.CURRENT_STEP_CHANGE, setCurrentStep);
+                stepItem.on(StepItem.event.STATE_CHANGE, setStepState);
 
                 node.stepItem = stepItem;
                 stepLookup[node.id] = stepItem;
@@ -319,6 +320,12 @@ define([
         function setCurrentStep(event) {
             t.dfs(choiceTree, function (node) {
                 node.stepItem.currentStep(event.level, event.id);
+            });
+        }
+
+        function setStepState(event) {
+            t.dfs(choiceTree, function (node) {
+                node.stepItem.setState(event.level, event.id, event.state);
             });
         }
 
