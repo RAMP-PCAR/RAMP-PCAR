@@ -123,9 +123,13 @@ define([
 
             disable: function (disable) {
                 if (disable) {
-                    this.node.find("button").attr("disabled", true);
+                    this.node
+                        .find("button, input, select")
+                        .attr("disabled", true);
                 } else {
-                    this.node.find("button").attr("disabled", false);
+                    this.node
+                        .find("button, input, select")
+                        .attr("disabled", false);
                 }
             }
         });
@@ -228,10 +232,11 @@ define([
                 }
             ),
 
+            okButtonId: "okButton",
+            cancelButtonId: "cancelButton",
+
             initialize: function (id, config) {
                 var that = this,
-                    okButtonId = "okButton",
-                    cancelButtonId = "cancelButton",
                     newConfig;
 
                 newConfig =
@@ -241,7 +246,7 @@ define([
                         header: config.header,
                         content: [
                             {
-                                id: okButtonId,
+                                id: this.okButtonId,
                                 type: ButtonBrick,
                                 config: {
                                     label: config.okLabel,
@@ -250,7 +255,7 @@ define([
                                 }
                             },
                             {
-                                id: cancelButtonId,
+                                id: this.cancelButtonId,
                                 type: ButtonBrick,
                                 config: {
                                     label: config.cancelLabel,
@@ -270,8 +275,8 @@ define([
 
                 lang.mixin(this,
                     {
-                        okButtonBrick: this.contentBricks[okButtonId],
-                        cancelButtonBrick: this.contentBricks[cancelButtonId]
+                        okButtonBrick: this.contentBricks[this.okButtonId],
+                        cancelButtonBrick: this.contentBricks[this.cancelButtonId]
                     }
                 );
 
