@@ -59,7 +59,7 @@ define([
 
                 lang.mixin(this,
                     {
-                        required: [],
+                        required: null,
                         baseTemplate: "default_base_template"
                     },
                     config,
@@ -70,6 +70,16 @@ define([
                 );
 
                 this.node = template(this.baseTemplate, this);
+
+                if (this.required) {
+                    if (Array.isArray(this.required)) {
+                        this.required.forEach(function (req) {
+                            req.type = req.type ? req.type : "all";
+                        });
+                    } else {
+                        this.required.type = this.required.type ? this.required.type : "all";
+                    }
+                }
 
             },
 
@@ -249,7 +259,7 @@ define([
                                 }
                             }
                         ],
-                        required: config.required || [] // make sure required is at least an empty array
+                        required: config.required
                     };
 
                 if (config.reverseOrder) {

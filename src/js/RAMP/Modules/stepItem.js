@@ -171,17 +171,53 @@ define([
                 });
             },
 
+            _internalCheckHelper: function (required, targetBrick, contentBricks) {
+                var flag = false;
+
+                switch (required.type) {
+                    case "all":
+                        flag = required.check.every(function (ch) {
+                            return contentBricks[ch].isValid();
+                        });
+                        break;
+
+                    case "any":
+                        flag = required.check.some(function (ch) {
+                            return contentBricks[ch].isValid();
+                        });
+                        break;
+                }
+
+                // disable or enable a brick based on sum validity of its dependencies
+                targetBrick.disable(!flag);
+            },
+
             _doInternalCheck: function () {
-                var flag,
-                    that = this;
+                var that = this;
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
-                    flag = brick.required.every(function (req) {
-                        return that.contentBricks[req].isValid();
-                    });
+
+                    if (brick.required) {
+
+                        if (Bricks.MultiBrick.isPrototypeOf(brick)) {
+
+                            if (Array.isArray(brick.required)) {
+
+                                brick.required.forEach(function (req) {
+                                    that._internalCheckHelper(req, brick.contentBricks[req.id], that.contentBricks);
+                                });
+
+                            } else {
+                                that._internalCheckHelper(brick.required, brick, that.contentBricks);
+                            }
+
+                        } else {
+                            that._internalCheckHelper(brick.required, brick, that.contentBricks);
+                        }
+                    }
 
                     // disable or enable a brick based on sum validity of its dependencies
-                    brick.disable(!flag);
+                    //brick.disable(!flag);
                 });
             },
 
@@ -323,7 +359,7 @@ define([
                 }
 
                 return this;
-            },            
+            },
 
             _getChildNodes: function (except) {
                 var childNodes = [];
@@ -446,7 +482,7 @@ define([
 
             getContentOuterHeight: function () {
                 return this._contentNode.outerHeight();
-            }            
+            }
         });
 
         lang.mixin(StepItem,

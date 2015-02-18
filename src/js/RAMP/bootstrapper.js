@@ -223,7 +223,7 @@ require([
                                 //template: "template_name", //optional, has a default
                                 header: "Primary Colour"//,
                                 //label: "Service URL", // optional, equals to header by default
-                                
+
                             },
                             on: [
                                 {
@@ -331,7 +331,9 @@ require([
                                 //header: "test", //optional, omitted if not specified
                                 label: "Done", //optional, defaults to "Ok"
                                 //buttonClass: "btn-primary" //optional, defaults to "btn-primary"                                
-                                required: ["fileOrULR"]
+                                required: {
+                                    check: ["fileOrULR"]
+                                }
                             }
                         },
                         {
@@ -343,7 +345,9 @@ require([
 
                                 cancelLabel: "Nope!",
                                 cancelButtonClass: "btn-default",
-                                required: ["fileOrULR"]
+                                required: {
+                                    check: ["fileOrULR"]
+                                }
                             },
                             on: [
                                 {
@@ -389,7 +393,10 @@ require([
                                         value: "Third"
                                     }
                                 ],
-                                required: ["serviceType", "serviceURL"] // optional: indicates what other bricks must be valid before this brick gets enabled
+                                required:
+                                    {
+                                        check: ["serviceType", "serviceURL"] // optional: indicates what other bricks must be valid before this brick gets enabled
+                                    }
                             }
                         }
                     ]

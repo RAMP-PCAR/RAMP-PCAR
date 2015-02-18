@@ -123,7 +123,19 @@ define([
                                 okLabel: "Load",
                                 cancelLabel: "Cancel",
                                 reverseOrder: true,
-                                required: ["serviceType", "serviceURL"]
+                                
+                                required: [
+                                    {
+                                        id: Bricks.OkCancelButtonBrick.okButtonId,
+                                        type: "all",
+                                        check: ["serviceType", "serviceURL"]
+                                    },
+                                    {
+                                        id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                        type: "any",
+                                        check: ["serviceType", "serviceURL"]
+                                    }
+                                ]
                             },
                             on: [
                                 {
@@ -219,7 +231,19 @@ define([
                                 okLabel: "Load",
                                 cancelLabel: "Cancel",
                                 reverseOrder: true,
-                                required: ["fileType", "fileOrFileULR"]
+
+                                required: [
+                                    {
+                                        id: Bricks.OkCancelButtonBrick.okButtonId,
+                                        type: "all",
+                                        check: ["fileType", "fileOrFileULR"]
+                                    },
+                                    {
+                                        id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                        type: "any",
+                                        check: ["fileType", "fileOrFileULR"]
+                                    }
+                                ]
                             },
                             on: [
                                 {
