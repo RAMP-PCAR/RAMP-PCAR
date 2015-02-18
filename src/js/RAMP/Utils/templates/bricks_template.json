@@ -81,7 +81,12 @@
 
         <div class='form-group'>
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            
             <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+            
+            <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+            <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    
         </div>
     ",
 
@@ -106,7 +111,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
-        <div class='input-group'>
+        <div class='input-group form-group'>
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
             
             <div class='input-group-btn browse-files'>
@@ -121,6 +126,10 @@
             </div>
 
             <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+
+            <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+            <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    
         </div>
     "
 }

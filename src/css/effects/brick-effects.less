@@ -22,6 +22,34 @@
     }
 }
 
+.simpleinput-brick-glyphs () {
+    .form-group {
+
+        .glyphicon {
+            top: 0;
+            display: none;
+        }
+
+        .glyphicon-remove {
+            top: -1px;
+        }
+
+        &.has-feedback {
+            &.has-success {
+                .glyphicon-ok {
+                    display: block;
+                }
+            }
+
+            &.has-error {
+                .glyphicon-remove {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
 .multi-brick-container {
     display: table;
     table-layout: fixed;
@@ -40,8 +68,7 @@
 }
 
 .okcancelbutton-brick-container {
-
-    margin-top: 10px;
+    margin-top: 20px;
 
     .multi-container {
         text-align: right;
@@ -94,6 +121,14 @@
             width: 100%;
         }
     }
+
+    .simpleinput-brick-glyphs;
+}
+
+.fileinput-brick-container {
+    .simpleinput-brick-container;
+
+    .simpleinput-brick-glyphs;
 }
 
 .colorpicker-brick-container {
