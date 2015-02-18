@@ -103,6 +103,10 @@ define([
                 return this;
             },
 
+            clear: function () {
+
+            },
+
             isValid: function () {
                 return true;
             },
@@ -160,8 +164,25 @@ define([
 
                     that.contentBricks[contentBrick.id] = contentBrick;
 
+                    if (that.header) {
+                        contentBrick.node
+                            .replaceWith(
+                                contentBrick.node
+                                    .prop('outerHTML').replace("<h3", "<h4").replace("</h3>", "</h4>")
+                                )
+                        ;
+                    }
+
                     that.multiContainer.append(contentBrick.node);
                 });
+            },
+
+            clear: function () {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    brick.clear();
+                });
+
+                return this;
             },
 
             isValid: function () {
@@ -352,6 +373,10 @@ define([
                 return this.userSelected;
             },
 
+            clear: function () {
+                this.setChoice("", false);
+            },
+
             isValid: function () {
                 return this.selectedChoice !== "";
             },
@@ -406,6 +431,10 @@ define([
 
             isUserEntered: function () {
                 return this.userEntered;
+            },
+
+            clear: function () {
+                this.setInputValue("", false);
             },
 
             isValid: function () {
@@ -613,6 +642,10 @@ define([
 
             isUserSelected: function () {
                 return this.userSelected;
+            },
+
+            clear: function () {
+                this.setInputValue("", false);
             },
 
             isValid: function () {

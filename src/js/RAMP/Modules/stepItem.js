@@ -400,6 +400,18 @@ define([
                 return this;
             },
 
+            clearStep: function (brickIds) {
+                if (Array.isArray(brickIds)) {
+                    brickIds.forEach(function (brickId) {
+                        this.contentBricks[brickId].clear();
+                    });
+                } else {
+                    UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                        brick.clear();
+                    });
+                }
+            },
+
             retreat: function () {
                 var closeTimeline,
                     that = this;

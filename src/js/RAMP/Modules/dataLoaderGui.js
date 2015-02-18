@@ -103,6 +103,7 @@ define([
                                             serviceTypeBrick = step.contentBricks.serviceType,
                                             guess = "";
 
+                                        // make a guess if it's a feature or wms server only if the user hasn't already selected the type
                                         if (!serviceTypeBrick.isUserSelected()) {
 
                                             if (value.match(/ArcGIS\/rest\/services/ig)) {
@@ -123,7 +124,7 @@ define([
                                 okLabel: "Load",
                                 cancelLabel: "Cancel",
                                 reverseOrder: true,
-                                
+
                                 required: [
                                     {
                                         id: Bricks.OkCancelButtonBrick.okButtonId,
@@ -156,8 +157,15 @@ define([
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
                                     callback: function (step, data) {
+
                                         console.log("Cancel click:", this, step, data);
-                                        step.retreat();
+
+                                        if (step.state === "completed") {
+                                            step.retreat();
+                                        } else {
+                                            step.clearStep();
+                                            //step.clearStep(["serviceType", "serviceURL"]);
+                                        }
                                     }
                                 }
 
@@ -264,6 +272,12 @@ define([
                                     expose: { as: "retreat" },
                                     callback: function (step, data) {
                                         console.log("Cancel click:", this, step, data);
+
+                                        if (step.state === "completed") {
+                                            step.retreat();
+                                        } else {
+                                            step.clearStep();
+                                        }
                                     }
                                 }
 
