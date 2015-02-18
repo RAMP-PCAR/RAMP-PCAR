@@ -55,6 +55,11 @@ define([
                 CHANGE: "brick/change"
             },
 
+            state: {
+                SUCCESS: "brick/success",
+                ERROR: "brick/error"
+            },
+
             initialize: function (id, config) {
 
                 lang.mixin(this,
@@ -103,8 +108,12 @@ define([
                 return this;
             },
 
-            clear: function () {
+            setState: function () {
+                return this;
+            },
 
+            clear: function () {
+                return this;
             },
 
             isValid: function () {
@@ -175,6 +184,14 @@ define([
 
                     that.multiContainer.append(contentBrick.node);
                 });
+            },
+
+            setState: function (state) {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    brick.setState(state);
+                });
+
+                return this;
             },
 
             clear: function () {
@@ -410,6 +427,7 @@ define([
                     {
                         inputValue: "",
                         userEntered: false,
+                        formGroup: this.node.find(".form-group"),
                         inputNode: this.node.find("input[type='text']#" + this.guid)
                     }
                 );
@@ -431,6 +449,28 @@ define([
 
             isUserEntered: function () {
                 return this.userEntered;
+            },
+
+            setState: function (state) {
+
+                switch (state) {
+                    case this.state.SUCCESS:
+                        this.formGroup.addClass("has-feedback has-success");
+                        break;
+
+                    case this.state.ERROR:
+                        this.formGroup.addClass("has-feedback has-error");
+                        break;
+
+                    case this.state.DEFAULT:
+                        this.formGroup.removeClass("has-feedback has-success has-error");
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return this;
             },
 
             clear: function () {
