@@ -57,7 +57,8 @@ define([
 
             state: {
                 SUCCESS: "brick/success",
-                ERROR: "brick/error"
+                ERROR: "brick/error",
+                DEFAULT: "brick/default"
             },
 
             initialize: function (id, config) {
@@ -65,11 +66,13 @@ define([
                 lang.mixin(this,
                     {
                         required: null,
+                        freezeOnSuccess: false,
                         baseTemplate: "default_base_template"
                     },
                     config,
                     {
                         id: id,
+                        _isFrozen: false,
                         _listeners: {}
                     }
                 );
@@ -108,7 +111,28 @@ define([
                 return this;
             },
 
-            setState: function () {
+            setState: function (state) {
+                switch (state) {
+                    case this.state.SUCCESS:
+
+                        if (this.freezeOnSuccess) {
+                            this.freeze(true);
+                        }
+
+                        break;
+
+                    case this.state.DEFAULT:
+
+                        if (this.freezeOnSuccess) {
+                            this.freeze(false);
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+
                 return this;
             },
 
@@ -134,15 +158,22 @@ define([
                 return result;
             },
 
-            disable: function (disable) {
-                if (disable) {
-                    this.node
-                        .find("button, input, select")
-                        .attr("disabled", true);
-                } else {
-                    this.node
-                        .find("button, input, select")
-                        .attr("disabled", false);
+            freeze: function (freeze) {
+                this._isFrozen = freeze;
+                this.disable(freeze, true);
+            },
+
+            disable: function (disable, force) {
+                if (!this._isFrozen || force) {
+                    if (disable) {
+                        this.node
+                            .find("button, input, select")
+                            .attr("disabled", true);
+                    } else {
+                        this.node
+                            .find("button, input, select")
+                            .attr("disabled", false);
+                    }
                 }
             }
         });
@@ -288,7 +319,8 @@ define([
                                 config: {
                                     label: config.okLabel,
                                     containerClass: "ok-button-brick-container",
-                                    buttonClass: "ok-btn " + (config.okButtonClass || "btn-sm btn-primary")
+                                    buttonClass: "ok-btn " + (config.okButtonClass || "btn-sm btn-primary"),
+                                    freezeOnSuccess: config.okFreezeOnSuccess
                                 }
                             },
                             {
@@ -297,7 +329,8 @@ define([
                                 config: {
                                     label: config.cancelLabel,
                                     containerClass: "cancel-button-brick-container",
-                                    buttonClass: "cancel-btn " + (config.cancelButtonClass || "btn-sm button-none")
+                                    buttonClass: "cancel-btn " + (config.cancelButtonClass || "btn-sm button-none"),
+                                    freezeOnSuccess: config.cancelFreezeOnSuccess
                                 }
                             }
                         ],
@@ -468,6 +501,8 @@ define([
                     default:
                         break;
                 }
+
+                Brick.setState.call(this, state);
 
                 return this;
             },

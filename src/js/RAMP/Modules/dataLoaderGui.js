@@ -83,7 +83,8 @@ define([
                                         key: "wms",
                                         value: "WMS"
                                     }
-                                ]
+                                ],
+                                freezeOnSuccess: true
                             }
                         },
                         {
@@ -93,7 +94,8 @@ define([
                                 //template: "template_name", //optional, has a default
                                 header: "Service URL",
                                 //label: "Service URL", // optional, equals to header by default
-                                placeholder: "ESRI MapServer or Feature layer or WMS layer"
+                                placeholder: "ESRI MapServer or Feature layer or WMS layer",
+                                freezeOnSuccess: true
                             },
                             on: [
                                 {
@@ -121,8 +123,10 @@ define([
                             id: "serviceTypeOkCancel",
                             type: Bricks.OkCancelButtonBrick,
                             config: {
-                                okLabel: "Load",
+                                okLabel: "Connect",
+                                okFreezeOnSuccess: true,
                                 cancelLabel: "Cancel",
+                                //cancelFreezeOnSuccess: false,
                                 reverseOrder: true,
 
                                 required: [
@@ -151,6 +155,7 @@ define([
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
                                         step.advance("dummyButton");
+
                                     }
                                 },
                                 {
