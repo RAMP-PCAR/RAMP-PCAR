@@ -67,7 +67,8 @@ define([
                     {
                         required: null,
                         freezeStates: [],
-                        baseTemplate: "default_base_template"
+                        baseTemplate: "default_base_template",
+                        noticeTemplate: "default_brick_notice"
                     },
                     config,
                     {
@@ -78,6 +79,12 @@ define([
                 );
 
                 this.node = template(this.baseTemplate, this);
+
+                lang.mixin(this,
+                    {
+                        noticeNode: this.node.find(".brick-notice-placeholder")
+                    }
+                );
 
                 if (this.required) {
                     if (Array.isArray(this.required)) {
@@ -119,6 +126,18 @@ define([
                 }
 
                 return this;
+            },
+
+            displayNotice: function (notice) {
+                if (notice) {
+                    this.noticeNode
+                        .empty()
+                        .append(
+                            template(this.noticeTemplate, notice)
+                        );
+                } else {
+                    this.noticeNode.empty();
+                }
             },
 
             clear: function () {

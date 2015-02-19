@@ -10,6 +10,19 @@
  *
  */
 {
+    "default_brick_notice_placeholder": "
+        <div class='brick-notice-placeholder'></div>
+    ",
+
+    "default_brick_notice": "
+        <strong class='brick-notice {%= o.type %}'>
+            <span class='label'>
+                <span class='prefix'>{%= o.header %}:</span>
+                <br>{%= o.message %}
+            </span>
+        </strong>
+    ",
+
     "default_base_template": "
         <div class='brick {%= o.containerClass %}'>
 
@@ -35,6 +48,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
+        {% include('default_brick_notice_placeholder', o); %}
         <div class='button-content'>
             <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
         </div>
@@ -46,6 +60,7 @@
             <h3 class='h6'>{%= o.header %}</h3>
         {% } %}
 
+        {% include('default_brick_notice_placeholder', o); %}
         <div class='btn-group choice-group'>
             {%  
                 o.choices.forEach(function(choice) {
@@ -67,6 +82,8 @@
 
         <div class='form-group'>
             <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
+
             <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
                 <option value=''>Select One:</option>
             </select>
@@ -80,7 +97,9 @@
         {% } %}
 
         <div class='form-group'>
+            
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
             
             <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
             
@@ -112,7 +131,9 @@
         {% } %}
 
         <div class='input-group form-group'>
+
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
             
             <div class='input-group-btn browse-files'>
                 <div class='input-container'>

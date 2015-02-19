@@ -22,6 +22,34 @@
     }
 }
 
+.brick-notice {
+    
+    &.error {
+        width: 100%;
+        overflow: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+        border-left: 4px @attention-color solid;
+        background-color: @light-attention-color;
+        padding: 2px 0 2px 10px;
+        vertical-align: bottom;
+        
+        > span.label {
+            font-size: 90%;
+            white-space: normal;
+            background: none;
+            border: none;
+            padding: 0;
+            font-weight: normal;
+            color: black;
+
+            .prefix {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
 .simpleinput-brick-glyphs () {
     .form-group {
 
