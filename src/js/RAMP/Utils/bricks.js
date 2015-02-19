@@ -66,7 +66,7 @@ define([
                 lang.mixin(this,
                     {
                         required: null,
-                        freezeOnSuccess: false,
+                        freezeStates: [],
                         baseTemplate: "default_base_template"
                     },
                     config,
@@ -112,25 +112,10 @@ define([
             },
 
             setState: function (state) {
-                switch (state) {
-                    case this.state.SUCCESS:
-
-                        if (this.freezeOnSuccess) {
-                            this.freeze(true);
-                        }
-
-                        break;
-
-                    case this.state.DEFAULT:
-
-                        if (this.freezeOnSuccess) {
-                            this.freeze(false);
-                        }
-
-                        break;
-
-                    default:
-                        break;
+                if (this.freezeStates.indexOf(state) !== -1) {
+                    this.freeze(true);
+                } else {
+                    this.freeze(false);
                 }
 
                 return this;
@@ -320,7 +305,7 @@ define([
                                     label: config.okLabel,
                                     containerClass: "ok-button-brick-container",
                                     buttonClass: "ok-btn " + (config.okButtonClass || "btn-sm btn-primary"),
-                                    freezeOnSuccess: config.okFreezeOnSuccess
+                                    freezeStates: config.okFreezeStates || []
                                 }
                             },
                             {
@@ -330,7 +315,7 @@ define([
                                     label: config.cancelLabel,
                                     containerClass: "cancel-button-brick-container",
                                     buttonClass: "cancel-btn " + (config.cancelButtonClass || "btn-sm button-none"),
-                                    freezeOnSuccess: config.cancelFreezeOnSuccess
+                                    freezeStates: config.cancelFreezeStates || []
                                 }
                             }
                         ],

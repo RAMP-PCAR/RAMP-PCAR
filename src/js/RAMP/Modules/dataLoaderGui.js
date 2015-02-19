@@ -84,7 +84,7 @@ define([
                                         value: "WMS"
                                     }
                                 ],
-                                freezeOnSuccess: true
+                                freezeStates: [Bricks.Brick.state.SUCCESS]
                             }
                         },
                         {
@@ -95,7 +95,7 @@ define([
                                 header: "Service URL",
                                 //label: "Service URL", // optional, equals to header by default
                                 placeholder: "ESRI MapServer or Feature layer or WMS layer",
-                                freezeOnSuccess: true
+                                freezeStates: [Bricks.Brick.state.SUCCESS]
                             },
                             on: [
                                 {
@@ -124,9 +124,12 @@ define([
                             type: Bricks.OkCancelButtonBrick,
                             config: {
                                 okLabel: "Connect",
-                                okFreezeOnSuccess: true,
+                                okFreezeStates: [
+                                    Bricks.Brick.state.SUCCESS,
+                                    Bricks.Brick.state.ERROR
+                                ],
                                 cancelLabel: "Cancel",
-                                //cancelFreezeOnSuccess: false,
+                                //cancelFreezeStates: false,
                                 reverseOrder: true,
 
                                 required: [
