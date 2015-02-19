@@ -221,12 +221,12 @@ define([
                 });
             },
 
-            _makeCloseTimeline: function (skipFirst) {
+            _makeCloseTimeline: function (skipFirst, resetState) {
                 var closeTimeline = new TimelineLite(),
                     closeStagger,
                     closeTimelines = [];
 
-                this._getCloseTimelines(closeTimelines, skipFirst);
+                this._getCloseTimelines(closeTimelines, skipFirst, resetState);
                 closeTimelines = closeTimelines.reverse();
 
                 if (closeTimelines.length > 0) {
@@ -237,7 +237,7 @@ define([
                 return closeTimeline;
             },
 
-            _getCloseTimelines: function (tls, skip) {
+            _getCloseTimelines: function (tls, skip, reset) {
                 var tl = new TimelineLite(),
 
                     that = this;
@@ -260,7 +260,10 @@ define([
                         tls.push(tl);
                     }
 
-                    this._notifyStateChange(StepItem.state.DEFAULT);
+                    if (reset) {
+                        this._notifyStateChange(StepItem.state.DEFAULT);
+                    }
+
                     this._activeChildStep._getCloseTimelines(tls);
                 }
 
@@ -502,7 +505,7 @@ define([
                     .clear()
                 ;
 
-                closeTimeline = this._makeCloseTimeline();
+                closeTimeline = this._makeCloseTimeline(false, true);
 
                 this._timeline
                     .add(closeTimeline)
