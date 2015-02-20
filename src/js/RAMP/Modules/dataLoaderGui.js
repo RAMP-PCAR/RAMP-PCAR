@@ -157,7 +157,7 @@ define([
                                     eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
-                                        
+
                                         console.log("Ok click:", this, step, data);
 
                                         step.advance(step.getData().serviceType.selectedChoice);
@@ -188,7 +188,7 @@ define([
                             id: "featureServiceAttrStep",
                             content: [
                                 {
-                                    id: "primaryFeatureAttribute",
+                                    id: "featurePrimaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Primary Attribute"
@@ -196,6 +196,27 @@ define([
                                 },
                                 {
                                     id: "addFeatureDataset",
+                                    type: Bricks.ButtonBrick,
+                                    config: {
+                                        label: "Add Dataset",
+                                        containerClass: "button-brick-container-main",
+                                        buttonClass: "btn-primary"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            id: "wmsServiceAttrStep",
+                            content: [
+                                {
+                                    id: "wmsLayerName",
+                                    type: Bricks.DropDownBrick,
+                                    config: {
+                                        header: "Layer Name"
+                                    }
+                                },
+                                {
+                                    id: "addWmsDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
@@ -218,15 +239,15 @@ define([
                                 header: "File Type",
                                 choices: [
                                     {
-                                        key: "feature",
+                                        key: "geojsonFileAttrStep",
                                         value: "GeoJSON"
                                     },
                                     {
-                                        key: "wms",
+                                        key: "csvFileAttrStep",
                                         value: "CSV"
                                     },
                                     {
-                                        key: "shapefile",
+                                        key: "shapefileFileAttrStep",
                                         value: "Shapefile"
                                     }
                                 ]
@@ -283,6 +304,8 @@ define([
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
+
+                                        step.advance(step.getData().fileType.selectedChoice);
                                     }
                                 },
                                 {
@@ -299,6 +322,136 @@ define([
                                     }
                                 }
 
+                            ]
+                        }
+                    ],
+                    children: [
+                        {
+                            id: "geojsonFileAttrStep",
+                            content: [
+                                {
+                                    id: "geojsonDatasetName",
+                                    type: Bricks.SimpleInputBrick,
+                                    config: {
+                                        header: "Dataset Name"
+                                    }
+                                },
+                                {
+                                    id: "geojsonPrimaryAttribute",
+                                    type: Bricks.DropDownBrick,
+                                    config: {
+                                        header: "Primary Attribute"
+                                    }
+                                },
+                                {
+                                    id: "geojsonColor",
+                                    type: Bricks.ColorPickerBrick,
+                                    config: {
+                                        header: "Colour"
+                                    }
+                                },
+                                {
+                                    id: "addGeojsonDataset",
+                                    type: Bricks.ButtonBrick,
+                                    config: {
+                                        label: "Add Dataset",
+                                        containerClass: "button-brick-container-main",
+                                        buttonClass: "btn-primary"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            id: "csvFileAttrStep",
+                            content: [
+                                {
+                                    id: "csvDatasetName",
+                                    type: Bricks.SimpleInputBrick,
+                                    config: {
+                                        header: "Dataset Name"
+                                    }
+                                },
+                                {
+                                    id: "csvPrimaryAttribute",
+                                    type: Bricks.DropDownBrick,
+                                    config: {
+                                        header: "Primary Attribute"
+                                    }
+                                },
+                                {
+                                    id: "csvLatLongAttribute",
+                                    type: Bricks.MultiBrick,
+                                    config: {
+                                        //header: "Service URL", //optional, omitted if not specified
+                                        content: [
+                                            {
+                                                id: "latitude",
+                                                type: Bricks.DropDownBrick,
+                                                config: {
+                                                    header: "Latitude"
+                                                }
+                                            },
+                                            {
+                                                id: "longitude",
+                                                type: Bricks.DropDownBrick,
+                                                config: {
+                                                    header: "Longitude"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    id: "csvColor",
+                                    type: Bricks.ColorPickerBrick,
+                                    config: {
+                                        header: "Colour"
+                                    }
+                                },
+                                {
+                                    id: "addCsvDataset",
+                                    type: Bricks.ButtonBrick,
+                                    config: {
+                                        label: "Add Dataset",
+                                        containerClass: "button-brick-container-main",
+                                        buttonClass: "btn-primary"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            id: "shapefileFileAttrStep",
+                            content: [
+                                {
+                                    id: "shapefileDatasetName",
+                                    type: Bricks.SimpleInputBrick,
+                                    config: {
+                                        header: "Dataset Name"
+                                    }
+                                },
+                                {
+                                    id: "shapefilePrimaryAttribute",
+                                    type: Bricks.DropDownBrick,
+                                    config: {
+                                        header: "Primary Attribute"
+                                    }
+                                },
+                                {
+                                    id: "shapefileColor",
+                                    type: Bricks.ColorPickerBrick,
+                                    config: {
+                                        header: "Colour"
+                                    }
+                                },
+                                {
+                                    id: "addGeojsonDataset",
+                                    type: Bricks.ButtonBrick,
+                                    config: {
+                                        label: "Add Dataset",
+                                        containerClass: "button-brick-container-main",
+                                        buttonClass: "btn-primary"
+                                    }
+                                }
                             ]
                         }
                     ]

@@ -66,8 +66,6 @@
     }
 }
 
-
-
 .simpleinput-brick-glyphs () {
     .form-group {
 
@@ -100,11 +98,32 @@
     display: table;
     table-layout: fixed;
 
+    margin-top: 21px;
+
     .multi-container {
         display: table-row;
 
         & > .brick {
-            margin-bottom: 0;
+            padding-right: 8px;
+            padding-left: 8px;
+            
+            &:first-child {
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+            }
+
+            h3, h4 {
+                margin-top: 0;
+            }
+
+            .form-group {
+                margin-bottom: 0;
+            }
+
+            margin-bottom: 0;  
         }
 
         & > div {
