@@ -77,11 +77,11 @@ define([
                                 header: "Service Type",
                                 choices: [
                                     {
-                                        key: "feature",
+                                        key: "featureServiceAttrStep",
                                         value: "Feature"
                                     },
                                     {
-                                        key: "wms",
+                                        key: "wmsServiceAttrStep",
                                         value: "WMS"
                                     }
                                 ],
@@ -157,8 +157,10 @@ define([
                                     eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
+                                        
                                         console.log("Ok click:", this, step, data);
-                                        step.advance("dummyButton");
+
+                                        step.advance(step.getData().serviceType.selectedChoice);
 
                                     }
                                 },
@@ -183,15 +185,22 @@ define([
                     ],
                     children: [
                         {
-                            id: "dummyButton",
+                            id: "featureServiceAttrStep",
                             content: [
                                 {
-                                    id: "okButton",
+                                    id: "primaryFeatureAttribute",
+                                    type: Bricks.DropDownBrick,
+                                    config: {
+                                        header: "Primary Attribute"
+                                    }
+                                },
+                                {
+                                    id: "addFeatureDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        //header: "test", //optional, omitted if not specified
-                                        label: "Done" //optional, defaults to "Ok"
-                                        //buttonClass: "btn-primary" //optional, defaults to "btn-primary"
+                                        label: "Add Dataset",
+                                        containerClass: "button-brick-container-main",
+                                        buttonClass: "btn-primary"
                                     }
                                 }
                             ]

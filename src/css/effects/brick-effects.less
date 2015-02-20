@@ -113,8 +113,25 @@
     }
 }
 
-.okcancelbutton-brick-container {
+.button-brick-container {
     margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.button-brick-container-main {
+    .button-brick-container;
+
+    .button-content {
+        text-align: right;
+
+        button {
+            width: 50%;
+        }
+    }
+}
+
+.okcancelbutton-brick-container {
+    .button-brick-container;
 
     .multi-container {
         text-align: right;
