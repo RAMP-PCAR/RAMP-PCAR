@@ -764,8 +764,8 @@ module.exports = (grunt) ->
 
         concat:
             options:
-                stripBanners: true
-                separator: ''
+                stripBanners: false
+                separator: '/* */ \n\r /* */'
 
             jsLib:
                 dest: 'build/js/lib/lib.js'
