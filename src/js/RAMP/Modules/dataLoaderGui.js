@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n, RAMP */
+﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n, RAMP, Btoa */
 
 define([
     /* Dojo */
@@ -757,12 +757,19 @@ define([
             return tmpl(key, data);
         }
 
+        // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_.22Unicode_Problem.22
+        function b64EncodeUnicode(str) {
+            return new Btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+                return String.fromCharCode('0x' + p1);
+            })).a;
+        }
+
         function addCSVDataset(obj) {
             var promise,
                 rgbColour = UtilMisc.hexToRgb(obj.colour),
                 iconTemplate = _template("a_d_icon_circlePoint", obj);
 
-            //console.log(iconTemplate);
+            iconTemplate = "data:image/svg+xml;base64," + b64EncodeUnicode(iconTemplate);
 
             promise = DataLoader.buildCsv(obj.data, {
                 latfield: obj.lat,
