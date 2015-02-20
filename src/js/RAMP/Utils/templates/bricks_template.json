@@ -31,11 +31,28 @@
         </div>
     ",
 
-    "default_multi_brick_template": "
+    "default_brick_header": "
 
         {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
+            <h3 class='h6'>
+                {%= o.header %}
+
+                {% if (o.instructions) { %}
+                    
+                    <span tabindex='0' class='brick-instructions _tooltip' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-info'>
+                        <i class='fa fa-question-circle'></i>
+                        <span class='wb-inv'>{%= o.instructions %}</span>
+                    </span>
+
+                {% } %}
+            </h3>
         {% } %}
+
+    ",
+
+    "default_multi_brick_template": "
+
+        {% include('default_brick_header', o); %}
 
         <div class='multi-container'>
             
@@ -44,9 +61,7 @@
 
     "default_button_brick_template": "
 
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         {% include('default_brick_notice_placeholder', o); %}
         <div class='button-content'>
@@ -56,9 +71,7 @@
 
     "default_choice_brick_template": "
         
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         {% include('default_brick_notice_placeholder', o); %}
         <div class='btn-group choice-group'>
@@ -76,9 +89,7 @@
 
     "default_dropdown_brick_template": "
         
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         <div class='form-group'>
             <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
@@ -92,9 +103,7 @@
 
     "default_simpleinput_brick_template": "
         
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         <div class='form-group'>
             
@@ -111,9 +120,7 @@
 
     "default_colorpicker_brick_template": "
         
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         <div class='color-picker-container'>
             <div class='form-group'>
@@ -126,9 +133,7 @@
 
     "default_fileinput_brick_template": "
         
-        {% if (o.header) { %}
-            <h3 class='h6'>{%= o.header %}</h3>
-        {% } %}
+        {% include('default_brick_header', o); %}
 
         <div class='input-group form-group'>
 
@@ -142,7 +147,7 @@
                 <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
                     <i class='fa fa-file'></i>
                     <i class='fa fa-file-o'></i>
-                    <span class='on-right wb-inv'>Browse</span>
+                    <span class='on-right'>File</span>
                 </span>                                                                                                
             </div>
 

@@ -42,6 +42,7 @@ define([
                     type: Bricks.ChoiceBrick,
                     config: {
                         header: "Data Source",
+                        //instructions: "Halp!",
                         choices: [
                             {
                                 key: "serviceTypeStep",
