@@ -709,8 +709,7 @@ define([
                 this.filePseudoNode.toggleClass("selected", this.fileValue ? true : false);
 
                 if (this.fileValue) {
-                    this.inputNode.val(this.fileValue.name);
-                    this.userEntered = false;
+                    SimpleInputBrick.setInputValue.call(this, this.fileValue.name, false);
 
                     this.notify(this.event.CHANGE, this.getData());
                 } else {
