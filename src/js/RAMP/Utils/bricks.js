@@ -615,6 +615,10 @@ define([
                 return this.userSelected;
             },
 
+            clear: function () {
+                this.selectOption("");
+            },
+
             isValid: function () {
                 return this.inputValue !== "";
             },
