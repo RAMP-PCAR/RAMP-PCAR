@@ -192,9 +192,28 @@ define([
                                     expose: { as: "advance" },
                                     callback: function (step, data) {
 
+                                        var stepData = step.getData(),
+                                            serviceType = stepData.serviceType.selectedChoice;
+
                                         console.log("Ok click:", this, step, data);
 
-                                        step.advance(step.getData().serviceType.selectedChoice);
+                                        step.advance(serviceType,
+                                            {
+                                                primaryAttribute: {
+                                                    options: [
+                                                        {
+                                                            value: "one",
+                                                            text: "One"
+                                                        },
+                                                        {
+                                                            value: "two",
+                                                            text: "Two"
+                                                        }
+                                                    ],
+                                                    selectedOption: "two"
+                                                }
+                                            }
+                                        );
 
                                     }
                                 },
@@ -212,14 +231,14 @@ define([
                             id: "featureServiceAttrStep",
                             content: [
                                 {
-                                    id: "featurePrimaryAttribute",
+                                    id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Primary Attribute"
                                     }
                                 },
                                 {
-                                    id: "addFeatureDataset",
+                                    id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
@@ -233,14 +252,14 @@ define([
                             id: "wmsServiceAttrStep",
                             content: [
                                 {
-                                    id: "wmsLayerName",
+                                    id: "layerName",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Layer Name"
                                     }
                                 },
                                 {
-                                    id: "addWmsDataset",
+                                    id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
@@ -327,7 +346,17 @@ define([
                                     callback: function (step, data) {
                                         console.log("Ok click:", this, step, data);
 
-                                        step.advance(step.getData().fileType.selectedChoice);
+                                        var stepData = step.getData(),
+                                            fileType = stepData.fileType.selectedChoice,
+                                            fileName = stepData.fileOrFileULR.inputValue;
+
+                                        step.advance(fileType,
+                                            {
+                                                datasetName: {
+                                                    inputValue: fileName
+                                                }
+                                            }
+                                        );
                                     }
                                 },
                                 {
@@ -344,28 +373,28 @@ define([
                             id: "geojsonFileAttrStep",
                             content: [
                                 {
-                                    id: "geojsonDatasetName",
+                                    id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
                                         header: "Dataset Name"
                                     }
                                 },
                                 {
-                                    id: "geojsonPrimaryAttribute",
+                                    id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Primary Attribute"
                                     }
                                 },
                                 {
-                                    id: "geojsonColor",
+                                    id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
                                         header: "Colour"
                                     }
                                 },
                                 {
-                                    id: "addGeojsonDataset",
+                                    id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
@@ -379,21 +408,21 @@ define([
                             id: "csvFileAttrStep",
                             content: [
                                 {
-                                    id: "csvDatasetName",
+                                    id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
                                         header: "Dataset Name"
                                     }
                                 },
                                 {
-                                    id: "csvPrimaryAttribute",
+                                    id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Primary Attribute"
                                     }
                                 },
                                 {
-                                    id: "csvLatLongAttribute",
+                                    id: "latLongAttribute",
                                     type: Bricks.MultiBrick,
                                     config: {
                                         //header: "Service URL", //optional, omitted if not specified
@@ -416,14 +445,14 @@ define([
                                     }
                                 },
                                 {
-                                    id: "csvColor",
+                                    id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
                                         header: "Colour"
                                     }
                                 },
                                 {
-                                    id: "addCsvDataset",
+                                    id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
@@ -437,7 +466,7 @@ define([
                             id: "shapefileFileAttrStep",
                             content: [
                                 {
-                                    id: "shapefileDatasetName",
+                                    id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
                                         header: "Dataset Name"
@@ -451,14 +480,14 @@ define([
                                     }
                                 },
                                 {
-                                    id: "shapefileColor",
+                                    id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
                                         header: "Colour"
                                     }
                                 },
                                 {
-                                    id: "addGeojsonDataset",
+                                    id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
                                         label: "Add Dataset",
