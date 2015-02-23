@@ -55,6 +55,7 @@ module.exports = (grunt) ->
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
             'generateConfig'
+            'copy:polyfillBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
@@ -186,6 +187,7 @@ module.exports = (grunt) ->
         'copy:dist'
         'INTERNAL: Copies files (except JS and CSS) needed for a distribution package.'
         [
+            'copy:polyfillDist'
             'copy:wetboewDist'
             'copy:assetsDist'
             'copy:configDist'
@@ -596,6 +598,18 @@ module.exports = (grunt) ->
                     '!*.html'
                 ]
                 dest: 'dist/js/lib/wet-boew/'
+
+            polyfillBuild:
+                expand: true
+                cwd: 'src/js/polyfill'
+                src: '*.*'
+                dest: 'build/js/polyfill'
+
+            polyfillDist:
+                expand: true
+                cwd: 'src/js/polyfill'
+                src: '*.*'
+                dest: 'dist/js/polyfill'
 
             assetsBuild:
                 expand: true
