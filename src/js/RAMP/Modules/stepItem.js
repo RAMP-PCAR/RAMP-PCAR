@@ -496,6 +496,14 @@ define([
                 return this._state === StepItem.state.SUCCESS;
             },
 
+            setBrickData: function (data) {
+                var that = this;
+
+                UtilDict.forEachEntry(data, function (brickId, brickData) {
+                    that.contentBricks[brickId].setData(brickData);
+                });
+            },
+
             retreat: function () {
                 var closeTimeline,
                     that = this;
@@ -519,7 +527,7 @@ define([
                 return this;
             },
 
-            advance: function (targetChildStepId) {
+            advance: function (targetChildStepId, targetChildData) {
                 var closeTimeline,
                     shiftTimeline,
                     openTimeline,
@@ -534,6 +542,8 @@ define([
                 ;
 
                 skipFirst = this._activeChildStep ? true : false;
+
+                targetChildStep.setBrickData(targetChildData);
 
                 closeTimeline = this._makeCloseTimeline(skipFirst);
                 shiftTimeline = this._makeShiftTimeline(targetChildStepId);

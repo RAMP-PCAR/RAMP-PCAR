@@ -148,6 +148,10 @@ define([
                 return true;
             },
 
+            setData: function () {
+                return this;
+            },
+
             getData: function (payload, wrap) {
                 var result = {};
 
@@ -244,6 +248,14 @@ define([
                 });
 
                 return true;
+            },
+
+            setData: function (data) {
+                UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                    brick.setData(data);
+                });
+
+                return this;
             },
 
             getData: function (wrap) {
@@ -434,6 +446,12 @@ define([
                 return this.selectedChoice !== "";
             },
 
+            setData: function (data) {
+                this.setChoice(data.selectedChoice, data.userSelected);
+
+                return this;
+            },
+
             getData: function (wrap) {
                 var payload = {
                     selectedChoice: this.selectedChoice,
@@ -519,6 +537,12 @@ define([
                 return this.inputValue !== "";
             },
 
+            setData: function (data) {
+                this.setInputValue(data.inputValue, data.userEntered);
+
+                return this;
+            },
+
             getData: function (wrap) {
                 var payload = {
                     inputValue: this.inputValue,
@@ -554,10 +578,9 @@ define([
                 );
 
                 this.selectNode.on("input", function () {
-                    var value = that.selectNode.val(),
-                        text = that.selectNode.find("option:selected").text();
+                    var option = that.selectNode.find("option:selected");
 
-                    that.setDropDownValue(value, text, true);
+                    that.setDropDownValue(option, true);
                 });
 
                 if (this.options) {
@@ -565,12 +588,21 @@ define([
                 }
             },
 
-            setDropDownValue: function (value, text, userSelected) {
+            selectOption: function (selectedOption, userSelected) {
+                var option = this.selectNode.find("option[value='" + selectedOption + "']");
+
+                this.setDropDownValue(option, userSelected);
+            },
+
+            setDropDownValue: function (option, userSelected) {
+                var value = option.val(),
+                    text = option.find("option:selected").text();
+
                 this.userSelected = userSelected ? true : false;
                 this.dropDownValue = value;
                 this.dropDownText = text;
 
-                // to do set node if set manually
+                // TODO: select proper node if set manually
 
                 this.notify(this.event.CHANGE, this.getData());
             },
@@ -585,6 +617,19 @@ define([
 
             isValid: function () {
                 return this.inputValue !== "";
+            },
+
+            setData: function (data) {
+
+                if (data.options) {
+                    this.setDropDownOptions(data.options, data.append);
+                }
+
+                if (data.selectedOption) {
+                    this.selectOption(data.selectedOption, data.userSelected);
+                }
+
+                return this;
             },
 
             getData: function (wrap) {
@@ -648,6 +693,13 @@ define([
             isValid: function () {
                 // Todo: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
             }*/
+
+            /*setData: function (data) {
+                //TODO: allow to set colors programmatically
+                //this.setInputValue(data.value, ?data.userEntered?);
+
+                return this;
+            },*/
 
             getData: function (wrap) {
                 var payload = {
@@ -727,6 +779,16 @@ define([
 
             isValid: function () {
                 return SimpleInputBrick.isValid.call(this) || this.fileValue ? true : false;
+            },
+
+            setData: function (data) {
+                if (data.fileValue) {
+                    this.setFileValue(data.fileValue, data.userSelected);
+                } else if (data.inputValue) {
+                    this.setInputValue(data.inputValue, data.userEntered);
+                }
+
+                return this;
             },
 
             getData: function (wrap) {
