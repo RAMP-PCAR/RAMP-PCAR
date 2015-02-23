@@ -28,11 +28,64 @@ define([
 
             //steps,
             choiceTree,
+            choiceTreeCallbacks,
             stepLookup = {},
 
             transitionDuration = 0.4;
 
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
+
+        choiceTreeCallbacks = {
+            simpleChoiceAdvance: function (step, data) {
+                step.advance(data.selectedChoice);
+            },
+
+            simpleCancel: function (step, data) {
+                console.log("Cancel click:", this, step, data);
+
+                if (step.isCompleted()) {
+                    step.retreat();
+                } else {
+                    step.clearStep();
+                }
+            },
+
+            serviceTypeStepGuess: function (step, data) {
+                var value = data.inputValue,
+                    serviceTypeBrick = step.contentBricks.serviceType,
+                    guess = "";
+
+                // make a guess if it's a feature or wms server only if the user hasn't already selected the type
+                if (!serviceTypeBrick.isUserSelected()) {
+
+                    if (value.match(/ArcGIS\/rest\/services/ig)) {
+                        guess = "featureServiceAttrStep";
+                    } else if (value.match(/wms/ig)) {
+                        guess = "wmsServiceAttrStep";
+                    }
+
+                    serviceTypeBrick.setChoice(guess);
+                }
+            },
+
+            fileTypeStepGuess: function (step, data) {
+                var fileName = data.inputValue,
+                    serviceFileBrick = step.contentBricks.fileType,
+                    guess = "";
+
+                if (!serviceFileBrick.isUserSelected() && !serviceFileBrick.isUserEntered) {
+                    if (fileName.endWith(".csv")) {
+                        guess = "csvFileAttrStep";
+                    } else if (fileName.endWith(".json")) {
+                        guess = "geojsonFileAttrStep";
+                    } else if (fileName.endWith(".zip")) {
+                        guess = "shapefileFileAttrStep";
+                    }
+
+                    serviceFileBrick.setChoice(guess);
+                }
+            }
+        };
 
         choiceTree = {
             id: "sourceTypeStep",
@@ -58,9 +111,7 @@ define([
                             {
                                 eventName: Bricks.ChoiceBrick.event.CHANGE,
                                 expose: { as: "advance" },
-                                callback: function (step, data) {
-                                    step.advance(data.selectedChoice);
-                                }
+                                callback: choiceTreeCallbacks.simpleChoiceAdvance
                             }
                     ]
                 }
@@ -69,6 +120,21 @@ define([
                 {
                     id: "serviceTypeStep",
                     content: [
+                        {
+                            id: "serviceURL",
+                            type: Bricks.SimpleInputBrick,
+                            config: {
+                                header: "Service URL",
+                                placeholder: "ESRI MapServer or Feature layer or WMS layer",
+                                freezeStates: [Bricks.Brick.state.SUCCESS]
+                            },
+                            on: [
+                                {
+                                    eventName: Bricks.SimpleInputBrick.event.CHANGE,
+                                    callback: choiceTreeCallbacks.serviceTypeStepGuess
+                                }
+                            ]
+                        },
                         {
                             id: "serviceType",
                             type: Bricks.ChoiceBrick,
@@ -87,38 +153,6 @@ define([
                                 ],
                                 freezeStates: [Bricks.Brick.state.SUCCESS]
                             }
-                        },
-                        {
-                            id: "serviceURL",
-                            type: Bricks.SimpleInputBrick,
-                            config: {
-                                //template: "template_name", //optional, has a default
-                                header: "Service URL",
-                                //label: "Service URL", // optional, equals to header by default
-                                placeholder: "ESRI MapServer or Feature layer or WMS layer",
-                                freezeStates: [Bricks.Brick.state.SUCCESS]
-                            },
-                            on: [
-                                {
-                                    eventName: Bricks.SimpleInputBrick.event.CHANGE,
-                                    callback: function (step, data) {
-                                        var value = data.inputValue,
-                                            serviceTypeBrick = step.contentBricks.serviceType,
-                                            guess = "";
-
-                                        // make a guess if it's a feature or wms server only if the user hasn't already selected the type
-                                        if (!serviceTypeBrick.isUserSelected()) {
-
-                                            if (value.match(/ArcGIS\/rest\/services/ig)) {
-                                                guess = "feature";
-                                            } else if (value.match(/wms/ig)) {
-                                                guess = "wms";
-                                            }
-                                            serviceTypeBrick.setChoice(guess);
-                                        }
-                                    }
-                                }
-                            ]
                         },
                         {
                             id: "serviceTypeOkCancel",
@@ -167,17 +201,7 @@ define([
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
-                                    callback: function (step, data) {
-
-                                        console.log("Cancel click:", this, step, data);
-
-                                        if (step.isCompleted()) {
-                                            step.retreat();
-                                        } else {
-                                            step.clearStep();
-                                            //step.clearStep(["serviceType", "serviceURL"]);
-                                        }
-                                    }
+                                    callback: choiceTreeCallbacks.simpleCancel
                                 }
 
                             ]
@@ -232,6 +256,22 @@ define([
                     id: "fileTypeStep",
                     content: [
                         {
+                            id: "fileOrFileULR",
+                            type: Bricks.FileInputBrick,
+                            config: {
+                                //template: "template_name", //optional, has a default
+                                header: "File or URL",
+                                //label: "Service URL", // optional, equals to header by default
+                                placeholder: "Local file or URL"
+                            },
+                            on: [
+                                {
+                                    eventName: Bricks.FileInputBrick.event.CHANGE,
+                                    callback: choiceTreeCallbacks.fileTypeStepGuess
+                                }
+                            ]
+                        },
+                        {
                             id: "fileType",
                             type: Bricks.ChoiceBrick,
                             config: {
@@ -252,24 +292,6 @@ define([
                                     }
                                 ]
                             }
-                        },
-                        {
-                            id: "fileOrFileULR",
-                            type: Bricks.FileInputBrick,
-                            config: {
-                                //template: "template_name", //optional, has a default
-                                header: "File or URL",
-                                //label: "Service URL", // optional, equals to header by default
-                                placeholder: "Local file or URL"
-                            },
-                            on: [
-                                {
-                                    eventName: Bricks.FileInputBrick.event.CHANGE,
-                                    callback: function (step, data) {
-                                        console.log(this.id, this.isValid(), data);
-                                    }
-                                }
-                            ]
                         },
                         {
                             id: "fileTypeOkCancel",
@@ -311,15 +333,7 @@ define([
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
-                                    callback: function (step, data) {
-                                        console.log("Cancel click:", this, step, data);
-
-                                        if (step.state === "completed") {
-                                            step.retreat();
-                                        } else {
-                                            step.clearStep();
-                                        }
-                                    }
+                                    callback: choiceTreeCallbacks.simpleCancel
                                 }
 
                             ]
