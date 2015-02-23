@@ -74,11 +74,11 @@ define([
                     guess = "";
 
                 if (!serviceFileBrick.isUserSelected() && !serviceFileBrick.isUserEntered) {
-                    if (fileName.endWith(".csv")) {
+                    if (fileName.endsWith(".csv")) {
                         guess = "csvFileAttrStep";
-                    } else if (fileName.endWith(".json")) {
+                    } else if (fileName.endsWith(".json")) {
                         guess = "geojsonFileAttrStep";
-                    } else if (fileName.endWith(".zip")) {
+                    } else if (fileName.endsWith(".zip")) {
                         guess = "shapefileFileAttrStep";
                     }
 
