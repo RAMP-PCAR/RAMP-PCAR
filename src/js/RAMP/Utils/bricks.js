@@ -591,9 +591,11 @@ define([
             selectOption: function (selectedOption, userSelected) {
                 var option = this.selectNode.find("option[value='" + selectedOption + "']");
 
+                this.selectNode.val(selectedOption);
                 this.setDropDownValue(option, userSelected);
             },
 
+            // internal should not be called from outsite
             setDropDownValue: function (option, userSelected) {
                 var value = option.val(),
                     text = option.find("option:selected").text();
@@ -601,8 +603,6 @@ define([
                 this.userSelected = userSelected ? true : false;
                 this.dropDownValue = value;
                 this.dropDownText = text;
-
-                // TODO: select proper node if set manually
 
                 this.notify(this.event.CHANGE, this.getData());
             },
