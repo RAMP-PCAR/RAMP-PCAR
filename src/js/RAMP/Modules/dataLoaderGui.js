@@ -281,7 +281,8 @@ define([
                                 //template: "template_name", //optional, has a default
                                 header: "File or URL",
                                 //label: "Service URL", // optional, equals to header by default
-                                placeholder: "Local file or URL"
+                                placeholder: "Local file or URL",
+                                freezeStates: [Bricks.Brick.state.SUCCESS]
                             },
                             on: [
                                 {
@@ -309,7 +310,8 @@ define([
                                         key: "shapefileFileAttrStep",
                                         value: "Shapefile"
                                     }
-                                ]
+                                ],
+                                freezeStates: [Bricks.Brick.state.SUCCESS]
                             }
                         },
                         {
@@ -317,6 +319,10 @@ define([
                             type: Bricks.OkCancelButtonBrick,
                             config: {
                                 okLabel: "Load",
+                                okFreezeStates: [
+                                    Bricks.Brick.state.SUCCESS,
+                                    Bricks.Brick.state.ERROR
+                                ],
                                 cancelLabel: "Cancel",
                                 reverseOrder: true,
 
