@@ -341,15 +341,18 @@ define([
              *
              * @method displayNotice
              * @param  {Object} notice object with notice data to be passed to the template
+             * @param  {String} [noticeTemplate] notice template name
              * @return {Brick}           itself
              * @chainable
              */
-            displayNotice: function (notice) {
+            displayNotice: function (notice, noticeTemplate) {
+                noticeTemplate = noticeTemplate || this.noticeTemplate;
+
                 if (notice) {
                     this.noticeNode
                         .empty()
                         .append(
-                            template(this.noticeTemplate, notice)
+                            template(noticeTemplate, notice)
                         );
                 } else {
                     this.noticeNode.empty();
@@ -366,6 +369,8 @@ define([
              * @chainable
              */
             clear: function () {
+                this.noticeNode.empty();
+
                 return this;
             },
 
@@ -731,6 +736,8 @@ define([
 
             clear: function () {
                 this.setChoice("", false);
+
+                Brick.clear.call(this);
             },
 
             isValid: function () {
@@ -822,6 +829,8 @@ define([
 
             clear: function () {
                 this.setInputValue("", false);
+
+                Brick.clear.call(this);
             },
 
             isValid: function () {
@@ -908,6 +917,8 @@ define([
 
             clear: function () {
                 this.selectOption("");
+
+                Brick.clear.call(this);
             },
 
             isValid: function () {
@@ -1070,6 +1081,8 @@ define([
 
             clear: function () {
                 this.setInputValue("", false);
+
+                Brick.clear.call(this);
             },
 
             isValid: function () {
