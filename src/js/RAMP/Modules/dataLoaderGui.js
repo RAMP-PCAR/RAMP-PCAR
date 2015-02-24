@@ -36,8 +36,8 @@ define([
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
 
         choiceTreeCallbacks = {
-            simpleChoiceAdvance: function (step, data) {
-                step.advance(data.selectedChoice);
+            simpleAdvance: function (step, data, options) {
+                step.advance(data.selectedChoice, options);
             },
 
             simpleCancel: function (step, data) {
@@ -111,7 +111,7 @@ define([
                             {
                                 eventName: Bricks.ChoiceBrick.event.CHANGE,
                                 expose: { as: "advance" },
-                                callback: choiceTreeCallbacks.simpleChoiceAdvance
+                                callback: choiceTreeCallbacks.simpleAdvance
                             }
                     ]
                 }
@@ -189,33 +189,7 @@ define([
                                 },
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
-                                    expose: { as: "advance" },
-                                    callback: function (step, data) {
-
-                                        var stepData = step.getData(),
-                                            serviceType = stepData.serviceType.selectedChoice;
-
-                                        console.log("Ok click:", this, step, data);
-
-                                        step.advance(serviceType,
-                                            {
-                                                primaryAttribute: {
-                                                    options: [
-                                                        {
-                                                            value: "one",
-                                                            text: "One"
-                                                        },
-                                                        {
-                                                            value: "two",
-                                                            text: "Two"
-                                                        }
-                                                    ],
-                                                    selectedOption: "two"
-                                                }
-                                            }
-                                        );
-
-                                    }
+                                    expose: { as: "advance" }
                                 },
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
@@ -535,6 +509,99 @@ define([
             ;
 
             stepLookup.sourceTypeStep.currentStep(1);
+
+            stepLookup.serviceTypeStep.on("advance", function () {
+                var promise,
+                    data,
+                    that = this,
+                    stepData = this.getData(),
+                    serviceTypeValue = stepData.serviceType.selectedChoice,
+                    serviceUrlValue = stepData.serviceURL.inputValue;
+
+                switch (serviceTypeValue) {
+                    case "featureServiceAttrStep":
+                        //get data from feature layer endpoint
+                        promise = DataLoader.getFeatureLayer(serviceUrlValue);
+
+                        promise.then(function (event) {
+                            data = event;
+
+                            choiceTreeCallbacks.simpleAdvance(that, stepData.serviceType);
+
+                            ////get data from feature layer's legend endpoint
+                            //var legendPromise = DataLoader.getFeatureLayerLegend(loadSteps[stepId].getUrl());
+                            //legendPromise.then(function (legendLookup) {
+                            //    data.legendLookup = legendLookup;
+
+                            //    //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
+
+                            //    setSelectOptions(
+                            //        optionStepContent.find("#featurePrimaryAttrlist"),
+                            //        data.fields
+                            //    );
+
+                            //    //setSelectOptions(
+                            //    //    optionStepContent.find("#featureStyleAttrlist"),
+                            //    //    symbologyPreset
+                            //    //);
+
+                            //    //setSelectOptions(
+                            //    //    optionStepContent.find("#featureColourAttrlist"),
+                            //    //    { selectOne: "Select One" }
+                            //    //);
+
+                            //    optionStepContent.find(".btn-add-dataset").on("click", function () {
+                            //        addFeatureDataset({
+                            //            data: data,
+                            //            primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
+                            //            //style: optionStepContent.find("#featureStyleAttrlist").val(),
+                            //            //colour: optionStepContent.find("#featureColourAttrpicker").val()
+                            //        });
+                            //    });
+                            //    loadURLStep.successLoadUrlStep();
+                            //}, function () {
+                            //    loadURLStep.errorLoadUrlStep();
+                            //});
+                        }, function (event) {
+                            //setStepState(null, that, StepItem.state.ERROR);
+                            that
+                                ._notifyStateChange(StepItem.state.ERROR)
+                                .displayBrickNotices({
+                                    serviceURL: {
+                                        type: "error",
+                                        header: "I'm error",
+                                        message: "more about this erorr"
+                                    }
+                                })
+                            ;
+
+                            console.log(event);
+                            //loadURLStep.errorLoadUrlStep();
+                        });
+                        break;
+                }
+
+                /*step.advance(serviceType,
+                    {
+                        primaryAttribute: {
+                            options: [
+                                {
+                                    value: "one",
+                                    text: "One"
+                                },
+                                {
+                                    value: "two",
+                                    text: "Two"
+                                }
+                            ],
+                            selectedOption: "two"
+                        }
+                    }
+                );*/
+
+                //choiceTreeCallbacks.simpleChoiceAdvance(step, serviceType.getData(), {});
+
+            });
         }
 
         function setCurrentStep(event) {
