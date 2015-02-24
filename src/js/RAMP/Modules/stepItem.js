@@ -300,9 +300,10 @@ define([
 
                         .set(this._optionsNode, { left: 0 })
                         .set(otherChildNodes, { display: "none" })
+                        .call(function () {
+                            targetChildStep._notifyStateChange(targetChildStep._state);
+                        }, null, null, this._transitionDuration / 3)
                     ;
-
-                    this._notifyStateChange(this._state);
                 }
 
                 return shiftTimeline;
