@@ -2,6 +2,7 @@
     "version": "1.0.0",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "proxy/dotNet/proxy.ashx",
+    "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
