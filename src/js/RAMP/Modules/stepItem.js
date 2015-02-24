@@ -220,9 +220,6 @@ define([
                             that._internalCheckHelper(brick.required, brick, that.contentBricks);
                         }
                     }
-
-                    // disable or enable a brick based on sum validity of its dependencies
-                    //brick.disable(!flag);
                 });
             },
 
@@ -414,6 +411,8 @@ define([
                 });
 
                 this._emit(StepItem.event.STATE_CHANGE, { id: this.id, level: this.level, state: this._state });
+
+                return this;
             },
 
             _emit: function (event, payload) {
@@ -438,18 +437,26 @@ define([
             },
 
             clearStep: function (brickIds) {
+                var bricks = []; // bricks from whose notices should be hidden
+
                 // clear this steps state
                 this._notifyStateChange(StepItem.state.DEFAULT);
 
                 if (Array.isArray(brickIds)) {
                     brickIds.forEach(function (brickId) {
                         this.contentBricks[brickId].clear();
+
+                        bricks.push(this.contentBricks[brickId]);
                     });
                 } else {
                     UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                         brick.clear();
+
+                        bricks.push(brick);
                     });
                 }
+
+                this._toggleBrickNotices(bricks, false);
             },
 
             setState: function (level, stepId, state) {
@@ -511,6 +518,48 @@ define([
                 UtilDict.forEachEntry(data, function (brickId, brickData) {
                     that.contentBricks[brickId].setData(brickData);
                 });
+            },
+
+            displayBrickNotices: function (data) {
+                var that = this,
+                    bricks = [];
+
+                UtilDict.forEachEntry(data, function (brickId, brickData) {
+                    that.contentBricks[brickId].displayNotice(brickData);
+
+                    bricks.push(that.contentBricks[brickId]);
+                });
+
+                this._toggleBrickNotices(bricks, true);
+            },
+
+            _toggleBrickNotices: function (bricks, show) {
+                var that = this,
+                    notices,
+                    tl = new TimelineLite({ paused: true });
+
+                notices = bricks
+                    .map(function (brick) { return brick.noticeNode; })
+                    .filter(function (notice) { return notice.length > 0; })
+                ;
+
+                if (show) {
+                    tl.set(notices, { height: 0, visibility: "visible", position: "relative" }, 0);
+                } 
+
+                notices.forEach(function (notice) {
+
+                    tl
+                        .to(notice, that._transitionDuration / 2, { height: show ? notice.height() : 0, ease: "easeOutCirc" })
+                    ;
+
+                });
+
+                if (!show) {
+                    tl.set(notices, { clearProps: "all" });
+                }
+
+                tl.play();
             },
 
             retreat: function () {
