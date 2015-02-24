@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $ */
+﻿/* global define, RAMP, $ */
 
 /**
 *
@@ -60,11 +60,13 @@ define([
             printTask = new PrintTask(RAMP.config.exportMapUrl);
 
             printTask.on('complete', function (evt) {
-                console.log('PRINT RESULT: ' + evt.result.url);
+                //console.log('PRINT RESULT: ' + evt.result.url);
+                topic.publish(EventManager.Gui.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
             });
 
             printTask.on('error', function (evt) {
-                console.log('PRINT FAILED: ' + evt.error.message);
+                //console.log('PRINT FAILED: ' + evt.error.message);
+                topic.publish(EventManager.Gui.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
             });
 
             mapDom = $('#mainMap_root')[0];

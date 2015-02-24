@@ -1387,6 +1387,17 @@ define([
                     ImageExport.submitServiceImageRequest();
                 });
 
+                topic.subscribe(EventManager.Gui.ESRI_IMAGE_READY, function (evt) {
+                    //for now, just console.
+                    if (evt.error) {
+                        console.log("Image request failed");
+                        console.log(evt.imageUrl);
+                    } else {
+                        console.log("Here is your image URL, sir");
+                        console.log(evt.imageUrl);
+                    }
+                });
+
                 //start extended grid
                 topic.subscribe(EventManager.GUI.DATAGRID_EXPAND, function () {
                     layoutController.toggleFullDataMode();
