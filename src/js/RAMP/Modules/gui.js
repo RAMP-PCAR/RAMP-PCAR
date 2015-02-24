@@ -1387,7 +1387,7 @@ define([
                     ImageExport.submitServiceImageRequest();
                 });
 
-                topic.subscribe(EventManager.Gui.ESRI_IMAGE_READY, function (evt) {
+                topic.subscribe(EventManager.GUI.ESRI_IMAGE_READY, function (evt) {
                     //for now, just console.
                     if (evt.error) {
                         console.log("Image request failed");

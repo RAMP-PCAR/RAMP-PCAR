@@ -61,12 +61,12 @@ define([
 
             printTask.on('complete', function (evt) {
                 //console.log('PRINT RESULT: ' + evt.result.url);
-                topic.publish(EventManager.Gui.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
+                topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
             });
 
             printTask.on('error', function (evt) {
                 //console.log('PRINT FAILED: ' + evt.error.message);
-                topic.publish(EventManager.Gui.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
+                topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
             });
 
             mapDom = $('#mainMap_root')[0];
