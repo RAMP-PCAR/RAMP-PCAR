@@ -794,7 +794,9 @@ define([
                 this.userEntered = userEntered ? true : false;
                 this.inputValue = value;
 
-                this.inputNode.val(value);
+                if (!userEntered) {
+                    this.inputNode.val(value);
+                }
 
                 this.notify(this.event.CHANGE, this.getData());
             },
