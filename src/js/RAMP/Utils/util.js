@@ -1303,10 +1303,11 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             setSelectOptions: function (select, options, append) {
-                var optionsNode;
+                //var optionsNode;
 
                 if (!append) {
-                    select.append(optionsNode);
+                    select.empty();
+                    //select.append(optionsNode);
                 }
 
                 options.forEach(function (option) {
