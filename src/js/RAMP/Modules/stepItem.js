@@ -97,6 +97,8 @@ define([
                         _childSteps: {},
                         _activeChildStep: null,
 
+                        _parent: null,
+
                         _state: StepItem.state.DEFAULT,
 
                         _timeline: new TimelineLite({ paused: true }),
@@ -365,6 +367,8 @@ define([
                     }
 
                     this._notifyStateChange(StepItem.state.SUCCESS);
+                    // hide all notices when making a step successfull
+                    this.displayBrickNotices();
                     targetChildStep._getOpenTimelines(tls);
                 }
 
@@ -432,6 +436,7 @@ define([
             addChild: function (stepItem) {
                 this._optionsNode.append(stepItem.node);
                 this._childSteps[stepItem.id] = stepItem;
+                stepItem._parent = this;
 
                 return this;
             },
@@ -456,7 +461,8 @@ define([
                     });
                 }
 
-                this._toggleBrickNotices(bricks, false);
+                // hide all notices when clearing the step
+                this.displayBrickNotices();
             },
 
             setState: function (level, stepId, state) {
@@ -524,18 +530,28 @@ define([
                 var that = this,
                     bricks = [];
 
-                UtilDict.forEachEntry(data, function (brickId, brickData) {
-                    that.contentBricks[brickId].displayNotice(brickData);
+                if (data) {
+                    UtilDict.forEachEntry(data, function (brickId, brickData) {
+                        that.contentBricks[brickId].displayNotice(brickData);
 
-                    bricks.push(that.contentBricks[brickId]);
-                });
+                        bricks.push(that.contentBricks[brickId]);
+                    });                    
+                } else {
+                    UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
+                        brick.displayNotice();
 
-                this._toggleBrickNotices(bricks, true);
+                        bricks.push(brick);
+                    });
+                }
+
+                this._toggleBrickNotices(bricks, data);
             },
 
             _toggleBrickNotices: function (bricks, show) {
                 var that = this,
                     notices,
+                    contentHeight = this.getContentOuterHeight(),
+                    heightChange = 0,
                     tl = new TimelineLite({ paused: true });
 
                 notices = bricks
@@ -549,14 +565,26 @@ define([
 
                 notices.forEach(function (notice) {
 
+                    heightChange += notice.height();
+
                     tl
-                        .to(notice, that._transitionDuration / 2, { height: show ? notice.height() : 0, ease: "easeOutCirc" })
+                        .to(notice, that._transitionDuration / 2, { height: show ? notice.height() : 0, ease: "easeOutCirc" }, 0)
                     ;
 
                 });
 
                 if (!show) {
                     tl.set(notices, { clearProps: "all" });
+                }
+
+                heightChange = show ? 0 : -heightChange;
+
+                if (this._parent) {
+                    tl.to(this._parent._optionsBackgroundNode, this._transitionDuration / 2, {
+                        height: contentHeight + heightChange,
+                        "line-height": contentHeight + heightChange,
+                        ease: "easeOutCirc"
+                    }, 0);
                 }
 
                 tl.play();
