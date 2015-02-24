@@ -1,4 +1,4 @@
-﻿/* global define, RAMP, $ */
+﻿/* global define, console, RAMP, $ */
 
 /**
 *
@@ -73,8 +73,8 @@ define([
 
             template = new PrintTemplate();
             template.exportOptions = {
-                width: mapDom.style.width,
-                height: mapDom.style.height,
+                width: mapDom.clientWidth,
+                height: mapDom.clientHeight,
                 dpi: 96
             };
             template.format = "JPG";
@@ -84,6 +84,7 @@ define([
             params = new PrintParameters();
             params.map = mappy;
             params.template = template;
+            console.log("submitting print job.  please wait");
             printTask.execute(params);
         }
 
