@@ -160,7 +160,10 @@ define([
                                 that.emit(contentBrick.id + "/" + o.eventName, data);
 
                                 if (o.expose.as) {
-                                    that.emit(o.expose.as, data);
+                                    that.emit(o.expose.as, {
+                                        brick: contentBrick,
+                                        brickData: data
+                                    });
                                 }
                             }
                         });
