@@ -437,6 +437,9 @@ define([
             },
 
             clearStep: function (brickIds) {
+                // clear this steps state
+                this._notifyStateChange(StepItem.state.DEFAULT);
+
                 if (Array.isArray(brickIds)) {
                     brickIds.forEach(function (brickId) {
                         this.contentBricks[brickId].clear();
