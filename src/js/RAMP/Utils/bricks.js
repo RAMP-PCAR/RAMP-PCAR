@@ -1,16 +1,29 @@
 ﻿/*global console, define, $, jscolor, RColor, Base */
 
-/**
+/** 
+* Bricks is a static collection of form controls rolled into prototypical objects with extra functions available. The main purpose is to use them in the choice tree for adding datasets but they can be reused anywhere where form controls are required.
 * @module Utils
+* @submodule Bricks
 */
 
 /**
-* Set of functions that deal with arrays.
+* Bricks is a static collection of form controls rolled into prototypical objects with extra functions available. The main purpose is to use them in the choice tree for adding datasets but they can be reused anywhere where form controls are required.
 *
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+*  
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+* 
+* 
 * @class Bricks
 * @static
-* @uses dojo/_base/array
 * @uses dojo/_base/lang
+* 
 */
 define([
     /* Dojo */
@@ -45,22 +58,188 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(bricks_template));
 
+        /**
+         * Generates a template node based on the name of the template and the data to be passed to the template engine. The set of brick templates is suppled to the {{#crossLink "TmplHelper"}}{{/crossLink}}   module.
+         * 
+         * @method template
+         * @private
+         * @param {String} key template name
+         * @param {Object} data any data that should be passed to the template engine
+         * @return {jObject} a generated template nodes
+         */
         function template(key, data) {
             /*jshint validthis: true */
             return $(TmplHelper.template.call(this, key, data, templates)); // -> No Strict violation!
         }
 
+        /**
+        * The basic Brick prototype with no special functions. A base from all other Bricks.
+        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the Brick prototype.
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class Brick
+        * @constructor
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * 
+        */
         Brick = Base.extend({
+            /**
+             * Initializes the Brick by generating a specified template and setting defaults.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * 
+             * @retun Brick
+             * @chainable
+             * @for Brick
+             */
+            
+            /**
+             * A Brick header.
+             *
+             * @property header
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * An instructional text to be displayed.
+             *
+             * @property instructions
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A collection of rules specifying what external conditions must be valid for the Brick to be enabled.
+             * This is not used directly by the Brick itself, but instead by the external object manipulating a collection of Bricks.
+             * Two types of rules possible: "all" and "any". Any additional properties needed can be specified.
+             * 
+             * @property required
+             * @type {Array}
+             * @default null
+             * @example
+             *
+             *      [
+             *           {
+             *               type: "all",
+             *               check: ["serviceType", "serviceURL"]
+             *           }
+             *      ]
+             */
+            
+            /**
+             * A set of rules specifying states Brick should be frozen.
+             *
+             * @property freezeStates
+             * @private
+             * @type {Array}
+             * @default []
+             * @example
+             *
+             *      [
+             *           Bricks.Brick.state.SUCCESS,
+             *           Bricks.Brick.state.ERROR
+             *       ],
+             */
+            
+            /**
+             * A default base template name.
+             *
+             * @property baseTemplate
+             * @private
+             * @type {String}
+             * @default "default_base_template"
+             */
+            
+            /**
+             * A default notice template name.
+             *
+             * @property noticeTemplate
+             * @private
+             * @type {String}
+             * @default "default_brick_notice"
+             */                 
+
+            /**
+             * Indicates if the Brick is frozen and cannot be interacted with.
+             *
+             * @property _isFrozen
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * A collection of listeners to be notified of specified Brick events.
+             *
+             * @property _listeners
+             * @private
+             * @type {Object}
+             * @default {}
+             */
+
+            /**
+             * A dictionary of possible Brick events.
+             *
+             * @property event
+             * @type {Object}
+             * @example
+             *      event: {
+             *          CHANGE: "brick/change"
+             *      }
+             * 
+             */
             event: {
                 CHANGE: "brick/change"
             },
 
+            /**
+             * A dictionary of Brick events.
+             *
+             * @property state
+             * @type {Object}
+             * @example
+             *     state: {
+             *       SUCCESS: "brick/success",
+             *       ERROR: "brick/error",
+             *       DEFAULT: "brick/default"
+             *      }
+             */
             state: {
                 SUCCESS: "brick/success",
                 ERROR: "brick/error",
                 DEFAULT: "brick/default"
             },
 
+            /**
+             * Initializes the Brick by generatin a specified template and setting defaults.
+             * 
+             * @method initialize
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @private
+             */
             initialize: function (id, config) {
 
                 lang.mixin(this,
@@ -98,6 +277,16 @@ define([
 
             },
 
+            /**
+             * Notifies a listener of a Brick event. 
+             *
+             * @method notify
+             * @private
+             * @param  {String} eventName an eventName that should be reported
+             * @param  {Ojbect} data      a payload object to be passed along with the @event
+             * @return {Brick}           itself
+             * @chainable
+             */
             notify: function (eventName, data) {
                 var that = this;
 
@@ -107,8 +296,19 @@ define([
                 this._listeners[eventName].forEach(function (listener) {
                     listener.call(that, data);
                 });
+
+                return this;
             },
 
+            /**
+             * Sets a listener on the Brick for a speicifed eventName.
+             *
+             * @method on
+             * @param  {String} eventName an eventName to listen for
+             * @param  {Function} listener  a callback function to be called
+             * @return {Brick}           itself
+             * @chainable
+             */
             on: function (eventName, listener) {
                 if (!this._listeners[eventName]) {
                     this._listeners[eventName] = [];
@@ -118,6 +318,14 @@ define([
                 return this;
             },
 
+            /**
+             * Sets the state of the Brick. Checks if the state being set is a freezing state and freezes/unfreezes the Brick.
+             *
+             * @method setState
+             * @param {String} state a name of the state to set 
+             * @return {Brick}           itself
+             * @chainable
+             */
             setState: function (state) {
                 if (this.freezeStates.indexOf(state) !== -1) {
                     this.freeze(true);
@@ -128,6 +336,14 @@ define([
                 return this;
             },
 
+            /**
+             * Display a (error) notice on the brick.
+             *
+             * @method displayNotice
+             * @param  {Object} notice object with notice data to be passed to the template
+             * @return {Brick}           itself
+             * @chainable
+             */
             displayNotice: function (notice) {
                 if (notice) {
                     this.noticeNode
@@ -138,20 +354,50 @@ define([
                 } else {
                     this.noticeNode.empty();
                 }
+
+                return this;
             },
 
+            /**
+             * Clears the Brick. This is an empty function. Bricks inheriting from this should override and provide their specific implementations.
+             *
+             * @method clear
+             * @return {Brick}           itself
+             * @chainable
+             */
             clear: function () {
                 return this;
             },
 
+            /**
+             * Checks if the brick is valid. This is an empty function. Bricks inheriting from this should override and provide their specific implementations.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return true;
             },
 
+            /**
+             * Sets Brick's data. This is an empty function. Bricks inheriting from this should override and provide their specific implementations.
+             *
+             * @method setData
+             * @return {Brick}           itself
+             * @chainable
+             */
             setData: function () {
                 return this;
             },
 
+            /**
+             * Returns Brick's data. Bricks inheriting from this should override and provide their one implementation and then call parent's getData method.
+             *
+             * @method getData
+             * @param  {Object} [payload] data to be returned
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         Brick's data
+             */
             getData: function (payload, wrap) {
                 var result = {};
 
@@ -171,6 +417,16 @@ define([
                 this.disable(freeze, true);
             },
 
+            /**
+             * Disables or reenables the Brick.
+             * 
+             * @method disable
+             * @param  {Boolean} disable true to disable; false to enable
+             * @param  {Boolean} force   if true, disables the brick even if it's frozen
+             * @chainable
+             * @return {Brick} itself
+             * @for Brick
+             */
             disable: function (disable, force) {
                 if (!this._isFrozen || force) {
                     if (disable) {
@@ -183,10 +439,45 @@ define([
                             .attr("disabled", false);
                     }
                 }
+
+                return this;
             }
         });
-
+    
+        /**
+        * The basic Brick prototype with no special functions. A base from all other Bricks.
+        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class MultiBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         MultiBrick = Brick.extend({
+            /**
+             * Initializes the MutliBrick by generating a specified template and setting defaults.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the MultiBrick
+             * @param  {Object} config a configuration object for the MultiBrick
+             * @retun MultiBrick
+             * @chainable
+             * @for MultiBrick
+             */
+
             initialize: function (id, config) {
                 var that = this;
 
@@ -811,18 +1102,73 @@ define([
 
         return {
 
+            /**
+             * The basic Brick prototype with no special functions. A base from all other Bricks.
+             *
+             * @for Bricks
+             * @property Brick
+             * @type Brick
+             */
             Brick: Brick,
 
+            /**
+             * The MultiBrick prototype. Used as a container for multiple independent Bricks if they are required to be displayed side by side.
+             *
+             * @property MultiBrick
+             * @type MultiBrick
+             */
             MultiBrick: MultiBrick,
 
+            /**
+             * The ButtonBrick prototype. A simple Brick with a button template.
+             *
+             * @property ButtonBrick
+             * @type ButtonBrick
+             */
             ButtonBrick: ButtonBrick,
+            /**
+             * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
+             *
+             * @property OkCancelButtonBrick
+             * @type OkCancelButtonBrick
+             */
             OkCancelButtonBrick: OkCancelButtonBrick,
 
+            /**
+             * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
+             *
+             * @property ChoiceBrick
+             * @type ChoiceBrick
+             */
             ChoiceBrick: ChoiceBrick,
 
+            /**
+             * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
+             *
+             * @property DropDownBrick
+             * @type DropDownBrick
+             */
             DropDownBrick: DropDownBrick,
+            /**
+             * The ColorPickerBrick prototype. Provides a control to select a color.
+             *
+             * @property ColorPickerBrick
+             * @type ColorPickerBrick
+             */
             ColorPickerBrick: ColorPickerBrick,
+            /**
+             * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
+             *
+             * @property SimpleInputBrick
+             * @type SimpleInputBrick
+             */
             SimpleInputBrick: SimpleInputBrick,
+            /**
+             * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
+             *
+             * @property FileInputBrick
+             * @type FileInputBrick
+             */
             FileInputBrick: FileInputBrick
         };
     });
