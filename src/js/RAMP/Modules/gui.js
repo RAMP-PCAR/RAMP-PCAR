@@ -38,7 +38,7 @@ define([
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
 
-        "ramp/theme",
+        "ramp/theme", "ramp/imageExport",
 
 // Text
         "dojo/text!./templates/sub_panel_template.json",
@@ -57,7 +57,7 @@ define([
     // Ramp
         GlobalStorage, EventManager,
 
-        Theme,
+        Theme, ImageExport,
 
     // Text
         subPanelTemplate,
@@ -1380,6 +1380,12 @@ define([
                     addLayerPanelPopup.close();
                 });
                 //End Add Layer
+
+                //print test button.
+                //TODO remove once printing UI is made
+                $('#printtest').on('click', function () {
+                    ImageExport.submitServiceImageRequest();
+                });
 
                 //start extended grid
                 topic.subscribe(EventManager.GUI.DATAGRID_EXPAND, function () {
