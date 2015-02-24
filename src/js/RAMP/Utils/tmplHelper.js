@@ -5,7 +5,6 @@
 * Utility module containing useful static classes.
 *
 * @module Utils
-* @submodule TmplUtil
 */
 
 /**
