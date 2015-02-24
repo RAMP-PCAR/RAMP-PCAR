@@ -190,6 +190,11 @@ define([
 
                 // disable or enable a brick based on sum validity of its dependencies
                 targetBrick.disable(!flag);
+
+                // if the step in the error state and one of the Bricks is changed, switched to the DEFAULT state and switch all the content Bricks
+                if (this._state === StepItem.state.ERROR) {
+                    this._notifyStateChange(StepItem.state.DEFAULT);
+                }
             },
 
             _doInternalCheck: function () {
