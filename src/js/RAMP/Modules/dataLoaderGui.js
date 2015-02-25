@@ -1,4 +1,4 @@
-﻿/* global define, console, $, i18n, RAMP, t */
+﻿/* global define, console, window, $, i18n, RAMP, t */
 
 define([
     /* Dojo */
@@ -36,8 +36,8 @@ define([
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
 
         choiceTreeCallbacks = {
-            simpleAdvance: function (step, data, options) {
-                step.advance(data.selectedChoice, options);
+            simpleAdvance: function (step, data, targetChildData) {
+                step.advance(data.selectedChoice, targetChildData);
             },
 
             simpleCancel: function (step, data) {
@@ -218,7 +218,13 @@ define([
                                         label: "Add Dataset",
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
-                                    }
+                                    },
+                                    on: [
+                                        {
+                                            eventName: Bricks.ButtonBrick.event.CLICK,
+                                            expose: { as: "ADD_DATASET" }
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -512,96 +518,92 @@ define([
 
             stepLookup.serviceTypeStep.on("advance", function () {
                 var promise,
-                    data,
+                    //data,
+                    handle,
                     that = this,
-                    stepData = this.getData(),
-                    serviceTypeValue = stepData.serviceType.selectedChoice,
-                    serviceUrlValue = stepData.serviceURL.inputValue;
+                    bricksData = this.getData().bricksData,
+                    serviceTypeValue = bricksData.serviceType.selectedChoice,
+                    serviceUrlValue = bricksData.serviceURL.inputValue;
+
+                handle = window.setTimeout(function () {
+                    that._notifyStateChange(StepItem.state.LOADING);
+                }, 120);
 
                 switch (serviceTypeValue) {
                     case "featureServiceAttrStep":
                         //get data from feature layer endpoint
                         promise = DataLoader.getFeatureLayer(serviceUrlValue);
 
-                        promise.then(function (event) {
-                            data = event;
+                        promise.then(function (data) {
+                            //get data from feature layer's legend endpoint
+                            var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                            legendPromise.then(function (legendLookup) {
+                                window.clearTimeout(handle);
 
-                            choiceTreeCallbacks.simpleAdvance(that, stepData.serviceType);
-
-                            ////get data from feature layer's legend endpoint
-                            //var legendPromise = DataLoader.getFeatureLayerLegend(loadSteps[stepId].getUrl());
-                            //legendPromise.then(function (legendLookup) {
-                            //    data.legendLookup = legendLookup;
-
-                            //    //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
-
-                            //    setSelectOptions(
-                            //        optionStepContent.find("#featurePrimaryAttrlist"),
-                            //        data.fields
-                            //    );
-
-                            //    //setSelectOptions(
-                            //    //    optionStepContent.find("#featureStyleAttrlist"),
-                            //    //    symbologyPreset
-                            //    //);
-
-                            //    //setSelectOptions(
-                            //    //    optionStepContent.find("#featureColourAttrlist"),
-                            //    //    { selectOne: "Select One" }
-                            //    //);
-
-                            //    optionStepContent.find(".btn-add-dataset").on("click", function () {
-                            //        addFeatureDataset({
-                            //            data: data,
-                            //            primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
-                            //            //style: optionStepContent.find("#featureStyleAttrlist").val(),
-                            //            //colour: optionStepContent.find("#featureColourAttrpicker").val()
-                            //        });
-                            //    });
-                            //    loadURLStep.successLoadUrlStep();
-                            //}, function () {
-                            //    loadURLStep.errorLoadUrlStep();
-                            //});
-                        }, function (event) {
-                            //setStepState(null, that, StepItem.state.ERROR);
-                            that
-                                ._notifyStateChange(StepItem.state.ERROR)
-                                .displayBrickNotices({
-                                    serviceURL: {
-                                        type: "error",
-                                        header: "I'm error",
-                                        message: "more about this erorr"
+                                data.legendLookup = legendLookup;
+                                
+                                choiceTreeCallbacks.simpleAdvance(that, bricksData.serviceType, {
+                                    stepData: data,
+                                    bricksData: {
+                                        primaryAttribute: {
+                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                            options: data.fields.map(function (field) { return { value: field, text: field }; })
+                                        }
                                     }
-                                })
-                            ;
+                                });
 
-                            console.log(event);
-                            //loadURLStep.errorLoadUrlStep();
+                            }, function (event) {
+                                handleFailure(that, event, handle);
+                            });
+
+                        }, function (event) {
+                            handleFailure(that, event, handle);
                         });
                         break;
                 }
-
-                /*step.advance(serviceType,
-                    {
-                        primaryAttribute: {
-                            options: [
-                                {
-                                    value: "one",
-                                    text: "One"
-                                },
-                                {
-                                    value: "two",
-                                    text: "Two"
-                                }
-                            ],
-                            selectedOption: "two"
-                        }
-                    }
-                );*/
-
-                //choiceTreeCallbacks.simpleChoiceAdvance(step, serviceType.getData(), {});
-
             });
+
+            stepLookup.featureServiceAttrStep.on("ADD_DATASET", function () {
+                var data = this.getData(),
+                    bricksData = data.bricksData,
+                    layerData = data.stepData,
+
+                    newConfig = { //make feature layer config.
+                        id: LayerLoader.nextId(),
+                        displayName: layerData.layerName,
+                        nameField: bricksData.primaryAttribute.dropDownValue,
+                        datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                        symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
+                        url: layerData.layerUrl
+                    },
+                    featureLayer;
+
+                //TODO: set symbology and colour on feature layer (obj.data)
+                newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+                //make layer
+                featureLayer = RampMap.makeFeatureLayer(newConfig, true);
+                RAMP.config.layers.feature.push(newConfig);
+
+                LayerLoader.loadLayer(featureLayer);
+
+                //mainPopup.close();
+            });
+        }
+
+        function handleFailure(step, event, handle) {
+            window.clearTimeout(handle);
+
+            step
+                ._notifyStateChange(StepItem.state.ERROR)
+                .displayBrickNotices({
+                    serviceURL: {
+                        type: "error",
+                        header: "Cannot load",
+                        message: event.message
+                    }
+                })
+            ;
         }
 
         function setCurrentStep(event) {
@@ -610,7 +612,15 @@ define([
             });
         }
 
-        function setStepState(event) {
+        function setStepState(event, step, state) {
+            if (step && state) {
+                event = {
+                    id: step.id,
+                    level: step.level,
+                    state: state
+                };
+            }
+
             t.dfs(choiceTree, function (node) {
                 node.stepItem.setState(event.level, event.id, event.state);
             });
