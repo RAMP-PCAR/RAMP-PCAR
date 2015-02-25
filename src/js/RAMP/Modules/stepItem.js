@@ -99,6 +99,8 @@ define([
 
                         _parent: null,
 
+                        _store: {},
+
                         _state: StepItem.state.DEFAULT,
 
                         _timeline: new TimelineLite({ paused: true }),
@@ -427,7 +429,9 @@ define([
             },
 
             getData: function () {
-                var data = {};
+                var data = {
+                    store: this._store
+                };
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     lang.mixin(data, brick.getData(true));
@@ -521,12 +525,16 @@ define([
                 return this._state === StepItem.state.SUCCESS;
             },
 
-            setBrickData: function (data) {
+            setData: function (data) {
                 var that = this;
 
                 UtilDict.forEachEntry(data, function (brickId, brickData) {
                     that.contentBricks[brickId].setData(brickData);
                 });
+
+                if (data.store) {
+                    this._store = data.store;
+                }
             },
 
             displayBrickNotices: function (data) {
@@ -632,7 +640,7 @@ define([
 
                 skipFirst = this._activeChildStep ? true : false;
 
-                targetChildStep.setBrickData(targetChildData);
+                targetChildStep.setData(targetChildData);
 
                 closeTimeline = this._makeCloseTimeline(skipFirst);
                 shiftTimeline = this._makeShiftTimeline(targetChildStepId);
