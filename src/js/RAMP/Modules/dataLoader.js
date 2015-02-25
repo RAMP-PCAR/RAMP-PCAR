@@ -103,16 +103,21 @@ define([
 
             promise.then(
                 function (data) {
-                    var res = {
-                        layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
-                        layerName: data.name,
-                        layerUrl: featureLayerEndpoint,
-                        geometryType: data.geometryType,
-                        fields: dojoArray.map(data.fields, function (x) { return x.name; }),
-                        renderer: data.drawingInfo.renderer
-                    };
+                    try {
 
-                    def.resolve(res);
+                        var res = {
+                            layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
+                            layerName: data.name,
+                            layerUrl: featureLayerEndpoint,
+                            geometryType: data.geometryType,
+                            fields: dojoArray.map(data.fields, function (x) { return x.name; }),
+                            renderer: data.drawingInfo.renderer
+                        };
+
+                        def.resolve(res);
+                    } catch (e) {
+                        def.reject(e);
+                    }
                 },
                 function (error) {
                     console.log(error);
