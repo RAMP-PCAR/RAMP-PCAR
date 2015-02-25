@@ -99,7 +99,7 @@ define([
 
                         _parent: null,
 
-                        _store: {},
+                        _stepData: {},
 
                         _state: StepItem.state.DEFAULT,
 
@@ -430,11 +430,12 @@ define([
 
             getData: function () {
                 var data = {
-                    store: this._store
+                    stepData: this._stepData,
+                    bricksData: {}
                 };
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
-                    lang.mixin(data, brick.getData(true));
+                    lang.mixin(data.bricksData, brick.getData(true));
                 });
 
                 return data;
@@ -528,12 +529,16 @@ define([
             setData: function (data) {
                 var that = this;
 
-                UtilDict.forEachEntry(data, function (brickId, brickData) {
-                    that.contentBricks[brickId].setData(brickData);
-                });
+                if (data) {
+                    if (data.bricksData) {
+                        UtilDict.forEachEntry(data.bricksData, function (brickId, brickData) {
+                            that.contentBricks[brickId].setData(brickData);
+                        });
+                    }
 
-                if (data.store) {
-                    this._store = data.store;
+                    if (data.stepData) {
+                        this._stepData = data.stepData;
+                    }
                 }
             },
 
