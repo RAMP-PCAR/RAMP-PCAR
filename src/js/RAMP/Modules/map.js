@@ -1148,14 +1148,37 @@ define([
                     return fl;
                 });
 
-                //the map!
-                map = new EsriMap(RAMP.config.divNames.map, {
-                    extent: initExtent,
-                    logo: false,
-                    minZoom: RAMP.config.zoomLevels.min,
-                    maxZoom: RAMP.config.zoomLevels.max,
-                    slider: false
-                });
+                // determine the basmap wkid from config
+                var basemapWkid = schemaBasemap.spatialReference.wkid;
+
+                // add custom level of details if lod exists in config.json
+                if (!UtilMisc.isUndefined(basemapWkid)) {
+
+                    var levelOfDetails = UtilArray.find(RAMP.config.LODs, function (configLOD) {
+                        return configLOD.wkid === basemapWkid; 
+                    });
+                    
+                    //the map!
+                    map = new EsriMap(RAMP.config.divNames.map, {
+                        extent: initExtent,
+                        logo: false,
+                        minZoom: RAMP.config.zoomLevels.min,
+                        maxZoom: RAMP.config.zoomLevels.max,
+                        slider: false,
+                        lods: levelOfDetails.lod
+                    });
+                } else {
+                    //the map!
+                    map = new EsriMap(RAMP.config.divNames.map, {
+                        extent: initExtent,
+                        logo: false,
+                        minZoom: RAMP.config.zoomLevels.min,
+                        maxZoom: RAMP.config.zoomLevels.max,
+                        slider: false
+                    });
+                }
+
+                
 
                 RAMP.map = map;
                 MapClickHandler.init(map);
