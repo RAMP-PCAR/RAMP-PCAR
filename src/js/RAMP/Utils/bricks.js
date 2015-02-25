@@ -111,7 +111,7 @@ define([
              * @chainable
              * @for Brick
              */
-            
+
             /**
              * A Brick header.
              *
@@ -120,7 +120,7 @@ define([
              * @type {String}
              * @default ""
              */
-            
+
             /**
              * An instructional text to be displayed.
              *
@@ -147,7 +147,7 @@ define([
              *           }
              *      ]
              */
-            
+
             /**
              * A set of rules specifying states Brick should be frozen.
              *
@@ -162,7 +162,7 @@ define([
              *           Bricks.Brick.state.ERROR
              *       ],
              */
-            
+
             /**
              * A default base template name.
              *
@@ -171,7 +171,7 @@ define([
              * @type {String}
              * @default "default_base_template"
              */
-            
+
             /**
              * A default notice template name.
              *
@@ -179,7 +179,7 @@ define([
              * @private
              * @type {String}
              * @default "default_brick_notice"
-             */                 
+             */
 
             /**
              * Indicates if the Brick is frozen and cannot be interacted with.
@@ -448,7 +448,7 @@ define([
                 return this;
             }
         });
-    
+
         /**
         * The basic Brick prototype with no special functions. A base from all other Bricks.
         * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
@@ -935,6 +935,8 @@ define([
 
                 if (data.selectedOption) {
                     this.selectOption(data.selectedOption, data.userSelected);
+                } else if (data.options && data.options.length > 0) {
+                    this.selectOption(data.options[0].value, false);
                 }
 
                 Brick.setData.call(data);
