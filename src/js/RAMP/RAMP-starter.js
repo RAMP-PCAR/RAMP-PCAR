@@ -69,6 +69,24 @@ RAMP = {
     }
 };
 
+var importScript = (function (oHead) {
+	'use strict';
+
+	function loadError (oError) {
+		throw new URIError("The script " + oError.target.src + " is not accessible.");
+    }
+
+    return function (sSrc, fOnload) {
+        var oScript = document.createElement("script");
+        oScript.type = "text\/javascript";
+        oScript.onerror = loadError;
+        if (fOnload) { oScript.onload = fOnload; }
+            oHead.appendChild(oScript);
+            oScript.src = sSrc;
+        };
+
+    })(document.head || document.getElementsByTagName("head")[0]);
+
 dojoConfig = {
     parseOnLoad: false,
     locale: htmlNode.attr("lang"),
@@ -90,18 +108,7 @@ dojoConfig = {
     fullPluginPath: pathname + jsFolderPath + 'plugins/'
 };
 
-$(document).ready(function () {
-    "use strict";
-    // when loading js file this way, it will NOT show up in the debug panel in Firebug
-    /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",
-        function( data, textStatus, jqxhr ) {
-            console.log( jqxhr.status ); // 200
-    });*/
-
-    // when loading js file this way, it will show up in the debug panel in Firebug
-    var head = document.getElementsByTagName('head')[0],
-        script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = pathname + jsFolderPath + "RAMP/bootstrapper.js";
-    head.appendChild(script);
+importScript('http://js.arcgis.com/3.10/', function () {
+	'use strict';
+	importScript(pathname + jsFolderPath + "RAMP/bootstrapper.js");
 });
