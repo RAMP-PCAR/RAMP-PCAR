@@ -375,6 +375,25 @@
             }
         },
 
+        "LODs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "wkid": { "type": "number" },
+                    "lod": { "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "level": { "type": "number" },
+                                "resolution": { "type": "number" },
+                                "scale": { "type": "number" }
+                            }
+                        }
+                }
+                }
+            }
+            },
         "templates": {
             "type": "object",
             "properties": {
