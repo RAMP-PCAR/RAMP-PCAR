@@ -747,7 +747,7 @@ define([
             setData: function (data) {
                 this.setChoice(data.selectedChoice, data.userSelected);
 
-                return this;
+                Brick.setData.call(data);
             },
 
             getData: function (wrap) {
@@ -842,7 +842,7 @@ define([
             setData: function (data) {
                 this.setInputValue(data.inputValue, data.userEntered);
 
-                return this;
+                Brick.setData.call(data);
             },
 
             getData: function (wrap) {
@@ -937,7 +937,7 @@ define([
                     this.selectOption(data.selectedOption, data.userSelected);
                 }
 
-                return this;
+                Brick.setData.call(data);
             },
 
             getData: function (wrap) {
@@ -1098,7 +1098,7 @@ define([
                     this.setInputValue(data.inputValue, data.userEntered);
                 }
 
-                return this;
+                SimpleInputBrick.setData.call(data);
             },
 
             getData: function (wrap) {
