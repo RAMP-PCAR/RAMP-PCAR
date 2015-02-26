@@ -240,7 +240,11 @@
         "downloadJPGdesc": "Download as JPG",
         "downloadPNG": "PNG",
         "downloadPNGdesc": "Download as PNG",
-        "downloadImage": "Download Image"
+        "downloadImage": "Download Image",
+        "error": {
+            "generalTitle": "Error",
+            "generalMessage": "Image cannot be generated. Please try again later."
+        }
 
     },
 

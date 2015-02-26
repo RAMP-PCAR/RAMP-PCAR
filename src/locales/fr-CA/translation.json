@@ -241,7 +241,11 @@
         "downloadJPGdesc": "[fr] Download as JPG",
         "downloadPNG": "[fr] PNG",
         "downloadPNGdesc": "[fr] Download as PNG",
-        "downloadImage": "[fr] Download Image"
+        "downloadImage": "[fr] Download Image",
+        "error": {
+            "generalTitle": "[fr] Error",
+            "generalMessage": "[fr] Image cannot be generated. Please try again later."
+        }
 
     },
 

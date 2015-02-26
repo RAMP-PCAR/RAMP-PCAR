@@ -99,7 +99,10 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="map-export-preview">
-                                <div class="map-export-stretcher" role="presentation">
+                                <div class="map-export-stretcher" role="presentation"><section class="map-export-notice alert alert-danger">
+                                            <h3>{{t "mapExport.error.generalTitle"}}</h3>
+                                            <p>{{t "mapExport.error.generalMessage"}}</p>
+                                        </section>
                                     <div class="sk-spinner sk-spinner-chasing-dots">
                                         <div class="sk-dot1"></div>
                                         <div class="sk-dot2"></div>
@@ -116,22 +119,22 @@
                                 </button>
                                 <div class="">
                                     <!--<div class="checkbox">
-                                        <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
-                                    </div>-->
+                            <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
+                        </div>-->
 
                                     <div class="download-buttons mrgn-tp-lg">
                                         <!--<button class="btn btn-primary" type="button">
-                                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
-                                        </button>-->
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                            </button>-->
                                         <a class="btn btn-primary" type="button" href="" target="_blank" download="">
                                             <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
                                         </a>
                                         <!--<button class="btn btn-primary" type="button">
-                                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
-                                        </button>-->
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
+                            </button>-->
                                         <!--<button class="btn btn-primary" type="button">
-                                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadJPG"}}</span>
-                                        </button>-->
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadJPG"}}</span>
+                            </button>-->
                                     </div>
 
                                 </div>
