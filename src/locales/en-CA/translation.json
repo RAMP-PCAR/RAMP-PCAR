@@ -239,7 +239,8 @@
         "downloadJPG": "JPG",
         "downloadJPGdesc": "Download as JPG",
         "downloadPNG": "PNG",
-        "downloadPNGdesc": "Download as PNG"
+        "downloadPNGdesc": "Download as PNG",
+        "downloadImage": "Download Image"
 
     },
 
