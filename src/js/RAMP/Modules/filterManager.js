@@ -189,6 +189,7 @@ define([
                     * easier to write a function that takes a list of checkboxes
                     * than to write two functions, one to take a list and one to
                     * take an individual checkbox
+                    * 
                     * @method createGroups
                     * @private
                     */

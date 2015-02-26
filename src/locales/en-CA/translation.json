@@ -244,7 +244,8 @@
         "error": {
             "generalTitle": "Error",
             "generalMessage": "Image cannot be generated. Please try again later."
-        }
+        },
+        "loading": "Generating image. Please wait."
 
     },
 

@@ -245,7 +245,8 @@
         "error": {
             "generalTitle": "[fr] Error",
             "generalMessage": "[fr] Image cannot be generated. Please try again later."
-        }
+        },
+        "loading": "[fr] Generating image. Please wait."
 
     },
 
