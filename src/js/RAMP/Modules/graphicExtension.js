@@ -46,17 +46,6 @@ define([
 
         return {
             /**
-            * Given a graphic object, returns the config object associated with the graphic's layer.
-            *
-            * @method getLayerConfig
-            * @param {esri/Graphic} graphic a graphic object or a feature object
-            * @return {esri/Graphic}
-            */
-            getLayerConfig: function (graphic) {
-                return Ramp.getLayerConfig(graphic.getLayer().url);
-            },
-
-            /**
             * Returns the oid of the given graphic object
             *
             * @param {esri/Graphic} graphic
@@ -78,14 +67,14 @@ define([
             * @return {Object} found graphic object
             */
             getTextContent: function (graphic) {
-                var templateName = Ramp.getLayerConfig(graphic.getLayer().url).templates.detail;
+                var templateName = graphic.getLayer().ramp.config.templates.detail;
 
                 function fillTemplate(graphic) {
                     tmpl.cache = {};
                     tmpl.templates = JSON.parse(
                         TmplHelper.stringifyTemplate(feature_details_template));
 
-                    var datawrapper = TmplHelper.dataBuilder(graphic, graphic.getLayer().url),
+                    var datawrapper = TmplHelper.dataBuilder(graphic, graphic.getLayer().ramp.config),
                         result = tmpl(templateName, datawrapper);
 
                     return result;
@@ -103,7 +92,7 @@ define([
             * @return {}
             */
             getGraphicTitle: function (graphic) {
-                return graphic.attributes[this.getLayerConfig(graphic).nameField];
+                return graphic.attributes[graphic.getLayer().ramp.config.nameField];
             }
         };
     });

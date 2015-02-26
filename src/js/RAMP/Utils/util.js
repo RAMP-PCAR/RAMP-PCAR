@@ -35,7 +35,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
         * call different file read methods.
         *
         * @method _wrapFileCallInPromise
-        * @static
+        * @private
         * @param {String} readMethod a string indicating the FileReader method to call
         * @return {Function} a function which accepts a {File} object and returns a Promise
         */
@@ -420,8 +420,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                     oneLayer = one.getLayer();
                     twoLayer = two.getLayer();
                     objectIdField = oneLayer.objectIdField;
-                    oneKey = oneLayer.url + one.attributes[objectIdField];
-                    twoKey = twoLayer.url + two.attributes[objectIdField];
+                    oneKey = oneLayer.sourceLayerId + one.attributes[objectIdField];
+                    twoKey = twoLayer.sourceLayerId + two.attributes[objectIdField];
                 }
 
                 return oneKey === twoKey;
@@ -601,6 +601,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /*
             * Create a new extent based on the current map size, a point (X/Y coordinates), and a pixel tolerance value.
             * @method pointToExtent
+            * @static
             * @param {Object} map The map control
             * @param {Object} point The location on screen (X/Y coordinates)
             * @param {Number} toleranceInPixel A value indicating how many screen pixels the extent should be from the point
@@ -622,6 +623,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * Create boudingbox graphic for a bounding box extent
             *
             * @method createGraphic
+            * @static
             * @param  {esri/geometry/Extent} extent of a bounding box
             * @return {esri/Graphic}        An ESRI graphic object represents a bouding box
             */
@@ -922,6 +924,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsText and returns a promise.
             *
+            * @method readFileAsText
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
@@ -930,6 +934,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsBinaryString and returns a promise.
             *
+            * @method readFileAsBinary
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends a string containing the file output if successful
             */
@@ -938,6 +944,8 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             /**
             * Parses a file using the FileReader API.  Wraps readAsArrayBuffer and returns a promise.
             *
+            * @method readFileAsArrayBuffer
+            * @static
             * @param {File} file a dom file object to be read
             * @return {Object} a promise which sends an ArrayBuffer containing the file output if successful
             */
@@ -1000,7 +1008,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                                 settings.onStop.call(null, event, { item: null });
                             }
                         })
-                        .on("keyup", ".sort-handle", function (event) { 
+                        .on("keyup", ".sort-handle", function (event) {
                             var liNode = $(this).closest("li"),
                                 liId = liNode[0].id,
                                 liIdArray = ulNode.sortable("toArray"),
@@ -1095,7 +1103,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         });
                 });
             },
-                        
+
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter
@@ -1109,6 +1117,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
              *      
              * 
              * @method resetTimelines
+             * @static
              * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
              * @param {Boolean} keepPosition Indicates if the timeline should be set in the play position it was in before the reset
              */
@@ -1131,6 +1140,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * Checks if two spatial reference objects are equivalent.  Handles both wkid and wkt definitions
             *
             * @method isSpatialRefEqual
+            * @static
             * @param {Esri/SpatialReference} sr1 First {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
             * @param {Esri/SpatialReference} sr2 Second {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to compare
             * @return {Boolean} true if the two spatial references are equivalent.  False otherwise.
@@ -1148,8 +1158,142 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                 }
             },
 
+            /**
+            * Checks if the given dom node is present in the dom.
+            *
+            * @method containsInDom
+            * @static
+            * @param {Object} el DOM node to check
+            * @return {Boolean} true if the given node is in the dom
+            */
             containsInDom: function (el) {
                 return $.contains(document.documentElement, el);
-            }			
+            },
+
+            styleBrowseFilesButton: function (nodes) {
+                var input,
+                    button;
+
+                function focusIn(event) {
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover");
+                }
+
+                function focusOut(event) {
+                    event.data.button.removeClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseEnter(event) {
+                    event.data.button.not(".disabled").addClass("btn-hover");
+                }
+
+                function mouseLeave(event) {
+                    event.data.button.removeClass("btn-hover btn-active");
+                }
+
+                function mouseDown(event) {
+                    event.data.button.not(".disabled").addClass("btn-focus btn-hover btn-active");
+                }
+
+                function mouseUp(event) {
+                    event.data.button.removeClass("btn-active");
+                }
+
+                nodes.each(function (i, node) {
+                    node = $(node);
+                    input = node.find("input[type='file']");
+                    button = node.find(".browse-button");
+
+                    input
+                        .on("focusin", { button: button }, focusIn)
+                        .on("focusout", { button: button }, focusOut)
+
+                        .on("mouseenter", { button: button }, mouseEnter)
+                        .on("mouseleave", { button: button }, mouseLeave)
+
+                        .on("mousedown", { button: button }, mouseDown)
+                        .on("mouseup", { button: button }, mouseUp)
+                    ;
+                });
+            },
+
+            /**
+            * Detects either cell or line delimiter in a given csv data.
+            *
+            * @method detectDelimiter
+            * @static
+            * @param {String} data csv content
+            * @param {String} [type] Type of the delimiter to detect. Possible values "cell" or "line". Defaults to "cell".
+            * @return {String} Detected delimiter
+            */
+            detectDelimiter: function (data, type) {
+                var count = 0,
+                    detected,
+
+                    escapeDelimiters = ['|', '^'],
+                    delimiters = {
+                        cell: [',', ';', '\t', '|', '^'],
+                        line: ['\r\n', '\r', '\n']
+                    };
+
+                type = type !== "cell" && type !== "line" ? "cell" : type;
+
+                delimiters[type].forEach(function (delimiter) {
+                    var needle = delimiter,
+                        matches;
+
+                    if (escapeDelimiters.indexOf(delimiter) !== -1) {
+                        needle = '\\' + needle;
+                    }
+
+                    matches = data.match(new RegExp(needle, 'g'));
+                    if (matches && matches.length > count) {
+                        count = matches.length;
+                        detected = delimiter;
+                    }
+                });
+
+                console.log(type + " delimiter detected: '" + (detected || delimiters[type][0]) + "'");
+
+                return (detected || delimiters[type][0]);
+            },
+
+            /**
+            * Converts HEX colour to RGB.
+            * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
+            *
+            * @method hexToRgb
+            * @static
+            * @param {String} hex hex colour code
+            * @return {Object} ojbect containing r, g, and b components of the supplied colour
+            */
+            hexToRgb: function (hex) {
+                // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+                var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+                hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                    return r + r + g + g + b + b;
+                });
+
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            },
+
+            /**
+            * Converts RGB colour to HEX.
+            * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
+            *
+            * @method rgbToHex
+            * @static 
+            * @param {Number} r r component
+            * @param {Number} g g component
+            * @param {Number} b b component
+            * @return {Object} hex colour code 
+            */
+            rgbToHex: function (r, g, b) {
+                return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
         };
     });

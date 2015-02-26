@@ -21,13 +21,13 @@ define(["dojo/_base/array", "utils/util"],
         "use strict";
 
         var featureLayerDefaults = {
-                layerAttributes: '*',
-                minScale: 0,
-                maxScale: 0,
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-                datagrid: { rowsPerPage: 50 },
-                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
-            },
+            layerAttributes: '*',
+            minScale: 0,
+            maxScale: 0,
+            settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
+            datagrid: { rowsPerPage: 50 },
+            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
+        },
 
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
@@ -46,7 +46,52 @@ define(["dojo/_base/array", "utils/util"],
                 templates: { basemap: "default_basemap", globalSelectorToggles: "default_selector_toggles" },
                 layers: { feature: [], wms: [] },
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
-                advancedToolbar: { enabled: false, tools: [] }
+                advancedToolbar: { enabled: false, tools: [] },
+                mapInitFailUrl: "./error-en.html"
+            },
+
+            defaultRenderers = {
+                circlePoint: {
+                    geometryType: "esriGeometryPoint",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSMS",
+                            style: "esriSMSCircle",
+                            color: [67, 100, 255, 200],
+                            size: 7
+                        }
+                    }
+                },
+                solidLine: {
+                    geometryType: "esriGeometryPolyline",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSLS",
+                            style: "esriSLSSolid",
+                            color: [90, 90, 90, 200],
+                            width: 2
+                        }
+                    }
+                },
+                outlinedPoly: {
+                    geometryType: "esriGeometryPolygon",
+                    renderer: {
+                        type: "simple",
+                        symbol: {
+                            type: "esriSFS",
+                            style: "esriSFSSolid",
+                            color: [76, 76, 125, 200],
+                            outline: {
+                                type: "esriSLS",
+                                style: "esriSLSSolid",
+                                color: [110, 110, 110, 255],
+                                width: 1
+                            }
+                        }
+                    }
+                }
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -58,6 +103,8 @@ define(["dojo/_base/array", "utils/util"],
             // wgs84 and aux mercator are built in, add Canada Lambert and Canada Atlas Lambert
             proj4.defs("EPSG:3978", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
             proj4.defs("EPSG:3979", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            proj4.defs("EPSG:102100", proj4.defs('EPSG:3857'));
+            proj4.defs("EPSG:54004", "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
         }
 
         function applyConfigDefaults(configObj) {
@@ -70,16 +117,23 @@ define(["dojo/_base/array", "utils/util"],
             result.basemaps = dojoArray.map(result.basemaps, function (b) {
                 return applyDefaults(basemapDefaults, b);
             });
-            result.layers.feature = dojoArray.map(result.layers.feature, function (fl) {
-                var layer = applyDefaults(featureLayerDefaults, fl);
-                layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
-                    return applyDefaults(gridColumnDefaults, gc);
-                });
-                return layer;
-            });
+            result.layers.feature = dojoArray.map(result.layers.feature, applyFeatureDefaults);
             console.log(result);
             return result;
+        }
 
+        function applyFeatureDefaults(featureLayer) {
+            var layer = applyDefaults(featureLayerDefaults, featureLayer);
+            layer.datagrid.gridColumns = dojoArray.map(layer.datagrid.gridColumns, function (gc) {
+                return applyDefaults(gridColumnDefaults, gc);
+            });
+            return layer;
+        }
+
+        function applyWMSDefaults(wmsLayer) {
+            var layer = applyDefaults(wmsLayerDefaults, wmsLayer);
+
+            return layer;
         }
 
         return {
@@ -88,12 +142,15 @@ define(["dojo/_base/array", "utils/util"],
                 RAMP.config = config;
 
                 this.layerSelectorGroups = [
-                    this.layerType.feature,
-                    this.layerType.wms
+                    this.layerType.wms,
+                    this.layerType.feature
                 ];
             },
 
             defineProjections: defineProjections,
+            DefaultRenderers: defaultRenderers,
+            applyFeatureDefaults: applyFeatureDefaults,
+            applyWMSDefaults: applyWMSDefaults,
 
             layerType: {
                 Basemap: "basemap",
@@ -106,6 +163,8 @@ define(["dojo/_base/array", "utils/util"],
                 Zoomlight: "zoomlight_layer"
             },
 
-            layerSelectorGroups: []
+            // specifies knows layer groups in the reversed order;
+            layerSelectorGroups: [
+            ]
         };
     });

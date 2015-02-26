@@ -11,18 +11,24 @@
 {
     // templates for extended datagrid
     // unformatted value template, based on columnIdx and fieldName
-    "unformatted_grid_value":"{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}",
+    "unformatted_grid_value":"{%#o.fn.autoHyperlink(o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName))%}",
     
+	// unformatted value template, based on columnIdx and fieldName.  will not autolink urls or emails
+    "unformatted_grid_value_nolink":"{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}",
+	
     // tooltiped grid value
-    "title_span": "<span class='title-span' title='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}</span>",
+    "title_span": "<span class='title-span' title='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%#o.fn.autoHyperlink(o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName))%}</span>",
     
+	// tooltiped grid value.  will not autolink urls or emails
+    "title_span_nolink": "<span class='title-span' title='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}</span>",
+	
     // sample icon template
     "graphic_icon":"<div class='point-image-box'>
                         <img alt='' role='presentation' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' class='point-image bg-white'>
                     </div>",
                     
     // Details button
-    "details_button":"<button class='button button-none button-small font-xsmall details' data-feature-url={%=o.lyr.url%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>",
+    "details_button":"<button class='button button-none button-small font-xsmall details' data-layer-id={%=o.lyr.id%} data-feature-oid={%=o.fn.getObjectId(o.data)%}>{%=i18n.t('datagrid.details')%}</button>",
 
     // Url
     "url": "<a src='{%=o.fn.getAttributeValueByName(o.data, o.lyr.datagrid.gridColumns[o.columnIdx].fieldName)%}'>{%=i18n.t('datagrid.details')%}</a>"

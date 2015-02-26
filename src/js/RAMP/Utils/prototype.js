@@ -188,6 +188,22 @@ define([
             addPrototype(String, "replaceAll", function (search, replace) {
                 return this.toString().split(search).join(replace);
             });
+
+            // TODO: refactor how we are adding prototype polyfills;
+            // TODO: check if all the polyfills used are safe
+            if (!String.prototype.endsWith) {
+                Object.defineProperty(String.prototype, 'endsWith', {
+                    value: function (searchString, position) {
+                        var subjectString = this.toString();
+                        if (position === undefined || position > subjectString.length) {
+                            position = subjectString.length;
+                        }
+                        position -= searchString.length;
+                        var lastIndex = subjectString.indexOf(searchString, position);
+                        return lastIndex !== -1 && lastIndex === position;
+                    }
+                });
+            }
         }
 
         /**

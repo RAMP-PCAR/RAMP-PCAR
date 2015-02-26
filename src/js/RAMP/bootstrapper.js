@@ -52,10 +52,10 @@ require([
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme", "ramp/layerLoader",
-
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader",
+    
 /* Utils */
     "utils/util",
 
@@ -72,7 +72,7 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader,
 
     /* Utils */
         UtilMisc
@@ -133,6 +133,8 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
+
+                DataLoadedGui.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
@@ -296,16 +298,16 @@ require([
                 // the available screen size may still be changing (e.g. due to fullscreen
                 // or subpanel closing)
                 topic.subscribe(EventManager.GUI.UPDATE_COMPLETE, function () {
+                    // Create the panel that the bookmark link sits in
+                    // can only do this after the gui loads
+                    BookmarkLink.createUI();
+
                     LayerLoader.init();
                     initializeMap();
                 });
 
                 gui.load(null, null, function () { });
-
-                // Create the panel that the bookmark link sits in
-                // can only do this after the gui loads
-                BookmarkLink.createUI();
-
+                
                 Ramp.loadStrings();
             });
 

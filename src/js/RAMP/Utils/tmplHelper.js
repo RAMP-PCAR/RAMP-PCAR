@@ -38,15 +38,15 @@ define([
              * Create a data wrapper with properties: data, config, str, lyr, fn
              * @method dataBuilder
              * @param {Object} data A json object passing over.
-             * @param {Number} layerIndex Index value of a layer inside Rest-end url (optional)
+             * @param {String} layerConfig config object for specific layer (optional)
              * @returns {Object} Returns a JSON object with following properties
              *      .data = {}
              *      .config = <global config object>
-             *      .lyr = <global config object . featurelayers [parameter index] >
+             *      .lyr = <global config object . layers.feature [parameter index] >
              *      .fn = object with helper functions assigned to it.
              *
              */
-            dataBuilder: function (data, layerUrl) {
+            dataBuilder: function (data, layerConfig) {
                 var dataWrapperPrototype = {
                     data: null,
                     config: null,
@@ -59,19 +59,18 @@ define([
                 dataWrapper.data = data;
                 dataWrapper.config = RAMP.config;
 
-                if (layerUrl != null) {
-                    //get configuration from the layer with layerIndex
-                    dataWrapper.lyr = Ramp.getLayerConfig(layerUrl);
+                if (layerConfig != null) {
+                    dataWrapper.lyr = layerConfig;
                 }
 
                 dataWrapper.fn = TmplUtil;
                 return dataWrapper;
             },
+
             /*
              * Create a data wrapper with properties: data, config, str, fn
              * @method genericDataBuilder
              * @param {Object} data A json object passing over.
-             * @param {Number} layerIndex Index value of a layer inside Rest-end url (optional)
              * @returns {Object} Returns a JSON object with following properties
              *      .data = {}
              *      .config = <global config object>
@@ -115,7 +114,14 @@ define([
                                          })
                     // remove hard breaks and tabs
                     .replace(/[\n\r\t]/g, "")
-                    .replace(/>\s*?</g, "><");
+                    .replace(/>\s*?</g, "><")
+
+                    // strip spaces between html and other tags
+                    .replace(/%}\s*?</g, "%}<")
+                    .replace(/>\s*?{%/g, ">{%")
+
+                    .replace(/"\s*?</g, '"<')
+                    .replace(/>\s*?"/g, '>"');
             }
         };
     });

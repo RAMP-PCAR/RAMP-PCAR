@@ -6,13 +6,11 @@
     margin: 0;
     text-align: left;
     top: 32px;
-
-    width: 500px;
+    width: 550px;
 
     .basemapselector-section {
         min-height: 150px;
         position: relative;
-        
         .box-shadow-section;
 
         .projection-list,
@@ -22,7 +20,7 @@
         }
 
         .projection-list-pane {
-            width: 150px;
+            width: 200px;
 
             .projection-button {
                 border-radius: 0 0 0 0;
@@ -58,7 +56,7 @@
                 position: absolute;
                 width: 5px;
                 background: #545454;
-                left: 146px;
+                left: 196px;
                 top: 0;
                 bottom: 0;
             }
@@ -70,7 +68,7 @@
             right: 1px;
             width: 350px;
             overflow: hidden;
-            
+
             .basemap-info-notice {
                 .info-notice;
             }
@@ -132,7 +130,7 @@
                     float: right;
                     vertical-align: bottom;
                     overflow: hidden;
-                    
+
                     .basemap-image {
                         //border: 2px solid #FFF;
                         //height: 48px;
@@ -143,8 +141,137 @@
                         //float: right;
                         //vertical-align: bottom;
                     }
-                }                
+                }
             }
         }
     }
 }
+
+/*
+#reveal {
+    display: block;
+}
+
+#reveal-marker, .reveal-marker {
+    display: none;
+    position: absolute;
+}
+
+#reveal-marker.reveal-card-hover, .reveal-marker.reveal-card-hover, #reveal.rap, #reveal-marker.rap, .reveal-marker.rap {
+    display: block;
+}
+
+.reveal-marker-circle {
+    top: -5px;
+    left: -5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: #494949;
+    z-index: 2;
+    position: absolute;
+}
+
+.reveal-marker-circle.reveal-ripple-playing {
+    display: none;
+}
+
+.reveal-marker-glow {
+    top: -8px;
+    left: -8px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #aba8a3;
+    -webkit-animation: reveal-glowing 1.6s linear 0s infinite normal;
+    -moz-animation: reveal-glowing 1.6s linear 0s infinite normal;
+    -ms-animation: reveal-glowing 1.6s linear 0s infinite normal;
+    -webkit-transform: scale(0.6);
+    -moz-transform: scale(0.6);
+    -ms-transform: scale(0.6);
+    opacity: 1;
+    z-index: 1;
+    position: absolute;
+}
+
+.reveal-embedded-pulse {
+    display: none;
+}
+
+.reveal-pulse-active .reveal-embedded-pulse {
+    display: block;
+}
+
+.reveal-pulse-active .reveal-ripple {
+    display: none;
+}
+
+@-webkit-keyframes reveal-glowing {
+    0% {
+        -webkit-transform: scale(0.6);
+        opacity: 1;
+    }
+
+    100% {
+        -webkit-transform: scale(3);
+        opacity: 0;
+    }
+}
+
+@-moz-keyframes reveal-glowing {
+    0% {
+        -moz-transform: scale(0.6);
+        opacity: 1;
+    }
+
+    100% {
+        -moz-transform: scale(3);
+        opacity: 0;
+    }
+}
+
+@-ms-keyframes reveal-glowing {
+    0% {
+        -ms-transform: scale(0.6);
+        opacity: 1;
+    }
+
+    100% {
+        -ms-transform: scale(3);
+        opacity: 0;
+    }
+}
+
+.reveal-ripple {
+    z-index: -1;
+    opacity: 1;
+    display: block;
+    position: absolute;
+    background-color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    -webkit-transform: scale(0.125);
+    -moz-transform: scale(0.125);
+    -ms-transform: scale(0.125);
+    transform: scale(0.125);
+    -webkit-transition: opacity 240ms 80ms ease-out,-webkit-transform 320ms 0s ease-out;
+    -moz-transition: opacity 240ms 80ms ease-out,-moz-transform 320ms 0s ease-out;
+    -ms-transition: opacity 240ms 80ms ease-out,-ms-transform 320ms 0s ease-out;
+    transition: opacity 240ms 80ms ease-out,transform 320ms 0s ease-out;
+}
+
+.reveal-ripple.reveal-ripple-playing {
+    z-index: 1;
+    opacity: 0;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}
+
+.app-imagery-mode .reveal-marker-ripple-ring {
+    background-color: rgba(255,255,255,0.6);
+}
+    */

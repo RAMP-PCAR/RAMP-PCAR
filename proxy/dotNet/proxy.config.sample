@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ProxyConfig allowedReferers="*" mustMatch="true">
+    <serverUrls>
+        <serverUrl url="http://services.arcgisonline.com" matchAll="true"/>
+        <serverUrl url="http://cgns.nrcan.gc.ca/wmsu/cubeserv.cgi" matchAll="true"/>
+        <serverUrl url="http://wms.ess-ws.nrcan.gc.ca/wms/toporama_en" matchAll="true"/>
+        <serverUrl url="http://cabin.cciw.ca/cabin/cabin_cr.asp" matchAll="true"/>
+        <serverUrl url="http://atlas.gc.ca/cgi-bin/atlaswms_en" matchAll="true"/>
+        <serverUrl url="http://geogratis.gc.ca/maps/CBMT" matchAll="true"/>
+        <serverUrl url="http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WMSServer" matchAll="true"/>
+        <serverUrl url="http://maps.geogratis.gc.ca/wms" matchAll="true"/>
+        <serverUrl url="http://geo.weather.gc.ca/geomet" matchAll="true"/>
+    </serverUrls>
+</ProxyConfig>
+
+<!-- See https://github.com/Esri/resource-proxy for more information -->

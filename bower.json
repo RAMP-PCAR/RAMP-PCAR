@@ -1,6 +1,6 @@
 {
     "name": "ramp-pcar",
-    "version": "5.0.0-8",
+    "version": "5.1.0-1",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
@@ -34,7 +34,7 @@
         "jquery.scrollTo": "~1.4.13",
         "shorten": "https://github.com/viralpatel/jquery.shorten.git#master",
         "Snap.svg": "~0.1.0",
-        "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.5",
+        "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.6",
         "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#3.0.1-r",
         "urlshortener": "https://github.com/RAMP-PCAR/jQuery-URL-shortener.git#1.0.1-r",
         "animate.css": "~3.0.0",
@@ -45,7 +45,9 @@
         "terraformer-arcgis-parser": "~1.0.4",
         "terraformer-proj4js": "https://github.com/RAMP-PCAR/terraformer-proj4js.git#master",
         "csv2geojson": "https://github.com/mapbox/csv2geojson.git#v3.7.1",
-        "shapefile-js": "https://github.com/calvinmetcalf/shapefile-js.git#3.1.5"
+        "shapefile-js": "https://github.com/calvinmetcalf/shapefile-js.git#3.1.5",
+        "RandomColor": "https://github.com/sterlingwes/RandomColor.git",
+        "btoa-umd": "~0.7.5"
     },
     "moduleType": [
         "globals"

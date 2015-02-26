@@ -8,11 +8,17 @@
  * 
  */
 
- //TODO remove the hardcoded names, apply generic template
-
 {
-	// Generic anchored map tip template 
+
+	// Generic anchored map tip template.  URLs and Emails will be autolinked
 	"anchored_map_tip":"<div class='map-tip-content'>
+							<img class='map-tip-image pointIconDetails' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' alt='Feature icon'>
+							<span class='map-tip-label'>{%#o.fn.autoHyperlink(o.data.attributes[o.lyr.nameField])%}</span>
+							</div>",
+
+
+	// Generic anchored map tip template 
+	"anchored_map_tip_nolink":"<div class='map-tip-content'>
 							<img class='map-tip-image pointIconDetails' src='{%=o.fn.getGraphicIcon(o.data, o.lyr)%}' alt='Feature icon'>
 							<span class='map-tip-label'>{%=o.data.attributes[o.lyr.nameField]%}</span>
 							</div>"

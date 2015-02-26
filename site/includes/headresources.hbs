@@ -10,6 +10,10 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryOldIEVersion}}/jquery{{environment.suffix}}.js"></script>
 <script src="{{assets}}/js/ie8-wet-boew{{environment.suffix}}.js"></script>
 <![endif]-->
+<!--[if IE 9]>
+<script src="js/polyfill/xhook.min.js"></script>
+<script src="js/polyfill/xhook-cors-ie9.js"></script>
+<![endif]-->
 
 <noscript><link rel="stylesheet" href="{{assets}}/css/noscript{{environment.suffix}}.css" /></noscript>
 
