@@ -12,6 +12,14 @@
 *
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+*  
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
+* 
 * @class ImageExport
 * @static
 * @uses dojo/topic
@@ -19,11 +27,6 @@
 * @uses esri/tasks/PrintTemplate
 * @uses esri/tasks/PrintParameters
 * @uses esri/tasks/PrintTask
-* @uses EventManager
-* @uses GlobalStorage
-* @uses Map
-* @uses Ramp
-* @uses Util
 */
 
 define([
@@ -55,13 +58,71 @@ define([
                 mapExportNotice,
                 downloadButton,
 
+                promise,
+
                 jWindow,
                 transitionDuration = 0.4;
 
-            return {
-                init: function () {
-                    var promise;
+            /**
+             * Handles click event on the export image toggle.
+             * 
+             * @private
+             * @method ui.generateExportIamge
+             */
+            function generateExportImage() {
+                // get the export image url
+                var tl = new TimelineLite(),
+                    result = submitServiceImageRequest(),
+                    imageSize = result.exportOptions,
+                    stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
+                    stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
+                
+                tl
+                    .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
+                    .set(mapExportNotice, { display: "none" }) // hide error notice
+                    .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
+                    .set(mapExportImg, { display: "none" }) // hide image
+                    .call(function () { mapExportImg.attr("src", ""); })
+                    .set(mapExportStretcher, { clearProps: "all" })
+                ;
 
+                if (promise) {
+                    promise.cancel();
+                }
+                promise = result.promise;
+
+                promise.then(
+                    function (event) {
+                        tl
+                            .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); }) // enabled download button
+                            .set(mapExportSpinner, { display: "none" }) // hide loading animation
+                            .set(mapExportImg, { display: "block" }) // show image
+                            .call(function () { mapExportImg.attr("src", event.result.url); })
+                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }) // animate popup; 2 needed to account for the border
+                        ;
+
+                        console.log(event);
+                    },
+                    function (error) {
+                        // show error notice
+                        tl
+                            .set(mapExportSpinner, { display: "none" })
+                            .set(mapExportNotice, { display: "inline-block", width: mapExportStretcher.width() })
+                        ;
+
+                        console.log(error);
+                    }
+                );
+            }
+
+            return {
+                /**
+                 * Initializes ui and listeners.
+                 * 
+                 * @private
+                 * @method ui.init
+                 */
+                init: function () {
                     jWindow = $(window);
 
                     mapExportToggle = $("#map-export-toggle");
@@ -71,51 +132,7 @@ define([
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
-                    // get the export image url
-                    mapExportToggle.on('click', function () {
-                        var tl = new TimelineLite(),
-                            result = submitServiceImageRequest(),
-                            imageSize = result.exportOptions,
-                            stretcherWidth = jWindow.width() - 350,
-                            stretcherHeight = imageSize.height / imageSize.width * stretcherWidth;
-
-                        tl
-                                .call(function () { downloadButton.attr({ disabled: true, href: "" }); })
-                                .set(mapExportNotice, { display: "none" })
-                                .set(mapExportSpinner, { display: "inline-block" })
-                                .set(mapExportImg, { display: "none" })
-                                .call(function () { mapExportImg.attr("src", ""); })
-                                .set(mapExportStretcher, { clearProps: "all" })
-                        ;
-                        
-                        if (promise) {
-                            promise.cancel();
-                        }
-                        promise = result.promise;
-
-                        promise.then(
-                            function (event) {
-
-                                tl
-                                    .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); })
-                                    .set(mapExportSpinner, { display: "none" })
-                                    .set(mapExportImg, { display: "block" })
-                                    .call(function () { mapExportImg.attr("src", event.result.url); })
-                                    .to(mapExportStretcher, transitionDuration, { height: stretcherHeight, width: stretcherWidth, ease: "easeOutCirc" })
-                                ;
-
-                                console.log(event);
-                            },
-                            function (error) {
-                                tl
-                                    .set(mapExportSpinner, { display: "none" })
-                                    .set(mapExportNotice, { display: "inline-block", width: mapExportStretcher.width() })
-                                ;
-
-                                console.log(error);
-                            }
-                        );
-                    });
+                    mapExportToggle.on('click', generateExportImage);
                 }
             };
         }());
