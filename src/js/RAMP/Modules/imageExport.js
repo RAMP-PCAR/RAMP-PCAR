@@ -144,36 +144,42 @@ define([
             var mappy, printTask, params, template, mapDom,
                 def = new Deferred();
 
-            mappy = RampMap.getMap();
-            printTask = new PrintTask(RAMP.config.exportMapUrl);
+            try {
 
-            printTask.on('complete', function (event) {
-                //console.log('PRINT RESULT: ' + event.result.url);
-                def.resolve(event);
-            });
+                mappy = RampMap.getMap();
+                printTask = new PrintTask(RAMP.config.exportMapUrl);
 
-            printTask.on('error', function (event) {
-                //console.log('PRINT FAILED: ' + event.error.message);
+                printTask.on('complete', function (event) {
+                    //console.log('PRINT RESULT: ' + event.result.url);
+                    def.resolve(event);
+                });
+
+                printTask.on('error', function (event) {
+                    //console.log('PRINT FAILED: ' + event.error.message);
+                    def.reject(event);
+                });
+
+                mapDom = $('#mainMap_root')[0];
+
+                template = new PrintTemplate();
+                template.exportOptions = {
+                    width: mapDom.clientWidth,
+                    height: mapDom.clientHeight,
+                    dpi: 96
+                };
+                template.format = "JPG";
+                template.layout = "MAP_ONLY";
+                template.showAttribution = false;
+
+                params = new PrintParameters();
+                params.map = mappy;
+                params.template = template;
+                console.log("submitting print job.  please wait");
+                printTask.execute(params);
+
+            } catch (event) {
                 def.reject(event);
-            });
-
-            mapDom = $('#mainMap_root')[0];
-
-            template = new PrintTemplate();
-            template.exportOptions = {
-                width: mapDom.clientWidth,
-                height: mapDom.clientHeight,
-                dpi: 96
-            };
-            template.format = "JPG";
-            template.layout = "MAP_ONLY";
-            template.showAttribution = false;
-
-            params = new PrintParameters();
-            params.map = mappy;
-            params.template = template;
-            console.log("submitting print job.  please wait");
-            printTask.execute(params);
+            }
 
             return {
                 promise: def.promise,
