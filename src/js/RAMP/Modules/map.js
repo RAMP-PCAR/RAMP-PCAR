@@ -1149,13 +1149,13 @@ define([
                 });
 
                 // determine the basmap wkid from config
-                var basemapWkid = schemaBasemap.spatialReference.wkid;
+                var tileSchema = schemaBasemap.tileSchema;
 
                 // add custom level of details if lod exists in config.json
-                if (!UtilMisc.isUndefined(basemapWkid)) {
+                if (!UtilMisc.isUndefined(tileSchema)) {
 
                     var levelOfDetails = UtilArray.find(RAMP.config.LODs, function (configLOD) {
-                        return configLOD.wkid === basemapWkid; 
+                        return configLOD.tileSchema === tileSchema; 
                     });
                     
                     //the map!
@@ -1177,8 +1177,6 @@ define([
                         slider: false
                     });
                 }
-
-                
 
                 RAMP.map = map;
                 MapClickHandler.init(map);

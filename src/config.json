@@ -70,7 +70,7 @@
     },
     "LODs":[
     {
-      "wkid": 102100,
+      "tileSchema": "ESRI_World_AuxMerc_3857",
       "lod":[
             {"level": 1, "resolution": 78271.51696399994, "scale": 295828763.795777},
             {"level": 2, "resolution": 39135.75848200009, "scale": 147914381.897889},
@@ -91,7 +91,7 @@
             {"level": 17, "resolution": 1.1943285668550503, "scale": 4513.988705}]
     },
     {
-      "wkid": 3978,
+      "tileSchema": "NRCAN_Lambert_3978",
       "lod":[
         {"level":1,"resolution":22489.62831258996,"scale":85000000},
         {"level":2,"resolution":13229.193125052918,"scale":50000000},
