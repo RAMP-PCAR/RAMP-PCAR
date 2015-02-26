@@ -114,13 +114,11 @@ define([
             printTask.on('complete', function (evt) {
                 //console.log('PRINT RESULT: ' + evt.result.url);
                 def.resolve(evt);
-                //topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
             });
 
             printTask.on('error', function (evt) {
                 //console.log('PRINT FAILED: ' + evt.error.message);
                 def.reject(evt);
-                //topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
             });
 
             mapDom = $('#mainMap_root')[0];

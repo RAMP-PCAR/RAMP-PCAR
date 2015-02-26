@@ -274,18 +274,7 @@ define([],
                 * @event GUI.UPDATE_COMPLETE
                 * @for GUI
                 */
-                UPDATE_COMPLETE: "gui/update-complete",
-
-                /**
-                * Published when the ESRI print task has generated an image.
-                *
-                * @event GUI.ESRI_IMAGE_READY
-                * @for GUI
-                * @param evt {Object} the event Object
-                * @param evt.imageUrl {String} url of the image
-                * @param evt.error {Boolean} flag if an error occurred
-                */
-                ESRI_IMAGE_READY: "gui/esri-image-ready"
+                UPDATE_COMPLETE: "gui/update-complete"
             },
 
             FeatureHighlighter: {
