@@ -71,6 +71,11 @@ define([
                     stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
                     stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
 
+                if (promise) {
+                    promise.cancel();
+                }
+                promise = result.promise;
+
                 tl
                     .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
                     .set(mapExportNotice, { display: "none" }) // hide error notice
@@ -79,11 +84,6 @@ define([
                     .call(function () { mapExportImg.attr("src", ""); })
                     .set(mapExportStretcher, { clearProps: "all" })
                 ;
-
-                if (promise) {
-                    promise.cancel();
-                }
-                promise = result.promise;
 
                 promise.then(
                     function (event) {
