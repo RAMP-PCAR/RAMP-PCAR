@@ -105,19 +105,22 @@ define([
         * @private
         */
         function submitServiceImageRequest() {
-            var mappy, printTask, params, template, mapDom;
+            var mappy, printTask, params, template, mapDom,
+                def = new Deferred();
 
             mappy = RampMap.getMap();
             printTask = new PrintTask(RAMP.config.exportMapUrl);
 
             printTask.on('complete', function (evt) {
                 //console.log('PRINT RESULT: ' + evt.result.url);
-                topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
+                def.resolve(evt);
+                //topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: false, imageUrl: evt.result.url });
             });
 
             printTask.on('error', function (evt) {
                 //console.log('PRINT FAILED: ' + evt.error.message);
-                topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
+                def.reject(evt);
+                //topic.publish(EventManager.GUI.ESRI_IMAGE_READY, { error: true, imageUrl: evt.error.message });
             });
 
             mapDom = $('#mainMap_root')[0];
@@ -137,12 +140,16 @@ define([
             params.template = template;
             console.log("submitting print job.  please wait");
             printTask.execute(params);
+
+            return {
+                promise: def.promise,
+                exportOptions: template.exportOptions
+            };
         }
 
         return {
-            
-            submitServiceImageRequest: submitServiceImageRequest,
 
+            submitServiceImageRequest: submitServiceImageRequest,
 
             /**
             * Initializes UI triggers.
