@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $ */
+﻿/* global define, console, RAMP, $, TimelineLite, window */
 
 /**
 *
@@ -28,7 +28,7 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array",
+"dojo/topic", "dojo/_base/array", "dojo/Deferred",
 
 /* ESRI */
 "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
@@ -38,7 +38,7 @@ define([
 
     function (
     /* Dojo */
-    topic, dojoArray,
+    topic, dojoArray, Deferred,
 
     /* ESRI */
     PrintTemplate, PrintParameters, PrintTask,
@@ -50,52 +50,77 @@ define([
         var ui = (function () {
             var mapExportToggle,
                 mapExportStretcher,
-                mapExportImg;
+                mapExportImg,
+                mapExportSpinner,
+                downloadButton,
 
+                jWindow,
+                transitionDuration = 0.4;
 
             return {
                 init: function () {
+                    var promise;
+
+                    jWindow = $(window);
+
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImg = $(".map-export-image > img");
+                    mapExportSpinner = mapExportStretcher.find(".sk-spinner");
+                    downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     // get the export image url
                     mapExportToggle.on('click', function () {
-                        var promise = ImageExport.submitServiceImageRequest();
-                        //imageSize = ImageExport.submitServiceImageRequest();
+                        var tl = new TimelineLite(),
+                            result = submitServiceImageRequest(),
+                            imageSize = result.exportOptions,
+                            stretcherWidth = jWindow.width() - 350,
+                            stretcherHeight = imageSize.height / imageSize.width * stretcherWidth;
+
+                        tl
+                                .set(mapExportSpinner, { display: "inline-block" })
+                                .set(mapExportImg, { display: "none" })
+                                .call(function () { mapExportImg.attr("src", ""); })
+                                .set(mapExportStretcher, { clearProps: "all" })
+                        ;
+
+                        downloadButton
+                            .attr({
+                                disabled: true,
+                                href: ""
+                            })
+                        ;
+
+                        if (promise) {
+                            promise.cancel();
+                        }
+                        promise = result.promise;
 
                         promise.then(
                             function (event) {
+                                downloadButton
+                                    .attr({
+                                        disabled: false,
+                                        href: event.result.url
+                                    }
+                                );
+
+                                tl
+                                    .set(mapExportSpinner, { display: "none" })
+                                    .set(mapExportImg, { display: "block" })
+                                    .call(function () { mapExportImg.attr("src", event.result.url); })
+                                    .to(mapExportStretcher, transitionDuration, { height: stretcherHeight, width: stretcherWidth, ease: "easeOutCirc" })
+                                ;
+
                                 console.log(event);
                             },
                             function (error) {
                                 console.log(error);
                             }
                         );
-
-                        mapExportImg.hide();
-
-                        console.log(mapExportStretcher);
-
-                        //imageSize.width = imageSize.width * 0.8 + 30; 
-                        //imageSize.height = imageSize.height * 0.8;
-                        //mapExportStretcher.css(imageSize);
-                    });
-
-                    topic.subscribe(EventManager.GUI.ESRI_IMAGE_READY, function (evt) {
-                        //for now, just console.
-                        if (evt.error) {
-                            console.log("Image request failed");
-                            console.log(evt.imageUrl);
-                        } else {
-                            console.log("Here is your image URL, sir");
-                            console.log(evt.imageUrl);
-
-                            mapExportImg.show().attr("src", evt.imageUrl);
-                        }
                     });
                 }
-            }
+            };
         }());
 
         /**
