@@ -52,6 +52,7 @@ define([
                 mapExportStretcher,
                 mapExportImg,
                 mapExportSpinner,
+                mapExportNotice,
                 downloadButton,
 
                 jWindow,
@@ -67,6 +68,7 @@ define([
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImg = $(".map-export-image > img");
                     mapExportSpinner = mapExportStretcher.find(".sk-spinner");
+                    mapExportNotice = mapExportStretcher.find(".map-export-notice");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     // get the export image url
@@ -78,19 +80,14 @@ define([
                             stretcherHeight = imageSize.height / imageSize.width * stretcherWidth;
 
                         tl
+                                .call(function () { downloadButton.attr({ disabled: true, href: "" }); })
+                                .set(mapExportNotice, { display: "none" })
                                 .set(mapExportSpinner, { display: "inline-block" })
                                 .set(mapExportImg, { display: "none" })
                                 .call(function () { mapExportImg.attr("src", ""); })
                                 .set(mapExportStretcher, { clearProps: "all" })
                         ;
-
-                        downloadButton
-                            .attr({
-                                disabled: true,
-                                href: ""
-                            })
-                        ;
-
+                        
                         if (promise) {
                             promise.cancel();
                         }
@@ -98,14 +95,9 @@ define([
 
                         promise.then(
                             function (event) {
-                                downloadButton
-                                    .attr({
-                                        disabled: false,
-                                        href: event.result.url
-                                    }
-                                );
 
                                 tl
+                                    .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); })
                                     .set(mapExportSpinner, { display: "none" })
                                     .set(mapExportImg, { display: "block" })
                                     .call(function () { mapExportImg.attr("src", event.result.url); })
@@ -115,6 +107,11 @@ define([
                                 console.log(event);
                             },
                             function (error) {
+                                tl
+                                    .set(mapExportSpinner, { display: "none" })
+                                    .set(mapExportNotice, { display: "inline-block", width: mapExportStretcher.width() })
+                                ;
+
                                 console.log(error);
                             }
                         );
@@ -127,6 +124,7 @@ define([
         * Will initiate a request for an image of all service-based layers.
         *
         * @method submitServiceImageRequest
+        * @return {Promise} Returns a promise that is resolved when the image comes down or not.
         * @private
         */
         function submitServiceImageRequest() {
