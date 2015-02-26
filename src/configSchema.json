@@ -304,6 +304,7 @@
         "version": { "type": "string", "enum": [ "1.0.0", "1.0.1" ] },
         "proxyUrl": { "type": "string" },
         "geometryServiceUrl": { "type": "string" },
+        "exportMapUrl": { "type": "string" },
         "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },

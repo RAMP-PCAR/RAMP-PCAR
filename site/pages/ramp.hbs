@@ -10,7 +10,7 @@
     <!--<h2 id="ramp-title" class="wb-invisible">
         {{t "page.header.titleLink"}}
     </h2>-->
-    
+
     <section id="map-div" class="height-100 margin-bottom-none">
         <!--<div class="margin-bottom-medium margin-top-medium margin-right-medium text-right">-->
         <ul id="map-toolbar" class="text-right">
@@ -35,7 +35,7 @@
                                 <span class="wb-invisible">{{t "gui.actions.close"}}</span>
                             </button>
                             <div class="get-link-content">
-                                
+
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input-group">
@@ -43,21 +43,21 @@
                                                 <button class="btn btn-default btn-sm getlink-shorten-button" type="button">
                                                     <i class="fa fa-link"></i>
                                                     <span class="on-right">{{t "bookmarkLink.shortLink"}}</span>
-                                                </button>                                                                                                
+                                                </button>
                                             </span>
                                             <label class="wb-inv" for="getlink-input">{{t "bookmarkLink.description"}}</label>
                                             <input type="text" data-role="none" readonly="readonly" class="form-control input-sm" id="getlink-input" />
-                                            
+
                                             <span class="input-group-btn">
                                                 <a href="mailto:" class="btn btn-info btn-sm getlink-email-button">
                                                     <i class="fa fa-envelope-o"></i>
                                                     <span class="on-right">{{t "bookmarkLink.email"}}</span>
-                                                </a>                                                                                              
+                                                </a>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="get-link-loading-div">
                                     <ul class="loadingAnimation" style="display: none;">
                                         <li></li>
@@ -68,7 +68,7 @@
                                         <li></li>
                                     </ul>
                                 </div>
-                                
+
                                 <div class="clearfix">
                                 </div>
                             </div>
@@ -81,13 +81,109 @@
                     <i class="fa fa-cog"></i><span class="on-right">{{t "advancedToolbar.title"}}</span>
                 </button>
                 <div id="advanced-toolbar">
-                    
+
                 </div>
             </li>
             <li class="map-toolbar-item">
                 <button class="btn btn-xs map-toolbar-item-button button-none" id="fullScreenToggle">
                     <i class="fa fa-arrows-alt"></i><span class="on-right">{{t "gui.actions.fullScreen"}}</span>
                 </button>
+            </li>
+            <li class="map-toolbar-item">
+                <a class="btn btn-xs map-toolbar-item-button button-none wb-lbx lbx-modal" href="#map-export-modal" aria-controls="map-export-modal" id="map-export-toggle" disabled>
+                    <i class="fa fa-download"></i><span class="on-right">{{t "gui.actions.mapExport"}}</span>
+                </a>
+
+                <section id="map-export-modal" class="mfp-hide modal-dialog modal-content overlay-def">
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="map-export-preview">
+                                <div class="map-export-stretcher" role="presentation"><section class="map-export-notice alert alert-danger">
+                                            <h3>{{t "mapExport.error.generalTitle"}}</h3>
+                                            <p>{{t "mapExport.error.generalMessage"}}</p>
+                                        </section>
+                                    <div class="sk-spinner sk-spinner-chasing-dots">
+                                        <div class="sk-dot1"></div>
+                                        <div class="sk-dot2"></div>
+                                    </div>
+                                    <span class="wb-inv">{{t "mapExport.loading"}}</span>
+                                </div>
+                                <div class="map-export-image">
+                                    <img src="" alt="">
+                                </div>
+                            </div>
+                            <div class="map-export-controls">
+                                <h2 class="mrgn-tp-sm mrgn-bttm-sm page-header h3">{{t "mapExport.title"}}</h2>
+                                <button class="button-none button-close _tooltip popup-modal-dismiss" title="{{t "gui.actions.close"}}">
+                                    <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+                                </button>
+                                <div class="">
+                                    <!--<div class="checkbox">
+                            <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
+                        </div>-->
+
+                                    <div class="download-buttons mrgn-tp-lg">
+                                        <!--<button class="btn btn-primary" type="button">
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                            </button>-->
+                                        <a class="btn btn-primary" type="button" href="" target="_blank" download="">
+                                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                                        </a>
+                                        <!--<button class="btn btn-primary" type="button">
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
+                            </button>-->
+                                        <!--<button class="btn btn-primary" type="button">
+                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadJPG"}}</span>
+                            </button>-->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="mapExport-section-container" class="map-toolbar-item-container">
+                    <div id="mapExport-section" class="map-toolbar-item-section text-left box-shadow-section">
+                        <section>
+                            <h2 class="mrgn-tp-sm page-header h3">
+                                {{t "mapExport.title"}}
+                            </h2>
+                            <button class="button-none button-close _tooltip" title="{{t "gui.actions.close"}}">
+                                <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+                            </button>
+                            <div class="get-link-content">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-default btn-sm getlink-shorten-button" type="button">
+                                                    <i class="fa fa-link"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.shortLink"}}</span>
+                                                </button>
+                                            </span>
+                                            <label class="wb-inv" for="getlink-input">{{t "bookmarkLink.description"}}</label>
+                                            <input type="text" data-role="none" readonly="readonly" class="form-control input-sm" id="getlink-input" />
+
+                                            <span class="input-group-btn">
+                                                <a href="mailto:" class="btn btn-info btn-sm getlink-email-button">
+                                                    <i class="fa fa-envelope-o"></i>
+                                                    <span class="on-right">{{t "bookmarkLink.email"}}</span>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
             </li>
             <li class="map-toolbar-item">
                 <button class="btn btn-xs map-toolbar-item-button button-none" id="helpToggle">
@@ -108,7 +204,7 @@
                                     {{>help}}
                                 </div>
                             </section>
-                        </div>                                            
+                        </div>
                     </div>
                 </div>
             </li>
