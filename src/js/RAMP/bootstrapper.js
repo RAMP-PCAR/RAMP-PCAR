@@ -115,6 +115,9 @@ require([
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
 
+                        //initialize the map export after everything is done
+                        ImageExport.init();
+
                         //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
@@ -130,9 +133,6 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
-
-                //initialize the map export
-                ImageExport.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {

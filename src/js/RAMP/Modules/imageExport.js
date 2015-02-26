@@ -8,17 +8,11 @@
 */
 
 /**
-* Image Export class.
-*
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-*  
-* ####Uses RAMP Templates:
-* {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
 * 
 * @class ImageExport
 * @static
@@ -132,7 +126,9 @@ define([
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
-                    mapExportToggle.on('click', generateExportImage);
+                    mapExportToggle
+                        .attr("disabled", false)
+                        .on('click', generateExportImage);
                 }
             };
         }());
