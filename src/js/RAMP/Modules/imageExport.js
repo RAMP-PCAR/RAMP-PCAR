@@ -70,7 +70,7 @@ define([
                     imageSize = result.exportOptions,
                     stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
                     stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
-                
+
                 tl
                     .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
                     .set(mapExportNotice, { display: "none" }) // hide error notice
@@ -147,14 +147,14 @@ define([
             mappy = RampMap.getMap();
             printTask = new PrintTask(RAMP.config.exportMapUrl);
 
-            printTask.on('complete', function (evt) {
-                //console.log('PRINT RESULT: ' + evt.result.url);
-                def.resolve(evt);
+            printTask.on('complete', function (event) {
+                //console.log('PRINT RESULT: ' + event.result.url);
+                def.resolve(event);
             });
 
-            printTask.on('error', function (evt) {
-                //console.log('PRINT FAILED: ' + evt.error.message);
-                def.reject(evt);
+            printTask.on('error', function (event) {
+                //console.log('PRINT FAILED: ' + event.error.message);
+                def.reject(event);
             });
 
             mapDom = $('#mainMap_root')[0];
