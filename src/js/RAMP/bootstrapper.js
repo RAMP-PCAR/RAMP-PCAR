@@ -50,7 +50,7 @@ require([
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
-    "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
+    "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/GlobalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
@@ -70,7 +70,7 @@ require([
     esriConfig,
 
     /* RAMP */
-    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
     Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader,
 
@@ -130,6 +130,9 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
+
+                //initialize the map export
+                ImageExport.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {

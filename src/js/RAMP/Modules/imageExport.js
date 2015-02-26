@@ -47,6 +47,57 @@ define([
     EventManager, RampMap) {
         "use strict";
 
+        var ui = (function () {
+            var mapExportToggle,
+                mapExportStretcher,
+                mapExportImg;
+
+
+            return {
+                init: function () {
+                    mapExportToggle = $("#map-export-toggle");
+                    mapExportStretcher = $(".map-export-stretcher");
+                    mapExportImg = $(".map-export-image > img");
+
+                    // get the export image url
+                    mapExportToggle.on('click', function () {
+                        var promise = ImageExport.submitServiceImageRequest();
+                        //imageSize = ImageExport.submitServiceImageRequest();
+
+                        promise.then(
+                            function (event) {
+                                console.log(event);
+                            },
+                            function (error) {
+                                console.log(error);
+                            }
+                        );
+
+                        mapExportImg.hide();
+
+                        console.log(mapExportStretcher);
+
+                        //imageSize.width = imageSize.width * 0.8 + 30; 
+                        //imageSize.height = imageSize.height * 0.8;
+                        //mapExportStretcher.css(imageSize);
+                    });
+
+                    topic.subscribe(EventManager.GUI.ESRI_IMAGE_READY, function (evt) {
+                        //for now, just console.
+                        if (evt.error) {
+                            console.log("Image request failed");
+                            console.log(evt.imageUrl);
+                        } else {
+                            console.log("Here is your image URL, sir");
+                            console.log(evt.imageUrl);
+
+                            mapExportImg.show().attr("src", evt.imageUrl);
+                        }
+                    });
+                }
+            }
+        }());
+
         /**
         * Will initiate a request for an image of all service-based layers.
         *
@@ -89,11 +140,15 @@ define([
         }
 
         return {
+            
+            submitServiceImageRequest: submitServiceImageRequest,
+
+
             /**
-            * Initializes properties.  Set up event listeners
+            * Initializes UI triggers.
             *
             * @method init
             */
-            submitServiceImageRequest: submitServiceImageRequest
+            init: ui.init
         };
     });
