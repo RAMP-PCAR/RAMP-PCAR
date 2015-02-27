@@ -35,7 +35,7 @@
         "shorten": "https://github.com/viralpatel/jquery.shorten.git#master",
         "Snap.svg": "~0.1.0",
         "blueimp-tmpl": "https://github.com/RAMP-PCAR/JavaScript-Templates.git#2.5.6",
-        "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#3.0.1-r",
+        "tooltipster": "https://github.com/RAMP-PCAR/tooltipster.git#rampfix",
         "urlshortener": "https://github.com/RAMP-PCAR/jQuery-URL-shortener.git#1.0.1-r",
         "animate.css": "~3.0.0",
         "fontawesome": "~4.2.0",

@@ -60,9 +60,7 @@ require([
     "utils/util",
 
 /* Plugins */
-    "utils/prototype!", "utils/functionMangler!"],
-
-    //"dojo/domReady!"],
+    "utils/prototype!", "utils/functionMangler!", "dojo/domReady!"],
 
     function (
     /* Dojo */
