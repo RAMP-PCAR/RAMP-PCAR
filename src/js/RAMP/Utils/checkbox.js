@@ -262,6 +262,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 // remove previous listeners
                 this.node
                     .off("change focus focusout")
+                    .removeClass("tooltipstered")
                 ;
                 this._initListeners();
                 this._toggleLabel();
