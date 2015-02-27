@@ -787,7 +787,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
                         // [patched from ECDMP] Add parameters to xsl document (setParameter = Chrome/FF/Others)
                         if (params) {
                             for (i = 0; i < params.length; i++) {
-                                xsltProcessor.setParameter(null, params[i].key, params[i].value);
+                                xsltProcessor.setParameter(null, params[i].key, params[i].value || "");
                             }
                         }
                         output = xsltProcessor.transformToFragment(xmlString, document);
