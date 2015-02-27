@@ -10,6 +10,7 @@
 * Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic changing of the layer item state. 
 * 
 * ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * {{#crossLink "TmplUtil"}}{{/crossLink}}  
 * {{#crossLink "Array"}}{{/crossLink}}  
@@ -44,12 +45,12 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, TmplUtil, UtilArray, UtilDict
+        Util, TmplHelper, TmplUtil, UtilArray, UtilDict
     ) {
         "use strict";
 
@@ -314,6 +315,7 @@ define([
             setState: function (state, options, force) {
                 var allowedStates = this.transitionMatrix[this.state],
                     notice,
+                    focusedNode,
 
                     that = this;
 
@@ -339,6 +341,9 @@ define([
                         }
                     }
 
+                    // store reference to a focused node inside this layer item if any
+                    focusedNode = this.node.find(":focus");
+                    
                     this._setParts("controls", this._controlStore, this._controlsNode);
                     this._setParts("toggles", this._toggleStore, this._togglesNode);
                     this._setParts("notices", this._noticeStore, this._noticesNode);
@@ -371,6 +376,16 @@ define([
 
                         default:
                             break;
+                    }
+
+                    // reset focus after changing layer item's state
+                    if (focusedNode.length > 0) {
+                        // if the previously focused node still in DOM, set focus to it
+                        if (Util.containsInDom(focusedNode[0])) {
+                            focusedNode.focus();
+                        } else { // if this node is no longer in DOM, set focus to the first focusable element in layer item
+                            this.node.find(":focusable:first").focus();
+                        }
                     }
 
                     return true;
