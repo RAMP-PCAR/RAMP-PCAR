@@ -410,9 +410,15 @@ define([
                     controls.push(partStore[pKey]);
                 });
 
+                // use detach instead of empty to preserve handlers that jQuery deletes on empty
+                // http://stackoverflow.com/questions/2027706/why-do-registered-events-disappear-when-an-element-is-removed-from-dom/14900035#14900035
+                // http://api.jquery.com/detach/
                 target
-                    .empty()
-                    .append(controls);
+                    .children()
+                    .detach() 
+                    .end()
+                    .append(controls)
+                ;
             },
 
             /**

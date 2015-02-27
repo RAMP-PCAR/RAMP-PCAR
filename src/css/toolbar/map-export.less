@@ -1,0 +1,120 @@
+﻿@media screen and (min-device-width: 768px) and (min-width: 768px) {
+    #map-export-modal {
+        .map-export-controls {
+            min-width: 170px;
+            margin: 0 15px 0 10px;
+        }
+
+        .map-export-stretcher {
+            width: 560px;
+            height: 370px;
+        }
+    }
+}
+
+@media screen and (min-device-width: 1024px) and (min-width: 1200px) {
+    #map-export-modal {
+        .map-export-controls {
+            min-width: 220px;
+            margin: 0 15px 0 10px;
+        }
+
+        .map-export-stretcher {
+            width: 750px;
+            height: 450px;
+        }
+    }
+}
+
+.mfp-content {
+    width: auto !important;
+}
+
+#map-export-modal {
+    width: auto;
+    border-radius: 0;
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .map-export-preview {
+        position: relative;
+        float: left;
+    }
+
+    .map-export-controls {
+        position: relative;
+        float: left;
+    }
+
+    .map-export-stretcher {
+        text-align: center;
+        margin: 0 15px;
+        background-color: @very-light-grey-color;
+
+        &:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        .map-export-notice {
+            position: relative;
+            display: none;
+            text-align: left;
+            vertical-align: top;
+            margin-bottom: 0;
+        }
+
+        .sk-spinner.sk-spinner-chasing-dots {
+            display: inline-block;
+            margin: 0 auto;
+            //width: 70px;
+            //height: 70px;
+            vertical-align: middle;
+        }
+    }
+
+    .map-export-image {
+        position: absolute;
+        border: 1px solid black;
+        top: 0;
+        bottom: 0;
+        right: 15px;
+        left: 15px;
+        overflow: hidden;
+        //padding: 1px;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .button-close {
+        //right: 7px;
+        top: 0;
+    }
+
+    .checkbox {
+        label {
+            padding-left: 0;
+            display: block;
+
+            input {
+                right: 0;
+                margin-left: 0;
+            }
+        }
+    }
+
+    .download-buttons {
+        .btn {
+            border-radius: 0;
+            //padding: 6px 22px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+}

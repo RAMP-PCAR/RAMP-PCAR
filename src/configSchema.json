@@ -304,6 +304,7 @@
         "version": { "type": "string", "enum": [ "1.0.0", "1.0.1" ] },
         "proxyUrl": { "type": "string" },
         "geometryServiceUrl": { "type": "string" },
+        "exportMapUrl": { "type": "string" },
         "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },
@@ -374,7 +375,45 @@
                 "additionalProperties": false
             }
         },
+        "LODs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "tileSchema": { "type": "string" },
+                    "lod": { "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "level": { "type": "number" },
+                                "resolution": { "type": "number" },
+                                "scale": { "type": "number" }
+                            }
+                        }
+                }
+                }
+            }
+            },
 
+        "LODs": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "wkid": { "type": "number" },
+                    "lod": { "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "level": { "type": "number" },
+                                "resolution": { "type": "number" },
+                                "scale": { "type": "number" }
+                            }
+                        }
+                }
+                }
+            }
+            },
         "templates": {
             "type": "object",
             "properties": {

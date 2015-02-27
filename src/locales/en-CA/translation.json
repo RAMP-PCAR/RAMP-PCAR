@@ -276,8 +276,9 @@
     }, 
     "gui": {
         "actions": {
-            "close": "Close", 
-            "fullScreen": "Full Screen", 
+            "close": "Close",
+            "fullScreen": "Full Screen",
+            "mapExport": "Map Export",
             "open": "Open"
         }
     }, 
@@ -444,10 +445,24 @@
         "loadingTitle": "Loading", 
         "scale": "Scale"
     },
-    "mapClickHandler": { 
+    "mapClickHandler": {
         "getFiFailed": "GetFeatureInfo request failed on one or more WMS layers",
         "getFiPanelName": "WMS GetFeatureInfo",
         "getFiPanelTitle": "Query Results"
+    },
+    "mapExport": {
+        "downloadImage": "Download Image",
+		"downloadJPG": "JPG",
+        "downloadJPGdesc": "Download as JPG",
+        "downloadPNG": "PNG",
+        "downloadPNGdesc": "Download as PNG",
+        "error": {
+            "generalMessage": "Image cannot be generated. Please try again later.",
+			"generalTitle": "Error"            
+        },
+		"includeLegend": "Include Legend",
+        "loading": "Generating image. Please wait.",
+		"title": "Map Export"
     },
     "page": {
         "footer": {

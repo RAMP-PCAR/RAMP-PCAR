@@ -50,7 +50,7 @@ require([
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
-    "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
+    "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
@@ -68,7 +68,7 @@ require([
     esriConfig,
 
     /* RAMP */
-    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
     Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader,
 
@@ -112,6 +112,9 @@ require([
                         EventManager.FilterManager.UI_COMPLETE
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
+
+                        //initialize the map export after everything is done
+                        ImageExport.init();
 
                         //RampMap.zoomToLayerScale();
                     });

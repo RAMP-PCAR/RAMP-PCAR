@@ -463,6 +463,10 @@ module.exports = (grunt) ->
             ]
         
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
+                
+                if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+$/
+                    grunt.config 'github-release.options.release.body', '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html)'
+                
                 grunt.task.run tasks
     )
 
@@ -776,11 +780,11 @@ module.exports = (grunt) ->
 
         concat:
             options:
-                stripBanners: true
-                separator: ''
                 # remove //@ style sourcemaps
                 process: (src, filepath) ->
                     src.replace( /\/\/@.*$/mg, '' )
+                stripBanners: false
+                separator: '/* */ \n\r /* */'
 
             jsLib:
                 dest: 'build/js/lib/lib.js'
