@@ -2,10 +2,6 @@
 <link rel="stylesheet" href="{{assets}}/css/wet-boew{{environment.suffix}}.css" />
 <link rel="stylesheet" href="{{assets}}/css/theme{{environment.suffix}}.css" />
 {{#if page.css}}{{#each page.css}}<link rel="stylesheet" href="{{this}}{{../environment.suffix}}.css" />{{/each}}{{/if}}
-<!--[if IE 9]>
-<script src="js/polyfill/xhook.min.js"></script>
-<script src="js/polyfill/xhook-cors-ie9.js"></script>
-<![endif]-->
 
 <noscript><link rel="stylesheet" href="{{assets}}/css/noscript{{environment.suffix}}.css" /></noscript>
 
@@ -21,5 +17,7 @@
       type="text/css" rel="stylesheet">
 <!-- EsriCSSEnd -->
 
-<!-- ARCGIS API: make sure there is a script tag in the head node of the document to avoid "Cannot read property 'insertBefore' of null" errors caused by urlshortener jQuery plugin -->
+<!-- ARCGIS API: make sure there is a script tag in the head node of the
+                 document to avoid "Cannot read property 'insertBefore' of
+                 null" errors caused by urlshortener jQuery plugin -->
 <script></script>

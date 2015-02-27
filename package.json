@@ -64,6 +64,7 @@
         "concat": {
 
             "jsLib": [
+                "jquery/dist/jquery.js",
                 "DataTables/media/js/jquery.dataTables.js",
                 "gsap/src/uncompressed/TweenLite.js",
                 "gsap/src/uncompressed/TimelineLite.js",

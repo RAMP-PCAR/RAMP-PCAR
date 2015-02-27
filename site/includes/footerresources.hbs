@@ -1,7 +1,11 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryVersion}}/jquery{{environment.suffix}}.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryVersion}}/jquery{{environment.suffix}}.js"></script>
 <script src="{{assets}}/js/wet-boew{{environment.suffix}}.js"></script>
-{{#if page.js}}{{#each page.js}}<script src="{{this}}{{../environment.suffix}}.js"></script>{{/each}}{{/if}}
+{{#if page.js}}{{#each page.js}}<script src="{{this}}{{../environment.suffix}}.js"></script>{{/each}}{{/if}} -->
 
+<!--[if IE 9]>
+<script src="js/polyfill/xhook.min.js"></script>
+<script src="js/polyfill/xhook-cors-ie9.js"></script>
+<![endif]-->
 
 <!-- RAMP-starter.js is now directly appended to lib.js -->
 <script type="text/javascript" src="js/lib/lib.js"></script>
