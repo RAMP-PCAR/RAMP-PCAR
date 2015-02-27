@@ -241,6 +241,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 return this;
             },
 
+            /**
+            * Validates that the checkbox node is in fact in dom. If not, set checkbox's state to "checkbox-invalid" to prevent any interactions.
+            *
+            * @method validate
+            * @return {Checkbox} Control object for chaining
+            * @chainable
+            */
             validate: function () {
                 if (!this.node || !Util.containsInDom(this.node[0])) {
                     this.state = Checkbox.state.INVALID;
@@ -252,7 +259,10 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
             },
 
             reset: function () {
-                this.node.off("change", "focus", "focusout");
+                // remove previous listeners
+                this.node
+                    .off("change focus focusout")
+                ;
                 this._initListeners();
                 this._toggleLabel();
             }
