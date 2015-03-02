@@ -181,21 +181,62 @@ define([
                                 ]
                             },
                             on: [
-                                {
+                                /*{
                                     eventName: Bricks.OkCancelButtonBrick.event.CLICK,
                                     callback: function (step, data) {
                                         console.log("Just Click:", this, step, data);
                                     }
-                                },
+                                },*/
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
-                                    expose: { as: "advance" }
-                                },
+                                    // connect to feature service
+                                    callback: function (step/*, data*/) {
+                                        var promise,
+                                            handle = delayLoadingState(step, 100),
+                                            bricksData = step.getData().bricksData,
+                                            serviceTypeValue = bricksData.serviceType.selectedChoice,
+                                            serviceUrlValue = bricksData.serviceURL.inputValue;
+
+                                        switch (serviceTypeValue) {
+                                            case "featureServiceAttrStep":
+                                                //get data from feature layer endpoint
+                                                promise = DataLoader.getFeatureLayer(serviceUrlValue);
+
+                                                promise.then(function (data) {
+                                                    //get data from feature layer's legend endpoint
+                                                    var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                                                    legendPromise.then(function (legendLookup) {
+                                                        window.clearTimeout(handle);
+
+                                                        data.legendLookup = legendLookup;
+
+                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                            stepData: data,
+                                                            bricksData: {
+                                                                primaryAttribute: {
+                                                                    // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                                    options: data.fields.map(function (field) { return { value: field, text: field }; })
+                                                                }
+                                                            }
+                                                        });
+
+                                                    }, function (event) {
+                                                        handleFailure(step, event, handle);
+                                                    });
+
+                                                }, function (event) {
+                                                    handleFailure(step, event, handle);
+                                                });
+                                                break;
+                                        }
+                                    }
+                                    //expose: { as: "advance" }
+                                }/*,
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
                                     expose: { as: "retreat" },
                                     callback: choiceTreeCallbacks.simpleCancel
-                                }
+                                }*/
 
                             ]
                         }
@@ -222,7 +263,34 @@ define([
                                     on: [
                                         {
                                             eventName: Bricks.ButtonBrick.event.CLICK,
-                                            expose: { as: "ADD_DATASET" }
+                                            // add feature service layer to the map
+                                            callback: function (step /*,data*/) {
+                                                var data = step.getData(),
+                                                    bricksData = data.bricksData,
+                                                    layerData = data.stepData,
+
+                                                    newConfig = { //make feature layer config.
+                                                        id: LayerLoader.nextId(),
+                                                        displayName: layerData.layerName,
+                                                        nameField: bricksData.primaryAttribute.dropDownValue,
+                                                        datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                                                        symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
+                                                        url: layerData.layerUrl
+                                                    },
+                                                    featureLayer;
+
+                                                //TODO: set symbology and colour on feature layer (obj.data)
+                                                newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+                                                //make layer
+                                                featureLayer = RampMap.makeFeatureLayer(newConfig, true);
+                                                RAMP.config.layers.feature.push(newConfig);
+
+                                                LayerLoader.loadLayer(featureLayer);
+
+                                                //mainPopup.close();
+                                            }
+                                            //expose: { as: "ADD_DATASET" }
                                         }
                                     ]
                                 }
@@ -490,6 +558,7 @@ define([
 
         function reset() {
 
+            // create the choice tree
             t.dfs(choiceTree, function (node, par/*, ctrl*/) {
                 var stepItem,
                     level = par ? par.level + 1 : 1;
@@ -509,86 +578,29 @@ define([
                 console.log(node);
             });
 
+            // append tree to the page
             rootNode
                 .find(".add-dataset-content")
                 .append(stepLookup.sourceTypeStep.node)
             ;
 
-            stepLookup.sourceTypeStep.currentStep(1);
+            // set the first step as active
+            stepLookup.sourceTypeStep.currentStep(1);           
+        }
 
-            stepLookup.serviceTypeStep.on("advance", function () {
-                var promise,
-                    //data,
-                    handle,
-                    that = this,
-                    bricksData = this.getData().bricksData,
-                    serviceTypeValue = bricksData.serviceType.selectedChoice,
-                    serviceUrlValue = bricksData.serviceURL.inputValue;
-
-                handle = window.setTimeout(function () {
-                    that._notifyStateChange(StepItem.state.LOADING);
-                }, 120);
-
-                switch (serviceTypeValue) {
-                    case "featureServiceAttrStep":
-                        //get data from feature layer endpoint
-                        promise = DataLoader.getFeatureLayer(serviceUrlValue);
-
-                        promise.then(function (data) {
-                            //get data from feature layer's legend endpoint
-                            var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
-                            legendPromise.then(function (legendLookup) {
-                                window.clearTimeout(handle);
-
-                                data.legendLookup = legendLookup;
-                                
-                                choiceTreeCallbacks.simpleAdvance(that, bricksData.serviceType, {
-                                    stepData: data,
-                                    bricksData: {
-                                        primaryAttribute: {
-                                            // TODO: when field name aliases are available, change how the dropdown values are generated
-                                            options: data.fields.map(function (field) { return { value: field, text: field }; })
-                                        }
-                                    }
-                                });
-
-                            }, function (event) {
-                                handleFailure(that, event, handle);
-                            });
-
-                        }, function (event) {
-                            handleFailure(that, event, handle);
-                        });
-                        break;
-                }
-            });
-
-            stepLookup.featureServiceAttrStep.on("ADD_DATASET", function () {
-                var data = this.getData(),
-                    bricksData = data.bricksData,
-                    layerData = data.stepData,
-
-                    newConfig = { //make feature layer config.
-                        id: LayerLoader.nextId(),
-                        displayName: layerData.layerName,
-                        nameField: bricksData.primaryAttribute.dropDownValue,
-                        datagrid: DataLoader.createDatagridConfig(layerData.fields),
-                        symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
-                        url: layerData.layerUrl
-                    },
-                    featureLayer;
-
-                //TODO: set symbology and colour on feature layer (obj.data)
-                newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
-
-                //make layer
-                featureLayer = RampMap.makeFeatureLayer(newConfig, true);
-                RAMP.config.layers.feature.push(newConfig);
-
-                LayerLoader.loadLayer(featureLayer);
-
-                //mainPopup.close();
-            });
+        /**
+         * Delay setting loading state to the step for a specified time in case it happens really fast and 
+         * 
+         * @method delayLoadingState
+         * @param {StepItem} step step to delay setting loading state on
+         * @param {Number} time a delay in ms
+         * @private
+         * @return {Number} setTimeout handle
+         */
+        function delayLoadingState(step, time) {
+            return window.setTimeout(function () {
+                step._notifyStateChange(StepItem.state.LOADING);
+            }, time);
         }
 
         function handleFailure(step, event, handle) {
