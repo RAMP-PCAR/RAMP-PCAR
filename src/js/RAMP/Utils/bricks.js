@@ -1109,6 +1109,8 @@ define([
                 lang.mixin(payload,
                     {
                         fileValue: this.fileValue,
+                        // derive the file name
+                        fileName: this.fileValue ? this.fileValue.name : this.inputValue.split("/").pop(),
                         userSelected: this.userSelected
                     }
                 );
