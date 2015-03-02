@@ -256,16 +256,23 @@ require([
         */
         function configReady(configObject) {
             var pluginConfig,
-                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
+                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent(),
+                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
 
             console.log("Bootstrapper: config loaded");
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
 
-            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
+            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
-            esriConfig.defaults.io.corsDetection = true;
+            if (brokenWebBrowser) {
+                // really IE9???  (╯°□°）╯︵ ┻━┻
+                esriConfig.defaults.io.corsDetection = false;
+                esriConfig.defaults.io.alwaysUseProxy = true;
+            } else {
+                esriConfig.defaults.io.corsDetection = true;
+            }
 
             // Show or remove advanced toolbar toggle based on the config value
             if (RAMP.config.advancedToolbar.enabled) {
