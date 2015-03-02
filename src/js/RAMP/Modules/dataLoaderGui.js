@@ -246,8 +246,8 @@ define([
 
                                                     }, function (event) {
                                                         handleFailure(step, handle, {
-                                                            serviceType: 
-                                                                lang.mixin(choiceTreeErrors.base,{
+                                                            serviceType:
+                                                                lang.mixin(choiceTreeErrors.base, {
                                                                     message: "Blah-blah" + event.message
                                                                 })
                                                         });
@@ -516,30 +516,85 @@ define([
                                 ]
                             },
                             on: [
-                                {
+                                /*{
                                     eventName: Bricks.OkCancelButtonBrick.event.CLICK,
                                     callback: function (step, data) {
                                         console.log("Just Click:", this, step, data);
                                     }
-                                },
+                                },*/
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
-                                    expose: { as: "advance" },
-                                    callback: function (step, data) {
-                                        console.log("Ok click:", this, step, data);
+                                    // load and process files
+                                    callback: function (step/*, data*/) {
+                                        var promise,
+                                            handle = delayLoadingState(step, 100),
+                                            bricksData = step.getData().bricksData,
+                                            fileTypeValue = bricksData.fileType.selectedChoice,
+                                            fileValue = bricksData.fileOrFileULR.fileValue,
+                                            fileUrlValue = bricksData.fileOrFileULR.inputValue,
+                                            fileName = bricksData.fileOrFileULR.fileName;
 
-                                        var stepData = step.getData(),
-                                            fileType = stepData.fileType.selectedChoice,
-                                            fileName = stepData.fileOrFileULR.inputValue;
+                                        promise = DataLoader.loadDataSet({
+                                            url: fileValue ? null : fileUrlValue,
+                                            file: fileValue,
+                                            type: fileTypeValue === "shapefileFileAttrStep" ? "binary" : "text"
+                                        });
 
-                                        step.advance(fileType,
-                                            {
-                                                datasetName: {
-                                                    inputValue: fileName
-                                                }
+                                        promise.then(function (data) {
+                                            switch (fileTypeValue) {
+                                                case "geojsonFileAttrStep":
+                                                    var geojsonPromise = DataLoader.buildGeoJson(data);
+
+                                                    geojsonPromise.then(function (featureLayer) {
+                                                        var fieldOptions;
+                                                        window.clearTimeout(handle);
+
+                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                        fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                        // no layer names available; likely this is not a geojson file
+                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Blah-blah"
+                                                                    })
+                                                            });
+                                                        } else {
+
+                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                stepData: featureLayer,
+                                                                bricksData: {
+                                                                    datasetName: {
+                                                                        inputValue: fileName
+                                                                    },
+                                                                    primaryAttribute: {
+                                                                        options: fieldOptions
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+
+                                                    }, function (event) {
+                                                        //error building geojson
+                                                        console.log(event);
+                                                    });
+
+                                                    break;
+
+                                                case "csvFileAttrStep":
+                                                    break;
+
+                                                case "shapefileFileAttrStep":
+                                                    break;
                                             }
-                                        );
+
+                                        }, function (event) {
+                                            //error loading file
+                                            console.log(event);
+                                        });
                                     }
+                                    //expose: { as: "advance" },
                                 },
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
