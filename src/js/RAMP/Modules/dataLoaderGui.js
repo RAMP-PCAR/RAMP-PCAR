@@ -588,6 +588,74 @@ define([
                                                     break;
 
                                                 case "csvFileAttrStep":
+                                                    var rows,
+                                                        delimiter = UtilMisc.detectDelimiter(data),
+
+                                                        guessedLatHeader = null,
+                                                        guessedLongHeader = null,
+                                                        headers;
+
+                                                    window.clearTimeout(handle);
+
+                                                    rows = DataLoader.csvPeek(data, delimiter);
+                                                    headers = rows[0].map(function (header) { return { value: header, text: header }; });
+
+                                                    // no properties names available; likely this is not a csv file
+                                                    if (!headers || headers.length === 0) {
+                                                        handleFailure(step, handle, {
+                                                            fileType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Not a geojson file"
+                                                                })
+                                                        });
+                                                    } else if (!rows || rows.length < 2) {
+                                                        handleFailure(step, handle, {
+                                                            fileType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "No data in the file; maybe not CSV?"
+                                                                })
+                                                        });
+                                                    } else {
+                                                        // try guessing lat and long columns
+
+                                                        var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
+                                                            longRegex = new RegExp(/^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i);
+
+                                                        // guess lat
+                                                        guessedLatHeader = UtilArray.find(rows[0], function (header, i) {
+                                                            return rows.every(function (row, rowi) {
+                                                                return rowi === 0 || latRegex.test(row[i]);
+                                                            });
+                                                        });
+
+                                                        // guess long
+                                                        guessedLongHeader = UtilArray.find(rows[0], function (header, i) {
+                                                            return rows.every(function (row, rowi) {
+                                                                return rowi === 0 || longRegex.test(row[i]);
+                                                            }) && header !== guessedLatHeader;
+                                                        });
+
+                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                            stepData: data,
+                                                            bricksData: {
+                                                                datasetName: {
+                                                                    inputValue: fileName
+                                                                },
+                                                                primaryAttribute: {
+                                                                    options: headers
+                                                                },
+                                                                latitude: {
+                                                                    options: headers,
+                                                                    selectedOption: guessedLatHeader
+                                                                },
+                                                                longitude: {
+                                                                    options: headers,
+                                                                    selectedOption: guessedLongHeader
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+
                                                     break;
 
                                                 case "shapefileFileAttrStep":
