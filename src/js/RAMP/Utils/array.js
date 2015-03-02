@@ -45,7 +45,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
             * @method find
             * @static
             * @param {Array} arr Array to be searched
-            * @param {Function} predicate a function that takes one argument and returns true if the
+            * @param {Function} predicate a function that takes two arguments (element and its index) and returns true if the
             * argument satisfies some condition, and false otherwise.
             * @param {Object} scope ???
             * @return {Object} first element that satisfies the given predicate; `null` if no such element is found
@@ -67,7 +67,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
             * @method indexOf
             * @static
             * @param {Array} arr Array to be searched
-            * @param {Function} predicate a function that takes one argument and returns true if the
+            * @param {Function} predicate a function that takes two arguments (element and its index) and returns true if the
             * argument satisfies some condition, and false otherwise.
             * @param {Object} scope ???
             * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element is found
@@ -78,7 +78,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
                 }
                 var i;
                 for (i = 0; i < arr.length; i++) {
-                    if (predicate(arr[i])) {
+                    if (predicate(arr[i], i)) {
                         return i;
                     }
                 }
