@@ -29,6 +29,7 @@ define([
             //steps,
             choiceTree,
             choiceTreeCallbacks,
+            choiceTreeErrors,
             stepLookup = {},
 
             transitionDuration = 0.4;
@@ -84,6 +85,14 @@ define([
 
                     serviceFileBrick.setChoice(guess);
                 }
+            }
+        };
+
+        choiceTreeErrors = {
+            base: {
+                type: "error",
+                header: "Cannot load",
+                message: "You have IE9?"
             }
         };
 
@@ -208,26 +217,49 @@ define([
                                                     // get data from feature layer's legend endpoint
                                                     var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
                                                     legendPromise.then(function (legendLookup) {
+                                                        var fieldOptions;
                                                         window.clearTimeout(handle);
 
                                                         data.legendLookup = legendLookup;
+                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                        fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
 
-                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                            stepData: data,
-                                                            bricksData: {
-                                                                primaryAttribute: {
-                                                                    // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                                    options: data.fields.map(function (field) { return { value: field, text: field }; })
+                                                        // no fields available; likely this is not a Feature service
+                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                            handleFailure(step, handle, {
+                                                                serviceType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Blah-blah"
+                                                                    })
+                                                            });
+                                                        } else {
+
+                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                stepData: data,
+                                                                bricksData: {
+                                                                    primaryAttribute: {
+                                                                        options: fieldOptions
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
+                                                            });
+                                                        }
 
                                                     }, function (event) {
-                                                        handleFailure(step, event, handle);
+                                                        handleFailure(step, handle, {
+                                                            serviceType: 
+                                                                lang.mixin(choiceTreeErrors.base,{
+                                                                    message: "Blah-blah" + event.message
+                                                                })
+                                                        });
                                                     });
 
                                                 }, function (event) {
-                                                    handleFailure(step, event, handle);
+                                                    handleFailure(step, handle, {
+                                                        serviceType:
+                                                            lang.mixin(choiceTreeErrors.base, {
+                                                                message: "Blah-blah" + event.message
+                                                            })
+                                                    });
                                                 });
 
                                                 break;
@@ -237,22 +269,42 @@ define([
                                                 promise = DataLoader.getWmsLayerList(serviceUrlValue);
 
                                                 promise.then(function (data) {
+                                                    var layerOptions;
+                                                    window.clearTimeout(handle);
 
-                                                    choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                        stepData: {
-                                                            wmsData: data,
-                                                            wmsUrl: serviceUrlValue
-                                                        },
-                                                        bricksData: {
-                                                            layerName: {
-                                                                // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                                options: data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; })
+                                                    // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                    layerOptions = data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; });
+
+                                                    // no layer names available; likely this is not a WMS service
+                                                    if (!layerOptions || layerOptions.length === 0) {
+                                                        handleFailure(step, handle, {
+                                                            serviceType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Blah-blah"
+                                                                })
+                                                        });
+                                                    } else {
+
+                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                            stepData: {
+                                                                wmsData: data,
+                                                                wmsUrl: serviceUrlValue
+                                                            },
+                                                            bricksData: {
+                                                                layerName: {
+                                                                    options: layerOptions
+                                                                }
                                                             }
-                                                        }
-                                                    });
+                                                        });
+                                                    }
 
                                                 }, function (event) {
-                                                    handleFailure(step, event, handle);
+                                                    handleFailure(step, handle, {
+                                                        serviceType:
+                                                            lang.mixin(choiceTreeErrors.base, {
+                                                                message: "Blah-blah" + event.message
+                                                            })
+                                                    });
                                                 });
 
                                                 break;
@@ -679,18 +731,12 @@ define([
             }, time);
         }
 
-        function handleFailure(step, event, handle) {
+        function handleFailure(step, handle, brickNotices) {
             window.clearTimeout(handle);
 
             step
                 ._notifyStateChange(StepItem.state.ERROR)
-                .displayBrickNotices({
-                    serviceURL: {
-                        type: "error",
-                        header: "Cannot load",
-                        message: event.message
-                    }
-                })
+                .displayBrickNotices(brickNotices)
             ;
         }
 
