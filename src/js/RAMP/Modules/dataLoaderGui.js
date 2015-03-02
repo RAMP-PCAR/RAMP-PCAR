@@ -557,7 +557,7 @@ define([
                                                             handleFailure(step, handle, {
                                                                 fileType:
                                                                     lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Blah-blah"
+                                                                        message: "Not a geojson file"
                                                                     })
                                                             });
                                                         } else {
@@ -577,7 +577,12 @@ define([
 
                                                     }, function (event) {
                                                         //error building geojson
-                                                        console.log(event);
+                                                        handleFailure(step, handle, {
+                                                            fileType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Cannot build, not a geojson" + event.message
+                                                                })
+                                                        });
                                                     });
 
                                                     break;
@@ -591,7 +596,12 @@ define([
 
                                         }, function (event) {
                                             //error loading file
-                                            console.log(event);
+                                            handleFailure(step, handle, {
+                                                fileOrFileULR:
+                                                    lang.mixin(choiceTreeErrors.base, {
+                                                        message: "Cannot load file" + event.message
+                                                    })
+                                            });
                                         });
                                     }
                                     //expose: { as: "advance" },
