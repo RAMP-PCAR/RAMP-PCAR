@@ -88,6 +88,7 @@ define([
         };
 
         choiceTree = {
+            // step for choosing between adding a service or a file
             id: "sourceTypeStep",
             content: [
                 {
@@ -108,16 +109,17 @@ define([
                         ]
                     },
                     on: [
-                            {
-                                eventName: Bricks.ChoiceBrick.event.CHANGE,
-                                expose: { as: "advance" },
-                                callback: choiceTreeCallbacks.simpleAdvance
-                            }
+                        {
+                            eventName: Bricks.ChoiceBrick.event.CHANGE,
+                            //expose: { as: "advance" },
+                            callback: choiceTreeCallbacks.simpleAdvance
+                        }
                     ]
                 }
             ],
             children: [
                 {
+                    // step for choosing between feature and wms service and providing a service url
                     id: "serviceTypeStep",
                     content: [
                         {
@@ -199,11 +201,11 @@ define([
 
                                         switch (serviceTypeValue) {
                                             case "featureServiceAttrStep":
-                                                //get data from feature layer endpoint
+                                                // get data from feature layer endpoint
                                                 promise = DataLoader.getFeatureLayer(serviceUrlValue);
 
                                                 promise.then(function (data) {
-                                                    //get data from feature layer's legend endpoint
+                                                    // get data from feature layer's legend endpoint
                                                     var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
                                                     legendPromise.then(function (legendLookup) {
                                                         window.clearTimeout(handle);
@@ -227,16 +229,42 @@ define([
                                                 }, function (event) {
                                                     handleFailure(step, event, handle);
                                                 });
+
+                                                break;
+
+                                            case "wmsServiceAttrStep":
+                                                // get data from wms endpoint
+                                                promise = DataLoader.getWmsLayerList(serviceUrlValue);
+
+                                                promise.then(function (data) {
+
+                                                    choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                        stepData: {
+                                                            wmsData: data,
+                                                            wmsUrl: serviceUrlValue
+                                                        },
+                                                        bricksData: {
+                                                            layerName: {
+                                                                // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                                options: data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; })
+                                                            }
+                                                        }
+                                                    });
+
+                                                }, function (event) {
+                                                    handleFailure(step, event, handle);
+                                                });
+
                                                 break;
                                         }
                                     }
                                     //expose: { as: "advance" }
-                                }/*,
+                                },
                                 {
                                     eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
-                                    expose: { as: "retreat" },
+                                    //expose: { as: "retreat" },
                                     callback: choiceTreeCallbacks.simpleCancel
-                                }*/
+                                }
 
                             ]
                         }
@@ -313,7 +341,55 @@ define([
                                         label: "Add Dataset",
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
-                                    }
+                                    },
+                                    on: [
+                                        {
+                                            eventName: Bricks.ButtonBrick.event.CLICK,
+                                            // add wms service layer to the map
+                                            callback: function (step /*,data*/) {
+                                                var data = step.getData(),
+                                                    bricksData = data.bricksData,
+                                                    stepData = data.stepData,
+
+                                                    wmsLayerName = bricksData.layerName.dropDownValue,
+
+                                                    wmsConfig,
+                                                    layer,
+                                                    wmsLayer;
+
+                                                layer = UtilArray.find(stepData.wmsData.layers,
+                                                    function (l) {
+                                                        return l.name === wmsLayerName;
+                                                    }
+                                                );
+
+                                                wmsConfig = {
+                                                    id: LayerLoader.nextId(),
+                                                    displayName: layer.desc,
+                                                    format: "png",
+                                                    layerName: wmsLayerName,
+                                                    imageUrl: "assets/images/wms.png",
+                                                    url: stepData.wmsUrl,
+                                                    legendMimeType: "image/jpeg"
+                                                };
+
+                                                if (layer.queryable) {
+                                                    wmsConfig.featureInfo = {
+                                                        parser: "stringParse",
+                                                        mimeType: "text/plain"
+                                                    };
+                                                }
+
+                                                wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
+
+                                                wmsLayer = RampMap.makeWmsLayer(wmsConfig, true);
+                                                RAMP.config.layers.wms.push(wmsConfig);
+
+                                                LayerLoader.loadLayer(wmsLayer);
+                                            }
+                                            //expose: { as: "ADD_DATASET" }
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -585,7 +661,7 @@ define([
             ;
 
             // set the first step as active
-            stepLookup.sourceTypeStep.currentStep(1);           
+            stepLookup.sourceTypeStep.currentStep(1);
         }
 
         /**
