@@ -38,6 +38,8 @@ define([
             choiceTreeErrors,
             stepLookup = {},
 
+            addDatasetPopup,
+
             transitionDuration = 0.5,
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
@@ -376,6 +378,7 @@ define([
                                                 RAMP.config.layers.feature.push(newConfig);
 
                                                 LayerLoader.loadLayer(featureLayer);
+                                                addDatasetPopup.close();
 
                                                 //mainPopup.close();
                                             }
@@ -447,6 +450,7 @@ define([
                                                 RAMP.config.layers.wms.push(wmsConfig);
 
                                                 LayerLoader.loadLayer(wmsLayer);
+                                                addDatasetPopup.close();
                                             }
                                             //expose: { as: "ADD_DATASET" }
                                         }
@@ -789,6 +793,7 @@ define([
                                                 });
 
                                                 LayerLoader.loadLayer(featureLayer);
+                                                addDatasetPopup.close();
                                             }
                                         }
                                     ]
@@ -895,6 +900,7 @@ define([
 
                                                     //TODO: set symbology and colour on feature layer (obj.data)
                                                     LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
 
                                                 }, function () {
                                                     // can't construct csv
@@ -968,6 +974,7 @@ define([
                                                 });
 
                                                 LayerLoader.loadLayer(featureLayer);
+                                                addDatasetPopup.close();
                                             }
                                         }
                                     ]
@@ -1168,10 +1175,11 @@ define([
                     .set(filterToggles, { className: "+=scroll" }, 0.01)
 
                     .to(filterToggles, transitionDuration, { top: -60, ease: "easeOutCirc" })
-                    .to(layerList, transitionDuration, { top: layerList.height() / 3, autoAlpha: 0, ease: "easeOutCirc" }, 0)
+                    .to(layerList, transitionDuration, { top: layerList.height() / 3, ease: "easeOutCirc" }, 0)
+                    .to(layerList, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" }, transitionDuration / 2)
                 ;
 
-                PopupManager.registerPopup(addDatasetToggle, "click",
+                addDatasetPopup = PopupManager.registerPopup(addDatasetToggle, "click",
                     function (d) {                        
                         createChoiceTree();
 
