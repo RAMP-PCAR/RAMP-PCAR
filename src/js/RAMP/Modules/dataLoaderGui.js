@@ -24,6 +24,12 @@ define([
 
         var rootNode = $("#searchMapSectionBody"),
 
+            addDatasetToggle,
+            addDatasetContainer,
+
+            layerList,
+            filterToggles,
+
             symbologyPreset = {},
 
             //steps,
@@ -1140,9 +1146,58 @@ define([
             });
         }
 
+        function closeChoiceTree() {
+            stepLookup.sourceTypeStep.retreat();
+        }
+
         return {
             init: function () {
-                reset();
+                var tl = new TimelineLite({ paused: true });
+
+                addDatasetToggle = rootNode.find("#addDatasetToggle");
+                addDatasetContainer = rootNode.find("#add-dataset-section-container");
+
+                layerList = rootNode.find("#layerList");
+                filterToggles = rootNode.find("#filterGlobalToggles");
+
+                createChoiceTree();
+                tl
+                    .set(addDatasetContainer, { display: "block" })
+
+                    .set(layerList, { className: "+=scroll" }, 0.01)
+                    .set(filterToggles, { className: "+=scroll" }, 0.01)
+
+                    .to(filterToggles, transitionDuration, { top: -60, ease: "easeOutCirc" })
+                    .to(layerList, transitionDuration, { top: layerList.height() / 3, autoAlpha: 0, ease: "easeOutCirc" }, 0)
+                ;
+
+                PopupManager.registerPopup(addDatasetToggle, "click",
+                    function (d) {                        
+                        createChoiceTree();
+
+                        tl
+                            .eventCallback("onComplete", function () {
+                                d.resolve();
+                            })
+                           .play()
+                        ;
+                    },
+                    {
+                        closeHandler: function (d) {
+                            closeChoiceTree();
+
+                            tl
+                                .eventCallback("onReverseComplete", function () {
+                                    d.resolve();
+                                })
+                               .reverse()
+                            ;
+                        },
+                        target: addDatasetContainer,
+                        activeClass: "button-pressed",
+                        resetFocusOnClose: true
+                    }
+                );
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key) {
