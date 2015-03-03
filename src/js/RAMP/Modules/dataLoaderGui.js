@@ -254,8 +254,9 @@ define([
                                                     });
 
                                                 }, function (event) {
+                                                    // error connection to service
                                                     handleFailure(step, handle, {
-                                                        serviceType:
+                                                        serviceURL:
                                                             lang.mixin(choiceTreeErrors.base, {
                                                                 message: "Blah-blah" + event.message
                                                             })
@@ -591,8 +592,8 @@ define([
                                                     var rows,
                                                         delimiter = UtilMisc.detectDelimiter(data),
 
-                                                        guessedLatHeader = null,
-                                                        guessedLongHeader = null,
+                                                        guess,
+
                                                         headers;
 
                                                     window.clearTimeout(handle);
@@ -616,25 +617,10 @@ define([
                                                                 })
                                                         });
                                                     } else {
-                                                        // try guessing lat and long columns
+                                                        
+                                                        guess = guessLatLong(rows);
 
-                                                        var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
-                                                            longRegex = new RegExp(/^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i);
-
-                                                        // guess lat
-                                                        guessedLatHeader = UtilArray.find(rows[0], function (header, i) {
-                                                            return rows.every(function (row, rowi) {
-                                                                return rowi === 0 || latRegex.test(row[i]);
-                                                            });
-                                                        });
-
-                                                        // guess long
-                                                        guessedLongHeader = UtilArray.find(rows[0], function (header, i) {
-                                                            return rows.every(function (row, rowi) {
-                                                                return rowi === 0 || longRegex.test(row[i]);
-                                                            }) && header !== guessedLatHeader;
-                                                        });
-
+                                                        // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
                                                         choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
                                                             stepData: data,
                                                             bricksData: {
@@ -646,11 +632,11 @@ define([
                                                                 },
                                                                 latitude: {
                                                                     options: headers,
-                                                                    selectedOption: guessedLatHeader
+                                                                    selectedOption: guess.lat
                                                                 },
                                                                 longitude: {
                                                                     options: headers,
-                                                                    selectedOption: guessedLongHeader
+                                                                    selectedOption: guess.long
                                                                 }
                                                             }
                                                         });
@@ -774,6 +760,7 @@ define([
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     }
+
                                 }
                             ]
                         },
@@ -847,6 +834,71 @@ define([
 
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
+        }
+
+        function guessLatLong(rows) {
+            // try guessing lat and long columns
+            var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
+                longRegex = new RegExp(/^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i),
+                
+                guessesLat,
+                guessesLong,
+
+                guessedLatHeader,
+                guessedLongHeader;
+
+            // first filter out all columns that are not lat
+            guessesLat = rows[0].filter(function (header, i) {
+                return rows.every(function (row, rowi) {
+                    return rowi === 0 || latRegex.test(row[i]);
+                });
+            });
+
+            // filter out all columns that are not long for sure
+            guessesLong = rows[0].filter(function (header, i) {
+                return rows.every(function (row, rowi) {
+                    return rowi === 0 || longRegex.test(row[i]);
+                });
+            });
+
+            // console.log(guessesLat);
+            // console.log(guessesLong);
+
+            // if there more than one lat guesses
+            if (guessesLat.length > 1) {
+                // filter out ones that don't have "la" or "y" in header name
+                guessesLat = guessesLat.filter(function (header) {
+                    var h = header.toLowerCase();
+
+                    return h.indexOf('la') !== -1 || h.indexOf('y') !== -1;
+                });
+            }
+
+            // console.log(guessesLat);
+            // pick the first lat guess or null
+            guessedLatHeader = guessesLat[0] || null;
+
+            // if there more than one long guesses
+            if (guessesLong.length > 1) {
+                // first, remove lat guess from long options in case they overlap
+                UtilArray.remove(guessesLong, guessedLatHeader);
+
+                // filter out ones that don't have "lo" or "x" in header name
+                guessesLong = guessesLong.filter(function (header) {
+                    var h = header.toLowerCase();
+
+                    return h.indexOf('lo') !== -1 || h.indexOf('x') !== -1;
+                });
+            }
+
+            // console.log(guessesLong);
+            // pick the first long guess or null
+            guessedLongHeader = guessesLong[0] || null;
+
+            return {
+                lat: guessedLatHeader,
+                long: guessedLongHeader
+            };
         }
 
         /**
