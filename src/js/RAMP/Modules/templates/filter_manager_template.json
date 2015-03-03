@@ -354,15 +354,35 @@
         "filter_manager_template2": "
             
             <div id='categories'>
+
                 <div id='filterGlobalToggles' class='global-toggles'>
-                    {% include('filter_global_row_template', o.config.templates);%}
+                    <div class='dataset-global-control'>
+                        <button class='btn btn-sm button-none _tooltip' title='{%= i18n.t('addDataset.title') %}' id='addDatasetToggle'> 
+                            <i class='fa fa-plus'></i>
+                            <span class='on-right wb-inv'>{%= i18n.t('addDataset.title') %}</span>
+                         </button>
+                    </div>
+
+                    <div class='layer-checkboxes'>
+                        <div class='checkbox-custom'>
+                            <label for='globalVisibility' class='form-checkbox _tooltip eye checked' title=''>
+                                <span class='wb-invisible'></span>
+                            </label>
+                            <input id='globalVisibility' checked='checked' class='layerList_legend' type='checkbox' ></input>
+                        </div>
+                        <div class='checkbox-custom'>
+                            <label for='globalBox' class='form-checkbox _tooltip box checked' title=''>
+                                <span class='wb-invisible'></span>
+                            </label>
+                            <input id='globalBox' checked='checked' class='layerList_legend' type='checkbox' ></input>
+                        </div>
+                    </div>
                 </div>
-                <!-- layerList is the target for the Javascript version.  everything else uses the fieldsets-->
+                
+                {% include('add_dataset_template', o); %}
+
                 <ul id='layerList' role='listbox' aria-label='{%= i18n.t('filterManager.layerListLabel') %}'>
-                   
                 </ul>
             </div>
-
-            {% include('add_dataset_template', o); %}
         "
 }

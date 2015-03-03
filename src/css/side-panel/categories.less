@@ -1,10 +1,15 @@
-﻿#categories {
+﻿#searchMapSectionBody {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#categories {
 
     #filterGlobalToggles {
-        padding-bottom: 12px; // fix the height after removing the global toggle.
-        padding-top: 12px;
-
-        .global-controls {
+        padding: 0 0 0 20px;
+        height: 46px;
+        /*.global-controls {
             .inline-control-group;
             margin-left: 36px;
 
@@ -15,6 +20,28 @@
 
         .global-checkboxes {
             .right-align-checkboxes;
+        }*/
+        .dataset-global-control {
+            display: inline-block;
+            vertical-align: middle;
+            position: relative;
+
+            button {
+                width: 32px;
+                height: 32px;
+
+                &:hover,
+                &:focus {
+                    color: @attention-color;
+                }
+            }
+        }
+
+        &:before {
+            content: "";
+            vertical-align: middle;
+            height: 100%;
+            display: inline-block;
         }
     }
 
@@ -360,8 +387,7 @@
                 .grayscale;
                 opacity: 0.5;
             }
-
-            //background-color: @very-light-grey-color !important;            
+            //background-color: @very-light-grey-color !important;
         }
 
         &.layer-state-updating {
@@ -374,7 +400,7 @@
             img {
                 opacity: 0.5;
             }
-            
+
             &:before {
                 content: "";
                 position: absolute;
@@ -625,7 +651,7 @@
                     color: #FFF;
                 }
 
-                .fa-exclamation-circle  {
+                .fa-exclamation-circle {
                     color: @attention-color;
                 }
             }

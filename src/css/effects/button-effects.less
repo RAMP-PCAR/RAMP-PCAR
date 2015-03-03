@@ -123,6 +123,18 @@
     outline-color: transparent;
     text-decoration: underline;
     text-shadow: none;
+    color: black;
+
+    &:hover,
+    &:focus {
+        background: none repeat scroll 0 center rgba(0, 0, 0, 0) !important;
+        border-color: rgba(0, 0, 0, 0) !important;
+        .box-shadow (none);
+        text-shadow: none;
+        //outline: 1px dotted #000;
+        //color: @attention-color;
+        color: black;
+    }
 }
 
 .button-close {
