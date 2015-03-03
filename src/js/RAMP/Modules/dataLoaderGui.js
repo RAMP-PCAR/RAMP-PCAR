@@ -1,4 +1,4 @@
-﻿/* global define, console, window, $, i18n, RAMP, t */
+﻿/* global define, console, window, $, i18n, RAMP, t, TimelineLite */
 
 define([
     /* Dojo */
@@ -32,11 +32,11 @@ define([
             choiceTreeErrors,
             stepLookup = {},
 
-            transitionDuration = 0.4,
+            transitionDuration = 0.5,
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-        console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
+        //console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
 
         choiceTreeCallbacks = {
             simpleAdvance: function (step, data, targetChildData) {
@@ -973,7 +973,12 @@ define([
             ]
         };
 
-        function reset() {
+        function createChoiceTree() {
+
+            // clear steps
+            t.dfs(choiceTree, function (node) {
+                node.stepItem = null;
+            });
 
             // create the choice tree
             t.dfs(choiceTree, function (node, par/*, ctrl*/) {
@@ -981,6 +986,7 @@ define([
                     level = par ? par.level + 1 : 1;
 
                 node.level = level;
+                
                 stepItem = new StepItem(node);
                 stepItem.on(StepItem.event.CURRENT_STEP_CHANGE, setCurrentStep);
                 stepItem.on(StepItem.event.STATE_CHANGE, setStepState);
@@ -998,6 +1004,7 @@ define([
             // append tree to the page
             rootNode
                 .find(".add-dataset-content")
+                .empty()
                 .append(stepLookup.sourceTypeStep.node)
             ;
 
