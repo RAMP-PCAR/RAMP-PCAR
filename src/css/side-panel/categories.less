@@ -43,6 +43,10 @@
             height: 100%;
             display: inline-block;
         }
+
+        &.scroll {
+            .box-shadow (0 6px 5px -5px rgb(0, 0, 0));
+        }
     }
 
     #layerList {
@@ -55,6 +59,13 @@
         top: 0;
         margin: 0 !important;
         padding: 0;
+
+        &.scroll {
+            
+            &> li:first-child {
+                .box-shadow (0 -6px 5px -5px rgb(0, 0, 0));
+            }
+        }
 
         .sk-spinner-wave-10.sk-spinner {
             position: absolute;
