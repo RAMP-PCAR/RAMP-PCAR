@@ -939,20 +939,30 @@ define([
                                     },
                                     on: [
                                         {
-                                            eventName: Bricks.ButtonBrick.event.CLICK//,
+                                            eventName: Bricks.ButtonBrick.event.CLICK,
                                             // add wms service layer to the map
-                                            //callback: function (step /*,data*/) {
-                                                //var data = step.getData(),
-                                                //    bricksData = data.bricksData,
-                                                //    stepData = data.stepData,
+                                            callback: function (step /*,data*/) {
+                                                var data = step.getData(),
+                                                    bricksData = data.bricksData,
+                                                    featureLayer = data.stepData,
 
-                                                //    csvData = stepData.csvData,
-                                                //    csvHeaders = stepData.csvHeaders,
-                                                //    csvDelimeter = stepData.csvDelimeter,
+                                                    iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
 
-                                                //    featureLayer,
-                                                //    iconTemplate = makeIconTemplate('a_d_icon_circlePoint' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
-                                            //}
+                                                DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                    //renderer: obj.style,
+                                                    colour: [
+                                                        bricksData.color.rgb_[0],
+                                                        bricksData.color.rgb_[1],
+                                                        bricksData.color.rgb_[2],
+                                                        255
+                                                    ],
+                                                    nameField: bricksData.primaryAttribute.dropDownValue,
+                                                    icon: iconTemplate,
+                                                    datasetName: bricksData.datasetName.inputValue
+                                                });
+
+                                                LayerLoader.loadLayer(featureLayer);
+                                            }
                                         }
                                     ]
                                 }
