@@ -971,6 +971,8 @@ define([
                         }
                     } else {
                         templateKey = "datagrid_full_manager_Template";
+                        // bugfix: 7047 need this to fix extended grid issue.
+                        selectedDatasetId = "";
 
                         // filter out static layers
                         var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
