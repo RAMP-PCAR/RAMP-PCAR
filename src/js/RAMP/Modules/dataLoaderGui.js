@@ -630,7 +630,11 @@ define([
 
                                                         // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
                                                         choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
-                                                            stepData: data,
+                                                            stepData: {
+                                                                csvData: data,
+                                                                csvHeaders: rows[0],
+                                                                csvDelimeter: delimiter
+                                                            },
                                                             bricksData: {
                                                                 datasetName: {
                                                                     inputValue: fileName
@@ -720,7 +724,7 @@ define([
                                                     bricksData = data.bricksData,
                                                     featureLayer = data.stepData,
 
-                                                    iconTemplate = makeIconTemplate(featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+                                                    iconTemplate = makeIconTemplate("a_d_icon_" + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
 
                                                 DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                     //renderer: obj.style,
@@ -796,8 +800,65 @@ define([
                                         label: "Add Dataset",
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
-                                    }
+                                    },
+                                    on: [
+                                        {
+                                            eventName: Bricks.ButtonBrick.event.CLICK,
+                                            // add wms service layer to the map
+                                            callback: function (step /*,data*/) {
+                                                var data = step.getData(),
+                                                    bricksData = data.bricksData,
+                                                    stepData = data.stepData,
 
+                                                    csvData = stepData.csvData,
+                                                    csvHeaders = stepData.csvHeaders,
+                                                    csvDelimeter = stepData.csvDelimeter,
+
+                                                    featureLayer,
+                                                    iconTemplate = makeIconTemplate('a_d_icon_circlePoint', bricksData.color.hex),
+
+                                                    promise;
+
+                                                promise = DataLoader.buildCsv(csvData, {
+                                                    latfield: bricksData.latitude.dropDownValue,
+                                                    lonfield: bricksData.longitude.dropDownValue,
+                                                    delimiter: csvDelimeter,
+
+                                                    fields: csvHeaders
+                                                });
+
+                                                promise.then(function (event) {
+                                                    featureLayer = event;
+
+                                                    DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                        renderer: "circlePoint",
+                                                        colour: [
+                                                            bricksData.color.rgb_[0],
+                                                            bricksData.color.rgb_[1],
+                                                            bricksData.color.rgb_[2],
+                                                            255
+                                                        ],
+                                                        nameField: bricksData.primaryAttribute.dropDownValue,
+                                                        icon: iconTemplate,
+                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        fields: csvHeaders
+                                                    });
+
+                                                    //TODO: set symbology and colour on feature layer (obj.data)
+                                                    LayerLoader.loadLayer(featureLayer);
+
+                                                }, function () {
+                                                    // can't construct csv
+                                                    handleFailure(step, null, {
+                                                        datasetName:
+                                                            lang.mixin(choiceTreeErrors.base, {
+                                                                message: "Cannot create CSV feature lyer"
+                                                            })
+                                                    });
+                                                });
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -949,7 +1010,7 @@ define([
             /*jshint validthis: true */
             return "data:image/svg+xml;base64," +
                 UtilMisc.b64EncodeUnicode(
-                    TmplHelper.template.call(this, "a_d_icon_" + templateName, {
+                    TmplHelper.template.call(this, templateName, {
                         colour: hex
                     }, templates)
                 );
@@ -971,7 +1032,9 @@ define([
         }
 
         function handleFailure(step, handle, brickNotices) {
-            window.clearTimeout(handle);
+            if (handle) {
+                window.clearTimeout(handle);
+            }
 
             step
                 ._notifyStateChange(StepItem.state.ERROR)
