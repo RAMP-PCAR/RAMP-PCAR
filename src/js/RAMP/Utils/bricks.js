@@ -1015,6 +1015,7 @@ define([
                 var payload = {
                     hex: this.picker.toString(),
                     rgb: this.picker.rgb,
+                    rgb_: this.picker.rgb.map(function (c) { return Math.round(c * 255); }), // also return a proper rgb
                     hsv: this.picker.hsv
                 };
 
