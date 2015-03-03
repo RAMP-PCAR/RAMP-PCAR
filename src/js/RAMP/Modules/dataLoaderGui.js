@@ -32,7 +32,9 @@ define([
             choiceTreeErrors,
             stepLookup = {},
 
-            transitionDuration = 0.4;
+            transitionDuration = 0.4,
+                
+            templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
 
@@ -708,7 +710,40 @@ define([
                                         label: "Add Dataset",
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
-                                    }
+                                    },
+                                    on: [
+                                        {
+                                            eventName: Bricks.ButtonBrick.event.CLICK,
+                                            // add wms service layer to the map
+                                            callback: function (step /*,data*/) {
+                                                var data = step.getData(),
+                                                    bricksData = data.bricksData,
+                                                    featureLayer = data.stepData,
+
+                                                    rgbColour = bricksData.color.rgb,
+                                                    iconTemplate;
+
+                                                iconTemplate = $(TmplHelper.template.call(this, "a_d_icon_" + featureLayer.renderer._RAMP_rendererType, {
+                                                    colour: bricksData.color.hex
+                                                }, templates));
+
+                                                DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                    //renderer: obj.style,
+                                                    colour: [
+                                                        rgbColour.r,
+                                                        rgbColour.g,
+                                                        rgbColour.b,
+                                                        255
+                                                    ],
+                                                    nameField: bricksData.primaryAttribute.dropDownValue,
+                                                    icon: iconTemplate,
+                                                    datasetName: bricksData.datasetName.inputValue
+                                                });
+
+                                                LayerLoader.loadLayer(featureLayer);
+                                            }
+                                        }
+                                    ]
                                 }
                             ]
                         },
