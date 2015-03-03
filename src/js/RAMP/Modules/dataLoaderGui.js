@@ -1177,6 +1177,7 @@ define([
 
                         tl
                             .eventCallback("onComplete", function () {
+                                addDatasetContainer.find(":focusable:first").focus();
                                 d.resolve();
                             })
                            .play()
