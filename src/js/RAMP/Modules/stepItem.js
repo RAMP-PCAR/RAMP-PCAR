@@ -109,7 +109,7 @@ define([
                     config
                 );
 
-                this.node = $(TmplHelper.template(this.template, config, templates));
+                this.node = $(TmplHelper.template.call(null, this.template, config, templates));
 
                 this._contentNode = this.node.find("> .step-content");
                 this._optionsContainerNode = this.node.find("> .step-options-container");
@@ -637,6 +637,11 @@ define([
                     skipFirst,
 
                     that = this;
+
+                // cannot advance if the target is not specified
+                if (!targetChildStep) {
+                    return this;
+                }
 
                 this._timeline
                     .seek("+=0", false)
