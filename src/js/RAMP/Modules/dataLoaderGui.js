@@ -33,7 +33,7 @@ define([
             stepLookup = {},
 
             transitionDuration = 0.4,
-                
+
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
         console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
@@ -720,19 +720,14 @@ define([
                                                     bricksData = data.bricksData,
                                                     featureLayer = data.stepData,
 
-                                                    rgbColour = bricksData.color.rgb,
-                                                    iconTemplate;
-
-                                                iconTemplate = $(TmplHelper.template.call(this, "a_d_icon_" + featureLayer.renderer._RAMP_rendererType, {
-                                                    colour: bricksData.color.hex
-                                                }, templates));
+                                                    iconTemplate = makeIconTemplate(featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
 
                                                 DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                     //renderer: obj.style,
                                                     colour: [
-                                                        rgbColour.r,
-                                                        rgbColour.g,
-                                                        rgbColour.b,
+                                                        bricksData.color.rgb_[0],
+                                                        bricksData.color.rgb_[1],
+                                                        bricksData.color.rgb_[2],
                                                         255
                                                     ],
                                                     nameField: bricksData.primaryAttribute.dropDownValue,
@@ -941,6 +936,23 @@ define([
                 lat: guessedLatHeader,
                 long: guessedLongHeader
             };
+        }
+
+        /**
+         * 
+         * @method makeIconTemplate
+         * @param {String} templateName a name of the template to use for an icon
+         * @param {String} hex color value in hex
+         * @return {String} a base64 encoded icon template
+         */
+        function makeIconTemplate(templateName, hex) {
+            /*jshint validthis: true */
+            return "data:image/svg+xml;base64," +
+                UtilMisc.b64EncodeUnicode(
+                    TmplHelper.template.call(this, "a_d_icon_" + templateName, {
+                        colour: hex
+                    }, templates)
+                );
         }
 
         /**
