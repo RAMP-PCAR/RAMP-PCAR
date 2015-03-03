@@ -593,7 +593,7 @@ define([
                                                         delimiter = UtilMisc.detectDelimiter(data),
 
                                                         guess,
-
+                                                        primaryAttribute,
                                                         headers;
 
                                                     window.clearTimeout(handle);
@@ -617,8 +617,14 @@ define([
                                                                 })
                                                         });
                                                     } else {
-                                                        
+
                                                         guess = guessLatLong(rows);
+
+                                                        // preselect primary attribute so it's not one of the lat or long guesses;
+                                                        // if csv has only two fields (lat, long), select the first as primary
+                                                        primaryAttribute = rows[0].filter(function (header) {
+                                                            return header !== guess.lat && header !== guess.long;
+                                                        })[0] || rows[0][0];
 
                                                         // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
                                                         choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
@@ -628,7 +634,8 @@ define([
                                                                     inputValue: fileName
                                                                 },
                                                                 primaryAttribute: {
-                                                                    options: headers
+                                                                    options: headers,
+                                                                    selectedOption: primaryAttribute
                                                                 },
                                                                 latitude: {
                                                                     options: headers,
@@ -840,7 +847,7 @@ define([
             // try guessing lat and long columns
             var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
                 longRegex = new RegExp(/^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i),
-                
+
                 guessesLat,
                 guessesLong,
 
