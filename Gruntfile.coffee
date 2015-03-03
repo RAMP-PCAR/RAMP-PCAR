@@ -276,7 +276,7 @@ module.exports = (grunt) ->
         'Replace unmin WET references with the min paths for HTML files.'
         () ->
             htmlFiles = grunt.file.expand(
-                'dist/**/*.html'
+                [ 'dist/**/*.html', 'dist/js/lib/lib.min.js' ]
             )
 
             htmlFiles.forEach(
