@@ -39,7 +39,7 @@
 
                 {% if (o.instructions) { %}
                     
-                    <span tabindex='0' class='brick-instructions _tooltip' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-info'>
+                    <span tabindex='0' class='brick-instructions' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-info'>
                         <i class='fa fa-question-circle'></i>
                         <span class='wb-inv'>{%= o.instructions %}</span>
                     </span>
@@ -140,18 +140,21 @@
             <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
             {% include('default_brick_notice_placeholder', o); %}
             
-            <div class='input-group-btn browse-files'>
-                <div class='input-container'>
-                    <input type='file' id='{%= o.guid %}realBrowse' data-role='upload'>
+            <div class='input-group-container'>
+                <div class='input-group-btn browse-files'>
+                    <div class='input-container'>
+                        <input type='file' id='{%= o.guid %}realBrowse' data-role='upload'>
+                    </div>
+                    <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
+                        <i class='fa fa-file'></i>
+                        <i class='fa fa-file-o'></i>
+                        <span class='on-right'>File</span>
+                    </span>                                                                                                
                 </div>
-                <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
-                    <i class='fa fa-file'></i>
-                    <i class='fa fa-file-o'></i>
-                    <span class='on-right'>File</span>
-                </span>                                                                                                
-            </div>
+            
+                <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
 
-            <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+            </div>
 
             <span class='glyphicon glyphicon-ok form-control-feedback'></span>
             <span class='glyphicon glyphicon-remove form-control-feedback'></span>
