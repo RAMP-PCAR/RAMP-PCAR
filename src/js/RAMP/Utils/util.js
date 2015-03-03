@@ -1319,6 +1319,13 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             },
 
             // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_.22Unicode_Problem.22
+            /**
+             * Base64 encoding for unicode text.
+             * 
+             * @method b64EncodeUnicode
+             * @param {String} str a string to encode
+             * @return {String} encoded string
+             */
             b64EncodeUnicode: function (str) {
                 return new Btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
                     return String.fromCharCode('0x' + p1);
