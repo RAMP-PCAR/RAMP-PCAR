@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limits"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Arctic Airports"
+                "geomet_wind": {
+                    "displayName": "Wind speed"
+                }, 
+                "geomet_temp": {
+                    "displayName": "Air temperature"
                 }, 
                 "wms6": {
                     "displayName": "Railway Network"
@@ -273,8 +276,9 @@
     }, 
     "gui": {
         "actions": {
-            "close": "Close", 
-            "fullScreen": "Full Screen", 
+            "close": "Close",
+            "fullScreen": "Full Screen",
+            "mapExport": "Map Export",
             "open": "Open"
         }
     }, 
@@ -440,6 +444,25 @@
     "map": {
         "loadingTitle": "Loading", 
         "scale": "Scale"
+    },
+    "mapClickHandler": {
+        "getFiFailed": "GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "WMS GetFeatureInfo",
+        "getFiPanelTitle": "Query Results"
+    },
+    "mapExport": {
+        "downloadImage": "Download Image",
+		"downloadJPG": "JPG",
+        "downloadJPGdesc": "Download as JPG",
+        "downloadPNG": "PNG",
+        "downloadPNGdesc": "Download as PNG",
+        "error": {
+            "generalMessage": "Image cannot be generated. Please try again later.",
+			"generalTitle": "Error"            
+        },
+		"includeLegend": "Include Legend",
+        "loading": "Generating image. Please wait.",
+		"title": "Map Export"
     },
     "page": {
         "footer": {

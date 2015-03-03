@@ -1,4 +1,4 @@
-/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP, document */
+/*global define, tmpl, TimelineLite, TweenLite, window, i18n, $, console, RAMP */
 /*jslint white: true */
 
 /**
@@ -1577,7 +1577,11 @@ define([
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                         //console.log('HOGG - layer loaded event');
                         applyExtentFilter();
-                    } else {
+                    }
+                    //this is causing more trouble than it is worth.  if a user opens big grid before a layer is loaded, they wont be
+                    //expecting to look at it anyways.   If it finishes loading when the big grid is open, user will be unaware because
+                    //everything else is hidden.  A loaded layer will appear the next time the grid opens.
+                    /*else {
                         //in this case, a slow loading layer updated after the user has switched to the extended grid view.
                         //add layer to selection combo box (as it would not have been added when the pane was generated)
                         var layerConfig = Ramp.getLayerConfigWithId(evt.layer.id),
@@ -1587,7 +1591,7 @@ define([
                         optElem.text = layerConfig.displayName;
                         optElem.value = layerConfig.id;
                         datasetSelector.add(optElem);
-                    }
+                    }*/
                 }
             });
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <system.web>
+    <compilation debug="false" targetFramework="4.0" />
+  </system.web>
+  <system.webServer>
+	<httpProtocol>
+	  <customHeaders>
+	    <add name="Access-Control-Allow-Origin" value="*" />
+	  </customHeaders>
+	</httpProtocol>
+  </system.webServer>
+  <system.diagnostics>
+    <switches>
+      <add name="TraceLevelSwitch" value="Info" />
+    </switches>
+  </system.diagnostics>
+</configuration>

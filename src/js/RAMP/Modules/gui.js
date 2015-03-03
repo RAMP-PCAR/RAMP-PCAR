@@ -38,7 +38,7 @@ define([
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
 
-        "ramp/theme",
+        "ramp/theme", "ramp/imageExport",
 
 // Text
         "dojo/text!./templates/sub_panel_template.json",
@@ -57,7 +57,7 @@ define([
     // Ramp
         GlobalStorage, EventManager,
 
-        Theme,
+        Theme, ImageExport,
 
     // Text
         subPanelTemplate,

@@ -1,7 +1,8 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
-    "proxyUrl": "proxy/dotNet/proxy.ashx",
+    "proxyUrl": "http://cp.zz9.ca/index",
+    "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -67,6 +68,50 @@
         "min": 1,
         "max": 17
     },
+    "LODs":[
+    {
+      "tileSchema": "ESRI_World_AuxMerc_3857",
+      "lod":[
+            {"level": 1, "resolution": 78271.51696399994, "scale": 295828763.795777},
+            {"level": 2, "resolution": 39135.75848200009, "scale": 147914381.897889},
+            {"level": 3, "resolution": 19567.87924099992, "scale": 73957190.948944},
+            {"level": 4, "resolution": 9783.93962049996, "scale": 36978595.474472},
+            {"level": 5, "resolution": 4891.96981024998, "scale": 18489297.737236},
+            {"level": 6, "resolution": 2445.98490512499, "scale": 9244648.868618},
+            {"level": 7, "resolution": 1222.992452562495, "scale": 4622324.434309},
+            {"level": 8, "resolution": 611.4962262813797, "scale": 2311162.217155},
+            {"level": 9, "resolution": 305.74811314055756, "scale": 1155581.108577},
+            {"level": 10, "resolution": 152.87405657041106, "scale": 577790.554289},
+            {"level": 11, "resolution": 76.43702828507324, "scale": 288895.277144},
+            {"level": 12, "resolution": 38.21851414253662, "scale": 144447.638572},
+            {"level": 13, "resolution": 19.10925707126831, "scale": 72223.819286},
+            {"level": 14, "resolution": 9.554628535634155, "scale": 36111.909643},
+            {"level": 15, "resolution": 4.77731426794937, "scale": 18055.954822},
+            {"level": 16, "resolution": 2.388657133974685, "scale": 9027.977411},
+            {"level": 17, "resolution": 1.1943285668550503, "scale": 4513.988705}]
+    },
+    {
+      "tileSchema": "NRCAN_Lambert_3978",
+      "lod":[
+        {"level":1,"resolution":22489.62831258996,"scale":85000000},
+        {"level":2,"resolution":13229.193125052918,"scale":50000000},
+        {"level":3,"resolution":7937.5158750317505,"scale":30000000},
+        {"level":4,"resolution":4630.2175937685215,"scale":17500000},
+        {"level":5,"resolution":2645.8386250105837,"scale":10000000},
+        {"level":6,"resolution":1587.5031750063501,"scale":6000000},
+        {"level":7,"resolution":926.0435187537042,"scale":3500000},
+        {"level":8,"resolution":529.1677250021168,"scale":2000000},
+        {"level":9,"resolution":317.50063500127004,"scale":1200000},
+        {"level":10,"resolution":185.20870375074085,"scale":700000},
+        {"level":11,"resolution":111.12522225044451,"scale":420000},
+        {"level":12,"resolution":66.1459656252646,"scale":250000},
+        {"level":13,"resolution":38.36466006265346,"scale":145000},
+        {"level":14,"resolution":22.48962831258996,"scale":85000},
+        {"level":15,"resolution":13.229193125052918,"scale":50000},
+        {"level":16,"resolution":7.9375158750317505,"scale":30000}
+      ]
+    }
+    ],
     "basemaps": [
         {
             "id": "baseNrCan",
@@ -258,138 +303,6 @@
     ],
     "layers": {
         "feature": [            
-            {
-                "id": "layer_sea_parks",
-                "displayName": "@@config.layers.feature.layer_sea_parks.displayName",
-                "nameField": "NAME_EN",
-                "url": "http://devmap.on.ec.gc.ca/ArcGIS/rest/services/ClassBreaks/MapServer/0",
-                "catalogueUrl": "http://www.google.ca",
-                "minScale": 0,
-                "datagrid": {
-                    "rowsPerPage": 50,
-                    "gridColumns": [
-                        {
-                            "id": "iconCol",
-                            "fieldName": "",
-                            "width": "50px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Icon",
-                            "columnTemplate": "graphic_icon"
-                        },
-                        {
-                            "id": "detailsCol",
-                            "fieldName": "NAME_EN",
-                            "width": "60px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Details",
-                            "columnTemplate": "details_button"
-                        },
-                        {
-                            "id": "nameCol",
-                            "fieldName": "NAME_EN",
-                            "width": "90px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 1,
-                            "title": "Project Name",
-                            "columnTemplate": "title_span"
-                        },
-                        {
-                            "id": "proVol",
-                            "fieldName": "PROV_EN",
-                            "width": "100px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Category",
-                            "columnTemplate": "title_span"
-                        },
-                        {
-                            "id": "classCol",
-                            "fieldName": "CLASS",
-                            "width": "100px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Classs",
-                            "columnTemplate": "title_span"
-                        },
-                        {
-                            "id": "typeCol",
-                            "fieldName": "TYPE",
-                            "width": "100px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Type",
-                            "columnTemplate": "title_span"
-                        },
-                        {
-                            "id": "shapeCol",
-                            "fieldName": "SHAPE",
-                            "width": "100px",
-                            "orderable": false,
-                            "type": "string",
-                            "alignment": 0,
-                            "title": "Shape",
-                            "columnTemplate": "title_span"
-                        }
-
-                    ]
-                },
-                "symbology": {
-                    "defaultImageUrl": "",
-                    "minValue": 67051.7745534503,
-                    "field": "Shape_Area",
-                    "type": "classBreaks",
-                    "rangeMaps": [
-                        {
-                            "maxValue": 1432182875.06102,
-                            "label": "67051.774553 - 1432182875.061020",
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs9QAAiCER8wAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
-                        },
-                        {
-                            "maxValue": 4553728333.21153,
-                            "label": "1432182875.061020 - 4553728333.211530",
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs/YoAR14wigAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
-                        },
-                        {
-                            "maxValue": 12387916450.0657,
-                            "label": "4553728333.211540 - 12387916450.065700",
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxs9fUA4eoECwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
-                        },
-                        {
-                            "maxValue": 21361450262.0896,
-                            "label": "12387916450.065700 - 21361450262.089600",
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//bGxslPcAmsnHngAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGIFECkmLGBUalQKf7IhAwAAvwYDdd8LbKYAAAAASUVORK5CYII="
-                        },
-                        {
-                            "maxValue": 58789645998.2141,
-                            "label": "21361450262.089600 - 58789645998.214100",
-                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//APUAbGxsJX9ZrwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABxJREFUKJFjYCATMGEFEClGLGBUalQKf7IhAwAADbMCOcVvP1sAAAAASUVORK5CYII="
-                        }
-                    ]
-                },
-                "settings": {
-                    "opacity": {
-                        "enabled": true,
-                        "default": 0.9
-                    }
-                },
-                "layerExtent": {
-                    "xmin": -15561507.4653,
-                    "ymin": 5099812.9776,
-                    "xmax": 13733118.2248,
-                    "ymax": 10530239.1434,
-                    "spatialReference": {
-                        "wkid": 54004
-                    }
-                }
-            },
             {
                 "id": "ecogeo",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
@@ -744,34 +657,8 @@
                     "spatialReference": {
                         "wkid": 3978
                     }
-                }
-            },
-            {
-                "id": "dogGuts",
-                "displayName": "@@config.layers.feature.dog_guts.displayName",
-                "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/dog_guts/MapServer/0",
-                "symbology": {
-                    "type": "simple",
-                    "imageUrl": "assets/images/icons/1421457419_099374-twitter-bird3.png"
-                },
-                "settings": {
-                    "opacity": {
-                        "enabled": true,
-                        "default": 0.7
-                    },
-                    "visible": true
-                },
-                "layerExtent": {
-                    "xmin": -2566693.97839747,
-                    "ymin": -1104728.00466316,
-                    "xmax": 4021444.19787888,
-                    "ymax": 3657781.52035589,
-                    "spatialReference": {
-                        "wkid": 3978
                     }
                 },
-                "isStatic": true
-            },
             {
                 "id": "oilAreaOverlay",
                 "displayName": "@@config.layers.feature.oilAreaOverlay.displayName",
@@ -801,13 +688,32 @@
         ],
         "wms": [
             {
-                "id": "nasa_modis",
-                "displayName": "@@config.layers.wms.nasa_modis.displayName",
+                "id": "geomet_wind",
+                "displayName": "@@config.layers.wms.geomet_wind.displayName",
                 "format": "image/jpeg",
-                "layerName": "36",
+                "layerName": "GDPS.ETA_UU",
                 "imageUrl": "assets/images/wms.png",
-                "url": "http://geoportal.gc.ca/arcgis/services/Arctic_Voyage_Planning_Guide_ENG/MapServer/WmsServer",
-                "legendMimeType": "image/jpeg"
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "windParse"
+                },
+                "settings": {"opacity": {"default": 0.4}}
+            },
+            {
+                "id": "geomet_temp",
+                "displayName": "@@config.layers.wms.geomet_temp.displayName",
+                "format": "image/jpeg",
+                "layerName": "GDPS.ETA_TT",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "tempParse"
+                },
+                "settings": {"opacity": {"default": 0.3}}
             },
             {
                 "id": "railroad",
@@ -816,10 +722,6 @@
                 "layerName": "railway.track",
                 "imageUrl": "assets/images/wms.png",
                 "url": "http://maps.geogratis.gc.ca/wms/railway_en",
-                "featureInfo": {
-                    "parser": "stringParse",
-                    "mimeType": "text/plain"
-                },
                 "legendMimeType": "image/jpeg"
             }
         ]
@@ -842,6 +744,7 @@
         "stringParse.js",
         "htmlRawParse.js",
         "jsonRawParse.js",
+        "tempParse.js",
         "windParse.js"
     ],
 

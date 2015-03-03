@@ -177,8 +177,11 @@
                 "limits": {
                     "displayName": "Limites"
                 }, 
-                "nasa_modis": {
-                    "displayName": "Les aéroports de l'arctique"
+                "geomet_wind": {
+                    "displayName": "Vitesse du vent"
+                }, 
+                "geomet_temp": {
+                    "displayName": "Température de l'air"
                 }, 
                 "wms6": {
                     "displayName": "Réseau de chemins de fers"
@@ -273,8 +276,9 @@
     }, 
     "gui": {
         "actions": {
-            "close": "Fermer", 
+            "close": "Fermer",
             "fullScreen": "Plein écran", 
+            "mapExport": "[fr] Map Export",
             "open": "Ouvrir"
         }
     }, 
@@ -440,6 +444,25 @@
     "map": {
         "loadingTitle": "Chargement", 
         "scale": "Échelle"
+    },
+    "mapClickHandler": {
+        "getFiFailed": "[fr] GetFeatureInfo request failed on one or more WMS layers",
+        "getFiPanelName": "[fr] WMS GetFeatureInfo",
+        "getFiPanelTitle": "[fr] Query Results"
+    },
+    "mapExport": {
+        "downloadImage": "[fr] Download Image",
+		"downloadJPG": "[fr] JPG",
+        "downloadJPGdesc": "[fr] Download as JPG",
+        "downloadPNG": "[fr] PNG",
+        "downloadPNGdesc": "[fr] Download as PNG",
+        "error": {
+            "generalMessage": "[fr] Image cannot be generated. Please try again later.",
+			"generalTitle": "[fr] Error"            
+        },
+		"includeLegend": "[fr] Include Legend",
+        "loading": "[fr] Generating image. Please wait.",
+		"title": "[fr] Map Export"
     },
     "page": {
         "footer": {

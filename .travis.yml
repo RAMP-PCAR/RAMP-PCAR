@@ -17,6 +17,5 @@ before_install:
 script:
   - grunt
 
-after_success: 
-  - grunt gh-pages:travis
+after_success:
   - grunt release
