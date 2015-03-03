@@ -658,6 +658,49 @@ define([
                                                     break;
 
                                                 case "shapefileFileAttrStep":
+                                                    var shapefilePromise = DataLoader.buildShapefile(data);
+
+                                                    shapefilePromise.then(function (featureLayer) {
+                                                        var fieldOptions;
+
+                                                        window.clearTimeout(handle);
+
+                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                        fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                        // no layer names available; likely this is not a geojson file
+                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Not a shapefile file"
+                                                                    })
+                                                            });
+                                                        } else {
+
+                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                stepData: featureLayer,
+                                                                bricksData: {
+                                                                    datasetName: {
+                                                                        inputValue: fileName
+                                                                    },
+                                                                    primaryAttribute: {
+                                                                        options: fieldOptions
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+
+                                                    }, function (event) {
+                                                        // error to build shapefiles
+                                                        handleFailure(step, handle, {
+                                                            fileType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Cannot build, not a shapefile" + event.message
+                                                                })
+                                                        });
+                                                    });
+
                                                     break;
                                             }
 
@@ -852,7 +895,7 @@ define([
                                                     handleFailure(step, null, {
                                                         datasetName:
                                                             lang.mixin(choiceTreeErrors.base, {
-                                                                message: "Cannot create CSV feature lyer"
+                                                                message: "Cannot create CSV feature lyer, probably not a valid csv"
                                                             })
                                                     });
                                                 });
@@ -873,7 +916,7 @@ define([
                                     }
                                 },
                                 {
-                                    id: "shapefilePrimaryAttribute",
+                                    id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
                                         header: "Primary Attribute"
@@ -893,7 +936,25 @@ define([
                                         label: "Add Dataset",
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
-                                    }
+                                    },
+                                    on: [
+                                        {
+                                            eventName: Bricks.ButtonBrick.event.CLICK//,
+                                            // add wms service layer to the map
+                                            //callback: function (step /*,data*/) {
+                                                //var data = step.getData(),
+                                                //    bricksData = data.bricksData,
+                                                //    stepData = data.stepData,
+
+                                                //    csvData = stepData.csvData,
+                                                //    csvHeaders = stepData.csvHeaders,
+                                                //    csvDelimeter = stepData.csvDelimeter,
+
+                                                //    featureLayer,
+                                                //    iconTemplate = makeIconTemplate('a_d_icon_circlePoint' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+                                            //}
+                                        }
+                                    ]
                                 }
                             ]
                         }
