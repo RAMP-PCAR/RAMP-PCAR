@@ -471,6 +471,8 @@ define([
 
                 // hide all notices when clearing the step
                 this.displayBrickNotices();
+
+                return this;
             },
 
             setState: function (level, stepId, state) {
