@@ -45,7 +45,7 @@
                                 
                                 {% for (var prop in o.data.attributes ) { 
                                     if (o.data.attributes.hasOwnProperty(prop)) { 
-                                        include('simpleListItem', {key: prop, value: o.data.attributes[prop], fn: o.fn}); 
+                                        include('simpleListItem', {key: o.fn.getAttributeLabel(prop, o.lyr), value: o.data.attributes[prop], fn: o.fn}); 
                                     }
                                 } %}
                                 

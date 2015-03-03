@@ -146,6 +146,26 @@ define(["ramp/globalStorage"],
                 return graphic.attributes[fieldName];
             },
 
+            /*
+            * Helper function, get attribute label by field name.
+            * Will return an alias if it exists, else returns the field name
+            *
+            * @method getAttributeLabel
+            * @param {String} fieldName Name of the field to get a label for
+            * @param {Object} layerConfig config object for the layer the field belongs to
+            */
+            getAttributeLabel: function (fieldName, layerConfig) {
+                var alias,
+                    result = fieldName;
+                if (layerConfig.aliasMap) {
+                    alias = layerConfig.aliasMap[fieldName];
+                    if (alias) {
+                        result = alias;
+                    }
+                }
+                return result;
+            },
+
             /* Helper function used by filterManager.*/
             /*
             * generate visibility legend object
