@@ -1032,6 +1032,8 @@ define([
 
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
+
+            Theme.tooltipster(addDatasetContainer);
         }
 
         function guessLatLong(rows) {
