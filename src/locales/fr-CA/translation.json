@@ -13,7 +13,8 @@
     "addDataset": {
         "addDatasetButton": "Ajouter le DataSet", 
         "cancel": "Annuler", 
-        "colour": "Couleur", 
+        "colour": "Couleur",
+        "connect": "[fr] Connect",
         "csv": "CSV", 
         "datasetName": "[fr] Dataset Name",
         "dataSource": "Source de données", 

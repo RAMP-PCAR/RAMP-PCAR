@@ -45,15 +45,13 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-        //console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
-
         choiceTreeCallbacks = {
             simpleAdvance: function (step, data, targetChildData) {
                 step.advance(data.selectedChoice, targetChildData);
             },
 
             simpleCancel: function (step, data) {
-                console.log("Cancel click:", this, step, data);
+                console.log("Step cancel click:", this, step, data);
 
                 if (step.isCompleted()) {
                     step.retreat();
@@ -99,144 +97,204 @@ define([
             }
         };
 
-        choiceTreeErrors = {
-            base: {
-                type: "error",
-                header: "Cannot load",
-                message: "You have IE9?"
-            }
-        };
+        /**
+         * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
+         * 
+         * @method prepareChoiceTreeStructure
+         * @private
+         */
+        function prepareChoiceTreeStructure() {
 
-        choiceTree = {
-            // step for choosing between adding a service or a file
-            id: "sourceTypeStep",
-            content: [
-                {
-                    id: "sourceType",
-                    type: Bricks.ChoiceBrick,
-                    config: {
-                        header: "Data Source",
-                        //instructions: "Halp!",
-                        choices: [
-                            {
-                                key: "serviceTypeStep",
-                                value: "Service"
-                            },
-                            {
-                                key: "fileTypeStep",
-                                value: "File"
-                            }
-                        ]
-                    },
-                    on: [
-                        {
-                            eventName: Bricks.ChoiceBrick.event.CHANGE,
-                            //expose: { as: "advance" },
-                            callback: choiceTreeCallbacks.simpleAdvance
-                        }
-                    ]
+            choiceTreeErrors = {
+                base: {
+                    type: "error",
+                    header: "Cannot load",
+                    message: "You have IE9?"
                 }
-            ],
-            children: [
-                {
-                    // step for choosing between feature and wms service and providing a service url
-                    id: "serviceTypeStep",
-                    content: [
-                        {
-                            id: "serviceURL",
-                            type: Bricks.SimpleInputBrick,
-                            config: {
-                                header: "Service URL",
-                                placeholder: "ESRI MapServer or Feature layer or WMS layer",
-                                freezeStates: [Bricks.Brick.state.SUCCESS]
-                            },
-                            on: [
+            };
+
+            choiceTree = {
+                // step for choosing between adding a service or a file
+                id: "sourceTypeStep",
+                content: [
+                    {
+                        id: "sourceType",
+                        type: Bricks.ChoiceBrick,
+                        config: {
+                            header: i18n.t("addDataset.dataSource"),
+                            //instructions: "Halp!",
+                            choices: [
                                 {
-                                    eventName: Bricks.SimpleInputBrick.event.CHANGE,
-                                    callback: choiceTreeCallbacks.serviceTypeStepGuess
+                                    key: "serviceTypeStep",
+                                    value: i18n.t("addDataset.dataSourceService")
+                                },
+                                {
+                                    key: "fileTypeStep",
+                                    value: i18n.t("addDataset.dataSourceFile")
                                 }
                             ]
                         },
-                        {
-                            id: "serviceType",
-                            type: Bricks.ChoiceBrick,
-                            config: {
-                                //template: "template_name", //optional, has a default
-                                header: "Service Type",
-                                choices: [
-                                    {
-                                        key: "featureServiceAttrStep",
-                                        value: "Feature"
-                                    },
-                                    {
-                                        key: "wmsServiceAttrStep",
-                                        value: "WMS"
-                                    }
-                                ],
-                                freezeStates: [Bricks.Brick.state.SUCCESS]
+                        on: [
+                            {
+                                eventName: Bricks.ChoiceBrick.event.CHANGE,
+                                //expose: { as: "advance" },
+                                callback: choiceTreeCallbacks.simpleAdvance
                             }
-                        },
-                        {
-                            id: "serviceTypeOkCancel",
-                            type: Bricks.OkCancelButtonBrick,
-                            config: {
-                                okLabel: "Connect",
-                                okFreezeStates: [
-                                    Bricks.Brick.state.SUCCESS,
-                                    Bricks.Brick.state.ERROR
-                                ],
-                                cancelLabel: "Cancel",
-                                //cancelFreezeStates: false,
-                                reverseOrder: true,
-
-                                required: [
+                        ]
+                    }
+                ],
+                children: [
+                    {
+                        // step for choosing between feature and wms service and providing a service url
+                        id: "serviceTypeStep",
+                        content: [
+                            {
+                                id: "serviceURL",
+                                type: Bricks.SimpleInputBrick,
+                                config: {
+                                    header: i18n.t("addDataset.serviceLayerURL"),
+                                    placeholder: i18n.t("addDataset.serviceLayerURLPlaceholder"),
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                },
+                                on: [
                                     {
-                                        id: Bricks.OkCancelButtonBrick.okButtonId,
-                                        type: "all",
-                                        check: ["serviceType", "serviceURL"]
-                                    },
-                                    {
-                                        id: Bricks.OkCancelButtonBrick.cancelButtonId,
-                                        type: "any",
-                                        check: ["serviceType", "serviceURL"]
+                                        eventName: Bricks.SimpleInputBrick.event.CHANGE,
+                                        callback: choiceTreeCallbacks.serviceTypeStepGuess
                                     }
                                 ]
                             },
-                            on: [
-                                /*{
-                                    eventName: Bricks.OkCancelButtonBrick.event.CLICK,
-                                    callback: function (step, data) {
-                                        console.log("Just Click:", this, step, data);
-                                    }
-                                },*/
-                                {
-                                    eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
-                                    // connect to feature service
-                                    callback: function (step/*, data*/) {
-                                        var promise,
-                                            handle = delayLoadingState(step, 100),
-                                            bricksData = step.getData().bricksData,
-                                            serviceTypeValue = bricksData.serviceType.selectedChoice,
-                                            serviceUrlValue = bricksData.serviceURL.inputValue;
+                            {
+                                id: "serviceType",
+                                type: Bricks.ChoiceBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    header: i18n.t("addDataset.serviceType"),
+                                    choices: [
+                                        {
+                                            key: "featureServiceAttrStep",
+                                            value: i18n.t("addDataset.serviceTypeFeature")
+                                        },
+                                        {
+                                            key: "wmsServiceAttrStep",
+                                            value: i18n.t("addDataset.serviceTypeWMS")
+                                        }
+                                    ],
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                }
+                            },
+                            {
+                                id: "serviceTypeOkCancel",
+                                type: Bricks.OkCancelButtonBrick,
+                                config: {
+                                    okLabel: i18n.t("addDataset.connect"),
+                                    okFreezeStates: [
+                                        Bricks.Brick.state.SUCCESS,
+                                        Bricks.Brick.state.ERROR
+                                    ],
+                                    cancelLabel: i18n.t("addDataset.cancel"),
+                                    //cancelFreezeStates: false,
+                                    reverseOrder: true,
 
-                                        switch (serviceTypeValue) {
-                                            case "featureServiceAttrStep":
-                                                // get data from feature layer endpoint
-                                                promise = DataLoader.getFeatureLayer(serviceUrlValue);
+                                    required: [
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.okButtonId,
+                                            type: "all",
+                                            check: ["serviceType", "serviceURL"]
+                                        },
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                            type: "any",
+                                            check: ["serviceType", "serviceURL"]
+                                        }
+                                    ]
+                                },
+                                on: [
+                                    /*{
+                                        eventName: Bricks.OkCancelButtonBrick.event.CLICK,
+                                        callback: function (step, data) {
+                                            console.log("Just Click:", this, step, data);
+                                        }
+                                    },*/
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
+                                        // connect to feature service
+                                        callback: function (step/*, data*/) {
+                                            var promise,
+                                                handle = delayLoadingState(step, 100),
+                                                bricksData = step.getData().bricksData,
+                                                serviceTypeValue = bricksData.serviceType.selectedChoice,
+                                                serviceUrlValue = bricksData.serviceURL.inputValue;
 
-                                                promise.then(function (data) {
-                                                    // get data from feature layer's legend endpoint
-                                                    var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
-                                                    legendPromise.then(function (legendLookup) {
-                                                        var fieldOptions;
+                                            switch (serviceTypeValue) {
+                                                case "featureServiceAttrStep":
+                                                    // get data from feature layer endpoint
+                                                    promise = DataLoader.getFeatureLayer(serviceUrlValue);
+
+                                                    promise.then(function (data) {
+                                                        // get data from feature layer's legend endpoint
+                                                        var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                                                        legendPromise.then(function (legendLookup) {
+                                                            var fieldOptions;
+                                                            window.clearTimeout(handle);
+
+                                                            data.legendLookup = legendLookup;
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+
+                                                            // no fields available; likely this is not a Feature service
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    serviceType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Blah-blah"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                    stepData: data,
+                                                                    bricksData: {
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            handleFailure(step, handle, {
+                                                                serviceType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Blah-blah" + event.message
+                                                                    })
+                                                            });
+                                                        });
+
+                                                    }, function (event) {
+                                                        // error connection to service
+                                                        handleFailure(step, handle, {
+                                                            serviceURL:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Blah-blah" + event.message
+                                                                })
+                                                        });
+                                                    });
+
+                                                    break;
+
+                                                case "wmsServiceAttrStep":
+                                                    // get data from wms endpoint
+                                                    promise = DataLoader.getWmsLayerList(serviceUrlValue);
+
+                                                    promise.then(function (data) {
+                                                        var layerOptions;
                                                         window.clearTimeout(handle);
 
-                                                        data.legendLookup = legendLookup;
                                                         // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                        fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+                                                        layerOptions = data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; });
 
-                                                        // no fields available; likely this is not a Feature service
-                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                        // no layer names available; likely this is not a WMS service
+                                                        if (!layerOptions || layerOptions.length === 0) {
                                                             handleFailure(step, handle, {
                                                                 serviceType:
                                                                     lang.mixin(choiceTreeErrors.base, {
@@ -246,10 +304,13 @@ define([
                                                         } else {
 
                                                             choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                                stepData: data,
+                                                                stepData: {
+                                                                    wmsData: data,
+                                                                    wmsUrl: serviceUrlValue
+                                                                },
                                                                 bricksData: {
-                                                                    primaryAttribute: {
-                                                                        options: fieldOptions
+                                                                    layerName: {
+                                                                        options: layerOptions
                                                                     }
                                                                 }
                                                             });
@@ -264,629 +325,469 @@ define([
                                                         });
                                                     });
 
-                                                }, function (event) {
-                                                    // error connection to service
-                                                    handleFailure(step, handle, {
-                                                        serviceURL:
-                                                            lang.mixin(choiceTreeErrors.base, {
-                                                                message: "Blah-blah" + event.message
-                                                            })
-                                                    });
-                                                });
-
-                                                break;
-
-                                            case "wmsServiceAttrStep":
-                                                // get data from wms endpoint
-                                                promise = DataLoader.getWmsLayerList(serviceUrlValue);
-
-                                                promise.then(function (data) {
-                                                    var layerOptions;
-                                                    window.clearTimeout(handle);
-
-                                                    // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                    layerOptions = data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; });
-
-                                                    // no layer names available; likely this is not a WMS service
-                                                    if (!layerOptions || layerOptions.length === 0) {
-                                                        handleFailure(step, handle, {
-                                                            serviceType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Blah-blah"
-                                                                })
-                                                        });
-                                                    } else {
-
-                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                            stepData: {
-                                                                wmsData: data,
-                                                                wmsUrl: serviceUrlValue
-                                                            },
-                                                            bricksData: {
-                                                                layerName: {
-                                                                    options: layerOptions
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-
-                                                }, function (event) {
-                                                    handleFailure(step, handle, {
-                                                        serviceType:
-                                                            lang.mixin(choiceTreeErrors.base, {
-                                                                message: "Blah-blah" + event.message
-                                                            })
-                                                    });
-                                                });
-
-                                                break;
-                                        }
-                                    }
-                                    //expose: { as: "advance" }
-                                },
-                                {
-                                    eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
-                                    //expose: { as: "retreat" },
-                                    callback: choiceTreeCallbacks.simpleCancel
-                                }
-
-                            ]
-                        }
-                    ],
-                    children: [
-                        {
-                            id: "featureServiceAttrStep",
-                            content: [
-                                {
-                                    id: "primaryAttribute",
-                                    type: Bricks.DropDownBrick,
-                                    config: {
-                                        header: "Primary Attribute"
-                                    }
-                                },
-                                {
-                                    id: "addDataset",
-                                    type: Bricks.ButtonBrick,
-                                    config: {
-                                        label: "Add Dataset",
-                                        containerClass: "button-brick-container-main",
-                                        buttonClass: "btn-primary"
-                                    },
-                                    on: [
-                                        {
-                                            eventName: Bricks.ButtonBrick.event.CLICK,
-                                            // add feature service layer to the map
-                                            callback: function (step /*,data*/) {
-                                                var data = step.getData(),
-                                                    bricksData = data.bricksData,
-                                                    layerData = data.stepData,
-
-                                                    newConfig = { //make feature layer config.
-                                                        id: LayerLoader.nextId(),
-                                                        displayName: layerData.layerName,
-                                                        nameField: bricksData.primaryAttribute.dropDownValue,
-                                                        datagrid: DataLoader.createDatagridConfig(layerData.fields),
-                                                        symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
-                                                        url: layerData.layerUrl
-                                                    },
-                                                    featureLayer;
-
-                                                //TODO: set symbology and colour on feature layer (obj.data)
-                                                newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
-
-                                                //make layer
-                                                featureLayer = RampMap.makeFeatureLayer(newConfig, true);
-                                                RAMP.config.layers.feature.push(newConfig);
-
-                                                LayerLoader.loadLayer(featureLayer);
-                                                addDatasetPopup.close();
-
-                                                //mainPopup.close();
+                                                    break;
                                             }
-                                            //expose: { as: "ADD_DATASET" }
                                         }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "wmsServiceAttrStep",
-                            content: [
-                                {
-                                    id: "layerName",
-                                    type: Bricks.DropDownBrick,
-                                    config: {
-                                        header: "Layer Name"
+                                        //expose: { as: "advance" }
+                                    },
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
+                                        //expose: { as: "retreat" },
+                                        callback: choiceTreeCallbacks.simpleCancel
                                     }
-                                },
-                                {
-                                    id: "addDataset",
-                                    type: Bricks.ButtonBrick,
-                                    config: {
-                                        label: "Add Dataset",
-                                        containerClass: "button-brick-container-main",
-                                        buttonClass: "btn-primary"
-                                    },
-                                    on: [
-                                        {
-                                            eventName: Bricks.ButtonBrick.event.CLICK,
-                                            // add wms service layer to the map
-                                            callback: function (step /*,data*/) {
-                                                var data = step.getData(),
-                                                    bricksData = data.bricksData,
-                                                    stepData = data.stepData,
 
-                                                    wmsLayerName = bricksData.layerName.dropDownValue,
-
-                                                    wmsConfig,
-                                                    layer,
-                                                    wmsLayer;
-
-                                                layer = UtilArray.find(stepData.wmsData.layers,
-                                                    function (l) {
-                                                        return l.name === wmsLayerName;
-                                                    }
-                                                );
-
-                                                wmsConfig = {
-                                                    id: LayerLoader.nextId(),
-                                                    displayName: layer.desc,
-                                                    format: "png",
-                                                    layerName: wmsLayerName,
-                                                    imageUrl: "assets/images/wms.png",
-                                                    url: stepData.wmsUrl,
-                                                    legendMimeType: "image/jpeg"
-                                                };
-
-                                                if (layer.queryable) {
-                                                    wmsConfig.featureInfo = {
-                                                        parser: "stringParse",
-                                                        mimeType: "text/plain"
-                                                    };
-                                                }
-
-                                                wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
-
-                                                wmsLayer = RampMap.makeWmsLayer(wmsConfig, true);
-                                                RAMP.config.layers.wms.push(wmsConfig);
-
-                                                LayerLoader.loadLayer(wmsLayer);
-                                                addDatasetPopup.close();
-                                            }
-                                            //expose: { as: "ADD_DATASET" }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    id: "fileTypeStep",
-                    content: [
-                        {
-                            id: "fileOrFileULR",
-                            type: Bricks.FileInputBrick,
-                            config: {
-                                //template: "template_name", //optional, has a default
-                                header: "File or URL",
-                                //label: "Service URL", // optional, equals to header by default
-                                placeholder: "Local file or URL",
-                                freezeStates: [Bricks.Brick.state.SUCCESS]
-                            },
-                            on: [
-                                {
-                                    eventName: Bricks.FileInputBrick.event.CHANGE,
-                                    callback: choiceTreeCallbacks.fileTypeStepGuess
-                                }
-                            ]
-                        },
-                        {
-                            id: "fileType",
-                            type: Bricks.ChoiceBrick,
-                            config: {
-                                //template: "template_name", //optional, has a default
-                                header: "File Type",
-                                choices: [
-                                    {
-                                        key: "geojsonFileAttrStep",
-                                        value: "GeoJSON"
-                                    },
-                                    {
-                                        key: "csvFileAttrStep",
-                                        value: "CSV"
-                                    },
-                                    {
-                                        key: "shapefileFileAttrStep",
-                                        value: "Shapefile"
-                                    }
-                                ],
-                                freezeStates: [Bricks.Brick.state.SUCCESS]
+                                ]
                             }
-                        },
-                        {
-                            id: "fileTypeOkCancel",
-                            type: Bricks.OkCancelButtonBrick,
-                            config: {
-                                okLabel: "Load",
-                                okFreezeStates: [
-                                    Bricks.Brick.state.SUCCESS,
-                                    Bricks.Brick.state.ERROR
-                                ],
-                                cancelLabel: "Cancel",
-                                reverseOrder: true,
-
-                                required: [
+                        ],
+                        children: [
+                            {
+                                id: "featureServiceAttrStep",
+                                content: [
                                     {
-                                        id: Bricks.OkCancelButtonBrick.okButtonId,
-                                        type: "all",
-                                        check: ["fileType", "fileOrFileULR"]
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
                                     },
                                     {
-                                        id: Bricks.OkCancelButtonBrick.cancelButtonId,
-                                        type: "any",
-                                        check: ["fileType", "fileOrFileULR"]
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add feature service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        layerData = data.stepData,
+
+                                                        newConfig = { //make feature layer config.
+                                                            id: LayerLoader.nextId(),
+                                                            displayName: layerData.layerName,
+                                                            nameField: bricksData.primaryAttribute.dropDownValue,
+                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                                                            symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
+                                                            url: layerData.layerUrl
+                                                        },
+                                                        featureLayer;
+
+                                                    //TODO: set symbology and colour on feature layer (obj.data)
+                                                    newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+                                                    //make layer
+                                                    featureLayer = RampMap.makeFeatureLayer(newConfig, true);
+                                                    RAMP.config.layers.feature.push(newConfig);
+
+                                                    LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
+
+                                                    //mainPopup.close();
+                                                }
+                                                //expose: { as: "ADD_DATASET" }
+                                            }
+                                        ]
                                     }
                                 ]
                             },
-                            on: [
-                                /*{
-                                    eventName: Bricks.OkCancelButtonBrick.event.CLICK,
-                                    callback: function (step, data) {
-                                        console.log("Just Click:", this, step, data);
+                            {
+                                id: "wmsServiceAttrStep",
+                                content: [
+                                    {
+                                        id: "layerName",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.layerName")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        stepData = data.stepData,
+
+                                                        wmsLayerName = bricksData.layerName.dropDownValue,
+
+                                                        wmsConfig,
+                                                        layer,
+                                                        wmsLayer;
+
+                                                    layer = UtilArray.find(stepData.wmsData.layers,
+                                                        function (l) {
+                                                            return l.name === wmsLayerName;
+                                                        }
+                                                    );
+
+                                                    wmsConfig = {
+                                                        id: LayerLoader.nextId(),
+                                                        displayName: layer.desc,
+                                                        format: "png",
+                                                        layerName: wmsLayerName,
+                                                        imageUrl: "assets/images/wms.png",
+                                                        url: stepData.wmsUrl,
+                                                        legendMimeType: "image/jpeg"
+                                                    };
+
+                                                    if (layer.queryable) {
+                                                        wmsConfig.featureInfo = {
+                                                            parser: "stringParse",
+                                                            mimeType: "text/plain"
+                                                        };
+                                                    }
+
+                                                    wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
+
+                                                    wmsLayer = RampMap.makeWmsLayer(wmsConfig, true);
+                                                    RAMP.config.layers.wms.push(wmsConfig);
+
+                                                    LayerLoader.loadLayer(wmsLayer);
+                                                    addDatasetPopup.close();
+                                                }
+                                                //expose: { as: "ADD_DATASET" }
+                                            }
+                                        ]
                                     }
-                                },*/
-                                {
-                                    eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
-                                    // load and process files
-                                    callback: function (step/*, data*/) {
-                                        var promise,
-                                            handle = delayLoadingState(step, 100),
-                                            bricksData = step.getData().bricksData,
-                                            fileTypeValue = bricksData.fileType.selectedChoice,
-                                            fileValue = bricksData.fileOrFileULR.fileValue,
-                                            fileUrlValue = bricksData.fileOrFileULR.inputValue,
-                                            fileName = bricksData.fileOrFileULR.fileName;
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: "fileTypeStep",
+                        content: [
+                            {
+                                id: "fileOrFileULR",
+                                type: Bricks.FileInputBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    header: i18n.t("addDataset.fileOrURL"),
+                                    //label: "Service URL", // optional, equals to header by default
+                                    placeholder: i18n.t("addDataset.fileOrURLPlaceholder"),
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                },
+                                on: [
+                                    {
+                                        eventName: Bricks.FileInputBrick.event.CHANGE,
+                                        callback: choiceTreeCallbacks.fileTypeStepGuess
+                                    }
+                                ]
+                            },
+                            {
+                                id: "fileType",
+                                type: Bricks.ChoiceBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    header: i18n.t("addDataset.fileType"),
+                                    choices: [
+                                        {
+                                            key: "geojsonFileAttrStep",
+                                            value: i18n.t("addDataset.geojson")
+                                        },
+                                        {
+                                            key: "csvFileAttrStep",
+                                            value: i18n.t("addDataset.csv")
+                                        },
+                                        {
+                                            key: "shapefileFileAttrStep",
+                                            value: i18n.t("addDataset.shapefile")
+                                        }
+                                    ],
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                }
+                            },
+                            {
+                                id: "fileTypeOkCancel",
+                                type: Bricks.OkCancelButtonBrick,
+                                config: {
+                                    okLabel: i18n.t("addDataset.load"),
+                                    okFreezeStates: [
+                                        Bricks.Brick.state.SUCCESS,
+                                        Bricks.Brick.state.ERROR
+                                    ],
+                                    cancelLabel: i18n.t("addDataset.cancel"),
+                                    reverseOrder: true,
 
-                                        promise = DataLoader.loadDataSet({
-                                            url: fileValue ? null : fileUrlValue,
-                                            file: fileValue,
-                                            type: fileTypeValue === "shapefileFileAttrStep" ? "binary" : "text"
-                                        });
+                                    required: [
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.okButtonId,
+                                            type: "all",
+                                            check: ["fileType", "fileOrFileULR"]
+                                        },
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                            type: "any",
+                                            check: ["fileType", "fileOrFileULR"]
+                                        }
+                                    ]
+                                },
+                                on: [
+                                    /*{
+                                        eventName: Bricks.OkCancelButtonBrick.event.CLICK,
+                                        callback: function (step, data) {
+                                            console.log("Just Click:", this, step, data);
+                                        }
+                                    },*/
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
+                                        // load and process files
+                                        callback: function (step/*, data*/) {
+                                            var promise,
+                                                handle = delayLoadingState(step, 100),
+                                                bricksData = step.getData().bricksData,
+                                                fileTypeValue = bricksData.fileType.selectedChoice,
+                                                fileValue = bricksData.fileOrFileULR.fileValue,
+                                                fileUrlValue = bricksData.fileOrFileULR.inputValue,
+                                                fileName = bricksData.fileOrFileULR.fileName;
 
-                                        promise.then(function (data) {
-                                            switch (fileTypeValue) {
-                                                case "geojsonFileAttrStep":
-                                                    var geojsonPromise = DataLoader.buildGeoJson(data);
+                                            promise = DataLoader.loadDataSet({
+                                                url: fileValue ? null : fileUrlValue,
+                                                file: fileValue,
+                                                type: fileTypeValue === "shapefileFileAttrStep" ? "binary" : "text"
+                                            });
 
-                                                    geojsonPromise.then(function (featureLayer) {
-                                                        var fieldOptions;
+                                            promise.then(function (data) {
+                                                switch (fileTypeValue) {
+                                                    case "geojsonFileAttrStep":
+                                                        var geojsonPromise = DataLoader.buildGeoJson(data);
+
+                                                        geojsonPromise.then(function (featureLayer) {
+                                                            var fieldOptions;
+                                                            window.clearTimeout(handle);
+
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                            // no layer names available; likely this is not a geojson file
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    fileType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Not a geojson file"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                    stepData: featureLayer,
+                                                                    bricksData: {
+                                                                        datasetName: {
+                                                                            inputValue: fileName
+                                                                        },
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            //error building geojson
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Cannot build, not a geojson" + event.message
+                                                                    })
+                                                            });
+                                                        });
+
+                                                        break;
+
+                                                    case "csvFileAttrStep":
+                                                        var rows,
+                                                            delimiter = UtilMisc.detectDelimiter(data),
+
+                                                            guess,
+                                                            primaryAttribute,
+                                                            headers;
+
                                                         window.clearTimeout(handle);
 
-                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                        fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+                                                        rows = DataLoader.csvPeek(data, delimiter);
+                                                        headers = rows[0].map(function (header) { return { value: header, text: header }; });
 
-                                                        // no layer names available; likely this is not a geojson file
-                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                        // no properties names available; likely this is not a csv file
+                                                        if (!headers || headers.length === 0) {
                                                             handleFailure(step, handle, {
                                                                 fileType:
                                                                     lang.mixin(choiceTreeErrors.base, {
                                                                         message: "Not a geojson file"
                                                                     })
                                                             });
-                                                        } else {
-
-                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
-                                                                stepData: featureLayer,
-                                                                bricksData: {
-                                                                    datasetName: {
-                                                                        inputValue: fileName
-                                                                    },
-                                                                    primaryAttribute: {
-                                                                        options: fieldOptions
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-
-                                                    }, function (event) {
-                                                        //error building geojson
-                                                        handleFailure(step, handle, {
-                                                            fileType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Cannot build, not a geojson" + event.message
-                                                                })
-                                                        });
-                                                    });
-
-                                                    break;
-
-                                                case "csvFileAttrStep":
-                                                    var rows,
-                                                        delimiter = UtilMisc.detectDelimiter(data),
-
-                                                        guess,
-                                                        primaryAttribute,
-                                                        headers;
-
-                                                    window.clearTimeout(handle);
-
-                                                    rows = DataLoader.csvPeek(data, delimiter);
-                                                    headers = rows[0].map(function (header) { return { value: header, text: header }; });
-
-                                                    // no properties names available; likely this is not a csv file
-                                                    if (!headers || headers.length === 0) {
-                                                        handleFailure(step, handle, {
-                                                            fileType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Not a geojson file"
-                                                                })
-                                                        });
-                                                    } else if (!rows || rows.length < 2) {
-                                                        handleFailure(step, handle, {
-                                                            fileType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "No data in the file; maybe not CSV?"
-                                                                })
-                                                        });
-                                                    } else {
-
-                                                        guess = guessLatLong(rows);
-
-                                                        // preselect primary attribute so it's not one of the lat or long guesses;
-                                                        // if csv has only two fields (lat, long), select the first as primary
-                                                        primaryAttribute = rows[0].filter(function (header) {
-                                                            return header !== guess.lat && header !== guess.long;
-                                                        })[0] || rows[0][0];
-
-                                                        // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
-                                                        choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
-                                                            stepData: {
-                                                                csvData: data,
-                                                                csvHeaders: rows[0],
-                                                                csvDelimeter: delimiter
-                                                            },
-                                                            bricksData: {
-                                                                datasetName: {
-                                                                    inputValue: fileName
-                                                                },
-                                                                primaryAttribute: {
-                                                                    options: headers,
-                                                                    selectedOption: primaryAttribute
-                                                                },
-                                                                latitude: {
-                                                                    options: headers,
-                                                                    selectedOption: guess.lat
-                                                                },
-                                                                longitude: {
-                                                                    options: headers,
-                                                                    selectedOption: guess.long
-                                                                }
-                                                            }
-                                                        });
-                                                    }
-
-                                                    break;
-
-                                                case "shapefileFileAttrStep":
-                                                    var shapefilePromise = DataLoader.buildShapefile(data);
-
-                                                    shapefilePromise.then(function (featureLayer) {
-                                                        var fieldOptions;
-
-                                                        window.clearTimeout(handle);
-
-                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                        fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
-
-                                                        // no layer names available; likely this is not a geojson file
-                                                        if (!fieldOptions || fieldOptions.length === 0) {
+                                                        } else if (!rows || rows.length < 2) {
                                                             handleFailure(step, handle, {
                                                                 fileType:
                                                                     lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Not a shapefile file"
+                                                                        message: "No data in the file; maybe not CSV?"
                                                                     })
                                                             });
                                                         } else {
 
+                                                            guess = guessLatLong(rows);
+
+                                                            // preselect primary attribute so it's not one of the lat or long guesses;
+                                                            // if csv has only two fields (lat, long), select the first as primary
+                                                            primaryAttribute = rows[0].filter(function (header) {
+                                                                return header !== guess.lat && header !== guess.long;
+                                                            })[0] || rows[0][0];
+
+                                                            // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
                                                             choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
-                                                                stepData: featureLayer,
+                                                                stepData: {
+                                                                    csvData: data,
+                                                                    csvHeaders: rows[0],
+                                                                    csvDelimeter: delimiter
+                                                                },
                                                                 bricksData: {
                                                                     datasetName: {
                                                                         inputValue: fileName
                                                                     },
                                                                     primaryAttribute: {
-                                                                        options: fieldOptions
+                                                                        options: headers,
+                                                                        selectedOption: primaryAttribute
+                                                                    },
+                                                                    latitude: {
+                                                                        options: headers,
+                                                                        selectedOption: guess.lat
+                                                                    },
+                                                                    longitude: {
+                                                                        options: headers,
+                                                                        selectedOption: guess.long
                                                                     }
                                                                 }
                                                             });
                                                         }
 
-                                                    }, function (event) {
-                                                        // error to build shapefiles
-                                                        handleFailure(step, handle, {
-                                                            fileType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Cannot build, not a shapefile" + event.message
-                                                                })
+                                                        break;
+
+                                                    case "shapefileFileAttrStep":
+                                                        var shapefilePromise = DataLoader.buildShapefile(data);
+
+                                                        shapefilePromise.then(function (featureLayer) {
+                                                            var fieldOptions;
+
+                                                            window.clearTimeout(handle);
+
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                            // no layer names available; likely this is not a geojson file
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    fileType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Not a shapefile file"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                    stepData: featureLayer,
+                                                                    bricksData: {
+                                                                        datasetName: {
+                                                                            inputValue: fileName
+                                                                        },
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            // error to build shapefiles
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Cannot build, not a shapefile" + event.message
+                                                                    })
+                                                            });
                                                         });
-                                                    });
 
-                                                    break;
-                                            }
+                                                        break;
+                                                }
 
-                                        }, function (event) {
-                                            //error loading file
-                                            handleFailure(step, handle, {
-                                                fileOrFileULR:
-                                                    lang.mixin(choiceTreeErrors.base, {
-                                                        message: "Cannot load file" + event.message
-                                                    })
+                                            }, function (event) {
+                                                //error loading file
+                                                handleFailure(step, handle, {
+                                                    fileOrFileULR:
+                                                        lang.mixin(choiceTreeErrors.base, {
+                                                            message: "Cannot load file" + event.message
+                                                        })
+                                                });
                                             });
-                                        });
-                                    }
-                                    //expose: { as: "advance" },
-                                },
-                                {
-                                    eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
-                                    expose: { as: "retreat" },
-                                    callback: choiceTreeCallbacks.simpleCancel
-                                }
-
-                            ]
-                        }
-                    ],
-                    children: [
-                        {
-                            id: "geojsonFileAttrStep",
-                            content: [
-                                {
-                                    id: "datasetName",
-                                    type: Bricks.SimpleInputBrick,
-                                    config: {
-                                        header: "Dataset Name"
-                                    }
-                                },
-                                {
-                                    id: "primaryAttribute",
-                                    type: Bricks.DropDownBrick,
-                                    config: {
-                                        header: "Primary Attribute"
-                                    }
-                                },
-                                {
-                                    id: "color",
-                                    type: Bricks.ColorPickerBrick,
-                                    config: {
-                                        header: "Colour"
-                                    }
-                                },
-                                {
-                                    id: "addDataset",
-                                    type: Bricks.ButtonBrick,
-                                    config: {
-                                        label: "Add Dataset",
-                                        containerClass: "button-brick-container-main",
-                                        buttonClass: "btn-primary"
-                                    },
-                                    on: [
-                                        {
-                                            eventName: Bricks.ButtonBrick.event.CLICK,
-                                            // add wms service layer to the map
-                                            callback: function (step /*,data*/) {
-                                                var data = step.getData(),
-                                                    bricksData = data.bricksData,
-                                                    featureLayer = data.stepData,
-
-                                                    iconTemplate = makeIconTemplate("a_d_icon_" + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
-
-                                                DataLoader.enhanceFileFeatureLayer(featureLayer, {
-                                                    //renderer: obj.style,
-                                                    colour: [
-                                                        bricksData.color.rgb_[0],
-                                                        bricksData.color.rgb_[1],
-                                                        bricksData.color.rgb_[2],
-                                                        255
-                                                    ],
-                                                    nameField: bricksData.primaryAttribute.dropDownValue,
-                                                    icon: iconTemplate,
-                                                    datasetName: bricksData.datasetName.inputValue
-                                                });
-
-                                                LayerLoader.loadLayer(featureLayer);
-                                                addDatasetPopup.close();
-                                            }
                                         }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "csvFileAttrStep",
-                            content: [
-                                {
-                                    id: "datasetName",
-                                    type: Bricks.SimpleInputBrick,
-                                    config: {
-                                        header: "Dataset Name"
-                                    }
-                                },
-                                {
-                                    id: "primaryAttribute",
-                                    type: Bricks.DropDownBrick,
-                                    config: {
-                                        header: "Primary Attribute"
-                                    }
-                                },
-                                {
-                                    id: "latLongAttribute",
-                                    type: Bricks.MultiBrick,
-                                    config: {
-                                        //header: "Service URL", //optional, omitted if not specified
-                                        content: [
-                                            {
-                                                id: "latitude",
-                                                type: Bricks.DropDownBrick,
-                                                config: {
-                                                    header: "Latitude"
-                                                }
-                                            },
-                                            {
-                                                id: "longitude",
-                                                type: Bricks.DropDownBrick,
-                                                config: {
-                                                    header: "Longitude"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                },
-                                {
-                                    id: "color",
-                                    type: Bricks.ColorPickerBrick,
-                                    config: {
-                                        header: "Colour"
-                                    }
-                                },
-                                {
-                                    id: "addDataset",
-                                    type: Bricks.ButtonBrick,
-                                    config: {
-                                        label: "Add Dataset",
-                                        containerClass: "button-brick-container-main",
-                                        buttonClass: "btn-primary"
+                                        //expose: { as: "advance" },
                                     },
-                                    on: [
-                                        {
-                                            eventName: Bricks.ButtonBrick.event.CLICK,
-                                            // add wms service layer to the map
-                                            callback: function (step /*,data*/) {
-                                                var data = step.getData(),
-                                                    bricksData = data.bricksData,
-                                                    stepData = data.stepData,
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
+                                        expose: { as: "retreat" },
+                                        callback: choiceTreeCallbacks.simpleCancel
+                                    }
 
-                                                    csvData = stepData.csvData,
-                                                    csvHeaders = stepData.csvHeaders,
-                                                    csvDelimeter = stepData.csvDelimeter,
+                                ]
+                            }
+                        ],
+                        children: [
+                            {
+                                id: "geojsonFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        featureLayer = data.stepData,
 
-                                                    featureLayer,
-                                                    iconTemplate = makeIconTemplate('a_d_icon_circlePoint', bricksData.color.hex),
-
-                                                    promise;
-
-                                                promise = DataLoader.buildCsv(csvData, {
-                                                    latfield: bricksData.latitude.dropDownValue,
-                                                    lonfield: bricksData.longitude.dropDownValue,
-                                                    delimiter: csvDelimeter,
-
-                                                    fields: csvHeaders
-                                                });
-
-                                                promise.then(function (event) {
-                                                    featureLayer = event;
+                                                        iconTemplate = makeIconTemplate("a_d_icon_" + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
 
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
-                                                        renderer: "circlePoint",
+                                                        //renderer: obj.style,
                                                         colour: [
                                                             bricksData.color.rgb_[0],
                                                             bricksData.color.rgb_[1],
@@ -895,97 +796,204 @@ define([
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
-                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        datasetName: bricksData.datasetName.inputValue
+                                                    });
+
+                                                    LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: "csvFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "latLongAttribute",
+                                        type: Bricks.MultiBrick,
+                                        config: {
+                                            //header: "Service URL", //optional, omitted if not specified
+                                            content: [
+                                                {
+                                                    id: "latitude",
+                                                    type: Bricks.DropDownBrick,
+                                                    config: {
+                                                        header: i18n.t("addDataset.latitude")
+                                                    }
+                                                },
+                                                {
+                                                    id: "longitude",
+                                                    type: Bricks.DropDownBrick,
+                                                    config: {
+                                                        header: i18n.t("addDataset.longitude")
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        stepData = data.stepData,
+
+                                                        csvData = stepData.csvData,
+                                                        csvHeaders = stepData.csvHeaders,
+                                                        csvDelimeter = stepData.csvDelimeter,
+
+                                                        featureLayer,
+                                                        iconTemplate = makeIconTemplate('a_d_icon_circlePoint', bricksData.color.hex),
+
+                                                        promise;
+
+                                                    promise = DataLoader.buildCsv(csvData, {
+                                                        latfield: bricksData.latitude.dropDownValue,
+                                                        lonfield: bricksData.longitude.dropDownValue,
+                                                        delimiter: csvDelimeter,
+
                                                         fields: csvHeaders
                                                     });
 
-                                                    //TODO: set symbology and colour on feature layer (obj.data)
+                                                    promise.then(function (event) {
+                                                        featureLayer = event;
+
+                                                        DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                            renderer: "circlePoint",
+                                                            colour: [
+                                                                bricksData.color.rgb_[0],
+                                                                bricksData.color.rgb_[1],
+                                                                bricksData.color.rgb_[2],
+                                                                255
+                                                            ],
+                                                            nameField: bricksData.primaryAttribute.dropDownValue,
+                                                            icon: iconTemplate,
+                                                            datasetName: bricksData.datasetName.inputValue,
+                                                            fields: csvHeaders
+                                                        });
+
+                                                        //TODO: set symbology and colour on feature layer (obj.data)
+                                                        LayerLoader.loadLayer(featureLayer);
+                                                        addDatasetPopup.close();
+
+                                                    }, function () {
+                                                        // can't construct csv
+                                                        handleFailure(step, null, {
+                                                            datasetName:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Cannot create CSV feature lyer, probably not a valid csv"
+                                                                })
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: "shapefileFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        featureLayer = data.stepData,
+
+                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+
+                                                    DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                        //renderer: obj.style,
+                                                        colour: [
+                                                            bricksData.color.rgb_[0],
+                                                            bricksData.color.rgb_[1],
+                                                            bricksData.color.rgb_[2],
+                                                            255
+                                                        ],
+                                                        nameField: bricksData.primaryAttribute.dropDownValue,
+                                                        icon: iconTemplate,
+                                                        datasetName: bricksData.datasetName.inputValue
+                                                    });
+
                                                     LayerLoader.loadLayer(featureLayer);
                                                     addDatasetPopup.close();
-
-                                                }, function () {
-                                                    // can't construct csv
-                                                    handleFailure(step, null, {
-                                                        datasetName:
-                                                            lang.mixin(choiceTreeErrors.base, {
-                                                                message: "Cannot create CSV feature lyer, probably not a valid csv"
-                                                            })
-                                                    });
-                                                });
+                                                }
                                             }
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            id: "shapefileFileAttrStep",
-                            content: [
-                                {
-                                    id: "datasetName",
-                                    type: Bricks.SimpleInputBrick,
-                                    config: {
-                                        header: "Dataset Name"
+                                        ]
                                     }
-                                },
-                                {
-                                    id: "primaryAttribute",
-                                    type: Bricks.DropDownBrick,
-                                    config: {
-                                        header: "Primary Attribute"
-                                    }
-                                },
-                                {
-                                    id: "color",
-                                    type: Bricks.ColorPickerBrick,
-                                    config: {
-                                        header: "Colour"
-                                    }
-                                },
-                                {
-                                    id: "addDataset",
-                                    type: Bricks.ButtonBrick,
-                                    config: {
-                                        label: "Add Dataset",
-                                        containerClass: "button-brick-container-main",
-                                        buttonClass: "btn-primary"
-                                    },
-                                    on: [
-                                        {
-                                            eventName: Bricks.ButtonBrick.event.CLICK,
-                                            // add wms service layer to the map
-                                            callback: function (step /*,data*/) {
-                                                var data = step.getData(),
-                                                    bricksData = data.bricksData,
-                                                    featureLayer = data.stepData,
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
 
-                                                    iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
-
-                                                DataLoader.enhanceFileFeatureLayer(featureLayer, {
-                                                    //renderer: obj.style,
-                                                    colour: [
-                                                        bricksData.color.rgb_[0],
-                                                        bricksData.color.rgb_[1],
-                                                        bricksData.color.rgb_[2],
-                                                        255
-                                                    ],
-                                                    nameField: bricksData.primaryAttribute.dropDownValue,
-                                                    icon: iconTemplate,
-                                                    datasetName: bricksData.datasetName.inputValue
-                                                });
-
-                                                LayerLoader.loadLayer(featureLayer);
-                                                addDatasetPopup.close();
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        };
+        }
 
         function createChoiceTree() {
 
@@ -1169,7 +1177,9 @@ define([
                 layerToggles = rootNode.find(".layer-checkboxes:first");
                 filterToggles = rootNode.find("#filterGlobalToggles");
 
+                prepareChoiceTreeStructure();
                 createChoiceTree();
+
                 tl
                     .set(addDatasetContainer, { display: "block" })
 
