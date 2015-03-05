@@ -22,12 +22,13 @@ define([
     ) {
         "use strict";
 
-        var rootNode = $("#searchMapSectionBody"),
+        var rootNode,
 
             addDatasetToggle,
             addDatasetContainer,
 
             layerList,
+            layerToggles,
             filterToggles,
 
             symbologyPreset = {},
@@ -44,15 +45,13 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-        //console.log(rootNode, symbologyPreset, transitionDuration, RAMP, UtilDict);
-
         choiceTreeCallbacks = {
             simpleAdvance: function (step, data, targetChildData) {
                 step.advance(data.selectedChoice, targetChildData);
             },
 
             simpleCancel: function (step, data) {
-                console.log("Cancel click:", this, step, data);
+                console.log("Step cancel click:", this, step, data);
 
                 if (step.isCompleted()) {
                     step.retreat();
@@ -98,6 +97,14 @@ define([
             }
         };
 
+        /**
+         * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
+         * 
+         * @method prepareChoiceTreeStructure
+         * @private
+         */
+        function prepareChoiceTreeStructure() {
+
         choiceTreeErrors = {
             base: {
                 type: "error",
@@ -114,16 +121,16 @@ define([
                     id: "sourceType",
                     type: Bricks.ChoiceBrick,
                     config: {
-                        header: "Data Source",
+                            header: i18n.t("addDataset.dataSource"),
                         //instructions: "Halp!",
                         choices: [
                             {
                                 key: "serviceTypeStep",
-                                value: "Service"
+                                    value: i18n.t("addDataset.dataSourceService")
                             },
                             {
                                 key: "fileTypeStep",
-                                value: "File"
+                                    value: i18n.t("addDataset.dataSourceFile")
                             }
                         ]
                     },
@@ -145,8 +152,8 @@ define([
                             id: "serviceURL",
                             type: Bricks.SimpleInputBrick,
                             config: {
-                                header: "Service URL",
-                                placeholder: "ESRI MapServer or Feature layer or WMS layer",
+                                    header: i18n.t("addDataset.serviceLayerURL"),
+                                    placeholder: i18n.t("addDataset.serviceLayerURLPlaceholder"),
                                 freezeStates: [Bricks.Brick.state.SUCCESS]
                             },
                             on: [
@@ -161,15 +168,15 @@ define([
                             type: Bricks.ChoiceBrick,
                             config: {
                                 //template: "template_name", //optional, has a default
-                                header: "Service Type",
+                                    header: i18n.t("addDataset.serviceType"),
                                 choices: [
                                     {
                                         key: "featureServiceAttrStep",
-                                        value: "Feature"
+                                            value: i18n.t("addDataset.serviceTypeFeature")
                                     },
                                     {
                                         key: "wmsServiceAttrStep",
-                                        value: "WMS"
+                                            value: i18n.t("addDataset.serviceTypeWMS")
                                     }
                                 ],
                                 freezeStates: [Bricks.Brick.state.SUCCESS]
@@ -179,12 +186,12 @@ define([
                             id: "serviceTypeOkCancel",
                             type: Bricks.OkCancelButtonBrick,
                             config: {
-                                okLabel: "Connect",
+                                    okLabel: i18n.t("addDataset.connect"),
                                 okFreezeStates: [
                                     Bricks.Brick.state.SUCCESS,
                                     Bricks.Brick.state.ERROR
                                 ],
-                                cancelLabel: "Cancel",
+                                    cancelLabel: i18n.t("addDataset.cancel"),
                                 //cancelFreezeStates: false,
                                 reverseOrder: true,
 
@@ -340,14 +347,14 @@ define([
                                     id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
-                                        header: "Primary Attribute"
+                                            header: i18n.t("addDataset.primaryAttribute")
                                     }
                                 },
                                 {
                                     id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        label: "Add Dataset",
+                                            label: i18n.t("addDataset.addDatasetButton"),
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     },
@@ -396,14 +403,14 @@ define([
                                     id: "layerName",
                                     type: Bricks.DropDownBrick,
                                     config: {
-                                        header: "Layer Name"
+                                            header: i18n.t("addDataset.layerName")
                                     }
                                 },
                                 {
                                     id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        label: "Add Dataset",
+                                            label: i18n.t("addDataset.addDatasetButton"),
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     },
@@ -469,9 +476,9 @@ define([
                             type: Bricks.FileInputBrick,
                             config: {
                                 //template: "template_name", //optional, has a default
-                                header: "File or URL",
+                                    header: i18n.t("addDataset.fileOrURL"),
                                 //label: "Service URL", // optional, equals to header by default
-                                placeholder: "Local file or URL",
+                                    placeholder: i18n.t("addDataset.fileOrURLPlaceholder"),
                                 freezeStates: [Bricks.Brick.state.SUCCESS]
                             },
                             on: [
@@ -486,19 +493,19 @@ define([
                             type: Bricks.ChoiceBrick,
                             config: {
                                 //template: "template_name", //optional, has a default
-                                header: "File Type",
+                                    header: i18n.t("addDataset.fileType"),
                                 choices: [
                                     {
                                         key: "geojsonFileAttrStep",
-                                        value: "GeoJSON"
+                                            value: i18n.t("addDataset.geojson")
                                     },
                                     {
                                         key: "csvFileAttrStep",
-                                        value: "CSV"
+                                            value: i18n.t("addDataset.csv")
                                     },
                                     {
                                         key: "shapefileFileAttrStep",
-                                        value: "Shapefile"
+                                            value: i18n.t("addDataset.shapefile")
                                     }
                                 ],
                                 freezeStates: [Bricks.Brick.state.SUCCESS]
@@ -508,12 +515,12 @@ define([
                             id: "fileTypeOkCancel",
                             type: Bricks.OkCancelButtonBrick,
                             config: {
-                                okLabel: "Load",
+                                    okLabel: i18n.t("addDataset.load"),
                                 okFreezeStates: [
                                     Bricks.Brick.state.SUCCESS,
                                     Bricks.Brick.state.ERROR
                                 ],
-                                cancelLabel: "Cancel",
+                                    cancelLabel: i18n.t("addDataset.cancel"),
                                 reverseOrder: true,
 
                                 required: [
@@ -744,28 +751,28 @@ define([
                                     id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
-                                        header: "Dataset Name"
+                                            header: i18n.t("addDataset.datasetName")
                                     }
                                 },
                                 {
                                     id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
-                                        header: "Primary Attribute"
+                                            header: i18n.t("addDataset.primaryAttribute")
                                     }
                                 },
                                 {
                                     id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
-                                        header: "Colour"
+                                            header: i18n.t("addDataset.colour")
                                     }
                                 },
                                 {
                                     id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        label: "Add Dataset",
+                                            label: i18n.t("addDataset.addDatasetButton"),
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     },
@@ -808,14 +815,14 @@ define([
                                     id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
-                                        header: "Dataset Name"
+                                            header: i18n.t("addDataset.datasetName")
                                     }
                                 },
                                 {
                                     id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
-                                        header: "Primary Attribute"
+                                            header: i18n.t("addDataset.primaryAttribute")
                                     }
                                 },
                                 {
@@ -828,14 +835,14 @@ define([
                                                 id: "latitude",
                                                 type: Bricks.DropDownBrick,
                                                 config: {
-                                                    header: "Latitude"
+                                                        header: i18n.t("addDataset.latitude")
                                                 }
                                             },
                                             {
                                                 id: "longitude",
                                                 type: Bricks.DropDownBrick,
                                                 config: {
-                                                    header: "Longitude"
+                                                        header: i18n.t("addDataset.longitude")
                                                 }
                                             }
                                         ]
@@ -845,14 +852,14 @@ define([
                                     id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
-                                        header: "Colour"
+                                            header: i18n.t("addDataset.colour")
                                     }
                                 },
                                 {
                                     id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        label: "Add Dataset",
+                                            label: i18n.t("addDataset.addDatasetButton"),
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     },
@@ -925,28 +932,28 @@ define([
                                     id: "datasetName",
                                     type: Bricks.SimpleInputBrick,
                                     config: {
-                                        header: "Dataset Name"
+                                            header: i18n.t("addDataset.datasetName")
                                     }
                                 },
                                 {
                                     id: "primaryAttribute",
                                     type: Bricks.DropDownBrick,
                                     config: {
-                                        header: "Primary Attribute"
+                                            header: i18n.t("addDataset.primaryAttribute")
                                     }
                                 },
                                 {
                                     id: "color",
                                     type: Bricks.ColorPickerBrick,
                                     config: {
-                                        header: "Colour"
+                                            header: i18n.t("addDataset.colour")
                                     }
                                 },
                                 {
                                     id: "addDataset",
                                     type: Bricks.ButtonBrick,
                                     config: {
-                                        label: "Add Dataset",
+                                            label: i18n.t("addDataset.addDatasetButton"),
                                         containerClass: "button-brick-container-main",
                                         buttonClass: "btn-primary"
                                     },
@@ -986,6 +993,8 @@ define([
                 }
             ]
         };
+
+        }
 
         function createChoiceTree() {
 
@@ -1162,13 +1171,18 @@ define([
             init: function () {
                 var tl = new TimelineLite({ paused: true });
 
+                rootNode = $("#searchMapSectionBody");
+
                 addDatasetToggle = rootNode.find("#addDatasetToggle");
                 addDatasetContainer = rootNode.find("#add-dataset-section-container");
 
                 layerList = rootNode.find("#layerList");
+                layerToggles = rootNode.find(".layer-checkboxes:first");
                 filterToggles = rootNode.find("#filterGlobalToggles");
 
+                prepareChoiceTreeStructure();
                 createChoiceTree();
+
                 tl
                     .set(addDatasetContainer, { display: "block" })
 
@@ -1178,6 +1192,8 @@ define([
                     .to(filterToggles, transitionDuration, { top: -60, ease: "easeOutCirc" })
                     .to(layerList, transitionDuration, { top: layerList.height() / 3, ease: "easeOutCirc" }, 0)
                     .to(layerList, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" }, transitionDuration / 2)
+
+                    .set(layerToggles, { display: "none" })
                 ;
 
                 addDatasetPopup = PopupManager.registerPopup(addDatasetToggle, "click",
@@ -1187,10 +1203,11 @@ define([
                         tl
                             .eventCallback("onComplete", function () {
                                 addDatasetContainer.find(":focusable:first").focus();
-                                d.resolve();
                             })
                            .play()
                         ;
+
+                        d.resolve();
                     },
                     {
                         closeHandler: function (d) {
@@ -1198,10 +1215,11 @@ define([
 
                             tl
                                 .eventCallback("onReverseComplete", function () {
-                                    d.resolve();
                                 })
                                .reverse()
                             ;
+
+                            d.resolve();
                         },
                         target: addDatasetContainer,
                         activeClass: "button-pressed",
