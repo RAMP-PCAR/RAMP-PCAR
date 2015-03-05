@@ -309,9 +309,10 @@ define([
         * Will generate a generic datagrid config node for a set of layer attributes.
         *
         * @param {Array} fields an array of attribute fields for a layer
+        * @param {Object} aliases optional param. a mapping of field names to field aliases
         * @returns {Object} an JSON config object for feature datagrid
         */
-        function createDatagridConfig(fields) {
+        function createDatagridConfig(fields, aliases) {
             function makeField(id, fn, wd, ttl, tp) {
                 return {
                     id: id,
@@ -334,7 +335,13 @@ define([
             dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
 
             dojoArray.forEach(fields, function (field, idx) {
-                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', field, 'title_span'));
+                var fieldTitle = field;
+                if (aliases) {
+                    if (aliases[field]) {
+                        fieldTitle = aliases[field];
+                    }
+                }
+                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
             });
 
             return dg;

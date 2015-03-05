@@ -366,7 +366,8 @@ define([
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         datagrid: DataLoader.createDatagridConfig(layerData.fields),
                                                         symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
-                                                        url: layerData.layerUrl
+                                                        url: layerData.layerUrl,
+                                                        aliasMap: layerData.aliasMap
                                                     },
                                                     featureLayer;
 
