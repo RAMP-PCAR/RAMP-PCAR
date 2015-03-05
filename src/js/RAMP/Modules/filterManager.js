@@ -50,38 +50,35 @@
 
 define([
 /* Dojo */
-        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/on", "dojo/dom", "dojo/dom-class",
-        "dojo/dom-style", "dojo/dom-construct", "dojo/_base/connect", "dojo/Deferred", "dojo/topic",
-        "dojo/aspect", "dojo/promise/all",
+        "dojo/_base/array", "dojo/Deferred", "dojo/topic", "dojo/aspect",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
 
 /* Esri */
-        "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
+        "esri/tasks/query",
 
 /* Ramp */
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
+        "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
 
     function (
     /* Dojo */
-        declare, lang, query, dojoArray, on, dom, domClass, domStyle, domConstruct,
-        connect, Deferred, topic, aspect, all,
+        dojoArray, Deferred, topic, aspect,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
 
     /* Esri */
-        EsriQuery, FeatureLayer, WMSLayer,
+        EsriQuery,
 
     /* Ramp */
         Ramp, GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
+        TmplHelper, UtilMisc, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
         "use strict";
 
         var config,
