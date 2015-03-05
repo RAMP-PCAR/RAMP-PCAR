@@ -39,7 +39,7 @@
 
                 {% if (o.instructions) { %}
                     
-                    <span tabindex='0' class='brick-instructions' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-info'>
+                    <span tabindex='0' class='brick-instructions _tooltip' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-help' data-tooltip-maxwidth='350'>
                         <i class='fa fa-question-circle'></i>
                         <span class='wb-inv'>{%= o.instructions %}</span>
                     </span>

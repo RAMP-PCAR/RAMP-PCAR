@@ -63,10 +63,9 @@
     }
 }
 
-.tooltipster-info {
+.tooltipster-icon-base() {
     border-radius: 0;
     border: 1px solid #2c2c2c;
-    background: @light-info-color;
     color: #2c2c2c;
     box-shadow: 0 0 1px 2px rgba(34,34,34,0.4);
 
@@ -75,19 +74,51 @@
         font-size: 14px;
         line-height: 16px;
         padding: 8px 10px 8px 26px;
-        border-left: 6px solid @info-color;
-
+    
         &:before {
-            color: @info-color;
-            content: "\e086";
-            font-family: "Glyphicons Halflings";
+            display: inline-block;
+            font: normal normal normal 14px/1 FontAwesome;
+            font-size: inherit;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            
             position: absolute;
             left: 12px;
+            top: calc(~'50% - 7px');
         }
     }
 
     .tooltipster-arrow {
         top: 1px;
+    }
+}
+
+.tooltipster-info {
+    .tooltipster-icon-base;
+
+    background: @light-info-color;
+    
+    .tooltipster-content {
+        border-left: 6px solid @info-color;
+
+        &:before {
+            color: @info-color;
+            content: "\f05a";
+        }
+    }
+
+    .tooltipster-arrow {
+        top: 1px;
+    }
+}
+
+.tooltipster-help {
+    .tooltipster-info;
+
+    .tooltipster-content {
+        &:before {
+            content: "\f059";
+        }
     }
 }
 
