@@ -720,6 +720,11 @@ define([
                     lod,
                     i;
 
+                //gis lesson.
+                //min scale means dont show the layer if zoomed out beyond the min scale
+                //max scale means dont show the layer if zoomed in beyond the max scale
+                //from a numerical perspective, min > max (as the scale number represents 1/number )
+
                 for (i = 0; i < lods.length; i += 1) {
                     lod = lods[i];
                     //console.log("lod", lod, lod.scale > layer.minScale);
@@ -730,6 +735,20 @@ define([
                     if (!bottomLod && lod.scale <= layer.maxScale) {
                         bottomLod = lods[Math.max(0, i - 1)];
                     }
+                }
+
+                //assign defaults for open-ended ranges
+                //we will never have the case where both values are 0, as in that case the layer is visible everywhere, and this
+                //function will not be called (it's only used when layer is out-of-scale range).
+
+                if (layer.minScale === 0) {
+                    //no ceiling.  top = bottom
+                    topLod = bottomLod;
+                }
+
+                if (layer.maxScale === 0) {
+                    //no floor.  bottom = top
+                    bottomLod = topLod;
                 }
 
                 //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
@@ -1153,11 +1172,10 @@ define([
 
                 // add custom level of details if lod exists in config.json
                 if (!UtilMisc.isUndefined(tileSchema)) {
-
                     var levelOfDetails = UtilArray.find(RAMP.config.LODs, function (configLOD) {
-                        return configLOD.tileSchema === tileSchema; 
+                        return configLOD.tileSchema === tileSchema;
                     });
-                    
+
                     //the map!
                     map = new EsriMap(RAMP.config.divNames.map, {
                         extent: initExtent,
