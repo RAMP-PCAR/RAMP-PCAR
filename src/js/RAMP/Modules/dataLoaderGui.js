@@ -28,6 +28,7 @@ define([
             addDatasetContainer,
 
             layerList,
+            layerToggles,
             filterToggles,
 
             symbologyPreset = {},
@@ -999,7 +1000,7 @@ define([
                     level = par ? par.level + 1 : 1;
 
                 node.level = level;
-                
+
                 stepItem = new StepItem(node);
                 stepItem.on(StepItem.event.CURRENT_STEP_CHANGE, setCurrentStep);
                 stepItem.on(StepItem.event.STATE_CHANGE, setStepState);
@@ -1165,6 +1166,7 @@ define([
                 addDatasetContainer = rootNode.find("#add-dataset-section-container");
 
                 layerList = rootNode.find("#layerList");
+                layerToggles = rootNode.find(".layer-checkboxes:first");
                 filterToggles = rootNode.find("#filterGlobalToggles");
 
                 createChoiceTree();
@@ -1177,19 +1179,22 @@ define([
                     .to(filterToggles, transitionDuration, { top: -60, ease: "easeOutCirc" })
                     .to(layerList, transitionDuration, { top: layerList.height() / 3, ease: "easeOutCirc" }, 0)
                     .to(layerList, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" }, transitionDuration / 2)
+
+                    .set(layerToggles, { display: "none" })
                 ;
 
                 addDatasetPopup = PopupManager.registerPopup(addDatasetToggle, "click",
-                    function (d) {                        
+                    function (d) {
                         createChoiceTree();
 
                         tl
                             .eventCallback("onComplete", function () {
                                 addDatasetContainer.find(":focusable:first").focus();
-                                d.resolve();
                             })
                            .play()
                         ;
+
+                        d.resolve();
                     },
                     {
                         closeHandler: function (d) {
@@ -1197,10 +1202,11 @@ define([
 
                             tl
                                 .eventCallback("onReverseComplete", function () {
-                                    d.resolve();
                                 })
                                .reverse()
                             ;
+
+                            d.resolve();
                         },
                         target: addDatasetContainer,
                         activeClass: "button-pressed",
