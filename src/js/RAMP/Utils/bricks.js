@@ -436,11 +436,21 @@ define([
                 if (!this._isFrozen || force) {
                     if (disable) {
                         this.node
-                            .find("button, input, select")
+                            // make the buttons appear and act as if they are disabled but still able to receive focus
+                            // it's needed so keyboard focus wouldn't fly away to the beginning of the page if the button is suddenly disabled
+                            .find("button")
+                            .addClass("disabled")
+                            .attr("aria-disabled", true)
+                            .end()
+                            .find("input, select")
                             .attr("disabled", true);
                     } else {
                         this.node
-                            .find("button, input, select")
+                            .find("button")
+                            .removeClass("disabled")
+                            .attr("aria-disabled", false)
+                            .end()
+                            .find("input, select")
                             .attr("disabled", false);
                     }
                 }
@@ -586,7 +596,7 @@ define([
 
                 Brick.initialize.call(this, id, config);
 
-                this.node.on("click", "button", function () {
+                this.node.on("click", "button:not(.disabled)", function () {
                     that.notify(that.event.CLICK, null);
                 });
             },
