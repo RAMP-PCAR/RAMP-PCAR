@@ -22,7 +22,7 @@ define([
     ) {
         "use strict";
 
-        var rootNode = $("#searchMapSectionBody"),
+        var rootNode,
 
             addDatasetToggle,
             addDatasetContainer,
@@ -1169,6 +1169,8 @@ define([
         return {
             init: function () {
                 var tl = new TimelineLite({ paused: true });
+            
+                rootNode = $("#searchMapSectionBody");
 
                 addDatasetToggle = rootNode.find("#addDatasetToggle");
                 addDatasetContainer = rootNode.find("#add-dataset-section-container");
