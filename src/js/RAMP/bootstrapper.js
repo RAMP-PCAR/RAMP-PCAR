@@ -116,6 +116,7 @@ require([
                         //initialize the map export after everything is done
                         ImageExport.init();
 
+                        DataLoadedGui.init();
                         //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
@@ -131,8 +132,6 @@ require([
 
                 //initialize the filter
                 FilterManager.init();
-
-                DataLoadedGui.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
