@@ -201,12 +201,14 @@ define(["dojo/_base/lang", "utils/util"],
                                 } else {
                                     node.attr("title", node.data("tooltip"));
                                 }
-                                
+
                                 node.tooltipster(
                                     lang.mixin({
-                                            theme: node.data("tooltip-theme") || attr.theme,
-                                            delay: attr.delay
-                                        },
+                                        theme: node.data("tooltip-theme") || attr.theme,
+                                        //autoClose: false,
+                                        maxWidth: node.data("tooltip-maxwidth") || null,
+                                        delay: attr.delay
+                                    },
                                         options
                                     )
                                 );
