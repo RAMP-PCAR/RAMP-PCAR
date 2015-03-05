@@ -132,6 +132,10 @@ define([
             promise.then(
                 function (data) {
                     try {
+                        var alias = {};
+                        dojoArray.forEach(data.fields, function (field) {
+                            alias[field.name] = field.alias;
+                        });
 
                         var res = {
                             layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
@@ -139,7 +143,8 @@ define([
                             layerUrl: featureLayerEndpoint,
                             geometryType: data.geometryType,
                             fields: dojoArray.map(data.fields, function (x) { return x.name; }),
-                            renderer: data.drawingInfo.renderer
+                            renderer: data.drawingInfo.renderer,
+                            aliasMap: alias
                         };
 
                         def.resolve(res);
