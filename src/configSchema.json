@@ -245,6 +245,10 @@
                         "gridColumns": { "type": "array", "items": { "$ref": "#/definitions/gridColumn" } }
                     },
                     "additionalProperties": false
+                },
+                "aliasMap": { 
+                    "type": "object",                    
+                    "additionalProperties": true
                 }
 
             },
