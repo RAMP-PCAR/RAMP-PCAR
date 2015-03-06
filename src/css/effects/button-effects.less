@@ -1,44 +1,20 @@
-﻿.button-none {
-    background: 0;
-    border-color: transparent!important;
-    box-shadow: none;
-    outline-color: transparent;
-    text-decoration: underline;
-    text-shadow: none;
-}
-
-.button-close {
-    position: absolute;
-    cursor: pointer;
-    right: -7px;
-    top: -7px;
-
-    .css-icon-close(@light-grey-color, @attention-color, @attention-color);
-}
-
-.link-button() {
-
+﻿.link-button() {
     padding: 0 !important;
 
     &:hover,
     &:focus {
         background: none repeat scroll 0 center rgba(0, 0, 0, 0) !important;
         border-color: rgba(0, 0, 0, 0) !important;
-
         .box-shadow (none);
-
         outline-color: #124c86;
         //outline-color: rgba(0, 0, 0, 0);
-
         text-decoration: underline;
         text-shadow: none;
-
         color: @attention-color;
     }
 }
 
 .link-button2() {
-
     text-decoration: none !important;
     border-radius: 0;
 
@@ -46,16 +22,11 @@
     &:focus {
         background: none repeat scroll 0 center rgba(0, 0, 0, 0) !important;
         border-color: rgba(0, 0, 0, 0) !important;
-
         .box-shadow (none);
         text-shadow: none;
-
         //outline: 1px dotted #000;
-
         //color: @attention-color;
         color: black;
-
-
     }
 }
 
@@ -67,17 +38,13 @@
     border-top: none;
     cursor: pointer;
     display: block;
-
     padding: 0;
     margin: 0;
-
     position: absolute;
     right: 3px;
     top: 32px;
-
     height: 56px;
     width: 0;
-
     overflow: visible;
 
     &:after {
@@ -90,7 +57,6 @@
         position: absolute;
         top: 23px;
         width: 9px;
-
         .rotation(-225deg);
         .transition(400ms, ease);
     }
@@ -102,8 +68,79 @@
 
     &.state-expanded:after {
         left: 1px;
-
         .rotation(-45deg);
         .transition(400ms, ease);
     }
+}
+
+.btn-ramp-pressed () {
+    &.button-pressed {
+        border-color: @medium-dark-grey-color !important;
+        background-color: #545454 !important;
+        color: #FFF !important;
+        box-shadow: @button-active-shadow;
+
+        span {
+            color: #FFF !important;
+        }
+
+        .separator {
+            border-color: #FFF;
+        }
+    }
+}
+
+.btn-ramp-focused () {
+    &.focused,
+    &:focus, &:hover {
+        background-color: #D4D4D4 !important;
+        color: inherit !important;
+
+        span {
+            color: #000 !important;
+        }
+    }
+}
+
+.btn {
+    border-radius: 0 !important;
+}
+
+.btn-option,
+.btn-choice {
+    border-color: @light-grey-color !important;
+    background-color: @very-light-grey-color;
+    min-width: 95px;
+    color: #000;
+    .btn-ramp-focused;
+    .btn-ramp-pressed;
+}
+
+.button-none {
+    background: 0;
+    border-color: transparent !important;
+    box-shadow: none;
+    outline-color: transparent;
+    text-decoration: underline;
+    text-shadow: none;
+    color: black;
+
+    &:hover,
+    &:focus {
+        background: none repeat scroll 0 center rgba(0, 0, 0, 0) !important;
+        border-color: rgba(0, 0, 0, 0) !important;
+        .box-shadow (none);
+        text-shadow: none;
+        //outline: 1px dotted #000;
+        //color: @attention-color;
+        color: black;
+    }
+}
+
+.button-close {
+    position: absolute;
+    cursor: pointer;
+    right: -7px;
+    top: -7px;
+    .css-icon-close(@light-grey-color, @attention-color, @attention-color);
 }

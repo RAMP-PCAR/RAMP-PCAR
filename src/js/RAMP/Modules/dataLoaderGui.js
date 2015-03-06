@@ -1,4 +1,4 @@
-﻿/* global define, console, TweenLite, TimelineLite, $, window, tmpl, jscolor, RColor, i18n, RAMP, Btoa */
+﻿/* global define, console, window, $, i18n, RAMP, t, TimelineLite */
 
 define([
     /* Dojo */
@@ -9,1074 +9,1244 @@ define([
 
     /* Ramp */
 
-    "utils/popupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage",
+    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage", "ramp/stepItem",
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
         lang, Deferred,
         filter_manager_template,
-        PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage,
-        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict
+        PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage, StepItem,
+        UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
         "use strict";
 
-        var rootNode = $("#searchMapSectionBody"),
-            mainPopup,
+        var rootNode,
 
-            loadSteps = {
-                loadServiceStep: {
-                    typeUserSelected: false,
-                    serviceType: null,
-                    url: ""
-                },
+            addDatasetToggle,
+            addDatasetContainer,
 
-                loadFileStep: {
-                    typeUserSelected: false,
-                    fileType: null,
-                    url: "",
-                    file: null
-                }
-            },
+            layerList,
+            layerToggles,
+            filterToggles,
 
             symbologyPreset = {},
 
-            transitionDuration = 0.4;
+            //steps,
+            choiceTree,
+            choiceTreeCallbacks,
+            choiceTreeErrors,
+            stepLookup = {},
 
-        filter_manager_template = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
+            addDatasetPopup,
 
-        PopupManager.registerPopup(rootNode, "click",
-            function (d) {
-                var step = this.handle.parents(".step:first"),
-                    stepId = step.attr("id"),
-                    group = this.handle.parents(".choice-group:first");//,
-                //choiceId = group.data("choice-id");
+            transitionDuration = 0.5,
 
-                group
-                    .find(".button-pressed")
-                    .removeClass("button-pressed");
+            templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
-                loadSteps[stepId].setChoice(this.handle.data("option"));
-
-                d.resolve();
+        choiceTreeCallbacks = {
+            simpleAdvance: function (step, data, targetChildData) {
+                step.advance(data.selectedChoice, targetChildData);
             },
-            {
-                containerSelector: ".choice-group:first",
-                handleSelector: ".btn-option:not(.button-pressed):not(.btn-action)",
-                activeClass: "button-pressed",
-                openOnly: true,
-                useAria: false
-            }
-        );
 
-        PopupManager.registerPopup(rootNode, "click",
-            function (d) {
-                var optionsContainer = this.target,
-                    optionsBackground = optionsContainer.find("> .options-bg"),
-                    options = optionsContainer.find("> .step-options"),
-                    option = options.find("> ." + this.handle.data("option")),
-                    optionStepContent,
+            simpleCancel: function (step, data) {
+                console.log("Step cancel click:", this, step, data);
 
-                    otherOptionButtons = this.handle.parent().find(".button-pressed"),
-
-                    currentStepContent = optionsContainer.prev(),
-                    currentOptionsContainer = rootNode.find(".current-step"),
-
-                    step = this.handle.parents(".step:first"),
-                    stepId = step.attr("id"),
-
-                    retreatOptionsContainers = [],
-
-                    advanceOptionsContainers = [],
-                    lastContainer = optionsContainer,
-
-                    optionsLeftShift,
-                    leftShiftStartAdjustment,
-
-                    tl = new TimelineLite({ paused: true }),
-
-                    loadURLStep = (function () {
-                        var inputControlGroup,
-                            inputControl,
-                            inputControlButtons;
-
-                        function clearStep() {
-                            currentOptionsContainer.removeClass("error");
-                            currentStepContent.removeClass("loaded error");
-                            inputControlGroup.removeClass("has-feedback has-success has-error");
-
-                            currentStepContent.find(".btn-action").removeClass("button-pressed");
-                        }
-
-                        return {
-                            init: function () {
-                                inputControlGroup = currentStepContent.find(".input-group");
-                                inputControl = inputControlGroup.find(".load-url-control");
-                                inputControlButtons = inputControlGroup.find(".input-group-btn:not(.browse-files)");
-                            },
-
-                            beforeLoadUrlStep: function () {
-                                currentOptionsContainer
-                                    .removeClass("error")
-                                    .addClass("loading");
-
-                                currentStepContent.removeClass("error");
-
-                                inputControlGroup.removeClass("has-feedback has-success has-error");
-                            },
-
-                            successLoadUrlStep: function () {
-                                tl
-                                    .call(function () {
-                                        inputControl.attr("readonly", true);
-
-                                        currentOptionsContainer.removeClass("loading");
-                                        currentStepContent.addClass("loaded");
-                                        inputControlGroup.addClass("has-feedback has-success");
-
-                                        currentStepContent
-                                            .find(".btn-option:not(.btn-action), .browse-button")
-                                            .attr("disabled", true)
-                                            //.addClass("disabled")
-                                            .end().find("input[type='file']").attr("disabled", true);
-
-                                        currentStepContent
-                                            .find(".glyphicon")
-                                            .css({ right: inputControlButtons.width() });
-                                    }, [], null)
-                                ;
-
-                                resolveTreeTransitions();
-                                executeTransitions();
-                            },
-
-                            errorLoadUrlStep: function () {
-                                tl
-                                    .call(function () {
-                                        currentOptionsContainer
-                                            .addClass("error")
-                                            .removeClass("loading");
-
-                                        currentStepContent.addClass("error");
-
-                                        inputControlGroup.addClass("has-feedback has-error");
-
-                                        currentStepContent
-                                            .find(".glyphicon")
-                                            .css({ right: inputControlButtons.width() });
-                                    }, [], null)
-                                ;
-
-                                // no need to resolve transition since there shouldn't be any transitions on error
-                                executeTransitions();
-
-                                //Theme.tooltipster(rootNode, null, null, { position: "left" });
-
-                                currentStepContent.on("click", ".btn-option:not(.btn-action)", function () {
-                                    currentStepContent.off("click", ".btn-option:not(.btn-action)");
-
-                                    clearStep();
-                                });
-
-                                inputControl.on("input", function () {
-                                    inputControl.off("input");
-
-                                    clearStep();
-                                });
-
-                                currentStepContent.on("click", "input[type='file']", function () {
-                                    currentStepContent.off("click", "input[type='file']");
-
-                                    clearStep();
-                                });
-                            },
-
-                            cancelLoadUrlStep: function () {
-                                retreatOptionsContainers.push(optionsContainer); // add the current options container
-                                lastContainer = optionsContainer.parents(".step-options-container:first");
-
-                                resolveTreeTransitions();
-
-                                tl
-                                    .call(function () {
-                                        inputControl
-                                            //.val("")
-                                            .attr("readonly", false);
-
-                                        clearStep();
-
-                                        currentStepContent
-                                            .find(".btn-option:not(.btn-action), .browse-button")
-                                            .attr("disabled", false)
-                                            //.removeClass("disabled")
-                                            .end().find("input[type='file']").attr("disabled", false);
-
-                                        // disable all active options in the following steps
-                                        optionsContainer
-                                            .find(".active-option").removeClass("active-option")
-                                            .end()
-                                            .find(".button-pressed").removeClass("button-pressed");
-
-                                        //loadUrlControlStatusCheck(inputControl);
-                                    }, [], null, 0)
-                                ;
-
-                                executeTransitions();
-                            }
-                        };
-                    }())
-                ;
-
-                function findContainers() {
-                    var node; // temp variable
-
-                    optionStepContent = option.find("> .step-content");
-
-                    // find all downstream containers that have active options including the current container;
-                    // they will be opened
-                    node = option;
-                    while (node.length) {
-                        advanceOptionsContainers.push(node.parents(".step-options-container:first"));
-                        node = node.find("> .step-options-container > .step-options > .active-option:first");
-                    }
-
-                    // find all downstream containers that are visible;
-                    // they will be closed
-                    retreatOptionsContainers = retreatOptionsContainers
-                        .concat(
-                            optionsContainer
-                                .find(".step-options-container:visible")
-                                .toArray()
-                        );
-                }
-
-                function advance() {
-                    var advanceStagger = transitionDuration / 2 / advanceOptionsContainers.length; // calculate advance transition stagger
-
-                    option.addClass("active-option"); // mark selected option as active
-
-                    tl.addLabel("advanceStart"); // add time label
-
-                    advanceOptionsContainers.forEach(function (aoc, i) {
-                        var optionsBackground,
-                            options,
-                            optionStepContent;
-
-                        aoc = $(aoc);
-
-                        optionsBackground = aoc.find("> .options-bg");
-                        options = aoc.find("> .step-options");
-                        optionStepContent = options.find("> .active-option:first > .step-content");
-
-                        TweenLite.set(aoc, { display: "block" }); // unhide options container
-
-                        // re-detect the left offset if the block has been hidden before; otherwise it will be zero;
-                        optionsLeftShift = optionStepContent.position().left;
-
-                        tl
-                            .to(optionsBackground, 0, { height: optionStepContent.outerHeight() }, "advanceStart+=" + advanceStagger * (i))
-
-                            .set(options, { left: 0 }, "advanceStart+=" + advanceStagger * (i))
-                            //.set(options, { left: -optionsLeftShift }, "advanceStart+=" + advanceStagger * (i))
-                            .set(options.find("> .active-option"), { display: "inline-block" }, "advanceStart+=" + advanceStagger * (i))
-                            .set(options.find("> .step:not(.active-option)"), { display: "none" }, "advanceStart+=" + advanceStagger * (i))
-
-                            .to(aoc, 0, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "advanceStart+=" + advanceStagger * (i))
-                            .fromTo(aoc, transitionDuration,
-                                { top: -aoc.height() },
-                                { top: 0, ease: "easeOutCirc" },
-                                "advanceStart+=" + advanceStagger * (i))
-                            .set(aoc, { height: "auto" }, "advanceStart+=" + advanceStagger * (i))
-                        ;
-
-                        lastContainer = aoc;
-                    });
-                }
-
-                function retreat() {
-                    var retreatStagger = transitionDuration / 2 / retreatOptionsContainers.length;
-                    leftShiftStartAdjustment = retreatOptionsContainers.length > 0 ? "-=0.1" : "";
-
-                    retreatOptionsContainers.forEach(function (doc, i) {
-                        var docActiveOption,
-                            docActiveOptionContent;
-
-                        doc = $(doc);
-                        docActiveOption = doc.find("> .step-options > .step.active-option");
-                        docActiveOptionContent = docActiveOption.find("> .step-content");
-
-                        tl
-                            .to(doc, transitionDuration,
-                                { top: -docActiveOptionContent.outerHeight(), ease: "easeOutCirc" },
-                                retreatStagger * (retreatOptionsContainers.length - i - 1))
-                            .set(doc, { display: "none" })
-                        ;
-                    });
-                }
-
-                function shift() {
-                    var optionsLeftShift;
-
-                    TweenLite.set(options.find("> .step"), { display: "inline-block" });
-                    TweenLite.set(options, { left: -options.find("> .active-option").position().left });
-
-                    optionsLeftShift = optionStepContent.length > 0 ? optionStepContent.position().left : -1;
-
-                    if (optionsLeftShift !== -1 && optionsLeftShift !== options.position().left) {
-                        tl
-                            .addLabel("leftShiftStart")
-
-                            .to(optionsBackground, transitionDuration, { height: optionStepContent.outerHeight(), ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
-
-                            .to(options, transitionDuration,
-                                { left: -optionsLeftShift, ease: "easeOutCirc" }, "leftShiftStart" + leftShiftStartAdjustment)
-                            .set(options.find("> .step"), { className: "-=active-option" }) // when shifting, active-option is changing
-                            .set(option, { className: "+=active-option" })
-
-                            .set(options, { left: 0 })
-                            .set(options.find("> .step").not(option), { display: "none" })
-                        ;
-                    }
-                }
-
-                function resolveTreeTransitions() {
-                    findContainers();
-
-                    if (optionsContainer.is(":hidden")) {
-                        advance();
-                    } else {
-                        retreat();
-
-                        shift();
-
-                        // drop the first container since it shouldn't be advanced
-                        UtilArray.remove(advanceOptionsContainers, 0);
-                        advance();
-                    }
-
-                    tl
-                        .set(currentOptionsContainer, { height: "auto", className: "-=current-step" }, 0)
-                        .set(lastContainer, { className: "+=current-step" }, 0)
-                    ;
-                }
-
-                function executeTransitions() {
-                    tl
-                        .set(otherOptionButtons, { className: "-=button-pressed" }, 0)
-                        .play();
-
-                    d.resolve();
-                }
-
-                function someFunction(action) {
-                    var promise;
-
-                    switch (action) {
-                        case "serviceURLcancel":
-                            loadURLStep.init();
-                            loadURLStep.cancelLoadUrlStep();
-
-                            break;
-
-                        case "serviceURL":
-                            var serviceType = loadSteps[stepId].getServiceType(),
-                                optionStepContent,
-                                //fieldOptions = {},
-                                data; // a complete feature or wms layer object which has not been added to map yet
-
-                            option = options.find("> ." + serviceType + ":first");
-                            optionStepContent = option.find("> .step-content");
-
-                            loadURLStep.init();
-                            loadURLStep.beforeLoadUrlStep();
-
-                            switch (serviceType) {
-                                case "option-feature":
-
-                                    //get data from feature layer endpoint
-                                    promise = DataLoader.getFeatureLayer(loadSteps[stepId].getUrl());
-
-                                    promise.then(function (event) {
-                                        data = event;
-
-                                        //get data from feature layer's legend endpoint
-                                        var legendPromise = DataLoader.getFeatureLayerLegend(loadSteps[stepId].getUrl());
-                                        legendPromise.then(function (legendLookup) {
-                                            data.legendLookup = legendLookup;
-
-                                            //event.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
-
-                                            setSelectOptions(
-                                                optionStepContent.find("#featurePrimaryAttrlist"),
-                                                data.fields
-                                            );
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#featureStyleAttrlist"),
-                                            //    symbologyPreset
-                                            //);
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#featureColourAttrlist"),
-                                            //    { selectOne: "Select One" }
-                                            //);
-
-                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                                addFeatureDataset({
-                                                    data: data,
-                                                    primary: optionStepContent.find("#featurePrimaryAttrlist").val()//,
-                                                    //style: optionStepContent.find("#featureStyleAttrlist").val(),
-                                                    //colour: optionStepContent.find("#featureColourAttrpicker").val()
-                                                });
-                                            });
-                                            loadURLStep.successLoadUrlStep();
-                                        }, function () {
-                                            loadURLStep.errorLoadUrlStep();
-                                        });
-                                    }, function () {
-                                        loadURLStep.errorLoadUrlStep();
-                                    });
-
-                                    break;
-
-                                case "option-wms":
-                                    promise = DataLoader.getWmsLayerList(loadSteps[stepId].getUrl());
-
-                                    promise.then(function (event) {
-                                        var layerOptions = {};
-
-                                        data = event;
-                                        event.layers.forEach(function (l) { layerOptions[l.name] = l.desc; });
-
-                                        setSelectOptions(
-                                            optionStepContent.find("#wmsLayerNameAttrlist"),
-                                            layerOptions
-                                        );
-
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#wmsParserAttrlist"),
-                                        //    { selectOne: "Select One" }
-                                        //);
-
-                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addWMSDataset({
-                                                data: data,
-                                                url: loadSteps[stepId].getUrl(),
-                                                layerName: optionStepContent.find("#wmsLayerNameAttrlist").val()
-                                                //parser: optionStepContent.find("#wmsParserAttrlist").val()
-                                            });
-                                        });
-                                        loadURLStep.successLoadUrlStep();
-                                    }, function () {
-                                        loadURLStep.errorLoadUrlStep();
-                                    });
-
-                                    break;
-                            }
-
-                            break;
-
-                        case "fileOrURLcancel":
-                            loadURLStep.init();
-                            loadURLStep.cancelLoadUrlStep();
-
-                            break;
-
-                        case "fileOrURL":
-                            var fileName = loadSteps[stepId].getFile() ? loadSteps[stepId].getFile().name : loadSteps[stepId].getFileUrl().split("/").pop();
-
-                            loadURLStep.init();
-                            loadURLStep.beforeLoadUrlStep();
-
-                            promise = DataLoader.loadDataSet({
-                                url: loadSteps[stepId].getFileUrl(),
-                                file: loadSteps[stepId].getFile(),
-                                type: loadSteps[stepId].getFileType() === "option-shapefile" ? "binary" : "text"
-                            });
-
-                            promise.then(function (event) {
-                                var fileType = loadSteps[stepId].getFileType(),
-                                    optionStepContent,
-                                    fieldOptions = {},
-                                    pr,
-                                    featureLayer,
-                                    data = event; // either a {string} or {ArrayBuffer}; string for CSV and GeoJSON;
-
-                                //console.log(event);
-                                option = options.find("> ." + fileType + ":first");
-                                optionStepContent = option.find("> .step-content");
-
-                                switch (fileType) {
-                                    case "option-geojson":
-                                        pr = DataLoader.buildGeoJson(data);
-
-                                        pr.then(function (event) {
-                                            //console.log(event);
-                                            featureLayer = event;
-
-                                            featureLayer.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
-
-                                            optionStepContent.find("#geojsonDatasetNameAttrtextField").val(fileName);
-
-                                            setSelectOptions(
-                                                optionStepContent.find("#geojsonPrimaryAttrlist"),
-                                                fieldOptions
-                                            );
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#geojsonStyleAttrlist"),
-                                            //    symbologyPreset
-                                            //);
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#geojsonColourAttrlist"),
-                                            //    { selectOne: "Select One" }
-                                            //);
-
-                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                                addGeoJSONDataset({
-                                                    data: data,
-                                                    featureLayer: featureLayer,
-                                                    datasetName: optionStepContent.find("#geojsonDatasetNameAttrtextField").val(),
-                                                    primary: optionStepContent.find("#geojsonPrimaryAttrlist").val(),
-                                                    //style: optionStepContent.find("#geojsonStyleAttrlist").val(),
-                                                    colour: optionStepContent.find("#geojsonColourAttrpicker").val()
-                                                });
-                                            });
-                                        });
-
-                                        break;
-
-                                    case "option-csv":
-                                        var rows,
-                                            delimiter = UtilMisc.detectDelimiter(data),
-                                            headers = {};
-
-                                        rows = DataLoader.csvPeek(data, delimiter);
-
-                                        rows[0].forEach(function (row) {
-                                            headers[row] = row;
-                                        });
-
-                                        optionStepContent.find("#csvDatasetNameAttrtextField").val(fileName);
-
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvPrimaryAttrlist"),
-                                            headers
-                                        );
-
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvLatitudeAttrlist"),
-                                            headers
-                                        );
-
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvLongitudeAttrlist"),
-                                            headers
-                                        );
-
-                                        setSelectOptions(
-                                            optionStepContent.find("#csvStyleAttrlist"),
-                                            symbologyPreset
-                                        );
-
-                                        //setSelectOptions(
-                                        //    optionStepContent.find("#csvColourAttrlist"),
-                                        //    { selectOne: "Select One" }
-                                        //);
-
-                                        optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                            addCSVDataset({
-                                                data: data,
-                                                fields: rows[0],
-                                                delimiter: delimiter,
-                                                datasetName: optionStepContent.find("#csvDatasetNameAttrtextField").val(),
-                                                primary: optionStepContent.find("#csvPrimaryAttrlist").val(),
-                                                lat: optionStepContent.find("#csvLatitudeAttrlist").val(),
-                                                lon: optionStepContent.find("#csvLongitudeAttrlist").val(),
-                                                colour: optionStepContent.find("#csvColourAttrpicker").val()
-                                            });
-                                        });
-
-                                        break;
-
-                                    case "option-shapefile":
-
-                                        pr = DataLoader.buildShapefile(data);
-
-                                        pr.then(function (event) {
-                                            featureLayer = event;
-
-                                            featureLayer.fields.forEach(function (f) { fieldOptions[f.name] = f.name; });
-
-                                            optionStepContent.find("#shapefileDatasetNameAttrtextField").val(fileName);
-
-                                            setSelectOptions(
-                                                optionStepContent.find("#shapefilePrimaryAttrlist"),
-                                                fieldOptions
-                                            );
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#shapefileStyleAttrlist"),
-                                            //    symbologyPreset
-                                            //);
-
-                                            //setSelectOptions(
-                                            //    optionStepContent.find("#shapefileColourAttrlist"),
-                                            //    { selectOne: "Select One" }
-                                            //);
-
-                                            optionStepContent.find(".btn-add-dataset").on("click", function () {
-                                                addShapefileDataset({
-                                                    data: data,
-                                                    featureLayer: featureLayer,
-                                                    datasetName: optionStepContent.find("#shapefileDatasetNameAttrtextField").val(),
-                                                    primary: optionStepContent.find("#shapefilePrimaryAttrlist").val(),
-                                                    //style: optionStepContent.find("#shapefileStyleAttrlist").val(),
-                                                    colour: optionStepContent.find("#shapefileColourAttrpicker").val()
-                                                });
-                                            });
-                                        });
-
-                                        break;
-                                }
-
-                                loadURLStep.successLoadUrlStep();
-                            }, function () {
-                                loadURLStep.errorLoadUrlStep();
-                            });
-
-                            break;
-                    }
-                }
-
-                if (this.handle.data("action")) {
-                    someFunction(this.handle.data("action"));
+                if (step.isCompleted()) {
+                    step.retreat();
                 } else {
-                    resolveTreeTransitions();
-                    executeTransitions();
+                    step.clearStep();
                 }
             },
-            {
-                containerSelector: ".step:first",
-                handleSelector: ".btn-action:not(.button-pressed)",
-                targetSelector: "> .step-options-container",
-                activeClass: "button-pressed",
-                openOnly: true
+
+            serviceTypeStepGuess: function (step, data) {
+                var value = data.inputValue,
+                    serviceTypeBrick = step.contentBricks.serviceType,
+                    guess = "";
+
+                // make a guess if it's a feature or wms server only if the user hasn't already selected the type
+                if (!serviceTypeBrick.isUserSelected()) {
+
+                    if (value.match(/ArcGIS\/rest\/services/ig)) {
+                        guess = "featureServiceAttrStep";
+                    } else if (value.match(/wms/ig)) {
+                        guess = "wmsServiceAttrStep";
+                    }
+
+                    serviceTypeBrick.setChoice(guess);
+                }
+            },
+
+            fileTypeStepGuess: function (step, data) {
+                var fileName = data.inputValue,
+                    serviceFileBrick = step.contentBricks.fileType,
+                    guess = "";
+
+                if (!serviceFileBrick.isUserSelected() && !serviceFileBrick.isUserEntered) {
+                    if (fileName.endsWith(".csv")) {
+                        guess = "csvFileAttrStep";
+                    } else if (fileName.endsWith(".json")) {
+                        guess = "geojsonFileAttrStep";
+                    } else if (fileName.endsWith(".zip")) {
+                        guess = "shapefileFileAttrStep";
+                    }
+
+                    serviceFileBrick.setChoice(guess);
+                }
             }
-        );
+        };
 
-        function setSelectOptions(select, options) {
-            select.empty(); // remove old options
+        /**
+         * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
+         * 
+         * @method prepareChoiceTreeStructure
+         * @private
+         */
+        function prepareChoiceTreeStructure() {
 
-            UtilDict.forEachEntry(options, function (key, value) {
-                select
-                    .append($("<option></option>")
-                    .attr("value", key).text(value))
-                ;
-            });
-        }
-
-        function addFeatureDataset(obj) {
-            //TODO: set symbology and colour on feature layer (obj.data)
-
-            console.log(obj);
-
-            //make config.
-
-            var newConfig = {
-                id: LayerLoader.nextId(),
-                displayName: obj.data.layerName,
-                nameField: obj.data.fields[parseInt(obj.primary)],
-                datagrid: DataLoader.createDatagridConfig(obj.data.fields),
-                symbology: DataLoader.createSymbologyConfig(obj.data.renderer, obj.data.legendLookup),                
-                url: obj.data.layerUrl
-            }, featureLayer;
-
-            newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
-
-            //make layer
-            featureLayer = RampMap.makeFeatureLayer(newConfig, true);
-            RAMP.config.layers.feature.push(newConfig);
-
-            //console.log(obj);
-
-            LayerLoader.loadLayer(featureLayer);
-
-            mainPopup.close();
-        }
-
-        function addWMSDataset(obj) {
-            //TODO: set request parser for (obj.data)
-            var wmsConfig,
-                wmslayer,
-                layer;
-
-            layer = UtilArray.find(obj.data.layers,
-                function (l) {
-                    return l.name === obj.layerName;
-                });
-
-            wmsConfig = {
-                id: LayerLoader.nextId(),
-                displayName: layer.desc,
-                format: "png",
-                layerName: obj.layerName,
-                imageUrl: "assets/images/wms.png",
-                url: obj.url,
-                legendMimeType: "image/jpeg"
+            choiceTreeErrors = {
+                base: {
+                    type: "error",
+                    header: "Cannot load",
+                    message: "You have IE9?"
+                }
             };
 
-            if (layer.queryable) {
-                wmsConfig.featureInfo = {
-                    parser: "stringParse",
-                    mimeType: "text/plain"
+            choiceTree = {
+                // step for choosing between adding a service or a file
+                id: "sourceTypeStep",
+                content: [
+                    {
+                        id: "sourceType",
+                        type: Bricks.ChoiceBrick,
+                        config: {
+                            header: i18n.t("addDataset.dataSource"),
+                            instructions: i18n.t("addDataset.help.dataSource"),
+                            choices: [
+                                {
+                                    key: "serviceTypeStep",
+                                    value: i18n.t("addDataset.dataSourceService")
+                                },
+                                {
+                                    key: "fileTypeStep",
+                                    value: i18n.t("addDataset.dataSourceFile")
+                                }
+                            ]
+                        },
+                        on: [
+                            {
+                                eventName: Bricks.ChoiceBrick.event.CHANGE,
+                                //expose: { as: "advance" },
+                                callback: choiceTreeCallbacks.simpleAdvance
+                            }
+                        ]
+                    }
+                ],
+                children: [
+                    {
+                        // step for choosing between feature and wms service and providing a service url
+                        id: "serviceTypeStep",
+                        content: [
+                            {
+                                id: "serviceURL",
+                                type: Bricks.SimpleInputBrick,
+                                config: {
+                                    header: i18n.t("addDataset.serviceLayerURL"),
+                                    instructions: i18n.t("addDataset.help.serviceURL"),
+                                    placeholder: i18n.t("addDataset.serviceLayerURLPlaceholder"),
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                },
+                                on: [
+                                    {
+                                        eventName: Bricks.SimpleInputBrick.event.CHANGE,
+                                        callback: choiceTreeCallbacks.serviceTypeStepGuess
+                                    }
+                                ]
+                            },
+                            {
+                                id: "serviceType",
+                                type: Bricks.ChoiceBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    header: i18n.t("addDataset.serviceType"),
+                                    instructions: i18n.t("addDataset.help.serviceType"),
+                                    choices: [
+                                        {
+                                            key: "featureServiceAttrStep",
+                                            value: i18n.t("addDataset.serviceTypeFeature")
+                                        },
+                                        {
+                                            key: "wmsServiceAttrStep",
+                                            value: i18n.t("addDataset.serviceTypeWMS")
+                                        }
+                                    ],
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                }
+                            },
+                            {
+                                id: "serviceTypeOkCancel",
+                                type: Bricks.OkCancelButtonBrick,
+                                config: {
+                                    okLabel: i18n.t("addDataset.connect"),
+                                    okFreezeStates: [
+                                        Bricks.Brick.state.SUCCESS,
+                                        Bricks.Brick.state.ERROR
+                                    ],
+                                    cancelLabel: i18n.t("addDataset.cancel"),
+                                    //cancelFreezeStates: false,
+                                    reverseOrder: true,
+
+                                    required: [
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.okButtonId,
+                                            type: "all",
+                                            check: ["serviceType", "serviceURL"]
+                                        },
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                            type: "any",
+                                            check: ["serviceType", "serviceURL"]
+                                        }
+                                    ]
+                                },
+                                on: [
+                                    /*{
+                                        eventName: Bricks.OkCancelButtonBrick.event.CLICK,
+                                        callback: function (step, data) {
+                                            console.log("Just Click:", this, step, data);
+                                        }
+                                    },*/
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
+                                        // connect to feature service
+                                        callback: function (step/*, data*/) {
+                                            var promise,
+                                                handle = delayLoadingState(step, 100),
+                                                bricksData = step.getData().bricksData,
+                                                serviceTypeValue = bricksData.serviceType.selectedChoice,
+                                                serviceUrlValue = bricksData.serviceURL.inputValue;
+
+                                            switch (serviceTypeValue) {
+                                                case "featureServiceAttrStep":
+                                                    // get data from feature layer endpoint
+                                                    promise = DataLoader.getFeatureLayer(serviceUrlValue);
+
+                                                    promise.then(function (data) {
+                                                        // get data from feature layer's legend endpoint
+                                                        var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                                                        legendPromise.then(function (legendLookup) {
+                                                            var fieldOptions;
+                                                            window.clearTimeout(handle);
+
+                                                            data.legendLookup = legendLookup;
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+
+                                                            // no fields available; likely this is not a Feature service
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    serviceType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Blah-blah"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                    stepData: data,
+                                                                    bricksData: {
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            handleFailure(step, handle, {
+                                                                serviceType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Blah-blah" + event.message
+                                                                    })
+                                                            });
+                                                        });
+
+                                                    }, function (event) {
+                                                        // error connection to service
+                                                        handleFailure(step, handle, {
+                                                            serviceURL:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Blah-blah" + event.message
+                                                                })
+                                                        });
+                                                    });
+
+                                                    break;
+
+                                                case "wmsServiceAttrStep":
+                                                    // get data from wms endpoint
+                                                    promise = DataLoader.getWmsLayerList(serviceUrlValue);
+
+                                                    promise.then(function (data) {
+                                                        var layerOptions;
+                                                        window.clearTimeout(handle);
+
+                                                        // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                        layerOptions = data.layers.map(function (layer) { return { value: layer.name, text: layer.desc }; });
+
+                                                        // no layer names available; likely this is not a WMS service
+                                                        if (!layerOptions || layerOptions.length === 0) {
+                                                            handleFailure(step, handle, {
+                                                                serviceType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Blah-blah"
+                                                                    })
+                                                            });
+                                                        } else {
+
+                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                stepData: {
+                                                                    wmsData: data,
+                                                                    wmsUrl: serviceUrlValue
+                                                                },
+                                                                bricksData: {
+                                                                    layerName: {
+                                                                        options: layerOptions
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+
+                                                    }, function (event) {
+                                                        handleFailure(step, handle, {
+                                                            serviceType:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Blah-blah" + event.message
+                                                                })
+                                                        });
+                                                    });
+
+                                                    break;
+                                            }
+                                        }
+                                        //expose: { as: "advance" }
+                                    },
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
+                                        //expose: { as: "retreat" },
+                                        callback: choiceTreeCallbacks.simpleCancel
+                                    }
+
+                                ]
+                            }
+                        ],
+                        children: [
+                            {
+                                id: "featureServiceAttrStep",
+                                content: [
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.featurePrimaryAttribute"),
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add feature service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        layerData = data.stepData,
+
+                                                        newConfig = { //make feature layer config.
+                                                            id: LayerLoader.nextId(),
+                                                            displayName: layerData.layerName,
+                                                            nameField: bricksData.primaryAttribute.dropDownValue,
+                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                                                            symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
+                                                            url: layerData.layerUrl,
+                                                            aliasMap: layerData.aliasMap
+                                                        },
+                                                        featureLayer;
+
+                                                    //TODO: set symbology and colour on feature layer (obj.data)
+                                                    newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
+
+                                                    //make layer
+                                                    featureLayer = RampMap.makeFeatureLayer(newConfig, true);
+                                                    RAMP.config.layers.feature.push(newConfig);
+
+                                                    LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
+
+                                                    //mainPopup.close();
+                                                }
+                                                //expose: { as: "ADD_DATASET" }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: "wmsServiceAttrStep",
+                                content: [
+                                    {
+                                        id: "layerName",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.wmsLayerName"),
+                                            header: i18n.t("addDataset.layerName")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        stepData = data.stepData,
+
+                                                        wmsLayerName = bricksData.layerName.dropDownValue,
+
+                                                        wmsConfig,
+                                                        layer,
+                                                        wmsLayer;
+
+                                                    layer = UtilArray.find(stepData.wmsData.layers,
+                                                        function (l) {
+                                                            return l.name === wmsLayerName;
+                                                        }
+                                                    );
+
+                                                    wmsConfig = {
+                                                        id: LayerLoader.nextId(),
+                                                        displayName: layer.desc,
+                                                        format: "png",
+                                                        layerName: wmsLayerName,
+                                                        imageUrl: "assets/images/wms.png",
+                                                        url: stepData.wmsUrl,
+                                                        legendMimeType: "image/jpeg"
+                                                    };
+
+                                                    if (layer.queryable) {
+                                                        wmsConfig.featureInfo = {
+                                                            parser: "stringParse",
+                                                            mimeType: "text/plain"
+                                                        };
+                                                    }
+
+                                                    wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
+
+                                                    wmsLayer = RampMap.makeWmsLayer(wmsConfig, true);
+                                                    RAMP.config.layers.wms.push(wmsConfig);
+
+                                                    LayerLoader.loadLayer(wmsLayer);
+                                                    addDatasetPopup.close();
+                                                }
+                                                //expose: { as: "ADD_DATASET" }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: "fileTypeStep",
+                        content: [
+                            {
+                                id: "fileOrFileULR",
+                                type: Bricks.FileInputBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    header: i18n.t("addDataset.fileOrURL"),
+                                    instructions: i18n.t("addDataset.help.fileOrURL"),
+                                    //label: "Service URL", // optional, equals to header by default
+                                    placeholder: i18n.t("addDataset.fileOrURLPlaceholder"),
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                },
+                                on: [
+                                    {
+                                        eventName: Bricks.FileInputBrick.event.CHANGE,
+                                        callback: choiceTreeCallbacks.fileTypeStepGuess
+                                    }
+                                ]
+                            },
+                            {
+                                id: "fileType",
+                                type: Bricks.ChoiceBrick,
+                                config: {
+                                    //template: "template_name", //optional, has a default
+                                    instructions: i18n.t("addDataset.help.fileOrURLType"),
+                                    header: i18n.t("addDataset.fileType"),
+                                    choices: [
+                                        {
+                                            key: "geojsonFileAttrStep",
+                                            value: i18n.t("addDataset.geojson")
+                                        },
+                                        {
+                                            key: "csvFileAttrStep",
+                                            value: i18n.t("addDataset.csv")
+                                        },
+                                        {
+                                            key: "shapefileFileAttrStep",
+                                            value: i18n.t("addDataset.shapefile")
+                                        }
+                                    ],
+                                    freezeStates: [Bricks.Brick.state.SUCCESS]
+                                }
+                            },
+                            {
+                                id: "fileTypeOkCancel",
+                                type: Bricks.OkCancelButtonBrick,
+                                config: {
+                                    okLabel: i18n.t("addDataset.load"),
+                                    okFreezeStates: [
+                                        Bricks.Brick.state.SUCCESS,
+                                        Bricks.Brick.state.ERROR
+                                    ],
+                                    cancelLabel: i18n.t("addDataset.cancel"),
+                                    reverseOrder: true,
+
+                                    required: [
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.okButtonId,
+                                            type: "all",
+                                            check: ["fileType", "fileOrFileULR"]
+                                        },
+                                        {
+                                            id: Bricks.OkCancelButtonBrick.cancelButtonId,
+                                            type: "any",
+                                            check: ["fileType", "fileOrFileULR"]
+                                        }
+                                    ]
+                                },
+                                on: [
+                                    /*{
+                                        eventName: Bricks.OkCancelButtonBrick.event.CLICK,
+                                        callback: function (step, data) {
+                                            console.log("Just Click:", this, step, data);
+                                        }
+                                    },*/
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.OK_CLICK,
+                                        // load and process files
+                                        callback: function (step/*, data*/) {
+                                            var promise,
+                                                handle = delayLoadingState(step, 100),
+                                                bricksData = step.getData().bricksData,
+                                                fileTypeValue = bricksData.fileType.selectedChoice,
+                                                fileValue = bricksData.fileOrFileULR.fileValue,
+                                                fileUrlValue = bricksData.fileOrFileULR.inputValue,
+                                                fileName = bricksData.fileOrFileULR.fileName;
+
+                                            promise = DataLoader.loadDataSet({
+                                                url: fileValue ? null : fileUrlValue,
+                                                file: fileValue,
+                                                type: fileTypeValue === "shapefileFileAttrStep" ? "binary" : "text"
+                                            });
+
+                                            promise.then(function (data) {
+                                                switch (fileTypeValue) {
+                                                    case "geojsonFileAttrStep":
+                                                        var geojsonPromise = DataLoader.buildGeoJson(data);
+
+                                                        geojsonPromise.then(function (featureLayer) {
+                                                            var fieldOptions;
+                                                            window.clearTimeout(handle);
+
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                            // no layer names available; likely this is not a geojson file
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    fileType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Not a geojson file"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                    stepData: featureLayer,
+                                                                    bricksData: {
+                                                                        datasetName: {
+                                                                            inputValue: fileName
+                                                                        },
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            //error building geojson
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Cannot build, not a geojson" + event.message
+                                                                    })
+                                                            });
+                                                        });
+
+                                                        break;
+
+                                                    case "csvFileAttrStep":
+                                                        var rows,
+                                                            delimiter = UtilMisc.detectDelimiter(data),
+
+                                                            guess,
+                                                            primaryAttribute,
+                                                            headers;
+
+                                                        window.clearTimeout(handle);
+
+                                                        rows = DataLoader.csvPeek(data, delimiter);
+                                                        headers = rows[0].map(function (header) { return { value: header, text: header }; });
+
+                                                        // no properties names available; likely this is not a csv file
+                                                        if (!headers || headers.length === 0) {
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Not a geojson file"
+                                                                    })
+                                                            });
+                                                        } else if (!rows || rows.length < 2) {
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "No data in the file; maybe not CSV?"
+                                                                    })
+                                                            });
+                                                        } else {
+
+                                                            guess = guessLatLong(rows);
+
+                                                            // preselect primary attribute so it's not one of the lat or long guesses;
+                                                            // if csv has only two fields (lat, long), select the first as primary
+                                                            primaryAttribute = rows[0].filter(function (header) {
+                                                                return header !== guess.lat && header !== guess.long;
+                                                            })[0] || rows[0][0];
+
+                                                            // TODO: if you can't detect lat or long make the user choose them, don't just select the first header from the list, maybe.
+                                                            choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                stepData: {
+                                                                    csvData: data,
+                                                                    csvHeaders: rows[0],
+                                                                    csvDelimeter: delimiter
+                                                                },
+                                                                bricksData: {
+                                                                    datasetName: {
+                                                                        inputValue: fileName
+                                                                    },
+                                                                    primaryAttribute: {
+                                                                        options: headers,
+                                                                        selectedOption: primaryAttribute
+                                                                    },
+                                                                    latitude: {
+                                                                        options: headers,
+                                                                        selectedOption: guess.lat
+                                                                    },
+                                                                    longitude: {
+                                                                        options: headers,
+                                                                        selectedOption: guess.long
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+
+                                                        break;
+
+                                                    case "shapefileFileAttrStep":
+                                                        var shapefilePromise = DataLoader.buildShapefile(data);
+
+                                                        shapefilePromise.then(function (featureLayer) {
+                                                            var fieldOptions;
+
+                                                            window.clearTimeout(handle);
+
+                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                            fieldOptions = featureLayer.fields.map(function (field) { return { value: field.name, text: field.name }; });
+
+                                                            // no layer names available; likely this is not a geojson file
+                                                            if (!fieldOptions || fieldOptions.length === 0) {
+                                                                handleFailure(step, handle, {
+                                                                    fileType:
+                                                                        lang.mixin(choiceTreeErrors.base, {
+                                                                            message: "Not a shapefile file"
+                                                                        })
+                                                                });
+                                                            } else {
+
+                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
+                                                                    stepData: featureLayer,
+                                                                    bricksData: {
+                                                                        datasetName: {
+                                                                            inputValue: fileName
+                                                                        },
+                                                                        primaryAttribute: {
+                                                                            options: fieldOptions
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+
+                                                        }, function (event) {
+                                                            // error to build shapefiles
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.base, {
+                                                                        message: "Cannot build, not a shapefile" + event.message
+                                                                    })
+                                                            });
+                                                        });
+
+                                                        break;
+                                                }
+
+                                            }, function (event) {
+                                                //error loading file
+                                                handleFailure(step, handle, {
+                                                    fileOrFileULR:
+                                                        lang.mixin(choiceTreeErrors.base, {
+                                                            message: "Cannot load file" + event.message
+                                                        })
+                                                });
+                                            });
+                                        }
+                                        //expose: { as: "advance" },
+                                    },
+                                    {
+                                        eventName: Bricks.OkCancelButtonBrick.event.CANCEL_CLICK,
+                                        expose: { as: "retreat" },
+                                        callback: choiceTreeCallbacks.simpleCancel
+                                    }
+
+                                ]
+                            }
+                        ],
+                        children: [
+                            {
+                                id: "geojsonFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.geojsonDatasetName"),
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.geojsonPrimaryAttribute"),
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.geojsonColour"),
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        featureLayer = data.stepData,
+
+                                                        iconTemplate = makeIconTemplate("a_d_icon_" + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+
+                                                    DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                        //renderer: obj.style,
+                                                        colour: [
+                                                            bricksData.color.rgb_[0],
+                                                            bricksData.color.rgb_[1],
+                                                            bricksData.color.rgb_[2],
+                                                            255
+                                                        ],
+                                                        nameField: bricksData.primaryAttribute.dropDownValue,
+                                                        icon: iconTemplate,
+                                                        datasetName: bricksData.datasetName.inputValue
+                                                    });
+
+                                                    LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: "csvFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.csvDatasetName"),
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.csvPrimaryAttribute"),
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "latLongAttribute",
+                                        type: Bricks.MultiBrick,
+                                        config: {
+                                            //header: "Service URL", //optional, omitted if not specified
+                                            content: [
+                                                {
+                                                    id: "latitude",
+                                                    type: Bricks.DropDownBrick,
+                                                    config: {
+                                                        instructions: i18n.t("addDataset.help.csvLatitude"),
+                                                        header: i18n.t("addDataset.latitude")
+                                                    }
+                                                },
+                                                {
+                                                    id: "longitude",
+                                                    type: Bricks.DropDownBrick,
+                                                    config: {
+                                                        instructions: i18n.t("addDataset.help.csvLongitude"),
+                                                        header: i18n.t("addDataset.longitude")
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.csvColour"),
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        stepData = data.stepData,
+
+                                                        csvData = stepData.csvData,
+                                                        csvHeaders = stepData.csvHeaders,
+                                                        csvDelimeter = stepData.csvDelimeter,
+
+                                                        featureLayer,
+                                                        iconTemplate = makeIconTemplate('a_d_icon_circlePoint', bricksData.color.hex),
+
+                                                        promise;
+
+                                                    promise = DataLoader.buildCsv(csvData, {
+                                                        latfield: bricksData.latitude.dropDownValue,
+                                                        lonfield: bricksData.longitude.dropDownValue,
+                                                        delimiter: csvDelimeter,
+
+                                                        fields: csvHeaders
+                                                    });
+
+                                                    promise.then(function (event) {
+                                                        featureLayer = event;
+
+                                                        DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                            renderer: "circlePoint",
+                                                            colour: [
+                                                                bricksData.color.rgb_[0],
+                                                                bricksData.color.rgb_[1],
+                                                                bricksData.color.rgb_[2],
+                                                                255
+                                                            ],
+                                                            nameField: bricksData.primaryAttribute.dropDownValue,
+                                                            icon: iconTemplate,
+                                                            datasetName: bricksData.datasetName.inputValue,
+                                                            fields: csvHeaders
+                                                        });
+
+                                                        //TODO: set symbology and colour on feature layer (obj.data)
+                                                        LayerLoader.loadLayer(featureLayer);
+                                                        addDatasetPopup.close();
+
+                                                    }, function () {
+                                                        // can't construct csv
+                                                        handleFailure(step, null, {
+                                                            datasetName:
+                                                                lang.mixin(choiceTreeErrors.base, {
+                                                                    message: "Cannot create CSV feature lyer, probably not a valid csv"
+                                                                })
+                                                        });
+                                                    });
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                id: "shapefileFileAttrStep",
+                                content: [
+                                    {
+                                        id: "datasetName",
+                                        type: Bricks.SimpleInputBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.shapefileDatasetName"),
+                                            header: i18n.t("addDataset.datasetName")
+                                        }
+                                    },
+                                    {
+                                        id: "primaryAttribute",
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.shapefilePrimaryAttribute"),
+                                            header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.shapefileColour"),
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
+                                    {
+                                        id: "addDataset",
+                                        type: Bricks.ButtonBrick,
+                                        config: {
+                                            label: i18n.t("addDataset.addDatasetButton"),
+                                            containerClass: "button-brick-container-main",
+                                            buttonClass: "btn-primary"
+                                        },
+                                        on: [
+                                            {
+                                                eventName: Bricks.ButtonBrick.event.CLICK,
+                                                // add wms service layer to the map
+                                                callback: function (step /*,data*/) {
+                                                    var data = step.getData(),
+                                                        bricksData = data.bricksData,
+                                                        featureLayer = data.stepData,
+
+                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+
+                                                    DataLoader.enhanceFileFeatureLayer(featureLayer, {
+                                                        //renderer: obj.style,
+                                                        colour: [
+                                                            bricksData.color.rgb_[0],
+                                                            bricksData.color.rgb_[1],
+                                                            bricksData.color.rgb_[2],
+                                                            255
+                                                        ],
+                                                        nameField: bricksData.primaryAttribute.dropDownValue,
+                                                        icon: iconTemplate,
+                                                        datasetName: bricksData.datasetName.inputValue
+                                                    });
+
+                                                    LayerLoader.loadLayer(featureLayer);
+                                                    addDatasetPopup.close();
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+        }
+
+        function createChoiceTree() {
+
+            // clear steps
+            t.dfs(choiceTree, function (node) {
+                node.stepItem = null;
+            });
+
+            // create the choice tree
+            t.dfs(choiceTree, function (node, par/*, ctrl*/) {
+                var stepItem,
+                    level = par ? par.level + 1 : 1;
+
+                node.level = level;
+
+                stepItem = new StepItem(node);
+                stepItem.on(StepItem.event.CURRENT_STEP_CHANGE, setCurrentStep);
+                stepItem.on(StepItem.event.STATE_CHANGE, setStepState);
+
+                node.stepItem = stepItem;
+                stepLookup[node.id] = stepItem;
+
+                if (par) {
+                    par.stepItem.addChild(stepItem);
+                }
+
+                console.log(node);
+            });
+
+            // append tree to the page
+            rootNode
+                .find(".add-dataset-content")
+                .empty()
+                .append(stepLookup.sourceTypeStep.node)
+            ;
+
+            // set the first step as active
+            stepLookup.sourceTypeStep.currentStep(1);
+
+            Theme.tooltipster(addDatasetContainer);
+        }
+
+        function guessLatLong(rows) {
+            // try guessing lat and long columns
+            var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
+                longRegex = new RegExp(/^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/i),
+
+                guessesLat,
+                guessesLong,
+
+                guessedLatHeader,
+                guessedLongHeader;
+
+            // first filter out all columns that are not lat
+            guessesLat = rows[0].filter(function (header, i) {
+                return rows.every(function (row, rowi) {
+                    return rowi === 0 || latRegex.test(row[i]);
+                });
+            });
+
+            // filter out all columns that are not long for sure
+            guessesLong = rows[0].filter(function (header, i) {
+                return rows.every(function (row, rowi) {
+                    return rowi === 0 || longRegex.test(row[i]);
+                });
+            });
+
+            // console.log(guessesLat);
+            // console.log(guessesLong);
+
+            // if there more than one lat guesses
+            if (guessesLat.length > 1) {
+                // filter out ones that don't have "la" or "y" in header name
+                guessesLat = guessesLat.filter(function (header) {
+                    var h = header.toLowerCase();
+
+                    return h.indexOf('la') !== -1 || h.indexOf('y') !== -1;
+                });
+            }
+
+            // console.log(guessesLat);
+            // pick the first lat guess or null
+            guessedLatHeader = guessesLat[0] || null;
+
+            // if there more than one long guesses
+            if (guessesLong.length > 1) {
+                // first, remove lat guess from long options in case they overlap
+                UtilArray.remove(guessesLong, guessedLatHeader);
+
+                // filter out ones that don't have "lo" or "x" in header name
+                guessesLong = guessesLong.filter(function (header) {
+                    var h = header.toLowerCase();
+
+                    return h.indexOf('lo') !== -1 || h.indexOf('x') !== -1;
+                });
+            }
+
+            // console.log(guessesLong);
+            // pick the first long guess or null
+            guessedLongHeader = guessesLong[0] || null;
+
+            return {
+                lat: guessedLatHeader,
+                long: guessedLongHeader
+            };
+        }
+
+        /**
+         * 
+         * @method makeIconTemplate
+         * @param {String} templateName a name of the template to use for an icon
+         * @param {String} hex color value in hex
+         * @return {String} a base64 encoded icon template
+         */
+        function makeIconTemplate(templateName, hex) {
+            /*jshint validthis: true */
+            return "data:image/svg+xml;base64," +
+                UtilMisc.b64EncodeUnicode(
+                    TmplHelper.template.call(this, templateName, {
+                        colour: hex
+                    }, templates)
+                );
+        }
+
+        /**
+         * Delay setting loading state to the step for a specified time in case it happens really fast and 
+         * 
+         * @method delayLoadingState
+         * @param {StepItem} step step to delay setting loading state on
+         * @param {Number} time a delay in ms
+         * @private
+         * @return {Number} setTimeout handle
+         */
+        function delayLoadingState(step, time) {
+            return window.setTimeout(function () {
+                step._notifyStateChange(StepItem.state.LOADING);
+            }, time);
+        }
+
+        function handleFailure(step, handle, brickNotices) {
+            if (handle) {
+                window.clearTimeout(handle);
+            }
+
+            step
+                ._notifyStateChange(StepItem.state.ERROR)
+                .displayBrickNotices(brickNotices)
+            ;
+        }
+
+        function setCurrentStep(event) {
+            t.dfs(choiceTree, function (node) {
+                node.stepItem.currentStep(event.level, event.id);
+            });
+        }
+
+        function setStepState(event, step, state) {
+            if (step && state) {
+                event = {
+                    id: step.id,
+                    level: step.level,
+                    state: state
                 };
             }
 
-            wmsConfig = GlobalStorage.applyWMSDefaults(wmsConfig);
-
-            wmslayer = RampMap.makeWmsLayer(wmsConfig, true);
-            RAMP.config.layers.wms.push(wmsConfig);
-
-            //console.log(obj);
-
-            LayerLoader.loadLayer(wmslayer);
-
-            mainPopup.close();
-        }
-
-        function _template(key, data) {
-            tmpl.cache = {};
-            tmpl.templates = filter_manager_template;
-
-            data = data || {};
-            data.fn = TmplUtil;
-
-            return tmpl(key, data);
-        }
-
-        // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_.22Unicode_Problem.22
-        function b64EncodeUnicode(str) {
-            return new Btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-                return String.fromCharCode('0x' + p1);
-            })).a;
-        }
-
-        function addCSVDataset(obj) {
-            var promise,
-                rgbColour = UtilMisc.hexToRgb(obj.colour),
-                iconTemplate = _template("a_d_icon_circlePoint", obj);
-
-            iconTemplate = "data:image/svg+xml;base64," + b64EncodeUnicode(iconTemplate);
-
-            promise = DataLoader.buildCsv(obj.data, {
-                latfield: obj.lat,
-                lonfield: obj.lon,
-                delimiter: obj.delimiter,
-
-                fields: obj.fields
-            });
-
-            promise.then(function (event) {
-                var fl = event;
-
-                DataLoader.enhanceFileFeatureLayer(fl, {
-                    renderer: "circlePoint",
-                    colour: [
-                        rgbColour.r,
-                        rgbColour.g,
-                        rgbColour.b,
-                        255
-                    ],
-                    nameField: obj.primary,
-                    icon: iconTemplate,
-                    datasetName: obj.datasetName,
-                    fields: obj.fields
-                });
-
-                //TODO: set symbology and colour on feature layer (obj.data)
-                LayerLoader.loadLayer(fl);
-
-                mainPopup.close();
+            t.dfs(choiceTree, function (node) {
+                node.stepItem.setState(event.level, event.id, event.state);
             });
         }
 
-        function addGeoJSONDataset(obj) {
-            var rgbColour = UtilMisc.hexToRgb(obj.colour),
-                iconTemplate = _template("a_d_icon_" + obj.featureLayer.renderer._RAMP_rendererType, obj);
-
-            DataLoader.enhanceFileFeatureLayer(obj.featureLayer, {
-                //renderer: obj.style,
-                colour: [
-                    rgbColour.r,
-                    rgbColour.g,
-                    rgbColour.b,
-                    255
-                ],
-                nameField: obj.primary,
-                icon: iconTemplate,
-                datasetName: obj.datasetName
-            });
-
-            LayerLoader.loadLayer(obj.featureLayer);
-
-            mainPopup.close();
-        }
-
-        function addShapefileDataset(obj) {
-            var rgbColour = UtilMisc.hexToRgb(obj.colour),
-                iconTemplate = _template("a_d_icon_" + obj.featureLayer.renderer._RAMP_rendererType, obj);
-
-            DataLoader.enhanceFileFeatureLayer(obj.featureLayer, {
-                //renderer: obj.style,
-                colour: [
-                    rgbColour.r,
-                    rgbColour.g,
-                    rgbColour.b,
-                    255
-                ],
-                nameField: obj.primary,
-                icon: iconTemplate,
-                datasetName: obj.datasetName
-            });
-
-            LayerLoader.loadLayer(obj.featureLayer);
-
-            mainPopup.close();
-        }
-
-        function reset() {
-            var section;
-
-            tmpl.cache = {};
-            tmpl.templates = filter_manager_template;
-
-            section = tmpl('add_dataset_content_template', {});
-
-            rootNode
-                .find(".add-dataset-content")
-                .replaceWith(section)
-            ;
-
-            rootNode
-                .find("input.color")
-                .each(function (i, picker) {
-                    var node = $(picker),
-                        swatch = node.parents(".color-picker-container:first").find("> .color-picker-swatch");
-
-                    picker = new jscolor.color(picker, {
-                        pickerPosition: "top",
-                        styleElement: node.attr("id") + "Swatch"
-                    });
-
-                    picker.fromString((new RColor()).get(true).slice(1));
-
-                    swatch.on("click", function () {
-                        picker.showPicker();
-                    });
-                })
-            ;
-
-            UtilMisc.styleBrowseFilesButton(rootNode.find(".browse-files"));
-
-            loadSteps.loadServiceStep = (function () {
-                var step = rootNode.find("#loadServiceStep"),
-                    stepContent = step.find(".step-content"),
-                    choiceButtons = stepContent.find(".choice-group .btn-option"),
-
-                    inputControl = stepContent.find("#serviceURLinput"),
-                    submitButton = stepContent.find("#serviceURLinputSubmit"),
-
-                    typeUserSelected = false,
-                    serviceType = null,
-                    serviceUrl = ""
-                ;
-
-                function checkStepStatus() {
-                    if (serviceUrl !== "" && !serviceType && !typeUserSelected) {
-                        if (serviceUrl.match(/ArcGIS\/rest\/services/ig)) {
-                            choiceButtons
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-feature']")
-                                .addClass("button-pressed");
-
-                            serviceType = "option-feature";
-                        } else if (serviceUrl.match(/wms/ig)) {
-                            console.log("Z: wms?");
-                        }
-                    }
-
-                    submitButton.toggleClass("disabled", (!serviceType || serviceUrl === ""));
-                    submitButton.attr("disabled", (!serviceType || serviceUrl === ""));
-
-                    if (serviceUrl === "" && !typeUserSelected) {
-                        serviceType = null;
-                        choiceButtons
-                            .removeClass("button-pressed");
-                    }
-                }
-
-                inputControl.on("input", function (event) {
-                    serviceUrl = $(event.target).val();
-                    checkStepStatus();
-                });
-
-                return {
-                    setChoice: function (value) {
-                        serviceType = value;
-                        typeUserSelected = true;
-
-                        checkStepStatus();
-                    },
-
-                    getServiceType: function () {
-                        return serviceType;
-                    },
-
-                    getUrl: function () {
-                        return serviceUrl;
-                    }
-                };
-            }());
-
-            loadSteps.loadFileStep = (function () {
-                var step = rootNode.find("#loadFileStep"),
-                    stepContent = step.find(".step-content"),
-                    choiceButtons = stepContent.find(".choice-group .btn-option"),
-
-                    inputControl = stepContent.find("#fileOrURLinput"),
-                    submitButton = stepContent.find("#fileOrURLinputSubmit"),
-
-                    browsefiles = stepContent.find(".browse-files"),
-                    browseControl = stepContent.find(".browse-files input[type='file']"),
-                    pseudoBrowseControl = stepContent.find("#fileOrURLpseudoBrowse"),
-
-                    typeUserSelected = false,
-                    fileType = null,
-                    file = null,
-                    fileUrl = ""
-                ;
-
-                function checkStepStatus() {
-                    var fileName = fileUrl || (file ? file.name : null) || "";
-
-                    if (!typeUserSelected) {
-                        if (fileName.endsWith(".csv")) {
-                            fileType = "option-csv";
-
-                            choiceButtons
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-csv']")
-                                .addClass("button-pressed");
-                        } else if (fileName.endsWith(".json")) {
-                            fileType = "option-geojson";
-
-                            choiceButtons
-                                .removeClass("button-pressed")
-                                .filter("button[data-option='option-geojson']")
-                                .addClass("button-pressed");
-                        } else {
-                            fileType = null;
-                            choiceButtons
-                                .removeClass("button-pressed");
-                        }
-                    }
-
-                    submitButton.toggleClass("disabled", (!fileType || (!file && fileUrl === "")));
-                    submitButton.attr("disabled", (!fileType || (!file && fileUrl === "")));
-
-                    if (fileUrl === "" && !file && !typeUserSelected) {
-                        fileType = null;
-                        choiceButtons
-                            .removeClass("button-pressed");
-                    }
-                }
-
-                function resetFormElement(e) {
-                    e.wrap('<form>').closest('form').get(0).reset();
-                    e.unwrap();
-                }
-
-                inputControl.on("input", function (event) {
-                    fileUrl = $(event.target).val();
-                    file = null;
-                    resetFormElement(browseControl);
-                    pseudoBrowseControl.removeClass("selected");
-                    checkStepStatus();
-                });
-
-                browseControl.on("change", function (event) {
-                    file = event.target.files[0];
-                    inputControl.val(file.name);
-                    fileUrl = '';
-                    pseudoBrowseControl.addClass("selected");
-                    checkStepStatus();
-                });
-
-                if (!window.FileReader) {
-                    browseControl.remove();
-                    pseudoBrowseControl.attr("disabled", true);
-                    browsefiles
-                        .attr({
-                            title: "You have IE9"
-                        })
-                        .addClass("_tooltip");
-                    Theme.tooltipster(browsefiles.parent());
-                }
-
-                return {
-                    setChoice: function (value) {
-                        fileType = value;
-                        typeUserSelected = true;
-
-                        checkStepStatus();
-                    },
-
-                    getFileType: function () {
-                        return fileType;
-                    },
-
-                    getFileUrl: function () {
-                        return fileUrl;
-                    },
-
-                    getFile: function () {
-                        return file;
-                    }
-                };
-            }());
+        function closeChoiceTree() {
+            stepLookup.sourceTypeStep.retreat();
         }
 
         return {
             init: function () {
-                reset();
+                var tl = new TimelineLite({ paused: true });
 
-                mainPopup = PopupManager.registerPopup(rootNode.find("#addDatasetToggle"), "click",
+                rootNode = $("#searchMapSectionBody");
+
+                addDatasetToggle = rootNode.find("#addDatasetToggle");
+                addDatasetContainer = rootNode.find("#add-dataset-section-container");
+
+                layerList = rootNode.find("#layerList");
+                layerToggles = rootNode.find(".layer-checkboxes:first");
+                filterToggles = rootNode.find("#filterGlobalToggles");
+
+                prepareChoiceTreeStructure();
+                createChoiceTree();
+
+                tl
+                    .set(addDatasetContainer, { display: "block" })
+
+                    .set(layerList, { className: "+=scroll" }, 0.01)
+                    .set(filterToggles, { className: "+=scroll" }, 0.01)
+
+                    .to(filterToggles, transitionDuration, { top: -60, ease: "easeOutCirc" })
+                    .to(layerList, transitionDuration, { top: layerList.height() / 3, ease: "easeOutCirc" }, 0)
+                    .to(layerList, transitionDuration / 2, { autoAlpha: 0, ease: "easeOutCirc" }, transitionDuration / 2)
+
+                    .set(layerToggles, { display: "none" })
+                ;
+
+                addDatasetPopup = PopupManager.registerPopup(addDatasetToggle, "click",
                     function (d) {
-                        TweenLite.to(this.target, transitionDuration / 2,
-                            {
-                                autoAlpha: 1, ease: "easeOutCirc",
-                                onComplete: function () {
-                                    this.target.focus();
-                                }
-                            });
+                        createChoiceTree();
+
+                        tl
+                            .eventCallback("onComplete", function () {
+                                addDatasetContainer.find(":focusable:first").focus();
+                            })
+                           .play()
+                        ;
 
                         d.resolve();
                     },
                     {
                         closeHandler: function (d) {
-                            TweenLite.to(this.target, transitionDuration / 2, { autoAlpha: 0, ease: "easeInCirc" });
+                            closeChoiceTree();
 
-                            reset();
+                            tl
+                                .eventCallback("onReverseComplete", function () {
+                                })
+                               .reverse()
+                            ;
+
                             d.resolve();
                         },
-                        target: rootNode.find("#add-dataset-section-container"),
+                        target: addDatasetContainer,
                         activeClass: "button-pressed",
                         resetFocusOnClose: true
                     }
                 );
+
+                //addDatasetPopup.open();
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key) {

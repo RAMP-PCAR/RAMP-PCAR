@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader, Btoa */
 /* jshint bitwise:false  */
 
 /**
@@ -554,6 +554,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @static
             * @return {String} The generated guid string
             */
+            // TODO: check if there is new/better code for guid generation
             guid: function () {
                 return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                     var r = Math.random() * 16 | 0,
@@ -1294,6 +1295,41 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             */
             rgbToHex: function (r, g, b) {
                 return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            },
+
+            resetFormElement: function (e) {
+                e.wrap('<form>').closest('form').get(0).reset();
+                e.unwrap();
+            },
+
+            setSelectOptions: function (select, options, append) {
+                //var optionsNode;
+
+                if (!append) {
+                    select.empty();
+                    //select.append(optionsNode);
+                }
+
+                options.forEach(function (option) {
+                    select.append($("<option/>", {
+                        value: option.value,
+                        text: option.text
+                    }));
+                });
+            },
+
+            // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_.22Unicode_Problem.22
+            /**
+             * Base64 encoding for unicode text.
+             * 
+             * @method b64EncodeUnicode
+             * @param {String} str a string to encode
+             * @return {String} encoded string
+             */
+            b64EncodeUnicode: function (str) {
+                return new Btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+                    return String.fromCharCode('0x' + p1);
+                })).a;
             }
         };
     });

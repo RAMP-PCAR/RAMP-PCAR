@@ -30,21 +30,8 @@
                 width: 100%;
                 text-align: left;
                 border-right: none;
-
-                &.focused,
-                &:focus, &:hover {
-                    background-color: #D4D4D4 !important;
-                    color: inherit !important;
-                }
-
-                &.button-pressed {
-                    //background-color: #D4D4D4 !important;
-                    //color: #D73D38 !important;
-                    border-color: @medium-dark-grey-color !important;
-                    background-color: #545454 !important;
-                    color: #FFF !important;
-                    box-shadow: @button-active-shadow;
-                }
+                .btn-ramp-focused;
+                .btn-ramp-pressed;
 
                 .projection-name {
                     .overflow-span-block;
@@ -81,29 +68,9 @@
                 width: 100%;
                 text-align: left;
                 border-left: none;
-
-                &.focused,
-                &:focus, &:hover {
-                    background-color: #D4D4D4 !important;
-                    color: inherit !important;
-
-                    span {
-                        color: #000 !important;
-                    }
-                }
-
-                &.button-pressed {
-                    //background-color: #D4D4D4 !important;
-                    //color: #D73D38 !important;
-                    border-color: @medium-dark-grey-color !important;
-                    background-color: #545454 !important;
-                    color: #FFF !important;
-                    box-shadow: @button-active-shadow;
-
-                    span {
-                        color: #FFF !important;
-                    }
-                }
+    
+                .btn-ramp-focused;
+                .btn-ramp-pressed;
 
                 .basemap-info {
                     display: inline-block;

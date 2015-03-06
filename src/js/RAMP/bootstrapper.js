@@ -50,19 +50,17 @@ require([
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
-    "ramp/navigation", "ramp/filterManager", "ramp/bookmarkLink",
+    "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader",
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
     
 /* Utils */
     "utils/util",
 
 /* Plugins */
-    "utils/prototype!", "utils/functionMangler!"],
-
-    //"dojo/domReady!"],
+    "utils/prototype!", "utils/functionMangler!", "dojo/domReady!"],
 
     function (
     /* Dojo */
@@ -70,9 +68,9 @@ require([
     esriConfig,
 
     /* RAMP */
-    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager,
+    RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
 
     /* Utils */
         UtilMisc
@@ -99,6 +97,27 @@ require([
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
 
+            // this split exists solely to separate out the parts that IE9 is
+            // bad at handling there is a DOM race condition somewhere in here,
+            // we've given up on trying to find it
+            function guiInits() {
+                //initialize the filter
+                FilterManager.init();
+
+                // Initialize the advanced toolbar and tools.
+                if (RAMP.config.advancedToolbar.enabled) {
+                    AdvancedToolbar.init();
+                }
+
+                Datagrid.init();
+                theme.tooltipster();
+
+                //start loading the layers
+                dojoArray.forEach(RAMP.startupLayers, function (layer) {
+                    LayerLoader.loadLayer(layer);
+                });
+            }
+
             topic.subscribe(EventManager.Map.INITIAL_BASEMAP_LOADED, function () {
                 console.log("map - >> first update-end; init the rest");
 
@@ -115,6 +134,10 @@ require([
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
 
+                        //initialize the map export after everything is done
+                        ImageExport.init();
+
+                        DataLoadedGui.init();
                         //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
@@ -128,23 +151,13 @@ require([
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
 
-                //initialize the filter
-                FilterManager.init();
-
-                DataLoadedGui.init();
-
-                // Initialize the advanced toolbar and tools.
-                if (RAMP.config.advancedToolbar.enabled) {
-                    AdvancedToolbar.init();
+                if (RAMP.flags.brokenWebBrowser) {
+                    console.log('delaying for IE9 to catch up with the group');
+                    window.setTimeout(guiInits, 2000);
+                } else {
+                    guiInits();
                 }
 
-                Datagrid.init();
-                theme.tooltipster();
-
-                //start loading the layers
-                dojoArray.forEach(RAMP.startupLayers, function (layer) {
-                    LayerLoader.loadLayer(layer);
-                });
             });
 
             RampMap.init();
@@ -255,16 +268,24 @@ require([
         */
         function configReady(configObject) {
             var pluginConfig,
-                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent();
+                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent(),
+                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
 
             console.log("Bootstrapper: config loaded");
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
 
-            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;// "/proxy/proxy.ashx";
+            esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
-            esriConfig.defaults.io.corsDetection = true;
+            if (brokenWebBrowser) {
+                // really IE9???  (╯°□°）╯︵ ┻━┻
+                esriConfig.defaults.io.corsDetection = false;
+                esriConfig.defaults.io.alwaysUseProxy = true;
+            } else {
+                esriConfig.defaults.io.corsDetection = true;
+            }
+            RAMP.flags.brokenWebBrowser = brokenWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value
             if (RAMP.config.advancedToolbar.enabled) {
