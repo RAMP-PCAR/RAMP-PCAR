@@ -95,27 +95,28 @@ define([
         */
         Brick = Base.extend({
             /**
-             * Initializes the Brick by generating a specified template and setting defaults.
-             * 
-             * @method new
-             * @param  {String} id     specified id of the Brick
-             * @param  {Object} config a configuration object for the Brick
-             * @param  {String} [config.header] a Brick header
-             * @param  {String} [config.instructions] a configuration object for the Brick
-             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
-             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
-             * @param  {String} [config.baseTemplate] a base template name to be used
-             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
-             * 
-             * @retun Brick
-             * @chainable
-             * @for Brick
-             */
-
-            /**
              * A Brick header.
              *
              * @property header
+             * @for Brick
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A CSS class of the Brick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A name of the specific Brick template.
+             *
+             * @property template
              * @private
              * @type {String}
              * @default ""
@@ -233,12 +234,22 @@ define([
             },
 
             /**
-             * Initializes the Brick by generatin a specified template and setting defaults.
+             * Initializes the Brick by generating a specified template and setting defaults.
              * 
-             * @method initialize
+             * @method new
              * @param  {String} id     specified id of the Brick
              * @param  {Object} config a configuration object for the Brick
-             * @private
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @retun Brick
+             * @chainable
+             * 
              */
             initialize: function (id, config) {
 
@@ -483,16 +494,67 @@ define([
         */
         MultiBrick = Brick.extend({
             /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @for MultiBrick
+             * @private
+             * @type {String}
+             * @default "multi-brick-container"
+             */
+            
+            /**
+             * A name of the defautl MultiBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_multi_brick_template"
+             */
+
+             /**
+             * A collection of Brick objects to be displayed side by side in the MultiBrick.
+             *
+             * @property content
+             * @private
+             * @type {Array}
+             * @default []
+             */
+            
+            /**
+             * A MultiBrick container node.
+             *
+             * @property multiContainer
+             * @private
+             * @type {Object}
+             */
+            
+            /**
+             * A dictionary of the initialized content Brick objects for easy lookup. 
+             *
+             * @property contentBricks
+             * @private
+             * @type {Object}
+             */
+
+            /**
              * Initializes the MutliBrick by generating a specified template and setting defaults.
              * 
              * @method new
              * @param  {String} id     specified id of the MultiBrick
              * @param  {Object} config a configuration object for the MultiBrick
+             * @param  {String} [config.content] a collection of bricks to be displayed in the MultiBrick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
              * @retun MultiBrick
              * @chainable
-             * @for MultiBrick
              */
-
             initialize: function (id, config) {
                 var that = this;
 
@@ -513,6 +575,7 @@ define([
                     }
                 );
 
+                // loop through the content and create Bricks and append them to the MultiBrick container
                 this.content.forEach(function (contentItem) {
                     var contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
@@ -530,6 +593,14 @@ define([
                 });
             },
 
+            /**
+             * Sets the state of the MultiBrick by setting states of the individual bricks inside the MultiBrick using their specific setState methods.
+             *
+             * @method setState
+             * @param {String} state a name of the state to set 
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             setState: function (state) {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.setState(state);
@@ -538,6 +609,13 @@ define([
                 return this;
             },
 
+            /**
+             * Clears the MultiBrick by clearing of the individual bricks inside the MultiBrick using their specific clear methods.
+             *
+             * @method clear
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.clear();
@@ -546,6 +624,12 @@ define([
                 return this;
             },
 
+            /**
+             * Checks if the MultiBrick is valid. It's valid only if all individual bricks inside it are valid.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     if (!brick.isValid()) {
@@ -556,6 +640,13 @@ define([
                 return true;
             },
 
+            /**
+             * Sets MultiBrick's data by setting data to the individual bricks inside it. Uses their own specific setData functions
+             *
+             * @method setData
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.setData(data);
@@ -564,6 +655,14 @@ define([
                 return this;
             },
 
+            /**
+             * Returns MultiBrick's data by mixing together data of the individual bricks inside using their specific getData methods and then passing it to the Brick's getData method for potential wrapping.
+             *
+             * @method getData
+             * @for MultiBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         MultiBrick's data
+             */
             getData: function (wrap) {
                 var payload = {};
 
@@ -575,13 +674,105 @@ define([
             }
         });
 
+        /**
+        * The basic Brick prototype with no special functions. A base from all other Bricks.
+        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ButtonBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         ButtonBrick = Brick.extend({
+            
+            /**
+             * A dictionary of possible ButtonBrick events. Add a CLICK event to the default Brick events.
+             *
+             * @property event
+             * @for ButtonBrick
+             * @type {Object}
+             * @example
+             *      event: {
+             *          CHANGE: "brick/change",
+             *          CLICK: "buttonBrick/click"
+             *      }
+             * 
+             */
             event: lang.mixin({}, Brick.event,
                 {
                     CLICK: "buttonBrick/click"
                 }
             ),
 
+            /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "button-brick-container"
+             */
+
+            /**
+             * A name of the defautl ButtonBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_button_brick_template"
+             */
+            
+            /**
+             * A CSS class of the button.
+             *
+             * @property buttonClass
+             * @private
+             * @type {String}
+             * @default "btn-primary"
+             */
+            
+            /**
+             * A button label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * ButtonBrick is a simple button in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.buttonClass] a CSS class of the button in the ButtonBrick
+             * @param  {String} [config.label] a button label
+             * @chainable
+             * @return {ButtonBrick}
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -601,10 +792,24 @@ define([
                 });
             },
 
+            /**
+             * Returns true. ButtonBrick is always valid
+             *
+             * @method isValid
+             * @return {Boolean}           true
+             */
             isValid: function () {
                 return true;
             },
 
+            /**
+             * Returns ButtonBrick's data. Pretty useless function when you think of it. Just returns the data of the Brick prototype which is empty.
+             *
+             * @method getData
+             * @for ButtonBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         ButtonBrick's data
+             */
             getData: function (wrap) {
                 var payload = {};
 
