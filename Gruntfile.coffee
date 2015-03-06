@@ -458,8 +458,8 @@ module.exports = (grunt) ->
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
             tasks = [
-                'github-release'
-                'gh-pages'
+                #'github-release'
+                'gh-pages:demo'
             ]
         
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
@@ -1351,8 +1351,28 @@ module.exports = (grunt) ->
                         if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
                     ))
                 src: [
-                    'dist/**/*.*'
-                    'build/**/*.*'
+                    # TODO: upload minified and unminified code in tarballs
+                    #'dist/**/*.*'
+                    #'build/**/*.*'
+                    'tarball/**/*.*'
+                ]
+                
+            demo:
+                options:
+                    repo: process.env.DOCS_REPO
+                    branch: 'gh-pages'
+                    base: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/core'
+                    message: ((
+                        if process.env.TRAVIS_TAG
+                            "Demo files for the " + process.env.TRAVIS_TAG + " release"
+                        else
+                            "Demo files for build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
+                    ))
+                    silent: true
+                src: [
+                    # TODO: upload minified and unminified code in tarballs
+                    #'dist/**/*.*'
+                    #'build/**/*.*'
                     'tarball/**/*.*'
                 ]
         
