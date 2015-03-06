@@ -17,31 +17,20 @@
 *
 * @class FilterManager
 * @static
-* @uses dojo/_base/declare
-* @uses dojo/_base/lang
-* @uses dojo/query
 * @uses dojo/_base/array
-* @uses dojo/dom
-* @uses dojo/on
-* @uses dojo/dom-class
-* @uses dojo/dom-style
-* @uses dojo/dom-construct
-* @uses dojo/_base/connect
 * @uses dojo/Deferred
 * @uses dojo/topic
-* @uses dojo/aspect
-* @uses dojo/promise/all
 * @uses templates/filter_manager_template.json
 * @uses esri/tasks/query
-* @uses esri/layers/FeatureLayer
 * @uses RAMP
 * @uses GlobalStorage
 * @uses Map
 * @uses EventManager
+* @uses LayerItem
+* @uses LayerGroup
 * @uese Theme
 * @uese TmplHelper
 * @uses Util
-* @uses Array
 * @uses Dictionary
 * @uses PopupManager
 * @uses Checkbox
@@ -50,7 +39,7 @@
 
 define([
 /* Dojo */
-        "dojo/_base/array", "dojo/Deferred", "dojo/topic", "dojo/aspect",
+        "dojo/_base/array", "dojo/Deferred", "dojo/topic",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
@@ -66,7 +55,7 @@ define([
 
     function (
     /* Dojo */
-        dojoArray, Deferred, topic, aspect,
+        dojoArray, Deferred, topic,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
