@@ -462,7 +462,7 @@ module.exports = (grunt) ->
                 'gh-pages:demo'
             ]
         
-            if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
+            if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master')  ?
                 
                 if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+$/
                     grunt.config 'github-release.options.release.body', '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html)'
