@@ -74,7 +74,7 @@ define([
 
         /**
         * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the Brick prototype.
+        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the Brick prototype.
         * 
         * ####Imports RAMP Modules:
         * {{#crossLink "Util"}}{{/crossLink}}  
@@ -244,7 +244,7 @@ define([
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
-             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun Brick
@@ -294,7 +294,7 @@ define([
              * @method notify
              * @private
              * @param  {String} eventName an eventName that should be reported
-             * @param  {Ojbect} data      a payload object to be passed along with the @event
+             * @param  {Object} data      a payload object to be passed along with the @event
              * @return {Brick}           itself
              * @chainable
              */
@@ -312,7 +312,7 @@ define([
             },
 
             /**
-             * Sets a listener on the Brick for a speicifed eventName.
+             * Sets a listener on the Brick for a specified eventName.
              *
              * @method on
              * @param  {String} eventName an eventName to listen for
@@ -434,7 +434,7 @@ define([
             },
 
             /**
-             * Disables or reenables the Brick.
+             * Disables or re-enables the Brick.
              * 
              * @method disable
              * @param  {Boolean} disable true to disable; false to enable
@@ -472,7 +472,7 @@ define([
 
         /**
         * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
         *
         * 
         * ####Imports RAMP Modules:
@@ -504,7 +504,7 @@ define([
              */
             
             /**
-             * A name of the defautl MultiBrick template.
+             * A name of the default MultiBrick template.
              *
              * @property template
              * @private
@@ -549,7 +549,7 @@ define([
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
-             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun MultiBrick
@@ -676,7 +676,7 @@ define([
 
         /**
         * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
         *
         * 
         * ####Imports RAMP Modules:
@@ -727,7 +727,7 @@ define([
              */
 
             /**
-             * A name of the defautl ButtonBrick template.
+             * A name of the default ButtonBrick template.
              *
              * @property template
              * @private
@@ -765,7 +765,7 @@ define([
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
-             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.buttonClass] a CSS class of the button in the ButtonBrick
@@ -1112,7 +1112,7 @@ define([
                 this.setDropDownValue(option, userSelected);
             },
 
-            // internal should not be called from outsite
+            // internal should not be called from outside
             setDropDownValue: function (option, userSelected) {
                 var value = option.val(),
                     text = option.find("option:selected").text();
@@ -1216,7 +1216,7 @@ define([
             },/*
 
             isValid: function () {
-                // Todo: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
+                // TODO: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
             }*/
 
             /*setData: function (data) {
