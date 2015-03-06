@@ -664,10 +664,19 @@ define([
                                                                     })
                                                             });
                                                         } else if (!rows || rows.length < 2) {
+                                                            // no rows, no layer
                                                             handleFailure(step, handle, {
                                                                 fileType:
                                                                     lang.mixin(choiceTreeErrors.csvError, {
                                                                         message: i18n.t("addDataset.error.messageCSVShort")
+                                                                    })
+                                                            });
+                                                        } else if (headers.length < 2) {
+                                                            // only one column? are you kidding me?
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.csvError, {
+                                                                        message: i18n.t("addDataset.error.messageCSVThin")
                                                                     })
                                                             });
                                                         } else {

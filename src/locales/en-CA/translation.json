@@ -30,6 +30,7 @@
             "messageCSVBroken": "Unable to create layer from provided CSV.",
             "messageCSVInvalid": "Malformed CSV; field names cannot be retrieved.",
             "messageCSVShort": "Data source requires at least 2 rows for display.",
+            "messageCSVThin": "Data source requires at least latitude and longitude columns to display.",
             "messageFeatureConnect": "Cannot retrieve service.",
             "messageFeatureInvalid": "Service is misconfigured or does not exist.",
             "messageFeatureLegend": "Unable to retrieve legend information.",
