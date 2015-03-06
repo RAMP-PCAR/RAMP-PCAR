@@ -23,7 +23,7 @@
         "fileOrURL": "Fichier ou URL", 
         "fileOrURLPlaceholder": "Fichier ou URL local", 
         "fileType": "Type de fichier", 
-        "geojson": "GéoJSON", 
+        "geojson": "GéoJSON",
         "latitude": "Latitude", 
         "layerName": "[fr] Layer Name",
         "load": "Charger", 

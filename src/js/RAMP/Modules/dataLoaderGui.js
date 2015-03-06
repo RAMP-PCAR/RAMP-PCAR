@@ -122,7 +122,7 @@ define([
                         type: Bricks.ChoiceBrick,
                         config: {
                             header: i18n.t("addDataset.dataSource"),
-                            //instructions: "Halp!",
+                            instructions: i18n.t("addDataset.help.dataSource"),
                             choices: [
                                 {
                                     key: "serviceTypeStep",
@@ -153,6 +153,7 @@ define([
                                 type: Bricks.SimpleInputBrick,
                                 config: {
                                     header: i18n.t("addDataset.serviceLayerURL"),
+                                    instructions: i18n.t("addDataset.help.serviceURL"),
                                     placeholder: i18n.t("addDataset.serviceLayerURLPlaceholder"),
                                     freezeStates: [Bricks.Brick.state.SUCCESS]
                                 },
@@ -169,6 +170,7 @@ define([
                                 config: {
                                     //template: "template_name", //optional, has a default
                                     header: i18n.t("addDataset.serviceType"),
+                                    instructions: i18n.t("addDataset.help.serviceType"),
                                     choices: [
                                         {
                                             key: "featureServiceAttrStep",
@@ -347,6 +349,7 @@ define([
                                         id: "primaryAttribute",
                                         type: Bricks.DropDownBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.featurePrimaryAttribute"),
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
@@ -403,6 +406,7 @@ define([
                                         id: "layerName",
                                         type: Bricks.DropDownBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.wmsLayerName"),
                                             header: i18n.t("addDataset.layerName")
                                         }
                                     },
@@ -477,6 +481,7 @@ define([
                                 config: {
                                     //template: "template_name", //optional, has a default
                                     header: i18n.t("addDataset.fileOrURL"),
+                                    instructions: i18n.t("addDataset.help.fileOrURL"),
                                     //label: "Service URL", // optional, equals to header by default
                                     placeholder: i18n.t("addDataset.fileOrURLPlaceholder"),
                                     freezeStates: [Bricks.Brick.state.SUCCESS]
@@ -493,6 +498,7 @@ define([
                                 type: Bricks.ChoiceBrick,
                                 config: {
                                     //template: "template_name", //optional, has a default
+                                    instructions: i18n.t("addDataset.help.fileOrURLType"),
                                     header: i18n.t("addDataset.fileType"),
                                     choices: [
                                         {
@@ -751,6 +757,7 @@ define([
                                         id: "datasetName",
                                         type: Bricks.SimpleInputBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.geojsonDatasetName"),
                                             header: i18n.t("addDataset.datasetName")
                                         }
                                     },
@@ -758,6 +765,7 @@ define([
                                         id: "primaryAttribute",
                                         type: Bricks.DropDownBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.geojsonPrimaryAttribute"),
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
@@ -765,6 +773,7 @@ define([
                                         id: "color",
                                         type: Bricks.ColorPickerBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.geojsonColour"),
                                             header: i18n.t("addDataset.colour")
                                         }
                                     },
@@ -815,6 +824,7 @@ define([
                                         id: "datasetName",
                                         type: Bricks.SimpleInputBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.csvDatasetName"),
                                             header: i18n.t("addDataset.datasetName")
                                         }
                                     },
@@ -822,6 +832,7 @@ define([
                                         id: "primaryAttribute",
                                         type: Bricks.DropDownBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.csvPrimaryAttribute"),
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
@@ -835,6 +846,7 @@ define([
                                                     id: "latitude",
                                                     type: Bricks.DropDownBrick,
                                                     config: {
+                                                        instructions: i18n.t("addDataset.help.csvLatitude"),
                                                         header: i18n.t("addDataset.latitude")
                                                     }
                                                 },
@@ -842,6 +854,7 @@ define([
                                                     id: "longitude",
                                                     type: Bricks.DropDownBrick,
                                                     config: {
+                                                        instructions: i18n.t("addDataset.help.csvLongitude"),
                                                         header: i18n.t("addDataset.longitude")
                                                     }
                                                 }
@@ -852,6 +865,7 @@ define([
                                         id: "color",
                                         type: Bricks.ColorPickerBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.csvColour"),
                                             header: i18n.t("addDataset.colour")
                                         }
                                     },
@@ -932,6 +946,7 @@ define([
                                         id: "datasetName",
                                         type: Bricks.SimpleInputBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.shapefileDatasetName"),
                                             header: i18n.t("addDataset.datasetName")
                                         }
                                     },
@@ -939,6 +954,7 @@ define([
                                         id: "primaryAttribute",
                                         type: Bricks.DropDownBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.shapefilePrimaryAttribute"),
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
@@ -946,6 +962,7 @@ define([
                                         id: "color",
                                         type: Bricks.ColorPickerBrick,
                                         config: {
+                                            instructions: i18n.t("addDataset.help.shapefileColour"),
                                             header: i18n.t("addDataset.colour")
                                         }
                                     },
@@ -1228,6 +1245,8 @@ define([
                         resetFocusOnClose: true
                     }
                 );
+
+                //addDatasetPopup.open();
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key) {
