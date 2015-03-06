@@ -70,6 +70,14 @@ RAMP = {
     },
 
     /**
+     * Store global flags.  Should only contain boolean entries.
+     *
+     * @property flags
+     * @type Object
+     */
+    flags: {},
+
+    /**
      * Scripts to be loaded after dojo config is prepared.  Loaded in order (works around an IE9 issue).
      *
      * @property scripts

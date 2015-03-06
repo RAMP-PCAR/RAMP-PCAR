@@ -17,31 +17,20 @@
 *
 * @class FilterManager
 * @static
-* @uses dojo/_base/declare
-* @uses dojo/_base/lang
-* @uses dojo/query
 * @uses dojo/_base/array
-* @uses dojo/dom
-* @uses dojo/on
-* @uses dojo/dom-class
-* @uses dojo/dom-style
-* @uses dojo/dom-construct
-* @uses dojo/_base/connect
 * @uses dojo/Deferred
 * @uses dojo/topic
-* @uses dojo/aspect
-* @uses dojo/promise/all
 * @uses templates/filter_manager_template.json
 * @uses esri/tasks/query
-* @uses esri/layers/FeatureLayer
 * @uses RAMP
 * @uses GlobalStorage
 * @uses Map
 * @uses EventManager
+* @uses LayerItem
+* @uses LayerGroup
 * @uese Theme
 * @uese TmplHelper
 * @uses Util
-* @uses Array
 * @uses Dictionary
 * @uses PopupManager
 * @uses Checkbox
@@ -50,38 +39,35 @@
 
 define([
 /* Dojo */
-        "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/on", "dojo/dom", "dojo/dom-class",
-        "dojo/dom-style", "dojo/dom-construct", "dojo/_base/connect", "dojo/Deferred", "dojo/topic",
-        "dojo/aspect", "dojo/promise/all",
+        "dojo/_base/array", "dojo/Deferred", "dojo/topic",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
 
 /* Esri */
-        "esri/tasks/query", "esri/layers/FeatureLayer", "esri/layers/WMSLayer",
+        "esri/tasks/query",
 
 /* Ramp */
         "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
+        "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
 
     function (
     /* Dojo */
-        declare, lang, query, dojoArray, on, dom, domClass, domStyle, domConstruct,
-        connect, Deferred, topic, aspect, all,
+        dojoArray, Deferred, topic,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
 
     /* Esri */
-        EsriQuery, FeatureLayer, WMSLayer,
+        EsriQuery,
 
     /* Ramp */
         Ramp, GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilArray, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
+        TmplHelper, UtilMisc, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
         "use strict";
 
         var config,
