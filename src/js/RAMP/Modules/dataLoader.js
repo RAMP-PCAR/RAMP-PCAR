@@ -131,16 +131,26 @@ define([
 
             promise.then(
                 function (data) {
-                    var res = {
-                        layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
-                        layerName: data.name,
-                        layerUrl: featureLayerEndpoint,
-                        geometryType: data.geometryType,
-                        fields: dojoArray.map(data.fields, function (x) { return x.name; }),
-                        renderer: data.drawingInfo.renderer
-                    };
+                    try {
+                        var alias = {};
+                        dojoArray.forEach(data.fields, function (field) {
+                            alias[field.name] = field.alias;
+                        });
 
-                    def.resolve(res);
+                        var res = {
+                            layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
+                            layerName: data.name,
+                            layerUrl: featureLayerEndpoint,
+                            geometryType: data.geometryType,
+                            fields: dojoArray.map(data.fields, function (x) { return x.name; }),
+                            renderer: data.drawingInfo.renderer,
+                            aliasMap: alias
+                        };
+
+                        def.resolve(res);
+                    } catch (e) {
+                        def.reject(e);
+                    }
                 },
                 function (error) {
                     console.log(error);
@@ -299,9 +309,10 @@ define([
         * Will generate a generic datagrid config node for a set of layer attributes.
         *
         * @param {Array} fields an array of attribute fields for a layer
+        * @param {Object} aliases optional param. a mapping of field names to field aliases
         * @returns {Object} an JSON config object for feature datagrid
         */
-        function createDatagridConfig(fields) {
+        function createDatagridConfig(fields, aliases) {
             function makeField(id, fn, wd, ttl, tp) {
                 return {
                     id: id,
@@ -324,7 +335,13 @@ define([
             dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
 
             dojoArray.forEach(fields, function (field, idx) {
-                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', field, 'title_span'));
+                var fieldTitle = field;
+                if (aliases) {
+                    if (aliases[field]) {
+                        fieldTitle = aliases[field];
+                    }
+                }
+                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
             });
 
             return dg;

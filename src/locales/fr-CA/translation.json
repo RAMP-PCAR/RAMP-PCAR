@@ -13,7 +13,8 @@
     "addDataset": {
         "addDatasetButton": "Ajouter le DataSet", 
         "cancel": "Annuler", 
-        "colour": "Couleur", 
+        "colour": "Couleur",
+        "connect": "[fr] Connect",
         "csv": "CSV", 
         "datasetName": "[fr] Dataset Name",
         "dataSource": "Source de données", 
@@ -22,7 +23,7 @@
         "fileOrURL": "Fichier ou URL", 
         "fileOrURLPlaceholder": "Fichier ou URL local", 
         "fileType": "Type de fichier", 
-        "geojson": "GéoJSON", 
+        "geojson": "GéoJSON",
         "latitude": "Latitude", 
         "layerName": "[fr] Layer Name",
         "load": "Charger", 

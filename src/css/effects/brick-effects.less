@@ -1,0 +1,266 @@
+﻿.brick {
+    margin-bottom: 10px;
+
+    h3 {
+        margin: 21px 0 10px 0;
+
+        &.smaller {
+            margin: 10px 0 5px 0;
+        }
+    }
+
+    h4 {
+        &.smaller {
+            margin: 10px 0 5px 0;
+        }
+    }
+
+    &:first-child {
+        h3 {
+            margin: 2px 0 10px 0;
+        }
+    }
+
+    h3, h4 {
+        position: relative;
+
+        .brick-instructions {
+            position: absolute;
+            display: inline-block;
+            //right: 10px;
+            margin-left: 8px;
+        }
+
+        .fa-question-circle {
+            color: @info-color;
+            cursor: help;
+        }
+    }
+}
+
+.brick-notice-placeholder {
+    overflow: hidden;
+}
+
+.brick-notice {
+
+    &.error {
+        width: 100%;
+        overflow: hidden;
+        display: inline-block;
+        text-overflow: ellipsis;
+        border-left: 4px @attention-color solid;
+        background-color: @light-attention-color;
+        padding: 2px 0 2px 10px;
+        vertical-align: bottom;
+
+        > span.label {
+            font-size: 90%;
+            white-space: normal;
+            background: none;
+            border: none;
+            padding: 0;
+            font-weight: normal;
+            color: black;
+
+            .prefix {
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.simpleinput-brick-glyphs () {
+    .form-group {
+
+        .glyphicon {
+            top: auto;
+            bottom: 0;
+            display: none;
+        }
+
+        .glyphicon-remove {
+            //top: -1px;
+            bottom: -3px;
+        }
+
+        &.has-feedback {
+            &.has-success {
+                .glyphicon-ok {
+                    display: block;
+                }
+            }
+
+            &.has-error {
+                .glyphicon-remove {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+
+.multi-brick-container {
+    display: table;
+    table-layout: fixed;
+
+    margin-top: 21px;
+
+    .multi-container {
+        display: table-row;
+
+        & > .brick {
+            padding-right: 8px;
+            padding-left: 8px;
+            
+            &:first-child {
+                padding-left: 0;
+            }
+
+            &:last-child {
+                padding-right: 0;
+            }
+
+            h3, h4 {
+                margin-top: 0;
+            }
+
+            .form-group {
+                margin-bottom: 0;
+            }
+
+            margin-bottom: 0;  
+        }
+
+        & > div {
+            display: table-cell;
+        }
+    }
+}
+
+.button-brick-container {
+    margin-top: 25px;
+    margin-bottom: 5px;
+}
+
+.button-brick-container-main {
+    .button-brick-container;
+
+    .button-content {
+        text-align: right;
+
+        button {
+            width: 50%;
+        }
+    }
+}
+
+.okcancelbutton-brick-container {
+    .button-brick-container;
+
+    .multi-container {
+        text-align: right;
+
+        & > .brick {
+            margin-bottom: 0;
+
+            &:first-child {
+                display: inline-block;
+                margin-right: 10px;
+            }
+
+            &:last-child {
+                display: inline-block;
+                margin-left: 10px;
+            }
+        }
+
+        .ok-button-brick-container {
+            button {
+                min-width: 90px;
+            }
+        }
+
+        .cancel-button-brick-container {
+        }
+    }
+}
+
+.choice-brick-container {
+    .choice-group {
+        width: 100%;
+        // trick: http://stackoverflow.com/a/12198561
+        button:first-child:nth-last-child(1) {
+            width: 100%;
+        }
+        /* two items */
+        button:first-child:nth-last-child(2),
+        button:first-child:nth-last-child(2) ~ button {
+            width: 50%;
+        }
+        /* three items */
+        button:first-child:nth-last-child(3),
+        button:first-child:nth-last-child(3) ~ button {
+            width: 33.3333%;
+        }
+        /* four items */
+        button:first-child:nth-last-child(4),
+        button:first-child:nth-last-child(4) ~ button {
+            width: 25%;
+        }
+    }
+}
+
+.simpleinput-brick-container {
+    .form-group {
+
+        > input {
+            width: 100%;
+        }
+    }
+
+    .simpleinput-brick-glyphs;
+}
+
+.fileinput-brick-container {
+    .simpleinput-brick-container;
+
+    .input-group-container {
+        display: table;
+    }
+
+    .simpleinput-brick-glyphs;
+}
+
+.colorpicker-brick-container {
+    .color-picker-container {
+        display: table;
+        width: 100%;
+
+        & > .form-group {
+            display: table-cell !important;
+            width: 80% !important;
+            padding-right: 10px;
+
+            input {
+                width: 100%;
+            }
+        }
+
+        .color-picker-swatch {
+            display: table-cell;
+            margin-left: 10px;
+            width: 20%;
+            border: 1px solid black;
+        }
+    }
+}
+
+.dropdown-brick-container {
+    .form-group {
+
+        select {
+            width: 100%;
+        }
+    }
+}

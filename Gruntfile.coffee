@@ -660,6 +660,11 @@ module.exports = (grunt) ->
                     cwd: 'src/js/RAMP/Tools/templates'
                     src: '**/*.json'
                     dest: 'build/js/RAMP/Tools/templates'
+                ,
+                    expand: true
+                    cwd: 'src/js/RAMP/Utils/templates'
+                    src: '**/*.json'
+                    dest: 'build/js/RAMP/Utils/templates'
                 ]
 
             templatesDist:
@@ -673,6 +678,11 @@ module.exports = (grunt) ->
                     cwd: 'src/js/RAMP/Tools/templates'
                     src: '**/*.json'
                     dest: 'dist/js/RAMP/Tools/templates'
+                ,
+                    expand: true
+                    cwd: 'src/js/RAMP/Utils/templates'
+                    src: '**/*.json'
+                    dest: 'dist/js/RAMP/Utils/templates'
                 ]
 
             jsCore:

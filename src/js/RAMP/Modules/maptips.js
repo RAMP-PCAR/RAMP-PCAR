@@ -71,7 +71,7 @@ define([
         *
         * @method getSubPanelLeftOffset
         * @private
-        * @return {Number} position of hte sub-panel relative to the leftmost edge of the screen
+        * @return {Number} position of the sub-panel relative to the leftmost edge of the screen
         */
         function getSubPanelLeftOffset() {
             return $(window).width() - subPanelOffset;

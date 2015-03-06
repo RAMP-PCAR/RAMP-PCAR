@@ -942,6 +942,7 @@ define([
            * @return {Esri/layers/FeatureLayer} feature layer object (unloaded)
            */
             makeFeatureLayer: function (layerConfig, userLayer) {
+                // TODO: source of possible errors; add error handling
                 var fl = new FeatureLayer(layerConfig.url, {
                     id: layerConfig.id,
                     mode: FeatureLayer.MODE_SNAPSHOT,

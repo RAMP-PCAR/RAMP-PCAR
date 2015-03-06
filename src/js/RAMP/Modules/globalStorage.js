@@ -164,7 +164,6 @@ define(["dojo/_base/array", "utils/util"],
             },
 
             // specifies knows layer groups in the reversed order;
-            layerSelectorGroups: [
-            ]
+            layerSelectorGroups: []
         };
     });

@@ -47,7 +47,9 @@
         "csv2geojson": "https://github.com/mapbox/csv2geojson.git#v3.7.1",
         "shapefile-js": "https://github.com/calvinmetcalf/shapefile-js.git#3.1.5",
         "RandomColor": "https://github.com/sterlingwes/RandomColor.git",
-        "btoa-umd": "~0.7.5"
+        "btoa-umd": "~0.7.5",
+        "t": "~0.5.1",
+        "selfish": "~0.3.3"
     },
     "moduleType": [
         "globals"
