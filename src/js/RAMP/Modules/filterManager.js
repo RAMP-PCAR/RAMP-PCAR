@@ -586,6 +586,13 @@ define([
 
                                 metadataUrl = layerConfig.metadataUrl;
 
+                                // set it to null when layerConfig.catalogueUrl does not exist
+                                // instead of key with empty value
+                                var params = null;
+                                if (!UtilMisc.isUndefined(layerConfig.catalogueUrl)) {
+                                    params = [{ key: "catalogue_url", value: layerConfig.catalogueUrl }];
+                                }
+
                                 if (!metadataUrl) {
                                     metadataError();
                                 } else {
@@ -601,7 +608,7 @@ define([
                                                     guid: id
                                                 });
                                             }
-                                        }, null, [{ key: "catalogue_url", value: layerConfig.catalogueUrl }]);
+                                        }, null, params);
                                 }
                             }
                         } else {
