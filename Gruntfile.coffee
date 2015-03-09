@@ -852,7 +852,7 @@ module.exports = (grunt) ->
 
             jsPlugins:
                 options:
-                        banner: '/*! <%= pkg.name %> Plugins <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
+                    banner: '/*! <%= pkg.name %> Plugins <%= grunt.template.today("dd-mm-yyyy HH:MM:ss") %> : v. <%= pkg.version %> \n * \n * <%= pkg.description %> \n **/\n'
 
                 expand: true
                 cwd: 'build/js/plugins/'
