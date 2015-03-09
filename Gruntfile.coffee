@@ -1393,7 +1393,7 @@ module.exports = (grunt) ->
                     # TODO: upload minified and unminified code in tarballs
                     #'dist/**/*.*'
                     #'build/**/*.*'
-                    'tarball/**/*.*'
+                    'tarball/**/*.zip'
                 ]
                 
             demo:
