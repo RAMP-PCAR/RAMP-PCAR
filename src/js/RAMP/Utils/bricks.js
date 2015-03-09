@@ -641,9 +641,10 @@ define([
             },
 
             /**
-             * Sets MultiBrick's data by setting data to the individual bricks inside it. Uses their own specific setData functions
-             *
+             * Sets MultiBrick's data by setting data to the individual bricks inside it. Uses their own specific setData functions.
+             *              *
              * @method setData
+             * @param {Object} data
              * @return {MultiBrick}           itself
              * @chainable
              */
@@ -836,8 +837,8 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
+        * @uses Brick
         * @uses MultiBrick
-        * 
         */
         OkCancelButtonBrick = MultiBrick.extend({
             
@@ -1097,7 +1098,7 @@ define([
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
-             * @param  {Array} choices a set of choices that will be presented to the user
+             * @param  {Array} [config.choices] a set of choices that will be presented to the user
              * @chainable
              * @return {ChoiceBrick}
              */
@@ -1172,6 +1173,8 @@ define([
                 this.setChoice("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
             /**
@@ -1196,6 +1199,8 @@ define([
                 this.setChoice(data.selectedChoice, data.userSelected);
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
             /**
@@ -1216,7 +1221,105 @@ define([
             }
         });
 
+        /**
+        * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
+        * To instantiate, call {{#crossLink "SimpleInputBrick/new:method"}}{{/crossLink}} on the SimpleInputBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class SimpleInputBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         SimpleInputBrick = Brick.extend({
+            /**
+             * A CSS class of the SimpleInputBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for SimpleInputBrick
+             * @type {String}
+             * @default "simpleinput-brick-container"
+             */
+
+            /**
+             * A name of the default SimpleInputBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_simpleinput_brick_template"
+             */
+
+             /**
+             * An input field label. Invisible. Defaults to the Brick's header.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * A placeholder to be displayed inside the input field.
+             *
+             * @property placeholder
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A string that is currently entered in the input field
+             *
+             * @property inputValue
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * Indicates if the user entered text into the input field or it was entered programmatically
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * Initializes the SimpleInputBrick by generating a specified template and setting defaults.
+             * This Brick fires a CHANGE event on every change inside the input field.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
+             * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
+             * @retun SimpleInputBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -1240,27 +1343,57 @@ define([
                     }
                 );
 
+                // setting a listener on the input field
                 this.inputNode.on("input", function (event) {
                     var value = $(event.target).val();
                     that.setInputValue(value, true);
                 });
             },
 
+            /**
+             * Sets the current value of the input field.
+             * 
+             * @method setInputValue
+             * @param {String} value    string value to be entered into the input field
+             * @param {Boolea} userEntered boolean value indicating if the user is the source of the string value
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setInputValue: function (value, userEntered) {
                 this.userEntered = userEntered ? true : false;
                 this.inputValue = value;
 
+                // if user entered it, the text is already in the field;
+                // if not, need to populate the field
                 if (!userEntered) {
                     this.inputNode.val(value);
                 }
 
+                // fire change event
                 this.notify(this.event.CHANGE, this.getData());
+
+                return this;
             },
 
+            /**
+             * Checks if the input value was entered by the user or not.
+             * 
+             * @method isUserEntered
+             * @return {Boolean} true if the input value was entered by the user; false, otherwise
+             */
             isUserEntered: function () {
                 return this.userEntered;
             },
 
+            /**
+             * Sets the state of the Brick. Depending on the state, update the visual styles of the input field.
+             * Then call the Brick prototype setState function.
+             * 
+             * @method setState
+             * @param {String} state a name of the state to set 
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setState: function (state) {
 
                 switch (state) {
@@ -1285,22 +1418,55 @@ define([
                 return this;
             },
 
+            /**
+             * Clears the Brick. This is an empty function. Bricks inheriting from this should override and provide their specific implementations.
+             *
+             * @method clear
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.setInputValue("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
+            /**
+             * Checks if the SimpleInputBrick is valid. It's considered valid if the input value is not an empty String.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return this.inputValue !== "";
             },
 
+            /**
+             * Sets SimpleInputBrick's data. First calls setInputValue and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 this.setInputValue(data.inputValue, data.userEntered);
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
+            /**
+             * Returns SimpleInputBrick's data.
+             * 
+             * @method getData
+             * @for SimpleInputBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = {
                     inputValue: this.inputValue,
@@ -1377,6 +1543,8 @@ define([
                 this.selectOption("");
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
             isValid: function () {
@@ -1396,6 +1564,8 @@ define([
                 }
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
             getData: function (wrap) {
@@ -1544,6 +1714,8 @@ define([
                 this.setInputValue("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
             isValid: function () {
@@ -1558,6 +1730,8 @@ define([
                 }
 
                 SimpleInputBrick.setData.call(data);
+
+                return this;
             },
 
             getData: function (wrap) {
