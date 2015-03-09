@@ -1375,6 +1375,7 @@ module.exports = (grunt) ->
 
             travis:
                 options:
+                    add: true
                     repo: process.env.DIST_REPO
                     branch: '<%= series %>'
                     message: ((
@@ -1396,18 +1397,19 @@ module.exports = (grunt) ->
                 
             demo:
                 options:
+                    add: true
                     repo: process.env.DOCS_REPO
                     branch: 'gh-pages'
                     #base: 'demos/NRSTC'
                     message: ((
                         if process.env.TRAVIS_TAG
-                            "Demo files for the " + process.env.TRAVIS_TAG + " release"
+                            process.env.TRAVIS_TAG + " release demo"
                         else
-                            "Demo files for build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
+                            process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] build demo"
                     ))
                     silent: true
                 src: [
-                    'demos/NRSTC/**/*.*'
+                    'demos/**/*.*'
                 ]
         
         'github-release':
