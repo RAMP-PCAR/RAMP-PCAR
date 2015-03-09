@@ -1002,7 +1002,105 @@ define([
             }
         });
 
+        /**
+        * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
+        * To instantiate, call {{#crossLink "ChoiceBrick/new:method"}}{{/crossLink}} on the ChoiceBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ChoiceBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         ChoiceBrick = Brick.extend({
+            
+            /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for ChoiceBrick
+             * @type {String}
+             * @default "choice-brick-container"
+             */
+
+            /**
+             * A name of the default ButtonBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_choice_brick_template"
+             */
+            
+            /**
+             * Indicates which choice is currently selected
+             *
+             * @property selectedChoice
+             * @private
+             * @type {String}
+             * @default null
+             */
+            
+            /**
+             * Indicates if the user made the selection or it was made programmatically
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * A collection of choices that will be offered to the user. At least two choices are required for this Brick to have any use at all.
+             *
+             * @property choices
+             * @private
+             * @type {Array}
+             * @example
+             *     [
+             *         {
+             *             key: "ie9",
+             *             value: "IE9"
+             *         },
+             *         {
+             *             key: "chrome",
+             *             value: "Chrome"
+             *         }
+             *     ]
+             */
+
+            /**
+             * Initializes the ChoiceBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {Array} choices a set of choices that will be presented to the user
+             * @chainable
+             * @return {ChoiceBrick}
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -1030,6 +1128,15 @@ define([
                 });
             },
 
+            /**
+             * Sets the choice of the ChoiceBrick.
+             * 
+             * @method setChoice
+             * @param {String} choiceKey    string value of the choice to be selected
+             * @param {Boolea} userSelected boolean value indicating if the user is the source of the selection
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             setChoice: function (choiceKey, userSelected) {
                 // only set choice if it differs from the current one
                 if (choiceKey !== this.selectedChoice || (userSelected ? true : false) !== this.userSelected) {
@@ -1046,28 +1153,59 @@ define([
 
                     this.notify(this.event.CHANGE, this.getData());
                 }
+
+                return this;
             },
 
             isUserSelected: function () {
                 return this.userSelected;
             },
 
+            /**
+             * Clears the ChoiceBrick by reseting selectedChoice to an empty string and userSelected to false.
+             *
+             * @method clear
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.setChoice("", false);
 
                 Brick.clear.call(this);
             },
 
+            /**
+             * Checks if the brick is valid. The ChoiceBrick is considered valid if selectedChoice is not an empty String.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return this.selectedChoice !== "";
             },
 
+            /**
+             * Sets ChoiceBrick's data. First calls setChoice and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 this.setChoice(data.selectedChoice, data.userSelected);
 
                 Brick.setData.call(data);
             },
 
+            /**
+             * Returns ChoiceBrick's data.
+             * 
+             * @method getData
+             * @for ChoiceBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: selectedChoice and userSelected
+             */
             getData: function (wrap) {
                 var payload = {
                     selectedChoice: this.selectedChoice,
