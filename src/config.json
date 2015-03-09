@@ -1,7 +1,7 @@
 {
     "version": "1.0.1",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
-    "proxyUrl": "http://cp.zz9.ca/index",
+    "proxyUrl": "proxy/dotNet/proxy.ashx",
     "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "advancedToolbar": {
         "enabled": true,
@@ -399,7 +399,7 @@
                 },
                 "aliasMap": {
                     "PRJ_ID": "Project ID",
-                    "CATEG_NAM_ENG":  "Category Name"
+                    "CATEG_NAM_ENG": "Category Name"
                 }
             },
             {
@@ -687,8 +687,70 @@
                     "spatialReference": {
                         "wkid": 3978
                     }
+                }, 
+                "isStatic":  true
+            },
+            {
+                "id": "bigNative",
+                "displayName": "Big Native Shapes",
+                "nameField": "ENGLISHNAME ",
+                "url": "http://proxyinternet.nrcan.gc.ca/arcgis/rest/services/NRCan_SGB_Business_LCC/MapServer/80",
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
                 },
-                "isStatic": true
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.8
+                    },
+                    "visible": true
+                },
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "OBJECTID",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Detais",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "cityCol",
+                            "fieldName": "ENGLISHNAME",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "NameName",
+                            "columnTemplate": "unformatted_grid_value"
+                        }
+                    ]
+                },
+                "maxAllowableOffset": 5000,
+                "layerExtent": {
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
+                }
             }
         ],
         "wms": [
@@ -732,26 +794,38 @@
         ]
 
     },
-    "rowsPerPage": 40,
-    "extendedDatagridExtentFilterEnabled": false,
-    "templates": {
-        "basemap": "default_basemap",
-        "globalSelectorToggles": "layerGlobalToggles"
+            "rowsPerPage"
+            :
+            40,
+            "extendedDatagridExtentFilterEnabled"
+            :
+            false,
+            "templates"
+            :
+            {
+                "basemap": "default_basemap",
+                "globalSelectorToggles": "layerGlobalToggles"
 
-    },
-    "divNames": {
-        "map": "mainMap",
-        "navigation": "map-navigation",
-        "filter": "searchMapSectionBody",
-        "datagrid": "gridpane"
-    },
-    "plugins": [
-        "stringParse.js",
-        "htmlRawParse.js",
-        "jsonRawParse.js",
-        "tempParse.js",
-        "windParse.js"
-    ],
+            },
+            "divNames"
+            :
+            {
+                "map": "mainMap",
+                "navigation": "map-navigation",
+                "filter": "searchMapSectionBody",
+                "datagrid": "gridpane"
+            },
+            "plugins"
+            :
+            [
+                "stringParse.js",
+                "htmlRawParse.js",
+                "jsonRawParse.js",
+                "tempParse.js",
+                "windParse.js"
+            ],
 
-    "mapInitFailUrl": "./error-en.html"
-}
+            "mapInitFailUrl"
+            :
+            "./error-en.html"
+    }
