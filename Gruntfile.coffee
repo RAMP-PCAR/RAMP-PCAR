@@ -1368,7 +1368,7 @@ module.exports = (grunt) ->
                 options:
                     repo: process.env.DOCS_REPO
                     branch: 'gh-pages'
-                    base: 'demos/NRSTC/'
+                    #base: 'demos/NRSTC'
                     message: ((
                         if process.env.TRAVIS_TAG
                             "Demo files for the " + process.env.TRAVIS_TAG + " release"
@@ -1377,10 +1377,6 @@ module.exports = (grunt) ->
                     ))
                     silent: true
                 src: [
-                    # TODO: upload minified and unminified code in tarballs
-                    #'dist/**/*.*'
-                    #'build/**/*.*'
-                    #'tarball/**/*.*'
                     'demos/NRSTC/**/*.*'
                 ]
         
