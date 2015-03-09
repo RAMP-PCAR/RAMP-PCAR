@@ -201,7 +201,8 @@
                 "symbology": { "$ref": "#/definitions/symbolNode" },
 
                 "settings": { "$ref": "#/definitions/settingsNode" },
-                "isStatic": { "type": "boolean", "enum": [ true ] }
+                "isStatic": { "type": "boolean", "enum": [ true ] },
+                "maxAllowableOffset": { "type": "integer", "default": 0, "description": "Simplification factor.  Two points closer than the factor will be converted to one.  A value of 0 turns off the simplification."}
             },
             "required": [ "id", "displayName", "url", "symbology", "isStatic" ],
             "additionalProperties": false
@@ -220,6 +221,7 @@
                 "maxScale": { "type": "integer", "default": 0, "description": "Maximum zoom scale at which this layer is visible" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
+                "maxAllowableOffset": { "type": "integer", "default": 0, "description": "Simplification factor.  Two points closer than the factor will be converted to one.  A value of 0 turns off the simplification."},
 
                 "layerExtent": { "$ref": "#/definitions/extentWithReferenceNode" },
 
