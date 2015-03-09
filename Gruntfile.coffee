@@ -1407,7 +1407,7 @@ module.exports = (grunt) ->
                         else
                             process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] build demo"
                     ))
-                    silent: true
+                    #silent: true
                 src: [
                     'demos/**/*.*'
                 ]
