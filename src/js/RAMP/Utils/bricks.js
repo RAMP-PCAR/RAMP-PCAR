@@ -471,8 +471,8 @@ define([
         });
 
         /**
-        * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        * The MultiBrick prototype. Used as a container for multiple independent Bricks if they are required to be displayed side by side.
+        * To instantiate, call {{#crossLink "MultiBrick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
         *
         * 
         * ####Imports RAMP Modules:
@@ -675,8 +675,8 @@ define([
         });
 
         /**
-        * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        * ButtonBrick is just a Brick with a button inside it. The button can be styled and can be assigned an onClick event. 
+        * To instantiate, call {{#crossLink "ButtonBrick/new:method"}}{{/crossLink}} on the ButtonBrick prototype.
         *
         * 
         * ####Imports RAMP Modules:
@@ -816,8 +816,46 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+        
+        /**
+        * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
+        * To instantiate, call {{#crossLink "OkCancelButtonBrick/new:method"}}{{/crossLink}} on the OkCancelButtonBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class OkCancelButtonBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses MultiBrick
+        * 
+        */
         OkCancelButtonBrick = MultiBrick.extend({
+            
+            /**
+             * A dictionary of possible OkCancelButtonBrick events. Adds a OK_CLICK and CANCEL_CLICK events to the default ButtonBrick events.
+             *
+             * @property event
+             * @for OkCancelButtonBrick
+             * @type {Object}
+             * @example
+             *      event: {
+             *          CHANGE: "brick/change",
+             *          CLICK: "buttonBrick/click",
+             *          OK_CLICK: "okCancelButtonBrick/okClick",
+             *          CANCEL_CLICK: "okCancelButtonBrick/cancelClick"
+             *      }
+             * 
+             */
             event: lang.mixin({},
                 MultiBrick.event,
                 ButtonBrick.event,
@@ -827,13 +865,87 @@ define([
                 }
             ),
 
+            /**
+             * A CSS class of the OkCancelButtonBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "okcancelbutton-brick-container"
+             */
+            
+            /**
+             * Default id of the OK button of the Brick, cannot be changed.
+             *
+             * @property okButtonId
+             * @private
+             * @type {String}
+             * @default "okButton"
+             */
+
+            /**
+             * Default id of the cancel button of the Brick, cannot be changed.
+             *
+             * @property cancelButtonId
+             * @private
+             * @type {String}
+             * @default "cancelButton"
+             */
+
+            /**
+             * Default id of the cancel button of the Brick, cannot be changed.
+             *
+             * @property cancelButtonId
+             * @private
+             * @type {String}
+             * @default "cancelButton"
+             */
+            
+            /**
+             * Reverses the default visual order of OK, Cancel button to Cancel, OK.
+             *
+             * @property reverseOrder
+             * @private
+             * @type {Boolean}
+             * @default "false"
+             */
+
             okButtonId: "okButton",
             cancelButtonId: "cancelButton",
 
+            /**
+             * Initializes the OkCancelButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * OkCancelButtonBrick is a brick with two preset buttons: OK and Cancel.
+             * Button container classes are predifined as "ok-button-brick-container" and "cancel-button-brick-container"
+             * 
+             * @method new
+             * @for OkCancelButtonBrick
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.buttonClass] a CSS class of the button in the OkCancelButtonBrick
+             * @param  {String} [config.okLabel] an OK button label
+             * @param  {String} [config.cancelLabel] a Cancel button label
+             * @param  {String} [config.okButtonClass] an OK button CSS class
+             * @param  {String} [config.cancelButtonClass] a Cancel button CSS class
+             * @param  {String} [config.okFreezeStates] an OK button freeze states
+             * @param  {String} [config.cancelFreezeStates] a Cancel button freeze states
+             * @param  {String} [config.reverseOrder] reverses the default visual order of OK, Cancel button to Cancel, OK.
+             * @chainable
+             * @return {OkCancelButtonBrick}
+             */
             initialize: function (id, config) {
                 var that = this,
                     newConfig;
 
+                // generating a MultiBrick config with two buttons
                 newConfig =
                     {
                         //template: "default_okcancelbutton_brick_template",
@@ -877,6 +989,7 @@ define([
                     }
                 );
 
+                // setting event listeners on individual ButtonBricks, not button nodes directly
                 this.okButtonBrick.on(this.event.CLICK, function () {
                     that.notify(that.event.OK_CLICK, null);
                     that.notify(that.event.CLICK, null);
@@ -886,16 +999,6 @@ define([
                     that.notify(that.event.CANCEL_CLICK, null);
                     that.notify(that.event.CLICK, null);
                 });
-            },
-
-            isValid: function () {
-
-                return MultiBrick.isValid.call(this);
-            },
-
-            getData: function (wrap) {
-
-                return MultiBrick.getData.call(this, wrap);
             }
         });
 
