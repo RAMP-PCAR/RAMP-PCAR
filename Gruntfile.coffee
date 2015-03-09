@@ -1424,7 +1424,7 @@ module.exports = (grunt) ->
                     prerelease: true
                     tag_name: process.env.TRAVIS_TAG
             files:
-                src: ['tarball/*.*']
+                src: ['tarball/*-dist-*.*']
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
