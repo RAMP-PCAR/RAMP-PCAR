@@ -460,6 +460,7 @@ module.exports = (grunt) ->
             tasks = [
                 'github-release'
                 'gh-pages:travis'
+                'gh-pages-clean'
                 'copy:demo'
                 'gh-pages:demo'
             ]
