@@ -458,7 +458,8 @@ module.exports = (grunt) ->
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
             tasks = [
-                #'github-release'
+                'github-release'
+                'gh-pages:travis'
                 'copy:demo'
                 'gh-pages:demo'
             ]
@@ -466,8 +467,13 @@ module.exports = (grunt) ->
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master')  ?
                 
                 if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+$/
-                    grunt.config 'github-release.options.release.body', '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html)'
-                
+                    grunt.config 'github-release.options.release.body', 
+      	                '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html) <br>' + 
+                        '* [Live Demo:](http://ramp-pcar.github.io/demos/NRSTC/' + process.env.TRAVIS_TAG + '/' +  grunt.config("pkg.name") + '/ramp-en.html)'
+    
+                if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+(-.+)$/
+                    grunt.config 'github-release.options.release.body', 'Internal QC release'
+    
                 grunt.task.run tasks
     )
 
