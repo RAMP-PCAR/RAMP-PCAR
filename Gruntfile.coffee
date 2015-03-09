@@ -459,6 +459,7 @@ module.exports = (grunt) ->
         () ->
             tasks = [
                 #'github-release'
+                'copy:demo'
                 'gh-pages:demo'
             ]
         
@@ -714,6 +715,12 @@ module.exports = (grunt) ->
                 cwd: 'dist'
                 src: '**/*.*'
                 dest: '<%= pkg.ramp.deployFolder %>/'
+                
+            demo:
+                expand: true
+                cwd: 'dist'
+                src: '**/*.*'
+                dest: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/' + pkg.name
 
         assemble:
             options:
@@ -1361,7 +1368,7 @@ module.exports = (grunt) ->
                 options:
                     repo: process.env.DOCS_REPO
                     branch: 'gh-pages'
-                    base: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/core'
+                    base: 'demos/NRSTC/'
                     message: ((
                         if process.env.TRAVIS_TAG
                             "Demo files for the " + process.env.TRAVIS_TAG + " release"
@@ -1373,7 +1380,8 @@ module.exports = (grunt) ->
                     # TODO: upload minified and unminified code in tarballs
                     #'dist/**/*.*'
                     #'build/**/*.*'
-                    'tarball/**/*.*'
+                    #'tarball/**/*.*'
+                    'demos/NRSTC/**/*.*'
                 ]
         
         'github-release':
