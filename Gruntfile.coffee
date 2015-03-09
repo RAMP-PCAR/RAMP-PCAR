@@ -1370,13 +1370,14 @@ module.exports = (grunt) ->
                 push: false
                 
         'gh-pages':
-            options:
-                clone: 'ramp-pcar-dist'
+            #options:
+                #clone: 'ramp-pcar-dist'
                 # base: 'dist'
 
             travis:
                 options:
                     add: true
+                    clone: 'ramp-pcar-dist'
                     repo: process.env.DIST_REPO
                     branch: '<%= series %>'
                     message: ((
@@ -1399,6 +1400,7 @@ module.exports = (grunt) ->
             demo:
                 options:
                     add: true
+                    clone: 'ramp-pcar-demo'
                     repo: process.env.DOCS_REPO
                     branch: 'gh-pages'
                     #base: 'demos/NRSTC'
