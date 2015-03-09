@@ -720,7 +720,7 @@ module.exports = (grunt) ->
                 expand: true
                 cwd: 'dist'
                 src: '**/*.*'
-                dest: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/' + pkg.name
+                dest: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/<%= pkg.name %>' 
 
         assemble:
             options:
