@@ -254,8 +254,10 @@
         "hideFeatures": "Masquer {0}", 
         "layerHandle": "Descripteur de couche", 
         "layerHandleLabel": "Descripteur de couche pour __layerName__", 
-        "layerListLabel": "Liste des couches sortable", 
+        "layerListLabel": "Liste des couches sortable",
         "legend": "Légende", 
+        "showLegend": "[fr] Show Legend",
+        "hideLegend": "[fr] Hide Legend",
         "linkToCap": "Lien vers les capacités", 
         "metadata": "Métadonnées", 
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche", 
@@ -512,11 +514,11 @@
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "[fr] Circle Point",
-		    "outlinedPoly": "[fr] Outlined Polygon",
-		    "solidLine" : "[fr] Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "[fr] Circle Point",
+            "outlinedPoly": "[fr] Outlined Polygon",
+            "solidLine" : "[fr] Solid Line"	
+        }
     },
     "serverError": {
         "basemapNotAvailable": {

@@ -254,8 +254,10 @@
         "hideFeatures": "Hide {0}", 
         "layerHandle": "Layer Handle", 
         "layerHandleLabel": "Layer handle for __layerName__", 
-        "layerListLabel": "Sortable layer list", 
-        "legend": "Legend", 
+        "layerListLabel": "Sortable layer list",
+        "legend": "Legend",
+        "showLegend": "Show Legend",
+        "hideLegend": "Hide Legend",
         "linkToCap": "Link To Capabilities", 
         "metadata": "Metadata", 
         "metadataNotFound": "No metadata was found for this layer.", 
@@ -512,13 +514,13 @@
         "title": "Reusable Accessible Mapping Platform (RAMP)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "Circle Point",
-		    "outlinedPoly": "Outlined Polygon",
-		    "solidLine" : "Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "Circle Point",
+            "outlinedPoly": "Outlined Polygon",
+            "solidLine" : "Solid Line"	
+        }
     },
-	"serverError": {
+    "serverError": {
         "basemapNotAvailable": {
             "detail": "Basemap service not available; map failed to initialize properly.",
             "title": "Error: Basemap service not available"
