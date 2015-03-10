@@ -253,15 +253,17 @@ define([
                     try {
                         layers = dojoArray.map(query('Layer > Name', data), function (nameNode) { return nameNode.parentNode; });
                         res.layers = dojoArray.map(layers, function (x) {
-                            var name = getImmediateChild(x, 'Name').textContent,
+                            var nameNode = getImmediateChild(x, 'Name'),
+                                name = nameNode.textContent || nameNode.text,
+                                // .text is for IE9's benefit, even though it claims to support .textContent
                                 titleNode = getImmediateChild(x, 'Title');
                             return {
                                 name: name,
-                                desc: titleNode ? titleNode.textContent : name,
+                                desc: titleNode ? (titleNode.textContent || titleNode.text) : name,
                                 queryable: x.getAttribute('queryable') === '1'
                             };
                         });
-                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent; });
+                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent || node.text; });
                     } catch (e) {
                         def.reject(e);
                     }
