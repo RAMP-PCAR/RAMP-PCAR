@@ -229,7 +229,7 @@ define([
 
             //add entry to layer selector
             if (UtilMisc.isUndefined(reloadIndex)) {
-                FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
+                FilterManager.addLayer(layerSection, layer.ramp.config, lsState, layer.ramp.user);
             } else {
                 updateLayerSelectorState(layerConfig.id, lsState);
             }
