@@ -732,7 +732,6 @@ define([
             LayerItem.state.UPDATING
         ];
 
-
         /**
         * Modifies a given state matrix by adding specified partKey to the specified partType collection.
         *
@@ -779,7 +778,7 @@ define([
          */
         LayerItem.getStateMatrixTemplate = function () {
             return lang.clone(LayerItem.stateMatrix);
-        }
+        };
 
         // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
         ALL_STATES_CLASS =
