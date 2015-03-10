@@ -280,7 +280,9 @@
             "close": "Fermer",
             "fullScreen": "Plein écran", 
             "mapExport": "[fr] Map Export",
-            "open": "Ouvrir"
+            "open": "Ouvrir",
+            "wmsQueryDisable": "[fr] Disable Queries",
+            "wmsQueryEnable": "[fr] Enable Queries"
         }
     }, 
     "help": {
