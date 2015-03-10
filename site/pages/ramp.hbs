@@ -110,7 +110,7 @@
                                     <span class="wb-inv">{{t "mapExport.loading"}}</span>
                                 </div>
                                 <div class="map-export-image">
-                                    <img src="" alt="">
+                                    <img src="" crossorigin="anonymous" alt="">
                                 </div>
                             </div>
                             <div class="map-export-controls">
@@ -120,16 +120,31 @@
                                 </button>
                                 <div class="">
                                     <!--<div class="checkbox">
-                            <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
-                        </div>-->
+                                        <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
+                                    </div>-->
 
                                     <div class="download-buttons mrgn-tp-lg">
                                         <!--<button class="btn btn-primary" type="button">
-                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
-                            </button>-->
-                                        <a class="btn btn-primary" type="button" href="" target="_blank" download="">
                                             <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                                        </button>-->
+
+                                        <div class="btn-group open download-dropdown">
+                                            <a class="btn btn-primary download-default" href="#" target="_blank" download=""><i class="fa fa-download fa-fw on-left"></i>{{t "mapExport.downloadImage"}}</a>
+                                            <button class="btn btn-primary toggle" data-toggle="dropdown">
+                                                <span class="fa fa-caret-down"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="btn btn-none btn-download download-png" target="_blank" href="#" download=""><span class="fa fa-pencil fa-fw on-left"></span>{{t "mapExport.downloadPNG"}}</a></li>
+                                                <li><a class="btn btn-none btn-download download-jpg" target="_blank" href="#" download=""><span class="fa fa-trash-o fa-fw on-left"></span>{{t "mapExport.downloadJPG"}}</a></li>
+                                            </ul>
+                                        </div>
+
+                                        <!--<a class="btn download-png btn-primary" type="button" href="" target="_blank" download="">
+                                            <i class="fa fa-download"></i><span class="on-right">PNG {{t "mapExport.downloadImage"}}</span>
                                         </a>
+                                        <a class="btn download-jpg btn-primary" type="button" href="" target="_blank" download="">
+                                            <i class="fa fa-download"></i><span class="on-right">JPG {{t "mapExport.downloadImage"}}</span>
+                                        </a>-->
                                         <!--<button class="btn btn-primary" type="button">
                                 <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
                             </button>-->
