@@ -264,8 +264,9 @@
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche", 
         "notices": {
             "error": "Erreur", 
-            "offScale": "Aucune donnée n'est visible à ce niveau du Zoom", 
-            "update": "Mise à jour"
+            "offScale": "Aucune donnée n'est visible à ce niveau du Zoom",
+            "update": "Mise à jour",
+            "user": "[fr] User-added Dataset"
         }, 
         "settings": "Paramètres", 
         "settingsLayerSettings": "Paramètres de la couche", 
