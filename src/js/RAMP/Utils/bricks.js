@@ -1293,7 +1293,7 @@ define([
             /**
              * Indicates if the user entered text into the input field or it was entered programmatically
              *
-             * @property userSelected
+             * @property userEntered
              * @private
              * @type {Boolean}
              * @default false
@@ -1419,7 +1419,7 @@ define([
             },
 
             /**
-             * Clears the Brick. This is an empty function. Bricks inheriting from this should override and provide their specific implementations.
+             * Clears the Brick by setting inputValue to "" and userEntered to false.
              *
              * @method clear
              * @return {SimpleInputBrick}           itself
@@ -1476,8 +1476,104 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+    
+        /**
+        * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
+        * To instantiate, call {{#crossLink "DropDownBrick/new:method"}}{{/crossLink}} on the DropDownBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class DropDownBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         DropDownBrick = Brick.extend({
+            /**
+             * A CSS class of the DropDownBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for DropDownBrick
+             * @type {String}
+             * @default "dropdown-brick-container"
+             */
+
+            /**
+             * A name of the default DropDownBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_dropdown_brick_template"
+             */
+            
+            /**
+             * An input field label. Invisible. Defaults to the Brick's header.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A value of the currently selected item in the dropdown.
+             *
+             * @property dropDownValue
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * A text string of the currently selected item in the dropdown.
+             *
+             * @property dropDownText
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * Indicates if the user selected the option in the dropdown or it was selected programmatically.
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * Initializes the DropDownBrick by generating a specified template and setting defaults.
+             * This Brick fires a CHANGE event on every change inside the dropdown.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @retun DropDownBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -1512,14 +1608,35 @@ define([
                 }
             },
 
+            /**
+             * Selects the option whose value is provided in selectedOption param;
+             * 
+             * @method selectOption
+             * @param {String} selectedOption    string value to be selected in the dropdown
+             * @param {Boolea} userSelected boolean value indicating if the user is the source of the string value
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             selectOption: function (selectedOption, userSelected) {
                 var option = this.selectNode.find("option[value='" + selectedOption + "']");
 
                 this.selectNode.val(selectedOption);
                 this.setDropDownValue(option, userSelected);
+
+                return this;
             },
 
-            // internal should not be called from outside
+            /**
+             * Stores selected option's text and value and notifies any listeners of the change.
+             * Internal should not be called from outside.
+             * 
+             * @method setDropDownValue
+             * @private
+             * @param {String} option    string value to be selected in the dropdown
+             * @param {Boolea} userSelected boolean value indicating if the user is the source of the string value
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             setDropDownValue: function (option, userSelected) {
                 var value = option.val(),
                     text = option.find("option:selected").text();
@@ -1529,16 +1646,43 @@ define([
                 this.dropDownText = text;
 
                 this.notify(this.event.CHANGE, this.getData());
+
+                return this;
             },
 
+            /**
+             * Populates the drop down with provided set of options optionally replacing or appending them ot the existing options.
+             * 
+             * @method setDropDownOptions
+             * @param {Array} options an array of options(Object) in the form of { value: [value], text: [text] }
+             * @param {Boolean} [append]  Indicates wether to append to or replace the existing options
+             * @return {DropDownBrick}           itself
+             */
             setDropDownOptions: function (options, append) {
                 UtilMisc.setSelectOptions(this.selectNode, options, append);
+
+                return this;
             },
 
-            isUserEntered: function () {
+            /**
+             * Checks if the option was selected by the user or not.
+             * 
+             * @method isUserSelected
+             * @return {Boolean} true if the option was selected by the user; false, otherwise
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
+            isUserSelected: function () {
                 return this.userSelected;
             },
 
+            /**
+             * Clears the DropDownBrick by setting the selected option to "" and userSelected to false.
+             *
+             * @method clear
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.selectOption("");
 
@@ -1547,10 +1691,31 @@ define([
                 return this;
             },
 
+            /**
+             * Checks if the DropDownBrick is valid. It's considered valid if the selected option's value is not "".
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
-                return this.inputValue !== "";
+                return this.dropDownValue !== "";
             },
 
+            /**
+             * Sets DropDownBrick's data.
+             * data object may contain:
+             *  - {Object} options an array of options to be added to the dropdown
+             *  - {Boolean} append indicates whether to append or replace the exiting options
+             *  - {String} selectedOption string value of the option that should be preselected (either old or newly added option)
+             *  - {Boolean} userSelected boolean value indicating if the user is the source of the string value
+             *
+             * By default, after appending/replacing options, the first option will be selected unless specified otherwise.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
 
                 if (data.options) {
@@ -1568,6 +1733,14 @@ define([
                 return this;
             },
 
+            /**
+             * Returns DropDownBrick's data.
+             * 
+             * @method getData
+             * @for DropDownBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = {
                     dropDownValue: this.dropDownValue,
@@ -1757,6 +1930,7 @@ define([
              *
              * @for Bricks
              * @property Brick
+             * @static
              * @type Brick
              */
             Brick: Brick,
@@ -1765,6 +1939,7 @@ define([
              * The MultiBrick prototype. Used as a container for multiple independent Bricks if they are required to be displayed side by side.
              *
              * @property MultiBrick
+             * @static
              * @type MultiBrick
              */
             MultiBrick: MultiBrick,
@@ -1773,6 +1948,7 @@ define([
              * The ButtonBrick prototype. A simple Brick with a button template.
              *
              * @property ButtonBrick
+             * @static
              * @type ButtonBrick
              */
             ButtonBrick: ButtonBrick,
@@ -1780,6 +1956,7 @@ define([
              * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
              *
              * @property OkCancelButtonBrick
+             * @static
              * @type OkCancelButtonBrick
              */
             OkCancelButtonBrick: OkCancelButtonBrick,
@@ -1788,6 +1965,7 @@ define([
              * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
              *
              * @property ChoiceBrick
+             * @static
              * @type ChoiceBrick
              */
             ChoiceBrick: ChoiceBrick,
@@ -1796,6 +1974,7 @@ define([
              * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
              *
              * @property DropDownBrick
+             * @static
              * @type DropDownBrick
              */
             DropDownBrick: DropDownBrick,
@@ -1803,6 +1982,7 @@ define([
              * The ColorPickerBrick prototype. Provides a control to select a color.
              *
              * @property ColorPickerBrick
+             * @static
              * @type ColorPickerBrick
              */
             ColorPickerBrick: ColorPickerBrick,
@@ -1810,6 +1990,7 @@ define([
              * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
              *
              * @property SimpleInputBrick
+             * @static
              * @type SimpleInputBrick
              */
             SimpleInputBrick: SimpleInputBrick,
@@ -1817,6 +1998,7 @@ define([
              * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
              *
              * @property FileInputBrick
+             * @static
              * @type FileInputBrick
              */
             FileInputBrick: FileInputBrick
