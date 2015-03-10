@@ -31,7 +31,11 @@ define([
 "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map"],
+"ramp/eventManager", "ramp/map",
+
+/* UTIL */
+
+"utils/util", "utils/popupManager"],
 
     function (
     /* Dojo */
@@ -41,7 +45,10 @@ define([
     PrintTemplate, PrintParameters, PrintTask,
 
     /* RAMP */
-    EventManager, RampMap) {
+    EventManager, RampMap,
+
+    /* UTIL */
+    MiscUtil, PopupManager) {
         "use strict";
 
         var ui = (function () {
@@ -50,11 +57,24 @@ define([
                 mapExportImg,
                 mapExportSpinner,
                 mapExportNotice,
-                downloadButton,
+
+                mapExportCloseButton,
+
+                downloadDropdownToggle,
+                downloadDropdown,
+
+                downloadDropdownMenu,
+
+                downloadDefault,
+                downloadButtonJPG,
+                downloadButtonPNG,
+
+                downloadPopup,
 
                 promise,
 
                 jWindow,
+                cssButtonPressedClass = "button-pressed",
                 transitionDuration = 0.4;
 
             /**
@@ -77,7 +97,18 @@ define([
                 promise = result.promise;
 
                 tl
-                    .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
+                    .call(function () {
+                        downloadDropdown
+                            .find(".btn")
+                            .attr({ disabled: true })
+                            .end("a.btn-download")
+                            .find(".btn")
+                            .attr({ href: "" })
+                        ;
+
+                        //downloadButtonPNG.attr({ disabled: true, href: "" });
+                        //downloadButtonJPG.attr({ disabled: true, href: "" });
+                    })
                     .set(mapExportNotice, { display: "none" }) // hide error notice
                     .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
@@ -87,12 +118,36 @@ define([
 
                 promise.then(
                     function (event) {
+
+                        mapExportImg.on("load", function (event) {
+                            var canvas = MiscUtil.convertImageToCanvas(event.target),
+                                dataPNG = "",
+                                dataJPG = "";
+
+                            console.log(canvas);
+
+                            dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
+                            dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
+
+                            downloadDropdown
+                                .find(".btn")
+                                .attr({ disabled: false })
+                            ;
+
+                            downloadButtonJPG.attr({ disabled: false, href: dataJPG });
+                            downloadButtonPNG.attr({ disabled: false, href: dataPNG });
+                            downloadDefault.attr({ disabled: false, href: dataPNG });
+
+                            mapExportImg.off("load");
+                        });
+
                         tl
-                            .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); }) // enabled download button
+                            //.call(function () { downloadButtonPNG.attr({ disabled: false, href: event.result.url }); }) // enabled download button
                             .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
-                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }) // animate popup; 2 needed to account for the border
+                            // animate popup; 2 needed to account for the border
+                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" })
                         ;
 
                         console.log(event);
@@ -124,11 +179,46 @@ define([
                     mapExportImg = $(".map-export-image > img");
                     mapExportSpinner = mapExportStretcher.find(".sk-spinner");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
-                    downloadButton = $(".map-export-controls .download-buttons > .btn");
+
+                    downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
+                    downloadDropdownMenu = $(".map-export-controls .download-buttons .dropdown-menu");
+
+                    downloadDropdownToggle = downloadDropdown.find(".toggle");
+                    downloadButtonPNG = downloadDropdown.find(".btn.download-png");
+                    downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
+                    downloadDefault = downloadDropdown.find(".btn.download-default");
+
+                    mapExportCloseButton = $("#map-export-modal .button-close");
 
                     mapExportToggle
                         .attr("disabled", false)
                         .on('click', generateExportImage);
+
+                    downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, "click",
+                        function (d) {
+                            downloadDropdownMenu.show();
+                            d.resolve();
+                        },
+                        {
+                            activeClass: cssButtonPressedClass,
+                            target: downloadDropdownMenu,
+                            closeHandler: function (d) {
+
+                                downloadDropdownMenu.hide();
+                                d.resolve();
+                            },
+                            timeout: 500
+                        }
+                    );
+
+                    mapExportCloseButton.on("click", function () {
+                        downloadDropdown
+                            .find(".btn")
+                            .attr({ disabled: true, href: "" })
+                        ;
+
+                        mapExportImg.attr("src", "");
+                    });
                 }
             };
         }());
@@ -167,7 +257,7 @@ define([
                     height: mapDom.clientHeight,
                     dpi: 96
                 };
-                template.format = "JPG";
+                template.format = "PNG32";
                 template.layout = "MAP_ONLY";
                 template.showAttribution = false;
 
