@@ -713,6 +713,7 @@ define([
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
                 fullScreenToggle = $("#fullScreenToggle"),
+                wmsToggle = $("#uglyGetFiToggle"),
                 fullScreenPopup,
 
                 mapToolbar = $("#map-toolbar"),
@@ -1027,6 +1028,20 @@ define([
                     topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
                         panelPopup.toggle(null, event.visible);
                     });
+
+                    popupManager.registerPopup(wmsToggle, "click",
+                        function (d) {
+                            if (RAMP.state.ui.wmsQuery) {
+                                wmsToggle.addClass('button-pressed');
+                                wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryEnable'));
+                            } else {
+                                wmsToggle.removeClass('button-pressed');
+                                wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryDisable'));
+                            }
+                            RAMP.state.ui.wmsQuery = !RAMP.state.ui.wmsQuery;
+                            d.resolve();
+                        }
+                    );
 
                     // set listener to the full-screen toggle
                     fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",

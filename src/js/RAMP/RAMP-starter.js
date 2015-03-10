@@ -65,7 +65,8 @@ RAMP = {
     state: {
         ui: {
             sidePanelOpened: true,
-            fullscreen: false
+            fullscreen: false,
+            wmsQuery: true
         }
     },
 

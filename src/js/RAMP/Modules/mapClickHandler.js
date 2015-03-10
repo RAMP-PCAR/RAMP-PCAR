@@ -44,7 +44,8 @@ define([
 
             /**
             * This function should be called after the map has been created.  It will subscribe to the Map.CLICK event
-            * and trigger GUI.SUBPANEL_OPEN events for displaying the response data.
+            * and trigger GUI.SUBPANEL_OPEN events for displaying the response data.  Tests RAMP.state.ui.wmsQuery to
+            * determine if it should process the query or not.
             *
             * @method registerWMSClick
             * @param  {Object} map an EsriMap instance
@@ -54,6 +55,10 @@ define([
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
                     var visibleLayers = [],
                         rqPromises = [];
+
+                    if (!RAMP.state.ui.wmsQuery) {
+                        return;
+                    }
 
                     // filter only currently visible layers
                     visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
