@@ -473,6 +473,10 @@
                     color: #fff;
                 }
 
+                .fa-circle {
+                    color: #fff;
+                }
+
                 &.button-pressed {
                     .fa-plus-square-o {
                         display: none;
@@ -598,16 +602,23 @@
 
         .layer-notices {
             position: absolute;
-            left: 9px;
-            top: -11px;
+            left: 12px;
+            top: -10px;
 
             .fa {
-                line-height: 24px;
+                line-height: 20px;
             }
 
             .layer-notice {
-                width: 24px;
-                height: 24px;
+                width: 16px;
+                height: 20px;
+                left: -8px;
+
+                &:first-child {
+                    width: 18px;
+                    height: 20px;
+                    left: 0;
+                }
             }
 
             .scale {
@@ -636,6 +647,17 @@
                 }
 
                 .fa-refresh {
+                    //color: @info-color;
+                }
+            }
+
+            .user {
+                .fa-circle {
+                    color: #FFF;
+                }
+
+                .fa-user {
+                    font-size: 13px;
                     //color: @info-color;
                 }
             }
