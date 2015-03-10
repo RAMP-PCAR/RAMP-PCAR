@@ -732,6 +732,55 @@ define([
             LayerItem.state.UPDATING
         ];
 
+
+        /**
+        * Modifies a given state matrix by adding specified partKey to the specified partType collection.
+        *
+        * @param {Object} stateMatrix matrix to modify
+        * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+        * @param {String} partKey part key to be inserted into the collection
+        * @param {Boolean} prepend indicates if the part key should be prepended or appended
+        * @method addStateMatrixPart
+        * @static
+        * @private
+        */
+        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, prepend) {
+            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                if (prepend) {
+                    data[partType].unshift(partKey);
+                } else {
+                    data[partType].push(partKey);
+                }
+            });
+        };
+
+        /**
+         * Modifies a given state matrix by removing specified partKey to the specified partType collection.
+         *
+         * @param {Object} stateMatrix matrix to modify
+         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+         * @param {String} partKey part key to be removed into the collection
+         * @method addStateMatrixPart
+         * @static
+         * @private
+         */
+        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey) {
+            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                UtilArray.remove(data[partType], partKey);
+            });
+        };
+
+        /**
+         * Get a deep copy of the default stateMatrix.
+         * 
+         * @method getStateMatrixTemplate
+         * @static
+         * @return {Object} a deep copy of the default stateMatrix
+         */
+        LayerItem.getStateMatrixTemplate = function () {
+            return lang.clone(LayerItem.stateMatrix);
+        }
+
         // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
         ALL_STATES_CLASS =
             Object

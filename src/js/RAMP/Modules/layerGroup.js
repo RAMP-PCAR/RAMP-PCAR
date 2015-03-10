@@ -237,36 +237,6 @@ define([
             },
 
             /**
-             * Modifies the state matrix by adding specified partKey to the specified partType collection
-             *
-             * @param {Object} stateMatrix matrix to modify
-             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-             * @param {String} partKey part key to be inserted into the collection
-             * @method _addStateMatrixPart
-             * @private
-             */
-            _addStateMatrixPart: function (stateMatrix, partType, partKey) {
-                UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                    data[partType].push(partKey);
-                });
-            },
-
-            /**
-             * Modifies the state matrix by removing specified partKey to the specified partType collection
-             *
-             * @param {Object} stateMatrix matrix to modify
-             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-             * @param {String} partKey part key to be removed into the collection
-             * @method _addStateMatrixPart
-             * @private
-             */
-            _removeStateMatrixPart: function (stateMatrix, partType, partKey) {
-                UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                    UtilArray.remove(data[partType], partKey);
-                });
-            },
-
-            /**
              * Constructs and adds a LayerItem to the LayerGroup.
              *
              * @param {String} layerId an id of the LayerItem to set the state on
