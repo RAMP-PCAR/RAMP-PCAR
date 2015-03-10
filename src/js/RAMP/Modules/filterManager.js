@@ -476,8 +476,19 @@ define([
                     // open renderers sections when the renderer button (layer icon) is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
+                            var newTooltip = this.isOpen() ? i18n.t('filterManager.showLegend') : i18n.t('filterManager.hideLegend'),
+                                that = this;
+
                             this.target.slideToggle("fast", function () {
                                 adjustPaneWidth();
+
+                                that.handle
+                                    .prop("title", newTooltip)
+                                    .find("> .wb-invisible")
+                                    .text(newTooltip);
+
+                                Theme.tooltipster(that.handle.parent(), null, "update");
+
                                 d.resolve();
                             });
                         },
