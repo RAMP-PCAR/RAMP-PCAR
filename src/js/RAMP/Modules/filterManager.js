@@ -913,9 +913,10 @@ define([
             * @param {String} initState optional. the state to initialize in.  Default value is LOADING
             * @method addLayer
             */
-            addLayer: function (layerType, layerConfig, initState) {
+            addLayer: function (layerType, layerConfig, initState, userAdded) {
                 var layerGroup = layerGroups[layerType],
-                    newLayer;
+                    newLayer,
+                    options;
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
@@ -929,7 +930,15 @@ define([
                     ui.addLayerGroup(layerGroup.node);
                 }
 
-                newLayer = layerGroup.addLayerItem(layerConfig);
+                // layer is user-added, add an extra notice to all states
+                if (userAdded) {
+                    options = {
+                        stateMatrix: LayerItem.getStateMatrixTemplate()
+                    };
+                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", "user", true);
+                }
+
+                newLayer = layerGroup.addLayerItem(layerConfig, options);
 
                 if (!UtilMisc.isUndefined(initState)) {
                     newLayer.setState(initState, null, true);
