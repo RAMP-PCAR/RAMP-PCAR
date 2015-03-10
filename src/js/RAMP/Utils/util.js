@@ -1294,6 +1294,25 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             */
             rgbToHex: function (r, g, b) {
                 return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            },
+
+            // Converts image to canvas; returns new canvas element
+            convertImageToCanvas: function (image) {
+                var canvas = document.createElement("canvas");
+                canvas.width = image.width;
+                canvas.height = image.height;
+                canvas.getContext("2d").drawImage(image, 0, 0);
+
+                return canvas;
+            },
+
+            // Converts canvas to an image
+            convertCanvasToDataURL: function (canvas, type) {
+                var data;
+                type = type || "image/png";
+
+                data = canvas.toDataURL(type);
+                return data;
             }
         };
     });
