@@ -27,6 +27,7 @@
             "headerGeojson": "GeoJSON error",
             "headerShapefile": "Shapefile error",
             "headerWMS": "Web Map Service error",
+            "ie9FileAPI": "Your browser does not support local file access",
             "messageCSVBroken": "Unable to create layer from provided CSV.",
             "messageCSVInvalid": "Malformed CSV; field names cannot be retrieved.",
             "messageCSVShort": "Data source requires at least 2 rows for display.",
@@ -47,7 +48,7 @@
         "fileType": "File Type",
         "geojson": "GeoJSON",
         "help": {
-            "csvColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "csvColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "csvDatasetName": "Dataset name that will appear in the layer selector",
             "csvLatitude": "Select a latitude column (in decimal degrees)",
             "csvLongitude": "Select a longitude column (in decimal degrees)",
@@ -56,12 +57,12 @@
             "featurePrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "fileOrURL": "Select a file on your computer, or specify a URL to a network file",
             "fileOrURLType": "Select the correct File Type (if we didn't guessed correctly)",
-            "geojsonColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "geojsonColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "geojsonDatasetName": "Dataset name that will appear in the layer selector",
             "geojsonPrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "serviceType": "Select the correct Map Service Type (if we didn't guessed correctly)",
             "serviceURL": "Enter the Map Service endpoint URL for an ESRI Feature Layer or OGC Web Map Service.",
-            "shapefileColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "shapefileColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "shapefileDatasetName": "Dataset name that will appear in the layer selector",
             "shapefilePrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "wmsLayerName": "Select a WMS layer to add."
@@ -495,17 +496,17 @@
     },
     "mapExport": {
         "downloadImage": "Download Image",
-		"downloadJPG": "JPG",
+        "downloadJPG": "JPG",
         "downloadJPGdesc": "Download as JPG",
         "downloadPNG": "PNG",
         "downloadPNGdesc": "Download as PNG",
         "error": {
             "generalMessage": "Image cannot be generated. Please try again later.",
-			"generalTitle": "Error"            
+            "generalTitle": "Error"            
         },
-		"includeLegend": "Include Legend",
+        "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
-		"title": "Map Export"
+        "title": "Map Export"
     },
     "page": {
         "footer": {
@@ -570,13 +571,13 @@
         "title": "Reusable Accessible Mapping Platform (RAMP)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "Circle Point",
-		    "outlinedPoly": "Outlined Polygon",
-		    "solidLine" : "Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "Circle Point",
+            "outlinedPoly": "Outlined Polygon",
+            "solidLine" : "Solid Line"	
+        }
     },
-	"serverError": {
+    "serverError": {
         "basemapNotAvailable": {
             "detail": "Basemap service not available; map failed to initialize properly.",
             "title": "Error: Basemap service not available"
