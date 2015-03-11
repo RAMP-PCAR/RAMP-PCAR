@@ -740,11 +740,11 @@ define([
 
                         // set tooltips on the collapsed toolbar
                         mapToolbar
-                            .find(".map-toolbar-item-button")
+                            .find(".map-toolbar-item-button:visible")
                             .map(function (i, node) {
                                 node = $(node);
                                 node
-                                    .addClass("_tooltip")
+                                    .addClass("_tooltip tooltip-temp")
                                     .attr(
                                         "title",
                                         node.find("span").text()
@@ -762,11 +762,15 @@ define([
                         adjustHeight();
                         layoutChange();
 
-                        // remove tooltips from the restored toolbar
-                        Theme.tooltipster(mapToolbar, null, "destroy");
+                        // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
+                        Theme.tooltipster(
+                            mapToolbar
+                                .find(".map-toolbar-item-button.tooltip-temp")
+                                .parent(),
+                            null, "destroy");                        
 
                         mapToolbar
-                            .find(".map-toolbar-item-button")
+                            .find(".map-toolbar-item-button.tooltip-temp")
                             .removeClass("_tooltip")
                             .removeAttr("title");
 
