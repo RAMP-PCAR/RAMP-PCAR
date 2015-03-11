@@ -302,7 +302,9 @@
             "mapExport": "Map Export",
             "open": "Open",
             "wmsQueryDisable": "Disable Queries",
-            "wmsQueryEnable": "Enable Queries"
+            "wmsQueryDisableTooltip": "Disable queries on all WMS layers",
+            "wmsQueryEnable": "Enable Queries",
+            "wmsQueryEnableTooltip": "Enable queries on all WMS layers"
         }
     }, 
     "help": {
@@ -475,17 +477,17 @@
     },
     "mapExport": {
         "downloadImage": "Download Image",
-		"downloadJPG": "JPG",
+        "downloadJPG": "JPG",
         "downloadJPGdesc": "Download as JPG",
         "downloadPNG": "PNG",
         "downloadPNGdesc": "Download as PNG",
         "error": {
             "generalMessage": "Image cannot be generated. Please try again later.",
-			"generalTitle": "Error"            
+            "generalTitle": "Error"            
         },
-		"includeLegend": "Include Legend",
+        "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
-		"title": "Map Export"
+        "title": "Map Export"
     },
     "page": {
         "footer": {
@@ -550,13 +552,13 @@
         "title": "Reusable Accessible Mapping Platform (RAMP)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "Circle Point",
-		    "outlinedPoly": "Outlined Polygon",
-		    "solidLine" : "Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "Circle Point",
+            "outlinedPoly": "Outlined Polygon",
+            "solidLine" : "Solid Line"	
+        }
     },
-	"serverError": {
+    "serverError": {
         "basemapNotAvailable": {
             "detail": "Basemap service not available; map failed to initialize properly.",
             "title": "Error: Basemap service not available"
