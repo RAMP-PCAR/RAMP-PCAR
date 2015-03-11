@@ -1369,9 +1369,15 @@ module.exports = (grunt) ->
             files:
                 src: ['tarball/*.*']
 
+        changelog:
+            options:
+                issueLink : (issueId) ->
+                    return '['+ issueId + '](http://tfs.int.ec.gc.ca:8080/tfs/DC/RAMP/_workitems/edit/' + issueId + ')'
+
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
+    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-contrib-clean'
     @loadNpmTasks 'grunt-contrib-compress'
     @loadNpmTasks 'grunt-contrib-concat'
@@ -1385,14 +1391,14 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-uglify'
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
+    @loadNpmTasks 'grunt-conventional-changelog'
+    @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-gh-pages'
     @loadNpmTasks 'grunt-github-releaser'
-    @loadNpmTasks 'grunt-docco'
-    @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
-    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
+    @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-newer'
     @loadNpmTasks 'grunt-notify'
     @loadNpmTasks 'grunt-replace'
