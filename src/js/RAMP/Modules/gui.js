@@ -691,11 +691,14 @@ define([
             addLayerSectionContainer = $("#addLayer-section-container"),
             //AddLayerSection = $("#addLayer-section"),
 
+            wmsToggle = $("#uglyGetFiToggle"),
+
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
 
             helpPanelPopup,
             addLayerPanelPopup,
+            wmsQueryPopup,
 
             transitionDuration = 0.5,
 
@@ -713,7 +716,6 @@ define([
                 mapDiv = $("#map-div"),
                 mapContent = $("#mapContent"),
                 fullScreenToggle = $("#fullScreenToggle"),
-                wmsToggle = $("#uglyGetFiToggle"),
                 fullScreenPopup,
 
                 mapToolbar = $("#map-toolbar"),
@@ -1029,20 +1031,6 @@ define([
                         panelPopup.toggle(null, event.visible);
                     });
 
-                    popupManager.registerPopup(wmsToggle, "click",
-                        function (d) {
-                            if (RAMP.state.ui.wmsQuery) {
-                                wmsToggle.addClass('button-pressed');
-                                wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryEnable'));
-                            } else {
-                                wmsToggle.removeClass('button-pressed');
-                                wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryDisable'));
-                            }
-                            RAMP.state.ui.wmsQuery = !RAMP.state.ui.wmsQuery;
-                            d.resolve();
-                        }
-                    );
-
                     // set listener to the full-screen toggle
                     fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
                         function (d) {
@@ -1303,6 +1291,26 @@ define([
             }
         }
 
+        /**
+         * A helper method that fires WMS_QUERY_CHANGE event.
+         * 
+         * @method wmsQueryPopupHelper
+         * @param {Object} d deferred to be resolved
+         */
+        function wmsQueryPopupHelper(d) {
+            topic.publish(EventManager.FilterManager.WMS_QUERY_CHANGE, { allowed: RAMP.state.ui.wmsQuery });
+
+            /*jshint validthis: true */
+            // I think there is no need to change the label of the button as we are already changing its visual state
+            // this is also consistent with how fullscreen and other toolbar buttons work
+            /*this.handle
+                .children('span')
+                .html(i18n.t('gui.actions.wmsQueryEnable'))
+            ;*/
+
+            d.resolve();
+        }
+
         return {
             /**
             * Call load to initialize the GUI module.
@@ -1353,6 +1361,27 @@ define([
                         resetFocusOnClose: true
                     }
                 );
+
+                // WMS query Start
+                wmsQueryPopup = popupManager.registerPopup(wmsToggle, "click",
+                    function (d) {
+                        RAMP.state.ui.wmsQuery = false;
+                        wmsQueryPopupHelper.call(this, d);
+                    },
+                    {
+                        activeClass: cssButtonPressedClass,
+                        closeHandler: function (d) {
+                            RAMP.state.ui.wmsQuery = true;
+                            wmsQueryPopupHelper.call(this, d);
+                        }
+                    }
+                );
+
+                // if the query is disabled (from bookmarklink) toggle the button
+                if (!RAMP.state.ui.wmsQuery) {
+                    wmsQueryPopup.open();
+                }
+                // WMS query end
 
                 //Start AddLayer popup controller
                 addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",
