@@ -577,6 +577,12 @@ define([
                     }
                     console.log('csv parsed');
                     console.log(data);
+                    // csv2geojson will not include the lat and long in the feature
+                    dojoArray.forEach(data.features, function (feature) {
+                        // add new property Long and Lat before layer is generated
+                        feature.properties[csvOpts.lonfield] = feature.geometry.coordinates[0];
+                        feature.properties[csvOpts.latfield] = feature.geometry.coordinates[1];
+                    });
                     jsonLayer = makeGeoJsonLayer(data, opts);
                     def.resolve(jsonLayer);
                 });
