@@ -936,6 +936,7 @@ define([
                         stateMatrix: LayerItem.getStateMatrixTemplate()
                     };
                     LayerItem.addStateMatrixPart(options.stateMatrix, "notices", "user", true);
+                    LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
                 }
 
                 newLayer = layerGroup.addLayerItem(layerConfig, options);
