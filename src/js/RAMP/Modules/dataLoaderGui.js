@@ -503,7 +503,7 @@ define([
                         id: "fileTypeStep",
                         content: [
                             {
-                                id: "fileOrFileULR",
+                                id: "fileOrFileURL",
                                 type: Bricks.FileInputBrick,
                                 config: {
                                     //template: "template_name", //optional, has a default
@@ -560,12 +560,12 @@ define([
                                         {
                                             id: Bricks.OkCancelButtonBrick.okButtonId,
                                             type: "all",
-                                            check: ["fileType", "fileOrFileULR"]
+                                            check: ["fileType", "fileOrFileURL"]
                                         },
                                         {
                                             id: Bricks.OkCancelButtonBrick.cancelButtonId,
                                             type: "any",
-                                            check: ["fileType", "fileOrFileULR"]
+                                            check: ["fileType", "fileOrFileURL"]
                                         }
                                     ]
                                 },
@@ -584,9 +584,9 @@ define([
                                                 handle = delayLoadingState(step, 100),
                                                 bricksData = step.getData().bricksData,
                                                 fileTypeValue = bricksData.fileType.selectedChoice,
-                                                fileValue = bricksData.fileOrFileULR.fileValue,
-                                                fileUrlValue = bricksData.fileOrFileULR.inputValue,
-                                                fileName = bricksData.fileOrFileULR.fileName;
+                                                fileValue = bricksData.fileOrFileURL.fileValue,
+                                                fileUrlValue = bricksData.fileOrFileURL.inputValue,
+                                                fileName = bricksData.fileOrFileURL.fileName;
 
                                             promise = DataLoader.loadDataSet({
                                                 url: fileValue ? null : fileUrlValue,
@@ -770,7 +770,7 @@ define([
                                                 //error loading file
                                                 console.error(event);
                                                 handleFailure(step, handle, {
-                                                    fileOrFileULR:
+                                                    fileOrFileURL:
                                                         lang.mixin(choiceTreeErrors.fileError, {
                                                             message: i18n.t("addDataset.error.messageFileConnect")
                                                         })
@@ -1089,6 +1089,22 @@ define([
 
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
+
+            // It's IE9. 
+            if (!window.FileReader) {
+                var fileOrFileURL = stepLookup.fileTypeStep.contentBricks.fileOrFileURL;
+
+                console.warn("You have IE9");
+
+                fileOrFileURL.fileNode.remove();
+                fileOrFileURL.filePseudoNode.attr("disabled", true);
+                fileOrFileURL.browseFilesContainer
+                    .attr({
+                        title: i18n.t("addDataset.error.ie9FileAPI")
+                    })
+                    .addClass("_tooltip")
+                ;
+            }
 
             Theme.tooltipster(addDatasetContainer);
         }
