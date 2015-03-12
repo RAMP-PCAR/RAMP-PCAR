@@ -381,7 +381,7 @@
             "h1": "Usage", 
             "header": "Full Screen", 
             "p1": "Full Screen is used to collapse the departmental headers and footers to provide larger screen space for mapping.", 
-            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Show Headers link to restore to default view."
+            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Full Screen link again to restore to default view."
         }, 
         "s6": {
             "h1": "Usage", 
