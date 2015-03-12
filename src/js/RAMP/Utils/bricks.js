@@ -889,7 +889,7 @@ define([
                     }
                 );
 
-                this.selectNode.on("input", function () {
+                this.selectNode.on("click", function () {
                     var option = that.selectNode.find("option:selected");
 
                     that.setDropDownValue(option, true);
