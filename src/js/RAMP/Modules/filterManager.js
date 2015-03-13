@@ -463,8 +463,19 @@ define([
                     // open renderers sections when the renderer button (layer icon) is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
+                            var newTooltip = this.isOpen() ? i18n.t('filterManager.showLegend') : i18n.t('filterManager.hideLegend'),
+                                that = this;
+
                             this.target.slideToggle("fast", function () {
                                 adjustPaneWidth();
+
+                                that.handle
+                                    .prop("title", newTooltip)
+                                    .find("> .wb-invisible")
+                                    .text(newTooltip);
+
+                                Theme.tooltipster(that.handle.parent(), null, "update");
+
                                 d.resolve();
                             });
                         },
@@ -896,9 +907,10 @@ define([
             * @param {String} initState optional. the state to initialize in.  Default value is LOADING
             * @method addLayer
             */
-            addLayer: function (layerType, layerConfig, initState) {
+            addLayer: function (layerType, layerConfig, initState, userAdded) {
                 var layerGroup = layerGroups[layerType],
-                    newLayer;
+                    newLayer,
+                    options;
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
@@ -912,7 +924,16 @@ define([
                     ui.addLayerGroup(layerGroup.node);
                 }
 
-                newLayer = layerGroup.addLayerItem(layerConfig);
+                // layer is user-added, add an extra notice to all states
+                if (userAdded) {
+                    options = {
+                        stateMatrix: LayerItem.getStateMatrixTemplate()
+                    };
+                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, true);
+                    LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
+                }
+
+                newLayer = layerGroup.addLayerItem(layerConfig, options);
 
                 if (!UtilMisc.isUndefined(initState)) {
                     newLayer.setState(initState, null, true);
