@@ -7,13 +7,15 @@
 */
 
 /**
-* Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic changing of the layer item state. 
+* Creates a step in the choice tree.
 * 
 * ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * {{#crossLink "TmplUtil"}}{{/crossLink}}  
 * {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "Bricks"}}{{/crossLink}}    
 *  
 * 
 * ####Uses RAMP Templates:
@@ -73,6 +75,15 @@ define([
                          * @default null
                          */
                         id: null,
+
+                        /**
+                         * Indicates the level of the step, or how far down the tree this step appears. 
+                         * 
+                         * @property level
+                         * @type Number
+                         * @default 0
+                         * 
+                         */
                         level: 0,
 
                         /**
@@ -84,26 +95,152 @@ define([
                          */
                         node: null,
 
+                        /**
+                         * An array of Brick configs and other related properies.
+                         * 
+                         * @property content
+                         * @type {Array}
+                         * @default null
+                         * @private
+                         * @example
+                         *     [{
+                         *        id: "sourceType",
+                         *        type: Bricks.ChoiceBrick,
+                         *        config: {
+                         *            header: i18n.t("addDataset.dataSource"),
+                         *            instructions: i18n.t("addDataset.help.dataSource"),
+                         *            choices: [
+                         *                {
+                         *                    key: "serviceTypeStep",
+                         *                    value: i18n.t("addDataset.dataSourceService")
+                         *                },
+                         *                {
+                         *                    key: "fileTypeStep",
+                         *                    value: i18n.t("addDataset.dataSourceFile")
+                         *                }
+                         *            ]
+                         *        },
+                         *        on: [
+                         *            {
+                         *                eventName: Bricks.ChoiceBrick.event.CHANGE,
+                         *                //expose: { as: "advance" },
+                         *                callback: choiceTreeCallbacks.simpleAdvance
+                         *            }
+                         *        ]
+                         *       }]
+                         * 
+                         */
                         content: null,
+
+                        /**
+                         * A collection of build Bricks that can accessed by their ids.
+                         * 
+                         * @property contentBricks
+                         * @type {Object}
+                         * @default {}
+                         */
                         contentBricks: {},
 
+                        /**
+                         * Default template used for building step items.
+                         * 
+                         * @property template
+                         * @type {String}
+                         * @default "default_step_template"
+                         */
                         template: "default_step_template",
 
+                        /**
+                         * Node of the content div.
+                         * 
+                         * @private
+                         * @property _contentNode
+                         * @default null
+                         */
                         _contentNode: null,
+                        /**
+                         * Node of the options container.
+                         * 
+                         * @private
+                         * @property _optionsContainerNode
+                         * @default null
+                         */
                         _optionsContainerNode: null,
+                        /**
+                         * Node of the options background node. It's used to change the state of the child steps - SUCCESS, ERROR, etc.
+                         * 
+                         * @private
+                         * @property _optionsBackgroundNode
+                         * @default null
+                         */
                         _optionsBackgroundNode: null,
+                        /**
+                         * Node of the options div.
+                         * 
+                         * @private
+                         * @property _optionsNode
+                         * @default null
+                         */
                         _optionsNode: null,
 
+                        /**
+                         * A collection of the child step items of this step item. Should not be accessed directly.
+                         * 
+                         * @private
+                         * @property _childSteps
+                         * @default {}
+                         */
                         _childSteps: {},
+                        /**
+                         * A step item of the currently active child of this step item.
+                         * 
+                         * @private
+                         * @property _activeChildStep
+                         * @default null
+                         */
                         _activeChildStep: null,
 
+                        /**
+                         * A step item of the parent step item if any. Used only for animating background when opening/collapsing (error) notices.
+                         * 
+                         * @private
+                         * @property _parent
+                         * @default null
+                         */
                         _parent: null,
 
+                        /**
+                         * An object containing some data. This is used like that: when the step is advanced, a data object is provided by external code; this object is then passed to whichever child is being advanced so it can be retrieved later without exterenal code having to store it somewhere.
+                         * 
+                         * @private
+                         * @property _stepData
+                         * @default null
+                         */
                         _stepData: {},
 
+                        /**
+                         * The current state of this step item.
+                         * 
+                         * @private
+                         * @property _state
+                         * @default StepItem.state.DEFAULT,
+                         */
                         _state: StepItem.state.DEFAULT,
 
+                        /**
+                         * A timeline of this step item. Used for animation
+                         * 
+                         * @private
+                         * @property _timeline
+                         */
                         _timeline: new TimelineLite({ paused: true }),
+                        /**
+                         * A default duration value for all single transitions of any elements of this step.
+                         * 
+                         * @private
+                         * @property _transitionDuration
+                         * @default 0.4
+                         */
                         _transitionDuration: 0.4
                     },
                     config
@@ -683,8 +820,30 @@ define([
 
         lang.mixin(StepItem,
             {
+                /**
+                 * Specifies the current step CSS class name.
+                 * 
+                 * @property currentStepClass
+                 * @static
+                 * @type {String}
+                 */
                 currentStepClass: "current-step",
 
+                /**
+                 * A collection of possible StepItem states and their names.
+                 * 
+                 * @propery state
+                 * @static
+                 * @type {Object}
+                 * @example
+                 *     state: {
+                 *           SUCCESS: "step-state-success",
+                 *           ERROR: "step-state-error",
+                 *           DEFAULT: "step-state-default",
+                 *           LOADING: "step-state-loading"
+                 *       }
+                 * 
+                 */
                 state: {
                     SUCCESS: "step-state-success",
                     ERROR: "step-state-error",
@@ -695,10 +854,9 @@ define([
                 /**
                  * Event names published by the StepItem
                  *
-                 * @private
                  * @property event
+                 * @static
                  * @type Object
-                 * @default null
                  * @example
                  *      {
                  *          CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
@@ -709,13 +867,22 @@ define([
                     /**
                     * Published whenever a StepItem becomes a current step. A current step has a distinct visual style.
                     *
-                    * @event CURRENT_STEP_CHANGE
+                    * @event StepItem.event.CURRENT_STEP_CHANGE
                     * @param event {Object}
                     * @param event.level {Number} Level of the StepItem that became a current step
                     * @param event.id {String} Id of the StepItem that became a current step
                     */
                     CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
 
+                    /**
+                    * Published whenever a StepItem changes its state. 
+                    * 
+                    * @event StepItem.event.CURRENT_STEP_CHANGE
+                    * @param event {Object}
+                    * @param event.level {Number} Level of the StepItem that became a current step
+                    * @param event.id {String} Id of the StepItem that became a current step
+                    * @param event.state {String} name of the state
+                    */
                     STATE_CHANGE: "stepItem/stateChange"
                 }
             }
