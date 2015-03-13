@@ -307,7 +307,11 @@
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche", 
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche", 
         "notices": {
-            "error": "Erreur", 
+            "error": {
+                "connect": "[fr] Cannot retrieve service.",
+                "draw": "[fr] Cannot display service data.", 
+                "load": "[fr] Cannot load service data."
+            },
             "offScale": "Aucune donnée n'est visible à ce niveau du Zoom",
             "update": "Mise à jour",
             "user": "[fr] User-added Dataset"
