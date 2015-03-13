@@ -467,7 +467,6 @@ module.exports = (grunt) ->
     @initConfig
 
         # Metadata.
-        pkg: grunt.file.readJSON('package.json')
         series: 'v' + grunt.file.readJSON('package.json').version.split('.').slice(0,2).join('.') + '-dist'
 
         yuidocconfig: grunt.file.readJSON('yuidoc.json')
