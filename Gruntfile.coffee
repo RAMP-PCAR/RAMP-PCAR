@@ -1,12 +1,19 @@
 fs = require("fs")
 ZSchema = require("z-schema")
 util = require('util')
+path = require('path')
 
 module.exports = (grunt) ->
     
-    require( 'jit-grunt' )( grunt, 
-        'notify_hooks': 'grunt-notify'
-    )
+    require('load-grunt-config') grunt,
+        jitGrunt: 
+            customTasksDir: path.join(process.cwd(), 'grunt/tasks')
+            staticMappings:
+                'notify_hooks': 'grunt-notify'
+        configPath: [
+            path.join(process.cwd(), 'grunt/options')
+            path.join(process.cwd(), 'grunt_overrider/options')
+        ]
     
     @registerTask(
         'default'
@@ -34,6 +41,7 @@ module.exports = (grunt) ->
             'copy:build'
             'assemble'
             'notify:page'
+            'js:prep'
             'js:build'
             'css:build'
             'notify:build'
@@ -70,8 +78,8 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        'js:build'
-        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
+        'js:prep'
+        'INTERNAL: Prepares the list of JS files for concatenation.'
         ->
             grunt.config(
                 'concat.jsLib.src'
@@ -88,22 +96,26 @@ module.exports = (grunt) ->
             )
 
             #console.log(grunt.config('concat.jsLib'))
+    )
 
-            grunt.task.run [
-                'hint'
-                'jsstyle'
-                'concat:jsLib'
-                'copy:jsCore'
-                'copy:jsPlugins'
-                'replace:jsCoreBuild'
-                'notify:js'               
-            ]        
+    @registerTask(
+        'js:build'
+        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
+        [
+            'hint'
+            'jsstyle'
+            'concat:jsLib'
+            'copy:jsCore'
+            'copy:jsPlugins'
+            'replace:jsCoreBuild'
+            'notify:js'               
+        ]        
     )
 
     @registerTask(
         'js:quietbuild'
         'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
-        ->
+        ()->
             grunt.config(
                 'concat.jsLib.src'
                 smartExpand(
@@ -133,7 +145,7 @@ module.exports = (grunt) ->
     @registerTask(
         'css:build'
         'INTERNAL: Concatenates, processes and copies all CSS to the build folder.'
-        ->
+        ()->
             grunt.config(
                 'concat.cssLib.src'
                 smartExpand(
