@@ -372,7 +372,7 @@ define([
                     }
 
                     this._notifyStateChange(StepItem.state.SUCCESS);
-                    // hide all notices when making a step successfull
+                    // hide all notices when making a step successful
                     this.displayBrickNotices();
                     targetChildStep._getOpenTimelines(tls);
                 }
@@ -701,7 +701,8 @@ define([
                  * @default null
                  * @example
                  *      {
-                 *          CURRENT_STEP_CHANGE: "stepItem/currentStepChange"
+                 *          CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
+                 *          STATE_CHANGE: "stepItem/stateChange"
                  *      }
                  */
                 event: {

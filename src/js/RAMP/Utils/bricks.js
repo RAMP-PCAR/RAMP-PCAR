@@ -74,7 +74,7 @@ define([
 
         /**
         * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the Brick prototype.
+        * To instantiate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the Brick prototype.
         * 
         * ####Imports RAMP Modules:
         * {{#crossLink "Util"}}{{/crossLink}}  
@@ -95,27 +95,28 @@ define([
         */
         Brick = Base.extend({
             /**
-             * Initializes the Brick by generating a specified template and setting defaults.
-             * 
-             * @method new
-             * @param  {String} id     specified id of the Brick
-             * @param  {Object} config a configuration object for the Brick
-             * @param  {String} [config.header] a Brick header
-             * @param  {String} [config.instructions] a configuration object for the Brick
-             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
-             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
-             * @param  {String} [config.baseTemplate] a base template name to be used
-             * @param  {String} [config.noticeTemplate] a notice tempalte name to be used
-             * 
-             * @retun Brick
-             * @chainable
-             * @for Brick
-             */
-
-            /**
              * A Brick header.
              *
              * @property header
+             * @for Brick
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A CSS class of the Brick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A name of the specific Brick template.
+             *
+             * @property template
              * @private
              * @type {String}
              * @default ""
@@ -233,12 +234,22 @@ define([
             },
 
             /**
-             * Initializes the Brick by generatin a specified template and setting defaults.
+             * Initializes the Brick by generating a specified template and setting defaults.
              * 
-             * @method initialize
+             * @method new
              * @param  {String} id     specified id of the Brick
              * @param  {Object} config a configuration object for the Brick
-             * @private
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @retun Brick
+             * @chainable
+             * 
              */
             initialize: function (id, config) {
 
@@ -283,7 +294,7 @@ define([
              * @method notify
              * @private
              * @param  {String} eventName an eventName that should be reported
-             * @param  {Ojbect} data      a payload object to be passed along with the @event
+             * @param  {Object} data      a payload object to be passed along with the @event
              * @return {Brick}           itself
              * @chainable
              */
@@ -301,7 +312,7 @@ define([
             },
 
             /**
-             * Sets a listener on the Brick for a speicifed eventName.
+             * Sets a listener on the Brick for a specified eventName.
              *
              * @method on
              * @param  {String} eventName an eventName to listen for
@@ -423,7 +434,7 @@ define([
             },
 
             /**
-             * Disables or reenables the Brick.
+             * Disables or re-enables the Brick.
              * 
              * @method disable
              * @param  {Boolean} disable true to disable; false to enable
@@ -460,8 +471,8 @@ define([
         });
 
         /**
-        * The basic Brick prototype with no special functions. A base from all other Bricks.
-        * To instanciate, call {{#crossLink "Brick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
+        * The MultiBrick prototype. Used as a container for multiple independent Bricks if they are required to be displayed side by side.
+        * To instantiate, call {{#crossLink "MultiBrick/new:method"}}{{/crossLink}} on the MultiBrick prototype.
         *
         * 
         * ####Imports RAMP Modules:
@@ -483,16 +494,67 @@ define([
         */
         MultiBrick = Brick.extend({
             /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @for MultiBrick
+             * @private
+             * @type {String}
+             * @default "multi-brick-container"
+             */
+            
+            /**
+             * A name of the default MultiBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_multi_brick_template"
+             */
+
+             /**
+             * A collection of Brick objects to be displayed side by side in the MultiBrick.
+             *
+             * @property content
+             * @private
+             * @type {Array}
+             * @default []
+             */
+            
+            /**
+             * A MultiBrick container node.
+             *
+             * @property multiContainer
+             * @private
+             * @type {Object}
+             */
+            
+            /**
+             * A dictionary of the initialized content Brick objects for easy lookup. 
+             *
+             * @property contentBricks
+             * @private
+             * @type {Object}
+             */
+
+            /**
              * Initializes the MutliBrick by generating a specified template and setting defaults.
              * 
              * @method new
              * @param  {String} id     specified id of the MultiBrick
              * @param  {Object} config a configuration object for the MultiBrick
+             * @param  {String} [config.content] a collection of bricks to be displayed in the MultiBrick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
              * @retun MultiBrick
              * @chainable
-             * @for MultiBrick
              */
-
             initialize: function (id, config) {
                 var that = this;
 
@@ -513,6 +575,7 @@ define([
                     }
                 );
 
+                // loop through the content and create Bricks and append them to the MultiBrick container
                 this.content.forEach(function (contentItem) {
                     var contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
@@ -530,6 +593,14 @@ define([
                 });
             },
 
+            /**
+             * Sets the state of the MultiBrick by setting states of the individual bricks inside the MultiBrick using their specific setState methods.
+             *
+             * @method setState
+             * @param {String} state a name of the state to set 
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             setState: function (state) {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.setState(state);
@@ -538,6 +609,13 @@ define([
                 return this;
             },
 
+            /**
+             * Clears the MultiBrick by clearing of the individual bricks inside the MultiBrick using their specific clear methods.
+             *
+             * @method clear
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.clear();
@@ -546,6 +624,12 @@ define([
                 return this;
             },
 
+            /**
+             * Checks if the MultiBrick is valid. It's valid only if all individual bricks inside it are valid.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     if (!brick.isValid()) {
@@ -556,6 +640,14 @@ define([
                 return true;
             },
 
+            /**
+             * Sets MultiBrick's data by setting data to the individual bricks inside it. Uses their own specific setData functions.
+             *              *
+             * @method setData
+             * @param {Object} data
+             * @return {MultiBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     brick.setData(data);
@@ -564,6 +656,14 @@ define([
                 return this;
             },
 
+            /**
+             * Returns MultiBrick's data by mixing together data of the individual bricks inside using their specific getData methods and then passing it to the Brick's getData method for potential wrapping.
+             *
+             * @method getData
+             * @for MultiBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         MultiBrick's data
+             */
             getData: function (wrap) {
                 var payload = {};
 
@@ -575,13 +675,105 @@ define([
             }
         });
 
+        /**
+        * ButtonBrick is just a Brick with a button inside it. The button can be styled and can be assigned an onClick event. 
+        * To instantiate, call {{#crossLink "ButtonBrick/new:method"}}{{/crossLink}} on the ButtonBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ButtonBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         ButtonBrick = Brick.extend({
+            
+            /**
+             * A dictionary of possible ButtonBrick events. Add a CLICK event to the default Brick events.
+             *
+             * @property event
+             * @for ButtonBrick
+             * @type {Object}
+             * @example
+             *      event: {
+             *          CHANGE: "brick/change",
+             *          CLICK: "buttonBrick/click"
+             *      }
+             * 
+             */
             event: lang.mixin({}, Brick.event,
                 {
                     CLICK: "buttonBrick/click"
                 }
             ),
 
+            /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "button-brick-container"
+             */
+
+            /**
+             * A name of the default ButtonBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_button_brick_template"
+             */
+            
+            /**
+             * A CSS class of the button.
+             *
+             * @property buttonClass
+             * @private
+             * @type {String}
+             * @default "btn-primary"
+             */
+            
+            /**
+             * A button label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * ButtonBrick is a simple button in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.buttonClass] a CSS class of the button in the ButtonBrick
+             * @param  {String} [config.label] a button label
+             * @chainable
+             * @return {ButtonBrick}
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -601,18 +793,70 @@ define([
                 });
             },
 
+            /**
+             * Returns true. ButtonBrick is always valid
+             *
+             * @method isValid
+             * @return {Boolean}           true
+             */
             isValid: function () {
                 return true;
             },
 
+            /**
+             * Returns ButtonBrick's data. Pretty useless function when you think of it. Just returns the data of the Brick prototype which is empty.
+             *
+             * @method getData
+             * @for ButtonBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         ButtonBrick's data
+             */
             getData: function (wrap) {
                 var payload = {};
 
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+        
+        /**
+        * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
+        * To instantiate, call {{#crossLink "OkCancelButtonBrick/new:method"}}{{/crossLink}} on the OkCancelButtonBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class OkCancelButtonBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * @uses MultiBrick
+        */
         OkCancelButtonBrick = MultiBrick.extend({
+            
+            /**
+             * A dictionary of possible OkCancelButtonBrick events. Adds a OK_CLICK and CANCEL_CLICK events to the default ButtonBrick events.
+             *
+             * @property event
+             * @for OkCancelButtonBrick
+             * @type {Object}
+             * @example
+             *      event: {
+             *          CHANGE: "brick/change",
+             *          CLICK: "buttonBrick/click",
+             *          OK_CLICK: "okCancelButtonBrick/okClick",
+             *          CANCEL_CLICK: "okCancelButtonBrick/cancelClick"
+             *      }
+             * 
+             */
             event: lang.mixin({},
                 MultiBrick.event,
                 ButtonBrick.event,
@@ -622,13 +866,87 @@ define([
                 }
             ),
 
+            /**
+             * A CSS class of the OkCancelButtonBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "okcancelbutton-brick-container"
+             */
+            
+            /**
+             * Default id of the OK button of the Brick, cannot be changed.
+             *
+             * @property okButtonId
+             * @private
+             * @type {String}
+             * @default "okButton"
+             */
+
+            /**
+             * Default id of the cancel button of the Brick, cannot be changed.
+             *
+             * @property cancelButtonId
+             * @private
+             * @type {String}
+             * @default "cancelButton"
+             */
+
+            /**
+             * Default id of the cancel button of the Brick, cannot be changed.
+             *
+             * @property cancelButtonId
+             * @private
+             * @type {String}
+             * @default "cancelButton"
+             */
+            
+            /**
+             * Reverses the default visual order of OK, Cancel button to Cancel, OK.
+             *
+             * @property reverseOrder
+             * @private
+             * @type {Boolean}
+             * @default "false"
+             */
+
             okButtonId: "okButton",
             cancelButtonId: "cancelButton",
 
+            /**
+             * Initializes the OkCancelButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * OkCancelButtonBrick is a brick with two preset buttons: OK and Cancel.
+             * Button container classes are predefined as "ok-button-brick-container" and "cancel-button-brick-container"
+             * 
+             * @method new
+             * @for OkCancelButtonBrick
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.buttonClass] a CSS class of the button in the OkCancelButtonBrick
+             * @param  {String} [config.okLabel] an OK button label
+             * @param  {String} [config.cancelLabel] a Cancel button label
+             * @param  {String} [config.okButtonClass] an OK button CSS class
+             * @param  {String} [config.cancelButtonClass] a Cancel button CSS class
+             * @param  {String} [config.okFreezeStates] an OK button freeze states
+             * @param  {String} [config.cancelFreezeStates] a Cancel button freeze states
+             * @param  {String} [config.reverseOrder] reverses the default visual order of OK, Cancel button to Cancel, OK.
+             * @chainable
+             * @return {OkCancelButtonBrick}
+             */
             initialize: function (id, config) {
                 var that = this,
                     newConfig;
 
+                // generating a MultiBrick config with two buttons
                 newConfig =
                     {
                         //template: "default_okcancelbutton_brick_template",
@@ -672,6 +990,7 @@ define([
                     }
                 );
 
+                // setting event listeners on individual ButtonBricks, not button nodes directly
                 this.okButtonBrick.on(this.event.CLICK, function () {
                     that.notify(that.event.OK_CLICK, null);
                     that.notify(that.event.CLICK, null);
@@ -681,20 +1000,108 @@ define([
                     that.notify(that.event.CANCEL_CLICK, null);
                     that.notify(that.event.CLICK, null);
                 });
-            },
-
-            isValid: function () {
-
-                return MultiBrick.isValid.call(this);
-            },
-
-            getData: function (wrap) {
-
-                return MultiBrick.getData.call(this, wrap);
             }
         });
 
+        /**
+        * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
+        * To instantiate, call {{#crossLink "ChoiceBrick/new:method"}}{{/crossLink}} on the ChoiceBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ChoiceBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         ChoiceBrick = Brick.extend({
+            
+            /**
+             * A CSS class of the MultiBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for ChoiceBrick
+             * @type {String}
+             * @default "choice-brick-container"
+             */
+
+            /**
+             * A name of the default ButtonBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_choice_brick_template"
+             */
+            
+            /**
+             * Indicates which choice is currently selected
+             *
+             * @property selectedChoice
+             * @private
+             * @type {String}
+             * @default null
+             */
+            
+            /**
+             * Indicates if the user made the selection or it was made programmatically
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * A collection of choices that will be offered to the user. At least two choices are required for this Brick to have any use at all.
+             *
+             * @property choices
+             * @private
+             * @type {Array}
+             * @example
+             *     [
+             *         {
+             *             key: "ie9",
+             *             value: "IE9"
+             *         },
+             *         {
+             *             key: "chrome",
+             *             value: "Chrome"
+             *         }
+             *     ]
+             */
+
+            /**
+             * Initializes the ChoiceBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {Array} [config.choices] a set of choices that will be presented to the user
+             * @chainable
+             * @return {ChoiceBrick}
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -722,6 +1129,15 @@ define([
                 });
             },
 
+            /**
+             * Sets the choice of the ChoiceBrick.
+             * 
+             * @method setChoice
+             * @param {String} choiceKey    string value of the choice to be selected
+             * @param {Boolean} userSelected boolean value indicating if the user is the source of the selection
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             setChoice: function (choiceKey, userSelected) {
                 // only set choice if it differs from the current one
                 if (choiceKey !== this.selectedChoice || (userSelected ? true : false) !== this.userSelected) {
@@ -738,28 +1154,63 @@ define([
 
                     this.notify(this.event.CHANGE, this.getData());
                 }
+
+                return this;
             },
 
             isUserSelected: function () {
                 return this.userSelected;
             },
 
+            /**
+             * Clears the ChoiceBrick by reseting selectedChoice to an empty string and userSelected to false.
+             *
+             * @method clear
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.setChoice("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
+            /**
+             * Checks if the brick is valid. The ChoiceBrick is considered valid if selectedChoice is not an empty String.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return this.selectedChoice !== "";
             },
 
+            /**
+             * Sets ChoiceBrick's data. First calls setChoice and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 this.setChoice(data.selectedChoice, data.userSelected);
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
+            /**
+             * Returns ChoiceBrick's data.
+             * 
+             * @method getData
+             * @for ChoiceBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: selectedChoice and userSelected
+             */
             getData: function (wrap) {
                 var payload = {
                     selectedChoice: this.selectedChoice,
@@ -770,7 +1221,105 @@ define([
             }
         });
 
+        /**
+        * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
+        * To instantiate, call {{#crossLink "SimpleInputBrick/new:method"}}{{/crossLink}} on the SimpleInputBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class SimpleInputBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         SimpleInputBrick = Brick.extend({
+            /**
+             * A CSS class of the SimpleInputBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for SimpleInputBrick
+             * @type {String}
+             * @default "simpleinput-brick-container"
+             */
+
+            /**
+             * A name of the default SimpleInputBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_simpleinput_brick_template"
+             */
+
+             /**
+             * An input field label. Invisible. Defaults to the Brick's header.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * A placeholder to be displayed inside the input field.
+             *
+             * @property placeholder
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A string that is currently entered in the input field
+             *
+             * @property inputValue
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * Indicates if the user entered text into the input field or it was entered programmatically
+             *
+             * @property userEntered
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * Initializes the SimpleInputBrick by generating a specified template and setting defaults.
+             * This Brick fires a CHANGE event on every change inside the input field.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
+             * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
+             * @retun SimpleInputBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -794,27 +1343,57 @@ define([
                     }
                 );
 
+                // setting a listener on the input field
                 this.inputNode.on("input", function (event) {
                     var value = $(event.target).val();
                     that.setInputValue(value, true);
                 });
             },
 
+            /**
+             * Sets the current value of the input field.
+             * 
+             * @method setInputValue
+             * @param {String} value    string value to be entered into the input field
+             * @param {Boolean} userEntered boolean value indicating if the user is the source of the string value
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setInputValue: function (value, userEntered) {
                 this.userEntered = userEntered ? true : false;
                 this.inputValue = value;
 
+                // if user entered it, the text is already in the field;
+                // if not, need to populate the field
                 if (!userEntered) {
                     this.inputNode.val(value);
                 }
 
+                // fire change event
                 this.notify(this.event.CHANGE, this.getData());
+
+                return this;
             },
 
+            /**
+             * Checks if the input value was entered by the user or not.
+             * 
+             * @method isUserEntered
+             * @return {Boolean} true if the input value was entered by the user; false, otherwise
+             */
             isUserEntered: function () {
                 return this.userEntered;
             },
 
+            /**
+             * Sets the state of the Brick. Depending on the state, update the visual styles of the input field.
+             * Then call the Brick prototype setState function.
+             * 
+             * @method setState
+             * @param {String} state a name of the state to set 
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setState: function (state) {
 
                 switch (state) {
@@ -839,22 +1418,55 @@ define([
                 return this;
             },
 
+            /**
+             * Clears the Brick by setting inputValue to "" and userEntered to false.
+             *
+             * @method clear
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.setInputValue("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
+            /**
+             * Checks if the SimpleInputBrick is valid. It's considered valid if the input value is not an empty String.
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return this.inputValue !== "";
             },
 
+            /**
+             * Sets SimpleInputBrick's data. First calls setInputValue and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {SimpleInputBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 this.setInputValue(data.inputValue, data.userEntered);
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
+            /**
+             * Returns SimpleInputBrick's data.
+             * 
+             * @method getData
+             * @for SimpleInputBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = {
                     inputValue: this.inputValue,
@@ -864,8 +1476,104 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+    
+        /**
+        * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
+        * To instantiate, call {{#crossLink "DropDownBrick/new:method"}}{{/crossLink}} on the DropDownBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class DropDownBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * 
+        */
         DropDownBrick = Brick.extend({
+            /**
+             * A CSS class of the DropDownBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for DropDownBrick
+             * @type {String}
+             * @default "dropdown-brick-container"
+             */
+
+            /**
+             * A name of the default DropDownBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_dropdown_brick_template"
+             */
+            
+            /**
+             * An input field label. Invisible. Defaults to the Brick's header.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * A value of the currently selected item in the dropdown.
+             *
+             * @property dropDownValue
+             * @private
+             * @type {String}
+             * @default ""
+             */
+            
+            /**
+             * A text string of the currently selected item in the dropdown.
+             *
+             * @property dropDownText
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
+             * Indicates if the user selected the option in the dropdown or it was selected programmatically.
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+
+            /**
+             * Initializes the DropDownBrick by generating a specified template and setting defaults.
+             * This Brick fires a CHANGE event on every change inside the dropdown.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @retun DropDownBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this;
 
@@ -902,14 +1610,35 @@ define([
                 }
             },
 
+            /**
+             * Selects the option whose value is provided in selectedOption param;
+             * 
+             * @method selectOption
+             * @param {String} selectedOption    string value to be selected in the dropdown
+             * @param {Boolean} userSelected boolean value indicating if the user is the source of the string value
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             selectOption: function (selectedOption, userSelected) {
                 var option = this.selectNode.find("option[value='" + selectedOption + "']");
 
                 this.selectNode.val(selectedOption);
                 this.setDropDownValue(option, userSelected);
+
+                return this;
             },
 
-            // internal should not be called from outsite
+            /**
+             * Stores selected option's text and value and notifies any listeners of the change.
+             * Internal should not be called from outside.
+             * 
+             * @method setDropDownValue
+             * @private
+             * @param {String} option    string value to be selected in the dropdown
+             * @param {Boolean} userSelected boolean value indicating if the user is the source of the string value
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             setDropDownValue: function (option, userSelected) {
                 var value = option.val(),
                     text = option.find("option:selected").text();
@@ -919,26 +1648,76 @@ define([
                 this.dropDownText = text;
 
                 this.notify(this.event.CHANGE, this.getData());
+
+                return this;
             },
 
+            /**
+             * Populates the drop down with provided set of options optionally replacing or appending them ot the existing options.
+             * 
+             * @method setDropDownOptions
+             * @param {Array} options an array of options(Object) in the form of { value: [value], text: [text] }
+             * @param {Boolean} [append]  Indicates whether to append to or replace the existing options
+             * @return {DropDownBrick}           itself
+             */
             setDropDownOptions: function (options, append) {
                 UtilMisc.setSelectOptions(this.selectNode, options, append);
+
+                return this;
             },
 
-            isUserEntered: function () {
+            /**
+             * Checks if the option was selected by the user or not.
+             * 
+             * @method isUserSelected
+             * @return {Boolean} true if the option was selected by the user; false, otherwise
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
+            isUserSelected: function () {
                 return this.userSelected;
             },
 
+            /**
+             * Clears the DropDownBrick by setting the selected option to "" and userSelected to false.
+             *
+             * @method clear
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.selectOption("");
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
+            /**
+             * Checks if the DropDownBrick is valid. It's considered valid if the selected option's value is not "".
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
-                return this.inputValue !== "";
+                return this.dropDownValue !== "";
             },
 
+            /**
+             * Sets DropDownBrick's data.
+             * data object may contain:
+             *  - {Object} options an array of options to be added to the dropdown
+             *  - {Boolean} append indicates whether to append or replace the exiting options
+             *  - {String} selectedOption string value of the option that should be preselected (either old or newly added option)
+             *  - {Boolean} userSelected boolean value indicating if the user is the source of the string value
+             *
+             * By default, after appending/replacing options, the first option will be selected unless specified otherwise.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.
+             * @return {DropDownBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
 
                 if (data.options) {
@@ -952,8 +1731,18 @@ define([
                 }
 
                 Brick.setData.call(data);
+
+                return this;
             },
 
+            /**
+             * Returns DropDownBrick's data.
+             * 
+             * @method getData
+             * @for DropDownBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = {
                     dropDownValue: this.dropDownValue,
@@ -964,8 +1753,98 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+    
+        /**
+        * The ColorPickerBrick prototype. Provides a control to select a color.
+        * To instantiate, call {{#crossLink "ColorPickerBrick/new:method"}}{{/crossLink}} on the ColorPickerBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ColorPickerBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * @uses SimpleInputBrick
+        * 
+        */
         ColorPickerBrick = SimpleInputBrick.extend({
+            /**
+             * A CSS class of the ColorPickerBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for ColorPickerBrick
+             * @type {String}
+             * @default "colorpicker-brick-container"
+             */
+
+            /**
+             * A name of the default ColorPickerBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_colorpicker_brick_template"
+             */
+            
+            /**
+             * Specifies positions of the actual color picker (square wheel) control 
+             *
+             * @property pickerPosition
+             * @private
+             * @type {String}
+             * @default "top"
+             */
+
+             /**
+             * The actual node of the picker control.
+             *
+             * @property picker
+             * @private
+             * @type {Object}
+             */
+            
+            /**
+             * A sample node that is coloured with the selected colour.
+             *
+             * @property pickerSwatch
+             * @private
+             * @type {String}
+             */
+            
+            /**
+             * Initializes the ColorPickerBrick by generating a specified template and setting defaults.
+             * A random colour is picked as when this Brick is instantiated.
+             * This Brick fires a CHANGE event on every time the selected colour changes.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
+             * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
+             * @param  {String} [config.pickerPosition] specifies positions of the actual color picker (square wheel) control
+             * @retun ColorPickerBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this,
                     newConfig = {};
@@ -992,6 +1871,7 @@ define([
                     }
                 );
 
+                // create the picker control
                 this.picker = new jscolor.color(this.inputNode[0], {
                     pickerPosition: "top",
                     styleElement: this.pickerSwatch[0], //this.guid + "pickerSwatch",
@@ -1000,6 +1880,7 @@ define([
                     }
                 });
 
+                // generate random colour
                 this.picker.fromString((new RColor()).get(true).slice(1));
 
                 this.pickerSwatch.on("click", function () {
@@ -1013,7 +1894,7 @@ define([
             },/*
 
             isValid: function () {
-                // Todo: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
+                // TODO: if allowing color picker to start empty, need to check it's validity; otherwise, it's always valid
             }*/
 
             /*setData: function (data) {
@@ -1023,6 +1904,19 @@ define([
                 return this;
             },*/
 
+            /**
+             * Returns ColorPickerBrick's data.
+             * Returns different colour representations:
+             *  - {String} hex hexcode
+             *  - {Array} rgb array of rgb colours (from 0 to 1)
+             *  - {Array} rgb_ array of rgb colours (from 0 to 255)
+             *  - {Array} hsv array of hsv colours (from 0 to 1)
+             * 
+             * @method getData
+             * @for ColorPickerBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = {
                     hex: this.picker.toString(),
@@ -1034,8 +1928,113 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-
+        
+        /**
+        * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
+        * To instantiate, call {{#crossLink "FileInputBrick/new:method"}}{{/crossLink}} on the FileInputBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class FileInputBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @uses Brick
+        * @uses SimpleInputBrick
+        * 
+        */
         FileInputBrick = SimpleInputBrick.extend({
+            /**
+             * A CSS class of the FileInputBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @for FileInputBrick
+             * @type {String}
+             * @default "fileinput-brick-container"
+             */
+
+            /**
+             * A name of the default FileInputBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_fileinput_brick_template"
+             */
+            
+            /**
+             * A file object that is selected through FileAPI.
+             *
+             * @property fileValue
+             * @private
+             * @type {Object}
+             * @default null
+             */
+            
+            /**
+             * A flag indicating if the user has selected the file or the file has been selected using some magical means.
+             *
+             * @property userSelected
+             * @private
+             * @type {Boolean}
+             * @default false
+             */
+            
+            /**
+             * A browse files container node
+             *
+             * @property browseFilesContainer
+             * @private
+             * @type {Object}
+             */
+            
+            /**
+             * A node of the file input control.
+             *
+             * @property fileNode
+             * @private
+             * @type {Object}
+             */
+            
+            /**
+             * A node of the styled pseudo file input control that just looks nice and doesn't do anything. 
+             *
+             * @property filePseudoNode
+             * @private
+             * @type {Object}
+             */
+
+            /**
+             * Initializes the FileInputBrick by generating a specified template and setting defaults.
+             * This Brick fires a CHANGE event on every change inside the input field and on every file selected.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
+             * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
+             * @retun FileInputBrick
+             * @chainable
+             * 
+             */
             initialize: function (id, config) {
                 var that = this,
                     newConfig = {};
@@ -1063,6 +2062,7 @@ define([
                     }
                 );
 
+                // style the pseudoBrowse control to act as a normal button control
                 UtilMisc.styleBrowseFilesButton(this.browseFilesContainer);
 
                 this.fileNode.on("change", function (event) {
@@ -1072,12 +2072,35 @@ define([
                 });
             },
 
+            /**
+             * Sets the current value of the input field. In this case it's a file URL.
+             * If the URL is set, the returned file object is null.
+             *
+             * First calls setFileValue(null, false) to null the file object, then calls the prototype's setInputValue with the same parameters.
+             * 
+             * @method setInputValue
+             * @param {String} value    string value to be entered into the input field
+             * @param {Boolean} userEntered boolean value indicating if the user is the source of the string value
+             * @return {FileInputBrick}           itself
+             * @chainable
+             */
             setInputValue: function (value, userEntered) {
                 this.setFileValue(null, false);
 
                 SimpleInputBrick.setInputValue.call(this, value, userEntered);
+
+                return this;
             },
 
+            /**
+             * Sets file value of the Brick. When setting file object, input value is set to "". If value is null, the form is reset.
+             * 
+             * @method setFileValue
+             * @param {Object} value        the selected file object
+             * @param {Boolean} userSelected boolean value indicating if the user selected the file
+             * @return {FileInputBrick}           itself
+             * @chainable
+             */
             setFileValue: function (value, userSelected) {
                 this.userSelected = userSelected ? true : false;
                 this.fileValue = value;
@@ -1090,22 +2113,60 @@ define([
                 } else {
                     UtilMisc.resetFormElement(this.fileNode);
                 }
+
+                return this;
             },
 
+            /**
+             * Checks if the file was selected by the user or not.
+             * 
+             * @method isUserSelected
+             * @return {Boolean} true if the file was selected by the user; false, otherwise
+             */
             isUserSelected: function () {
                 return this.userSelected;
             },
 
+            /**
+             * Clears the Brick by setting inputValue to "" which sets fileValue to null and userEntered to false.
+             *
+             * @method clear
+             * @return {FileInputBrick}           itself
+             * @chainable
+             */
             clear: function () {
                 this.setInputValue("", false);
 
                 Brick.clear.call(this);
+
+                return this;
             },
 
+            /**
+             * Checks if the FileInputBrick is valid. It's considered valid if the input value is not "" or a file value is not null. 
+             *
+             * @method isValid
+             * @return {Boolean}           true if valid; false if not
+             */
             isValid: function () {
                 return SimpleInputBrick.isValid.call(this) || this.fileValue ? true : false;
             },
 
+            /**
+             * Sets SimpleInputBrick's data. First calls setInputValue and calls set data on the Brick prototype.
+             * data object may contain:
+             *  - {Object} fileValue a file object 
+             *  - {String} inputValue a input value (file URL)
+             *  - {Boolean} userSelected boolean value indicating if the user is the source of the file value
+             *  - {Boolean} userEntered boolean value indicating if the user is the source of the string value
+             *
+             * if both fileValue and inputValue are specified, only fileValue is used.
+             * 
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {FileInputBrick}           itself
+             * @chainable
+             */
             setData: function (data) {
                 if (data.fileValue) {
                     this.setFileValue(data.fileValue, data.userSelected);
@@ -1114,8 +2175,23 @@ define([
                 }
 
                 SimpleInputBrick.setData.call(data);
+
+                return this;
             },
 
+            /**
+             * Returns FileInputBrick's data. Either a file object or a file URL will be returned along with the file name, not both.
+             *
+             * Returns an object:
+             *  - {Object} fileValue file object if any was selected
+             *  - {String} fileName derived file name
+             *  - {Boolean} userSelected a flag indicating if the user has selected the file or typed the URL
+             * 
+             * @method getData
+             * @for FileInputBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}  A wrapper object around two properties: inputValue and userEntered
+             */
             getData: function (wrap) {
                 var payload = SimpleInputBrick.getData.call(this);
 
@@ -1139,6 +2215,7 @@ define([
              *
              * @for Bricks
              * @property Brick
+             * @static
              * @type Brick
              */
             Brick: Brick,
@@ -1147,6 +2224,7 @@ define([
              * The MultiBrick prototype. Used as a container for multiple independent Bricks if they are required to be displayed side by side.
              *
              * @property MultiBrick
+             * @static
              * @type MultiBrick
              */
             MultiBrick: MultiBrick,
@@ -1155,6 +2233,7 @@ define([
              * The ButtonBrick prototype. A simple Brick with a button template.
              *
              * @property ButtonBrick
+             * @static
              * @type ButtonBrick
              */
             ButtonBrick: ButtonBrick,
@@ -1162,6 +2241,7 @@ define([
              * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
              *
              * @property OkCancelButtonBrick
+             * @static
              * @type OkCancelButtonBrick
              */
             OkCancelButtonBrick: OkCancelButtonBrick,
@@ -1170,6 +2250,7 @@ define([
              * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
              *
              * @property ChoiceBrick
+             * @static
              * @type ChoiceBrick
              */
             ChoiceBrick: ChoiceBrick,
@@ -1178,6 +2259,7 @@ define([
              * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
              *
              * @property DropDownBrick
+             * @static
              * @type DropDownBrick
              */
             DropDownBrick: DropDownBrick,
@@ -1185,6 +2267,7 @@ define([
              * The ColorPickerBrick prototype. Provides a control to select a color.
              *
              * @property ColorPickerBrick
+             * @static
              * @type ColorPickerBrick
              */
             ColorPickerBrick: ColorPickerBrick,
@@ -1192,6 +2275,7 @@ define([
              * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
              *
              * @property SimpleInputBrick
+             * @static
              * @type SimpleInputBrick
              */
             SimpleInputBrick: SimpleInputBrick,
@@ -1199,6 +2283,7 @@ define([
              * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
              *
              * @property FileInputBrick
+             * @static
              * @type FileInputBrick
              */
             FileInputBrick: FileInputBrick
