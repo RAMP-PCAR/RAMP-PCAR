@@ -83,7 +83,7 @@ RAMP = {
      * @property scripts
      * @type array
      */
-    scripts: ['http://js.arcgis.com/3.10/', jsPrefix + 'lib/wet-boew/js/wet-boew.js', jsPrefix + 'RAMP/bootstrapper.js']
+    scripts: ['http://js.arcgis.com/3.13/', jsPrefix + 'lib/wet-boew/js/wet-boew.js', jsPrefix + 'RAMP/bootstrapper.js']
 };
 
 var importScript = (function (oHead) {
