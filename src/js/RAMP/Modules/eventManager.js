@@ -90,12 +90,20 @@ define([],
                 * Tells the filter manager to toggle a layer on or off
                 *
                 * @event FilterManager.TOGGLE_BOX_VISIBILITY [subscribed]
-                * @for FilterManager
                 * @param event {Object}
                 * @param event.layerId {String} the name of the layer to toggle
                 * @param event.state {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_BOX_VISIBILITY: "filterManager/toggle-box-visibility"
+                TOGGLE_BOX_VISIBILITY: "filterManager/toggle-box-visibility",
+
+                /**
+                * Published each time wms query is toggled
+                *
+                * @event FilterManager.WMS_QUERY_CHANGE
+                * @param evt {Object} the event Object
+                * @param evt.allowed {boolean} true if wms query is allowed, false if wms query is turned off.
+                */
+                WMS_QUERY_CHANGE: "filterManager/wms-query-change"
             },
 
             GUI: {

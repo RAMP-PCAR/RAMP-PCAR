@@ -326,7 +326,11 @@
             "close": "Close",
             "fullScreen": "Full Screen",
             "mapExport": "Map Export",
-            "open": "Open"
+            "open": "Open",
+            "wmsQueryDisable": "Disable Queries",
+            "wmsQueryDisableTooltip": "Disable queries on all WMS layers",
+            "wmsQueryEnable": "Enable Queries",
+            "wmsQueryEnableTooltip": "Enable queries on all WMS layers"
         }
     }, 
     "help": {
