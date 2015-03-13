@@ -466,9 +466,6 @@ module.exports = (grunt) ->
     # Project configuration.
     @initConfig
 
-        # Metadata.
-        yuidocconfig: grunt.file.readJSON('yuidoc.json')
-
         copy:
             configDist:
                 expand: true
