@@ -1,8 +1,9 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "http://cp.zz9.ca/index",
-    "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+    "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+    "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [

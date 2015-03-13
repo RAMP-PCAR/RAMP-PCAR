@@ -6,6 +6,7 @@
     "description": "RAMP Configuration",
     "additionalProperties": false,
     "comments": "FIXME: when draft 05 is release redo schema inheritance with patching / merging if they are accepted",
+    "version": "1.1.0",
 
     "definitions": {
         "spatialReference": {
@@ -307,11 +308,12 @@
 
     "properties": {
 
-        "version": { "type": "string", "enum": [ "1.0.0", "1.0.1" ] },
-        "proxyUrl": { "type": "string" },
-        "geometryServiceUrl": { "type": "string" },
-        "exportMapUrl": { "type": "string" },
-        "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0 },
+        "version": { "type": "string", "enum": [ "1.0.0", "1.0.1", "1.1.0" ], "description": "List of schema versions accepted by this version of RAMP." },
+        "proxyUrl": { "type": "string", "description": "A proxy service for non-CORS enabled services (e.g. most WMS servers), must be on the same origin or be CORS enabled itself." },
+        "geometryServiceUrl": { "type": "string", "description": "ESRI Geometry Service: currently used for advanced toolbar operations." },
+        "exportMapUrl": { "type": "string", "description": "Map export service endpoint: should point directly to an endpoint that can be consumed by ESRI PrintTask." },
+        "exportProxyUrl": { "type": "string", "description": "Proxy URL required for IE9 to support map export.  Deprecate this the minute IE9 is unsupported."},
+        "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0, "description": "Basemap to be loaded if no argument is specified in the query string." },
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },
 
