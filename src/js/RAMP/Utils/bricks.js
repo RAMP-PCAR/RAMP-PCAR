@@ -889,7 +889,9 @@ define([
                     }
                 );
 
-                this.selectNode.on("click", function () {
+                // setting event listener on <select> node; "change" is the most appropriate
+                // https://developer.mozilla.org/en-US/docs/Web/Events/change
+                this.selectNode.on("change", function () {
                     var option = that.selectNode.find("option:selected");
 
                     that.setDropDownValue(option, true);
