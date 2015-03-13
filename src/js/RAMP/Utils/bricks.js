@@ -212,6 +212,12 @@ define([
              * 
              */
             event: {
+                /**
+                * Published whenever a Brick undergoes some change.
+                *
+                * @event Bricks.Brick.event.CHANGE
+                * @param data {Object} anything, usually result of calling getData() on the Brick
+                */
                 CHANGE: "brick/change"
             },
 
@@ -714,6 +720,12 @@ define([
              */
             event: lang.mixin({}, Brick.event,
                 {
+                    /**
+                    * Published whenever a ButtonBrick is clicked.
+                    *
+                    * @event Bricks.ButtonBrick.event.CLICK
+                    * @param data {Object} anything, usually result of calling getData() on the Brick
+                    */
                     CLICK: "buttonBrick/click"
                 }
             ),
@@ -861,7 +873,19 @@ define([
                 MultiBrick.event,
                 ButtonBrick.event,
                 {
+                    /**
+                    * Published whenever an OK button of the OkCancelButtonBrick is clicked.
+                    *
+                    * @event Bricks.OkCancelButtonBrick.event.OK_CLICK
+                    * @param data {Object} anything, usually result of calling getData() on the Brick
+                    */
                     OK_CLICK: "okCancelButtonBrick/okClick",
+                    /**
+                    * Published whenever an Cancel button of the OkCancelButtonBrick is clicked
+                    *
+                    * @event Bricks.OkCancelButtonBrick.event.CANCEL_CLICK
+                    * @param data {Object} anything, usually result of calling getData() on the Brick
+                    */
                     CANCEL_CLICK: "okCancelButtonBrick/cancelClick"
                 }
             ),
@@ -1651,7 +1675,7 @@ define([
             },
 
             /**
-             * Populates the drop down with provided set of options optionally replacing or appending them ot the existing options.
+             * Populates the drop down with provided set of options optionally replacing or appending them to the existing options.
              * 
              * @method setDropDownOptions
              * @param {Array} options an array of options(Object) in the form of { value: [value], text: [text] }
