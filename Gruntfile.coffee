@@ -3,7 +3,11 @@ ZSchema = require("z-schema")
 util = require('util')
 
 module.exports = (grunt) ->
-
+    
+    require( 'jit-grunt' )( grunt, 
+        'notify_hooks': 'grunt-notify'
+    )
+    
     @registerTask(
         'default'
         'Default task create both an unminified development and a minified distribution packages.'
@@ -1370,32 +1374,6 @@ module.exports = (grunt) ->
                 src: ['tarball/*.*']
 
     # These plugins provide necessary tasks.
-    @loadNpmTasks 'assemble'
-    @loadNpmTasks 'grunt-autoprefixer'
-    @loadNpmTasks 'grunt-contrib-clean'
-    @loadNpmTasks 'grunt-contrib-compress'
-    @loadNpmTasks 'grunt-contrib-concat'
-    @loadNpmTasks 'grunt-contrib-connect'
-    @loadNpmTasks 'grunt-contrib-copy'
-    @loadNpmTasks 'grunt-contrib-cssmin'
-    @loadNpmTasks 'grunt-contrib-htmlmin'
-    @loadNpmTasks 'grunt-contrib-imagemin'
-    @loadNpmTasks 'grunt-contrib-jshint'
-    @loadNpmTasks 'grunt-contrib-less'
-    @loadNpmTasks 'grunt-contrib-uglify'
-    @loadNpmTasks 'grunt-contrib-watch'
-    @loadNpmTasks 'grunt-contrib-yuidoc'
-    @loadNpmTasks 'grunt-gh-pages'
-    @loadNpmTasks 'grunt-github-releaser'
-    @loadNpmTasks 'grunt-docco'
-    @loadNpmTasks 'grunt-jsonlint'
-    @loadNpmTasks 'grunt-hub'
-    @loadNpmTasks 'grunt-bump'
-    @loadNpmTasks 'grunt-jscs'
-    @loadNpmTasks 'grunt-json-minify'
-    @loadNpmTasks 'grunt-newer'
-    @loadNpmTasks 'grunt-notify'
-    @loadNpmTasks 'grunt-replace'
     
     @task.run 'notify_hooks'
 
