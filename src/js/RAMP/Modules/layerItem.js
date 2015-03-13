@@ -232,7 +232,7 @@ define([
                 this._generateParts("toggles", "layer_toggle_", this._toggleStore);
                 this._generateParts("notices", "layer_notice_", this._noticeStore);
 
-                this.setState(this.state, null, true);
+                this.setState(this.state, options, true);
 
                 console.debug("-->", this.state, options);
             },

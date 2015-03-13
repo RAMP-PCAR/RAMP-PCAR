@@ -39,7 +39,7 @@
 
 define([
 /* Dojo */
-        "dojo/_base/array", "dojo/Deferred", "dojo/topic",
+        "dojo/_base/lang", "dojo/_base/array", "dojo/Deferred", "dojo/topic",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
@@ -55,7 +55,7 @@ define([
 
     function (
     /* Dojo */
-        dojoArray, Deferred, topic,
+        lang, dojoArray, Deferred, topic,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
@@ -903,14 +903,17 @@ define([
             /**
             * Add a provided layer to the layer selector.
             * @param {String} layerType layer type - name of the layer group
-            * @param {Object} layerConfig a layer config
-            * @param {String} initState optional. the state to initialize in.  Default value is LOADING
+            * @param {Object} layerRamp ramp object
+            * @param {Object} [options] additional options for the layer item
+            * @param {String} [options.state] the state to initialize in.  Default value is LOADING
+            * @param {String} [options.notices] optional notices, for example error notices if the layer cannot be loaded from the get go
             * @method addLayer
             */
-            addLayer: function (layerType, layerConfig, initState, userAdded) {
+            addLayer: function (layerType, layerRamp, options) {
                 var layerGroup = layerGroups[layerType],
-                    newLayer,
-                    options;
+                    newLayer;
+
+                options = options || {};
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
@@ -925,19 +928,18 @@ define([
                 }
 
                 // layer is user-added, add an extra notice to all states
-                if (userAdded) {
-                    options = {
-                        stateMatrix: LayerItem.getStateMatrixTemplate()
-                    };
+                if (layerRamp.user) {
+                    options = lang.mixin(options,
+                        {
+                            stateMatrix: LayerItem.getStateMatrixTemplate()
+                        }
+                    );
+
                     LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, true);
                     LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
                 }
 
-                newLayer = layerGroup.addLayerItem(layerConfig, options);
-
-                if (!UtilMisc.isUndefined(initState)) {
-                    newLayer.setState(initState, null, true);
-                }
+                newLayer = layerGroup.addLayerItem(layerRamp.config, options);
 
                 // TODO: check scale in cleaner way
                 setLayerOffScaleStates();
