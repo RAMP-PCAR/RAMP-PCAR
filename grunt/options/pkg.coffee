@@ -1,2 +1,5 @@
 module.exports = (grunt)->
-    grunt.file.readJSON('package.json')
+    pkg = grunt.file.readJSON('package.json')
+    pkg.series = 'v' + pkg.version.split('.').slice(0,2).join('.') + '-dist'
+
+    return pkg

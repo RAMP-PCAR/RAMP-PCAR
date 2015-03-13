@@ -467,8 +467,6 @@ module.exports = (grunt) ->
     @initConfig
 
         # Metadata.
-        series: 'v' + grunt.file.readJSON('package.json').version.split('.').slice(0,2).join('.') + '-dist'
-
         yuidocconfig: grunt.file.readJSON('yuidoc.json')
 
         copy:
@@ -1249,7 +1247,7 @@ module.exports = (grunt) ->
             travis:
                 options:
                     repo: process.env.DIST_REPO
-                    branch: '<%= series %>'
+                    branch: '<%= pkg.series %>'
                     message: ((
                         if process.env.TRAVIS_TAG
                             "Production files for the " + process.env.TRAVIS_TAG + " release"
