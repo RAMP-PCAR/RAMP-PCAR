@@ -20,12 +20,35 @@
         "dataSource": "Data Source",
         "dataSourceFile": "File",
         "dataSourceService": "Service",
+        "error": {
+            "headerCSV": "CSV error",
+            "headerFeature": "Feature layer error",
+            "headerFile": "File error",
+            "headerGeojson": "GeoJSON error",
+            "headerShapefile": "Shapefile error",
+            "headerWMS": "Web Map Service error",
+            "ie9FileAPI": "Your browser does not support local file access",
+            "messageCSVBroken": "Unable to create layer from provided CSV.",
+            "messageCSVInvalid": "Malformed CSV; field names cannot be retrieved.",
+            "messageCSVShort": "Data source requires at least 2 rows for display.",
+            "messageCSVThin": "Data source requires at least latitude and longitude columns to display.",
+            "messageFeatureConnect": "Cannot retrieve service.",
+            "messageFeatureInvalid": "Service is misconfigured or does not exist.",
+            "messageFeatureLegend": "Unable to retrieve legend information.",
+            "messageFileConnect": "Cannot retrieve file.",
+            "messageGeojsonBroken": "Unable to create layer from provided GeoJSON.",
+            "messageGeojsonInvalid": "Malformed JSON object; field names cannot be retrieved.",
+            "messageShapefileBroken": "Unable to create layer from provided Shapefile.",
+            "messageShapefileInvalid": "Malformed Shapefile; field names cannot be retrieved.",
+            "messageWMSConnect": "Cannot retrieve service.",
+            "messageWMSInvalid": "Service is misconfigured or does not exist."
+        },
         "fileOrURL": "File or URL",
         "fileOrURLPlaceholder": "Local file or URL",
         "fileType": "File Type",
         "geojson": "GeoJSON",
         "help": {
-            "csvColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "csvColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "csvDatasetName": "Dataset name that will appear in the layer selector",
             "csvLatitude": "Select a latitude column (in decimal degrees)",
             "csvLongitude": "Select a longitude column (in decimal degrees)",
@@ -34,12 +57,12 @@
             "featurePrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "fileOrURL": "Select a file on your computer, or specify a URL to a network file",
             "fileOrURLType": "Select the correct File Type (if we didn't guessed correctly)",
-            "geojsonColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "geojsonColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "geojsonDatasetName": "Dataset name that will appear in the layer selector",
             "geojsonPrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "serviceType": "Select the correct Map Service Type (if we didn't guessed correctly)",
             "serviceURL": "Enter the Map Service endpoint URL for an ESRI Feature Layer or OGC Web Map Service.",
-            "shapefileColour" : "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "shapefileColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "shapefileDatasetName": "Dataset name that will appear in the layer selector",
             "shapefilePrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "wmsLayerName": "Select a WMS layer to add."
@@ -82,217 +105,224 @@
         "advancedTitle": "Advanced",
         "title": "Tools"
     },
-    "basemapSelector": { 
+    "basemapSelector": {
         "refreshRequired": "Page refresh required"
     },
     "bookmarkLink": {
-        "description": "Link to Map Viewer", 
-        "email": "Email", 
-        "emailUrlBody": "Here's a cool map:", 
-        "emailUrlSubject": "RAMP GIS Viewer", 
-        "longLink": "Long link", 
-        "shortLink": "Short link", 
+        "description": "Link to Map Viewer",
+        "email": "Email",
+        "emailUrlBody": "Here's a cool map:",
+        "emailUrlSubject": "RAMP GIS Viewer",
+        "longLink": "Long link",
+        "shortLink": "Short link",
         "title": "Get Link"
-    }, 
+    },
     "config": {
         "basemaps": {
             "baseCBME_CBCE_HS_RO_3978": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBMT_CBCT_HS", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_HS",
                 "name": "Shaded Relief"
-            }, 
+            },
             "baseCBMT_CBCT_GEOM_3978": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBMT_CBCT_GEOM", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_GEOM",
                 "name": "Road Networks"
-            }, 
+            },
             "baseE2M": {
-                "altText": "Topographic Map", 
-                "description": "Earth 2 Map", 
+                "altText": "Topographic Map",
+                "description": "Earth 2 Map",
                 "name": "Canada Topographic"
-            }, 
+            },
             "baseEsriPhysical": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Physical_Map", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Physical_Map",
                 "name": "Physical Earth"
-            }, 
+            },
             "baseEsriRelief": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Shaded_Relief", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Shaded_Relief",
                 "name": "Shaded Relief"
-            }, 
+            },
             "baseEsriStreet": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Street_Map", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Street_Map",
                 "name": "Streets"
-            }, 
+            },
             "baseEsriTerrain": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Terrain_Base", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Terrain_Base",
                 "name": "Terrain"
-            }, 
+            },
             "baseEsriTopo": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Topo_Map", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Topo_Map",
                 "name": "Topographic"
-            }, 
+            },
             "baseEsriWorld": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Imagery", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Imagery",
                 "name": "Satellite Imagery"
-            }, 
+            },
             "baseNrCan": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBCT3978", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBCT3978",
                 "name": "Canada Atlas"
-            }, 
+            },
             "baseSimple": {
-                "altText": "Topographic Map", 
-                "description": "NrCan Simple", 
+                "altText": "Topographic Map",
+                "description": "NrCan Simple",
                 "name": "Water Bodies"
             }
-        }, 
+        },
         "layers": {
             "feature": {
                 "MW_E": {
                     "displayName": "Smelters and refineries"
-                }, 
+                },
                 "_17e537a6": {
                     "displayName": "BBS Routes"
-                }, 
+                },
                 "_708985e5": {
                     "displayName": "Water Regions"
-                }, 
+                },
                 "_b6b6d5a6": {
                     "displayName": "CESI Water Quality Indicators"
-                }, 
+                },
                 "cesi_ozone": {
                     "displayName": "CESI Air Ozone"
-                }, 
+                },
                 "dog_guts": {
                     "displayName": "Bird Habitats"
-                }, 
+                },
                 "layer_dd1m3": {
                     "displayName": "Monitoring Sites"
-                }, 
+                },
                 "layer_g5h6i": {
                     "displayName": "EC Projects"
-                }, 
+                },
                 "layer_sea_parks": {
                     "displayName": "Sea Parks"
-                }, 
+                },
                 "oilAreaOverlay": {
                     "displayName": "CESI Oil Area Overlay"
-                }, 
+                },
                 "oilSandsRegions": {
                     "displayName": "Oil Sands Regions"
                 }
-            }, 
+            },
             "wms": {
                 "aglands": {
                     "displayName": "Pastures - 2000"
-                }, 
+                },
                 "dog_guts": {
                     "displayName": "Bird Habitats"
-                }, 
+                },
                 "limits": {
                     "displayName": "Limits"
-                }, 
+                },
                 "geomet_wind": {
                     "displayName": "Wind speed"
-                }, 
+                },
                 "geomet_temp": {
                     "displayName": "Air temperature"
-                }, 
+                },
                 "wms6": {
                     "displayName": "Railway Network"
                 }
             }
-        }, 
+        },
         "tileSchema": {
-            "ESRI_World_AuxMerc_3857": "Auxiliary Mercator", 
-            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "ESRI_World_AuxMerc_3857": "Auxiliary Mercator",
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "Lambert 79"
         }
-    }, 
+    },
     "datagrid": {
-        "dataTabTitle": "Data", 
-        "details": "Details", 
+        "dataTabTitle": "Data",
+        "details": "Details",
         "ex": {
-            "dataSummary": "Data Summary", 
-            "dataset": "Dataset", 
-            "datasetSelectorButtonLoad": "Load", 
-            "datasetSelectorButtonLoaded": "Loaded", 
+            "dataSummary": "Data Summary",
+            "dataset": "Dataset",
+            "datasetSelectorButtonLoad": "Load",
+            "datasetSelectorButtonLoaded": "Loaded",
             "datasetSelectorButtonLoading": "Loading ..."
-        }, 
-        "fullData": "Full Data", 
+        },
+        "fullData": "Full Data",
         "gridstrings": {
             "oAria": {
-                "sSortAscending": ": activate to sort column ascending", 
+                "sSortAscending": ": activate to sort column ascending",
                 "sSortDescending": ": activate to sort column descending"
-            }, 
+            },
             "oPaginate": {
-                "sFirst": "First", 
-                "sLast": "Last", 
-                "sNext": "Next", 
-                "sPage": "Page", 
-                "sPrevious": "Previous", 
+                "sFirst": "First",
+                "sLast": "Last",
+                "sNext": "Next",
+                "sPage": "Page",
+                "sPrevious": "Previous",
                 "sRecords": "Records"
-            }, 
-            "sEmptyTable": "No data available in table", 
-            "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries", 
-            "sInfoEmpty": "Showing 0 to 0 of 0 entries", 
-            "sInfoFiltered": "(filtered from _MAX_ total entries)", 
-            "sInfoPostFix": "", 
-            "sInfoThousands": ",", 
-            "sLengthMenu": "Show _MENU_ entries", 
-            "sLoadingRecords": "Loading ...", 
-            "sProcessing": "Processing ...", 
-            "sSearch": "Search:", 
+            },
+            "sEmptyTable": "No data available in table",
+            "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "sInfoEmpty": "Showing 0 to 0 of 0 entries",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Show _MENU_ entries",
+            "sLoadingRecords": "Loading ...",
+            "sProcessing": "Processing ...",
+            "sSearch": "Search:",
             "sZeroRecords": "No matching records found"
-        }, 
+        },
         "notices": {
-            "offScaleFullData": "Data is not visible at this zoom level.", 
+            "offScaleFullData": "Data is not visible at this zoom level.",
             "offScaleSummary": "Some data is not visible at this zoom level."
-        }, 
-        "sort": "Sort", 
-        "zoomBack": "Zoom Back", 
+        },
+        "sort": "Sort",
+        "zoomBack": "Zoom Back",
         "zoomTo": "Zoom To"
-    }, 
+    },
     "filterManager": {
-        "allData": "All Data", 
+        "allData": "All Data",
         "controlsMatrix": {
-            "error": "Error", 
-            "metadata": "Metadata", 
-            "reload": "Reload", 
-            "remove": "Remove", 
+            "error": "Error",
+            "metadata": "Metadata",
+            "reload": "Reload",
+            "remove": "Remove",
             "settings": "Settings"
-        }, 
-        "datasetsTabTitle": "Datasets", 
-        "hideAllBounds": "Hide All Bounds", 
-        "hideAllFeatures": "Hide All", 
-        "hideBounds": "Hide Bounds of {0}", 
-        "hideFeatures": "Hide {0}", 
-        "layerHandle": "Layer Handle", 
-        "layerHandleLabel": "Layer handle for __layerName__", 
-        "layerListLabel": "Sortable layer list", 
-        "legend": "Legend", 
-        "linkToCap": "Link To Capabilities", 
-        "metadata": "Metadata", 
-        "metadataNotFound": "No metadata was found for this layer.", 
-        "metadataNotPublished": "No metadata was published for this layer.", 
+        },
+        "datasetsTabTitle": "Datasets",
+        "hideAllBounds": "Hide All Bounds",
+        "hideAllFeatures": "Hide All",
+        "hideBounds": "Hide Bounds of {0}",
+        "hideFeatures": "Hide {0}",
+        "layerHandle": "Layer Handle",
+        "layerHandleLabel": "Layer handle for __layerName__",
+        "layerListLabel": "Sortable layer list",
+        "legend": "Legend",
+        "showLegend": "Show Legend",
+        "hideLegend": "Hide Legend",
+        "linkToCap": "Link To Capabilities",
+        "metadata": "Metadata",
+        "metadataNotFound": "No metadata was found for this layer.",
+        "metadataNotPublished": "No metadata was published for this layer.",
         "notices": {
-            "error": "Error", 
-            "offScale": "No data visible at this zoom level", 
-            "update": "Updating"
-        }, 
-        "settings": "Settings", 
-        "settingsLayerSettings": "Layer Settings", 
-        "settingsOpacity": "Opacity", 
-        "showAllBounds": "Show All Bounds", 
-        "showAllFeatures": "Show All", 
-        "showBounds": "Show Bounds of {0}", 
-        "showFeatures": "Show {0}", 
+            "error": {
+                "connect": "Cannot retrieve service.",
+                "draw": "Cannot display service data.", 
+                "load": "Cannot load service data."
+            },
+            "offScale": "No data visible at this zoom level",
+            "update": "Updating",
+            "user": "User-added Dataset"
+        },
+        "settings": "Settings",
+        "settingsLayerSettings": "Layer Settings",
+        "settingsOpacity": "Opacity",
+        "showAllBounds": "Show All Bounds",
+        "showAllFeatures": "Show All",
+        "showBounds": "Show Bounds of {0}",
+        "showFeatures": "Show {0}",
         "zoomToData": "Zoom to data"
     }, 
     "gui": {
@@ -300,7 +330,11 @@
             "close": "Close",
             "fullScreen": "Full Screen",
             "mapExport": "Map Export",
-            "open": "Open"
+            "open": "Open",
+            "wmsQueryDisable": "Disable Queries",
+            "wmsQueryDisableTooltip": "Disable queries on all WMS layers",
+            "wmsQueryEnable": "Enable Queries",
+            "wmsQueryEnableTooltip": "Enable queries on all WMS layers"
         }
     }, 
     "help": {
@@ -381,7 +415,7 @@
             "h1": "Usage", 
             "header": "Full Screen", 
             "p1": "Full Screen is used to collapse the departmental headers and footers to provide larger screen space for mapping.", 
-            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Show Headers link to restore to default view."
+            "p2": "Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Full Screen button again to restore to default view."
         }, 
         "s6": {
             "h1": "Usage", 
@@ -473,17 +507,17 @@
     },
     "mapExport": {
         "downloadImage": "Download Image",
-		"downloadJPG": "JPG",
+        "downloadJPG": "JPG",
         "downloadJPGdesc": "Download as JPG",
         "downloadPNG": "PNG",
         "downloadPNGdesc": "Download as PNG",
         "error": {
             "generalMessage": "Image cannot be generated. Please try again later.",
-			"generalTitle": "Error"            
+            "generalTitle": "Error"            
         },
-		"includeLegend": "Include Legend",
+        "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
-		"title": "Map Export"
+        "title": "Map Export"
     },
     "page": {
         "footer": {
@@ -548,13 +582,13 @@
         "title": "Reusable Accessible Mapping Platform (RAMP)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "Circle Point",
-		    "outlinedPoly": "Outlined Polygon",
-		    "solidLine" : "Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "Circle Point",
+            "outlinedPoly": "Outlined Polygon",
+            "solidLine" : "Solid Line"	
+        }
     },
-	"serverError": {
+    "serverError": {
         "basemapNotAvailable": {
             "detail": "Basemap service not available; map failed to initialize properly.",
             "title": "Error: Basemap service not available"

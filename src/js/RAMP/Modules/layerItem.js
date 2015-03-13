@@ -232,7 +232,7 @@ define([
                 this._generateParts("toggles", "layer_toggle_", this._toggleStore);
                 this._generateParts("notices", "layer_notice_", this._noticeStore);
 
-                this.setState(this.state, null, true);
+                this.setState(this.state, options, true);
 
                 console.debug("-->", this.state, options);
             },
@@ -528,13 +528,15 @@ define([
                 *     notices: {
                 *            SCALE: "scale"
                 *            ERROR: "error",
-                *            UPDATE: "update"
+                *            UPDATE: "update",
+                *            USER: "user"
                 *           }
                 */
                 notices: {
                     SCALE: "scale",
                     ERROR: "error",
-                    UPDATE: "update"
+                    UPDATE: "update",
+                    USER: "user"
                 },
 
                 /**
@@ -652,7 +654,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.DEFAULT] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.EYE,
@@ -678,7 +681,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.EYE,
@@ -703,7 +707,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.ZOOM,
@@ -746,6 +751,54 @@ define([
             LayerItem.state.DEFAULT,
             LayerItem.state.UPDATING
         ];
+
+        /**
+        * Modifies a given state matrix by adding specified partKey to the specified partType collection.
+        *
+        * @param {Object} stateMatrix matrix to modify
+        * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+        * @param {String} partKey part key to be inserted into the collection
+        * @param {Boolean} prepend indicates if the part key should be prepended or appended
+        * @method addStateMatrixPart
+        * @static
+        * @private
+        */
+        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, prepend) {
+            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                if (prepend) {
+                    data[partType].unshift(partKey);
+                } else {
+                    data[partType].push(partKey);
+                }
+            });
+        };
+
+        /**
+         * Modifies a given state matrix by removing specified partKey to the specified partType collection.
+         *
+         * @param {Object} stateMatrix matrix to modify
+         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+         * @param {String} partKey part key to be removed into the collection
+         * @method addStateMatrixPart
+         * @static
+         * @private
+         */
+        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey) {
+            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                UtilArray.remove(data[partType], partKey);
+            });
+        };
+
+        /**
+         * Get a deep copy of the default stateMatrix.
+         * 
+         * @method getStateMatrixTemplate
+         * @static
+         * @return {Object} a deep copy of the default stateMatrix
+         */
+        LayerItem.getStateMatrixTemplate = function () {
+            return lang.clone(LayerItem.stateMatrix);
+        };
 
         // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
         ALL_STATES_CLASS =

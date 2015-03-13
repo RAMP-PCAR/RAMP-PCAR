@@ -186,11 +186,9 @@
             <div class='layer-image-box'>                                  
                 <img alt='' role='presentation' src='{%= o[0] %}' class='layer-image bg-white'>
             </div>
-            <button class='btn btn-xs button-none renderer-button'>
-                <i class='fa fa-square'></i>
-                <i class='fa fa-plus-square-o'></i>
-                <i class='fa fa-minus-square-o'></i>                                            
-                <span class='wb-invisible'></span>
+            <button class='btn btn-xs button-none renderer-button _tooltip' title='{%= i18n.t('filterManager.showLegend') %}'>
+                                                        
+                <span class='wb-invisible'>{%= i18n.t('filterManager.showLegend') %}</span>
             </button>
             
         </div>
@@ -313,6 +311,14 @@
             <i class='fa fa-circle fa-stack-1x'></i>
             <i class='fa fa-refresh fa-spin fa-stack-1x'></i>
             <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.update') %}</span>
+        </div>
+    ",
+
+    "layer_notice_user": "
+        <div class='layer-notice user _tooltip fa-stack' title='{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.user') %}' >
+            <i class='fa fa-circle fa-stack-1x'></i>
+            <i class='fa fa-user fa-stack-1x'></i>
+            <span class='wb-invisible'>{%= (o.data) ? o.data.message : i18n.t('filterManager.notices.user') %}</span>
         </div>
     ",
 

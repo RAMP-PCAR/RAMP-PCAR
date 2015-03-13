@@ -10,7 +10,7 @@
         "supplementalData": "Données supplémentaires", 
         "timePeriod": "Période"
     }, 
-    "addDataset": {
+    "addDataset": {        
         "addDatasetButton": "Ajouter le DataSet", 
         "cancel": "Annuler", 
         "colour": "Couleur",
@@ -20,10 +20,53 @@
         "dataSource": "Source de données", 
         "dataSourceFile": "Fichier", 
         "dataSourceService": "Service", 
+        "error": {
+            "headerCSV": "[fr] CSV error",
+            "headerFeature": "[fr] Feature layer error",
+            "headerFile": "[fr] File error",
+            "headerGeojson": "[fr] GeoJSON error",
+            "headerShapefile": "[fr] Shapefile error",
+            "headerWMS": "[fr] Web Map Service error",
+            "ie9FileAPI": "[fr] Your browser does not support local file access",
+            "messageCSVBroken": "[fr] Unable to create layer from provided CSV.",
+            "messageCSVInvalid": "[fr] Malformed CSV; field names cannot be retrieved.",
+            "messageCSVShort": "[fr] Data source requires at least 2 rows for display.",
+            "messageCSVThin": "[fr] Data source requires at least latitude and longitude columns to display.",
+            "messageFeatureConnect": "[fr] Cannot retrieve service.",
+            "messageFeatureInvalid": "[fr] Service is misconfigured or does not exist.",
+            "messageFeatureLegend": "[fr] Unable to retrieve legend information.",
+            "messageFileConnect": "[fr] Cannot retrieve file.",
+            "messageGeojsonBroken": "[fr] Unable to create layer from provided GeoJSON.",
+            "messageGeojsonInvalid": "[fr] Malformed JSON object; field names cannot be retrieved.",
+            "messageShapefileBroken": "[fr] Unable to create layer from provided Shapefile.",
+            "messageShapefileInvalid": "[fr] Malformed Shapefile; field names cannot be retrieved.",
+            "messageWMSConnect": "[fr] Cannot retrieve service.",
+            "messageWMSInvalid": "[fr] Service is misconfigured or does not exist."
+        },
         "fileOrURL": "Fichier ou URL", 
         "fileOrURLPlaceholder": "Fichier ou URL local", 
         "fileType": "Type de fichier", 
         "geojson": "GéoJSON",
+        "help": {
+            "csvColour": "[fr] Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "csvDatasetName": "[fr] Dataset name that will appear in the layer selector",
+            "csvLatitude": "[fr] Select a latitude column (in decimal degrees)",
+            "csvLongitude": "[fr] Select a longitude column (in decimal degrees)",
+            "csvPrimaryAttribute": "[fr] Select a primary identifier for map features (i.e. Name, ID, etc)",
+            "dataSource": "[fr] Select the type of data source you would like to add: 'Service' to add a map web service; 'File' to upload a GeoJSON, CSV, or Shapefile.",
+            "featurePrimaryAttribute": "[fr] Select a primary identifier for map features (i.e. Name, ID, etc)",
+            "fileOrURL": "[fr] Select a file on your computer, or specify a URL to a network file",
+            "fileOrURLType": "[fr] Select the correct File Type (if we didn't guessed correctly)",
+            "geojsonColour": "[fr] Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "geojsonDatasetName": "[fr] Dataset name that will appear in the layer selector",
+            "geojsonPrimaryAttribute": "[fr] Select a primary identifier for map features (i.e. Name, ID, etc)",
+            "serviceType": "[fr] Select the correct Map Service Type (if we didn't guessed correctly)",
+            "serviceURL": "[fr] Enter the Map Service endpoint URL for an ESRI Feature Layer or OGC Web Map Service.",
+            "shapefileColour": "[fr] Enter hex HTML colour code or use a colour picker to select the layer features' colour",
+            "shapefileDatasetName": "[fr] Dataset name that will appear in the layer selector",
+            "shapefilePrimaryAttribute": "[fr] Select a primary identifier for map features (i.e. Name, ID, etc)",
+            "wmsLayerName": "[fr] Select a WMS layer to add."
+        },
         "latitude": "Latitude", 
         "layerName": "[fr] Layer Name",
         "load": "Charger", 
@@ -255,16 +298,23 @@
         "hideFeatures": "Masquer {0}", 
         "layerHandle": "Descripteur de couche", 
         "layerHandleLabel": "Descripteur de couche pour __layerName__", 
-        "layerListLabel": "Liste des couches sortable", 
+        "layerListLabel": "Liste des couches sortable",
         "legend": "Légende", 
+        "showLegend": "[fr] Show Legend",
+        "hideLegend": "[fr] Hide Legend",
         "linkToCap": "Lien vers les capacités", 
         "metadata": "Métadonnées", 
         "metadataNotFound": "Aucunes métadonnées trouvées pour cette couche", 
         "metadataNotPublished": "Aucunes métadonnées publiées pour cette couche", 
         "notices": {
-            "error": "Erreur", 
-            "offScale": "Aucune donnée n'est visible à ce niveau du Zoom", 
-            "update": "Mise à jour"
+            "error": {
+                "connect": "[fr] Cannot retrieve service.",
+                "draw": "[fr] Cannot display service data.", 
+                "load": "[fr] Cannot load service data."
+            },
+            "offScale": "Aucune donnée n'est visible à ce niveau du Zoom",
+            "update": "Mise à jour",
+            "user": "[fr] User-added Dataset"
         }, 
         "settings": "Paramètres", 
         "settingsLayerSettings": "Paramètres de la couche", 
@@ -280,7 +330,11 @@
             "close": "Fermer",
             "fullScreen": "Plein écran", 
             "mapExport": "[fr] Map Export",
-            "open": "Ouvrir"
+            "open": "Ouvrir",
+            "wmsQueryDisable": "[fr] Disable Queries",
+            "wmsQueryDisableTooltip": "[fr] Disable queries on all WMS layers",
+            "wmsQueryEnable": "[fr]  Queries",
+            "wmsQueryEnableTooltip": "[fr] Enable queries on all WMS layers"
         }
     }, 
     "help": {
@@ -361,7 +415,7 @@
             "h1": "Utilisation", 
             "header": "Plein écran", 
             "p1": "Le plein écran est utilisé pour masquer le haut et le bas de page du Ministère afin d’allouer plus d’espace à l’écran pour l’affichage cartographique.", 
-            "p2": "Cliquez sur le bouton « Plein écran » dans la barre d’outils pour masquer le haut et le bas de page du Ministère. Cliquez sur le lien « Afficher haut de page » pour rétablir l’affichage par défaut."
+            "p2": "[fr] Click the Full Screen button in the toolbar to hide departmental header and footer information. Select the Full Screen button again to restore to default view."
         }, 
         "s6": {
             "h1": "Utilisation", 
@@ -453,17 +507,17 @@
     },
     "mapExport": {
         "downloadImage": "[fr] Download Image",
-		"downloadJPG": "[fr] JPG",
+        "downloadJPG": "[fr] JPG",
         "downloadJPGdesc": "[fr] Download as JPG",
         "downloadPNG": "[fr] PNG",
         "downloadPNGdesc": "[fr] Download as PNG",
         "error": {
             "generalMessage": "[fr] Image cannot be generated. Please try again later.",
-			"generalTitle": "[fr] Error"            
+            "generalTitle": "[fr] Error"            
         },
-		"includeLegend": "[fr] Include Legend",
+        "includeLegend": "[fr] Include Legend",
         "loading": "[fr] Generating image. Please wait.",
-		"title": "[fr] Map Export"
+        "title": "[fr] Map Export"
     },
     "page": {
         "footer": {
@@ -528,11 +582,11 @@
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "[fr] Circle Point",
-		    "outlinedPoly": "[fr] Outlined Polygon",
-		    "solidLine" : "[fr] Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "[fr] Circle Point",
+            "outlinedPoly": "[fr] Outlined Polygon",
+            "solidLine" : "[fr] Solid Line"	
+        }
     },
     "serverError": {
         "basemapNotAvailable": {
