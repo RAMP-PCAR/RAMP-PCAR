@@ -513,13 +513,15 @@ define([
                 *     notices: {
                 *            SCALE: "scale"
                 *            ERROR: "error",
-                *            UPDATE: "update"
+                *            UPDATE: "update",
+                *            USER: "user"
                 *           }
                 */
                 notices: {
                     SCALE: "scale",
                     ERROR: "error",
-                    UPDATE: "update"
+                    UPDATE: "update",
+                    USER: "user"
                 },
 
                 /**

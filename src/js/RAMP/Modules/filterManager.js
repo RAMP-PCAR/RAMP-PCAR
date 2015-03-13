@@ -935,7 +935,7 @@ define([
                     options = {
                         stateMatrix: LayerItem.getStateMatrixTemplate()
                     };
-                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", "user", true);
+                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, true);
                     LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
                 }
 
