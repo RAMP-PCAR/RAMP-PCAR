@@ -652,7 +652,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.DEFAULT] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.EYE,
@@ -678,7 +679,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.EYE,
@@ -703,7 +705,8 @@ define([
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
             controls: [
                 LayerItem.controls.METADATA,
-                LayerItem.controls.SETTINGS
+                LayerItem.controls.SETTINGS,
+                LayerItem.controls.REMOVE
             ],
             toggles: [
                 LayerItem.toggles.ZOOM,
