@@ -1,7 +1,7 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "5.0.1",
+    "version": "5.1.0-2",
     "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
     "main": "",
     "repository": {
@@ -64,6 +64,7 @@
         "concat": {
 
             "jsLib": [
+                "jquery/dist/jquery.js",
                 "DataTables/media/js/jquery.dataTables.js",
                 "gsap/src/uncompressed/TweenLite.js",
                 "gsap/src/uncompressed/TimelineLite.js",

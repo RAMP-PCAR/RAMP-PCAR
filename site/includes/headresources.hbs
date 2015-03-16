@@ -1,15 +1,7 @@
-<!--[if gte IE 9 | !IE ]><!-->
 <link href="{{rampAssets}}/images/favicon.ico" rel="icon" type="image/x-icon" />
 <link rel="stylesheet" href="{{assets}}/css/wet-boew{{environment.suffix}}.css" />
-<!--<![endif]-->
 <link rel="stylesheet" href="{{assets}}/css/theme{{environment.suffix}}.css" />
 {{#if page.css}}{{#each page.css}}<link rel="stylesheet" href="{{this}}{{../environment.suffix}}.css" />{{/each}}{{/if}}
-<!--[if lt IE 9]>
-<link href="{{rampAssets}}/images/favicon.ico" rel="shortcut icon" />
-<link rel="stylesheet" href="{{assets}}/css/ie8-wet-boew{{environment.suffix}}.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryOldIEVersion}}/jquery{{environment.suffix}}.js"></script>
-<script src="{{assets}}/js/ie8-wet-boew{{environment.suffix}}.js"></script>
-<![endif]-->
 
 <noscript><link rel="stylesheet" href="{{assets}}/css/noscript{{environment.suffix}}.css" /></noscript>
 
@@ -25,4 +17,7 @@
       type="text/css" rel="stylesheet">
 <!-- EsriCSSEnd -->
 
+<!-- ARCGIS API: make sure there is a script tag in the head node of the
+                 document to avoid "Cannot read property 'insertBefore' of
+                 null" errors caused by urlshortener jQuery plugin -->
 <script></script>

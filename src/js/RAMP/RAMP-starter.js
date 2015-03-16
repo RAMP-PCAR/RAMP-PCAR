@@ -19,6 +19,7 @@
 var RAMP,
     jsFolderPath = "js/",
     pathname = location.pathname.replace(/\/[^/]+$/, "") + "/",
+    jsPrefix = pathname + jsFolderPath,
     htmlNode = $("html"),
     dojoConfig;
 
@@ -66,8 +67,34 @@ RAMP = {
             sidePanelOpened: true,
             fullscreen: false
         }
-    }
+    },
+
+    /**
+     * Scripts to be loaded after dojo config is prepared.  Loaded in order (works around an IE9 issue).
+     *
+     * @property scripts
+     * @type array
+     */
+    scripts: ['http://js.arcgis.com/3.10/', jsPrefix + 'lib/wet-boew/js/wet-boew.js', jsPrefix + 'RAMP/bootstrapper.js']
 };
+
+var importScript = (function (oHead) {
+        'use strict';
+
+        function loadError (oError) {
+            throw new URIError("The script " + oError.target.src + " is not accessible.");
+        }
+
+        return function (sSrc, fOnload) {
+            var oScript = document.createElement("script");
+            oScript.type = "text\/javascript";
+            oScript.onerror = loadError;
+            if (fOnload) { oScript.onload = fOnload; }
+                oHead.appendChild(oScript);
+                oScript.src = sSrc;
+            };
+
+    })(document.head || document.getElementsByTagName("head")[0]);
 
 dojoConfig = {
     parseOnLoad: false,
@@ -76,32 +103,22 @@ dojoConfig = {
     packages: [
         {
             name: "ramp",
-            location: pathname + jsFolderPath + "RAMP/Modules"
+            location: jsPrefix + "RAMP/Modules"
         },
         {
             name: "utils",
-            location: pathname + jsFolderPath + "RAMP/Utils"
+            location: jsPrefix + "RAMP/Utils"
         },
         {
             name: "tools",
-            location: pathname + jsFolderPath + "RAMP/Tools/"
+            location: jsPrefix + "RAMP/Tools/"
         }
     ],
-    fullPluginPath: pathname + jsFolderPath + 'plugins/'
+    fullPluginPath: jsPrefix + 'plugins/'
 };
 
-$(document).ready(function () {
-    "use strict";
-    // when loading js file this way, it will NOT show up in the debug panel in Firebug
-    /*$.getScript(pathname + jsFolderPath + state + "RAMP/bootstrapper.js",
-        function( data, textStatus, jqxhr ) {
-            console.log( jqxhr.status ); // 200
-    });*/
-
-    // when loading js file this way, it will show up in the debug panel in Firebug
-    var head = document.getElementsByTagName('head')[0],
-        script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = pathname + jsFolderPath + "RAMP/bootstrapper.js";
-    head.appendChild(script);
-});
+(function loadRampScripts(scripts) {
+    'use strict';
+    if (scripts.length === 0) { return; }
+    importScript(scripts[0], function () { loadRampScripts(scripts.slice(1)); });
+})(RAMP.scripts);

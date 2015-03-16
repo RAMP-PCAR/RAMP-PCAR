@@ -2,6 +2,7 @@
     "version": "1.0.1",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "http://cp.zz9.ca/index",
+    "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -301,7 +302,7 @@
         }
     ],
     "layers": {
-        "feature": [
+        "feature": [            
             {
                 "id": "ecogeo",
                 "displayName": "@@config.layers.feature.layer_g5h6i.displayName",
@@ -656,8 +657,8 @@
                     "spatialReference": {
                         "wkid": 3978
                     }
-                }
-            },
+                    }
+                },
             {
                 "id": "oilAreaOverlay",
                 "displayName": "@@config.layers.feature.oilAreaOverlay.displayName",
