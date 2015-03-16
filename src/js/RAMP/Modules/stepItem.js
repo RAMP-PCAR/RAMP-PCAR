@@ -1,4 +1,5 @@
-﻿/* global define, $, TimelineLite, console */
+﻿
+/* global define, $, TimelineLite, console */
 
 /**
 * @module RAMP
@@ -26,6 +27,7 @@
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/lang
+* @uses dojo/Deferred
 * 
 * @param {Object} config a config definition of the layer
 * @param {Object} [options] Additional options
@@ -40,7 +42,7 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/Deferred",
 
     /* Text */
     "dojo/text!./templates/filter_manager_template.json",
@@ -49,7 +51,7 @@ define([
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
-        Evented, declare, lang,
+        Evented, declare, lang, Deferred,
         filter_manager_template,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
@@ -681,25 +683,40 @@ define([
                 }
             },
 
+            /**
+             * Set Brick notices, mostly errors.
+             * 
+             * @method displayBrickNotices
+             * @param  {Object} [data] a dictionary of objects containing Brick notices
+             */
             displayBrickNotices: function (data) {
                 var that = this,
-                    bricks = [];
+                    bricks = [],
+                    promise;
 
                 if (data) {
                     UtilDict.forEachEntry(data, function (brickId, brickData) {
                         that.contentBricks[brickId].displayNotice(brickData);
 
                         bricks.push(that.contentBricks[brickId]);
-                    });                    
+                    });
+
+                    // toggle notice 
+                    this._toggleBrickNotices(bricks, data);
                 } else {
                     UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
-                        brick.displayNotice();
-
                         bricks.push(brick);
                     });
-                }
 
-                this._toggleBrickNotices(bricks, data);
+                    // if no data provided, first hide all existing notices, then empty them
+                    promise = this._toggleBrickNotices(bricks, data);
+
+                    promise.then(function () {
+                        bricks.forEach(function (brick) {
+                            brick.displayNotice();
+                        });
+                    });
+                }
             },
 
             _toggleBrickNotices: function (bricks, show) {
@@ -707,7 +724,12 @@ define([
                     notices,
                     contentHeight = this.getContentOuterHeight(),
                     heightChange = 0,
-                    tl = new TimelineLite({ paused: true });
+                    tl = new TimelineLite({ paused: true }),
+                    def = new Deferred();
+
+                tl.eventCallback("onComplete", function () {
+                    def.resolve();
+                });
 
                 notices = bricks
                     .map(function (brick) { return brick.noticeNode; })
@@ -743,6 +765,8 @@ define([
                 }
 
                 tl.play();
+
+                return def.promise;
             },
 
             retreat: function () {
