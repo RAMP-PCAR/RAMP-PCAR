@@ -98,7 +98,7 @@ define([
                         node: null,
 
                         /**
-                         * An array of Brick configs and other related properies.
+                         * An array of Brick configs and other related properties.
                          * 
                          * @property content
                          * @type {Array}
@@ -193,8 +193,9 @@ define([
                          * @default {}
                          */
                         _childSteps: {},
+
                         /**
-                         * A step item of the currently active child of this step item.
+                         * A step item of the currently active child of this step item. If there is no active child, it means that a choice or action hasn't been made on this step yet or it's the last step in the branch.
                          * 
                          * @private
                          * @property _activeChildStep
@@ -212,7 +213,7 @@ define([
                         _parent: null,
 
                         /**
-                         * An object containing some data. This is used like that: when the step is advanced, a data object is provided by external code; this object is then passed to whichever child is being advanced so it can be retrieved later without exterenal code having to store it somewhere.
+                         * An object containing some data. This is used like that: when the step is advanced, a data object is provided by external code; this object is then passed to whichever child is being advanced so it can be retrieved later without external code having to store it somewhere.
                          * 
                          * @private
                          * @property _stepData
@@ -262,6 +263,15 @@ define([
                 console.debug("-->", this._state);
             },
 
+            /**
+             * Instantiates and adds a new brick to this step item.
+             * 
+             * @method _addContentBrick
+             * @param {Object} contentItem a config object for a Brick
+             * @param {Object} contentItem.id Brick id
+             * @param {Object} contentItem.config actual Brick config
+             * @private
+             */
             _addContentBrick: function (contentItem) {
                 var that = this,
                     contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
@@ -282,6 +292,14 @@ define([
                 this._doInternalCheck();
             },
 
+            /**
+             * Wire up listeners on the given Brick.
+             * 
+             * @method _wireBrickUp
+             * @param  {Object} contentItem  a config object for a Brick
+             * @param  {Object} contentBrick an actual Brick instance
+             * @private
+             */
             _wireBrickUp: function (contentItem, contentBrick) {
                 var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
@@ -317,6 +335,15 @@ define([
                 });
             },
 
+            /**
+             * Checks Brick's requirements. Enables or disabled the target Brick based on validity of its requirements.
+             * 
+             * @method _internalCheckHelper
+             * @param  {Array} required      an array of required rules
+             * @param  {Brick} targetBrick   a Brick with requirements
+             * @param  {Object} contentBricks a dictionary of bricks available in this step
+             * @private
+             */
             _internalCheckHelper: function (required, targetBrick, contentBricks) {
                 var flag = false;
 
@@ -338,6 +365,12 @@ define([
                 targetBrick.disable(!flag);
             },
 
+            /**
+             * Checks this step item validity by checking validity of all its Bricks.
+             * 
+             * @method _doInternalCheck
+             * @private
+             */
             _doInternalCheck: function () {
                 var that = this;
 
@@ -345,6 +378,7 @@ define([
 
                     if (brick.required) {
 
+                        // if it's a MultiBrick, check requirements for each of the Bricks in MultiBrick 
                         if (Bricks.MultiBrick.isPrototypeOf(brick)) {
 
                             if (Array.isArray(brick.required)) {
@@ -369,6 +403,15 @@ define([
                 }
             },
 
+            /**
+             * Creates timelines for retreat animation - when the part of the choice tree is collapsing, switching to another branch of the tree.
+             * 
+             * @method _makeCloseTimeline
+             * @param  {Boolean} skipFirst  indicates whether the first child step should be included in the timeline
+             * @param  {Boolean} resetState indicates if the child step state should be reset
+             * @return {Object}            a constructed close timeline
+             * @private
+             */
             _makeCloseTimeline: function (skipFirst, resetState) {
                 var closeTimeline = new TimelineLite(),
                     closeStagger,
@@ -385,6 +428,16 @@ define([
                 return closeTimeline;
             },
 
+            /**
+             * Generates a close timeline for this particular step item and adds it to the global close timeline. Calls the same on the target child.
+             * 
+             * @param  {Object} tls   global close timeline
+             * @param  {Boolean} skip  indicates whether to skip the first child step item
+             * @param  {Boolean} reset indicates whether to reset the step item state to DEFAULT
+             * @return {StepItem}       itself
+             * @private
+             * @chainable
+             */
             _getCloseTimelines: function (tls, skip, reset) {
                 var tl = new TimelineLite(),
 
@@ -477,7 +530,7 @@ define([
                     if (!skip) {
 
                         tl
-                            // set options contaner node to visible, otherwise you can't get its size
+                            // set options container node to visible, otherwise you can't get its size
                             .set(this._optionsContainerNode, { display: "block", top: -9999 }, 0)
 
                             // make sure options' node is on the left
@@ -487,7 +540,7 @@ define([
                             .set(otherChildNodes, { display: "none" }, 0)
                             .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
 
-                            // make the targe step current
+                            // make the target step current
                             .call(function () {
                                 targetChildStep._notifyCurrentStepChange();
                             })
@@ -663,6 +716,11 @@ define([
                 return true;
             },
 
+            /**
+             * Checks if the step is completed. It's considered completed if its state is SUCCESS.
+             * 
+             * @return {Boolean} true if completed; false, otherwise
+             */
             isCompleted: function () {
                 return this._state === StepItem.state.SUCCESS;
             },
@@ -738,7 +796,7 @@ define([
 
                 if (show) {
                     tl.set(notices, { height: 0, visibility: "visible", position: "relative" }, 0);
-                } 
+                }
 
                 notices.forEach(function (notice) {
 
@@ -792,6 +850,15 @@ define([
                 return this;
             },
 
+            /**
+             * Advances the current step to the step with the provided id. The target id has to be a child step.
+             * Additionally, the tree expands down if the target child has an active child as well, and so on, until no active child is present.
+             * 
+             * @method advance
+             * @param  {String} targetChildStepId id of the new target step of advance too
+             * @param  {Object} [targetChildData]   data to be passed to the target step as it opens
+             * @return {StepItem}                   itself
+             */
             advance: function (targetChildStepId, targetChildData) {
                 var closeTimeline,
                     shiftTimeline,
@@ -806,11 +873,13 @@ define([
                     return this;
                 }
 
+                // reset timeline to the start and clear all the other rubbish that might be running already
                 this._timeline
                     .seek("+=0", false)
                     .clear()
                 ;
 
+                // if there is already an active child step, skip the first animation
                 skipFirst = this._activeChildStep ? true : false;
 
                 targetChildStep.setData(targetChildData);
@@ -824,6 +893,7 @@ define([
                     .add(shiftTimeline)
                     .add(openTimeline)
                     .call(function () {
+                        // only when animation completes, set the active child to the target child
                         that._activeChildStep = targetChildStep;
                     })
                 ;
@@ -833,10 +903,22 @@ define([
                 return this;
             },
 
+            /**
+             * Get position of the content node.
+             * 
+             * @method getContentPosition
+             * @return {Object} jQuery position object of the content node
+             */
             getContentPosition: function () {
                 return this._contentNode.position();
             },
 
+            /**
+             * Get outer height of the content node
+             * 
+             * @method getContentOuterHeight
+             * @return {Number} outer height of the content node
+             */
             getContentOuterHeight: function () {
                 return this._contentNode.outerHeight();
             }
