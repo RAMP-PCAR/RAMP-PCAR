@@ -399,10 +399,21 @@
         }, 
         "s3": {
             "h1": "Utilisation", 
-            "header": "Ajout d’une couche provenant du Web", 
-            "img1": "Fenêtre d’ajout de couche", 
-            "p1": "Ajouter une couche provenant du Web vous permettra de consulter les données à partir des services de cartographie accessibles au public en tant que copie à affichage seule et de les comparer à d’autres couches disponibles dans l’application de cartographie.", 
-            "p2": "À partir du menu déroulant, sélectionnez le type de service que vous désirez ajouter, puis saisissez une URL valide pour le point de terminaison du service, puis sélectionnez le niveau d’opacité pour la couche que vous ajoutez."
+            "h2": "[fr] Specifying the Dataset Type",
+            "h3": "[fr] Specifying the Dataset Location", 
+            "h4": "[fr] Specifying the Specifics of the Dataset", 
+            "header": "[fr] User Added Datasets",             
+            "p1": "[fr] Additional datasets can be added to the map viewer.  Supported formats are: ESRI Feature Layer, WMS, GeoJSON, Shapefile, and CSV File.  The '+' button at the top-left of the Layer Selector will launch the Add Dataset wizard.",
+            "p2": "[fr] Select the type of data source you would like to add: 'Service' to add a web-based map service; 'File' to upload a GeoJSON, CSV, or Shapefile.",
+            "p3": "[fr] Enter the location of the service URL or dataset file in the location box.  If the dataset is a file on your file system, you must click the 'File' button and browse to the location.",
+            "p4": "[fr] A web based URL can be typed or pasted into the box.",
+            "p5": "[fr] RAMP will predict the dataset type, if it is incorrect, click the button that specifies the correct type.",
+            "p6": "[fr] Click the 'Connect' or 'Load' button to initiate the loading of the dataset.",
+            "p7": "[fr] Depending on the type of dataset being loaded, various parameters can be set in this phase.",
+            "p8": "[fr] A Feature Service allows the choice of a Primary Attribute, which determines the attribute used to identify a feature in the data grid and map tips.  All other information is derived from the service's metadata.",
+            "p9": "[fr] A WMS Service allows the choice of the Layer Name, which determines the layer in the WMS to be used as the source for the dataset.  All other information is derived from the service's metadata.",
+            "p10": "[fr] File based datasets allow the choice of the following: a Dataset Name, which will be displayed in the Layer Selector; a Primary Attribute, which acts the same as in the Feature Service; a Symbol Colour, which determines the colour of the points / lines / polygons on the map.  CSV files also allow the specification of the columns that contain the Latitude and Longitude values, used to derive the point location on the map.",
+            "p11": "[fr] Clicking the 'Add Dataset' button will insert the layer into the map."
         }, 
         "s4": {
             "h1": "Utilisation", 
