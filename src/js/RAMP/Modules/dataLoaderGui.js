@@ -2,7 +2,7 @@
 
 define([
     /* Dojo */
-    "dojo/_base/lang", "dojo/Deferred",
+    "dojo/_base/lang",
 
     /* Text */
     "dojo/text!./templates/filter_manager_template.json",
@@ -15,7 +15,7 @@ define([
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
-        lang, Deferred,
+        lang,
         filter_manager_template,
         PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage, StepItem,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
