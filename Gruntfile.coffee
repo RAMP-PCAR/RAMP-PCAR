@@ -76,27 +76,6 @@ module.exports = (grunt) ->
     )
 
     @registerTask(
-        'js:prep'
-        'INTERNAL: Prepares the list of JS files for concatenation.'
-        ->
-            grunt.config(
-                'concat.jsLib.src'
-                smartExpand(
-                    'lib/'
-                    grunt.config 'pkg.ramp.concat.jsLib'
-                    [
-                        'src/js/lib/jquery.dataTables.pagination.ramp.js'
-                        'src/js/lib/jquery.ui.navigation.ramp.js'
-                        'src/js/lib/jscolor.js'
-                        'src/js/RAMP/RAMP-starter.js'
-                    ]
-                )
-            )
-
-            #console.log(grunt.config('concat.jsLib'))
-    )
-
-    @registerTask(
         'js:build'
         'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
         [
@@ -108,57 +87,6 @@ module.exports = (grunt) ->
             'replace:jsCoreBuild'
             'notify:js'               
         ]        
-    )
-
-    @registerTask(
-        'js:quietbuild'
-        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
-        ()->
-            grunt.config(
-                'concat.jsLib.src'
-                smartExpand(
-                    'lib/'
-                    grunt.config 'pkg.ramp.concat.jsLib'
-                    [
-                        'src/js/lib/jquery.dataTables.pagination.ramp.js'
-                        'src/js/lib/jquery.ui.navigation.ramp.js'
-                        'src/js/lib/jscolor.js'
-                        'src/js/RAMP/RAMP-starter.js'
-                    ]
-                )
-            )
-
-            #console.log(grunt.config('concat.jsLib'))
-
-            grunt.task.run [
-                'hint'
-                'concat:jsLib'
-                'copy:jsCore'
-                'copy:jsPlugins'
-                'replace:jsCoreBuild'
-                'notify:js'               
-            ]        
-    )
-
-    @registerTask(
-        'css:build'
-        'INTERNAL: Concatenates, processes and copies all CSS to the build folder.'
-        ()->
-            grunt.config(
-                'concat.cssLib.src'
-                smartExpand(
-                    'lib/'
-                    grunt.config 'pkg.ramp.concat.cssLib'
-                )
-            )
-
-            grunt.task.run [
-                'less'
-                'autoprefixer'
-                'concat:cssLib'
-                'copy:cssLibResBuild'
-                'notify:css'
-            ]
     )
 
     @registerTask(
