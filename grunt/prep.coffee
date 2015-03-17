@@ -1,4 +1,4 @@
-module.exports = do (grunt) -> 
+module.exports = (grunt) -> 
     
     grunt.util.linefeed = "\n"
 
