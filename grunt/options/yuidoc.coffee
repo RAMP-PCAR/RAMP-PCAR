@@ -1,2 +1,2 @@
-module.exports = (grunt)-> 
-    grunt.file.readJSON('yuidoc.json')
+module.exports = 
+    compile: '<%= yuidocconfig %>'
