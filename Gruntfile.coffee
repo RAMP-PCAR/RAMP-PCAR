@@ -440,13 +440,6 @@ module.exports = (grunt) ->
                 grunt.task.run tasks
     )
 
-    smartExpand = ( cwd, arr, extra ) ->    
-        # determine file order here and concat to arr
-        extra = extra or []
-        arr.map(( file ) ->
-            cwd + file
-        ).concat extra
-
     @util.linefeed = "\n"
 
 
