@@ -1038,20 +1038,6 @@ define([
                     if (!RAMP.config.ui.mapQueryToggle.show) {
                         RAMP.state.ui.wmsQuery = false;
                         wmsToggle.remove();
-                    } else {
-                        popupManager.registerPopup(wmsToggle, "click",
-                            function (d) {
-                                if (RAMP.state.ui.wmsQuery) {
-                                    wmsToggle.addClass('button-pressed');
-                                    wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryEnable'));
-                                } else {
-                                    wmsToggle.removeClass('button-pressed');
-                                    wmsToggle.children('span').html(i18n.t('gui.actions.wmsQueryDisable'));
-                                }
-                                RAMP.state.ui.wmsQuery = !RAMP.state.ui.wmsQuery;
-                                d.resolve();
-                            }
-                        );
                     }
 
                     // set listener to the full-screen toggle
