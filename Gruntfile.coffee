@@ -535,8 +535,11 @@ module.exports = (grunt) ->
                 else
                     mj[p] = o2[p]
             else
+                if typeof o1[p] == 'object'
+                    mj[p] = mergeLocale o1[p], {}, prefix
                 #else copy the property from source1
-                mj[p] = prefix + o1[p]
+                else 
+                    mj[p] = prefix + o1[p]
         mj
 
     smartExpand = ( cwd, arr, extra ) ->    
