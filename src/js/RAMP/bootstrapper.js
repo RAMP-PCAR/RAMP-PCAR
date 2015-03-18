@@ -278,13 +278,8 @@ require([
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
-            if (brokenWebBrowser) {
-                // really IE9???  (╯°□°）╯︵ ┻━┻
-                esriConfig.defaults.io.corsDetection = false;
-                esriConfig.defaults.io.alwaysUseProxy = true;
-            } else {
-                esriConfig.defaults.io.corsDetection = true;
-            }
+            esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
+            // really IE9???  (╯°□°）╯︵ ┻━┻
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value

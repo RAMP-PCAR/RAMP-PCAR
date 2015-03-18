@@ -163,9 +163,14 @@ define([
              */
             addLayerItem: function (layer, options) {
                 var layerItem,
-                    layerItemOptions = {
-                        stateMatrix: this._constructStateMatrix(layer)
-                    };
+                    layerItemOptions = {};
+
+                // augment existing stateMatrix or create a new one
+                if (options && options.stateMatrix) {
+                    options.stateMatrix = this._constructStateMatrix(layer, options.stateMatrix);
+                } else {
+                    layerItemOptions.stateMatrix = this._constructStateMatrix(layer);
+                }
 
                 lang.mixin(layerItemOptions,
                     {
@@ -216,54 +221,25 @@ define([
              * Modifies the state matrix of the layer to accommodate types of layers that might not use/have all the default controls or have extra controls.
              *
              * @param {Object} layerConfig layer config
+             * @param {Object} [stateMatrix] optional stateMatrix
              * @method _constructStateMatrix
              * @private
              * @return {Object} modified layer state matrix
              */
-            _constructStateMatrix: function (layerConfig) {
-                var stateMatrix = lang.clone(LayerItem.stateMatrix);
+            _constructStateMatrix: function (layerConfig, stateMatrix) {
+                stateMatrix = stateMatrix || LayerItem.getStateMatrixTemplate();
 
                 if (!layerConfig.settings.panelEnabled) {
-                    this._removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
+                    LayerItem.removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
                 }
 
                 // remove bounding box toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent || layerConfig.isStatic) {
-                    this._removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
-                    this._addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
+                    LayerItem.removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
+                    LayerItem.addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
                 }
 
                 return stateMatrix;
-            },
-
-            /**
-             * Modifies the state matrix by adding specified partKey to the specified partType collection
-             *
-             * @param {Object} stateMatrix matrix to modify
-             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-             * @param {String} partKey part key to be inserted into the collection
-             * @method _addStateMatrixPart
-             * @private
-             */
-            _addStateMatrixPart: function (stateMatrix, partType, partKey) {
-                UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                    data[partType].push(partKey);
-                });
-            },
-
-            /**
-             * Modifies the state matrix by removing specified partKey to the specified partType collection
-             *
-             * @param {Object} stateMatrix matrix to modify
-             * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-             * @param {String} partKey part key to be removed into the collection
-             * @method _addStateMatrixPart
-             * @private
-             */
-            _removeStateMatrixPart: function (stateMatrix, partType, partKey) {
-                UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                    UtilArray.remove(data[partType], partKey);
-                });
             },
 
             /**

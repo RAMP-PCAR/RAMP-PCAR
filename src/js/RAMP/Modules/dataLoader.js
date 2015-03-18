@@ -253,15 +253,17 @@ define([
                     try {
                         layers = dojoArray.map(query('Layer > Name', data), function (nameNode) { return nameNode.parentNode; });
                         res.layers = dojoArray.map(layers, function (x) {
-                            var name = getImmediateChild(x, 'Name').textContent,
+                            var nameNode = getImmediateChild(x, 'Name'),
+                                name = nameNode.textContent || nameNode.text,
+                                // .text is for IE9's benefit, even though it claims to support .textContent
                                 titleNode = getImmediateChild(x, 'Title');
                             return {
                                 name: name,
-                                desc: titleNode ? titleNode.textContent : name,
+                                desc: titleNode ? (titleNode.textContent || titleNode.text) : name,
                                 queryable: x.getAttribute('queryable') === '1'
                             };
                         });
-                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent; });
+                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent || node.text; });
                     } catch (e) {
                         def.reject(e);
                     }
@@ -577,6 +579,12 @@ define([
                     }
                     console.log('csv parsed');
                     console.log(data);
+                    // csv2geojson will not include the lat and long in the feature
+                    dojoArray.forEach(data.features, function (feature) {
+                        // add new property Long and Lat before layer is generated
+                        feature.properties[csvOpts.lonfield] = feature.geometry.coordinates[0];
+                        feature.properties[csvOpts.latfield] = feature.geometry.coordinates[1];
+                    });
                     jsonLayer = makeGeoJsonLayer(data, opts);
                     def.resolve(jsonLayer);
                 });

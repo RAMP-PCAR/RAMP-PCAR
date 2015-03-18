@@ -2,20 +2,20 @@
 
 define([
     /* Dojo */
-    "dojo/_base/lang", "dojo/Deferred",
+    "dojo/_base/lang",
 
     /* Text */
     "dojo/text!./templates/filter_manager_template.json",
 
     /* Ramp */
 
-    "utils/PopupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage", "ramp/stepItem",
+    "utils/popupManager", "ramp/dataLoader", "ramp/theme", "ramp/map", "ramp/layerLoader", "ramp/globalStorage", "ramp/stepItem",
 
     /* Util */
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
-        lang, Deferred,
+        lang,
         filter_manager_template,
         PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage, StepItem,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
@@ -112,6 +112,30 @@ define([
                     message: "You have IE9?"
                 }
             };
+
+            choiceTreeErrors.featureError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerFeature")
+            });
+
+            choiceTreeErrors.wmsError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerWMS")
+            });
+
+            choiceTreeErrors.fileError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerFile")
+            });
+
+            choiceTreeErrors.geojsonError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerGeojson")
+            });
+
+            choiceTreeErrors.csvError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerCSV")
+            });
+
+            choiceTreeErrors.shapefileError = lang.mixin({}, choiceTreeErrors.base, {
+                header: i18n.t("addDataset.error.headerShapefile")
+            });
 
             choiceTree = {
                 // step for choosing between adding a service or a file
@@ -247,8 +271,8 @@ define([
                                                             if (!fieldOptions || fieldOptions.length === 0) {
                                                                 handleFailure(step, handle, {
                                                                     serviceType:
-                                                                        lang.mixin(choiceTreeErrors.base, {
-                                                                            message: "Blah-blah"
+                                                                        lang.mixin(choiceTreeErrors.featureError, {
+                                                                            message: i18n.t("addDataset.error.messageFeatureInvalid")
                                                                         })
                                                                 });
                                                             } else {
@@ -264,20 +288,22 @@ define([
                                                             }
 
                                                         }, function (event) {
+                                                            console.error(event);
                                                             handleFailure(step, handle, {
                                                                 serviceType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Blah-blah" + event.message
+                                                                    lang.mixin(choiceTreeErrors.featureError, {
+                                                                        message: i18n.t("addDataset.error.messageFeatureLegend")
                                                                     })
                                                             });
                                                         });
 
                                                     }, function (event) {
                                                         // error connection to service
+                                                        console.error(event);
                                                         handleFailure(step, handle, {
                                                             serviceURL:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Blah-blah" + event.message
+                                                                lang.mixin(choiceTreeErrors.featureError, {
+                                                                    message: i18n.t("addDataset.error.messageFeatureConnect")
                                                                 })
                                                         });
                                                     });
@@ -299,8 +325,8 @@ define([
                                                         if (!layerOptions || layerOptions.length === 0) {
                                                             handleFailure(step, handle, {
                                                                 serviceType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Blah-blah"
+                                                                    lang.mixin(choiceTreeErrors.wmsError, {
+                                                                        message: i18n.t("addDataset.error.messageWMSInvalid")
                                                                     })
                                                             });
                                                         } else {
@@ -319,10 +345,11 @@ define([
                                                         }
 
                                                     }, function (event) {
+                                                        console.error(event);
                                                         handleFailure(step, handle, {
-                                                            serviceType:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Blah-blah" + event.message
+                                                            serviceURL:
+                                                                lang.mixin(choiceTreeErrors.wmsError, {
+                                                                    message: i18n.t("addDataset.error.messageWMSConnect")
                                                                 })
                                                         });
                                                     });
@@ -476,7 +503,7 @@ define([
                         id: "fileTypeStep",
                         content: [
                             {
-                                id: "fileOrFileULR",
+                                id: "fileOrFileURL",
                                 type: Bricks.FileInputBrick,
                                 config: {
                                     //template: "template_name", //optional, has a default
@@ -533,12 +560,12 @@ define([
                                         {
                                             id: Bricks.OkCancelButtonBrick.okButtonId,
                                             type: "all",
-                                            check: ["fileType", "fileOrFileULR"]
+                                            check: ["fileType", "fileOrFileURL"]
                                         },
                                         {
                                             id: Bricks.OkCancelButtonBrick.cancelButtonId,
                                             type: "any",
-                                            check: ["fileType", "fileOrFileULR"]
+                                            check: ["fileType", "fileOrFileURL"]
                                         }
                                     ]
                                 },
@@ -557,9 +584,9 @@ define([
                                                 handle = delayLoadingState(step, 100),
                                                 bricksData = step.getData().bricksData,
                                                 fileTypeValue = bricksData.fileType.selectedChoice,
-                                                fileValue = bricksData.fileOrFileULR.fileValue,
-                                                fileUrlValue = bricksData.fileOrFileULR.inputValue,
-                                                fileName = bricksData.fileOrFileULR.fileName;
+                                                fileValue = bricksData.fileOrFileURL.fileValue,
+                                                fileUrlValue = bricksData.fileOrFileURL.inputValue,
+                                                fileName = bricksData.fileOrFileURL.fileName;
 
                                             promise = DataLoader.loadDataSet({
                                                 url: fileValue ? null : fileUrlValue,
@@ -583,8 +610,8 @@ define([
                                                             if (!fieldOptions || fieldOptions.length === 0) {
                                                                 handleFailure(step, handle, {
                                                                     fileType:
-                                                                        lang.mixin(choiceTreeErrors.base, {
-                                                                            message: "Not a geojson file"
+                                                                        lang.mixin(choiceTreeErrors.geojsonError, {
+                                                                            message: i18n.t("addDataset.error.messageGeojsonInvalid")
                                                                         })
                                                                 });
                                                             } else {
@@ -604,10 +631,11 @@ define([
 
                                                         }, function (event) {
                                                             //error building geojson
+                                                            console.error(event);
                                                             handleFailure(step, handle, {
                                                                 fileType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Cannot build, not a geojson" + event.message
+                                                                    lang.mixin(choiceTreeErrors.geojsonError, {
+                                                                        message: i18n.t("addDataset.error.messageGeojsonBroken")
                                                                     })
                                                             });
                                                         });
@@ -631,15 +659,24 @@ define([
                                                         if (!headers || headers.length === 0) {
                                                             handleFailure(step, handle, {
                                                                 fileType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Not a geojson file"
+                                                                    lang.mixin(choiceTreeErrors.csvError, {
+                                                                        message: i18n.t("addDataset.error.messageCSVInvalid")
                                                                     })
                                                             });
                                                         } else if (!rows || rows.length < 2) {
+                                                            // no rows, no layer
                                                             handleFailure(step, handle, {
                                                                 fileType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "No data in the file; maybe not CSV?"
+                                                                    lang.mixin(choiceTreeErrors.csvError, {
+                                                                        message: i18n.t("addDataset.error.messageCSVShort")
+                                                                    })
+                                                            });
+                                                        } else if (headers.length < 2) {
+                                                            // only one column? are you kidding me?
+                                                            handleFailure(step, handle, {
+                                                                fileType:
+                                                                    lang.mixin(choiceTreeErrors.csvError, {
+                                                                        message: i18n.t("addDataset.error.messageCSVThin")
                                                                     })
                                                             });
                                                         } else {
@@ -696,8 +733,8 @@ define([
                                                             if (!fieldOptions || fieldOptions.length === 0) {
                                                                 handleFailure(step, handle, {
                                                                     fileType:
-                                                                        lang.mixin(choiceTreeErrors.base, {
-                                                                            message: "Not a shapefile file"
+                                                                        lang.mixin(choiceTreeErrors.shapefileError, {
+                                                                            message: i18n.t("addDataset.error.messageShapefileInvalid")
                                                                         })
                                                                 });
                                                             } else {
@@ -717,10 +754,11 @@ define([
 
                                                         }, function (event) {
                                                             // error to build shapefiles
+                                                            console.error(event);
                                                             handleFailure(step, handle, {
                                                                 fileType:
-                                                                    lang.mixin(choiceTreeErrors.base, {
-                                                                        message: "Cannot build, not a shapefile" + event.message
+                                                                    lang.mixin(choiceTreeErrors.shapefileError, {
+                                                                        message: i18n.t("addDataset.error.messageShapefileBroken")
                                                                     })
                                                             });
                                                         });
@@ -730,10 +768,11 @@ define([
 
                                             }, function (event) {
                                                 //error loading file
+                                                console.error(event);
                                                 handleFailure(step, handle, {
-                                                    fileOrFileULR:
-                                                        lang.mixin(choiceTreeErrors.base, {
-                                                            message: "Cannot load file" + event.message
+                                                    fileOrFileURL:
+                                                        lang.mixin(choiceTreeErrors.fileError, {
+                                                            message: i18n.t("addDataset.error.messageFileConnect")
                                                         })
                                                 });
                                             });
@@ -928,8 +967,8 @@ define([
                                                         // can't construct csv
                                                         handleFailure(step, null, {
                                                             datasetName:
-                                                                lang.mixin(choiceTreeErrors.base, {
-                                                                    message: "Cannot create CSV feature lyer, probably not a valid csv"
+                                                                lang.mixin(choiceTreeErrors.csvError, {
+                                                                    message: i18n.t("addDataset.error.messageCSVBroken")
                                                                 })
                                                         });
                                                     });
@@ -1050,6 +1089,22 @@ define([
 
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
+
+            // It's IE9. 
+            if (!window.FileReader) {
+                var fileOrFileURL = stepLookup.fileTypeStep.contentBricks.fileOrFileURL;
+
+                console.warn("You have IE9");
+
+                fileOrFileURL.fileNode.remove();
+                fileOrFileURL.filePseudoNode.attr("disabled", true);
+                fileOrFileURL.browseFilesContainer
+                    .attr({
+                        title: i18n.t("addDataset.error.ie9FileAPI")
+                    })
+                    .addClass("_tooltip")
+                ;
+            }
 
             Theme.tooltipster(addDatasetContainer);
         }
