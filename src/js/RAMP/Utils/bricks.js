@@ -1178,6 +1178,14 @@ define([
                 return this;
             },
 
+            /**
+             * Checks if the option was selected by the user or not.
+             * 
+             * @method isUserSelected
+             * @return {Boolean} true if the option was selected by the user; false, otherwise
+             * @return {ChoiceBrick}           itself
+             * @chainable
+             */
             isUserSelected: function () {
                 return this.userSelected;
             },

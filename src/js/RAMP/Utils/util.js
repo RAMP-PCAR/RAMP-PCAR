@@ -486,7 +486,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
 
                 deferred.then(function () {
                     window.clearInterval(handle);
-                    //console.log("deffered resolved");
+                    //console.log("deferred resolved");
 
                     callback();
                 });
@@ -1265,7 +1265,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @method hexToRgb
             * @static
             * @param {String} hex hex colour code
-            * @return {Object} ojbect containing r, g, and b components of the supplied colour
+            * @return {Object} object containing r, g, and b components of the supplied colour
             */
             hexToRgb: function (hex) {
                 // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
