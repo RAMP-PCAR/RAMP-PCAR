@@ -282,7 +282,9 @@
             "mapExport": "[fr] Map Export",
             "open": "Ouvrir",
             "wmsQueryDisable": "[fr] Disable Queries",
-            "wmsQueryEnable": "[fr] Enable Queries"
+            "wmsQueryDisableTooltip": "[fr] Disable queries on all WMS layers",
+            "wmsQueryEnable": "[fr]  Queries",
+            "wmsQueryEnableTooltip": "[fr] Enable queries on all WMS layers"
         }
     }, 
     "help": {
@@ -455,17 +457,17 @@
     },
     "mapExport": {
         "downloadImage": "[fr] Download Image",
-		"downloadJPG": "[fr] JPG",
+        "downloadJPG": "[fr] JPG",
         "downloadJPGdesc": "[fr] Download as JPG",
         "downloadPNG": "[fr] PNG",
         "downloadPNGdesc": "[fr] Download as PNG",
         "error": {
             "generalMessage": "[fr] Image cannot be generated. Please try again later.",
-			"generalTitle": "[fr] Error"            
+            "generalTitle": "[fr] Error"            
         },
-		"includeLegend": "[fr] Include Legend",
+        "includeLegend": "[fr] Include Legend",
         "loading": "[fr] Generating image. Please wait.",
-		"title": "[fr] Map Export"
+        "title": "[fr] Map Export"
     },
     "page": {
         "footer": {
@@ -530,11 +532,11 @@
         "title": "Plateforme de cartographie accessible et réutilisable (PCAR)"
     },
     "presets" : {
-	    "defaultRenderers": {
-		    "circlePoint": "[fr] Circle Point",
-		    "outlinedPoly": "[fr] Outlined Polygon",
-		    "solidLine" : "[fr] Solid Line"	
-	    }
+        "defaultRenderers": {
+            "circlePoint": "[fr] Circle Point",
+            "outlinedPoly": "[fr] Outlined Polygon",
+            "solidLine" : "[fr] Solid Line"	
+        }
     },
     "serverError": {
         "basemapNotAvailable": {
