@@ -763,7 +763,5 @@
         "windParse.js"
     ],
 
-    "ui": {"mapQueryToggle": {"show": false}},
-
     "mapInitFailUrl": "./error-en.html"
 }
