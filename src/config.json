@@ -721,6 +721,16 @@
                 "settings": { "opacity": { "default": 0.3 } }
             },
             {
+                "id": "geomet_rain",
+                "displayName": "@@config.layers.wms.geomet_rain.displayName",
+                "format": "image/jpeg",
+                "layerName": "RADAR_RRAI",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "settings": { "opacity": { "default": 0.8 } }
+            },
+            {
                 "id": "railroad",
                 "displayName": "@@config.layers.wms.wms6.displayName",
                 "format": "png",

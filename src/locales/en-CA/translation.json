@@ -224,6 +224,9 @@
                 "geomet_wind": {
                     "displayName": "Wind speed"
                 },
+                "geomet_rain": {
+                    "displayName": "Rain"
+                },
                 "geomet_temp": {
                     "displayName": "Air temperature"
                 },
