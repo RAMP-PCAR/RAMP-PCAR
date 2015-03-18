@@ -344,12 +344,8 @@ define([
              * @chainable
              */
             setState: function (state) {
-                if (this.freezeStates.indexOf(state) !== -1) {
-                    this.freeze(true);
-                } else {
-                    this.freeze(false);
-                }
-
+                this.freeze(this.freezeStates.indexOf(state) !== -1);
+                
                 return this;
             },
 
