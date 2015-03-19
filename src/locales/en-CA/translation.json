@@ -35,7 +35,7 @@
             "messageFeatureConnect": "Cannot retrieve service.",
             "messageFeatureInvalid": "Service is misconfigured or does not exist.",
             "messageFeatureLegend": "Unable to retrieve legend information.",
-            "messageFeatureOutsideZoomRange": "Layer ouside RAMP zoom range. Features will not be visible.",
+            "messageFeatureOutsideZoomRange": "Layer is outside of available zoom range. Features will not be visible.",
             "messageFileConnect": "Cannot retrieve file.",
             "messageGeojsonBroken": "Unable to create layer from provided GeoJSON.",
             "messageGeojsonInvalid": "Malformed JSON object; field names cannot be retrieved.",
