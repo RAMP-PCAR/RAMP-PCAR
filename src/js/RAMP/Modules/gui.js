@@ -767,7 +767,7 @@ define([
                             mapToolbar
                                 .find(".map-toolbar-item-button.tooltip-temp")
                                 .parent(),
-                            null, "destroy");                        
+                            null, "destroy");
 
                         mapToolbar
                             .find(".map-toolbar-item-button.tooltip-temp")
@@ -789,6 +789,10 @@ define([
                 timeLines;
 
             createFullDataTL = function () {
+                if (panelDiv.find(".wb-tabs > ul li").length === 0) {
+                    return;
+                }
+
                 fullDataTimeLine
                     .fromTo(mapDiv, transitionDuration, { width: "auto" }, { width: 35, ease: "easeOutCirc" }, 0)
 
@@ -962,6 +966,12 @@ define([
             */
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
+
+                // if the timeline duration is 0, reset it
+                // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when creating timelines
+                if (fullDataTimeLine.totalDuration() === 0) {
+                    UtilMisc.resetTimelines([timeLines[0]]);
+                }
 
                 if (_isFullData) {
                     viewport.addClass("full-data-mode"); // set full-data-mode css class BEFORE animation; remove it after it finishes - on onReverseComplete callback
