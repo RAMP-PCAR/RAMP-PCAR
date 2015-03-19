@@ -24,20 +24,6 @@ module.exports = (grunt)->
     )
 
     grunt.registerTask(
-        'js:build'
-        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
-        [
-            'hint'
-            'jsstyle'
-            'concat:jsLib'
-            'copy:jsCore'
-            'copy:jsPlugins'
-            'replace:jsCoreBuild'
-            'notify:js'               
-        ]        
-    )
-
-    grunt.registerTask(
         'js:quietbuild'
         'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
         ()->
@@ -67,11 +53,3 @@ module.exports = (grunt)->
             ]        
     )
 
-    grunt.registerTask(
-        'js:dist'
-        'INTERNAL: Minifies JS code.'
-        [
-            'uglify'
-            'replace:jsCoreDist'
-        ]
-    )

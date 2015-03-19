@@ -3,20 +3,6 @@ module.exports = (grunt)->
     fs = require("fs")
 
     grunt.registerTask(
-        'api'
-        'Generates API docs.'
-        [
-            'clean:yuidoc'
-            'yuidoc'
-            'replace:api_dojo'
-            'replace:api_esri'
-            'clean:docco'
-            'docco'
-            'notify:api'
-        ]
-    )
-
-    grunt.registerTask(
         'api:enhance'
         'INTERNAL: Updates API doc templates with some magic.'
         () ->
