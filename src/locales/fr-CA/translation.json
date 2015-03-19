@@ -35,6 +35,7 @@
             "messageFeatureConnect": "[fr] Cannot retrieve service.",
             "messageFeatureInvalid": "[fr] Service is misconfigured or does not exist.",
             "messageFeatureLegend": "[fr] Unable to retrieve legend information.",
+            "messageFeatureOutsideZoomRange": "[fr] Layer ouside RAMP zoom range. Features will not be visible.",
             "messageFileConnect": "[fr] Cannot retrieve file.",
             "messageGeojsonBroken": "[fr] Unable to create layer from provided GeoJSON.",
             "messageGeojsonInvalid": "[fr] Malformed JSON object; field names cannot be retrieved.",
