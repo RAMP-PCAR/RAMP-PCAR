@@ -1398,7 +1398,7 @@ module.exports = (grunt) ->
                     'tarball/**/*.zip'
                 ]
                 
-            # push demo to the ramp docs repo
+            # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
             demo:
                 options:
                     add: true
