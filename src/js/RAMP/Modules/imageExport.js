@@ -11,9 +11,9 @@
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}
 * {{#crossLink "Map"}}{{/crossLink}}
-* 
+*
 * @class ImageExport
 * @static
 * @uses dojo/topic
@@ -59,7 +59,7 @@ define([
 
             /**
              * Handles click event on the export image toggle.
-             * 
+             *
              * @private
              * @method ui.generateExportIamge
              */
@@ -112,7 +112,7 @@ define([
             return {
                 /**
                  * Initializes ui and listeners.
-                 * 
+                 *
                  * @private
                  * @method ui.init
                  */
@@ -131,7 +131,52 @@ define([
                         .on('click', generateExportImage);
                 }
             };
-        }());
+        }()),
+             //this is a variable declaration, hiding after a very long ui variable
+             visState = { empty: true, layers: [] };
+
+        /**
+        * Find any visible file-based user-added layers.  Set them to invisible. Store the change.
+        *
+        * @method hideFileLayers
+        * @private
+        */
+        function hideFileLayers() {
+            //safety check.  if state is not empty, we may still have a previous call running, so dont mess with layers a second time
+            if (visState.empty) {
+                visState.empty = false;
+
+                //go through feature layer config
+                dojoArray.forEach(RAMP.config.layers.feature, function (fl) {
+                    var flObj = RAMP.layerRegistry[fl.id];
+
+                    //find if feature layer, user added, visible, and has no URL
+                    if (flObj.ramp.user && flObj.visible && !(flObj.url)) {
+                        //turn off visibility.  remember the layer
+                        flObj.setVisibility(false);
+                        visState.layers.push(flObj);
+                    }
+                });
+            }
+        }
+
+        /**
+        * Restore visibility to any layers that were temporarily turned off.
+        *
+        * @method restoreFileLayers
+        * @private
+        */
+        function restoreFileLayers() {
+            if (!visState.empty) {
+                //go through feature layer config
+                dojoArray.forEach(visState.layers, function (flObj) {
+                    flObj.setVisibility(true);
+                });
+
+                visState.empty = true;
+                visState.layers = [];
+            }
+        }
 
         /**
         * Will initiate a request for an image of all service-based layers.
@@ -145,17 +190,22 @@ define([
                 def = new Deferred();
 
             try {
-
                 mappy = RampMap.getMap();
+                //turn off any user-added file based layers, as they will kill the print service
+                hideFileLayers();
                 printTask = new PrintTask(RAMP.config.exportMapUrl);
 
                 printTask.on('complete', function (event) {
                     //console.log('PRINT RESULT: ' + event.result.url);
+                    //turn hidden layers back on
+                    restoreFileLayers();
                     def.resolve(event);
                 });
 
                 printTask.on('error', function (event) {
                     //console.log('PRINT FAILED: ' + event.error.message);
+                    //turn hidden layers back on
+                    restoreFileLayers();
                     def.reject(event);
                 });
 
@@ -176,7 +226,6 @@ define([
                 params.template = template;
                 console.log("submitting print job.  please wait");
                 printTask.execute(params);
-
             } catch (event) {
                 def.reject(event);
             }
@@ -188,7 +237,6 @@ define([
         }
 
         return {
-
             submitServiceImageRequest: submitServiceImageRequest,
 
             /**
