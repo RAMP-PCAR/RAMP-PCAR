@@ -458,9 +458,9 @@ module.exports = (grunt) ->
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
             tasks = [
-                'github-release'
-                'gh-pages:travis'
-                'gh-pages-clean'
+                #'github-release'
+                #'gh-pages:travis'
+                #'gh-pages-clean'
                 'copy:demo'
                 'gh-pages:demo'
             ]
@@ -1374,6 +1374,7 @@ module.exports = (grunt) ->
                 #clone: 'ramp-pcar-dist'
                 # base: 'dist'
 
+            # push minified and unminified builds to the dist repo
             travis:
                 options:
                     add: true
@@ -1397,6 +1398,7 @@ module.exports = (grunt) ->
                     'tarball/**/*.zip'
                 ]
                 
+            # push demo to the ramp docs repo
             demo:
                 options:
                     add: true
@@ -1415,6 +1417,7 @@ module.exports = (grunt) ->
                     'demos/**/*.*'
                 ]
         
+        # upload zipped builds to release in the RAMP-PCAR repo
         'github-release':
             options:
                 repository: process.env.HOME_REPO
