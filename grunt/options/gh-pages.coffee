@@ -6,10 +6,9 @@ module.exports =
     # push minified and unminified builds to the dist repo
     travis:
         options:
-            add: true
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
-            branch: '<%= series %>'
+            branch: '<%= pkg.series %>'
             message: ((
                 if process.env.TRAVIS_TAG
                     "Production files for the " + process.env.TRAVIS_TAG + " release"
@@ -21,10 +20,7 @@ module.exports =
                 if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
             ))
         src: [
-            # TODO: upload minified and unminified code in tarballs
-            #'dist/**/*.*'
-            #'build/**/*.*'
-            'tarball/**/*.zip'
+            'tarball/*.zip'
         ]
         
     # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
@@ -33,7 +29,7 @@ module.exports =
             add: true
             clone: 'ramp-pcar-demo'
             repo: process.env.DOCS_REPO
-            branch: 'gh-pages'
+            branch: 'master'
             #base: 'demos/NRSTC'
             message: ((
                 if process.env.TRAVIS_TAG
