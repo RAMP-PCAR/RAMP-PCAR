@@ -35,6 +35,7 @@
             "messageFeatureConnect": "Cannot retrieve service.",
             "messageFeatureInvalid": "Service is misconfigured or does not exist.",
             "messageFeatureLegend": "Unable to retrieve legend information.",
+            "messageFeatureOutsideZoomRange": "Layer is outside of available zoom range. Features will not be visible.",
             "messageFileConnect": "Cannot retrieve file.",
             "messageGeojsonBroken": "Unable to create layer from provided GeoJSON.",
             "messageGeojsonInvalid": "Malformed JSON object; field names cannot be retrieved.",
@@ -53,14 +54,14 @@
             "csvLatitude": "Select a latitude column (in decimal degrees)",
             "csvLongitude": "Select a longitude column (in decimal degrees)",
             "csvPrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
-            "dataSource": "Select the type of data source you would like to add: 'Service' to add a map web service; 'File' to upload a GeoJSON, CSV, or Shapefile.",
+            "dataSource": "Select the type of data source you would like to add: 'Service' to add a web service; 'File' to upload a GeoJSON, CSV, or Shapefile.",
             "featurePrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
             "fileOrURL": "Select a file on your computer, or specify a URL to a network file",
             "fileOrURLType": "Select the correct File Type (if we didn't guessed correctly)",
             "geojsonColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "geojsonDatasetName": "Dataset name that will appear in the layer selector",
             "geojsonPrimaryAttribute": "Select a primary identifier for map features (i.e. Name, ID, etc)",
-            "serviceType": "Select the correct Map Service Type (if we didn't guessed correctly)",
+            "serviceType": "Select the correct Map Service Type (if we didn't guess correctly)",
             "serviceURL": "Enter the Map Service endpoint URL for an ESRI Feature Layer or OGC Web Map Service.",
             "shapefileColour": "Enter hex HTML colour code or use a colour picker to select the layer features' colour",
             "shapefileDatasetName": "Dataset name that will appear in the layer selector",
@@ -105,220 +106,227 @@
         "advancedTitle": "Advanced",
         "title": "Tools"
     },
-    "basemapSelector": { 
+    "basemapSelector": {
         "refreshRequired": "Page refresh required"
     },
     "bookmarkLink": {
-        "description": "Link to Map Viewer", 
-        "email": "Email", 
-        "emailUrlBody": "Here's a cool map:", 
-        "emailUrlSubject": "RAMP GIS Viewer", 
-        "longLink": "Long link", 
-        "shortLink": "Short link", 
+        "description": "Link to Map Viewer",
+        "email": "Email",
+        "emailUrlBody": "Here's a cool map:",
+        "emailUrlSubject": "RAMP GIS Viewer",
+        "longLink": "Long link",
+        "shortLink": "Short link",
         "title": "Get Link"
-    }, 
+    },
     "config": {
         "basemaps": {
             "baseCBME_CBCE_HS_RO_3978": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBMT_CBCT_HS", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_HS",
                 "name": "Shaded Relief"
-            }, 
+            },
             "baseCBMT_CBCT_GEOM_3978": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBMT_CBCT_GEOM", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBMT_CBCT_GEOM",
                 "name": "Road Networks"
-            }, 
+            },
             "baseE2M": {
-                "altText": "Topographic Map", 
-                "description": "Earth 2 Map", 
+                "altText": "Topographic Map",
+                "description": "Earth 2 Map",
                 "name": "Canada Topographic"
-            }, 
+            },
             "baseEsriPhysical": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Physical_Map", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Physical_Map",
                 "name": "Physical Earth"
-            }, 
+            },
             "baseEsriRelief": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Shaded_Relief", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Shaded_Relief",
                 "name": "Shaded Relief"
-            }, 
+            },
             "baseEsriStreet": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Street_Map", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Street_Map",
                 "name": "Streets"
-            }, 
+            },
             "baseEsriTerrain": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Terrain_Base", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Terrain_Base",
                 "name": "Terrain"
-            }, 
+            },
             "baseEsriTopo": {
-                "altText": "Topographic Map", 
-                "description": "ESRI World_Topo_Map", 
+                "altText": "Topographic Map",
+                "description": "ESRI World_Topo_Map",
                 "name": "Topographic"
-            }, 
+            },
             "baseEsriWorld": {
-                "altText": "Satellite Map", 
-                "description": "ESRI World_Imagery", 
+                "altText": "Satellite Map",
+                "description": "ESRI World_Imagery",
                 "name": "Satellite Imagery"
-            }, 
+            },
             "baseNrCan": {
-                "altText": "Topographic Map", 
-                "description": "NrCan CBCT3978", 
+                "altText": "Topographic Map",
+                "description": "NrCan CBCT3978",
                 "name": "Canada Atlas"
-            }, 
+            },
             "baseSimple": {
-                "altText": "Topographic Map", 
-                "description": "NrCan Simple", 
+                "altText": "Topographic Map",
+                "description": "NrCan Simple",
                 "name": "Water Bodies"
             }
-        }, 
+        },
         "layers": {
             "feature": {
                 "MW_E": {
                     "displayName": "Smelters and refineries"
-                }, 
+                },
                 "_17e537a6": {
                     "displayName": "BBS Routes"
-                }, 
+                },
                 "_708985e5": {
                     "displayName": "Water Regions"
-                }, 
+                },
                 "_b6b6d5a6": {
                     "displayName": "CESI Water Quality Indicators"
-                }, 
+                },
                 "cesi_ozone": {
                     "displayName": "CESI Air Ozone"
-                }, 
+                },
                 "dog_guts": {
                     "displayName": "Bird Habitats"
-                }, 
+                },
                 "layer_dd1m3": {
                     "displayName": "Monitoring Sites"
-                }, 
+                },
                 "layer_g5h6i": {
                     "displayName": "EC Projects"
-                }, 
+                },
                 "layer_sea_parks": {
                     "displayName": "Sea Parks"
-                }, 
+                },
                 "oilAreaOverlay": {
                     "displayName": "CESI Oil Area Overlay"
-                }, 
+                },
                 "oilSandsRegions": {
                     "displayName": "Oil Sands Regions"
                 }
-            }, 
+            },
             "wms": {
                 "aglands": {
                     "displayName": "Pastures - 2000"
-                }, 
+                },
                 "dog_guts": {
                     "displayName": "Bird Habitats"
-                }, 
+                },
                 "limits": {
                     "displayName": "Limits"
-                }, 
+                },
                 "geomet_wind": {
                     "displayName": "Wind speed"
-                }, 
+                },
+                "geomet_rain": {
+                    "displayName": "Rain"
+                },
                 "geomet_temp": {
                     "displayName": "Air temperature"
-                }, 
+                },
                 "wms6": {
                     "displayName": "Railway Network"
                 }
             }
-        }, 
+        },
         "tileSchema": {
-            "ESRI_World_AuxMerc_3857": "Auxiliary Mercator", 
-            "NRCAN_Lambert_3978": "Canada Atlas Lambert", 
+            "ESRI_World_AuxMerc_3857": "Auxiliary Mercator",
+            "NRCAN_Lambert_3978": "Canada Atlas Lambert",
             "NRCAN_Lambert_3979": "Lambert 79"
         }
-    }, 
+    },
     "datagrid": {
-        "dataTabTitle": "Data", 
-        "details": "Details", 
+        "dataTabTitle": "Data",
+        "details": "Details",
         "ex": {
-            "dataSummary": "Data Summary", 
-            "dataset": "Dataset", 
-            "datasetSelectorButtonLoad": "Load", 
-            "datasetSelectorButtonLoaded": "Loaded", 
+            "dataSummary": "Data Summary",
+            "dataset": "Dataset",
+            "datasetSelectorButtonLoad": "Load",
+            "datasetSelectorButtonLoaded": "Loaded",
             "datasetSelectorButtonLoading": "Loading ..."
-        }, 
-        "fullData": "Full Data", 
+        },
+        "fullData": "Full Data",
         "gridstrings": {
             "oAria": {
-                "sSortAscending": ": activate to sort column ascending", 
+                "sSortAscending": ": activate to sort column ascending",
                 "sSortDescending": ": activate to sort column descending"
-            }, 
+            },
             "oPaginate": {
-                "sFirst": "First", 
-                "sLast": "Last", 
-                "sNext": "Next", 
-                "sPage": "Page", 
-                "sPrevious": "Previous", 
+                "sFirst": "First",
+                "sLast": "Last",
+                "sNext": "Next",
+                "sPage": "Page",
+                "sPrevious": "Previous",
                 "sRecords": "Records"
-            }, 
-            "sEmptyTable": "No data available in table", 
-            "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries", 
-            "sInfoEmpty": "Showing 0 to 0 of 0 entries", 
-            "sInfoFiltered": "(filtered from _MAX_ total entries)", 
-            "sInfoPostFix": "", 
-            "sInfoThousands": ",", 
-            "sLengthMenu": "Show _MENU_ entries", 
-            "sLoadingRecords": "Loading ...", 
-            "sProcessing": "Processing ...", 
-            "sSearch": "Search:", 
+            },
+            "sEmptyTable": "No data available in table",
+            "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
+            "sInfoEmpty": "Showing 0 to 0 of 0 entries",
+            "sInfoFiltered": "(filtered from _MAX_ total entries)",
+            "sInfoPostFix": "",
+            "sInfoThousands": ",",
+            "sLengthMenu": "Show _MENU_ entries",
+            "sLoadingRecords": "Loading ...",
+            "sProcessing": "Processing ...",
+            "sSearch": "Search:",
             "sZeroRecords": "No matching records found"
-        }, 
+        },
         "notices": {
-            "offScaleFullData": "Data is not visible at this zoom level.", 
+            "offScaleFullData": "Data is not visible at this zoom level.",
             "offScaleSummary": "Some data is not visible at this zoom level."
-        }, 
-        "sort": "Sort", 
-        "zoomBack": "Zoom Back", 
+        },
+        "sort": "Sort",
+        "zoomBack": "Zoom Back",
         "zoomTo": "Zoom To"
-    }, 
+    },
     "filterManager": {
-        "allData": "All Data", 
+        "allData": "All Data",
         "controlsMatrix": {
-            "error": "Error", 
-            "metadata": "Metadata", 
-            "reload": "Reload", 
-            "remove": "Remove", 
+            "error": "Error",
+            "metadata": "Metadata",
+            "reload": "Reload",
+            "remove": "Remove",
             "settings": "Settings"
-        }, 
-        "datasetsTabTitle": "Datasets", 
-        "hideAllBounds": "Hide All Bounds", 
-        "hideAllFeatures": "Hide All", 
-        "hideBounds": "Hide Bounds of {0}", 
-        "hideFeatures": "Hide {0}", 
-        "layerHandle": "Layer Handle", 
-        "layerHandleLabel": "Layer handle for __layerName__", 
+        },
+        "datasetsTabTitle": "Datasets",
+        "hideAllBounds": "Hide All Bounds",
+        "hideAllFeatures": "Hide All",
+        "hideBounds": "Hide Bounds of {0}",
+        "hideFeatures": "Hide {0}",
+        "layerHandle": "Layer Handle",
+        "layerHandleLabel": "Layer handle for __layerName__",
         "layerListLabel": "Sortable layer list",
         "legend": "Legend",
         "showLegend": "Show Legend",
         "hideLegend": "Hide Legend",
-        "linkToCap": "Link To Capabilities", 
-        "metadata": "Metadata", 
-        "metadataNotFound": "No metadata was found for this layer.", 
-        "metadataNotPublished": "No metadata was published for this layer.", 
+        "linkToCap": "Link To Capabilities",
+        "metadata": "Metadata",
+        "metadataNotFound": "No metadata was found for this layer.",
+        "metadataNotPublished": "No metadata was published for this layer.",
         "notices": {
-            "error": "Error", 
+            "error": {
+                "connect": "Cannot retrieve service.",
+                "draw": "Cannot display service data.", 
+                "load": "Cannot load service data."
+            },
             "offScale": "No data visible at this zoom level",
             "update": "Updating",
             "user": "User-added Dataset"
-        }, 
-        "settings": "Settings", 
-        "settingsLayerSettings": "Layer Settings", 
-        "settingsOpacity": "Opacity", 
-        "showAllBounds": "Show All Bounds", 
-        "showAllFeatures": "Show All", 
-        "showBounds": "Show Bounds of {0}", 
-        "showFeatures": "Show {0}", 
+        },
+        "settings": "Settings",
+        "settingsLayerSettings": "Layer Settings",
+        "settingsOpacity": "Opacity",
+        "showAllBounds": "Show All Bounds",
+        "showAllFeatures": "Show All",
+        "showBounds": "Show Bounds of {0}",
+        "showFeatures": "Show {0}",
         "zoomToData": "Zoom to data"
     }, 
     "gui": {
@@ -361,26 +369,29 @@
             "h2": "Opening the Toolbar", 
             "h3": "Tool Activation", 
             "h4": "Population Tool", 
-            "h5": "Buffer Tool", 
-            "h6": "Measure Tool", 
+            "h5": "Buffer Tool",
+            "h6": "Area Tool", 
+            "h7": "Distance Tool", 
             "header": "Advanced Toolbar", 
             "img2": "The Toolbar Button", 
             "img3": "The Advanced Toolbar", 
             "img4": "Population Polygon and Result", 
-            "img5": "Buffer Input and Result", 
-            "img6": "Measurement Polygon and Result", 
-            "p1": "The advanced toolbar provides utilities that can break accessibility, usually due to their dependance on a mouse-driven input.", 
-            "p2": "Select the Advanced button on the main toolbar to open the advanced toolbar. Selecting the button a second time will close the advanced toolbar and de-activate any active tools.", 
+            "img5": "Buffer Input and Result",
+            "img6": "Area Polygon and Result", 
+            "img7": "Distance Line and Result", 
+            "p1": "The advanced toolbar provides utilities that can break accessibility, usually due to their dependence on a mouse-driven input.", 
+            "p2": "Select the Tools button on the main toolbar to open the advanced toolbar. Selecting the button a second time will close the advanced toolbar and de-activate any active tools.", 
             "p3": "Any tool can be activated by clicking the appropriate button on the advanced toolbar. Clicking a second time will de-activate the tool, as will closing the advanced toolbar, or selecting a new tool.", 
             "p31": "While active, you may use a tool as many times as you like.", 
             "p4": "Select the Population button to activate the population tool. Draw a polygon on the map and release the mouse.  The population of people inside the polygon will be displayed in the results window.  The Clear button will erase an existing result from the map.", 
-            "p5": "Select the Buffer button to activate the buffer tool. Enter a desired buffer size in kilometers in the tool input. Draw a polygon on the map and release the mouse.  A buffer of the desired size will be applied to the polygon and displayed.", 
-            "p6": "Select the Measure button to activate the tool. Draw a polygon on the map and release the mouse.  The area and the circumference of the polygon will be displayed in the results window."
-        }, 
+            "p5": "Select the Buffer button to activate the buffer tool. Enter a desired buffer size in kilometers in the tool input. Draw a polygon on the map and release the mouse.  A buffer of the desired size will be applied to the polygon and displayed.",
+            "p6": "Select the Area button to activate the tool. Draw a polygon on the map and release the mouse.  The area and the circumference of the polygon will be displayed in the results window.",
+            "p7": "Select the Distance button to activate the tool. Draw a line on the map and release the mouse.  The distance of the line will be displayed in the results window."
+        },
         "s12": {
-            "h2": "Note", 
-            "header": "Load Times / Unanticipated Behaviour", 
-            "p1": "Load times may vary based on network location and bandwidth availability, and unanticipated behaviour may occur if any map interactions occur before data is fully loaded. Please allow the webpage to load completely before triggering any map functions.", 
+            "h2": "Note",
+            "header": "Load Times / Unanticipated Behaviour",
+            "p1": "Load times may vary based on network location and bandwidth availability, and unanticipated behaviour may occur if any map interactions occur before data is fully loaded. Please allow the webpage to load completely before triggering any map functions.",
             "p2": "If the \"Loading...\" text appears in the lower right corner of map or the data grid displays a loading message, please allow the loading indicator to disappear before triggering any function on the map."
         }, 
         "s2": {
@@ -392,10 +403,21 @@
         }, 
         "s3": {
             "h1": "Usage", 
-            "header": "Add Layer from Web", 
-            "img1": "Add layer widget", 
-            "p1": "Adding a layer from web will allow you to reference data from publicly accessible mapping services as a view-only copy and compare it to other layers available inside the mapping application.", 
-            "p2": "From the dropdown, select the type of service you wish to add, then enter a valid URL for the service endpoint, then select to opacity level for the layer you will add."
+            "h2": "Specifying the Dataset Type",
+            "h3": "Specifying the Dataset Location", 
+            "h4": "Specifying the Specifics of the Dataset", 
+            "header": "User Added Datasets",             
+            "p1": "Additional datasets can be added to the map viewer.  Supported formats are: ESRI Feature Layer, WMS, GeoJSON, Shapefile, and CSV File.  The '+' button at the top-left of the Layer Selector will launch the Add Dataset wizard.",
+            "p2": "Select the type of data source you would like to add: 'Service' to add a web-based map service; 'File' to upload a GeoJSON, CSV, or Shapefile.",
+            "p3": "Enter the location of the service URL or dataset file in the location box.  If the dataset is a file on your file system, you must click the 'File' button and browse to the location.",
+            "p4": "A web based URL can be typed or pasted into the box.",
+            "p5": "RAMP will predict the dataset type, if it is incorrect, click the button that specifies the correct type.",
+            "p6": "Click the 'Connect' or 'Load' button to initiate the loading of the dataset.",
+            "p7": "Depending on the type of dataset being loaded, various parameters can be set in this phase.",
+            "p8": "A Feature Service allows the choice of a Primary Attribute, which determines the attribute used to identify a feature in the data grid and map tips.  All other information is derived from the service's metadata.",
+            "p9": "A WMS Service allows the choice of the Layer Name, which determines the layer in the WMS to be used as the source for the dataset.  All other information is derived from the service's metadata.",
+            "p10": "File based datasets allow the choice of the following: a Dataset Name, which will be displayed in the Layer Selector; a Primary Attribute, which acts the same as in the Feature Service; a Symbol Colour, which determines the colour of the points / lines / polygons on the map.  CSV files also allow the specification of the columns that contain the Latitude and Longitude values, used to derive the point location on the map.",
+            "p11": "Clicking the 'Add Dataset' button will insert the layer into the map."
         }, 
         "s4": {
             "h1": "Usage", 
@@ -418,20 +440,30 @@
             "h2": "Layer Types", 
             "h3": "Layer Visibility", 
             "h4": "Layer Bounding Box", 
-            "h5": "Layer Reordering", 
-            "h6": "Layer Metadata", 
-            "h7": "Layer Settings", 
-            "header": "Data Sets", 
-            "img2": "Data Sets", 
-            "img5": "Layer Reordering", 
+            "h5": "Layer Legends", 
+            "h6": "Handling Layer Errors", 
+            "h7": "Layer Reordering", 
+            "h8": "Layer Metadata", 
+            "h9": "Layer Settings", 
+            "h10": "Zoom Scale Dependent Layers", 
+            "header": "Datasets", 
+            "img2": "Datasets",
+            "img5": "Legends",
+            "img6": "Layer Errors",
+            "img7": "Layer Reordering", 
+            "img7a": "Layer Group Boundaries", 
+            "img10": "Zoom Scale Dependent Layers", 
             "p1": "The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid. The Datasets tab also serves as a map legend.", 
             "p2": "There are three types of layers that can reside in the Dataset tab.", 
             "p3": "Select the \"eye\" icon next to a dataset name to toggle the layer on or off.", 
             "p4": "Use the \"cross hatch\" icon to the right of the eye icon to display the bounding box of the dataset.", 
-            "p5": "Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.", 
-            "p51": "While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  WMS layers will always be displayed beneath the other layers, but may be re-ordered amongst other WMS layers.", 
-            "p6": "Select the \"Metadata\" link to display relevant metadata for that source in a collapsible Info Panel.", 
-            "p7": "Select the \"Settings\" link to change layer's opacity using the slider control.", 
+            "p5": "Each layer has some symbology associated with it.  For simple feature layers a single icon will be present next to the layer name.  For complex feature layers (i.e. those with multiple symbols used per layer) the icon will show as a stack and maybe toggled on and off.  When toggled on a section will expand beneath the layer name and show the full symbology for the layer.  WMS layers may optionally have a graphical legend defined, if one is present it will be displayed in the same drop down manner.",
+            "p6": "If a layer fails to load correctly it will be identified by an error notice.  Instead of the standard layer actions you can select to either reload the layer (this is particularly helpful if there is a temporary network connectivity issue) or remove the layer.  If a layer is removed it will be taken out of the layer selector completely and if it is added back via \"Add Dataset\" it will lose any previous customizations.",
+            "p7": "Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.", 
+            "p7a": "While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  When reordering layers, layers which cannot be mixed will be greyed out.  Although layers can be reordered within their groups the grouping is static with feature and static layers always displaying over the WMS layer group.", 
+            "p8": "Select the \"Metadata\" link to display relevant metadata for that source in a collapsible Info Panel.", 
+            "p9": "Select the \"Settings\" link to change layer's opacity using the slider control.", 
+            "p10": "Some layers may only be visible at certain zoom levels.  If a layer is not visible at a given zoom level the layer selector will display a notice and have an action available to zoom to the closest zoom level at which the layer will be visible (this may involve either zooming in or zooming out).",
             "ul2": {
                 "li1": "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.", 
                 "li2": "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.", 

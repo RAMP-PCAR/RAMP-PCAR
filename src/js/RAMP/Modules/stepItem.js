@@ -1,4 +1,5 @@
-﻿/* global define, $, TimelineLite, console */
+﻿
+/* global define, $, TimelineLite, console */
 
 /**
 * @module RAMP
@@ -7,13 +8,15 @@
 */
 
 /**
-* Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic changing of the layer item state. 
+* Creates a step in the choice tree.
 * 
 * ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * {{#crossLink "TmplUtil"}}{{/crossLink}}  
 * {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "Bricks"}}{{/crossLink}}    
 *  
 * 
 * ####Uses RAMP Templates:
@@ -24,6 +27,7 @@
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/lang
+* @uses dojo/Deferred
 * 
 * @param {Object} config a config definition of the layer
 * @param {Object} [options] Additional options
@@ -38,7 +42,7 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/Deferred",
 
     /* Text */
     "dojo/text!./templates/filter_manager_template.json",
@@ -47,7 +51,7 @@ define([
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
-        Evented, declare, lang,
+        Evented, declare, lang, Deferred,
         filter_manager_template,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
@@ -73,6 +77,15 @@ define([
                          * @default null
                          */
                         id: null,
+
+                        /**
+                         * Indicates the level of the step, or how far down the tree this step appears. 
+                         * 
+                         * @property level
+                         * @type Number
+                         * @default 0
+                         * 
+                         */
                         level: 0,
 
                         /**
@@ -84,26 +97,153 @@ define([
                          */
                         node: null,
 
+                        /**
+                         * An array of Brick configs and other related properties.
+                         * 
+                         * @property content
+                         * @type {Array}
+                         * @default null
+                         * @private
+                         * @example
+                         *     [{
+                         *        id: "sourceType",
+                         *        type: Bricks.ChoiceBrick,
+                         *        config: {
+                         *            header: i18n.t("addDataset.dataSource"),
+                         *            instructions: i18n.t("addDataset.help.dataSource"),
+                         *            choices: [
+                         *                {
+                         *                    key: "serviceTypeStep",
+                         *                    value: i18n.t("addDataset.dataSourceService")
+                         *                },
+                         *                {
+                         *                    key: "fileTypeStep",
+                         *                    value: i18n.t("addDataset.dataSourceFile")
+                         *                }
+                         *            ]
+                         *        },
+                         *        on: [
+                         *            {
+                         *                eventName: Bricks.ChoiceBrick.event.CHANGE,
+                         *                //expose: { as: "advance" },
+                         *                callback: choiceTreeCallbacks.simpleAdvance
+                         *            }
+                         *        ]
+                         *       }]
+                         * 
+                         */
                         content: null,
+
+                        /**
+                         * A collection of build Bricks that can accessed by their ids.
+                         * 
+                         * @property contentBricks
+                         * @type {Object}
+                         * @default {}
+                         */
                         contentBricks: {},
 
+                        /**
+                         * Default template used for building step items.
+                         * 
+                         * @property template
+                         * @type {String}
+                         * @default "default_step_template"
+                         */
                         template: "default_step_template",
 
+                        /**
+                         * Node of the content div.
+                         * 
+                         * @private
+                         * @property _contentNode
+                         * @default null
+                         */
                         _contentNode: null,
+                        /**
+                         * Node of the options container.
+                         * 
+                         * @private
+                         * @property _optionsContainerNode
+                         * @default null
+                         */
                         _optionsContainerNode: null,
+                        /**
+                         * Node of the options background node. It's used to change the state of the child steps - SUCCESS, ERROR, etc.
+                         * 
+                         * @private
+                         * @property _optionsBackgroundNode
+                         * @default null
+                         */
                         _optionsBackgroundNode: null,
+                        /**
+                         * Node of the options div.
+                         * 
+                         * @private
+                         * @property _optionsNode
+                         * @default null
+                         */
                         _optionsNode: null,
 
+                        /**
+                         * A collection of the child step items of this step item. Should not be accessed directly.
+                         * 
+                         * @private
+                         * @property _childSteps
+                         * @default {}
+                         */
                         _childSteps: {},
+
+                        /**
+                         * A step item of the currently active child of this step item. If there is no active child, it means that a choice or action hasn't been made on this step yet or it's the last step in the branch.
+                         * 
+                         * @private
+                         * @property _activeChildStep
+                         * @default null
+                         */
                         _activeChildStep: null,
 
+                        /**
+                         * A step item of the parent step item if any. Used only for animating background when opening/collapsing (error) notices.
+                         * 
+                         * @private
+                         * @property _parent
+                         * @default null
+                         */
                         _parent: null,
 
+                        /**
+                         * An object containing some data. This is used like that: when the step is advanced, a data object is provided by external code; this object is then passed to whichever child is being advanced so it can be retrieved later without external code having to store it somewhere.
+                         * 
+                         * @private
+                         * @property _stepData
+                         * @default null
+                         */
                         _stepData: {},
 
+                        /**
+                         * The current state of this step item.
+                         * 
+                         * @private
+                         * @property _state
+                         * @default StepItem.state.DEFAULT,
+                         */
                         _state: StepItem.state.DEFAULT,
 
+                        /**
+                         * A timeline of this step item. Used for animation
+                         * 
+                         * @private
+                         * @property _timeline
+                         */
                         _timeline: new TimelineLite({ paused: true }),
+                        /**
+                         * A default duration value for all single transitions of any elements of this step.
+                         * 
+                         * @private
+                         * @property _transitionDuration
+                         * @default 0.4
+                         */
                         _transitionDuration: 0.4
                     },
                     config
@@ -123,6 +263,15 @@ define([
                 console.debug("-->", this._state);
             },
 
+            /**
+             * Instantiates and adds a new brick to this step item.
+             * 
+             * @method _addContentBrick
+             * @param {Object} contentItem a config object for a Brick
+             * @param {Object} contentItem.id Brick id
+             * @param {Object} contentItem.config actual Brick config
+             * @private
+             */
             _addContentBrick: function (contentItem) {
                 var that = this,
                     contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
@@ -143,6 +292,14 @@ define([
                 this._doInternalCheck();
             },
 
+            /**
+             * Wire up listeners on the given Brick.
+             * 
+             * @method _wireBrickUp
+             * @param  {Object} contentItem  a config object for a Brick
+             * @param  {Object} contentBrick an actual Brick instance
+             * @private
+             */
             _wireBrickUp: function (contentItem, contentBrick) {
                 var that = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
@@ -178,6 +335,15 @@ define([
                 });
             },
 
+            /**
+             * Checks Brick's requirements. Enables or disabled the target Brick based on validity of its requirements.
+             * 
+             * @method _internalCheckHelper
+             * @param  {Array} required      an array of required rules
+             * @param  {Brick} targetBrick   a Brick with requirements
+             * @param  {Object} contentBricks a dictionary of bricks available in this step
+             * @private
+             */
             _internalCheckHelper: function (required, targetBrick, contentBricks) {
                 var flag = false;
 
@@ -199,6 +365,12 @@ define([
                 targetBrick.disable(!flag);
             },
 
+            /**
+             * Checks this step item validity by checking validity of all its Bricks.
+             * 
+             * @method _doInternalCheck
+             * @private
+             */
             _doInternalCheck: function () {
                 var that = this;
 
@@ -206,6 +378,7 @@ define([
 
                     if (brick.required) {
 
+                        // if it's a MultiBrick, check requirements for each of the Bricks in MultiBrick 
                         if (Bricks.MultiBrick.isPrototypeOf(brick)) {
 
                             if (Array.isArray(brick.required)) {
@@ -230,6 +403,15 @@ define([
                 }
             },
 
+            /**
+             * Creates timeline for retreat animation - when the part of the choice tree is collapsing, switching to another branch of the tree.
+             * 
+             * @method _makeCloseTimeline
+             * @param  {Boolean} skipFirst  indicates whether the first child step should be included in the timeline
+             * @param  {Boolean} resetState indicates if the child step state should be reset
+             * @return {Object}            a constructed close timeline
+             * @private
+             */
             _makeCloseTimeline: function (skipFirst, resetState) {
                 var closeTimeline = new TimelineLite(),
                     closeStagger,
@@ -246,6 +428,17 @@ define([
                 return closeTimeline;
             },
 
+            /**
+             * Generates a close timeline for this particular step item and adds it to the global close timeline. Calls the same on the target child.
+             *
+             * @method _getCloseTimelines
+             * @param  {Object} tls   global close timeline
+             * @param  {Boolean} skip  indicates whether to skip the first child step item
+             * @param  {Boolean} reset indicates whether to reset the step item state to DEFAULT
+             * @return {StepItem}       itself
+             * @private
+             * @chainable
+             */
             _getCloseTimelines: function (tls, skip, reset) {
                 var tl = new TimelineLite(),
 
@@ -279,6 +472,14 @@ define([
                 return this;
             },
 
+            /**
+             * Creates timeline for shift animation - when the selected option for a choice is changing - animating horizontally.
+             * 
+             * @method _makeShiftTimeline
+             * @param  {String} targetChildStepId  specifies the target childId
+             * @return {Object}            a constructed shift timeline
+             * @private
+             */
             _makeShiftTimeline: function (targetChildStepId) {
                 var shiftTimeline = new TimelineLite(),
                     targetChildStep = this._childSteps[targetChildStepId],
@@ -313,6 +514,15 @@ define([
                 return shiftTimeline;
             },
 
+            /**
+             * Creates timeline for advance animation - when the part of the choice tree is unfolding, (after switching to another branch of the tree).
+             * 
+             * @method _makeOpenTimeline
+             * @param  {String} targetChildStepId specifies the target child id
+             * @param  {Boolean} skipFirst  indicates whether the first child step should be included in the timeline
+             * @return {Object}            a constructed open timeline
+             * @private
+             */
             _makeOpenTimeline: function (targetChildStepId, skipFirst) {
                 var openTimeline = new TimelineLite(),
                     openStagger,
@@ -328,6 +538,17 @@ define([
                 return openTimeline;
             },
 
+            /**
+             * Generates an open timeline for this particular step item and adds it to the global open timeline. Calls the same on the target child.
+             *
+             * @method _getOpenTimelines
+             * @param  {Object} tls   global open timeline
+             * @param  {String} targetChildStepId specifies the target child id
+             * @param  {Boolean} skip  indicates whether to skip the first child step item
+             * @return {StepItem}       itself
+             * @private
+             * @chainable
+             */
             _getOpenTimelines: function (tls, targetChildStepId, skip) {
                 var tl = new TimelineLite(),
                     targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
@@ -338,7 +559,7 @@ define([
                     if (!skip) {
 
                         tl
-                            // set options contaner node to visible, otherwise you can't get its size
+                            // set options container node to visible, otherwise you can't get its size
                             .set(this._optionsContainerNode, { display: "block", top: -9999 }, 0)
 
                             // make sure options' node is on the left
@@ -348,7 +569,7 @@ define([
                             .set(otherChildNodes, { display: "none" }, 0)
                             .set(targetChildStep.node, { className: "+=active-option", display: "inline-block" }, 0)
 
-                            // make the targe step current
+                            // make the target step current
                             .call(function () {
                                 targetChildStep._notifyCurrentStepChange();
                             })
@@ -380,6 +601,14 @@ define([
                 return this;
             },
 
+            /**
+             * Returns an array of child step nodes except for steps whose ids are passed in `except` param.
+             * 
+             * @method _getChildNodes
+             * @private
+             * @param  {Array} except an array of child step ids to not include in the result
+             * @return {Array}        an array of child step nodes
+             */
             _getChildNodes: function (except) {
                 var childNodes = [];
 
@@ -394,10 +623,28 @@ define([
                 return childNodes;
             },
 
+            /**
+             * Emits a `CURRENT_STEP_CHANGE` event with a payload of id and level of the current step item.
+             * This notifies the trunk of the tree and this step is now a current step. The trunk in turn notifies 
+             * every other step that they are not current steps.
+             *
+             * @method _notifyCurrentStepChange
+             * @private
+             */
             _notifyCurrentStepChange: function () {
                 this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
             },
 
+            /**
+             * Emits a `STATE_CHANGE` event with a payload of id, level and state of the current step item.
+             * Additionally sets state of all the content bricks to corresponding states.
+             * 
+             * @method _notifyStateChange
+             * @private
+             * @chainable
+             * @param  {String} state state to set the step item to
+             * @return {StepItem}       itself
+             */
             _notifyStateChange: function (state) {
                 var brickState;
 
@@ -424,8 +671,19 @@ define([
                 return this;
             },
 
+            /**
+             * A helper function to emit a supplied event with payload.
+             * 
+             * @private
+             * @chainable
+             * @param  {String} event   event name
+             * @param  {Object} [payload] payload object
+             * @return {StepItem}         itself
+             */
             _emit: function (event, payload) {
                 this.emit(event, payload);
+
+                return this;
             },
 
             getData: function () {
@@ -441,6 +699,14 @@ define([
                 return data;
             },
 
+            /**
+             * Adds a given step item object as a child for this step item.
+             * 
+             * @method addChild
+             * @chainable
+             * @param {StepItem} stepItem a stepItem object to be added as a child.
+             * @return {StepItem} itself
+             */
             addChild: function (stepItem) {
                 this._optionsNode.append(stepItem.node);
                 this._childSteps[stepItem.id] = stepItem;
@@ -514,6 +780,12 @@ define([
                 }
             },
 
+            /**
+             * Checks if the step is valid. It's considered valid if all its content bricks are valid.
+             *
+             * @method isValid
+             * @return {Boolean} true if completed; false, otherwise
+             */
             isValid: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     if (!brick.isValid()) {
@@ -524,6 +796,12 @@ define([
                 return true;
             },
 
+            /**
+             * Checks if the step is completed. It's considered completed if its state is SUCCESS.
+             *
+             * @method isCompleted
+             * @return {Boolean} true if completed; false, otherwise
+             */
             isCompleted: function () {
                 return this._state === StepItem.state.SUCCESS;
             },
@@ -544,25 +822,40 @@ define([
                 }
             },
 
+            /**
+             * Set Brick notices, mostly errors.
+             * 
+             * @method displayBrickNotices
+             * @param  {Object} [data] a dictionary of objects containing Brick notices
+             */
             displayBrickNotices: function (data) {
                 var that = this,
-                    bricks = [];
+                    bricks = [],
+                    promise;
 
                 if (data) {
                     UtilDict.forEachEntry(data, function (brickId, brickData) {
                         that.contentBricks[brickId].displayNotice(brickData);
 
                         bricks.push(that.contentBricks[brickId]);
-                    });                    
+                    });
+
+                    // toggle notice 
+                    this._toggleBrickNotices(bricks, data);
                 } else {
                     UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
-                        brick.displayNotice();
-
                         bricks.push(brick);
                     });
-                }
 
-                this._toggleBrickNotices(bricks, data);
+                    // if no data provided, first hide all existing notices, then empty them
+                    promise = this._toggleBrickNotices(bricks, data);
+
+                    promise.then(function () {
+                        bricks.forEach(function (brick) {
+                            brick.displayNotice();
+                        });
+                    });
+                }
             },
 
             _toggleBrickNotices: function (bricks, show) {
@@ -570,7 +863,12 @@ define([
                     notices,
                     contentHeight = this.getContentOuterHeight(),
                     heightChange = 0,
-                    tl = new TimelineLite({ paused: true });
+                    tl = new TimelineLite({ paused: true }),
+                    def = new Deferred();
+
+                tl.eventCallback("onComplete", function () {
+                    def.resolve();
+                });
 
                 notices = bricks
                     .map(function (brick) { return brick.noticeNode; })
@@ -579,7 +877,7 @@ define([
 
                 if (show) {
                     tl.set(notices, { height: 0, visibility: "visible", position: "relative" }, 0);
-                } 
+                }
 
                 notices.forEach(function (notice) {
 
@@ -606,6 +904,8 @@ define([
                 }
 
                 tl.play();
+
+                return def.promise;
             },
 
             retreat: function () {
@@ -631,6 +931,15 @@ define([
                 return this;
             },
 
+            /**
+             * Advances the current step to the step with the provided id. The target id has to be a child step.
+             * Additionally, the tree expands down if the target child has an active child as well, and so on, until no active child is present.
+             * 
+             * @method advance
+             * @param  {String} targetChildStepId id of the new target step of advance too
+             * @param  {Object} [targetChildData]   data to be passed to the target step as it opens
+             * @return {StepItem}                   itself
+             */
             advance: function (targetChildStepId, targetChildData) {
                 var closeTimeline,
                     shiftTimeline,
@@ -645,11 +954,13 @@ define([
                     return this;
                 }
 
+                // reset timeline to the start and clear all the other rubbish that might be running already
                 this._timeline
                     .seek("+=0", false)
                     .clear()
                 ;
 
+                // if there is already an active child step, skip the first animation
                 skipFirst = this._activeChildStep ? true : false;
 
                 targetChildStep.setData(targetChildData);
@@ -663,6 +974,7 @@ define([
                     .add(shiftTimeline)
                     .add(openTimeline)
                     .call(function () {
+                        // only when animation completes, set the active child to the target child
                         that._activeChildStep = targetChildStep;
                     })
                 ;
@@ -672,10 +984,22 @@ define([
                 return this;
             },
 
+            /**
+             * Get position of the content node.
+             * 
+             * @method getContentPosition
+             * @return {Object} jQuery position object of the content node
+             */
             getContentPosition: function () {
                 return this._contentNode.position();
             },
 
+            /**
+             * Get outer height of the content node
+             * 
+             * @method getContentOuterHeight
+             * @return {Number} outer height of the content node
+             */
             getContentOuterHeight: function () {
                 return this._contentNode.outerHeight();
             }
@@ -683,8 +1007,30 @@ define([
 
         lang.mixin(StepItem,
             {
+                /**
+                 * Specifies the current step CSS class name.
+                 * 
+                 * @property currentStepClass
+                 * @static
+                 * @type {String}
+                 */
                 currentStepClass: "current-step",
 
+                /**
+                 * A collection of possible StepItem states and their names.
+                 * 
+                 * @propery state
+                 * @static
+                 * @type {Object}
+                 * @example
+                 *     state: {
+                 *           SUCCESS: "step-state-success",
+                 *           ERROR: "step-state-error",
+                 *           DEFAULT: "step-state-default",
+                 *           LOADING: "step-state-loading"
+                 *       }
+                 * 
+                 */
                 state: {
                     SUCCESS: "step-state-success",
                     ERROR: "step-state-error",
@@ -695,10 +1041,9 @@ define([
                 /**
                  * Event names published by the StepItem
                  *
-                 * @private
                  * @property event
+                 * @static
                  * @type Object
-                 * @default null
                  * @example
                  *      {
                  *          CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
@@ -709,13 +1054,22 @@ define([
                     /**
                     * Published whenever a StepItem becomes a current step. A current step has a distinct visual style.
                     *
-                    * @event CURRENT_STEP_CHANGE
+                    * @event StepItem.event.CURRENT_STEP_CHANGE
                     * @param event {Object}
                     * @param event.level {Number} Level of the StepItem that became a current step
                     * @param event.id {String} Id of the StepItem that became a current step
                     */
                     CURRENT_STEP_CHANGE: "stepItem/currentStepChange",
 
+                    /**
+                    * Published whenever a StepItem changes its state. 
+                    * 
+                    * @event StepItem.event.CURRENT_STEP_CHANGE
+                    * @param event {Object}
+                    * @param event.level {Number} Level of the StepItem that became a current step
+                    * @param event.id {String} Id of the StepItem that became a current step
+                    * @param event.state {String} name of the state
+                    */
                     STATE_CHANGE: "stepItem/stateChange"
                 }
             }

@@ -763,6 +763,63 @@ define([
             },
 
             /**
+            * For a specified layer, determine if the layer's scale fit into map LOD range.
+            * Return ture if in range
+            * @param { number } maxScale maximum scale.
+            * @param { number } minScale minimum scale
+            * @method layerInLODRange
+            * @type { boolean }
+            */
+            layerInLODRange: function (maxScale, minScale) {
+                var lods = map._params.lods,                    
+                    topLod = -1,
+                    bottomLod = -1,
+                    lod,
+                    i,
+                    inRange = false;
+
+                //gis lesson.
+                //min scale means dont show the layer if zoomed out beyond the min scale
+                //max scale means dont show the layer if zoomed in beyond the max scale
+                //from a numerical perspective, min > max (as the scale number represents 1/number )
+                
+                if (maxScale === 0) {
+                    bottomLod = 0; 
+                }
+
+                if (minScale === 0) {
+                    topLod = 0;
+                }
+
+                for (i = 0; i < lods.length; i += 1) {
+                    lod = lods[i];
+
+                    if (topLod === -1 && lod.scale <= minScale) {
+                        topLod = lod;
+                    }
+
+                    if (bottomLod === -1 && lod.scale <= maxScale) {
+                        bottomLod = lods[Math.max(0, i - 1)];
+                    } 
+                }
+
+                if (maxScale === 0 && minScale === 0) {                    
+                    inRange = true;
+                } else if (minScale === 0) {
+                    // check only maxScale (bottomLod)
+                    inRange = (bottomLod === -1) ? false : true; 
+                } else if (maxScale === 0) {
+                    // check only minScale (topLod)
+                    inRange = (topLod === -1) ? false : true; 
+                } else {
+                    inRange = (topLod !== -1 && bottomLod !== -1);
+                }
+
+                return inRange;
+                
+            },
+
+            /**
             * The maximum extent of the map control is allowed to go to
             * @property getMaxExtent
             * @type {Object}

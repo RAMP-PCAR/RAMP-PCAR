@@ -2,7 +2,7 @@
 
 define([
     /* Dojo */
-    "dojo/_base/lang", "dojo/Deferred",
+    "dojo/_base/lang",
 
     /* Text */
     "dojo/text!./templates/filter_manager_template.json",
@@ -15,7 +15,7 @@ define([
     "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", "utils/bricks"
 ],
     function (
-        lang, Deferred,
+        lang,
         filter_manager_template,
         PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage, StepItem,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
@@ -258,44 +258,57 @@ define([
 
                                                     promise.then(function (data) {
                                                         // get data from feature layer's legend endpoint
-                                                        var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
-                                                        legendPromise.then(function (legendLookup) {
-                                                            var fieldOptions;
-                                                            window.clearTimeout(handle);
+                                                        
+                                                        var layerInRampLODRange = RampMap.layerInLODRange(data.maxScale, data.minScale);
 
-                                                            data.legendLookup = legendLookup;
-                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                            fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
-
-                                                            // no fields available; likely this is not a Feature service
-                                                            if (!fieldOptions || fieldOptions.length === 0) {
-                                                                handleFailure(step, handle, {
-                                                                    serviceType:
-                                                                        lang.mixin(choiceTreeErrors.featureError, {
-                                                                            message: i18n.t("addDataset.error.messageFeatureInvalid")
-                                                                        })
-                                                                });
-                                                            } else {
-
-                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                                    stepData: data,
-                                                                    bricksData: {
-                                                                        primaryAttribute: {
-                                                                            options: fieldOptions
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-
-                                                        }, function (event) {
-                                                            console.error(event);
+                                                        if (!layerInRampLODRange) {
                                                             handleFailure(step, handle, {
                                                                 serviceType:
                                                                     lang.mixin(choiceTreeErrors.featureError, {
-                                                                        message: i18n.t("addDataset.error.messageFeatureLegend")
+                                                                        message: i18n.t("addDataset.error.messageFeatureOutsideZoomRange")
                                                                     })
                                                             });
-                                                        });
+                                                        } else {
+                                                            var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                                                            legendPromise.then(function (legendLookup) {
+                                                                var fieldOptions;
+                                                                window.clearTimeout(handle);
+
+                                                                data.legendLookup = legendLookup;
+                                                                // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                                fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+
+                                                                // no fields available; likely this is not a Feature service
+                                                                if (!fieldOptions || fieldOptions.length === 0) {
+                                                                    handleFailure(step, handle, {
+                                                                        serviceType:
+                                                                            lang.mixin(choiceTreeErrors.featureError, {
+                                                                                message: i18n.t("addDataset.error.messageFeatureInvalid")
+                                                                            })
+                                                                    });
+                                                                } else {
+
+                                                                    choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                        stepData: data,
+                                                                        bricksData: {
+                                                                            primaryAttribute: {
+                                                                                options: fieldOptions
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                            }, function (event) {
+                                                                console.error(event);
+                                                                handleFailure(step, handle, {
+                                                                    serviceType:
+                                                                        lang.mixin(choiceTreeErrors.featureError, {
+                                                                            message: i18n.t("addDataset.error.messageFeatureLegend")
+                                                                        })
+                                                                });
+                                                            });
+                                                        }
+                                                        
 
                                                     }, function (event) {
                                                         // error connection to service
