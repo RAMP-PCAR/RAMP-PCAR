@@ -436,7 +436,7 @@
                             "id": "nameCol",
                             "fieldName": "siteShortName_en",
                             "width": "500px",
-                            "orderable": false,
+                            "orderable": true,
                             "type": "string",
                             "alignment": 1,
                             "title": "Station Name",
