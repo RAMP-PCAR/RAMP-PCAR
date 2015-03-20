@@ -6,7 +6,7 @@ module.exports = (grunt) ->
             tasks = [
                 #'github-release' # upload build files to GitHub release
                 'gh-pages:travis' # drop build files to our dist GitHub repo
-                #'gh-pages-clean' # clean module cache
+                'gh-pages-clean' # clean module cache
                 'copy:demo' # crete a demo folder
                 'gh-pages:demo' # push demo to RAMPDocs site
             ]

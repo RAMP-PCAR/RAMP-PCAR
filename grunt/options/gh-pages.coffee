@@ -21,10 +21,7 @@ module.exports =
                 if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
             ))
         src: [
-            # TODO: upload minified and unminified code in tarballs
-            # 'dist/**/*.*'
-            # 'build/**/*.*'
-            'tarball/**/*.zip'
+            'tarball/*.zip'
         ]
         
     # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
