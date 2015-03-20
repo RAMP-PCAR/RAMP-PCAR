@@ -10,8 +10,13 @@
 * Computes the total population of a selected area. When the user draws a polygon, the population will
 * be displayed in the bottom right corner.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "BaseTool"}}{{/crossLink}}
+* 
 * @class PopulationTool
-* @static
+* @constructor
 * @uses dojo/dom
 * @uses dojo/string
 * @uses dojo/_base/lang
@@ -22,8 +27,6 @@
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleLineSymbol
 * @uses esri/symbols/SimpleFillSymbol
-* @uses Map
-* @uses GlobalStorage
 * @extends BaseTool
 */
 
