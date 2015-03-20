@@ -71,7 +71,7 @@ require([
     Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
 
     /* Utils */
-    UtilMisc
+        UtilMisc
     ) {
         "use strict";
 
@@ -277,7 +277,7 @@ require([
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
             esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
-            // really IE9???  (╯°□°）╯︵ ┻━┻
+                // really IE9???  (╯°□°）╯︵ ┻━┻
             if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
                 esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
             }
