@@ -9,7 +9,7 @@ module.exports =
             add: true
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
-            branch: 'test' + '<%= series %>'
+            branch: 'test' + '<%= pkg.series %>'
             message: ((
                 if process.env.TRAVIS_TAG
                     "Production files for the " + process.env.TRAVIS_TAG + " release"
@@ -22,8 +22,8 @@ module.exports =
             ))
         src: [
             # TODO: upload minified and unminified code in tarballs
-            #'dist/**/*.*'
-            #'build/**/*.*'
+            # 'dist/**/*.*'
+            # 'build/**/*.*'
             'tarball/**/*.zip'
         ]
         
