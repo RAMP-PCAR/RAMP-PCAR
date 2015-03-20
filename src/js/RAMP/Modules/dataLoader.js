@@ -1,13 +1,25 @@
 ﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
 
 /**
+* @module RAMP
+* @submodule DataLoader
+* @main DataLoader
+*/
+
+/**
 * A module for loading from web services and local files.  Fetches data via File API (IE9 is currently not supported) or
 * via XmlHttpRequest.  Handles GeoJSON, Shapefiles and CSV currently.  Includes utilities for parsing files into GeoJSON
 * (currently the selected intermediate format) and converting GeoJSON into FeatureLayers for consumption by the ESRI JS
 * API.
 *
-* @module RAMP
-* @submodule DataLoader
+* ####Imports RAMP Modules:
+* {{#crossLink "LayerLoader"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}
+* 
+* @class DataLoader
+* @static
 * @uses dojo/Deferred 
 * @uses dojo/query
 * @uses dojo/_base/array
@@ -15,16 +27,15 @@
 * @uses esri/SpatialReference
 * @uses esri/layers/FeatureLayer
 * @uses esri/renderers/SimpleRenderer
-* @uses ramp/layerLoader
-* @uses ramp/globalStorage
-* @uses ramp/map
-* @uses utils/util
 */
 
 define([
         "dojo/Deferred", "dojo/query", "dojo/_base/array",
+
         "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "esri/renderers/SimpleRenderer",
+
         "ramp/layerLoader", "ramp/globalStorage", "ramp/map",
+
         "utils/util"
 ],
     function (
