@@ -387,6 +387,7 @@ define([
                             columnDefs: [],
                             autoWidth: false,
                             deferRender: true,
+                            order: [], //required to remove the "default sort" icon from the first column
                             paging: true,
                             pagingType: "ramp", //"full_numbers",
                             scrollX: true,
