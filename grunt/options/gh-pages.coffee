@@ -6,7 +6,6 @@ module.exports =
     # push minified and unminified builds to the dist repo
     travis:
         options:
-            #add: true
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
             branch: 'test' + '<%= pkg.series %>'
