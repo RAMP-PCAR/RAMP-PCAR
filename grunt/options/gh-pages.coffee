@@ -9,7 +9,7 @@ module.exports =
             add: true
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
-            branch: '<%= series %>'
+            branch: 'test' + '<%= series %>'
             message: ((
                 if process.env.TRAVIS_TAG
                     "Production files for the " + process.env.TRAVIS_TAG + " release"
