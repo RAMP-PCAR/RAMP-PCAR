@@ -151,3 +151,9 @@ module.exports =
         cwd: 'dist'
         src: '**/*.*'
         dest: '<%= pkg.ramp.deployFolder %>/'
+
+    demo:
+        expand: true
+        cwd: 'dist'
+        src: '**/*.*'
+        dest: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/<%= pkg.name %>' 
