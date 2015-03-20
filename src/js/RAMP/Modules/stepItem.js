@@ -8,7 +8,7 @@
 */
 
 /**
-* Creates a step in the choice tree.
+* Creates a step in the choice tree. A step item can contain several bricks in it and can take different states. Each step can advance and retreat by either displaying its selected child or hiding it.
 * 
 * ####Imports RAMP Modules:
 * {{#crossLink "Util"}}{{/crossLink}}  
@@ -29,16 +29,18 @@
 * @uses dojo/lang
 * @uses dojo/Deferred
 * 
-* @param {Object} config a config definition of the layer
-* @param {Object} [options] Additional options
+* @param {Object} config a config definition of the step item
+* @param {String} config.id step item it; can be anything
+* @param {Number} config.level level of this step item
+* @param {Array} config.content an array of Brick configuration objects
+* @param {String} config.content.[].id content brick id
+* @param {Brick} config.content.[].type type of the content brick
+* @param {Object} config.content.[].config a brick config object that will be passed to Brick.new() init function
+* @param {Array} config.content.[].on a set of callbacks set on the create Brick object
+* @param {String} config.content.[].on.[].eventName a name of the Brick event the callback should react to
+* @param {Function} config.content.[].on.[].callback a function to be executed when the specified event is fired
 * 
-* @param {String} [options.state] Specifies the initial state of the LyerItem; must be one of the `LayerItem.state` defaults
-* @param {String} [options.type] Specifies type of this LayerItem and the name of the layer item template to use
-* 
-* @param {Object} [options.stateMatrix] additional state matrix records to be mixed into the default
-* @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed into the default
-* 
-* @return {StepItem} A control object representing a layer allowing to dynamically change its state.
+* @return {StepItem} A built StepItem object.
 */
 
 define([
@@ -686,6 +688,11 @@ define([
                 return this;
             },
 
+            /**
+             * Returns step data and data from all content bricks.
+             * 
+             * @return {Object} step data and brick data
+             */
             getData: function () {
                 var data = {
                     stepData: this._stepData,
@@ -715,6 +722,14 @@ define([
                 return this;
             },
 
+            /**
+             * Clears this step by resetting its state to `DEFAULT`, clearing all content bricks, and hide all brick notices.
+             * 
+             * @method 
+             * @param  {Array} brickIds [description]
+             * @return {StepItem}          itself
+             * @chainable
+             */
             clearStep: function (brickIds) {
                 var bricks = []; // bricks from whose notices should be hidden
 
@@ -741,14 +756,24 @@ define([
                 return this;
             },
 
+            /**
+             * Sets the step specified by the `level` and `stepId` to a specified state.
+             * 
+             * @method setState
+             * @param {Number} level  level of the step to set the state on
+             * @param {String} stepId id of the step to set the state on
+             * @param {String} state  name of the state to set
+             */
             setState: function (level, stepId, state) {
                 var that = this;
 
+                // if this step is the first step in the tree and so is the current step, set state class on its main node
                 if (this.level === 1 && level === 1) {
                     this.node
                         .removeClass(ALL_STATES_CLASS)
                         .addClass(state);
                 } else {
+                    // if not, go over the children and if one corresponds to the current step, set state class on the options (children) container
                     UtilDict.forEachEntry(this._childSteps,
                         function (childId, childStep) {
                             if (childId === stepId && childStep.level === level) {
@@ -761,15 +786,24 @@ define([
                 }
             },
 
+            /**
+             * Makes the step specified by the `level` and `stepId` a current step by setting a proper CSS class.
+             * 
+             * @method currentStep
+             * @param  {Number} level  step level
+             * @param  {String} stepId step id
+             */
             currentStep: function (level, stepId) {
                 var that = this;
 
+                // if this step is the first step in the tree and so is the current step, set class on the main node of this step 
                 if (this.level === 1 && level === 1) {
                     this.node.addClass(StepItem.currentStepClass);
                 } else {
                     this.node.removeClass(StepItem.currentStepClass);
                     this._optionsContainerNode.removeClass(StepItem.currentStepClass);
 
+                    // if not, go over the children and if one corresponds to the current step, set class on the options (children) container
                     UtilDict.forEachEntry(this._childSteps,
                         function (childId, childStep) {
                             if (childId === stepId && childStep.level === level) {
@@ -806,6 +840,16 @@ define([
                 return this._state === StepItem.state.SUCCESS;
             },
 
+            /**
+             * Sets data to the content brick
+             * 
+             * @method setData
+             * @param {Object} data a data object 
+             * @param {Object} [data.bricksData] dictionary of data where keys are brick ids and values data to be passed to the corresponding bricks
+             * @param {Object} [data.stepData] some data object to be saved in this step 
+             * @return {StepItem} itself
+             * @chainable
+             */
             setData: function (data) {
                 var that = this;
 
@@ -858,6 +902,15 @@ define([
                 }
             },
 
+            /**
+             * Toggles the visibility of notices for specified bricks.
+             * 
+             * @method _toggleBrickNotices
+             * @private
+             * @param  {Array} bricks an array of Brick items to toggle notices on
+             * @param  {Boolean} show   a flag indicating whether to show or hide the notices
+             * @return {Promise}        a promise that is resolved after animation is completed
+             */
             _toggleBrickNotices: function (bricks, show) {
                 var that = this,
                     notices,
@@ -870,6 +923,7 @@ define([
                     def.resolve();
                 });
 
+                // filter out bricks that don't have any notices
                 notices = bricks
                     .map(function (brick) { return brick.noticeNode; })
                     .filter(function (notice) { return notice.length > 0; })
@@ -879,6 +933,7 @@ define([
                     tl.set(notices, { height: 0, visibility: "visible", position: "relative" }, 0);
                 }
 
+                // add notice animation to the timeline
                 notices.forEach(function (notice) {
 
                     heightChange += notice.height();
@@ -895,6 +950,7 @@ define([
 
                 heightChange = show ? 0 : -heightChange;
 
+                // change the height of the parent's option background container to accommodate for notice height 
                 if (this._parent) {
                     tl.to(this._parent._optionsBackgroundNode, this._transitionDuration / 2, {
                         height: contentHeight + heightChange,
@@ -908,6 +964,13 @@ define([
                 return def.promise;
             },
 
+            /**
+             * Retreats the current step item by collapsing its active children and resetting their states to default. After, active child step is set to null.
+             * 
+             * @method retreat
+             * @return {StepItem} itself
+             * @chainable
+             */
             retreat: function () {
                 var closeTimeline,
                     that = this;
