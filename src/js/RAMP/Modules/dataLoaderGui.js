@@ -57,8 +57,8 @@ define([
                     step.retreat();
                 } else {
                     step.clearStep();
-                        }
-                            },
+                }
+            },
 
             serviceTypeStepGuess: function (step, data) {
                 var value = data.inputValue,
@@ -76,7 +76,7 @@ define([
 
                     serviceTypeBrick.setChoice(guess);
                 }
-                            },
+            },
 
             fileTypeStepGuess: function (step, data) {
                 var fileName = data.inputValue,
@@ -123,7 +123,7 @@ define([
 
             choiceTreeErrors.fileError = lang.mixin({}, choiceTreeErrors.base, {
                 header: i18n.t("addDataset.error.headerFile")
-                                });
+            });
 
             choiceTreeErrors.geojsonError = lang.mixin({}, choiceTreeErrors.base, {
                 header: i18n.t("addDataset.error.headerGeojson")
@@ -131,11 +131,11 @@ define([
 
             choiceTreeErrors.csvError = lang.mixin({}, choiceTreeErrors.base, {
                 header: i18n.t("addDataset.error.headerCSV")
-                                });
+            });
 
             choiceTreeErrors.shapefileError = lang.mixin({}, choiceTreeErrors.base, {
                 header: i18n.t("addDataset.error.headerShapefile")
-                                });
+            });
 
             choiceTree = {
                 // step for choosing between adding a service or a file
@@ -155,7 +155,7 @@ define([
                                 {
                                     key: "fileTypeStep",
                                     value: i18n.t("addDataset.dataSourceFile")
-                            }
+                                }
                             ]
                         },
                         on: [
@@ -163,7 +163,7 @@ define([
                                 eventName: Bricks.ChoiceBrick.event.CHANGE,
                                 //expose: { as: "advance" },
                                 callback: choiceTreeCallbacks.simpleAdvance
-                    }
+                            }
                         ]
                     }
                 ],
@@ -231,7 +231,7 @@ define([
                                             id: Bricks.OkCancelButtonBrick.cancelButtonId,
                                             type: "any",
                                             check: ["serviceType", "serviceURL"]
-                }
+                                        }
                                     ]
                                 },
                                 on: [
@@ -295,8 +295,8 @@ define([
                                                                                 options: fieldOptions
                                                                             }
                                                                         }
-                    });
-                }
+                                                                    });
+                                                                }
 
                                                             }, function (event) {
                                                                 console.error(event);
@@ -305,10 +305,9 @@ define([
                                                                         lang.mixin(choiceTreeErrors.featureError, {
                                                                             message: i18n.t("addDataset.error.messageFeatureLegend")
                                                                         })
-                    });
+                                                                });
                                                             });
-                }
-
+                                                        }
 
                                                     }, function (event) {
                                                         // error connection to service
@@ -342,7 +341,7 @@ define([
                                                                         message: i18n.t("addDataset.error.messageWMSInvalid")
                                                                     })
                                                             });
-                    } else {
+                                                        } else {
 
                                                             choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
                                                                 stepData: {
@@ -352,10 +351,10 @@ define([
                                                                 bricksData: {
                                                                     layerName: {
                                                                         options: layerOptions
-                    }
-                }
+                                                                    }
+                                                                }
                                                             });
-                }
+                                                        }
 
                                                     }, function (event) {
                                                         console.error(event);
@@ -367,7 +366,7 @@ define([
                                                         });
                                                     });
 
-                            break;
+                                                    break;
                                             }
                                         }
                                         //expose: { as: "advance" }
@@ -579,7 +578,7 @@ define([
                                             id: Bricks.OkCancelButtonBrick.cancelButtonId,
                                             type: "any",
                                             check: ["fileType", "fileOrFileURL"]
-                            }
+                                        }
                                     ]
                                 },
                                 on: [
@@ -601,11 +600,11 @@ define([
                                                 fileUrlValue = bricksData.fileOrFileURL.inputValue,
                                                 fileName = bricksData.fileOrFileURL.fileName;
 
-                            promise = DataLoader.loadDataSet({
+                                            promise = DataLoader.loadDataSet({
                                                 url: fileValue ? null : fileUrlValue,
                                                 file: fileValue,
                                                 type: fileTypeValue === "shapefileFileAttrStep" ? "binary" : "text"
-                            });
+                                            });
 
                                             promise.then(function (data) {
                                                 switch (fileTypeValue) {
@@ -650,22 +649,22 @@ define([
                                                                     lang.mixin(choiceTreeErrors.geojsonError, {
                                                                         message: i18n.t("addDataset.error.messageGeojsonBroken")
                                                                     })
-                                            });
-                                        });
+                                                            });
+                                                        });
 
-                                        break;
+                                                        break;
 
                                                     case "csvFileAttrStep":
-                                        var rows,
-                                            delimiter = UtilMisc.detectDelimiter(data),
+                                                        var rows,
+                                                            delimiter = UtilMisc.detectDelimiter(data),
 
-                                                            guess,
-                                                            primaryAttribute,
-                                                            headers;
+                                                                            guess,
+                                                                            primaryAttribute,
+                                                                            headers;
 
                                                         window.clearTimeout(handle);
 
-                                        rows = DataLoader.csvPeek(data, delimiter);
+                                                        rows = DataLoader.csvPeek(data, delimiter);
                                                         headers = rows[0].map(function (header) { return { value: header, text: header }; });
 
                                                         // no properties names available; likely this is not a csv file
@@ -691,7 +690,7 @@ define([
                                                                     lang.mixin(choiceTreeErrors.csvError, {
                                                                         message: i18n.t("addDataset.error.messageCSVThin")
                                                                     })
-                                        });
+                                                            });
                                                         } else {
 
                                                             guess = guessLatLong(rows);
@@ -726,10 +725,10 @@ define([
                                                                         selectedOption: guess.long
                                                                     }
                                                                 }
-                                        });
+                                                            });
                                                         }
 
-                                        break;
+                                                        break;
 
                                                     case "shapefileFileAttrStep":
                                                         var shapefilePromise = DataLoader.buildShapefile(data);
@@ -762,7 +761,7 @@ define([
                                                                             options: fieldOptions
                                                                         }
                                                                     }
-                                                });
+                                                                });
                                                             }
 
                                                         }, function (event) {
@@ -773,11 +772,11 @@ define([
                                                                     lang.mixin(choiceTreeErrors.shapefileError, {
                                                                         message: i18n.t("addDataset.error.messageShapefileBroken")
                                                                     })
-                                            });
-                                        });
+                                                            });
+                                                        });
 
-                                        break;
-                                }
+                                                        break;
+                                                }
 
                                             }, function (event) {
                                                 //error loading file
@@ -788,7 +787,7 @@ define([
                                                             message: i18n.t("addDataset.error.messageFileConnect")
                                                         })
                                                 });
-                            });
+                                            });
                                         }
                                         //expose: { as: "advance" },
                                     },
@@ -799,7 +798,7 @@ define([
                                     }
 
                                 ]
-                    }
+                            }
                         ],
                         children: [
                             {
@@ -811,7 +810,7 @@ define([
                                         config: {
                                             instructions: i18n.t("addDataset.help.geojsonDatasetName"),
                                             header: i18n.t("addDataset.datasetName")
-                }
+                                        }
                                     },
                                     {
                                         id: "primaryAttribute",
@@ -819,16 +818,16 @@ define([
                                         config: {
                                             instructions: i18n.t("addDataset.help.geojsonPrimaryAttribute"),
                                             header: i18n.t("addDataset.primaryAttribute")
+                                        }
+                                    },
+            {
+                id: "color",
+                type: Bricks.ColorPickerBrick,
+                config: {
+                    instructions: i18n.t("addDataset.help.geojsonColour"),
+                    header: i18n.t("addDataset.colour")
                 }
             },
-            {
-                                        id: "color",
-                                        type: Bricks.ColorPickerBrick,
-                                        config: {
-                                            instructions: i18n.t("addDataset.help.geojsonColour"),
-                                            header: i18n.t("addDataset.colour")
-            }
-                                    },
                                     {
                                         id: "addDataset",
                                         type: Bricks.ButtonBrick,
@@ -859,9 +858,9 @@ define([
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
                                                         datasetName: bricksData.datasetName.inputValue
-            });
+                                                    });
 
-            LayerLoader.loadLayer(featureLayer);
+                                                    LayerLoader.loadLayer(featureLayer);
                                                     addDatasetPopup.close();
                                                 }
                                             }
@@ -908,10 +907,10 @@ define([
                                                     config: {
                                                         instructions: i18n.t("addDataset.help.csvLongitude"),
                                                         header: i18n.t("addDataset.longitude")
-        }
-            }
+                                                    }
+                                                }
                                             ]
-        }
+                                        }
                                     },
                                     {
                                         id: "color",
@@ -919,7 +918,7 @@ define([
                                         config: {
                                             instructions: i18n.t("addDataset.help.csvColour"),
                                             header: i18n.t("addDataset.colour")
-        }
+                                        }
                                     },
                                     {
                                         id: "addDataset",
@@ -953,26 +952,26 @@ define([
                                                         delimiter: csvDelimeter,
 
                                                         fields: csvHeaders
-            });
+                                                    });
 
-            promise.then(function (event) {
+                                                    promise.then(function (event) {
                                                         featureLayer = event;
 
                                                         DataLoader.enhanceFileFeatureLayer(featureLayer, {
-                    renderer: "circlePoint",
-                    colour: [
-                                                                bricksData.color.rgb_[0],
-                                                                bricksData.color.rgb_[1],
-                                                                bricksData.color.rgb_[2],
-                        255
-                    ],
+                                                            renderer: "circlePoint",
+                                                            colour: [
+                                                                                                        bricksData.color.rgb_[0],
+                                                                                                        bricksData.color.rgb_[1],
+                                                                                                        bricksData.color.rgb_[2],
+                                                                255
+                                                            ],
                                                             nameField: bricksData.primaryAttribute.dropDownValue,
-                    icon: iconTemplate,
+                                                            icon: iconTemplate,
                                                             datasetName: bricksData.datasetName.inputValue,
                                                             fields: csvHeaders
-                });
+                                                        });
 
-                //TODO: set symbology and colour on feature layer (obj.data)
+                                                        //TODO: set symbology and colour on feature layer (obj.data)
                                                         LayerLoader.loadLayer(featureLayer);
                                                         addDatasetPopup.close();
 
@@ -984,8 +983,8 @@ define([
                                                                     message: i18n.t("addDataset.error.messageCSVBroken")
                                                                 })
                                                         });
-            });
-        }
+                                                    });
+                                                }
                                             }
                                         ]
                                     }
@@ -1038,17 +1037,17 @@ define([
                                                         iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
 
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
-                //renderer: obj.style,
-                colour: [
-                                                            bricksData.color.rgb_[0],
-                                                            bricksData.color.rgb_[1],
-                                                            bricksData.color.rgb_[2],
-                    255
-                ],
+                                                        //renderer: obj.style,
+                                                        colour: [
+                                                                                                    bricksData.color.rgb_[0],
+                                                                                                    bricksData.color.rgb_[1],
+                                                                                                    bricksData.color.rgb_[2],
+                                                            255
+                                                        ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
-                icon: iconTemplate,
+                                                        icon: iconTemplate,
                                                         datasetName: bricksData.datasetName.inputValue
-            });
+                                                    });
 
                                                     LayerLoader.loadLayer(featureLayer);
                                                     addDatasetPopup.close();
@@ -1114,13 +1113,13 @@ define([
                 fileOrFileURL.browseFilesContainer
                     .attr({
                         title: i18n.t("addDataset.error.ie9FileAPI")
-                })
+                    })
                     .addClass("_tooltip")
                 ;
             }
 
             Theme.tooltipster(addDatasetContainer);
-                    }
+        }
 
         function guessLatLong(rows) {
             // try guessing lat and long columns
@@ -1138,7 +1137,7 @@ define([
                 return rows.every(function (row, rowi) {
                     return rowi === 0 || latRegex.test(row[i]);
                 });
-                });
+            });
 
             // filter out all columns that are not long for sure
             guessesLong = rows[0].filter(function (header, i) {
@@ -1158,7 +1157,7 @@ define([
 
                     return h.indexOf('la') !== -1 || h.indexOf('y') !== -1;
                 });
-                    }
+            }
 
             // console.log(guessesLat);
             // pick the first lat guess or null
@@ -1185,7 +1184,7 @@ define([
                 lat: guessedLatHeader,
                 long: guessedLongHeader
             };
-                    }
+        }
 
         /**
          * 
@@ -1217,23 +1216,23 @@ define([
             return window.setTimeout(function () {
                 step._notifyStateChange(StepItem.state.LOADING);
             }, time);
-                    }
+        }
 
         function handleFailure(step, handle, brickNotices) {
             if (handle) {
                 window.clearTimeout(handle);
-                }
+            }
 
             step
                 ._notifyStateChange(StepItem.state.ERROR)
                 .displayBrickNotices(brickNotices)
             ;
-                }
+        }
 
         function setCurrentStep(event) {
             t.dfs(choiceTree, function (node) {
                 node.stepItem.currentStep(event.level, event.id);
-                });
+            });
         }
 
         function setStepState(event, step, state) {
@@ -1247,14 +1246,14 @@ define([
 
             t.dfs(choiceTree, function (node) {
                 node.stepItem.setState(event.level, event.id, event.state);
-                });
+            });
         }
 
         function closeChoiceTree() {
             stepLookup.sourceTypeStep.retreat();
-                }
+        }
 
-                return {
+        return {
             init: function () {
                 var tl = new TimelineLite({ paused: true });
 
