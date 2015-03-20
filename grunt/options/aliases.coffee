@@ -87,6 +87,7 @@ module.exports =
     # 'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
     'generateConfig':
         [   
+            'locale:check'
             'jsonlint:oneConfig'
             'zs3'
             'jsonlint:locales'

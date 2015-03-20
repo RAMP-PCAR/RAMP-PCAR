@@ -52,6 +52,14 @@ module.exports =
         options:
             message: "Tarball is created!"
 
+    localeInvalid:
+        options:
+            message: "Locale files differ! Merging..."
+            
+    localeValid:
+        options:
+            message: "Locale files are validated!"
+    
     configInvalid:
         options:
             message: "Config is invalid!"
