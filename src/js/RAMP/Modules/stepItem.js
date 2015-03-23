@@ -1,5 +1,4 @@
-﻿
-/* global define, $, TimelineLite, console */
+﻿/* global define, $, TimelineLite, console */
 
 /**
 * @module RAMP
@@ -262,7 +261,7 @@ define([
                     that._addContentBrick(contentItem);
                 });
 
-                console.debug("-->", this._state);
+                // console.debug("-->", this._state);
             },
 
             /**

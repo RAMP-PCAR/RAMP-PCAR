@@ -23,7 +23,6 @@
 * {{#crossLink "Array"}}{{/crossLink}}  
 * {{#crossLink "Dictionary"}}{{/crossLink}}  
 * {{#crossLink "Bricks"}}{{/crossLink}}    
-*  
 * 
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
@@ -31,8 +30,6 @@
 * @class DataLoaderGui
 * @static
 * @uses dojo/lang
-* 
-* @return {DataLoaderGui} 
 */
 
 define([
@@ -68,7 +65,6 @@ define([
 
             symbologyPreset = {},
 
-            //steps,
             choiceTree,
             choiceTreeCallbacks,
             choiceTreeErrors,
@@ -80,11 +76,35 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
+        /**
+         * A collection of callbacks used by the choice tree.
+         * 
+         * @property choiceTreeCallbacks
+         * @private
+         * @type {Object}
+         */
         choiceTreeCallbacks = {
+            /**
+             * A callback that advances the choice tree to the specified child step of the supplised step item.
+             * 
+             * @method choiceTreeCallbacks.simpleAdvance
+             * @private
+             * @param  {StepItem} step            step item to advance from
+             * @param  {Object} data            data from the choice brick in step item
+             * @param  {Object} targetChildData data to be passed to the step being advanced to
+             */
             simpleAdvance: function (step, data, targetChildData) {
                 step.advance(data.selectedChoice, targetChildData);
             },
 
+            /**
+             * A callback that retreats part of the choice tree to the step item specified.
+             * 
+             * @method choiceTreeCallbacks.simpleCancel
+             * @private
+             * @param  {StepItem} step step item to retreat to
+             * @param  {Object} data data from the callback function
+             */
             simpleCancel: function (step, data) {
                 console.log("Step cancel click:", this, step, data);
 
@@ -95,6 +115,14 @@ define([
                 }
             },
 
+            /**
+             * A callback to guess the service type from the service url provided in step data.
+             * 
+             * @method choiceTreeCallbacks.serviceTypeStepGuess
+             * @private
+             * @param  {StepItem} step step item to guess service type on
+             * @param  {[type]} data data from the callback function
+             */
             serviceTypeStepGuess: function (step, data) {
                 var value = data.inputValue,
                     serviceTypeBrick = step.contentBricks.serviceType,
@@ -112,6 +140,14 @@ define([
                 }
             },
 
+            /**
+             * A callback to guess the file type from the file url or file object provided in step data.
+             * 
+             * @method choiceTreeCallbacks.fileTypeStepGuess
+             * @private
+             * @param  {StepItem} step step item to guess file type on
+             * @param  {[type]} data data from the callback function
+             */
             fileTypeStepGuess: function (step, data) {
                 var fileName = data.inputValue,
                     serviceFileBrick = step.contentBricks.fileType,
@@ -138,6 +174,13 @@ define([
          * @private
          */
         function prepareChoiceTreeStructure() {
+            /**
+             * A collection of precanned error messages that are used by the choice tree.
+             * 
+             * @property choiceTreeErrors
+             * @private
+             * @type {Object}
+             */
             choiceTreeErrors = {
                 base: {
                     type: "error",
@@ -170,6 +213,15 @@ define([
                 header: i18n.t("addDataset.error.headerShapefile")
             });
 
+            /**
+             * A choice tree conig object
+             *
+             * Config has a simple tree structure, with content being an array of Brick object to be placed inside a StepItem.
+             * 
+             * @property choiceTree
+             * @private
+             * @type {Object}
+             */
             choiceTree = {
                 // step for choosing between adding a service or a file
                 id: "sourceTypeStep",
@@ -1074,6 +1126,12 @@ define([
             };
         }
 
+        /**
+         * Creates a new choice tree html representation and appends it to the page.
+         * 
+         * @method createChoiceTree
+         * @private
+         */
         function createChoiceTree() {
             // clear steps
             t.dfs(choiceTree, function (node) {
@@ -1111,7 +1169,7 @@ define([
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
 
-            // It's IE9.
+            // It's IE9. Run Away!
             if (!window.FileReader) {
                 var fileOrFileURL = stepLookup.fileTypeStep.contentBricks.fileOrFileURL;
 
@@ -1130,6 +1188,14 @@ define([
             Theme.tooltipster(addDatasetContainer);
         }
 
+        /**
+         * From provided CSV data, guesses which columns are long and lat.
+         * 
+         * @method guessLatLong
+         * @private
+         * @param  {Array} rows csv data
+         * @return {Object}      an object with lat and long string properties indicating corresponding field names
+         */
         function guessLatLong(rows) {
             // try guessing lat and long columns
             var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
@@ -1141,7 +1207,7 @@ define([
                 guessedLatHeader,
                 guessedLongHeader;
 
-            // first filter out all columns that are not lat
+            // first filter out all columns that are not lat fro sure
             guessesLat = rows[0].filter(function (header, i) {
                 return rows.every(function (row, rowi) {
                     return rowi === 0 || latRegex.test(row[i]);
@@ -1196,8 +1262,10 @@ define([
         }
 
         /**
-         *
+         * Creates a icon base64 template to be displayed in the layer selector.
+         * 
          * @method makeIconTemplate
+         * @private 
          * @param {String} templateName a name of the template to use for an icon
          * @param {String} hex color value in hex
          * @return {String} a base64 encoded icon template
@@ -1213,7 +1281,7 @@ define([
         }
 
         /**
-         * Delay setting loading state to the step for a specified time in case it happens really fast and
+         * Delay setting loading state to the step for a specified time in case it happens really fast and it will flicker.
          *
          * @method delayLoadingState
          * @param {StepItem} step step to delay setting loading state on
@@ -1227,6 +1295,15 @@ define([
             }, time);
         }
 
+        /**
+         * Handles any failure happening in the choice tree by setting the responsible step to error and displaying appropriate notices.
+         * 
+         * @method handleFailure
+         * @private
+         * @param  {StepItem} step         a step item that should handle failure
+         * @param  {Number} handle       a timeout handle to be canceled
+         * @param  {Object} brickNotices brick notices to be displayed 
+         */
         function handleFailure(step, handle, brickNotices) {
             if (handle) {
                 window.clearTimeout(handle);
@@ -1238,12 +1315,28 @@ define([
             ;
         }
 
+        /**
+         * Notifies all step items in the tree which step is current at the moment.
+         * 
+         * @method setCurrentStep
+         * @private
+         * @param {String} event a StepItem.CURRENT_STEP_CHANGE event
+         */
         function setCurrentStep(event) {
             t.dfs(choiceTree, function (node) {
                 node.stepItem.currentStep(event.level, event.id);
             });
         }
 
+        /**
+         * Notifies all step items in the tree that a certain step has changed its state.
+         * 
+         * @method setStepState
+         * @private
+         * @param {Object} event a StepItem.STATE_CHANGE event
+         * @param {StepItem} step  a step item; this doesn't seem to be used
+         * @param {String} state a state; this doesn't seem to be used
+         */
         function setStepState(event, step, state) {
             if (step && state) {
                 event = {
@@ -1258,13 +1351,19 @@ define([
             });
         }
 
+        /**
+         * Closes the add dataset choice tree.
+         * 
+         * @method closeChoiceTree
+         * @private
+         */
         function closeChoiceTree() {
             stepLookup.sourceTypeStep.retreat();
         }
 
         return {
             /**
-             * Initialize add-dataset functionality.
+             * Initialize add-dataset functionality and creates a add-dataset choice tree.
              * 
              * @method init
              * @static
@@ -1327,8 +1426,6 @@ define([
                         resetFocusOnClose: true
                     }
                 );
-
-                //addDatasetPopup.open();
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key) {
