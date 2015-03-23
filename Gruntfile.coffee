@@ -8,6 +8,7 @@ module.exports = (grunt) ->
             staticMappings:
                 'notify_hooks': 'grunt-notify'
                 'changelog': 'grunt-conventional-changelog'
+                'github-release': 'grunt-github-releaser'
         configPath: [
             path.join(process.cwd(), 'grunt/options')
             path.join(process.cwd(), 'grunt_overrider/options')
