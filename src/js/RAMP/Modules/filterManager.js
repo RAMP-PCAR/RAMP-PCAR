@@ -430,6 +430,8 @@ define([
                 * @private
                 */
                 function setButtonEvents() {
+                    var metadataPopup;
+
                     // highlight layer item on hover/focus with a light gray background
                     PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
@@ -489,14 +491,28 @@ define([
 
                     // display metadata when the metadata button is clicked;
                     // TODO: move to a separate/different module?
-                    PopupManager.registerPopup(mainList, "click",
+                    metadataPopup = PopupManager.registerPopup(mainList, "click",
                         function (d) {
-                            metadataClickHandler(this.target);
+                            // close the popup, this will update aria tags;
+                            // the metadata panel will be closed by metadataClickHandler if needed.
+                            if (metadataPopup.isOpen(null, "any")) {
+                                // need to reject the open promise since we are actually closing the popup
+                                d.reject();
+                                metadataPopup.close();
 
-                            d.resolve();
+                                metadataClickHandler(this.target);
+                            } else {
+                                metadataClickHandler(this.target);
+
+                                d.resolve();
+                            }
                         },
                         {
+                            closeHandler: function (d) {
+                                d.resolve();
+                            },
                             handleSelector: ".metadata-button",
+                            openOnly: true,
                             activeClass: "button-pressed"
                         }
                     );
@@ -549,7 +565,10 @@ define([
                                     node.addClass("selected-row");
                                 },
                                 doOnHide: function () {
-                                    button.removeClass("button-pressed");
+                                    //button.removeClass("button-pressed");
+                                    if (metadataPopup.isOpen(null, "any")) {
+                                        metadataPopup.close();
+                                    }
                                     node.removeClass("selected-row");
                                 }
                             });

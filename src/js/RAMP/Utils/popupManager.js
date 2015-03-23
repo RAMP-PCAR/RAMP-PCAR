@@ -246,16 +246,31 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 *
                 * @method isOpen
                 * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
-                * @return result True if any of the described popup are open; false otherwise
+                * @param {String} [condition] can be `all` or `any`; if all, returns true if `all` the described popups are open; if `any`; if at least one is open.
+                * @return result True if any of the described popups are open; false otherwise
                 */
-                isOpen: function (selector) {
-                    var result = true;
+                isOpen: function (selector, condition) {
+                    var result,
+                        popups;
 
-                    this._spawnPopups(selector).forEach(function (p) {
-                        if (!p.isOpen()) {
-                            result = false;
-                        }
-                    });
+                    condition = condition || "all";
+                    popups = this._spawnPopups(selector);
+
+                    switch (condition) {
+                        case "all":
+                            result = popups.every(function (p) {
+                                return p.isOpen();
+                            });
+
+                            break;
+
+                        case "any":
+                            result = popups.some(function (p) {
+                                return p.isOpen();
+                            });
+
+                            break;
+                    }
 
                     return result;
                 },
@@ -463,19 +478,26 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @param {Function} callback The callback to be executed
                 */
                 _performAction: function (action, cssAction, callback) {
+                    var that = this;
+
                     if ($.isFunction(action) && !this._isAnimating) {
                         var deferred = new Deferred();
 
-                        deferred.then(lang.hitch(this,
+                        deferred.then(
                             function () {
-                                this._isAnimating = false;
+                                that._isAnimating = false;
 
-                                if (!this.setClassBefore) {
-                                    cssAction.call(this);
+                                if (!that.setClassBefore) {
+                                    cssAction.call(that);
                                 }
 
-                                callback.call(this);
-                            }));
+                                callback.call(that);
+                            },
+                            function (/*error*/) {
+                                // action is canceled; assume no longer animating
+                                that._isAnimating = false;
+                            }
+                        );
 
                         this._isAnimating = true;
 
