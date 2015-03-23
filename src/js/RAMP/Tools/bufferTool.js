@@ -10,8 +10,13 @@
 * Adds a buffer around the a selected area. The user will be able to specify the distance
 * in the bottom right corner, then draw a polygon on the map.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "BaseTool"}}{{/crossLink}}
+* 
 * @class BufferTool
-* @static
+* @constructor
 * @uses dojo/_base/array
 * @uses dojo/_base/Color
 * @uses esri/config
@@ -21,8 +26,6 @@
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/BufferParameters
 * @uses esri/toolbars/draw
-* @uses Map
-* @uses GlobalStorage
 * @extends BaseTool
 */
 

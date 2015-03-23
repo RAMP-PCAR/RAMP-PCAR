@@ -15,7 +15,7 @@
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * {{#crossLink "TmplUtil"}}{{/crossLink}}  
 * {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
 * {{#crossLink "Bricks"}}{{/crossLink}}    
 *  
 * 

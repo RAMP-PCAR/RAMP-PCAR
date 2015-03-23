@@ -1,5 +1,40 @@
 ﻿/* global define, console, window, $, i18n, RAMP, t, TimelineLite */
 
+/**
+* @module RAMP
+* @submodule FilterManager
+* @main FilterManager
+*/
+
+/**
+* Creates a choice tree for adding datasets.
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "DataLoader"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "LayerLoader"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "StepItem"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "TmplUtil"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "Bricks"}}{{/crossLink}}    
+*  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
+* 
+* @class DataLoaderGui
+* @static
+* @uses dojo/lang
+* 
+* @return {DataLoaderGui} 
+*/
+
 define([
     /* Dojo */
     "dojo/_base/lang",
@@ -1228,6 +1263,12 @@ define([
         }
 
         return {
+            /**
+             * Initialize add-dataset functionality.
+             * 
+             * @method init
+             * @static
+             */
             init: function () {
                 var tl = new TimelineLite({ paused: true });
 
