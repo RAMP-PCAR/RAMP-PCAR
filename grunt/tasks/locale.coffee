@@ -55,26 +55,34 @@ module.exports = (grunt) ->
         'locale:check'
         'INTERNAL Checks locale files for completeness.'
         () ->
-            languages = ['en', 'fr']
+            main = grunt.config("pkg.ramp.locale.main")
+            languages = grunt.config("pkg.ramp.locale.languages")
             localeData = {}
-            isValid
+            isValid = false
             
+            # sort default locale file
+            sortLocale main
+
+            # read main lang
+            localeData[main] = grunt.file.readJSON 'src/locales/' + main + '-CA/translation.json'
+
             languages.forEach(
-                ( lang ) ->
-                    localeData[lang] = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+                (lang) ->
+                    if lang != main
+                        localeData[lang] = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+
+                        isValid = deepCheck localeData[main], localeData[lang]
+
+                        if isValid
+                            grunt.task.run 'notify:localeValid'
+                        else
+                            grunt.task.run 'notify:localeInvalid'
+                            
+                            # assuming French locale is missing string; merge in English ones with a prefix
+                            merged = mergeLocale localeData[main], localeData[lang], '[' + lang + '] '
+                            # console.log merged
+                            
+                            # saving merged locale
+                            grunt.file.write 'src/locales/' + lang + '-CA/translation.json', JSON.stringify(merged, null, '    ')
             )
-            
-            isValid = deepCheck localeData['en'], localeData['fr']
-            
-            if isValid
-                grunt.task.run 'notify:localeValid'
-            else
-                grunt.task.run 'notify:localeInvalid'
-                
-                # assuming French locale is missing string; merge in English ones with a prefix
-                merged = mergeLocale localeData['en'], localeData['fr'], '[fr] '
-                # console.log merged
-                
-                # saving merged locale
-                grunt.file.write 'src/locales/fr-CA/translation.json', JSON.stringify(merged, null, '    ')
     )
