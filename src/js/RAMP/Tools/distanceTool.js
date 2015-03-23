@@ -14,8 +14,8 @@
 * {{#crossLink "BaseTool"}}{{/crossLink}}
 * 
 * @class DistanceTool
-* @constructor
 * @uses dojo/dom
+* @uses dojo/string
 * @uses dojo/_base/lang
 * @uses esri/config
 * @uses esri/graphic
@@ -23,6 +23,7 @@
 * @uses esri/tasks/LengthsParameters
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleFillSymbol
+* @extends BaseTool
 */
 
 define([

@@ -16,7 +16,6 @@
 * 
 * @extends BaseTool
 * @class AreaTool
-* @constructor
 * @uses dojo/dom
 * @uses dojo/_base/lang
 * @uses esri/config

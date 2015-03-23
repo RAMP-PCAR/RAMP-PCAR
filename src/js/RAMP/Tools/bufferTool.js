@@ -16,7 +16,6 @@
 * {{#crossLink "BaseTool"}}{{/crossLink}}
 * 
 * @class BufferTool
-* @constructor
 * @uses dojo/_base/array
 * @uses dojo/_base/Color
 * @uses esri/config

@@ -16,7 +16,6 @@
 * {{#crossLink "BaseTool"}}{{/crossLink}}
 * 
 * @class PopulationTool
-* @constructor
 * @uses dojo/dom
 * @uses dojo/string
 * @uses dojo/_base/lang
