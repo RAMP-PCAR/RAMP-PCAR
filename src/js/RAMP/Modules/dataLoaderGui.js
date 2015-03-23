@@ -67,7 +67,6 @@ define([
 
                 // make a guess if it's a feature or wms server only if the user hasn't already selected the type
                 if (!serviceTypeBrick.isUserSelected()) {
-
                     if (value.match(/ArcGIS\/rest\/services/ig)) {
                         guess = "featureServiceAttrStep";
                     } else if (value.match(/wms/ig)) {
@@ -99,12 +98,11 @@ define([
 
         /**
          * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
-         * 
+         *
          * @method prepareChoiceTreeStructure
          * @private
          */
         function prepareChoiceTreeStructure() {
-
             choiceTreeErrors = {
                 base: {
                     type: "error",
@@ -276,7 +274,6 @@ define([
                                                                         })
                                                                 });
                                                             } else {
-
                                                                 choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
                                                                     stepData: data,
                                                                     bricksData: {
@@ -286,7 +283,6 @@ define([
                                                                     }
                                                                 });
                                                             }
-
                                                         }, function (event) {
                                                             console.error(event);
                                                             handleFailure(step, handle, {
@@ -296,7 +292,6 @@ define([
                                                                     })
                                                             });
                                                         });
-
                                                     }, function (event) {
                                                         // error connection to service
                                                         console.error(event);
@@ -330,7 +325,6 @@ define([
                                                                     })
                                                             });
                                                         } else {
-
                                                             choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
                                                                 stepData: {
                                                                     wmsData: data,
@@ -343,7 +337,6 @@ define([
                                                                 }
                                                             });
                                                         }
-
                                                     }, function (event) {
                                                         console.error(event);
                                                         handleFailure(step, handle, {
@@ -615,7 +608,6 @@ define([
                                                                         })
                                                                 });
                                                             } else {
-
                                                                 choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
                                                                     stepData: featureLayer,
                                                                     bricksData: {
@@ -628,7 +620,6 @@ define([
                                                                     }
                                                                 });
                                                             }
-
                                                         }, function (event) {
                                                             //error building geojson
                                                             console.error(event);
@@ -680,7 +671,6 @@ define([
                                                                     })
                                                             });
                                                         } else {
-
                                                             guess = guessLatLong(rows);
 
                                                             // preselect primary attribute so it's not one of the lat or long guesses;
@@ -738,7 +728,6 @@ define([
                                                                         })
                                                                 });
                                                             } else {
-
                                                                 choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
                                                                     stepData: featureLayer,
                                                                     bricksData: {
@@ -751,7 +740,6 @@ define([
                                                                     }
                                                                 });
                                                             }
-
                                                         }, function (event) {
                                                             // error to build shapefiles
                                                             console.error(event);
@@ -765,7 +753,6 @@ define([
 
                                                         break;
                                                 }
-
                                             }, function (event) {
                                                 //error loading file
                                                 console.error(event);
@@ -827,7 +814,7 @@ define([
                                         on: [
                                             {
                                                 eventName: Bricks.ButtonBrick.event.CLICK,
-                                                // add wms service layer to the map
+                                                // add geojson layer to the map
                                                 callback: function (step /*,data*/) {
                                                     var data = step.getData(),
                                                         bricksData = data.bricksData,
@@ -845,7 +832,8 @@ define([
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
-                                                        datasetName: bricksData.datasetName.inputValue
+                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        fields: featureLayer.fields.map(function (field) { return field.name; })
                                                     });
 
                                                     LayerLoader.loadLayer(featureLayer);
@@ -962,7 +950,6 @@ define([
                                                         //TODO: set symbology and colour on feature layer (obj.data)
                                                         LayerLoader.loadLayer(featureLayer);
                                                         addDatasetPopup.close();
-
                                                     }, function () {
                                                         // can't construct csv
                                                         handleFailure(step, null, {
@@ -1034,7 +1021,8 @@ define([
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
-                                                        datasetName: bricksData.datasetName.inputValue
+                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        fields: featureLayer.fields.map(function (field) { return field.name; })
                                                     });
 
                                                     LayerLoader.loadLayer(featureLayer);
@@ -1049,11 +1037,9 @@ define([
                     }
                 ]
             };
-
         }
 
         function createChoiceTree() {
-
             // clear steps
             t.dfs(choiceTree, function (node) {
                 node.stepItem = null;
@@ -1090,7 +1076,7 @@ define([
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
 
-            // It's IE9. 
+            // It's IE9.
             if (!window.FileReader) {
                 var fileOrFileURL = stepLookup.fileTypeStep.contentBricks.fileOrFileURL;
 
@@ -1175,7 +1161,7 @@ define([
         }
 
         /**
-         * 
+         *
          * @method makeIconTemplate
          * @param {String} templateName a name of the template to use for an icon
          * @param {String} hex color value in hex
@@ -1192,8 +1178,8 @@ define([
         }
 
         /**
-         * Delay setting loading state to the step for a specified time in case it happens really fast and 
-         * 
+         * Delay setting loading state to the step for a specified time in case it happens really fast and
+         *
          * @method delayLoadingState
          * @param {StepItem} step step to delay setting loading state on
          * @param {Number} time a delay in ms
