@@ -436,7 +436,7 @@ define([
                                                             id: LayerLoader.nextId(),
                                                             displayName: layerData.layerName,
                                                             nameField: bricksData.primaryAttribute.dropDownValue,
-                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields, layerData.aliasMap),
                                                             symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
                                                             url: layerData.layerUrl,
                                                             aliasMap: layerData.aliasMap
