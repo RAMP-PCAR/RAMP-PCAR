@@ -24,31 +24,33 @@
 */
 
 define([
-/* Dojo */
-"dojo/topic", "dojo/_base/array", "dojo/Deferred",
-
-/* ESRI */
-"esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
-
-/* RAMP */
-"ramp/eventManager", "ramp/map",
-
-/* UTIL */
-
-"utils/util", "utils/popupManager"],
-
-    function (
     /* Dojo */
-    topic, dojoArray, Deferred,
+    "dojo/topic", "dojo/_base/array", "dojo/Deferred",
 
     /* ESRI */
-    PrintTemplate, PrintParameters, PrintTask,
+    "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
 
     /* RAMP */
-    EventManager, RampMap,
+    "ramp/eventManager", "ramp/map",
 
     /* UTIL */
-    MiscUtil, PopupManager) {
+
+    "utils/util", "utils/popupManager"
+],
+
+    function (
+        /* Dojo */
+        topic, dojoArray, Deferred,
+
+        /* ESRI */
+        PrintTemplate, PrintParameters, PrintTask,
+
+        /* RAMP */
+        EventManager, RampMap,
+
+        /* UTIL */
+        MiscUtil, PopupManager
+        ) {
         "use strict";
 
         var ui = (function () {

@@ -99,70 +99,8 @@
                     <i class="fa fa-download"></i><span class="on-right">{{t "gui.actions.mapExport"}}</span>
                 </a>
 
-                <section id="map-export-modal" class="mfp-hide modal-dialog modal-content overlay-def">
+                {{>mapexport}}
 
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="map-export-preview">
-                                <div class="map-export-stretcher" role="presentation"><section class="map-export-notice alert alert-danger">
-                                            <h3>{{t "mapExport.error.generalTitle"}}</h3>
-                                            <p>{{t "mapExport.error.generalMessage"}}</p>
-                                        </section>
-                                    <div class="sk-spinner sk-spinner-chasing-dots">
-                                        <div class="sk-dot1"></div>
-                                        <div class="sk-dot2"></div>
-                                    </div>
-                                    <span class="wb-inv">{{t "mapExport.loading"}}</span>
-                                </div>
-                                <div class="map-export-image">
-                                    <img src="" crossorigin="anonymous" alt="">
-                                </div>
-                            </div>
-                            <div class="map-export-controls">
-                                <h2 class="mrgn-tp-sm mrgn-bttm-sm page-header h3">{{t "mapExport.title"}}</h2>
-                                <button class="button-none button-close _tooltip popup-modal-dismiss" title="{{t "gui.actions.close"}}">
-                                    <span class="wb-invisible">{{t "gui.actions.close"}}</span>
-                                </button>
-                                <div class="">
-                                    <!--<div class="checkbox">
-                                        <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
-                                    </div>-->
-
-                                    <div class="download-buttons mrgn-tp-lg">
-                                        <!--<button class="btn btn-primary" type="button">
-                                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
-                                        </button>-->
-
-                                        <div class="btn-group open download-dropdown">
-                                            <a class="btn btn-primary download-default" href="#" target="_blank" download=""><i class="fa fa-download fa-fw on-left"></i>{{t "mapExport.downloadImage"}}</a>
-                                            <button class="btn btn-primary toggle" data-toggle="dropdown">
-                                                <span class="fa fa-caret-down"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="btn btn-none btn-download download-png" target="_blank" href="#" download=""><span class="fa fa-pencil fa-fw on-left"></span>{{t "mapExport.downloadPNG"}}</a></li>
-                                                <li><a class="btn btn-none btn-download download-jpg" target="_blank" href="#" download=""><span class="fa fa-trash-o fa-fw on-left"></span>{{t "mapExport.downloadJPG"}}</a></li>
-                                            </ul>
-                                        </div>
-
-                                        <!--<a class="btn download-png btn-primary" type="button" href="" target="_blank" download="">
-                                            <i class="fa fa-download"></i><span class="on-right">PNG {{t "mapExport.downloadImage"}}</span>
-                                        </a>
-                                        <a class="btn download-jpg btn-primary" type="button" href="" target="_blank" download="">
-                                            <i class="fa fa-download"></i><span class="on-right">JPG {{t "mapExport.downloadImage"}}</span>
-                                        </a>-->
-                                        <!--<button class="btn btn-primary" type="button">
-                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
-                            </button>-->
-                                        <!--<button class="btn btn-primary" type="button">
-                                <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadJPG"}}</span>
-                            </button>-->
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </li>
             <li class="map-toolbar-item">
                 <button class="btn btn-xs map-toolbar-item-button button-none" id="helpToggle">
