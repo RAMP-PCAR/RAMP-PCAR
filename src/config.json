@@ -1,8 +1,9 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "http://cp.zz9.ca/index",
-    "exportMapUrl": "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+    "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
+    "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "advancedToolbar": {
         "enabled": true,
         "tools": [
@@ -435,7 +436,7 @@
                             "id": "nameCol",
                             "fieldName": "siteShortName_en",
                             "width": "500px",
-                            "orderable": false,
+                            "orderable": true,
                             "type": "string",
                             "alignment": 1,
                             "title": "Station Name",
@@ -719,6 +720,16 @@
                     "parser": "tempParse"
                 },
                 "settings": { "opacity": { "default": 0.3 } }
+            },
+            {
+                "id": "geomet_rain",
+                "displayName": "@@config.layers.wms.geomet_rain.displayName",
+                "format": "image/jpeg",
+                "layerName": "RADAR_RRAI",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "settings": { "opacity": { "default": 0.8 } }
             },
             {
                 "id": "railroad",

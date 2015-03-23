@@ -144,7 +144,9 @@ define([
                             geometryType: data.geometryType,
                             fields: dojoArray.map(data.fields, function (x) { return x.name; }),
                             renderer: data.drawingInfo.renderer,
-                            aliasMap: alias
+                            aliasMap: alias,
+                            maxScale: data.maxScale,
+                            minScale: data.minScale
                         };
 
                         def.resolve(res);

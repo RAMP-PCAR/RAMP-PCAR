@@ -404,7 +404,7 @@ define([
             },
 
             /**
-             * Creates timelines for retreat animation - when the part of the choice tree is collapsing, switching to another branch of the tree.
+             * Creates timeline for retreat animation - when the part of the choice tree is collapsing, switching to another branch of the tree.
              * 
              * @method _makeCloseTimeline
              * @param  {Boolean} skipFirst  indicates whether the first child step should be included in the timeline
@@ -430,7 +430,8 @@ define([
 
             /**
              * Generates a close timeline for this particular step item and adds it to the global close timeline. Calls the same on the target child.
-             * 
+             *
+             * @method _getCloseTimelines
              * @param  {Object} tls   global close timeline
              * @param  {Boolean} skip  indicates whether to skip the first child step item
              * @param  {Boolean} reset indicates whether to reset the step item state to DEFAULT
@@ -471,6 +472,14 @@ define([
                 return this;
             },
 
+            /**
+             * Creates timeline for shift animation - when the selected option for a choice is changing - animating horizontally.
+             * 
+             * @method _makeShiftTimeline
+             * @param  {String} targetChildStepId  specifies the target childId
+             * @return {Object}            a constructed shift timeline
+             * @private
+             */
             _makeShiftTimeline: function (targetChildStepId) {
                 var shiftTimeline = new TimelineLite(),
                     targetChildStep = this._childSteps[targetChildStepId],
@@ -505,6 +514,15 @@ define([
                 return shiftTimeline;
             },
 
+            /**
+             * Creates timeline for advance animation - when the part of the choice tree is unfolding, (after switching to another branch of the tree).
+             * 
+             * @method _makeOpenTimeline
+             * @param  {String} targetChildStepId specifies the target child id
+             * @param  {Boolean} skipFirst  indicates whether the first child step should be included in the timeline
+             * @return {Object}            a constructed open timeline
+             * @private
+             */
             _makeOpenTimeline: function (targetChildStepId, skipFirst) {
                 var openTimeline = new TimelineLite(),
                     openStagger,
@@ -520,6 +538,17 @@ define([
                 return openTimeline;
             },
 
+            /**
+             * Generates an open timeline for this particular step item and adds it to the global open timeline. Calls the same on the target child.
+             *
+             * @method _getOpenTimelines
+             * @param  {Object} tls   global open timeline
+             * @param  {String} targetChildStepId specifies the target child id
+             * @param  {Boolean} skip  indicates whether to skip the first child step item
+             * @return {StepItem}       itself
+             * @private
+             * @chainable
+             */
             _getOpenTimelines: function (tls, targetChildStepId, skip) {
                 var tl = new TimelineLite(),
                     targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
@@ -572,6 +601,14 @@ define([
                 return this;
             },
 
+            /**
+             * Returns an array of child step nodes except for steps whose ids are passed in `except` param.
+             * 
+             * @method _getChildNodes
+             * @private
+             * @param  {Array} except an array of child step ids to not include in the result
+             * @return {Array}        an array of child step nodes
+             */
             _getChildNodes: function (except) {
                 var childNodes = [];
 
@@ -586,10 +623,28 @@ define([
                 return childNodes;
             },
 
+            /**
+             * Emits a `CURRENT_STEP_CHANGE` event with a payload of id and level of the current step item.
+             * This notifies the trunk of the tree and this step is now a current step. The trunk in turn notifies 
+             * every other step that they are not current steps.
+             *
+             * @method _notifyCurrentStepChange
+             * @private
+             */
             _notifyCurrentStepChange: function () {
                 this._emit(StepItem.event.CURRENT_STEP_CHANGE, { id: this.id, level: this.level });
             },
 
+            /**
+             * Emits a `STATE_CHANGE` event with a payload of id, level and state of the current step item.
+             * Additionally sets state of all the content bricks to corresponding states.
+             * 
+             * @method _notifyStateChange
+             * @private
+             * @chainable
+             * @param  {String} state state to set the step item to
+             * @return {StepItem}       itself
+             */
             _notifyStateChange: function (state) {
                 var brickState;
 
@@ -616,8 +671,19 @@ define([
                 return this;
             },
 
+            /**
+             * A helper function to emit a supplied event with payload.
+             * 
+             * @private
+             * @chainable
+             * @param  {String} event   event name
+             * @param  {Object} [payload] payload object
+             * @return {StepItem}         itself
+             */
             _emit: function (event, payload) {
                 this.emit(event, payload);
+
+                return this;
             },
 
             getData: function () {
@@ -633,6 +699,14 @@ define([
                 return data;
             },
 
+            /**
+             * Adds a given step item object as a child for this step item.
+             * 
+             * @method addChild
+             * @chainable
+             * @param {StepItem} stepItem a stepItem object to be added as a child.
+             * @return {StepItem} itself
+             */
             addChild: function (stepItem) {
                 this._optionsNode.append(stepItem.node);
                 this._childSteps[stepItem.id] = stepItem;
@@ -706,6 +780,12 @@ define([
                 }
             },
 
+            /**
+             * Checks if the step is valid. It's considered valid if all its content bricks are valid.
+             *
+             * @method isValid
+             * @return {Boolean} true if completed; false, otherwise
+             */
             isValid: function () {
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     if (!brick.isValid()) {
@@ -718,7 +798,8 @@ define([
 
             /**
              * Checks if the step is completed. It's considered completed if its state is SUCCESS.
-             * 
+             *
+             * @method isCompleted
              * @return {Boolean} true if completed; false, otherwise
              */
             isCompleted: function () {

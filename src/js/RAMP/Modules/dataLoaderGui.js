@@ -258,44 +258,56 @@ define([
 
                                                     promise.then(function (data) {
                                                         // get data from feature layer's legend endpoint
-                                                        var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
-                                                        legendPromise.then(function (legendLookup) {
-                                                            var fieldOptions;
-                                                            window.clearTimeout(handle);
 
-                                                            data.legendLookup = legendLookup;
-                                                            // TODO: when field name aliases are available, change how the dropdown values are generated
-                                                            fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+                                                        var layerInRampLODRange = RampMap.layerInLODRange(data.maxScale, data.minScale);
 
-                                                            // no fields available; likely this is not a Feature service
-                                                            if (!fieldOptions || fieldOptions.length === 0) {
-                                                                handleFailure(step, handle, {
-                                                                    serviceType:
-                                                                        lang.mixin(choiceTreeErrors.featureError, {
-                                                                            message: i18n.t("addDataset.error.messageFeatureInvalid")
-                                                                        })
-                                                                });
-                                                            } else {
-
-                                                                choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
-                                                                    stepData: data,
-                                                                    bricksData: {
-                                                                        primaryAttribute: {
-                                                                            options: fieldOptions
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-
-                                                        }, function (event) {
-                                                            console.error(event);
+                                                        if (!layerInRampLODRange) {
                                                             handleFailure(step, handle, {
                                                                 serviceType:
                                                                     lang.mixin(choiceTreeErrors.featureError, {
-                                                                        message: i18n.t("addDataset.error.messageFeatureLegend")
+                                                                        message: i18n.t("addDataset.error.messageFeatureOutsideZoomRange")
                                                                     })
                                                             });
-                                                        });
+                                                        } else {
+                                                            var legendPromise = DataLoader.getFeatureLayerLegend(serviceUrlValue);
+                                                            legendPromise.then(function (legendLookup) {
+                                                                var fieldOptions;
+                                                                window.clearTimeout(handle);
+
+                                                                data.legendLookup = legendLookup;
+                                                                // TODO: when field name aliases are available, change how the dropdown values are generated
+                                                                fieldOptions = data.fields.map(function (field) { return { value: field, text: field }; });
+
+                                                                // no fields available; likely this is not a Feature service
+                                                                if (!fieldOptions || fieldOptions.length === 0) {
+                                                                    handleFailure(step, handle, {
+                                                                        serviceType:
+                                                                            lang.mixin(choiceTreeErrors.featureError, {
+                                                                                message: i18n.t("addDataset.error.messageFeatureInvalid")
+                                                                            })
+                                                                    });
+                                                                } else {
+
+                                                                    choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
+                                                                        stepData: data,
+                                                                        bricksData: {
+                                                                            primaryAttribute: {
+                                                                                options: fieldOptions
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+
+                                                            }, function (event) {
+                                                                console.error(event);
+                                                                handleFailure(step, handle, {
+                                                                    serviceType:
+                                                                        lang.mixin(choiceTreeErrors.featureError, {
+                                                                            message: i18n.t("addDataset.error.messageFeatureLegend")
+                                                                        })
+                                                                });
+                                                            });
+                                                        }
 
                                                     }, function (event) {
                                                         // error connection to service
@@ -464,7 +476,7 @@ define([
                                                         function (l) {
                                                             return l.name === wmsLayerName;
                                                         }
-                                                    );
+                                            );
 
                                                     wmsConfig = {
                                                         id: LayerLoader.nextId(),
@@ -646,9 +658,9 @@ define([
                                                         var rows,
                                                             delimiter = UtilMisc.detectDelimiter(data),
 
-                                                            guess,
-                                                            primaryAttribute,
-                                                            headers;
+                                                                            guess,
+                                                                            primaryAttribute,
+                                                                            headers;
 
                                                         window.clearTimeout(handle);
 
@@ -808,14 +820,14 @@ define([
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
-                                    {
-                                        id: "color",
-                                        type: Bricks.ColorPickerBrick,
-                                        config: {
-                                            instructions: i18n.t("addDataset.help.geojsonColour"),
-                                            header: i18n.t("addDataset.colour")
-                                        }
-                                    },
+            {
+                id: "color",
+                type: Bricks.ColorPickerBrick,
+                config: {
+                    instructions: i18n.t("addDataset.help.geojsonColour"),
+                    header: i18n.t("addDataset.colour")
+                }
+            },
                                     {
                                         id: "addDataset",
                                         type: Bricks.ButtonBrick,
@@ -948,9 +960,9 @@ define([
                                                         DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                             renderer: "circlePoint",
                                                             colour: [
-                                                                bricksData.color.rgb_[0],
-                                                                bricksData.color.rgb_[1],
-                                                                bricksData.color.rgb_[2],
+                                                                                                        bricksData.color.rgb_[0],
+                                                                                                        bricksData.color.rgb_[1],
+                                                                                                        bricksData.color.rgb_[2],
                                                                 255
                                                             ],
                                                             nameField: bricksData.primaryAttribute.dropDownValue,
@@ -1027,9 +1039,9 @@ define([
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                         //renderer: obj.style,
                                                         colour: [
-                                                            bricksData.color.rgb_[0],
-                                                            bricksData.color.rgb_[1],
-                                                            bricksData.color.rgb_[2],
+                                                                                                    bricksData.color.rgb_[0],
+                                                                                                    bricksData.color.rgb_[1],
+                                                                                                    bricksData.color.rgb_[2],
                                                             255
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,

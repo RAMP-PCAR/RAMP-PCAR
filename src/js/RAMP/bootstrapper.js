@@ -43,10 +43,8 @@
 
 require([
 /* Dojo */
-    "dojo/parser", "dojo/on", "dojo/topic",
-    "dojo/request/script",
-    "dojo/request/xhr", "dojo/_base/array",
-    "esri/config",
+    "dojo/parser", "dojo/on", "dojo/topic", "dojo/request/script", "dojo/request/xhr",
+    "esri/config", "esri/urlUtils",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
@@ -64,8 +62,8 @@ require([
 
     function (
     /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr, dojoArray,
-    esriConfig,
+    parser, dojoOn, topic, requestScript, xhr,
+    esriConfig, esriUrlUtils,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
@@ -113,7 +111,7 @@ require([
                 theme.tooltipster();
 
                 //start loading the layers
-                dojoArray.forEach(RAMP.startupLayers, function (layer) {
+                RAMP.startupLayers.forEach(function (layer) {
                     LayerLoader.loadLayer(layer);
                 });
             }
@@ -240,7 +238,7 @@ require([
                                 //we are expecting an array of JSON config fragments
                                 //merge each fragment into the file config
 
-                                dojoArray.forEach(serviceContent, function (configFragment) {
+                                serviceContent.forEach(function (configFragment) {
                                     UtilMisc.mergeRecursive(fileConfig, configFragment);
                                 });
 
@@ -279,7 +277,10 @@ require([
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
             esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
-            // really IE9???  (╯°□°）╯︵ ┻━┻
+                // really IE9???  (╯°□°）╯︵ ┻━┻
+            if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
+                esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
+            }
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value
@@ -291,9 +292,7 @@ require([
 
             pluginConfig = RAMP.config.plugins;
             if (pluginConfig) {
-                dojoArray.map(pluginConfig, function (pName) {
-                    loadPlugin(pName);
-                });
+                pluginConfig.map(function (pName) { loadPlugin(pName); });
             }
 
             // apply defaulting of extents (must be done prior to bookmark link updates)
