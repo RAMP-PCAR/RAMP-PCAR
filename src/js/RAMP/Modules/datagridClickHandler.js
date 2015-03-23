@@ -9,15 +9,16 @@
 
 /**
 * Datagridclick handler class.
-*
+*   
+* ####Imports RAMP Modules:
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class DatagridClickHandler
 * @static
-* @uses RAMP
-* @uses GraphicExtension
-* @uses EventManager
 * @uses dojo/topic
 * @uses dojo/dom-construct
-* @uses Util
 */
 
 define([

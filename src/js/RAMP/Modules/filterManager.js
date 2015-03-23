@@ -15,26 +15,31 @@
 * For a doc with diagrams on how this class works, please see
 * http://ecollab.ncr.int.ec.gc.ca/projects/science-apps/priv/RAMP/RAMP%20AMD%20Filter%20Module.docx
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+* {{#crossLink "LayerGroup"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "Checkbox"}}{{/crossLink}}  
+* {{#crossLink "CheckboxGroup"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
+* {{#crossLink "templates/filter_wms_meta_Template.json"}}{{/crossLink}}
+* 
 * @class FilterManager
 * @static
 * @uses dojo/_base/array
 * @uses dojo/Deferred
 * @uses dojo/topic
-* @uses templates/filter_manager_template.json
 * @uses esri/tasks/query
-* @uses RAMP
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
-* @uses LayerItem
-* @uses LayerGroup
-* @uese Theme
-* @uese TmplHelper
-* @uses Util
-* @uses Dictionary
-* @uses PopupManager
-* @uses Checkbox
-* @uses CheckboxGroup
 */
 
 define([
