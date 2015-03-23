@@ -8,7 +8,7 @@ module.exports = (grunt) ->
         if k1.length != k2.length
             return false
         
-        k1.every (key) ->
+        for key in k1
             if o1.hasOwnProperty(key) != o2.hasOwnProperty(key)
                 return false
             else if typeof o1[key] != typeof o2[key]
@@ -24,9 +24,12 @@ module.exports = (grunt) ->
         # Properties from the Souce1 object will be copied to Source2 Object.
         # prefix will be added to the missing properties
 
-        mj = {}
-        # = Object.create(source2);// Copying Source2 to a new Object
-        for p of o1
+        mj = {}        
+
+        # get the keys
+        ps = Object.keys(o1).sort()
+
+        for p in ps
             if o2.hasOwnProperty(p)
                 if o1[p] != null and typeof o1[p] == 'object'
                 # Recursive call if the property is an object,
