@@ -346,13 +346,15 @@ define([
             dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
 
             dojoArray.forEach(fields, function (field, idx) {
-                var fieldTitle = field;
-                if (aliases) {
-                    if (aliases[field]) {
-                        fieldTitle = aliases[field];
+                if (field.toLowerCase() !== "shape") {
+                    var fieldTitle = field;
+                    if (aliases) {
+                        if (aliases[field]) {
+                            fieldTitle = aliases[field];
+                        }
                     }
+                    dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
                 }
-                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
             });
 
             return dg;
