@@ -4,7 +4,7 @@ module.exports = (grunt) ->
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
             tasks = [
-                #'github-release' # upload build files to GitHub release
+                'github-release' # upload build files to GitHub release
                 'gh-pages:travis' # drop build files to our dist GitHub repo
                 'gh-pages-clean' # clean module cache
                 'copy:demo' # crete a demo folder
