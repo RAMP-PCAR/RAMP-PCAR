@@ -39,7 +39,7 @@
 
 define([
 /* Dojo */
-        "dojo/_base/array", "dojo/Deferred", "dojo/topic",
+        "dojo/_base/lang", "dojo/_base/array", "dojo/Deferred", "dojo/topic",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
@@ -55,7 +55,7 @@ define([
 
     function (
     /* Dojo */
-        dojoArray, Deferred, topic,
+        lang, dojoArray, Deferred, topic,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
@@ -430,6 +430,8 @@ define([
                 * @private
                 */
                 function setButtonEvents() {
+                    var metadataPopup;
+
                     // highlight layer item on hover/focus with a light gray background
                     PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
@@ -463,8 +465,19 @@ define([
                     // open renderers sections when the renderer button (layer icon) is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
+                            var newTooltip = this.isOpen() ? i18n.t('filterManager.showLegend') : i18n.t('filterManager.hideLegend'),
+                                that = this;
+
                             this.target.slideToggle("fast", function () {
                                 adjustPaneWidth();
+
+                                that.handle
+                                    .prop("title", newTooltip)
+                                    .find("> .wb-invisible")
+                                    .text(newTooltip);
+
+                                Theme.tooltipster(that.handle.parent(), null, "update");
+
                                 d.resolve();
                             });
                         },
@@ -478,14 +491,28 @@ define([
 
                     // display metadata when the metadata button is clicked;
                     // TODO: move to a separate/different module?
-                    PopupManager.registerPopup(mainList, "click",
+                    metadataPopup = PopupManager.registerPopup(mainList, "click",
                         function (d) {
-                            metadataClickHandler(this.target);
+                            // close the popup, this will update aria tags;
+                            // the metadata panel will be closed by metadataClickHandler if needed.
+                            if (metadataPopup.isOpen(null, "any")) {
+                                // need to reject the open promise since we are actually closing the popup
+                                d.reject();
+                                metadataPopup.close();
 
-                            d.resolve();
+                                metadataClickHandler(this.target);
+                            } else {
+                                metadataClickHandler(this.target);
+
+                                d.resolve();
+                            }
                         },
                         {
+                            closeHandler: function (d) {
+                                d.resolve();
+                            },
                             handleSelector: ".metadata-button",
+                            openOnly: true,
                             activeClass: "button-pressed"
                         }
                     );
@@ -538,7 +565,10 @@ define([
                                     node.addClass("selected-row");
                                 },
                                 doOnHide: function () {
-                                    button.removeClass("button-pressed");
+                                    //button.removeClass("button-pressed");
+                                    if (metadataPopup.isOpen(null, "any")) {
+                                        metadataPopup.close();
+                                    }
                                     node.removeClass("selected-row");
                                 }
                             });
@@ -586,6 +616,13 @@ define([
 
                                 metadataUrl = layerConfig.metadataUrl;
 
+                                // set it to null when layerConfig.catalogueUrl does not exist
+                                // instead of key with empty value
+                                var params = null;
+                                if (!UtilMisc.isUndefined(layerConfig.catalogueUrl)) {
+                                    params = [{ key: "catalogue_url", value: layerConfig.catalogueUrl }];
+                                }
+
                                 if (!metadataUrl) {
                                     metadataError();
                                 } else {
@@ -601,7 +638,7 @@ define([
                                                     guid: id
                                                 });
                                             }
-                                        }, null, [{ key: "catalogue_url", value: layerConfig.catalogueUrl }]);
+                                        }, null, params);
                                 }
                             }
                         } else {
@@ -885,13 +922,17 @@ define([
             /**
             * Add a provided layer to the layer selector.
             * @param {String} layerType layer type - name of the layer group
-            * @param {Object} layerConfig a layer config
-            * @param {String} initState optional. the state to initialize in.  Default value is LOADING
+            * @param {Object} layerRamp ramp object
+            * @param {Object} [options] additional options for the layer item
+            * @param {String} [options.state] the state to initialize in.  Default value is LOADING
+            * @param {String} [options.notices] optional notices, for example error notices if the layer cannot be loaded from the get go
             * @method addLayer
             */
-            addLayer: function (layerType, layerConfig, initState) {
+            addLayer: function (layerType, layerRamp, options) {
                 var layerGroup = layerGroups[layerType],
                     newLayer;
+
+                options = options || {};
 
                 // TODO: figure out how to handle ordering of the groups - can't have wms group before feature layer group
 
@@ -905,11 +946,19 @@ define([
                     ui.addLayerGroup(layerGroup.node);
                 }
 
-                newLayer = layerGroup.addLayerItem(layerConfig);
+                // layer is user-added, add an extra notice to all states
+                if (layerRamp.user) {
+                    options = lang.mixin(options,
+                        {
+                            stateMatrix: LayerItem.getStateMatrixTemplate()
+                        }
+                    );
 
-                if (!UtilMisc.isUndefined(initState)) {
-                    newLayer.setState(initState, null, true);
+                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, true);
+                    LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
                 }
+
+                newLayer = layerGroup.addLayerItem(layerRamp.config, options);
 
                 // TODO: check scale in cleaner way
                 setLayerOffScaleStates();

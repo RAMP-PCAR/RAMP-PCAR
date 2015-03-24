@@ -26,7 +26,8 @@ define(["dojo/_base/array", "utils/util"],
             maxScale: 0,
             settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
             datagrid: { rowsPerPage: 50 },
-            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' }
+            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' },
+            maxAllowableOffset: 0
         },
 
             wmsLayerDefaults = {
@@ -47,7 +48,7 @@ define(["dojo/_base/array", "utils/util"],
                 layers: { feature: [], wms: [] },
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
                 advancedToolbar: { enabled: false, tools: [] },
-                mapInitFailUrl: "./error-en.html"
+                ui: { mapQueryToggle: { show: true } }
             },
 
             defaultRenderers = {
@@ -164,7 +165,6 @@ define(["dojo/_base/array", "utils/util"],
             },
 
             // specifies knows layer groups in the reversed order;
-            layerSelectorGroups: [
-            ]
+            layerSelectorGroups: []
         };
     });

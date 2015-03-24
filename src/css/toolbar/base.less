@@ -29,24 +29,8 @@
                 display: inline-block;
             }
 
-            &.focused,
-            &:focus, &:hover {
-                background-color: #D4D4D4 !important;
-                color: inherit !important;
-            }
-
-            &.button-pressed {
-                //background-color: #D4D4D4 !important;
-                //color: #D73D38 !important;
-                border-color: @medium-dark-grey-color !important;
-                background-color: #545454 !important;
-                color: #FFF !important;
-                box-shadow: @button-active-shadow;
-
-                .separator {
-                    border-color: #FFF;
-                }
-            }
+            .btn-ramp-focused;
+            .btn-ramp-pressed;
         }
 
         .map-toolbar-item-container {
@@ -160,12 +144,7 @@
                     color: inherit !important;
                 }
 
-                &.button-pressed {
-                    border-color: @medium-dark-grey-color !important;
-                    background-color: #545454 !important;
-                    color: #FFF !important;
-                    box-shadow: @button-active-shadow;
-                }
+                .btn-ramp-pressed;
             }
         }
     }

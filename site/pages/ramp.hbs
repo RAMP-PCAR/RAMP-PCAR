@@ -22,6 +22,11 @@
                 </div>
             </li>
             <li class="map-toolbar-item">
+                <button class="btn btn-xs map-toolbar-item-button button-none _tooltip" title="{{t "gui.actions.wmsQueryDisableTooltip"}}" id="uglyGetFiToggle">
+                    <i class="fa fa-map-marker"></i><span class="on-right">{{t "gui.actions.wmsQueryDisable"}}</span>
+                </button>
+            </li>
+            <li class="map-toolbar-item">
                 <button class="btn btn-xs map-toolbar-item-button button-none" id="getlink-toggle">
                     <i class="fa fa-link"></i><span class="on-right">{{t "bookmarkLink.title"}}</span>
                 </button>
@@ -193,7 +198,7 @@
                 <details id="tabs1_1" data-panel-name="filterManager">
                     <summary class="">{{t "filterManager.datasetsTabTitle"}}</summary>
                     <!-- SEARCH MAP BEGIN -->
-                    <div id="searchMapSection">
+                    <!--<div id="searchMapSection">-->
                         <!--<h2 id="searchMapHeader">
                         </h2>-->
                         <div id="searchMapSectionBody">
@@ -208,7 +213,7 @@
                             </ul>
                             <!--LAYER SECTION END-->
                         </div>
-                    </div>
+                    <!--</div>-->
                     <!-- SEARCH MAP END -->
                 </details>
                 <details id="tabs1_2" data-panel-name="datagrid">

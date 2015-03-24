@@ -54,24 +54,30 @@
                     outline: 0;
                     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
                 }
+
+                .fa-file-o {
+                    display: inline-block;
+                }
+
+                .fa-file {
+                    display: none;
+                }
+
+                &.selected {
+                    .fa-file-o {
+                        display: none;
+                    }
+
+                    .fa-file {
+                        display: inline-block;
+                    }
+                }
             }
         }
     }
 }
 
-.color-picker-container {
-    display: table;
-
-    & > .input-group {
-        display: table-cell !important;
-        width: 80% !important;
-        padding-right: 10px;
-    }
-
-    .color-picker-swatch {
-        display: table-cell;
-        margin-left: 10px;
-        width: 20%;
-        border: 1px solid black;
-    }
+input,
+select {
+    border-radius: 0 !important;
 }

@@ -691,11 +691,14 @@ define([
             addLayerSectionContainer = $("#addLayer-section-container"),
             //AddLayerSection = $("#addLayer-section"),
 
+            wmsToggle = $("#uglyGetFiToggle"),
+
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
 
             helpPanelPopup,
             addLayerPanelPopup,
+            wmsQueryPopup,
 
             transitionDuration = 0.5,
 
@@ -737,11 +740,11 @@ define([
 
                         // set tooltips on the collapsed toolbar
                         mapToolbar
-                            .find(".map-toolbar-item-button")
+                            .find(".map-toolbar-item-button:visible")
                             .map(function (i, node) {
                                 node = $(node);
                                 node
-                                    .addClass("_tooltip")
+                                    .addClass("_tooltip tooltip-temp")
                                     .attr(
                                         "title",
                                         node.find("span").text()
@@ -759,11 +762,15 @@ define([
                         adjustHeight();
                         layoutChange();
 
-                        // remove tooltips from the restored toolbar
-                        Theme.tooltipster(mapToolbar, null, "destroy");
+                        // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
+                        Theme.tooltipster(
+                            mapToolbar
+                                .find(".map-toolbar-item-button.tooltip-temp")
+                                .parent(),
+                            null, "destroy");
 
                         mapToolbar
-                            .find(".map-toolbar-item-button")
+                            .find(".map-toolbar-item-button.tooltip-temp")
                             .removeClass("_tooltip")
                             .removeAttr("title");
 
@@ -782,6 +789,10 @@ define([
                 timeLines;
 
             createFullDataTL = function () {
+                if (panelDiv.find(".wb-tabs > ul li").length === 0) {
+                    return;
+                }
+
                 fullDataTimeLine
                     .fromTo(mapDiv, transitionDuration, { width: "auto" }, { width: 35, ease: "easeOutCirc" }, 0)
 
@@ -956,6 +967,12 @@ define([
             function _toggleFullDataMode(fullData) {
                 _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
 
+                // if the timeline duration is 0, reset it
+                // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when creating timelines
+                if (fullDataTimeLine.totalDuration() === 0) {
+                    UtilMisc.resetTimelines([timeLines[0]]);
+                }
+
                 if (_isFullData) {
                     viewport.addClass("full-data-mode"); // set full-data-mode css class BEFORE animation; remove it after it finishes - on onReverseComplete callback
                     fullDataTimeLine.play();
@@ -1027,6 +1044,11 @@ define([
                     topic.subscribe(EventManager.GUI.PANEL_TOGGLE, function (event) {
                         panelPopup.toggle(null, event.visible);
                     });
+
+                    if (!RAMP.config.ui.mapQueryToggle.show) {
+                        RAMP.state.ui.wmsQuery = false;
+                        wmsToggle.remove();
+                    }
 
                     // set listener to the full-screen toggle
                     fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
@@ -1288,6 +1310,26 @@ define([
             }
         }
 
+        /**
+         * A helper method that fires WMS_QUERY_CHANGE event.
+         * 
+         * @method wmsQueryPopupHelper
+         * @param {Object} d deferred to be resolved
+         */
+        function wmsQueryPopupHelper(d) {
+            topic.publish(EventManager.FilterManager.WMS_QUERY_CHANGE, { allowed: RAMP.state.ui.wmsQuery });
+
+            /*jshint validthis: true */
+            // I think there is no need to change the label of the button as we are already changing its visual state
+            // this is also consistent with how fullscreen and other toolbar buttons work
+            /*this.handle
+                .children('span')
+                .html(i18n.t('gui.actions.wmsQueryEnable'))
+            ;*/
+
+            d.resolve();
+        }
+
         return {
             /**
             * Call load to initialize the GUI module.
@@ -1338,6 +1380,27 @@ define([
                         resetFocusOnClose: true
                     }
                 );
+
+                // WMS query Start
+                wmsQueryPopup = popupManager.registerPopup(wmsToggle, "click",
+                    function (d) {
+                        RAMP.state.ui.wmsQuery = false;
+                        wmsQueryPopupHelper.call(this, d);
+                    },
+                    {
+                        activeClass: cssButtonPressedClass,
+                        closeHandler: function (d) {
+                            RAMP.state.ui.wmsQuery = true;
+                            wmsQueryPopupHelper.call(this, d);
+                        }
+                    }
+                );
+
+                // if the query is disabled (from bookmarklink) toggle the button
+                if (!RAMP.state.ui.wmsQuery) {
+                    wmsQueryPopup.open();
+                }
+                // WMS query end
 
                 //Start AddLayer popup controller
                 addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",

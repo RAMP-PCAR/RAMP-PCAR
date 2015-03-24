@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $ */
+﻿/* global define, console, RAMP, $, i18n */
 
 /**
 *
@@ -82,8 +82,9 @@ define([
         * @param  {String} layerId config id of the layer
         * @param  {String} newState the state to set the layer to in the layer selector
         * @param  {Boolean} abortIfError if true, don't update state if current state is an error state
+        * @param  {Object} [options] additional options for layer item (mostly error messages in this case)
         */
-        function updateLayerSelectorState(layerId, newState, abortIfError) {
+        function updateLayerSelectorState(layerId, newState, abortIfError, options) {
             if (abortIfError) {
                 var layerState;
                 layerState = FilterManager.getLayerState(layerId);
@@ -95,7 +96,7 @@ define([
             }
 
             //set layer selector to new state
-            FilterManager.setLayerState(layerId, newState);
+            FilterManager.setLayerState(layerId, newState, options);
         }
 
         /**
@@ -162,10 +163,11 @@ define([
         */
         function _loadLayer(layer, reloadIndex) {
             var insertIdx,
-                   layerSection,
-                   map = RampMap.getMap(),
-                   layerConfig = layer.ramp.config,
-                   lsState;
+                layerSection,
+                map = RampMap.getMap(),
+                layerConfig = layer.ramp.config,
+                lsState,
+                options = {};
 
             if (!layer.ramp) {
                 console.log('you failed to supply a ramp.type to the layer!');
@@ -223,24 +225,33 @@ define([
                     lsState = LayerItem.state.LOADING;
                     break;
                 case "error":
+                    options.notices = {
+                        error: {
+                            message: i18n.t("filterManager.notices.error.connect")
+                        }
+                    };
+
                     lsState = LayerItem.state.ERROR;
                     break;
             }
 
+            //add layer to map, triggering the loading process.  should add at correct position
+            //do this before creating layer selector item, as the layer selector inspects the map
+            //object to make state decisions
+            map.addLayer(layer, insertIdx);
+
             //add entry to layer selector
             if (UtilMisc.isUndefined(reloadIndex)) {
-                FilterManager.addLayer(layerSection, layer.ramp.config, lsState);
+                options.state = lsState; // pass initial state in the options object
+                FilterManager.addLayer(layerSection, layer.ramp, options);
             } else {
-                updateLayerSelectorState(layerConfig.id, lsState);
+                updateLayerSelectorState(layerConfig.id, lsState, false, options);
             }
             layer.ramp.load.inLS = true;
 
             //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
             //store a pointer here so we can find it (and it's information)
             RAMP.layerRegistry[layer.id] = layer;
-
-            //add layer to map, triggering the loading process.  should add at correct position
-            map.addLayer(layer, insertIdx);
 
             //this will force a recreation of the highlighting graphic group.
             //if not done, can cause mouse interactions to get messy if adding more than
@@ -365,19 +376,34 @@ define([
             * @param  {Object} evt.error the error object
             */
             onLayerError: function (evt) {
-                console.log("failed to load layer " + evt.layer.url);
-                console.log(evt.error.message);
-
+                console.error("failed to load layer " + evt.layer.url, evt.error);
+                
                 evt.layer.ramp.load.state = "error";
 
-                var layerId = evt.layer.id;
+                var layerId = evt.layer.id,
+                    // generic error notice
+                    errorMessage  = i18n.t("filterManager.notices.error.load"),
+                    options;
 
                 //get that failed layer outta here
                 removeFromMap(layerId);
 
+                // customize error notices based on the error type as much as possible
+                if (evt.error.code === 400) {
+                    errorMessage = i18n.t("filterManager.notices.error.draw");
+                }
+
+                options = {
+                    notices: {
+                        error: {
+                            message: errorMessage
+                        }
+                    }
+                };
+
                 //if layer is in layer selector, update the status
                 if (evt.layer.ramp.load.inLS) {
-                    updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false);
+                    updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.ERROR, false, options);
                 }
             },
 

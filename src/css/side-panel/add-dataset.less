@@ -5,48 +5,22 @@
 }
 
 #add-dataset-section-container {
-    visibility: hidden;
-
+    display: none;
+    
+    //visibility: hidden;
+    //padding-top: 46px !important;
     bottom: 0;
     left: 0;
     right: 0;
     top: 0;
-    //padding-top: 46px !important;
     overflow-y: auto;
     position: absolute;
     margin: 0 !important;
     padding: 0;
     background: white;
-    z-index: 10;
+    z-index: 0;
 
     #add-dataset-section {
-
-        .btn-group {
-            .btn-option {
-                border-color: @light-grey-color;
-                background-color: @very-light-grey-color;
-                min-width: 95px;
-                border-radius: 0;
-                color: #000;
-
-                &.focused,
-                &:focus, &:hover {
-                    background-color: #D4D4D4 !important;
-                    color: inherit !important;
-                }
-
-                &.button-pressed {
-                    border-color: @medium-dark-grey-color !important;
-                    background-color: #545454 !important;
-                    color: #FFF !important;
-                    box-shadow: @button-active-shadow;
-
-                    .separator {
-                        border-color: #FFF;
-                    }
-                }
-            }
-        }
 
         section {
             position: relative;
@@ -73,97 +47,8 @@
                     overflow: hidden;
                     background-color: #fff;
 
-                    h3 {
-                        margin: 21px 0 10px 0;
-
-                        &:first-child {                        
-                            margin: 2px 0 10px 0;
-                        }
-
-                        &.smaller {
-                            margin: 10px 0 5px 0;
-                        }
-                    }
-
-                    h4 {
-                        &.smaller {
-                            margin: 10px 0 5px 0;
-                        }
-                    }
-
-                    .btn-group,
-                    .input-group {
-                        margin-bottom: 10px;
-                        display: table;
-                    }
-
-                    .input-group {
+                    > .brick {
                         width: 85%;
-                    }
-
-                    &.load-url-step,
-                    &.load-file-step {
-
-                        .btn-load,
-                        .btn-cancel {
-                            width: 70px;
-                        }
-
-                        .glyphicon {
-                            top: 0;
-                        }
-
-                        .glyphicon-remove {
-                            top: -1px;
-                        }
-
-                        .btn-cancel,
-                        .glyphicon-ok,
-                        .glyphicon-remove {
-                            display: none;
-                        }
-
-                        &.loaded {
-                            .btn-load {
-                                display: none;
-                            }
-
-                            .btn-cancel,
-                            .glyphicon-ok {
-                                display: block;
-                            }
-                        }
-
-                        &.error {
-                            .btn-load {
-                                display: none;
-                            }
-
-                            .glyphicon-remove,
-                            .btn-cancel {
-                                display: block;
-                            }
-                        }
-
-                        .browse-button {
-                            .fa-file-o {
-                                display: inline-block;
-                            }
-
-                            .fa-file {
-                                display: none;
-                            }
-
-                            &.selected {
-                                .fa-file-o {
-                                    display: none;
-                                }
-
-                                .fa-file {
-                                    display: inline-block;
-                                }
-                            }
-                        }
                     }
 
                     .btn-add-dataset-container {
@@ -175,29 +60,6 @@
                             border-radius: 0;
                             width: 50%;
                         }
-                    }
-
-                    .double-list-container {
-                        width: 85%;
-                        display: table;
-                        margin: 19px 0 10px 0;
-
-                        .list-group {
-                            display: table-cell;
-                            width: 50%;
-
-                            &:first-child {
-                                padding-right: 10px;
-                            }
-
-                            &:last-child {
-                                padding-left: 8px;
-                            }
-                        }
-                    }
-
-                    .color-picker-container {
-                        width: 85%;
                     }
                 }
 
@@ -235,7 +97,7 @@
                         }
                     }
 
-                    &.error {
+                    &.step-state-error {
                         > .options-bg {
 
                             &:before {
@@ -287,7 +149,7 @@
                 }
             }
 
-            .loading {
+            .step-state-loading {
 
                 > .options-bg {
                     z-index: 9999;
@@ -298,8 +160,7 @@
                     }
                 }
             }
-
-            @font-face {
+            /*@font-face {
                 font-family: 'pirulen';
                 src: url('../assets/pirulen rg.ttf') format('truetype');
             }
@@ -312,17 +173,16 @@
             @font-face {
                 font-family: 'spire';
                 src: url('../assets/SPIRE0.ttf') format('truetype');
-            }
-
+            }*/
             .ghost-number() {
                 position: absolute;
                 right: -18px;
-                top: -26px;
-                font-size: 75pt;
+                //top: -26px;
+                //bottom: 0;
                 //opacity: 0.3;
+                font-size: 75pt;
                 font-weight: bold;
                 background-color: #fff;
-                bottom: 0;
             }
 
             .step-1 {
@@ -336,6 +196,8 @@
                         .ghost-number;
                         color: @light-light-grey-color;
                         content: "1";
+                        top: 0;
+                        line-height: 100%;
                     }
 
                     &:before {

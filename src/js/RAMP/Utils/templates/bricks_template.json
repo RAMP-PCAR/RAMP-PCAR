@@ -1,0 +1,164 @@
+﻿/* 
+ * 
+ * This template is not proper JSON as it allows for comments (like this one) and multi-line values.
+ * 
+ * 
+ * JavaScript-Templates templating engine
+ * https://github.com/blueimp/JavaScript-Templates
+ * 
+ *
+ *
+ */
+{
+    "default_brick_notice_placeholder": "
+        <div class='brick-notice-placeholder'></div>
+    ",
+
+    "default_brick_notice": "
+        <strong class='brick-notice {%= o.type %}'>
+            <span class='label'>
+                <span class='prefix'>{%= o.header %}:</span>
+                <br>{%= o.message %}
+            </span>
+        </strong>
+    ",
+
+    "default_base_template": "
+        <div class='brick {%= o.containerClass %}'>
+
+            {% include(o.template, o); %}
+
+        </div>
+    ",
+
+    "default_brick_header": "
+
+        {% if (o.header) { %}
+            <h3 class='h6'>
+                {%= o.header %}
+
+                {% if (o.instructions) { %}
+                    
+                    <span tabindex='0' class='brick-instructions _tooltip' title='{%= o.instructions %}' data-tooltip-theme='tooltipster-help' data-tooltip-maxwidth='350'>
+                        <i class='fa fa-question-circle'></i>
+                        <span class='wb-inv'>{%= o.instructions %}</span>
+                    </span>
+
+                {% } %}
+            </h3>
+        {% } %}
+
+    ",
+
+    "default_multi_brick_template": "
+
+        {% include('default_brick_header', o); %}
+
+        <div class='multi-container'>
+            
+        </div>
+    ",
+
+    "default_button_brick_template": "
+
+        {% include('default_brick_header', o); %}
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='button-content'>
+            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
+        </div>
+    ",
+
+    "default_choice_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='btn-group choice-group'>
+            {%  
+                o.choices.forEach(function(choice) {
+                    include('default_choice_brick_button_template', choice);
+                });
+            %}
+        </div>
+    ",
+
+    "default_choice_brick_button_template": "
+        <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
+    ",
+
+    "default_dropdown_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        <div class='form-group'>
+            <label class='wb-inv' for='{%= o.guid %}list'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
+
+            <select name='select' class='form-control input-sm' id='{%= o.guid %}' data-role='none'>
+                <option value=''>Select One:</option>
+            </select>
+        </div>
+    ",
+
+    "default_simpleinput_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        <div class='form-group'>
+            
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
+            
+            <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+            
+            <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+            <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    
+        </div>
+    ",
+
+    "default_colorpicker_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        <div class='color-picker-container'>
+            <div class='form-group'>
+                <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+                <input name='input' type='text' class='color form-control input-sm' id='{%= o.guid %}' data-role='none'/>
+            </div>
+            <div class='color-picker-swatch' role='presentation' id='{%= o.guid %}pickerSwatch'></div>
+        </div>
+    ",
+
+    "default_fileinput_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        <div class='input-group form-group'>
+
+            <label class='wb-inv' for='{%= o.guid %}'>{%= o.label %}:</label>
+            {% include('default_brick_notice_placeholder', o); %}
+            
+            <div class='input-group-container'>
+                <div class='input-group-btn browse-files'>
+                    <div class='input-container'>
+                        <input type='file' id='{%= o.guid %}realBrowse' data-role='upload'>
+                    </div>
+                    <span class='btn btn-default btn-sm browse-button' id='{%= o.guid %}pseudoBrowse'>
+                        <i class='fa fa-file'></i>
+                        <i class='fa fa-file-o'></i>
+                        <span class='on-right'>File</span>
+                    </span>                                                                                                
+                </div>
+            
+                <input name='input' type='text' class='form-control input-sm' id='{%= o.guid %}' data-role='none'  placeholder='{%= o.placeholder %}'/>
+
+            </div>
+
+            <span class='glyphicon glyphicon-ok form-control-feedback'></span>
+            <span class='glyphicon glyphicon-remove form-control-feedback'></span>
+                    
+        </div>
+    "
+}

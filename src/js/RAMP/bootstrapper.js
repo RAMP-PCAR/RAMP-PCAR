@@ -43,10 +43,8 @@
 
 require([
 /* Dojo */
-    "dojo/parser", "dojo/on", "dojo/topic",
-    "dojo/request/script",
-    "dojo/request/xhr", "dojo/_base/array",
-    "esri/config",
+    "dojo/parser", "dojo/on", "dojo/topic", "dojo/request/script", "dojo/request/xhr",
+    "esri/config", "esri/urlUtils",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
@@ -54,7 +52,7 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar",
-    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader",
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
     
 /* Utils */
     "utils/util",
@@ -64,13 +62,13 @@ require([
 
     function (
     /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr, dojoArray,
-    esriConfig,
+    parser, dojoOn, topic, requestScript, xhr,
+    esriConfig, esriUrlUtils,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
 
     /* Utils */
         UtilMisc
@@ -104,8 +102,6 @@ require([
                 //initialize the filter
                 FilterManager.init();
 
-                DataLoadedGui.init();
-
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
                     AdvancedToolbar.init();
@@ -115,7 +111,7 @@ require([
                 theme.tooltipster();
 
                 //start loading the layers
-                dojoArray.forEach(RAMP.startupLayers, function (layer) {
+                RAMP.startupLayers.forEach(function (layer) {
                     LayerLoader.loadLayer(layer);
                 });
             }
@@ -139,6 +135,7 @@ require([
                         //initialize the map export after everything is done
                         ImageExport.init();
 
+                        DataLoadedGui.init();
                         //RampMap.zoomToLayerScale();
                     });
                 // Added current level so slider will know how to adjust the position
@@ -241,7 +238,7 @@ require([
                                 //we are expecting an array of JSON config fragments
                                 //merge each fragment into the file config
 
-                                dojoArray.forEach(serviceContent, function (configFragment) {
+                                serviceContent.forEach(function (configFragment) {
                                     UtilMisc.mergeRecursive(fileConfig, configFragment);
                                 });
 
@@ -279,12 +276,10 @@ require([
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
-            if (brokenWebBrowser) {
+            esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
                 // really IE9???  (╯°□°）╯︵ ┻━┻
-                esriConfig.defaults.io.corsDetection = false;
-                esriConfig.defaults.io.alwaysUseProxy = true;
-            } else {
-                esriConfig.defaults.io.corsDetection = true;
+            if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
+                esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
             }
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
 
@@ -297,9 +292,7 @@ require([
 
             pluginConfig = RAMP.config.plugins;
             if (pluginConfig) {
-                dojoArray.map(pluginConfig, function (pName) {
-                    loadPlugin(pName);
-                });
+                pluginConfig.map(function (pName) { loadPlugin(pName); });
             }
 
             // apply defaulting of extents (must be done prior to bookmark link updates)
