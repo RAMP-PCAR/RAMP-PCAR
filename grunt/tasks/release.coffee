@@ -3,6 +3,7 @@ module.exports = (grunt) ->
         'release'
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
+            tasks = []
             ###
             tasks = [
                 'github-release' # upload build files to GitHub release
