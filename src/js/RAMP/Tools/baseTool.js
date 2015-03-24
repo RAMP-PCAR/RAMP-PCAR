@@ -10,18 +10,21 @@
 * after mixining it in.
 *
 * Call `initToggle` to initialize the tool.
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}
 *
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/tools_template.json"}}{{/crossLink}}
+* 
 * @class BaseTool
-* @static
 * @constructor
 * @uses dojo/Evented
 * @uses dojo/_base/lang
 * @uses dojo/Deferred
-* @uses dojo/text!./templates/tools_template.json
-* @uses GlobalStorage
-* @uses TmplHelper
-* @uses PopupManager
-* @uses Util
 */
 
 define([

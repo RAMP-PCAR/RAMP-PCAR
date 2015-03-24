@@ -9,13 +9,14 @@
 /**
 * ??? Description
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 *
 * @class FunctionMangler
 * @static
 * @uses dojo/on
 * @uses dojo/_base/lang
 * @uses dojo/topic
-* @uses Util
 */
 
 define([

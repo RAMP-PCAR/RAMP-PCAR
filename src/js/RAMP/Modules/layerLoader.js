@@ -13,6 +13,17 @@
 * Handles the asynchronous loading of map layers (excluding basemaps)
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
+* {{#crossLink "FilterManager"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Ramp"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -21,15 +32,6 @@
 * @uses esri/layers/GraphicsLayer
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/ProjectParameters
-* @uses EventManager
-* @uses FeatureClickHandler
-* @uses FilterManager
-* @uses GlobalStorage
-* @uses LayerItem
-* @uses Map
-* @uses MapClickHandler
-* @uses Ramp
-* @uses Util
 */
 
 define([

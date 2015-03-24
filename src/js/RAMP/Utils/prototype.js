@@ -13,10 +13,9 @@
 * @uses esri/geometry/Extent
 */
 define([
-/* ESRI */
-        "esri/geometry/Extent"
+    /* ESRI */
+    "esri/geometry/Extent"
 ],
-
     function (
     /* ESRI */
         EsriExtent) {
