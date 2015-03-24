@@ -8,7 +8,7 @@ module.exports =
         options:
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
-            branch: '_' + '<%= pkg.series %>'
+            branch: '<%= pkg.series %>'
             message: ((
                 if process.env.TRAVIS_TAG
                     "Production files for the " + process.env.TRAVIS_TAG + " release"
@@ -40,4 +40,23 @@ module.exports =
             silent: true
         src: [
             'demos/**/*.*'
+        ]
+
+    # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
+    api:
+        options:
+            add: true
+            clone: 'ramp-pcar-api'
+            repo: process.env.DOCS_REPO
+            branch: 'master'
+            #base: 'demos/NRSTC'
+            message: ((
+                if process.env.TRAVIS_TAG
+                    process.env.TRAVIS_TAG + " API release"
+                else
+                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] API build"
+            ))
+            silent: true
+        src: [
+            'api/**/*.*'
         ]

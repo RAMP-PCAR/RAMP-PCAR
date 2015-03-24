@@ -157,3 +157,9 @@ module.exports =
         cwd: 'dist'
         src: '**/*.*'
         dest: 'demos/NRSTC/' + process.env.TRAVIS_TAG + '/<%= pkg.name %>' 
+
+    api:
+        expand: true
+        cwd: 'docs'
+        src: '**/*.*'
+        dest: 'api/' + process.env.TRAVIS_TAG + '/' 
