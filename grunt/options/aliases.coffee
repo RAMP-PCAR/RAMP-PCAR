@@ -106,7 +106,7 @@ module.exports =
         [
             'hub'
             'thanks'
-            'api:enhance'
+            'yuiapi:enhance'
         ]
 
     # 'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
