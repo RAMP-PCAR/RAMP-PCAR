@@ -3,8 +3,6 @@ module.exports = (grunt) ->
         'release'
         'INTERNAL Uploads release builds to GitHub releases.'
         () ->
-            tasks = []
-            ###
             tasks = [
                 'github-release' # upload build files to GitHub release
                 'gh-pages:travis' # drop build files to our dist GitHub repo
@@ -12,7 +10,6 @@ module.exports = (grunt) ->
                 'copy:demo' # crete a demo folder
                 'gh-pages:demo' # push demo to RAMPDocs site
             ]
-            ###
             
             if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master')  ?
                 
