@@ -48,7 +48,7 @@ module.exports =
             add: true
             clone: 'ramp-pcar-api'
             repo: process.env.DOCS_REPO
-            branch: 'gh-pages' #'master'
+            branch: 'master'
             #base: 'demos/NRSTC'
             message: ((
                 if process.env.TRAVIS_TAG
