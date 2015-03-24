@@ -22,14 +22,15 @@ module.exports = (grunt) ->
                         '* [Live Demo](http://ramp-pcar.github.io/demos/NRSTC/' + process.env.TRAVIS_TAG + '/' +  grunt.config("pkg.name") + '/ramp-en.html)'
                 
                     # generate new api only for majour releases
-                    tasks.push [
+                    tasks.push( 
                         'api' # generate new api
                         'copy:api' # create a folder for a new api
                         'gh-pages:api' # push api docs to RAMP Docs site
-                    ]
+                    )
 
                 if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+(-.+)$/
                     grunt.config 'github-release.options.release.body', 'Internal QC release'
-    
+        
+
                 grunt.task.run tasks
     )
