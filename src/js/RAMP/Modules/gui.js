@@ -21,7 +21,7 @@
 * {{#crossLink "PopupManager"}}{{/crossLink}}  
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * 
-* * ####Uses RAMP Templates:
+* ####Uses RAMP Templates:
 * {{#crossLink "templates/sub_panel_template.json"}}{{/crossLink}}
 * 
 * @class GUI

@@ -85,7 +85,7 @@ define([
          */
         choiceTreeCallbacks = {
             /**
-             * A callback that advances the choice tree to the specified child step of the supplised step item.
+             * A callback that advances the choice tree to the specified child step of the supplied step item.
              * 
              * @method choiceTreeCallbacks.simpleAdvance
              * @private
@@ -214,7 +214,7 @@ define([
             });
 
             /**
-             * A choice tree conig object
+             * A choice tree config object
              *
              * Config has a simple tree structure, with content being an array of Brick object to be placed inside a StepItem.
              * 

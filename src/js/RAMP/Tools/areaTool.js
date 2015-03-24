@@ -12,7 +12,6 @@
 * {{#crossLink "Map"}}{{/crossLink}}  
 * {{#crossLink "GlobalStorage"}}{{/crossLink}}  
 * {{#crossLink "BaseTool"}}{{/crossLink}}
-
 * 
 * @extends BaseTool
 * @class AreaTool

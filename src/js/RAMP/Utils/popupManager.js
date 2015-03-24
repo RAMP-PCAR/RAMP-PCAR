@@ -1,7 +1,7 @@
 ﻿/*global define, window, $, document */
 
 /**
-* Utility module containint useful static classes.
+* Utility module containing useful static classes.
 *
 * @module Utils
 */
@@ -10,11 +10,13 @@
 * A static class to simplify the creation of UI popups, where a popup is a section of the page hidden and shown in
 * response to some user or system action. This class takes care of assigning aria-* attributes and keeping them updated.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class PopupManager
 * @static
 * @uses dojo/Deferred
 * @uses dojo/_base/lang
-* @uses Util
 */
 define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
     function (Deferred, lang, UtilMisc) {

@@ -53,7 +53,11 @@ define([
 ],
     function (
         Evented, declare, lang, Deferred,
+
+        /* Text */
         filter_manager_template,
+
+        /* Util */
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
         "use strict";

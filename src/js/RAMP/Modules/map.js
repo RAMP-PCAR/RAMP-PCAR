@@ -14,7 +14,18 @@
 /**
 * Map class represents the ESRI map object. The map is generated based on the application configuration and templates.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Navigation"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* 
 * @class Map
+* @static
 * @uses dojo/_base/declare
 * @uses dojo/_base/array
 * @uses dojo/dom
@@ -33,14 +44,6 @@
 * @uses esri/geometry/Extent
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/ProjectParameters
-* @uses GlobalStorage
-* @uses RAMP
-* @uses FeatureClickHandler
-* @uses MapClickHandler
-* @uses Navigation
-* @uses EventManager
-* @uses Util
-* @uses Array
 */
 
 define([

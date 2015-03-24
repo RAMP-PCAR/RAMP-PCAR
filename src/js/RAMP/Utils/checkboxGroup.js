@@ -7,7 +7,10 @@
 /**
 * Creates a Checkbox group bound from the supplied JArray of input nodes. Optionally, the group is bound to the supplied master input node
 * which acts as a global toggle for the group.
-*
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Checkbox"}}{{/crossLink}}  
 *
 * @class CheckboxGroup
 * @constructor
