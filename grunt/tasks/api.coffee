@@ -17,12 +17,14 @@ module.exports = (grunt)->
                 encoding: 'utf8'
             )
 
+            ###
             if data
                 data = data.replace("<input type=\"checkbox\" id=\"api-show-inherited\" checked>", "<input type=\"checkbox\" id=\"api-show-inherited\">")
                 fs.writeFileSync optionsFileName, data
             data = fs.readFileSync(themeFileName,
                 encoding: 'utf8'
             )
+            ###
 
             if data
                 data = data.replace("<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\"></h1>", "<h1><img src=\"{{projectLogo}}\" title=\"{{projectName}}\">" + grunt.config("pkg.subname") + "</h1>")

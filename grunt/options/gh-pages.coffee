@@ -41,3 +41,22 @@ module.exports =
         src: [
             'demos/**/*.*'
         ]
+
+    # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
+    api:
+        options:
+            add: true
+            clone: 'ramp-pcar-api'
+            repo: process.env.DOCS_REPO
+            branch: 'gh-pages' #'master'
+            #base: 'demos/NRSTC'
+            message: ((
+                if process.env.TRAVIS_TAG
+                    process.env.TRAVIS_TAG + " API release"
+                else
+                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] API build"
+            ))
+            silent: true
+        src: [
+            'api/**/*.*'
+        ]
