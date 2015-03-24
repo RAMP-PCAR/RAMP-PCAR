@@ -145,6 +145,10 @@ define([
 
             baseUrl,
 
+            sidePanelWbTabs,
+            sidePanelTabList,
+            sidePanelTabPanels,
+
         /**
         * A dictionary mapping names (String) to query parameter (String) of the URL. The query parameter is
         * what ends up in the url. The key can be any arbitrary name (best to name them to describe the query
@@ -237,6 +241,34 @@ define([
                             topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "get-link-section" });
                             console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", true);
+                            
+                            //when called in gui.js, elements for sidePanelTabList is not available yet
+                            //re-publish on selected tab
+                            sidePanelWbTabs = $("#panel-div > .wb-tabs");
+                            sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]");
+                            sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels");
+                            
+                            sidePanelTabList.find("li a").click(function () {
+                                console.log("inside side panel tab list on click");
+                                var selectedPanelId = $(this).attr("href").substr(1);
+
+                                sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
+                                    function () {
+                                        topic.publish(EventManager.GUI.TAB_SELECTED, {
+                                            id: this.id,
+                                            tabName: $(this).data("panel-name")
+                                        });
+                                    });
+
+                                // the panel currently open is being deselected
+                                sidePanelTabPanels.find("details[aria-expanded=true]").each(
+                                    function () {
+                                        topic.publish(EventManager.GUI.TAB_DESELECTED, {
+                                            id: this.id,
+                                            tabName: $(this).data("panel-name")
+                                        });
+                                    });
+                            });
 
                             // close this panel if any other panel is opened
                             UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
@@ -340,6 +372,7 @@ define([
                         //first param has a question mark in front of it.  all others have an &
                         delim = "&";
                     }
+                   
                 }
             });
 
@@ -461,6 +494,10 @@ define([
 
             config = RAMP.config;
             baseUrl = urlObj.uri;
+
+            //replace "#" with "st=", otherwise RAMP treats as regular parameters, not archors
+            urlObj.query = urlObj.query.replace("#", URL_KEYS.SELECT_TAB + "=");
+          
             queryObject = dojoQuery.queryToObject(urlObj.query);
 
             //adds homePage (e.g. default.aspx or rampmap.aspx) if not present;
@@ -546,11 +583,14 @@ define([
 
             // check for selected tab queries
             if (queryObject[URL_KEYS.SELECT_TAB]) {
-                // Just add the parameter, no need to do anything else
-                // since we're using anchor tags
-                addParameter(EVENT_TAB_CHANGE, {
-                    index: queryObject[URL_KEYS.SELECT_TAB]
-                });
+                //// Just add the parameter, no need to do anything else
+                //// since we're using anchor tags
+                //addParameter(EVENT_TAB_CHANGE, {
+                //    index: queryObject[URL_KEYS.SELECT_TAB]
+                //});
+                                
+                addAnchor(EVENT_TAB_CHANGE,queryObject[URL_KEYS.SELECT_TAB]);
+               
             }
 
             var layerIds;
@@ -728,10 +768,10 @@ define([
                 });
 
                 topic.subscribe(EventManager.GUI.TAB_SELECTED, function (event) {
-                    // Need to remove the "-link" part for the id to work
+                    // Need to remove the "-lnk" part for the id to work
                     // since when the page first loads, if the tab is deselected,
-                    // it's id will be missing the "-link" at the end.
-                    addAnchor(EVENT_TAB_CHANGE, event.id.replace("-link", ""));
+                    // it's id will be missing the "-lnk" at the end.
+                    addAnchor(EVENT_TAB_CHANGE, event.id.replace("-lnk", ""));
                     updateURL();
                 });
 

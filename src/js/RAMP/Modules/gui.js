@@ -71,7 +71,7 @@ define([
             sidePanelWbTabs = $("#panel-div > .wb-tabs"),
             sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
             sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
-            //panelTabs =
+                   
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
@@ -1440,16 +1440,18 @@ define([
                             captureSubPanel(na);
                         });
                     } else {
-                        dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
-                            na = Object.create(attr);
-                            na.consumeOrigin = element;
-                            captureSubPanel(na);
-                        });
+                            dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
+                                na = Object.create(attr);
+                                na.consumeOrigin = element;
+                                captureSubPanel(na);
+                            });
                     }
-                    console.log(EventManager.GUI.SUBPANEL_CAPTURE, attr);
                 });
-
+                
+             
                 sidePanelTabList.find("li a").click(function () {
+
+                    console.log("inside side panel tab list on click");
                     var selectedPanelId = $(this).attr("href").substr(1);
 
                     sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(

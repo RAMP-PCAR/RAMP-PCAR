@@ -484,7 +484,7 @@ define([
             */
             onLayerReload: function (evt) {
                 var map = RampMap.getMap(),
-                    layer,
+                    curlayer,
                     layerConfig,
                     user,
                     newLayer,
@@ -494,18 +494,20 @@ define([
                     idArray,
                     cleanIdArray;
 
-                layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+               removeFromMap(evt.layerId);
 
-                if (layer) {
+               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+             
+                if (curlayer) {
                     inMap = true;
                 } else {
                     //layer was kicked out of the map.  grab it from the registry
                     inMap = false;
-                    layer = RAMP.layerRegistry[evt.layerId];
+                    curlayer = RAMP.layerRegistry[evt.layerId];
                 }
 
-                layerConfig = layer.ramp.config;
-                user = layer.ramp.user;
+                layerConfig = curlayer.ramp.config;
+                user = curlayer.ramp.user;
 
                 //figure out index of layer
                 //since the layer may not be in the map, we have to use some trickery to derive where it is sitting
@@ -526,18 +528,18 @@ define([
                 //find where our index is
                 layerIndex = dojoArray.indexOf(cleanIdArray, evt.layerId);
 
-                if (layer.ramp.type === GlobalStorage.layerType.wms) {
+                if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
                     layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
                 }
 
                 //remove layer from map
                 if (inMap) {
-                    map.removeLayer(layer);
+                    map.removeLayer(curlayer);
                 }
 
                 //generate new layer
-                switch (layer.ramp.type) {
+                switch (curlayer.ramp.type) {
                     case GlobalStorage.layerType.wms:
                         newLayer = RampMap.makeWmsLayer(layerConfig, user);
                         break;
