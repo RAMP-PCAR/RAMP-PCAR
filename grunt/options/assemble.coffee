@@ -1,4 +1,4 @@
-module.exports = 
+module.exports =
     options:
         data: [
             "lib/wet-boew/site/data/**/*.{yml,json}"
@@ -10,7 +10,7 @@ module.exports =
         ]
         partials: [
             "lib/wet-boew/site/includes/**/*.hbs"
-            "site/includes/**/*.hbs",
+            "site/includes/**/*.hbs"
         ]
         layoutdir: "site/layouts"
         layout: "default.hbs"
@@ -25,7 +25,7 @@ module.exports =
         options:
             assets: 'build/js/lib/wet-boew'
             rampAssets: 'assets'
-            
+
             environment:
                 jqueryVersion: '2.1.1'
                 #jqueryVersion: "<%= jqueryVersion.version %>"
