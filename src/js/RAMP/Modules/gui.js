@@ -702,7 +702,136 @@ define([
 
             transitionDuration = 0.5,
 
+            toolbarController,
             layoutController;
+
+        toolbarController = (function () {
+            var mapToolbar,
+                mapTools,
+
+                toolbarWidth,
+                toolsWidth,
+
+                toolsTimeline = new TimelineLite(),
+
+                isTooltipsSet = false;
+
+            function updateToolbarStats() {
+                if (!layoutController.isFullData()) {
+                    toolbarWidth = mapToolbar.width();
+
+                    if (!isTooltipsSet) {
+                        toolsWidth = mapTools
+                            .map(function (i, n) { return $(n).outerWidth(); })
+                            .get() // need to use get() as jquery.map doesn't return a true array
+                            .reduce(function (total, width) { return total + width; })
+                        ;
+                    }
+
+                    if (!isToolbarWideEnough()) {
+                        setToolbarTooltips();
+                    } else {
+                        removeToolbarTooltips();
+                    }
+                }
+            }
+
+            function isToolbarWideEnough() {
+                return toolbarWidth > toolsWidth;
+            }
+
+            function setToolbarTooltips() {
+                toolsTimeline.invalidate();
+
+                if (!isTooltipsSet) {
+                    // set tooltips on the collapsed toolbar
+                    mapToolbar.addClass("compact");
+
+                    mapTools
+                        .filter(":not(.tooltipstered)")
+                        .map(function (i, node) {
+                            node = $(node);
+                            node
+                                .addClass("_tooltip tooltip-temp")
+                                .attr(
+                                    "title",
+                                    node.find("span").text()
+                                );
+                        });
+
+                    Theme.tooltipster(mapToolbar);
+
+                    isTooltipsSet = true;
+                }
+
+            }
+
+            function removeToolbarTooltips() {
+                if (isTooltipsSet && isToolbarWideEnough()) {
+                    // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
+                    Theme.tooltipster(
+                        mapTools
+                            .filter(".tooltip-temp")
+                            .parent(),
+                        null, "destroy");
+
+                    mapToolbar
+                        .removeClass("compact");
+                    mapTools
+                        .filter(".tooltip-temp")
+                        .removeClass("_tooltip")
+                        .removeAttr("title");
+
+                    isTooltipsSet = false;
+                }
+            }
+
+            return {
+                init: function () {
+                    mapToolbar = $("#map-toolbar");
+                    mapTools = mapToolbar.find("> .map-toolbar-item > .map-toolbar-item-button");
+
+                    updateToolbarStats();
+
+                    jWindow.on("resize", updateToolbarStats);
+
+                    toolsTimeline
+                        .fromTo(toolbarController.mapTools().find("> span"), transitionDuration / 2, { width: "auto" }, { width: 0, ease: "easeOutCirc" }, 0)
+                        .fromTo(toolbarController.mapTools().find("> span"), 0, { display: "inline-block" }, { display: "none" }, transitionDuration / 2)
+                    ;
+
+                    return this;
+                },
+
+                mapTools: function () {
+                    return mapTools;
+                },
+
+                toolsTimeline: function () {
+                    return toolsTimeline;
+                },
+
+                update: function () {
+                    updateToolbarStats();
+
+                    return this;
+                },
+
+                setTooltips: function () {
+                    setToolbarTooltips();
+
+                    return this;
+                },
+
+                removeTooltips: function () {
+                    removeToolbarTooltips();
+
+                    return this;
+                }
+
+            };
+
+        }());
 
         /**
         * Controls layout transition such as full-data and full-screen modes, opening and closing of the side panel, adjusts layout when resizing the browser window.
@@ -738,20 +867,7 @@ define([
                         adjustHeight();
                         layoutChange();
 
-                        // set tooltips on the collapsed toolbar
-                        mapToolbar
-                            .find(".map-toolbar-item-button:visible")
-                            .map(function (i, node) {
-                                node = $(node);
-                                node
-                                    .addClass("_tooltip tooltip-temp")
-                                    .attr(
-                                        "title",
-                                        node.find("span").text()
-                                    );
-                            });
-
-                        Theme.tooltipster(mapToolbar);
+                        toolbarController.setTooltips();
 
                         //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
@@ -762,17 +878,9 @@ define([
                         adjustHeight();
                         layoutChange();
 
-                        // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
-                        Theme.tooltipster(
-                            mapToolbar
-                                .find(".map-toolbar-item-button.tooltip-temp")
-                                .parent(),
-                            null, "destroy");
-
-                        mapToolbar
-                            .find(".map-toolbar-item-button.tooltip-temp")
-                            .removeClass("_tooltip")
-                            .removeAttr("title");
+                        toolbarController
+                            .update()
+                            .removeTooltips();
 
                         //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
@@ -808,8 +916,10 @@ define([
                         { width: "100%", height: "32px" },
                         { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, transitionDuration / 2)
 
-                    .to(mapToolbar.find(".map-toolbar-item-button span"), transitionDuration / 2, { width: 0, ease: "easeOutCirc" }, 0)
-                    .set(mapToolbar.find(".map-toolbar-item-button span"), { display: "none" }, transitionDuration / 2)
+                    .add(toolbarController.toolsTimeline(), 0)
+
+                    //.fromTo(toolbarController.mapTools().find("> span"), transitionDuration / 2, { width: "auto" }, { width: 0, ease: "easeOutCirc" }, 0)
+                    //.fromTo(toolbarController.mapTools().find("> span"), 0, { display: "inline-block" }, { display: "none" }, transitionDuration / 2)
 
                     .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
                     .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
@@ -917,6 +1027,8 @@ define([
                             layoutChange();
                             panelChange(true);
 
+                            toolbarController.update();
+
                             // update close button tooltips
                             panelToggle
                                 .tooltipster("content", i18n.t("gui.actions.close"))
@@ -943,6 +1055,8 @@ define([
                             console.log("GUI <-- map/update-end from gui");
                             layoutChange();
                             panelChange(false);
+
+                            toolbarController.update();
 
                             // update open button tooltips
                             panelToggle
@@ -1006,6 +1120,7 @@ define([
             * @private
             */
             function optimizeLayout() {
+
                 if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
                     (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
                     windowWidth = jWindow.width();
@@ -1025,6 +1140,8 @@ define([
                     windowWidth = jWindow.width();
                     jWindow.on("resize", optimizeLayout);
                     updatePanelWidth();
+
+                    toolbarController.init();
 
                     UtilMisc.resetTimelines(timeLines);
 
@@ -1511,7 +1628,15 @@ define([
                     }
                 });
                 
-             
+                // since basemap toggle may differ in width based on the basemap name, check if everything still fits
+                topic.subscribe(EventManager.BasemapSelector.UI_COMPLETE, function () {
+                    toolbarController.update();
+                });
+
+                topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function () {
+                    toolbarController.update();
+                });
+
                 sidePanelTabList.find("li a").click(function () {
 
                     console.log("inside side panel tab list on click");
