@@ -56,10 +56,17 @@
         "request": "~2.34.0",
         "time-grunt": "~1.0.0",
         "z-schema": "~3.1.0",
-        "grunt-jsonlint": "~1.0.4"
+        "grunt-jsonlint": "~1.0.4",
+        "load-grunt-config": "~0.16.0",
+        "grunt-conventional-changelog": "~1.1.0"
     },
 
     "ramp": {
+
+        "locale": {
+            "main": "en",
+            "languages": [ "en", "fr" ]
+        },        
 
         "concat": {
 
