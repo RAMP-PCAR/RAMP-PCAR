@@ -150,8 +150,8 @@ require([
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
 
-                if (RAMP.flags.brokenWebBrowser) {
-                    console.log('delaying for IE9 to catch up with the group');
+                if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
+                    console.log('delaying for IE9 and IE10 to catch up with the group');
                     window.setTimeout(guiInits, 2000);
                 } else {
                     guiInits();
@@ -268,7 +268,8 @@ require([
         function configReady(configObject) {
             var pluginConfig,
                 advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent(),
-                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
+                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1,
+                annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
 
             console.log("Bootstrapper: config loaded");
 
@@ -283,6 +284,7 @@ require([
                 esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
             }
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
+            RAMP.flags.ie10client = annoyingWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value
             if (RAMP.config.advancedToolbar.enabled) {
