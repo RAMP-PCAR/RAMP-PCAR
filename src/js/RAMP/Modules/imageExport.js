@@ -127,7 +127,8 @@ define([
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     mapExportToggle
-                        .attr("disabled", false)
+                        .removeClass('disabled')
+                        .attr('aria-disabled', false)
                         .on('click', generateExportImage);
                 }
             };
