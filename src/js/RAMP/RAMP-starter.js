@@ -53,7 +53,8 @@ RAMP = {
      * @type Object
      */
     plugins: {
-        featureInfoParser: {}
+        featureInfoParser: {},
+        projectionLookup: {}
     },
 
     /**
