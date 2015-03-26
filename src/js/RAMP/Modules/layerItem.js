@@ -515,7 +515,8 @@ define([
                     RELOAD: "reload",
                     HIDE: "hide",
                     ZOOM: "zoom",
-                    PLACEHOLDER: "placeholder"
+                    PLACEHOLDER: "placeholder",
+                    QUERY: "query"
                 },
 
                 /**
@@ -659,7 +660,8 @@ define([
             ],
             toggles: [
                 LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
+                LayerItem.toggles.BOX,
+                LayerItem.toggles.QUERY
             ],
             notices: []
         };

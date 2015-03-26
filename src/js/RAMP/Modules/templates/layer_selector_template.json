@@ -263,6 +263,15 @@
         </div>
     ",
 
+    "layer_toggle_query": "{% include('layer_toggle_awesome', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                checked: o.config.settings.visible,
+                                nameKey: o.nameKey,
+                                icon: 'map-marker'
+                            }); %}
+    ",
+
     "layer_toggle_eye": "{% include('layer_toggle_generic', {
                                 id: o.id,
                                 displayName: o.config.displayName,
@@ -283,6 +292,18 @@
         <div class='checkbox-custom'>
             <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
                 data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_toggle_awesome": "
+        <div class='checkbox-custom'>
+            <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <i class='fa fa-{%= o.icon %}'></i>
                 <span class='wb-invisible'>{%= o.displayName %}</span>
             </label>
             <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
