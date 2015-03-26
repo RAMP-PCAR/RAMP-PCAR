@@ -996,8 +996,8 @@ module.exports = (grunt) ->
                     usePrefix: false
 
                 files: [
-                    src: 'dist/js/lib/lib.js'
-                    dest: 'dist/js/lib/lib.js'
+                    src: 'dist/js/lib/lib.min.js'
+                    dest: 'dist/js/lib/lib.min.js'
                 ]
 
             api_esri:
