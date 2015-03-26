@@ -77,7 +77,7 @@ define([
         /**
         * Will set a layerId's layer selector state to a new state.
         *
-        * @method onLayerError
+        * @method updateLayerSelectorState
         * @private
         * @param  {String} layerId config id of the layer
         * @param  {String} newState the state to set the layer to in the layer selector
