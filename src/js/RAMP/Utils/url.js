@@ -1,7 +1,7 @@
 ﻿/* global define */
 
 /**
-* Utility module containint useful static classes.
+* Utility module containing useful static classes.
 *
 * @module Utils
 * @uses dojo/_base/declare

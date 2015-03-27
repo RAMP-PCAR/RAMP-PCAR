@@ -16,12 +16,14 @@
 *
 * NOTE: jquery.ui.navigation.js is required to create the object
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* 
 * @class Navigation
 * @static
 * @uses dojo/_base/declare
 * @uses dojo/topic
-* @uses GlobalStorage
-* @uses EventManager
 */
 
 define([

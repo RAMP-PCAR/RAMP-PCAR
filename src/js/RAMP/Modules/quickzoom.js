@@ -14,6 +14,11 @@
 * The QuickZoom class handles zooming in the map based on province, city, or postal code.
 * These zoom in services rely on web services which return extent values based the user-entered province, city, or postal code
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class QuickZoom
 * @uses dojo/_base/declare
 * @uses dojo/_base/array
@@ -27,30 +32,36 @@
 * @uses esri/geometry/Extent
 * @uses esri/tasks/QueryTask
 * @uses esri/tasks/query
-* @uses GlobalStorage
-* @uses Map
-* @uses Util
 */
 
 define([
-/* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang", "dojo/dom", "dojo/dom-construct", "dijit/form/Form",
-"dijit/form/TextBox", "dijit/form/Select", "dijit/form/Button",
-/* Esri */
-"esri/geometry/Extent", "esri/tasks/QueryTask", "esri/tasks/query",
-/* Ramp */
-"ramp/globalStorage", "ramp/map",
-/* Util */
-"utils/util"],
+
+    /* Dojo */
+    "dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang", "dojo/dom", "dojo/dom-construct", "dijit/form/Form",
+    "dijit/form/TextBox", "dijit/form/Select", "dijit/form/Button",
+
+    /* Esri */
+    "esri/geometry/Extent", "esri/tasks/QueryTask", "esri/tasks/query",
+
+    /* Ramp */
+    "ramp/globalStorage", "ramp/map",
+
+    /* Util */
+    "utils/util"
+],
 
     function (
-    /* Dojo */
-    declare, dojoArray, dojoLang, dom, domConstruct, Form, TextBox, Select, Button,
-    Extent, QueryTask, Query,
-    /* Ramp */
-    GlobalStorage, RampMap,
-    /* Util */
-    UtilMisc) {
+
+        /* Dojo */
+        declare, dojoArray, dojoLang, dom, domConstruct, Form, TextBox, Select, Button,
+        Extent, QueryTask, Query,
+
+        /* Ramp */
+        GlobalStorage, RampMap,
+
+        /* Util */
+        UtilMisc
+    ) {
         "use strict";
         return declare(null, {
             /*

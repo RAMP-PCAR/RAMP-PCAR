@@ -9,6 +9,8 @@
 /**
 * A set of functions that can be accessed within templates
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
 *
 * @class TmplUtil
 * @static

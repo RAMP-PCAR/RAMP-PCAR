@@ -10,6 +10,17 @@
 * Populates the BasemapGallery widget located in the maps toolbar with items found in the application configuration.
 * This module also handles all the event  needed to change the map basemap and update the UI
 *
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/basemap_selector_template.json"}}{{/crossLink}}
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
 *
 * @class BaseMapSelector
 * @static
@@ -18,13 +29,7 @@
 * @uses dojo/dom-attr
 * @uses dojo/query
 * @uses dojo/topic
-* @uses templates/basemap_selector_template.json
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
 * @uses esri/dijit/BasemapGallery
-* @uses utils/popupManager
-* @uses utils/thmplHelper
 */
 
 define([

@@ -14,12 +14,19 @@
 * The map tip module provides functions to create a small popup window as the mouse hovers over a feature on the map (point, polygon, line, etc.).
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/feature_hovertip_template.json"}}{{/crossLink}}
+* {{#crossLink "templates/feature_anchortip_template.json"}}{{/crossLink}}
+* 
 * @class Maptips
 * @static
 * @uses dojo/topic
-* @uses RAMP
-* @uses EventManager
-* @uses TmplHelper
+
 * @uses templates/feature_hovertip_template.json
 * @uses templates/feature_anchortip_template.json
 */
