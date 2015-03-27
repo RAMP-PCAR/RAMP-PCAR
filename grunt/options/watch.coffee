@@ -10,6 +10,7 @@ module.exports =
         tasks: [
             #'build'
             'assemble' #for quicker build only run a subset of build
+            'htmllint'
             'notify:page'
         ]
 
@@ -64,6 +65,7 @@ module.exports =
             #'build'
             'generateConfig'
             'assemble' #for quicker build only run a subset of build
+            'htmllint'
             'notify:page'
             'copy:localesBuild'
         ]

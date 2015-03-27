@@ -18,6 +18,7 @@ module.exports =
             'clean:build'
             'copy:build'
             'assemble'
+            'htmllint'
             'notify:page'
             'js:prep'
             'js:build'
