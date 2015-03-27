@@ -13,6 +13,24 @@
 * The Datagrid class represents the side bar table shown next to the map. The data grid displays all map objects in a text format and allows the user to see more
 * details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
+* {{#crossLink "templates/extended_datagrid_template.json"}}{{/crossLink}}
+* 
 * @class Datagrid
 * @static
 * @uses dojo/_base/declare
@@ -26,19 +44,6 @@
 * @uses dojo/on
 * @uses esri/layers/FeatureLayer
 * @uses esri/tasks/query
-* @uses Ramp
-* @uses GraphicExtension
-* @uses GlobalStorage
-* @uses Gui
-* @uses DatagridClickHandler
-* @uses Map
-* @uses EventManager
-* @uses Theme
-* @uses Util
-* @uses Array
-* @uses Dictionary
-* @uses PopupManager
-* @uses TmplHelper
 */
 
 define([

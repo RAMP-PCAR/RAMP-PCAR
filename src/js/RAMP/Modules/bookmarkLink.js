@@ -40,6 +40,16 @@
 *    (a name is required for efficiency, this way the URL will only need to
 *    serialize and update the given object instead of all objects).
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "Url"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* 
 * @class BookmarkLink
 * @static
 * @uses dojo/_base/declare
@@ -53,13 +63,6 @@
 * @uses dijit/form/TextBox
 * @uses dijit/TitlePane
 * @uses esri/geometry/Extent
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
-* @uses Url
-* @uses Util
-* @uses Dictionary
-* @uses PopupManager
 */
 
 define([

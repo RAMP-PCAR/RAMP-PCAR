@@ -12,30 +12,37 @@
 /**
 * AdvancedToolbar class.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/advanced_toolbar_template.json"}}{{/crossLink}}
+* 
 * @class AdvancedToolbar
 * @static
 * @uses dojo/_base/lang
 * @uses dojo/_base/array
 * @uses dojo/topic
 * @uses dojo/Deferred
-* @uses ramp/eventManager
-* @uses ramp/map
-* @uses ramp/globalStorage
-* @uses PopupManager
 */
 
 define([
-// Dojo
-        "dojo/_base/lang", "dojo/_base/array", "dojo/topic", "dojo/Deferred",
-// Ramp
-        "ramp/eventManager", "ramp/map", "ramp/globalStorage",
-// Util
-        "utils/util", "utils/dictionary", "utils/popupManager",
-        "utils/tmplHelper",
-// Text
-        "dojo/text!./templates/advanced_toolbar_template.json"
+    // Dojo
+            "dojo/_base/lang", "dojo/_base/array", "dojo/topic", "dojo/Deferred",
+    // Ramp
+            "ramp/eventManager", "ramp/map", "ramp/globalStorage",
+    // Util
+            "utils/util", "utils/dictionary", "utils/popupManager",
+            "utils/tmplHelper",
+    // Text
+            "dojo/text!./templates/advanced_toolbar_template.json"
 ],
-
     function (
     // Dojo
         dojoLang, dojoArray, topic, Deferred,
@@ -44,7 +51,8 @@ define([
     // Util
         UtilMisc, UtilDict, PopupManager, TmplHelper,
     // Text
-        advanced_toolbar_template_json) {
+        advanced_toolbar_template_json
+    ) {
         "use strict";
 
         var map,

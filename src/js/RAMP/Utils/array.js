@@ -8,6 +8,9 @@
 /**
 * Set of functions that deal with arrays.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class Array
 * @static
 * @uses dojo/_base/array

@@ -13,6 +13,17 @@
 * Handles the asynchronous loading of map layers (excluding basemaps)
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
+* {{#crossLink "FilterManager"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Ramp"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -21,15 +32,6 @@
 * @uses esri/layers/GraphicsLayer
 * @uses esri/tasks/GeometryService
 * @uses esri/tasks/ProjectParameters
-* @uses EventManager
-* @uses FeatureClickHandler
-* @uses FilterManager
-* @uses GlobalStorage
-* @uses LayerItem
-* @uses Map
-* @uses MapClickHandler
-* @uses Ramp
-* @uses Util
 */
 
 define([
@@ -77,7 +79,7 @@ define([
         /**
         * Will set a layerId's layer selector state to a new state.
         *
-        * @method onLayerError
+        * @method updateLayerSelectorState
         * @private
         * @param  {String} layerId config id of the layer
         * @param  {String} newState the state to set the layer to in the layer selector
@@ -216,13 +218,23 @@ define([
                     break;
             }
 
+            //add layer to map, triggering the loading process.  should add at correct position
+            //do this before creating layer selector item, as the layer selector inspects the map
+            //object to make state decisions
+            map.addLayer(layer, insertIdx);
+
             //derive initial state
             switch (layer.ramp.load.state) {
                 case "loaded":
                     lsState = LayerItem.state.LOADED;
                     break;
                 case "loading":
-                    lsState = LayerItem.state.LOADING;
+                    //IE10 hack. since IE10 will not fire the loaded event, check the loaded flag of the layer object
+                    if (layer.loaded) {
+                        lsState = LayerItem.state.LOADED;
+                    } else {
+                        lsState = LayerItem.state.LOADING;
+                    }
                     break;
                 case "error":
                     options.notices = {
@@ -234,11 +246,6 @@ define([
                     lsState = LayerItem.state.ERROR;
                     break;
             }
-
-            //add layer to map, triggering the loading process.  should add at correct position
-            //do this before creating layer selector item, as the layer selector inspects the map
-            //object to make state decisions
-            map.addLayer(layer, insertIdx);
 
             //add entry to layer selector
             if (UtilMisc.isUndefined(reloadIndex)) {
@@ -428,6 +435,11 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //            don't do it if it's in error state.  once an error, always an error
+                if (evt.layer.ramp.load.state !== "error") {
+                    evt.layer.ramp.load.state = "loaded";
+                }
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
             },
 

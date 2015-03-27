@@ -14,13 +14,15 @@
 * related to feature selection. Any function subscribes to the topic will be able handle the
 * specific event.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class FeatureClickHandler
 * @static
-* @uses GraphicExtension
-* @uses EventManager
 * @uses dojo/topic
 * @uses dojo/dom-construct
-* @uses Util
 */
 
 define([

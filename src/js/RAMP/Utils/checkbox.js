@@ -9,6 +9,8 @@
 * its functionality. Handles synchronization of the checkbox's state with its new rendering.
 * Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 *
 * @class Checkbox
 * @constructor

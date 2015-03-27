@@ -1,7 +1,7 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "5.2.0-rc1",
+    "version": "5.2.0-rc2",
     "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {
@@ -45,5 +45,5 @@
             }
         }
     },
-    "logo": "../../src/assets/images/bobcat_logo_sharp_smaller_s.png"
+    "logo": "../../assets/images/bobcat_logo_sharp_smaller_s.png"
 }

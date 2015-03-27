@@ -12,6 +12,26 @@
 * Starting point of RAMP, RAMP modules are loaded here and mapped to a function parameter
 * Phase X?: For mobile support, there can be a different mobileBootstrapper with only the mobile modules loaded
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "BaseMapSelector"}}{{/crossLink}}  
+* {{#crossLink "Maptips"}}{{/crossLink}}  
+* {{#crossLink "Datagrid"}}{{/crossLink}}  
+* {{#crossLink "Navigation"}}{{/crossLink}}  
+* {{#crossLink "FilterManager"}}{{/crossLink}}  
+* {{#crossLink "BookmarkLink"}}{{/crossLink}}  
+* {{#crossLink "Url"}}{{/crossLink}}  
+* {{#crossLink "FeatureHighlighter"}}{{/crossLink}}  
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "GUI"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "AdvancedToolbar"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Prototype"}}{{/crossLink}}  
+* {{#crossLink "FunctionMangler"}}{{/crossLink}}  
+* {{#crossLink "LayerLoader"}}{{/crossLink}}  
+* 
 * @class Bootstrapper
 * @static
 *
@@ -20,25 +40,6 @@
 * @uses dojo/topic
 * @uses dojo/request/script
 * @uses dojo/request/xhr
-*
-* @uses Map
-* @uses Basemapselector
-* @uses Maptips
-* @uses Datagrid
-* @uses Navigation
-* @uses FilterManager
-* @uses BookmarkLink
-* @uses Url
-* @uses FeatureHighlighter
-* @uses Ramp
-* @uses GlobalStorage
-* @uses GUI
-* @uses EventManager
-* @uses AdvancedToolbar
-* @uses Util
-* @uses Prototype
-* @uses FunctionMangler
-* @uses LayerLoader
 */
 
 require([
@@ -149,8 +150,8 @@ require([
                 //Apply listeners for basemap gallery
                 BasemapSelector.init();
 
-                if (RAMP.flags.brokenWebBrowser) {
-                    console.log('delaying for IE9 to catch up with the group');
+                if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
+                    console.log('delaying for IE9 and IE10 to catch up with the group');
                     window.setTimeout(guiInits, 2000);
                 } else {
                     guiInits();
@@ -267,7 +268,8 @@ require([
         function configReady(configObject) {
             var pluginConfig,
                 advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent(),
-                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
+                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1,
+                annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
 
             console.log("Bootstrapper: config loaded");
 
@@ -282,6 +284,7 @@ require([
                 esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
             }
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
+            RAMP.flags.ie10client = annoyingWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value
             if (RAMP.config.advancedToolbar.enabled) {

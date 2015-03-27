@@ -1,7 +1,7 @@
 ﻿/* global define */
 
 /**
-* Utility module containint useful static classes.
+* Utility module containing useful static classes.
 *
 * @module Utils
 */
@@ -9,12 +9,13 @@
 /**
 * A set of useful functions for manipulating dictionaries.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 *
 * @class Dictionary
 * @static
 * @uses dojo/_base/array
 * @uses dojo/_base/lang
-* @uses Util
 */
 define([
         "dojo/_base/array", "dojo/_base/lang",

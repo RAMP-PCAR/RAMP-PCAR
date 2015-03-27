@@ -1,22 +1,21 @@
 ﻿/*global define, i18n, RAMP */
 
 /**
-* MeasureTool submodule.
-*
-* Computes the area and perimeter length of a selected area. When the user draws a polygon, the area
-* and length will be displayed in the bottom right corner.
-*
-* @module RAMP
-* @submodule MeasureTool
-* @main MeasureTool
+* @module Tools
 */
 
 /**
-* MeasureTool class.
+* Computes the area and perimeter length of a selected area. When the user draws a polygon, the area
+* and length will be displayed in the bottom right corner.
 *
-* @class MeasureTool
-* @static
+* ####Imports RAMP Modules:
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "BaseTool"}}{{/crossLink}}
+* 
+* @class DistanceTool
 * @uses dojo/dom
+* @uses dojo/string
 * @uses dojo/_base/lang
 * @uses esri/config
 * @uses esri/graphic
@@ -24,8 +23,7 @@
 * @uses esri/tasks/LengthsParameters
 * @uses esri/toolbars/draw
 * @uses esri/symbols/SimpleFillSymbol
-* @uses Map
-* @uses GlobalStorage
+* @extends BaseTool
 */
 
 define([

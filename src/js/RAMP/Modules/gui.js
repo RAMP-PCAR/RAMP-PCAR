@@ -12,6 +12,18 @@
 /**
 * A class for handling most of the GUI on the page.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/sub_panel_template.json"}}{{/crossLink}}
+* 
 * @class GUI
 * @static
 * @uses dojo/_base/array
@@ -19,16 +31,6 @@
 * @uses dojo/_base/lang
 * @uses dojo/Deferred
 * @uses dojo/domReady!
-* @uses GlobalStorage
-* @uses EventManager
-* @uses Theme
-* @uses templates/sub_panel_Template.html
-* @uses templates/sub_panel_template.json
-* @uses templates/sub_panel_content_Template.html
-* @uses Util
-* @uses Dictionary
-* @uses PopupManager
-* @uses TmplHelper
 * @uses dojo/domReady!
 */
 define([

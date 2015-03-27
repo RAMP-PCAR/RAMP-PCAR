@@ -11,7 +11,12 @@
 /**
 * Base theme for RAMP.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class Theme
+* @static
+* @uses dojo/_base/lang
 */
 
 define(["dojo/_base/lang", "utils/util"],

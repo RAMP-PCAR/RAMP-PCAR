@@ -10,13 +10,14 @@
 /**
 * A set of functions used to support and standardize the use of templating.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "TmplUtil"}}{{/crossLink}}  
 *
 * @class TmplHelper
 * @static
 * @uses dojo/_base/lang
-* @uses GlobalStorage
-* @uses RAMP
-* @uses TmplUtil
 */
 
 define([
