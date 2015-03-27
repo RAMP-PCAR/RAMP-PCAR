@@ -761,7 +761,8 @@
         "htmlRawParse.js",
         "jsonRawParse.js",
         "tempParse.js",
-        "windParse.js"
+        "windParse.js",
+        "epsgio.js"
     ],
 
     "mapInitFailUrl": "./error-@@page.lang.main.html"

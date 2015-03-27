@@ -203,10 +203,10 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @param {object} scope Scope of the callback
             */
             subscribe: function (name, callback, scope) {
-                if (this.isUndefined(scope)) {
-                    topic.subscribe(name, callback);
-                } else {
+                if (scope) {
                     topic.subscribe(name, dojoLang.hitch(scope, callback));
+                } else {
+                    topic.subscribe(name, callback);
                 }
             },
 
@@ -396,6 +396,7 @@ define(["dojo/_base/array", "dojo/_base/lang", "dojo/topic", "dojo/Deferred", "e
             * @return {boolean} True if the given object is undefined, false otherwise
             */
             isUndefined: function (obj) {
+                console.warn('Think twice about using isDefined: consider checking explicitly or using a falsy test instead');
                 return (typeof obj === 'undefined');
             },
 

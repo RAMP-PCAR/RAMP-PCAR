@@ -179,7 +179,7 @@ define([
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
                     layerSection = GlobalStorage.layerType.wms;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
 
                         // generate wms legend image url and store in the layer config
@@ -206,7 +206,7 @@ define([
                 case GlobalStorage.layerType.feature:
                 case GlobalStorage.layerType.Static:
                     layerSection = GlobalStorage.layerType.feature;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                     } else {
@@ -248,7 +248,7 @@ define([
             }
 
             //add entry to layer selector
-            if (UtilMisc.isUndefined(reloadIndex)) {
+            if (!reloadIndex) {
                 options.state = lsState; // pass initial state in the options object
                 FilterManager.addLayer(layerSection, layer.ramp, options);
             } else {
@@ -270,7 +270,7 @@ define([
                 case GlobalStorage.layerType.wms:
 
                     // WMS binding for getFeatureInfo calls
-                    if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
+                    if (layerConfig.featureInfo) {
                         MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
                     }
 
@@ -297,7 +297,7 @@ define([
 
                     //generate bounding box
                     //if a reload, the bounding box still exists from the first load
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
@@ -307,7 +307,7 @@ define([
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                        if (layerConfig.layerExtent) {
                             boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                             if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
@@ -482,7 +482,7 @@ define([
 
                 layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
-                if (UtilMisc.isUndefined(layer)) {
+                if (!layer) {
                     //layer was kicked out of the map.  grab it from the registry
                     layer = RAMP.layerRegistry[evt.layerId];
                 }

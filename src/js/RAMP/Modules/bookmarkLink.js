@@ -708,15 +708,8 @@ define([
         */
         function isBookmarkLayer(layerId) {
             var layer = RampMap.getMap().getLayer(layerId);
-
-            if (UtilMisc.isUndefined(layer)) {
-                return false;
-            } else if (layer.ramp.user) {
-                //we do not store user-added layers in the bookmark link (as they will not be reloaded).
-                return false;
-            } else {
-                return true;
-            }
+            // false if layer is undefined; if layer is defined then only if it is not a user-added layer
+            return layer ? !layer.ramp.user : false;
         }
 
         return {

@@ -334,7 +334,7 @@ define([
                         layerConfig = obj.feature.getLayer().ramp.config;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        if (utilMisc.isUndefined(obj[datagridMode])) {
+                        if (!(datagridMode in obj)) {
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
 
@@ -349,7 +349,7 @@ define([
 
                         return obj[datagridMode];
                     } else {
-                        if (utilMisc.isUndefined(obj[datagridMode])) {
+                        if (!(datagridMode in obj)) {
                             obj[datagridMode] = [];
 
                             //make array containing values for each column in the full grid
@@ -1268,7 +1268,7 @@ define([
                             invisibleLayerToggleOn = RampMap.getInvisibleLayers()
                             .filter(function (l) {
                                 // make sure l.ramp is not undefined, and it's a feature layer, and config.settings.visible is true
-                                return !utilMisc.isUndefined(l.ramp) && l.ramp.type === GlobalStorage.layerType.feature && l.ramp.config.settings.visible === true;
+                                return l.ramp && l.ramp.type === GlobalStorage.layerType.feature && l.ramp.config.settings.visible;
                             })
                             .map(function (lyr) {
                                 return lyr.ramp.config.id;
