@@ -846,7 +846,7 @@ define([
             *
             */
             getMap: function () {
-                if (UtilMisc.isUndefined(map)) {
+                if (!map) {
                     console.log("trying to get map before it is available!");
                 }
                 return map;
@@ -1244,7 +1244,7 @@ define([
                 var tileSchema = schemaBasemap.tileSchema;
 
                 // add custom level of details if lod exists in config.json
-                if (!UtilMisc.isUndefined(tileSchema)) {
+                if (tileSchema) {
                     var levelOfDetails = UtilArray.find(RAMP.config.LODs, function (configLOD) {
                         return configLOD.tileSchema === tileSchema;
                     });

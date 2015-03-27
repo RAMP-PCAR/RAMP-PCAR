@@ -45,6 +45,7 @@ define([
         * @method _initDojoPrototype
         * @private
         */
+        // FIXME improve docs: parameters are undefined
         function _initDojoPrototype() {
             var originalOn = dojoOn;
             dojoOn = function (target, type, listener, scope) {

@@ -124,7 +124,7 @@ define([
                                     // Setting Opacity to >0.0, sets layer to visible
                                     newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
 
-                                    if (!UtilMisc.isUndefined(newState) && !UtilMisc.isUndefined(cause) && cause !== "refresh") {
+                                    if (newState && cause && cause !== "refresh") {
                                         topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
                                             state: newState,
                                             layerId: sliderId
@@ -624,7 +624,7 @@ define([
                                 // set it to null when layerConfig.catalogueUrl does not exist
                                 // instead of key with empty value
                                 var params = null;
-                                if (!UtilMisc.isUndefined(layerConfig.catalogueUrl)) {
+                                if (layerConfig.catalogueUrl) {
                                     params = [{ key: "catalogue_url", value: layerConfig.catalogueUrl }];
                                 }
 
