@@ -1,2 +1,4 @@
 module.exports = (grunt)-> 
-    grunt.file.readJSON('yuidoc.json')
+    
+    if grunt.file.exists 'yuidoc.json'
+        grunt.file.readJSON('yuidoc.json')
