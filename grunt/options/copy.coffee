@@ -1,4 +1,20 @@
 module.exports = 
+    # used by theme build
+    
+    configBuild:
+        files: [
+            expand: true
+            cwd: '<%= corepkg.corepath %>src'
+            src: 'config.json'
+            dest: 'build/'
+        # overrider core config with local if exists
+        ,
+            expand: true
+            cwd: 'src'
+            src: 'config.json'
+            dest: 'build/'
+        ]
+
     configDist:
         expand: true
         cwd: 'build/'
@@ -51,16 +67,32 @@ module.exports =
         dest: 'dist/js/polyfill'
 
     assetsBuild:
-        expand: true
-        cwd: 'src/assets'
-        src: '**/*.*'
-        dest: 'build/assets'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/assets'
+            src: '**/*.*'
+            dest: 'build/assets'
+        ,
+            expand: true
+            cwd: 'src/assets'
+            src: '**/*.*'
+            dest: 'build/assets'
+        ]
 
     assetsDist:
-        expand: true
-        cwd: 'src/assets'
-        src: '**/*.*'
-        dest: 'dist/assets'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/assets'
+            src: '**/*.*'
+            dest: 'dist/assets'
+        ,
+            expand: true
+            cwd: 'src/assets'
+            src: '**/*.*'
+            dest: 'dist/assets'
+        ]
 
     proxyBuild:
         expand: true
@@ -88,6 +120,24 @@ module.exports =
 
     templatesBuild:
         files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Modules/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Modules/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Tools/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Tools/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Utils/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Utils/templates'
+        ,
             expand: true
             cwd: 'src/js/RAMP/Modules/templates'
             src: '**/*.json'
@@ -106,6 +156,24 @@ module.exports =
 
     templatesDist:
         files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Modules/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Modules/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Tools/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Tools/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/Utils/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Utils/templates'
+        ,
             expand: true
             cwd: 'src/js/RAMP/Modules/templates'
             src: '**/*.json'
@@ -123,10 +191,18 @@ module.exports =
         ]
 
     jsCore:
-        expand: true
-        cwd: 'src/js/RAMP/'
-        src: '**/*.js'
-        dest: 'build/js/RAMP/'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= corepkg.corepath %>src/js/RAMP/'
+            src: '**/*.js'
+            dest: 'build/js/RAMP/'
+        ,
+            expand: true
+            cwd: 'src/js/RAMP/'
+            src: '**/*.js'
+            dest: 'build/js/RAMP/'
+        ]
 
     jsPlugins:
         expand: true
