@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $, i18n */
+﻿/* global define, console, RAMP */
 
 /**
 *
@@ -12,6 +12,9 @@
 *
 * Handles the querying of the geolocation service
 * This includes adding user filters, parsing user input, and packaging return values
+* NOTE: the geogratis services treat lat/long as lenght-2 arrays where longitude comes first
+*       e.g. [-77.167641,44.1072025]
+*       code in this module will keep to that convention
 *
 * @class LayerLoader
 * @static
@@ -29,37 +32,31 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array",
+"dojo/topic", "dojo/_base/array", "dojo/request/script", "dojo/Deferred"
 
 /* ESRI */
-"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
-
-/* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/ramp",
-
-/* Util */
-"utils/util"],
+//"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
+],
 
     function (
     /* Dojo */
-    topic, dojoArray,
+    topic, dojoArray, script, Deferred
 
-    /* ESRI */
-    GeometryService, ProjectParameters, EsriExtent,
-
-    /* RAMP */
-    EventManager, RampMap, GlobalStorage, Ramp,
-
-     /* Util */
-    UtilMisc) {
+        /* ESRI */
+        //GeometryService, ProjectParameters, EsriExtent,
+) {
         "use strict";
 
         //types of special inputs by the user
         var parseType = {
-            "none": "none",
-            "fsa": "fsa",
-            "latlong": "latlong",
-            "prov": "prov"
+            none: "none",
+            fsa: "fsa",
+            lonlat: "lonlat",
+            prov: "prov"
+        }, statusType = {
+            list: "list",
+            none: "none",
+            hide: "hide"
         };
 
         /**
@@ -81,7 +78,7 @@ define([
 
         /**
         * Will examine the user search string. Returns any special type and related data
-        * Valid types are: none, fsa, latlong, prov
+        * Valid types are: none, fsa, lonlat, prov
         *
         * @method parseInput
         * @private
@@ -112,13 +109,10 @@ define([
                 //check lat/long
                 if (vals.length === 2) {
                     if (isLatLong(vals[0]) && isLatLong(vals[1])) {
-                        ret.type = parseType.latlong;
-                        ret.data = {
-                            lat: Number(vals[0]),
-                            long: Number(vals[1]),
-                        }
-                        return ret;
+                        ret.type = parseType.lonlat;
+                        ret.data = [Number(vals[0]), Number(vals[1])];
                     }
+                    return ret;
                 }
 
                 //check for trailing province
@@ -127,13 +121,10 @@ define([
                     provAbbr = ["AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT"],
                     provTest = vals[vals.length - 1].trim();
 
-                //lower case equality test
-                function lc_comp(arrayElem) {
-                    return provTest.toLowerCase() === arrayElem.toLowerCase();
-                }
-
                 //see if item after last comma is a province
-                if (provFull.some(lc_comp) || provAbbr.some(lc_comp)) {
+                if (provFull.concat(provAbbr).some(function (arrayElem) {
+                            return provTest.toLowerCase() === arrayElem.toLowerCase();
+                })) {
                     ret.type = parseType.prov;
                     ret.data = {
                         prov: provTest,
@@ -145,12 +136,237 @@ define([
             return ret;
         }
 
+        /**
+        * Will search for an FSA
+        * Promise delivers centroid lat long if FSA is found
+        *
+        * @method fsaSearch
+        * @private
+        * @param {String} fsa FSA code
+        * @return {Object} promise of results
+        */
+        function fsaSearch(fsa) {
+            //results thing
+            //lat long of the FSA centroid. nothing if invalid FSA
+
+            var defResult = new Deferred(),
+                //launch the search for the fsa
+                defService = script.get(RAMP.config.geolocationUrl, {
+                    query: "q=" + fsa,
+                    jsonp: "callback"
+                });
+
+            defService.then(
+            function (serviceContent) {
+                console.log(serviceContent);
+                var res = { lonlat: undefined };
+
+                //service returned.  check if we have a result
+                if (serviceContent.length > 0) {
+                    //find first item that is a postal code
+                    serviceContent.every(function (elem) {
+                        if (elem.type === "ca.gc.nrcan.geoloc.data.model.PostalCode") {
+                            res.lonlat = elem.geometry.coordinates;
+                            return false; //will cause the "every" loop to break
+                        }
+                        return true; //keep looping
+                    });
+                }
+
+                //resolve the promise
+                defResult.resolve(res);
+            },
+            function (error) {
+                console.log("Geolocation search error : " + error);
+                defResult.reject(error);
+            });
+
+            return defResult.promise;
+        }
+
+        /**
+        * Will execute a specific search against the geoname service
+        *
+        * @method executeSearch
+        * @private
+        * @param {Object} params values to use in the search
+        * @return {Object} promise of results
+        */
+        function executeSearch(params) {
+            /*
+            input param details
+            any missing properties means don't apply it to the search
+
+            .lonlat  array of two decimal degrees, lat and long.  if present, means do area search
+
+            .radius  radius of area filter.  used with lonlat
+
+            */
+
+            //results thing
+            //lat long of the FSA centroid. nothing if invalid FSA
+
+            //build up our query string
+            //http://www.nrcan.gc.ca/earth-sciences/geography/place-names/tools-applications/9249
+
+            var query = "",
+                defResult = new Deferred(),
+                defService;
+
+            //search around a point
+            if (params.lonlat) {
+                query += "lat=" + params.lonlat[1].toString() + "&lon=" + params.lonlat[0].toString() + "&";
+
+                if (params.radius) {
+                    //should be between 1 and 100, and integer
+                    query += "radius=" + params.radius.toString() + "&";
+                }
+            }
+
+            console.log("Executing Query: " + query);
+
+            //launch the search
+            defService = script.get(RAMP.config.geonameUrl, {
+                query: query,
+                jsonp: "callback"
+            });
+
+            defService.then(
+            function (searchResult) {
+                console.log(searchResult);
+
+                //turn complex results into simplified results (can add values as needed).
+                //pass simplified result back to promise
+                //NOTE: when using JSONP, the search results come back in a parent array.  If not JSONP, there is no array >:'(
+                defResult.resolve(searchResult[0].items.map(function (elem) {
+                    return {
+                        name: elem.name,
+                        location: elem.location,
+                        province: elem.province.code, //convert to text here (en/fr)?
+                        lonlat: [elem.longitude,  elem.latitude],
+                        type: elem.concise.code  //convert to text here (en/fr)?
+                    };
+                }));
+            },
+            function (error) {
+                console.log("Geoname search error : " + error);
+                defResult.reject(error);
+            });
+
+            return defResult.promise;
+        }
+
+        /**
+        * Will search on user input string
+        *
+        *
+        * @method geoSearch
+        * @private
+        * @param {String} input search item user has entered
+        * @param {Object} filters any filters provided from the UI
+        * @return {Object} promise of results
+        */
+        function geoSearch(input, filters) {
+            /*
+            Filters thing
+            .radius -- size of radius search.  default 10
+
+            */
+            /*
+            Result thing:
+
+            defItem: lat/long -- the default item to zoom to if a person hits enter  (default is a reserved word, hence the lousy name)
+            status: list, none, hide  -- status of the search. list means results. none means no results. hide means nothing should be shown (e.g. 1 char string, bad postal code)
+            list: array of search results
+                  - name
+                  - location
+                  - province
+                  - lonlat
+                  - type (concise type)
+
+            */
+
+            var defResult = new Deferred();
+
+            //is search too short?
+            if (input.length < 3) {
+                defResult.resolve({
+                    status: statusType.hide
+                });
+            }
+
+            var parse = parseInput(input);
+
+            switch (parse.type) {
+                case parseType.none:
+
+                    break;
+                case parseType.fsa:
+                    //if lonlat or fsa, do an area search
+
+                    var fsaPromise = fsaSearch(parse.data);
+
+                    fsaPromise.then(
+                        function (fsaResult) {
+                            //did we find an FSA?
+                            if (fsaResult.lonlat) {
+                                //set the latlong as default result
+                                var result = {
+                                    defItem: fsaResult.lonlat
+                                },
+                                //do an area search on FSA centroid
+                                defArea = executeSearch({
+                                    lonlat: fsaResult.lonlat,
+                                    radius: filters.radius
+                                });
+
+                                defArea.then(
+                                    function (searchResult) {
+                                        //service returned.  package results
+
+                                        //TODO debate if no results should be hide or none.  None would visually indicate nothing in FSA radius found, but might confuse user to think FSA was invalid
+                                        result.status = (searchResult.length > 0) ? statusType.list : statusType.hide;
+                                        result.list = searchResult;
+
+                                        //resolve the promise
+                                        defResult.resolve(result);
+                                    },
+                                    function (error) {
+                                        defResult.reject(error);
+                                    });
+                            } else {
+                                //fsa not found.  return none result
+                                defResult.resolve({
+                                    status: statusType.none
+                                });
+                            }
+                        },
+                        function (error) {
+                            defResult.reject(error);
+                        }
+                    );
+
+                    break;
+                case parseType.lonlat:
+                    //NOTE: while this module deals in lon/lat format, we assume the user types in values in lat,lon order.  Be careful!
+
+                    break;
+                case parseType.prov:
+
+                    break;
+            }
+            //else add all the valid filter things, plus wildcards
+            //after getting result, apply local extent filter if required
+
+            return defResult.promise;
+        }
+
         return {
             /**
-            * Initializes properties.  Set up event listeners
+            * Execute a geoSearch
             *
-            * @method init
+            * @method geoSearch
             */
-            parseInput: parseInput
+            geoSearch: geoSearch
         };
     });
