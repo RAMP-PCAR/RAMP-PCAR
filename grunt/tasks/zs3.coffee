@@ -8,10 +8,14 @@ module.exports = (grunt)->
         'INTERNAL: Config validation'
         ->
             validator = new ZSchema()
-        
-            config = grunt.file.readJSON 'src/config.json'
-            schema = grunt.file.readJSON 'src/configSchema.json'
-            draft4 = grunt.file.readJSON 'src/draft-04-schema.json'
+            
+            # use different path depending on what is building
+            corepkg = grunt.option 'corepkg'
+            isTheme = corepkg.isTheme
+
+            config = grunt.file.readJSON((if isTheme then 'build/' else 'src/') + 'config.json')
+            schema = grunt.file.readJSON((if isTheme then corepkg.corepath else '') + 'src/configSchema.json')
+            draft4 = grunt.file.readJSON((if isTheme then corepkg.corepath else '') + 'src/draft-04-schema.json')
         
             validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
         
