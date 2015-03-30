@@ -69,6 +69,9 @@ module.exports =
         ]
     
     config:
+        options:
+            reload: true
         files: [
             'Gruntfile.coffee'
+            'grunt/**/*.coffee'
         ]
