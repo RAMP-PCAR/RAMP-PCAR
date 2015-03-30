@@ -12,27 +12,19 @@
 *
 * Handles the querying of the geolocation service
 * This includes adding user filters, parsing user input, and packaging return values
-* NOTE: the geogratis services treat lat/long as lenght-2 arrays where longitude comes first
+* NOTE: the geogratis services treat lat/long as length-2 arrays where longitude comes first
 *       e.g. [-77.167641,44.1072025]
 *       code in this module will keep to that convention
 *
 * @class LayerLoader
 * @static
-* @uses dojo/topic
-* @uses dojo/_base/array
-* @uses esri/geometry/Extent
-* @uses esri/tasks/GeometryService
-* @uses esri/tasks/ProjectParameters
-* @uses EventManager
-* @uses GlobalStorage
-* @uses Map
-* @uses Ramp
-* @uses Util
+* @uses dojo/Deferred
+* @uses dojo/request/script
 */
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array", "dojo/request/script", "dojo/Deferred"
+ "dojo/request/script", "dojo/Deferred"
 
 /* ESRI */
 //"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
@@ -40,7 +32,7 @@ define([
 
     function (
     /* Dojo */
-    topic, dojoArray, script, Deferred
+    script, Deferred
 
         /* ESRI */
         //GeometryService, ProjectParameters, EsriExtent,
@@ -110,7 +102,7 @@ define([
                 if (vals.length === 2) {
                     if (isLatLong(vals[0]) && isLatLong(vals[1])) {
                         ret.type = parseType.lonlat;
-                        ret.data = [Number(vals[0]), Number(vals[1])];
+                        ret.data = [Number(vals[1]), Number(vals[0])]; //Reverse order to match internal structure of lonlat
                     }
                     return ret;
                 }
@@ -243,7 +235,7 @@ define([
                         name: elem.name,
                         location: elem.location,
                         province: elem.province.code, //convert to text here (en/fr)?
-                        lonlat: [elem.longitude,  elem.latitude],
+                        lonlat: [elem.longitude, elem.latitude],
                         type: elem.concise.code  //convert to text here (en/fr)?
                     };
                 }));
@@ -252,6 +244,42 @@ define([
                 console.log("Geoname search error : " + error);
                 defResult.reject(error);
             });
+
+            return defResult.promise;
+        }
+
+        /**
+        * Will trigger an area search and package the results
+        *
+        *
+        * @method areaSearch
+        * @private
+        * @param {Object} filters search filters, particarly lonlat and optional radius
+        * @return {Object} promise of results
+        */
+        function areaSearch(filters) {
+            //set the lonlat as default result
+            var result = {
+                defItem: filters.lonlat
+            },
+            defResult = new Deferred(),
+            //do an area search on FSA centroid
+            defArea = executeSearch(filters);
+
+            defArea.then(
+                function (searchResult) {
+                    //service returned.  package results
+
+                    //TODO debate if no results should be hide or none.  None would visually indicate nothing in FSA radius found, but might confuse user to think FSA was invalid
+                    result.status = (searchResult.length > 0) ? statusType.list : statusType.hide;
+                    result.list = searchResult;
+
+                    //resolve the promise
+                    defResult.resolve(result);
+                },
+                function (error) {
+                    defResult.reject(error);
+                });
 
             return defResult.promise;
         }
@@ -299,36 +327,26 @@ define([
 
             switch (parse.type) {
                 case parseType.none:
+                    //add all the valid filter things, plus wildcards
 
                     break;
                 case parseType.fsa:
-                    //if lonlat or fsa, do an area search
-
+                    //search for the FSA
                     var fsaPromise = fsaSearch(parse.data);
 
                     fsaPromise.then(
                         function (fsaResult) {
                             //did we find an FSA?
                             if (fsaResult.lonlat) {
-                                //set the latlong as default result
-                                var result = {
-                                    defItem: fsaResult.lonlat
-                                },
-                                //do an area search on FSA centroid
-                                defArea = executeSearch({
+                                //get results around the FSA
+                                var defArea = areaSearch({
                                     lonlat: fsaResult.lonlat,
                                     radius: filters.radius
                                 });
 
+                                //TODO is there are better way of passing the result of defArea to defResult?
                                 defArea.then(
-                                    function (searchResult) {
-                                        //service returned.  package results
-
-                                        //TODO debate if no results should be hide or none.  None would visually indicate nothing in FSA radius found, but might confuse user to think FSA was invalid
-                                        result.status = (searchResult.length > 0) ? statusType.list : statusType.hide;
-                                        result.list = searchResult;
-
-                                        //resolve the promise
+                                    function (result) {
                                         defResult.resolve(result);
                                     },
                                     function (error) {
@@ -348,14 +366,27 @@ define([
 
                     break;
                 case parseType.lonlat:
-                    //NOTE: while this module deals in lon/lat format, we assume the user types in values in lat,lon order.  Be careful!
+                    //package parsed lat/long for search
+                    var defArea = areaSearch({
+                        lonlat: parse.data,
+                        radius: filters.radius
+                    });
+
+                    //TODO is there are better way of passing the result of defArea to defResult?
+                    defArea.then(
+                        function (result) {
+                            defResult.resolve(result);
+                        },
+                        function (error) {
+                            defResult.reject(error);
+                        });
 
                     break;
                 case parseType.prov:
 
                     break;
             }
-            //else add all the valid filter things, plus wildcards
+
             //after getting result, apply local extent filter if required
 
             return defResult.promise;
