@@ -4,8 +4,8 @@
     "proxyUrl": "http://cp.zz9.ca/index",
     "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
-    "geonameUrl": "http://geogratis.gc.ca/services/geoname/@@page.lang.main/geonames.json",
-    "geolocationUrl":  "http://geogratis.gc.ca/services/geolocation/@@page.lang.main/locate",
+    "geonameUrl": "http://geogratis.gc.ca/services/geoname/",
+    "geolocationUrl":  "http://geogratis.gc.ca/services/geolocation/",
     "advancedToolbar": {
         "enabled": true,
         "tools": [

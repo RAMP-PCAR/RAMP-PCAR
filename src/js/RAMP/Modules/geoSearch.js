@@ -143,7 +143,7 @@ define([
 
             var defResult = new Deferred(),
                 //launch the search for the fsa
-                defService = script.get(RAMP.config.geolocationUrl, {
+                defService = script.get(RAMP.config.geolocationUrl + RAMP.locale + '/locate', {
                     query: "q=" + fsa,
                     jsonp: "callback"
                 });
@@ -222,7 +222,7 @@ define([
             console.log("Executing Query: " + query);
 
             //launch the search
-            defService = script.get(RAMP.config.geonameUrl, {
+            defService = script.get(RAMP.config.geonameUrl + RAMP.locale + '/geonames.json', {
                 query: query,
                 jsonp: "callback"
             });
