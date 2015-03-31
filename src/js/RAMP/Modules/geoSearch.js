@@ -255,14 +255,13 @@ define([
         * @method areaSearch
         * @private
         * @param {Object} filters search filters, particarly lonlat and optional radius
-        * @return {Object} promise of results
+        * @param {Object} defResult a Deferred supplied by the caller. areaSearch will resolve or reject it
         */
-        function areaSearch(filters) {
+        function areaSearch(filters, defResult) {
             //set the lonlat as default result
             var result = {
                 defItem: filters.lonlat
             },
-            defResult = new Deferred(),
             //do an area search on FSA centroid
             defArea = executeSearch(filters);
 
@@ -280,8 +279,6 @@ define([
                 function (error) {
                     defResult.reject(error);
                 });
-
-            return defResult.promise;
         }
 
         /**
@@ -339,19 +336,10 @@ define([
                             //did we find an FSA?
                             if (fsaResult.lonlat) {
                                 //get results around the FSA
-                                var defArea = areaSearch({
+                                areaSearch({
                                     lonlat: fsaResult.lonlat,
                                     radius: filters.radius
-                                });
-
-                                //TODO is there are better way of passing the result of defArea to defResult?
-                                defArea.then(
-                                    function (result) {
-                                        defResult.resolve(result);
-                                    },
-                                    function (error) {
-                                        defResult.reject(error);
-                                    });
+                                }, defResult);
                             } else {
                                 //fsa not found.  return none result
                                 defResult.resolve({
@@ -367,19 +355,10 @@ define([
                     break;
                 case parseType.lonlat:
                     //package parsed lat/long for search
-                    var defArea = areaSearch({
+                    areaSearch({
                         lonlat: parse.data,
                         radius: filters.radius
-                    });
-
-                    //TODO is there are better way of passing the result of defArea to defResult?
-                    defArea.then(
-                        function (result) {
-                            defResult.resolve(result);
-                        },
-                        function (error) {
-                            defResult.reject(error);
-                        });
+                    }, defResult);
 
                     break;
                 case parseType.prov:
