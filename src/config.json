@@ -5,7 +5,7 @@
     "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "advancedToolbar": {
-        "enabled": true,
+        "enabled": false,
         "tools": [
             {
                 "name": "areaTool",
