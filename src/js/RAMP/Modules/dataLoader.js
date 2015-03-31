@@ -327,17 +327,23 @@ define([
         * @returns {Object} an JSON config object for feature datagrid
         */
         function createDatagridConfig(fields, aliases) {
-            function makeField(id, fn, wd, ttl, tp) {
-                return {
+            function makeField(id, fn, wd, ttl, tp, opts) {
+                var r = {
                     id: id,
                     fieldName: fn,
                     width: wd,
-                    orderable: false,
-                    type: 'string',
-                    alignment: 0,
                     title: ttl,
                     columnTemplate: tp
-                };
+                },
+                optFields = ['type', 'orderable', 'alignment'];
+
+                optFields.forEach(function (opt) {
+                    if (opts && opt in opts) {
+                        r[opt] = opts[opt];
+                    }
+                });
+
+                return r;
             }
 
             var dg = {
@@ -345,8 +351,8 @@ define([
                 gridColumns: []
             };
 
-            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon'));
-            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
+            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon', { orderable: false }));
+            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button',{ orderable: false }));
 
             if (fields && fields.length) {
                 fields.forEach(function (field, idx) {
