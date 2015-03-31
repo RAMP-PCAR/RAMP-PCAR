@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP */
+﻿/* global define, console, RAMP, escape */
 
 /**
 *
@@ -215,6 +215,10 @@ define([
                 }
             }
 
+            if (params.q) {
+                query += "q=" + escape(params.q) + "&";
+            }
+
             console.log("Executing Query: " + query);
 
             //launch the search
@@ -246,6 +250,43 @@ define([
             });
 
             return defResult.promise;
+        }
+
+        /**
+        * Will trigger an basic name search, apply filters, and package the results
+        *
+        *
+        * @method generalSearch
+        * @private
+        * @param {String} name string to search on
+        * @param {Object} filters search filters, particarly lonlat and optional radius
+        * @param {Object} defResult a Deferred supplied by the caller. areaSearch will resolve or reject it
+        */
+        function generalSearch(name, filters, defResult) {
+            filters.q = name;
+
+            var result = {},
+            //do an search on the name
+            defSearch = executeSearch(filters);
+
+            defSearch.then(
+                function (searchResult) {
+                    //service returned.  package results
+
+                    if (searchResult.length > 0) {
+                        result.status = statusType.list;
+                        result.list = searchResult;
+                        result.defItem = searchResult[0].lonlat; //default to first item in the list
+                    } else {
+                        result.status = statusType.none;
+                    }
+
+                    //resolve the promise
+                    defResult.resolve(result);
+                },
+                function (error) {
+                    defResult.reject(error);
+                });
         }
 
         /**
@@ -282,7 +323,7 @@ define([
         }
 
         /**
-        * Will search on user input string
+        * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls
         *
         *
         * @method geoSearch
@@ -325,6 +366,8 @@ define([
             switch (parse.type) {
                 case parseType.none:
                     //add all the valid filter things, plus wildcards
+
+                    generalSearch(parse.data, filters, defResult);
 
                     break;
                 case parseType.fsa:
