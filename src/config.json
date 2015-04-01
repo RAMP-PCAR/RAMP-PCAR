@@ -764,6 +764,5 @@
         "windParse.js",
         "epsgio.js"
     ],
-
     "mapInitFailUrl": "./error-@@page.lang.main.html"
 }

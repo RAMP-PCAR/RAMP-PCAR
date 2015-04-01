@@ -522,7 +522,8 @@
                     "type": "object",
                     "description": "State of the map query button in the toolbar",
                     "properties": {
-                        "show": { "type": "boolean", "default": true, "description": "If the button should be displayed to the user." }
+                        "show": { "type": "boolean", "default": true, "description": "If the button should be displayed to the user." },
+                        "autoHide": { "type": "boolean", "default": true, "description": "If the button should hidden when no WMS layers are present in the map." }
                     },
                     "comment":  "add autoHide property at a later time, default true, automatically hide the button if no queryable layers are present"
                 }
