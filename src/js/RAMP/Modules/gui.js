@@ -1398,6 +1398,39 @@ define([
                     }
                 );
 
+                if (RAMP.config.ui.mapQueryToggle.autoHide) {
+
+                    // initialize to the correct state (this might be happening after some layers have already loaded)
+                    if (RAMP.layerRegistry) {
+                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) { return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.wms; });
+                        if (wmses.length === 0) {
+                            wmsToggle.hide();
+                        } else {
+                            wmsToggle.show();
+                        }
+                    }
+
+                    // on each load if the layer is a WMS make sure the button is visible
+                    topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, function (args) {
+                        if (args.layer.ramp.type === GlobalStorage.layerType.wms) {
+                            wmsToggle.show();
+                        }
+                    });
+
+                    // on each remove check if there are still WMSes in the layer list
+                    topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                        if (wmsToggle.is(':hidden')) { return; }
+                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) {
+                            var l = RAMP.layerRegistry[layer];
+                            return l ? l.ramp.type === GlobalStorage.layerType.wms : false;
+                        });
+                        console.log('wmses left (including the layer to be removed): ' + wmses.length);
+                        if (wmses.length === 1) {
+                            wmsToggle.hide();
+                        }
+                    });
+                }
+
                 // if the query is disabled (from bookmarklink) toggle the button
                 if (!RAMP.state.ui.wmsQuery) {
                     wmsQueryPopup.open();
