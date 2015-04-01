@@ -18,15 +18,17 @@
 *
 * and changing the opacity of the `graphicGroup` while adding shapes to one or more of the additional group objects.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* 
 * @class FeatureHighlighter
 * @static
 * @uses dojo/_base/declare
 * @uses dojo/topic
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
-* @uses Util
-* @uses Dictionary
 */
 
 define([

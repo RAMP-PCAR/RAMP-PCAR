@@ -14,6 +14,13 @@
 * require the global configuration object, place the code in
 * util.js
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "TmplUtil"}}{{/crossLink}}  
+* 
 * @class RAMP
 * @uses dojo/_base/declare
 * @uses dojo/query
@@ -23,33 +30,30 @@
 * @uses dojo/dom-style
 * @uses dojo/dom-construct
 * @uses dojo/request/script
-* @uses GlobalStorage
-* @uses Array
-* @uses Dictionary
-* @uses Util
-* @uses TmplUtil
 */
 
 define([
-// Dojo
+    // Dojo
     "dojo/_base/declare", "dojo/query", "dojo/_base/array", "dojo/dom", "dojo/dom-class", "dojo/dom-style",
     "dojo/dom-construct", "dojo/request/script",
 
-// RAMP
+    // RAMP
     "ramp/globalStorage", "ramp/map",
 
-// Utils
-    "utils/array", "utils/dictionary", "utils/util", "utils/tmplUtil"],
+    // Utils
+    "utils/array", "utils/dictionary", "utils/util", "utils/tmplUtil"
+],
 
     function (
-    // Dojo
-    declare, dojoQuery, dojoArray, dom, domClass, domStyle, domConstruct, requestScript,
+        // Dojo
+        declare, dojoQuery, dojoArray, dom, domClass, domStyle, domConstruct, requestScript,
 
-    // RAMP
-    GlobalStorage, RampMap,
+        // RAMP
+        GlobalStorage, RampMap,
 
-    // Utils,
-    UtilArray, UtilDict, UtilMisc, UtilTmpl) {
+        // Utils,
+        UtilArray, UtilDict, UtilMisc, UtilTmpl
+    ) {
         "use strict";
         return {
             /**

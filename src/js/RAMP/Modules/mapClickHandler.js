@@ -11,9 +11,11 @@
 * The mapClickHandler registers WMS layers for combined getFeatureInfo request.  It makes a 
 * single subscription to Map.CLICK and triggers a set of requests and joins the results together.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* 
 * @class MapClickHandler
 * @static
-* @uses EventManager
 * @uses esri/request
 * @uses dojo/promise/all
 * @uses dojo/_base/array

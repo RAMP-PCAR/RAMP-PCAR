@@ -13,6 +13,24 @@
 * The Datagrid class represents the side bar table shown next to the map. The data grid displays all map objects in a text format and allows the user to see more
 * details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
+* {{#crossLink "templates/extended_datagrid_template.json"}}{{/crossLink}}
+* 
 * @class Datagrid
 * @static
 * @uses dojo/_base/declare
@@ -26,19 +44,6 @@
 * @uses dojo/on
 * @uses esri/layers/FeatureLayer
 * @uses esri/tasks/query
-* @uses Ramp
-* @uses GraphicExtension
-* @uses GlobalStorage
-* @uses Gui
-* @uses DatagridClickHandler
-* @uses Map
-* @uses EventManager
-* @uses Theme
-* @uses Util
-* @uses Array
-* @uses Dictionary
-* @uses PopupManager
-* @uses TmplHelper
 */
 
 define([
@@ -329,7 +334,7 @@ define([
                         layerConfig = obj.feature.getLayer().ramp.config;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        if (utilMisc.isUndefined(obj[datagridMode])) {
+                        if (!(datagridMode in obj)) {
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
 
@@ -344,7 +349,7 @@ define([
 
                         return obj[datagridMode];
                     } else {
-                        if (utilMisc.isUndefined(obj[datagridMode])) {
+                        if (!(datagridMode in obj)) {
                             obj[datagridMode] = [];
 
                             //make array containing values for each column in the full grid
@@ -1263,7 +1268,7 @@ define([
                             invisibleLayerToggleOn = RampMap.getInvisibleLayers()
                             .filter(function (l) {
                                 // make sure l.ramp is not undefined, and it's a feature layer, and config.settings.visible is true
-                                return !utilMisc.isUndefined(l.ramp) && l.ramp.type === GlobalStorage.layerType.feature && l.ramp.config.settings.visible === true;
+                                return l.ramp && l.ramp.type === GlobalStorage.layerType.feature && l.ramp.config.settings.visible;
                             })
                             .map(function (lyr) {
                                 return lyr.ramp.config.id;

@@ -7,7 +7,7 @@
     "geonameUrl": "http://geogratis.gc.ca/services/geoname/",
     "geolocationUrl":  "http://geogratis.gc.ca/services/geolocation/",
     "advancedToolbar": {
-        "enabled": true,
+        "enabled": false,
         "tools": [
             {
                 "name": "areaTool",
@@ -763,8 +763,8 @@
         "htmlRawParse.js",
         "jsonRawParse.js",
         "tempParse.js",
-        "windParse.js"
+        "windParse.js",
+        "epsgio.js"
     ],
-
     "mapInitFailUrl": "./error-@@page.lang.main.html"
 }

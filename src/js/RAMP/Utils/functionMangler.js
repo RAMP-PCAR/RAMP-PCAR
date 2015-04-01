@@ -9,13 +9,14 @@
 /**
 * ??? Description
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "Util"}}{{/crossLink}}  
 *
 * @class FunctionMangler
 * @static
 * @uses dojo/on
 * @uses dojo/_base/lang
 * @uses dojo/topic
-* @uses Util
 */
 
 define([
@@ -44,6 +45,7 @@ define([
         * @method _initDojoPrototype
         * @private
         */
+        // FIXME improve docs: parameters are undefined
         function _initDojoPrototype() {
             var originalOn = dojoOn;
             dojoOn = function (target, type, listener, scope) {
@@ -56,7 +58,7 @@ define([
 
             var originalSubscribe = topic.subscribe;
             topic.subscribe = function (eventName, listener) {
-                if (UtilMisc.isUndefined(eventName)) {
+                if (!eventName) {
                     console.error("Trying to subscribe to an undefined event");
                     console.trace();
                 } else {
