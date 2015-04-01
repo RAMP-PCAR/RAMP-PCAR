@@ -49,7 +49,48 @@ define([
             list: "list",
             none: "none",
             hide: "hide"
-        };
+        }, provSearch = [],
+            provList = [],
+            conciseList = [];
+
+        /**
+        * Will determine if a value is a valid province identifier (en/fr name or 2-letter abbr)
+        *
+        * @method isProvince
+        * @private
+        * @param {String} value value to test
+        * @return {Boolean} tells if value is valid province identifier
+        */
+        function isProvince(value) {
+            //this function is slightly redundant, as getProvCode would achieve the same result.
+            //the thinking is this is used to quickly do an initial test (usually the test will be false).
+            //once it is known the value is a province, the heavier logic can be executed in getProvCode (if needed).
+            var lVal = value.toLowerCase();
+            return provSearch.indexOf(lVal) > -1;
+        }
+
+        /**
+        * Convert a provice name to province code
+        *
+        * @method getProvCode
+        * @private
+        * @param {String} prov province string
+        * @return {String} province code. undefined if no match
+        */
+        function getProvCode(prov) {
+            var lProv = prov.toLowerCase(),
+                code;
+            provList.every(function (elem) {
+                //TODO is there a prettier way to do this IF?
+                if (elem.abbr.toLowerCase() === lProv || elem.name.en.toLowerCase() === lProv || elem.name.fr.toLowerCase() === lProv) {
+                    code = elem.code;
+                    return false;
+                }
+                return true;
+            });
+
+            return code;
+        }
 
         /**
         * Will determine if a value is a valid number for a lat/long co-ordinate
@@ -103,23 +144,19 @@ define([
                     if (isLatLong(vals[0]) && isLatLong(vals[1])) {
                         ret.type = parseType.lonlat;
                         ret.data = [Number(vals[1]), Number(vals[0])]; //Reverse order to match internal structure of lonlat
+                        return ret;
                     }
-                    return ret;
                 }
 
                 //check for trailing province
                 //TODO move this into language configs?
-                var provFull = ["Alberta", "British Columbia", "Manitoba", "New Brunswick", "Newfoundland and Labrador", "Northwest Territories", "Nova Scotia", "Nunavut", "Ontario", "Prince Edward Island", "Quebec", "Saskatchewan", "Yukon", "Alberta", "Colombie-Britannique", "Manitoba", "Nouveau-Brunswick", "Terre-Neuve-et-Labrador", "Territoires du Nord-Ouest", "Nouvelle-Écosse", "Nunavut", "Ontario", "île-du-Prince-Édouard", "Québec", "Saskatchewan", "Yukon"],
-                    provAbbr = ["AB", "BC", "MB", "NB", "NL", "NS", "NT", "NU", "ON", "PE", "QC", "SK", "YT"],
-                    provTest = vals[vals.length - 1].trim();
+                var provTest = vals[vals.length - 1].trim();
 
                 //see if item after last comma is a province
-                if (provFull.concat(provAbbr).some(function (arrayElem) {
-                            return provTest.toLowerCase() === arrayElem.toLowerCase();
-                })) {
+                if (isProvince(provTest)) {
                     ret.type = parseType.prov;
                     ret.data = {
-                        prov: provTest,
+                        prov: getProvCode(provTest),
                         searchVal: input.substring(0, input.lastIndexOf(","))
                     };
                 }
@@ -405,7 +442,8 @@ define([
 
                     break;
                 case parseType.prov:
-
+                    //TEST
+                    defResult.resolve(parse);
                     break;
             }
 
@@ -414,12 +452,118 @@ define([
             return defResult.promise;
         }
 
+        /**
+        * Will initialize the module. Download provice keys & info. Download concise types keys & info.
+        *
+        * @method isLatLong
+        * @private
+        */
+        function init() {
+            //TODO do we need to worry about ensuring these calls return before the caller continues?
+            //     they should be really fast, and if service is down geosearch is broken anyways.
+            //     Init is called after the config loads, so should be plenty of time before a user starts geosearching
+
+            //get provinces english
+            var provUrl = '/codes/province.json',
+                conciseUrl = '/codes/concise.json',
+                defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
+                    jsonp: "callback"
+                });
+
+            defEnProv.then(
+            function (result) {
+                //service returned.  turn result into a formatted array
+                provList = result[0].definitions.map(function (provEn) {
+                    return {
+                        code: provEn.code,
+                        abbr: provEn.term,
+                        name: {
+                            en: provEn.description,
+                            fr: ''
+                        }
+                    };
+                });
+
+                //now load the french provinces
+                var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
+                    jsonp: "callback"
+                });
+
+                defFrProv.then(
+                    function (result) {
+                        //match up province IDs of the french data to the global province list.
+                        //update the french names when a match is made
+                        result[0].definitions.forEach(function (provFr) {
+                            provList.every(function (elem) {
+                                if (elem.code === provFr.code) {
+                                    elem.name.fr = provFr.description;
+                                    return false; //will cause the "every" loop to break
+                                }
+                                return true; //keep looping
+                            });
+                        });
+
+                        //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
+                        provList.forEach(function (elem) {
+                            provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
+                        });
+                    },
+                     function (error) {
+                         console.log("Fail to load french province codes : " + error);
+                     });
+            },
+            function (error) {
+                console.log("Fail to load english province codes : " + error);
+            });
+
+            //get geonames concise codes list english
+            var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
+                jsonp: "callback"
+            });
+
+            defEnCon.then(
+             function (result) {
+                 //service returned.  turn result into a formatted array
+                 conciseList = result[0].definitions.map(function (conEn) {
+                     return {
+                         code: conEn.code,
+                         name: {
+                             en: conEn.term,
+                             fr: ''
+                         }
+                     };
+                 });
+
+                 //now load the french concise codes
+                 var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
+                     jsonp: "callback"
+                 });
+
+                 defFrCon.then(
+                     function (result) {
+                         //match up concise IDs of the french data to the global concise list.
+                         //update the french names when a match is made
+                         result[0].definitions.forEach(function (conFr) {
+                             conciseList.every(function (elem) {
+                                 if (elem.code === conFr.code) {
+                                     elem.name.fr = conFr.term;
+                                     return false; //will cause the "every" loop to break
+                                 }
+                                 return true; //keep looping
+                             });
+                         });
+                     },
+                      function (error) {
+                          console.log("Fail to load french concise codes : " + error);
+                      });
+             },
+             function (error) {
+                 console.log("Fail to load english concise codes : " + error);
+             });
+        }
+
         return {
-            /**
-            * Execute a geoSearch
-            *
-            * @method geoSearch
-            */
-            geoSearch: geoSearch
+            geoSearch: geoSearch,
+            init: init
         };
     });
