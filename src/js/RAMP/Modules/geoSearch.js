@@ -92,6 +92,51 @@ define([
             return code;
         }
 
+        //worker function for sorting named lists
+        function nameSorter(a, b) {
+            if (a.name > b.name) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+
+        /**
+        * Returns a list of provinces and codes for the UI dropdown combo
+        *
+        * @method getProvList
+        * @private
+        * @return {Array} a list of province names and codes
+        */
+        function getProvList() {
+            //The return value structure can be modified to best suit the UI when it is implemmented
+
+            return provList.map(function (elem) {
+                return {
+                    name: elem.name[RAMP.locale],
+                    code: elem.code
+                };
+            }).sort(nameSorter);
+        }
+
+        /**
+        * Returns a list of concise names and codes for the UI dropdown combo
+        *
+        * @method getConciseList
+        * @private
+        * @return {Array} a list of concise names and codes
+        */
+        function getConciseList() {
+            //The return value structure can be modified to best suit the UI when it is implemmented
+
+            return conciseList.map(function (elem) {
+                return {
+                    name: elem.name[RAMP.locale],
+                    code: elem.code
+                };
+            }).sort(nameSorter);
+        }
+
         /**
         * Will determine if a value is a valid number for a lat/long co-ordinate
         *
@@ -564,6 +609,8 @@ define([
 
         return {
             geoSearch: geoSearch,
-            init: init
+            init: init,
+            getProvList: getProvList,
+            getConciseList: getConciseList
         };
     });
