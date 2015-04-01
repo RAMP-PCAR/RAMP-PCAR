@@ -301,6 +301,10 @@ define([
                 query += "q=" + escape(params.q) + "&";
             }
 
+            if (params.prov) {
+                query += "province=" + params.prov + "&";
+            }
+
             console.log("Executing Query: " + query);
 
             //launch the search
@@ -418,6 +422,7 @@ define([
             /*
             Filters thing
             .radius -- size of radius search.  default 10
+            .prov -- province code
 
             */
             /*
@@ -452,6 +457,7 @@ define([
                     generalSearch(parse.data, filters, defResult);
 
                     break;
+
                 case parseType.fsa:
                     //search for the FSA
                     var fsaPromise = fsaSearch(parse.data);
@@ -478,6 +484,7 @@ define([
                     );
 
                     break;
+
                 case parseType.lonlat:
                     //package parsed lat/long for search
                     areaSearch({
@@ -486,9 +493,12 @@ define([
                     }, defResult);
 
                     break;
+
                 case parseType.prov:
-                    //TEST
-                    defResult.resolve(parse);
+                    //add the province filter
+                    filters.prov = parse.data.prov;
+                    generalSearch(parse.data.searchVal, filters, defResult);
+
                     break;
             }
 
