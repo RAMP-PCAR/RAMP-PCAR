@@ -3,7 +3,7 @@
 console.log('loading jsonParse');
 RAMP.plugins.featureInfoParser.jsonParse = function (data) {
     'use strict';
-    var summary, fullData;
+    var summary;
 
     data = { a: 1, b: '2', c: true, d: [1, 2, 3], e: { f: 1, g: 2 }, h: null };
 
