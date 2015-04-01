@@ -285,6 +285,7 @@ define([
 
             var query = "",
                 defResult = new Deferred(),
+                listLimit = 10, //TODO should this be defined in the config?
                 defService;
 
             //search around a point
@@ -298,12 +299,22 @@ define([
             }
 
             if (params.q) {
-                query += "q=" + escape(params.q) + "&";
+                //inject wildcards after terms
+                query += "q=" + escape(params.q.trim().replace('%20', ' ').replace(' ', '* ') + '*') + "&";
             }
 
             if (params.prov) {
                 query += "province=" + params.prov + "&";
             }
+
+            if (params.concise) {
+                query += "concise=" + params.concise + "&";
+            }
+
+            if (params.showAll) {
+                listLimit = 1000; //boost to max allowed by service
+            }
+            query += "num=" + listLimit + "&";
 
             console.log("Executing Query: " + query);
 
@@ -421,8 +432,10 @@ define([
         function geoSearch(input, filters) {
             /*
             Filters thing
-            .radius -- size of radius search.  default 10
+            .radius -- size of radius search in km.  default 10
             .prov -- province code
+            .concise -- concise type code
+            .showAll -- show all results or clip to first X.  default false
 
             */
             /*
