@@ -967,7 +967,7 @@ define([
             * @private
             */
             function _toggleFullDataMode(fullData) {
-                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
+                _isFullData = typeof fullData === 'boolean' ? fullData : !_isFullData;
 
                 // if the timeline duration is 0, reset it
                 // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when creating timelines
