@@ -445,8 +445,23 @@ define([
         }
 
         /**
-        * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls
+        * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls.
+        * Accepts the following filter properties
+        *   - radius: size of search radius search in km.  default 10. only used with lat/long or FSA searches
+        *   - prov: province code (numeric, e.g. 35, not 'ON')
+        *   - concise: concise type code
+        *   - showAll: show all results or clip to first 10.  default false
+        *   - extent: extent of search area in lat/long [xmin, ymin, xmax, ymax].  caller will project from basemap to latlong.  reasoning: caller can project once then cache until extent changes
         *
+        * Result object can have the following properties
+        *   - status: status of the search. values are list, none, hide. list means results are present. none means no results. hide means nothing should be shown (e.g. 1 char search string, bad postal code)
+        *   - defItem: a lonlat array of the default result to zoom to if a person hits enter. for FSA, it is FSA centroid; for lat/long, it is the lat/long point; otherwise it is the first result
+        *   - list: array of search results
+        *       - name: name of the result
+        *       - location: general area where the result is situated
+        *       - province: province code where the result is found (numeric, e.g. 35, not 'ON')
+        *       - lonlat: co-ordinate where the result is located. array of [longitude, latitude]
+        *       - type: concise type code for the result
         *
         * @method geoSearch
         * @private
@@ -455,28 +470,6 @@ define([
         * @return {Object} promise of results
         */
         function geoSearch(input, filters) {
-            /*
-            Filters thing
-            .radius -- size of radius search in km.  default 10
-            .prov -- province code
-            .concise -- concise type code
-            .showAll -- show all results or clip to first X.  default false
-            .extent -- extent of in long/lat [xmin, ymin, xmax, ymax].  caller will project from basemap.  reasoning: caller can project once then cache until extent changes
-            */
-            /*
-            Result thing:
-
-            defItem: lat/long -- the default item to zoom to if a person hits enter  (default is a reserved word, hence the lousy name)
-            status: list, none, hide  -- status of the search. list means results. none means no results. hide means nothing should be shown (e.g. 1 char string, bad postal code)
-            list: array of search results
-                  - name
-                  - location
-                  - province
-                  - lonlat
-                  - type (concise type)
-
-            */
-
             var defResult = new Deferred();
 
             //is search too short?
