@@ -155,6 +155,19 @@ define([
         }
 
         /**
+        * Will determine if a point is inside an extent
+        *
+        * @method isInExtent
+        * @private
+        * @param {Array} point co-ordinates in [lon, lat] format
+        * @param {Array} extent co-ordinates in [lon_min, lat_min, lon_max, lat_max] format
+        * @return {Boolean} tells if the point is inside the extent
+        */
+        function isInExtent(point, extent) {
+            return (point[0] >= extent[0]) && (point[0] <= extent[2]) && (point[1] >= extent[1]) && (point[1] <= extent[3]);
+        }
+
+        /**
         * Will examine the user search string. Returns any special type and related data
         * Valid types are: none, fsa, lonlat, prov
         *
@@ -331,7 +344,8 @@ define([
                 //turn complex results into simplified results (can add values as needed).
                 //pass simplified result back to promise
                 //NOTE: when using JSONP, the search results come back in a parent array.  If not JSONP, there is no array >:'(
-                defResult.resolve(searchResult[0].items.map(function (elem) {
+
+                var returnList = searchResult[0].items.map(function (elem) {
                     return {
                         name: elem.name,
                         location: elem.location,
@@ -339,7 +353,18 @@ define([
                         lonlat: [elem.longitude, elem.latitude],
                         type: elem.concise.code  //convert to text here (en/fr)?
                     };
-                }));
+                });
+
+                //note the bbox parameter on the geonames service does not work well.
+                //will do a manual extent filter here, if there is one.
+                if (params.extent) {
+                    defResult.resolve(returnList.filter(function (elem) {
+                        return isInExtent(elem.lonlat, params.extent);
+                    }));
+                } else {
+                    //no extent filter.  pass back entire list
+                    defResult.resolve(returnList);
+                }
             },
             function (error) {
                 console.log("Geoname search error : " + error);
@@ -436,7 +461,7 @@ define([
             .prov -- province code
             .concise -- concise type code
             .showAll -- show all results or clip to first X.  default false
-
+            .extent -- extent of in long/lat [xmin, ymin, xmax, ymax].  caller will project from basemap.  reasoning: caller can project once then cache until extent changes
             */
             /*
             Result thing:
