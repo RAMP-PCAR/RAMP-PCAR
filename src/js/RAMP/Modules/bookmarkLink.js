@@ -402,12 +402,19 @@ define([
             }
 
             var paras = link.split('?')[1],
-                element = $("#wb-lng").find("li a"),
-                url = element.attr("href");
+                element = $('#wb-lng').find('li a'),
+                url = element.attr('href'),
+                dstLang = element.attr('lang'),
+                srcLang = RAMP.locale,
+                re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang),'g');
 
-            url = url.split('?')[0] + "?" + paras;
+            console.log(paras);
+            paras = paras.replace(re,'rcs.$1.{0}'.format(dstLang));
+            console.log(paras);
 
-            element.attr("href", url);
+            url = url.split('?')[0] + '?' + paras;
+
+            element.attr('href', url);
         }
 
         /**

@@ -36,7 +36,7 @@ RAMP = {
      * @property configServiceURL
      * @type String
      */
-    configServiceURL: "http://localhost:5000/",
+    configServiceURL: "http://sncr01wbingsdv1.ncr.int.ec.gc.ca:8000/v1/",
 
     /**
      * The RAMP application config, it should be treated as read only by all modules other than globalStorage and bootstrapper
