@@ -703,7 +703,7 @@
                 "legendMimeType": "image/jpeg",
                 "featureInfo": {
                     "mimeType": "text/plain",
-                    "parser": "windParse"
+                    "parser": "jsonParse"
                 },
                 "settings": { "opacity": { "default": 0.4 } }
             },
@@ -760,6 +760,7 @@
         "stringParse.js",
         "htmlRawParse.js",
         "jsonRawParse.js",
+        "jsonParse.js",
         "tempParse.js",
         "windParse.js",
         "epsgio.js"
