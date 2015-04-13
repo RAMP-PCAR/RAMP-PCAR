@@ -1,4 +1,4 @@
-﻿/* global define, console */
+﻿/* global define, console, RAMP */
 
 /**
 *
@@ -91,7 +91,8 @@ define([
                             elem.parent = attribData;
                         });
 
-                        //TODO store attribData somewhere
+                        //store attribData
+                        RAMP.data[layerId] = attribData;
                     },
                     function (error) {
                         console.log("Attribute load error : " + error);

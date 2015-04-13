@@ -592,7 +592,7 @@ define([
                 case "feature":
                     tempLayer = new FeatureLayer(layer_url, {
                         opacity: layer_op,
-                        mode: FeatureLayer.MODE_SNAPSHOT
+                        mode: FeatureLayer.MODE_ONDEMAND
                     });
                     break;
 
@@ -1015,11 +1015,11 @@ define([
                 // TODO: source of possible errors; add error handling
                 var fl = new FeatureLayer(layerConfig.url, {
                     id: layerConfig.id,
-                    mode: FeatureLayer.MODE_SNAPSHOT,
-                    outFields: [layerConfig.layerAttributes],
+                    mode: FeatureLayer.MODE_ONDEMAND,
+                    //outFields: [layerConfig.layerAttributes],
                     visible: layerConfig.settings.visible,
-                    opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                    maxAllowableOffset: layerConfig.maxAllowableOffset
+                    opacity: resolveLayerOpacity(layerConfig.settings.opacity)
+                    //maxAllowableOffset: layerConfig.maxAllowableOffset
                 });
 
                 prepLayer(fl, layerConfig, userLayer);
@@ -1077,10 +1077,10 @@ define([
                     case "feature":
                         tempLayer = new FeatureLayer(layerConfig.url, {
                             opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                            mode: FeatureLayer.MODE_SNAPSHOT,
+                            mode: FeatureLayer.MODE_ONDEMAND,
                             visible: layerConfig.settings.visible,
-                            id: layerConfig.id,
-                            maxAllowableOffset: layerConfig.maxAllowableOffset
+                            id: layerConfig.id
+                            //maxAllowableOffset: layerConfig.maxAllowableOffset
                         });
 
                         prepLayer(tempLayer, layerConfig, userLayer);
