@@ -1,4 +1,4 @@
-﻿/*global define, tmpl */
+﻿/*global define, tmpl, RAMP */
 
 //the "use strict" forces the ECMA Script 5 interpretation of the code
 
@@ -10,15 +10,14 @@
 */
 
 /**
-* GraphicExtension class containing helper functions for graphic objects.
-* Note this class requires the config object.
-* 
+* GraphicExtension class containing helper functions for graphic objects, data attribute objects, and the bridging between the two
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* 
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/point_details_list_Template.json"}}{{/crossLink}}
 * {{#crossLink "templates/point_details_list_item_Template.json"}}{{/crossLink}}
@@ -50,42 +49,93 @@ define([
 
         return {
             /**
-            * Returns the oid of the given graphic object
+            * Returns the object id of the given graphic object
             *
             * @param {esri/Graphic} graphic
-            * @method getOid
+            * @method getGraphicOid
+            * @return {Integer} object id for the graphic
             */
-            getOid: function (graphic) {
+            getGraphicOid: function (graphic) {
                 var objectIdField = graphic.getLayer().objectIdField;
                 return graphic.attributes[objectIdField];
             },
 
             /**
-            * Get popup content for a graphic (i.e. a point)
-            * This logic is customized per project
+            * Returns the object id of the given feature data object
             *
-            *
-            * @method getTextContent
-            * @private
-            * @param {Object} graphic
-            * @return {Object} found graphic object
+            * @param {Object} fData a feature data object
+            * @method getFDataOid
+            * @return {Integer} object id for data attribute
             */
-            getTextContent: function (graphic) {
+            getFDataOid: function (fData) {
+                return fData.attributes[fData.parent.idField];
+            },
+
+            /**
+            * Returns the data object of the given graphic object
+            *
+            * @param {esri/Graphic} graphic
+            * @method getFDataForGraphic
+            * @return {Object} data object of the given graphic object
+            */
+            getFDataForGraphic: function (graphic) {
+                var data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic belongs to
+                //use graphic object id as key in index to get position of data object
+                return data.features[data.index[this.getGraphicOid(graphic)]];
+            },
+
+            /**
+            * Returns the layer config node for a feature data object
+            *
+            * @param {Object} fData a feature data object
+            * @method getConfigForFData
+            * @return {Object} layer config node
+            */
+            getConfigForFData: function (fData) {               
+                return Ramp.getLayerConfigWithId(fData.parent.layerId);
+            },
+
+            /**
+            * Get details popup content for a graphic (i.e. a point)
+            *
+            * @method getGraphicTextContent
+            * @private
+            * @param {esri/Graphic} graphic
+            * @return {Object} popup content for graphic
+            */
+            getGraphicTextContent: function (graphic) {
+                //TODO investigate ways to merge this logic with getFDataTextContent
                 var templateName = graphic.getLayer().ramp.config.templates.detail;
 
-                function fillTemplate(graphic) {
-                    tmpl.cache = {};
-                    tmpl.templates = JSON.parse(
-                        TmplHelper.stringifyTemplate(feature_details_template));
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
 
-                    var datawrapper = TmplHelper.dataBuilder(graphic, graphic.getLayer().ramp.config),
-                        result = tmpl(templateName, datawrapper);
+                //grab the attribute data bound to this graphic
+                var datawrapper = TmplHelper.dataBuilder(this.getDataForGraphic(graphic), graphic.getLayer().ramp.config);
 
-                    return result;
-                }
+                return tmpl(templateName, datawrapper);
+            },
+            
+            /**
+            * Get popup content for a feature data object
+            *
+            * @method getFDataTextContent
+            * @private
+            * @param {Object} fData a feature data object
+            * @return {Object} popup content for feature data object
+            */
+            getFDataTextContent: function (fData) {
+                //TODO investigate ways to merge this logic with getGraphicTextContent
+                var lConfig = this.getConfigForFData(fData),
+                    templateName = lConfig.templates.detail;
 
-                //return generateHtml(graphic.attributes);
-                return fillTemplate(graphic);
+                tmpl.cache = {};
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
+
+                //grab the attribute data bound to this graphic
+                var datawrapper = TmplHelper.dataBuilder(fData, lConfig);
+
+                return tmpl(templateName, datawrapper);
             },
 
             /**
@@ -96,7 +146,18 @@ define([
             * @return {}
             */
             getGraphicTitle: function (graphic) {
-                return graphic.attributes[graphic.getLayer().ramp.config.nameField];
+                return this.getDataForGraphic(graphic).attributes[graphic.getLayer().ramp.config.nameField];
+            },
+
+            /**
+            * Returns the content of the name field of the provided feature data object
+            *
+            * @method getFDataTitle
+            * @param {Object} datAtt a feature data object
+            * @return {}
+            */
+            getFDataTitle: function (fData) {
+                return fData.attributes[this.getConfigForFData(fData).nameField];
             }
         };
     });

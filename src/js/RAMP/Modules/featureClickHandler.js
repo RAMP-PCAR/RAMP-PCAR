@@ -56,12 +56,13 @@ define([
             * @param  {Object} evt.graphic ESRI graphic object
             */
             onFeatureSelect: function (evt) {
-                var selectedGraphic = evt.graphic;
+                var selectedGraphic = evt.graphic,
+                    fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
 
                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                     panelName: i18n.t('datagrid.details'),
-                    title: GraphicExtension.getGraphicTitle(selectedGraphic),
-                    content: GraphicExtension.getTextContent(selectedGraphic),
+                    title: GraphicExtension.getFDataTitle(fData),
+                    content: GraphicExtension.getFDataTextContent(fData),
                     target: $("#map-div"),
                     origin: "rampPopup",
                     consumeOrigin: "datagrid",
@@ -75,7 +76,7 @@ define([
                         UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
                             var scroll = evt.scroll;
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                graphic: selectedGraphic,
+                                fData: fData,
                                 scroll: scroll
                             });
                         });

@@ -62,12 +62,13 @@ define([
             *
             * @method onDetailSelect
             * @param {JObject} buttonNode the "Details" button node
-            * @param {Object} selectedGraphic {esri/Graphic} the graphic object associated with the entry in the datagrid
+            * @param {Object} fData the feature data for the entry in the data grid 
+            * @param {esri/Graphic} selectedGraphic the on-map graphic object associated with the entry in the datagrid
             */
-            onDetailSelect: function (buttonNode, selectedGraphic, mode) {
+            onDetailSelect: function (buttonNode, fData, selectedGraphic, mode) {
                 var guid = buttonNode.data("guid") || buttonNode.data("guid", UtilMisc.guid()).data("guid"),
-                    content = GraphicExtension.getTextContent(selectedGraphic),
-                    title = GraphicExtension.getGraphicTitle(selectedGraphic),
+                    content = GraphicExtension.getFDataTextContent(fData),
+                    title = GraphicExtension.getFDataTitle(fData),
                     node = buttonNode.parents(".record-row").parent();
 
                 if (mode === "summary") {
@@ -83,7 +84,7 @@ define([
                             UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
                                 var scroll = evt.scroll;
                                 topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                    graphic: selectedGraphic,
+                                    fData: fData,
                                     scroll: scroll
                                 });
                             });
@@ -115,7 +116,7 @@ define([
                         //doOnOpen: function () {
                         doAfterUpdate: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                graphic: selectedGraphic,
+                                fData: fData,
                                 scroll: true
                             });
                         },
@@ -157,9 +158,10 @@ define([
             *
             * @method onZoomTo
             * @param {esri/geometry/Extent} currentExtent the current extent of the map
+            * @param {Object} fData the feature data for the entry in the data grid 
             * @param {Object} zoomToGraphic graphic object of the feature to zoom to
             */
-            onZoomTo: function (currentExtent, zoomToGraphic) {
+            onZoomTo: function (currentExtent, fData, zoomToGraphic) {
                 zoomBackExtent = currentExtent;
 
                 function callback() {
@@ -196,7 +198,7 @@ define([
                 }
 
                 topic.publish(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, {
-                    graphic: zoomToGraphic
+                    fData: fData
                 });
             },
 

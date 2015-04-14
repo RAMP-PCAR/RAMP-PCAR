@@ -146,9 +146,9 @@ define([
             ui = (function () {
                 /**
                 * creates a datagrid row that has the following features:
-                * highlight for a give graphic
+                * highlight for a given feature
                 * un-highlight
-                * scroll to for a give graphic
+                * scroll to for a given feature
                 *
                 * @method createRowPrototype
                 * @private
@@ -157,18 +157,18 @@ define([
                 */
                 function createRowPrototype(cssClass) {
                     var index = -1,
-                        graphic = null;
+                        fData = null;
 
                     return {
                         focusedButton: null,
 
                         isActive: function () {
-                            return graphic !== null;
+                            return fData !== null;
                         },
 
                         isEqual: function (layerId, oid) {
-                            var thisId = graphic.getLayer().id,
-                                thisOid = GraphicExtension.getOid(graphic);
+                            var thisId = fData.parent.layerId,
+                                thisOid = GraphicExtension.getFDataOid(fData);
 
                             return (thisId === layerId) && (thisOid === oid);
                         },
@@ -204,14 +204,14 @@ define([
                             return false;
                         },
 
-                        setGraphic: function (newGraphic) {
-                            graphic = newGraphic;
+                        setFeatureData: function (newFData) {
+                            fData = newFData;
 
                             this.refresh();
                         },
 
                         /**
-                        * Finds a row node corresponding to the given graphic object.
+                        * Refresh the page index of this row
                         *
                         * @method refresh
                         * @private
@@ -219,8 +219,8 @@ define([
                         */
                         refresh: function () {
                             if (graphic) {
-                                var layerId = graphic.getLayer().id,
-                                    id = GraphicExtension.getOid(graphic);
+                                var layerId = fData.parent.layerId,
+                                    id = GraphicExtension.getFDataOid(fData);
                                 if ((layerId in featureToPage) && (id in featureToPage[layerId])) {
                                     index = featureToPage[layerId][id];
                                 } else {
@@ -232,7 +232,7 @@ define([
                         },
 
                         /**
-                        * Finds a row node corresponding to the given graphic object.
+                        * Finds a row node corresponding to this object.
                         *
                         * @method getNode
                         * @private
@@ -243,13 +243,13 @@ define([
                         },
 
                         /**
-                        * Highlights the given graphic object using the specified cssClass.
+                        * Highlights this row using the specified cssClass.
                         *
                         * @method activate
                         * @private
                         */
                         activate: function () {
-                            if (graphic) {
+                            if (fData) {
                                 this.getNode().addClass(cssClass);
 
                                 if (this.focusedButton) {
@@ -260,15 +260,15 @@ define([
                         },
 
                         /**
-                        * Removes a specified cssClass from a given graphic object in the data grid
+                        * Removes a specified cssClass from this row in the data grid
                         *
                         * @method deactivate
                         * @private
                         */
                         deactivate: function () {
-                            if (graphic) {
+                            if (fData) {
                                 this.getNode().removeClass(cssClass);
-                                graphic = null;
+                                fData = null;
                             }
                         }
                     };
@@ -331,12 +331,15 @@ define([
                     var obj = row.last(),
                         datagridMode = ui.getDatagridMode(),
                         tmplData,
-                        layerConfig = obj.feature.getLayer().ramp.config;
+                        layerConfig = GraphicExtention.getConfigForFData(obj.fData);
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (!(datagridMode in obj)) {
+                            //first time rendering this row.  
+                            //we will run the template engine, then store the result in the last column.
+
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
 
                             var sumTemplate = layerConfig.templates.summary;
 
@@ -350,6 +353,9 @@ define([
                         return obj[datagridMode];
                     } else {
                         if (!(datagridMode in obj)) {
+                            //first time rendering this row.  
+                            //we will generate it (template engine), then store the result in the last column.
+
                             obj[datagridMode] = [];
 
                             //make array containing values for each column in the full grid
@@ -360,7 +366,7 @@ define([
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
 
                             dojoArray.forEach(extendedGrid, function (col, i) {
                                 // add columnIdx property, and set initial value
@@ -421,6 +427,7 @@ define([
                         );
                     } else {
                         //layout for variable column (extended grid)
+                        //grab config for active dataset and generate a table layout based on gridColumns
                         tableOptions = lang.mixin(tableOptions,
                             {
                                 columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns, function (column) {
@@ -551,27 +558,29 @@ define([
                         if (highlightRow.isActive() && highlightRow.isEqual(layerId, oid)) {
                             DatagridClickHandler.onDetailDeselect(datagridMode);
                         } else {
-                            var graphic = getGraphicFromButton(buttonNode);
+                            var fData = getAttribFromButton(buttonNode),
+                                graphic = getGraphicFromAttrib(fData);
 
-                            DatagridClickHandler.onDetailSelect(buttonNode, graphic, datagridMode);
+                            DatagridClickHandler.onDetailSelect(buttonNode, fData, graphic, datagridMode);
                         }
                     });
 
                     // Event handling for "Zoom To" button
                     sectionNode.on("click", "button.zoomto", function (evt) {
-                        var zoomNode = $(this);
+                        var zoomNode = $(this), 
+                            fData = getAttribFromButton(zoomNode);
 
                         zoomlightRow.focusedButton = "button.zoomto";
 
                         // Zoom To
                         if (zoomNode.text() === i18n.t("datagrid.zoomTo")) {
-                            handleGridEvent(evt, function () {
-                                zoomToGraphic = getGraphicFromButton(zoomNode);
-
+                            handleGridEvent(evt, function () {                               
+                                zoomToGraphic = getGraphicFromAttrib(fData);
+                               
                                 //store the current extent, then zoom to point.
                                 lastExtent = RampMap.getMap().extent.clone();
 
-                                DatagridClickHandler.onZoomTo(RampMap.getMap().extent.clone(), zoomToGraphic);
+                                DatagridClickHandler.onZoomTo(RampMap.getMap().extent.clone(), fData, zoomToGraphic);
 
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
@@ -579,8 +588,8 @@ define([
                                 utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
-                                                    featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                                    layerIdField, zoomToGraphic.getLayer().id));
+                                                    featureOidField, GraphicExtension.getFDataOid(fData),
+                                                    layerIdField, fData.parent.layerId));
                                     newNode.text(i18n.t("datagrid.zoomBack"));
                                 });
                             });
@@ -591,8 +600,8 @@ define([
                             // Reset focus back to "Zoom To" link after map extent change
                             utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
-                                        featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                        layerIdField, zoomToGraphic.getLayer().id));
+                                        featureOidField, GraphicExtension.getFDataOid(fData),
+                                        layerIdField, fData.parent.layerId));
                                 newNode.focus();
                             });
                         }
@@ -635,7 +644,7 @@ define([
 
                         updateDatasetSelectorState(state, true);
                     });
-
+                    
                     sectionNode.on("click", "#datasetSelectorSubmitButton", function () {
                         var optionSelected = datasetSelector.find("option:selected");
 
@@ -793,7 +802,7 @@ define([
                 function highlightrowShow(event) {
                     highlightrowHide();
 
-                    highlightRow.setGraphic(event.graphic);
+                    highlightRow.setFeatureData(event.fData);
 
                     if (event.scroll) {
                         ui.activateRows();
@@ -821,7 +830,7 @@ define([
                 * @param {Object} event A thrown event that contains a graphic object inside the grid
                 */
                 function zoomlightrowShow(event) {
-                    zoomlightRow.setGraphic(event.graphic);
+                    zoomlightRow.setFeatureData(event.fData);
                 }
 
                 /**
@@ -1290,7 +1299,7 @@ define([
             featureToPage = {};
             $.each(elements, function (idx, val) {
                 var layer = val.last().layerId,
-                    fid = GraphicExtension.getOid(val.last().feature);
+                    fid = GraphicExtension.getFDataOid(val.last().fData);
 
                 if (!(layer in featureToPage)) {
                     featureToPage[layer] = {
@@ -1316,11 +1325,12 @@ define([
                 //Ramp.setHTML(oid); // just update info hit
             }
         }
+
         /**
         * Gets all layer data in the current map extent that are visible, and put the data into the data grid.
         *
         * @method applyExtentFilter
-        * @param {A Deferred object} d
+        * @param {Deferred} d
         *
         */
         function applyExtentFilter(d) {
@@ -1337,8 +1347,7 @@ define([
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
-            //console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
-
+            //figure out what extent to use
             if (dataGridMode === GRID_MODE_FULL) {
                 visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
                     return layer.id === ui.getSelectedDatasetId();
@@ -1355,6 +1364,7 @@ define([
                 q.geometry = RampMap.getMap().extent;
             }
 
+            //this will result in just objectid fields, as that is all we have in feature layers
             q.outFields = ["*"];
 
             //console.timeEnd('applyExtentFilter:part 1 - 1');
@@ -1400,14 +1410,17 @@ define([
         }
 
         /**
-        * Given a map feature, return a data object used to represent the feature in the datagrid.
+        * Given a feature data object, return a data object used to represent the feature in the datagrid.
+        * The data object is an ordered array of raw values
         *
         * @method getDataObject
         * @private
-        * @param {Object} feature the feature needs to be represented in the datagrid
+        * @param {Object} fData data the feature needs to be represented in the datagrid
         * return {Array} an array representing the data the given feature contains.
         */
-        function getDataObject(feature) {
+        function getDataObject(fData) {
+            //TODO it may be possible to take the logic in function rowRenderer (which applies templating) and apply it here. try after things are working as-is
+
             var layerConfig = feature.getLayer().ramp.config,
                 innerArray;
             //attribute = feature.attributes;
@@ -1415,7 +1428,7 @@ define([
             //Remember, case sensitivity MATTERS in the attribute name.
 
             if (ui.getDatagridMode() === GRID_MODE_SUMMARY) {
-                innerArray = [feature.attributes[layerConfig.nameField]];
+                innerArray = [GraphicExtension.getFDataTitle(fData)];
             } else {
                 //make array containing values for each column in the full grid
                 innerArray = [];
@@ -1425,7 +1438,7 @@ define([
 
                 // process each column and add to row
                 dojoArray.forEach(extendedGrid, function (column) {
-                    innerArray.push(feature.attributes[column.fieldName] || "");
+                    innerArray.push(fData.attributes[column.fieldName] || "");
                 });
             }
 
@@ -1437,7 +1450,7 @@ define([
             innerArray.push({
                 layerId: layerConfig.id,
                 layerName: layerConfig.displayName,
-                feature: feature
+                fData: fData
             });
 
             return innerArray;
@@ -1452,7 +1465,7 @@ define([
         *
         * @method fetchRecords
         * @param {Array} visibleFeatures a dictionary mapping
-        * layer id to an array of feature objects
+        * layer id to an array of on-map feature objects
         * @private
         */
         function fetchRecords(visibleFeatures) {
@@ -1473,13 +1486,19 @@ define([
 
             //for each feature layer
             utilDict.forEachEntry(visibleFeatures, function (key, features) {
-                //for each feature in a specific layer
-                data = data.concat(dojoArray.map(features, function (feature) {
-                    //return the appropriate data object for the feature (.map puts them in array form)
+                //ensure attribute data has been downloaded
+                if (RAMP.data[key]) {
 
-                    // "cache" the data object so we don't have to generate it again
-                    return feature[ui.getDatagridMode()] ? feature[ui.getDatagridMode()] : feature[ui.getDatagridMode()] = getDataObject(feature);
-                }));
+                    //for each feature in a specific layer
+                    data = data.concat(dojoArray.map(features, function (feature) {
+                        //get the feature data for this feature
+                        var fData = GraphicExtension.getFDataForGraphic(feature);
+
+                        //return the appropriate data object for the feature (.map puts them in array form)
+                        // "cache" the data object so we don't have to generate it again
+                        return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
+                    }));
+                }
             });
 
             updateRecordsCount(data.length);
@@ -1496,7 +1515,7 @@ define([
 
             //console.timeEnd('fetchRecords: fnAddData');
 
-            console.log("jqgrid.dataTable().fnAddData(data);");
+            //console.log("jqgrid.dataTable().fnAddData(data);");
 
             // NOTE: fnAddData should be the last thing that happens in this function
             // if you want to add something after this point, use the fnDrawCallback
@@ -1504,26 +1523,44 @@ define([
         }
 
         /**
-        * Returns the graphic object of a feature layer which is contained in the given buttonNode.
+        * Returns the graphic object of a feature layer for the corresponding feature data object.
         *
-        * @method getGraphicFromButton
+        * @method getGraphicFromFData
         * @private
-        * @param {JObject} buttonNode   the node containing the feature layer
+        * @param {Object} fData a feature data object
         * @return {Object}   the graphic object of the feature layer.
         */
-        function getGraphicFromButton(buttonNode) {
-            var layerId = buttonNode.data(layerIdField),
-            // Need to parse the index into an integer since it
-            // comes as a String
-                oid = parseInt(buttonNode.data(featureOidField)),
+        function getGraphicFromFData(fData) {
+            //TODO move this into graphicExtension?  check for RampMap import circular reference.
+
+            var layerId = fData.parent.layerId,            
+                oid = GraphicExtension.getFDataOid(fData),
                 featureLayer = RampMap.getFeatureLayer(layerId),
 
                 graphic = UtilArray.binaryFind(featureLayer.graphics,
                     function (a_graphic) {
-                        return GraphicExtension.getOid(a_graphic) - oid;
+                        return GraphicExtension.getGraphicOid(a_graphic) - oid;
                     });
 
             return graphic;
+        }
+
+        /**
+        * Returns the feature data object which is encoded in the given buttonNode.
+        *
+        * @method getFDataFromButton
+        * @private
+        * @param {JObject} buttonNode   the node containing button for the row
+        * @return {Object}   the feature data object
+        */
+        function getFDataFromButton(buttonNode) {
+            var layerId = buttonNode.data(layerIdField),
+            // Need to parse the index into an integer since it
+            // comes as a String
+                oid = parseInt(buttonNode.data(featureOidField)),
+                layerData = RAMP.data[layerId];
+
+            return layerData.features[layerData.index[oid]];
         }
 
         /**
@@ -1631,6 +1668,7 @@ define([
 
                 if (layerConfigs.length !== 0) {
                     // layerConfig = config.featureLayers;
+                    //TODO we are using this for rowsPerPage.  need to change that!
                     gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
 
                     /*

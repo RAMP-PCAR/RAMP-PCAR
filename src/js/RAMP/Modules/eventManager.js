@@ -683,7 +683,7 @@ define([],
                 *
                 * @event Datagrid.HIGHLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the selected feature
+                * @param event.fData {Object} feature data object corresponding to the selected feature
                 */
                 HIGHLIGHTROW_SHOW: "datagrid/highlightrow-show",
 
@@ -698,7 +698,7 @@ define([],
                 *
                 * @event Datagrid.ZOOMLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the zoomed to feature
+                * @param event.fData {Object} feature data object corresponding to the zoomed to feature
                 */
                 ZOOMLIGHTROW_SHOW: "datagrid/zoomlightrow-show",
 
