@@ -53,6 +53,7 @@ define([
             switch (layerType) {
                 case GlobalStorage.layerType.feature:
 
+                    console.log('BEGIN ATTRIB LOAD: ' + layerId);
                     //fetch attributes from feature layer. where 1=1 (all records). outFields * (all attributes). no geometry.
                     var defService = script.get(layerUrl + '/query', {
                         query: "where=1%3D1&outFields=*&returnGeometry=false&f=json",
@@ -92,6 +93,9 @@ define([
 
                         //store attribData
                         RAMP.data[layerId] = attribData;
+                        //new data. tell grid to reload
+                        topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        console.log('END ATTRIB LOAD: ' + layerId);
                     },
                     function (error) {
                         console.log("Attribute load error : " + error);
@@ -103,8 +107,7 @@ define([
                     console.log("Layer type not supported by attribute loader: " + layerType);
             }
 
-            //TODO do we need to return any sort of promise to indicate when the loading has finished?
-            //TODO should we raise a topic indicating loading has finished (could trigger a grid refresh)
+            //TODO do we need to return any sort of promise to indicate when the loading has finished?          
         }
 
         return {
