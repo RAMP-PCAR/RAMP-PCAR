@@ -1384,7 +1384,9 @@ define([
             // Update total records
             totalRecords = 0;
             dojoArray.forEach(visibleGridLayers, function (layer) {
-                totalRecords += layer.graphics.length;
+                if (RAMP.data[layer.id]) {
+                    totalRecords += RAMP.data[layer.id].features.length;
+                }
             });
 
             //console.time('applyExtentFilter:part 1 - 2');
