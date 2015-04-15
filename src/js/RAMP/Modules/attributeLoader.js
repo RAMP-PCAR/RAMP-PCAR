@@ -47,8 +47,7 @@ define([
         * @private
         * @param  {String} layerId id of the layer
         * @param  {String} layerUrl the URL of the layer
-        * @param  {String} layerType type of the layer. should be a value from GlobalStorage.layerType
-        * @param  {Object} [options] additional options for layer item (mostly error messages in this case)
+        * @param  {String} layerType type of the layer. should be a value from GlobalStorage.layerType       
         */
         function loadAttributeData(layerId, layerUrl, layerType) {
             switch (layerType) {

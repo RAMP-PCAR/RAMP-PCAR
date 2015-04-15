@@ -170,7 +170,7 @@ define([
             * Returns the content of the name field of the provided feature data object
             *
             * @method getFDataTitle
-            * @param {Object} datAtt a feature data object
+            * @param {Object} fData a feature data object
             * @return {}
             */
             getFDataTitle: function (fData) {

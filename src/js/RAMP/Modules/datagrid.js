@@ -218,7 +218,7 @@ define([
                         * @return {{node: jObject, page: number}} A row node that displays graphic information. If none found, returns an object with empty jNode.
                         */
                         refresh: function () {
-                            if (graphic) {
+                            if (fData) {
                                 var layerId = fData.parent.layerId,
                                     id = GraphicExtension.getFDataOid(fData);
                                 if ((layerId in featureToPage) && (id in featureToPage[layerId])) {
@@ -331,7 +331,7 @@ define([
                     var obj = row.last(),
                         datagridMode = ui.getDatagridMode(),
                         tmplData,
-                        layerConfig = GraphicExtention.getConfigForFData(obj.fData);
+                        layerConfig = GraphicExtension.getConfigForFData(obj.fData);
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (!(datagridMode in obj)) {
@@ -558,8 +558,8 @@ define([
                         if (highlightRow.isActive() && highlightRow.isEqual(layerId, oid)) {
                             DatagridClickHandler.onDetailDeselect(datagridMode);
                         } else {
-                            var fData = getAttribFromButton(buttonNode),
-                                graphic = getGraphicFromAttrib(fData);
+                            var fData = getFDataFromButton(buttonNode),
+                                graphic = getGraphicFromFData(fData);
 
                             DatagridClickHandler.onDetailSelect(buttonNode, fData, graphic, datagridMode);
                         }
@@ -568,14 +568,14 @@ define([
                     // Event handling for "Zoom To" button
                     sectionNode.on("click", "button.zoomto", function (evt) {
                         var zoomNode = $(this),
-                            fData = getAttribFromButton(zoomNode);
+                            fData = getFDataFromButton(zoomNode);
 
                         zoomlightRow.focusedButton = "button.zoomto";
 
                         // Zoom To
                         if (zoomNode.text() === i18n.t("datagrid.zoomTo")) {
                             handleGridEvent(evt, function () {
-                                zoomToGraphic = getGraphicFromAttrib(fData);
+                                zoomToGraphic = getGraphicFromFData(fData);
 
                                 //store the current extent, then zoom to point.
                                 lastExtent = RampMap.getMap().extent.clone();
@@ -1421,7 +1421,7 @@ define([
         function getDataObject(fData) {
             //TODO it may be possible to take the logic in function rowRenderer (which applies templating) and apply it here. try after things are working as-is
 
-            var layerConfig = feature.getLayer().ramp.config,
+            var layerConfig = GraphicExtension.getConfigForFData(fData),
                 innerArray;
             //attribute = feature.attributes;
 

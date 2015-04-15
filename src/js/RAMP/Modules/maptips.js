@@ -1,4 +1,4 @@
-﻿/*global define, $, window, Modernizr, tmpl */
+﻿/*global define, $, window, Modernizr, tmpl, RAMP */
 /*jslint white: true */
 
 /**
