@@ -13,7 +13,7 @@
 
     //Default template for summary grid (aka supercell grid).
     //Will provide symbology icon, feature name, layer name, detail link, zoom to link
-    //expects a feature to be passed in via o.data
+    //expects a feature data object to be passed in via o.data
     
     "default_grid_summary_row": "<div class='record-row'>
                                     <div class='record-details'>

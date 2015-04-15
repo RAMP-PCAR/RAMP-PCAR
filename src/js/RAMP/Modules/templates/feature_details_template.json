@@ -10,34 +10,6 @@
 
 {
 
-    // generates a list with an image, several simple key-value pairs, and a link
-    "sample_rich_media_details":	"<div class='point-details-list'>
-                            <ul class='zebra-list' style='list-style: none; margin: 0;'>
-                                {% include('simpleListItem', {key: 'A template', value: 'with an image'}); %}
-                                {% include('imageListItem', {url: 'http://lorempixel.com/100/100/nature/' + o.NAME, text: 'A random image from the internet or a logo'}); %}
-
-                                {% include('simpleListItem', {key: 'Country', value: o.COUNTRY_C}); %}
-                                {% include('simpleListItem', {key: 'Kind', value: o.KIND}); %}
-                                {% include('simpleListItem', {key: 'Latitude', value: o.LAT_DD}); %}
-                                {% include('simpleListItem', {key: 'Longitude', value: o.LON_DD}); %}
-
-                                {% include('simpleLinkItem', {text: 'Raw data link', url: 'http://bhah/' + o.NAME}); %}								
-                            </ul>
-                        </div>",
-
-    "sample_dump_template": 	"<p>Just a Data dump template</p>
-                                <p>
-                                    <span>{</span><br>
-                                    {% for (var prop in o ) { 
-                                        if (o.hasOwnProperty(prop)) { %}
-
-                                           <span style='margin-left: 20px;'>'{%=prop%}' : '{%=o[prop]%}',</span><br>
-
-                                        {% }
-                                    } %}
-                                    <span>}</span><br>
-                                </p>",
-
     // generates a list of all items in a "features" array of a given object "o"
 	// will autolink any urls/emails in the attribute values
     "default_feature_details":	"<div class='point-details-list'>

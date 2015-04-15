@@ -9,12 +9,12 @@
 
 /**
 * Datagridclick handler class.
-*   
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class DatagridClickHandler
 * @static
 * @uses dojo/topic
@@ -62,7 +62,7 @@ define([
             *
             * @method onDetailSelect
             * @param {JObject} buttonNode the "Details" button node
-            * @param {Object} fData the feature data for the entry in the data grid 
+            * @param {Object} fData the feature data for the entry in the data grid
             * @param {esri/Graphic} selectedGraphic the on-map graphic object associated with the entry in the datagrid
             */
             onDetailSelect: function (buttonNode, fData, selectedGraphic, mode) {
@@ -158,7 +158,7 @@ define([
             *
             * @method onZoomTo
             * @param {esri/geometry/Extent} currentExtent the current extent of the map
-            * @param {Object} fData the feature data for the entry in the data grid 
+            * @param {Object} fData the feature data for the entry in the data grid
             * @param {Object} zoomToGraphic graphic object of the feature to zoom to
             */
             onZoomTo: function (currentExtent, fData, zoomToGraphic) {

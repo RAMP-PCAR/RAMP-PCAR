@@ -72,16 +72,21 @@ define([
             },
 
             /**
-            * Returns the data object of the given graphic object
+            * Returns the feature data object of the given graphic object
             *
             * @param {esri/Graphic} graphic
             * @method getFDataForGraphic
-            * @return {Object} data object of the given graphic object
+            * @return {Object} feature data object of the given graphic object. undefined if feature data object doesn't exist
             */
             getFDataForGraphic: function (graphic) {
                 var data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic belongs to
-                //use graphic object id as key in index to get position of data object
-                return data.features[data.index[this.getGraphicOid(graphic)]];
+
+                if (data) {
+                    //use graphic object id as key in index to get position of data object
+                    return data.features[data.index[this.getGraphicOid(graphic).toString()]];
+                } else {
+                    return undefined;
+                }
             },
 
             /**
@@ -91,7 +96,7 @@ define([
             * @method getConfigForFData
             * @return {Object} layer config node
             */
-            getConfigForFData: function (fData) {               
+            getConfigForFData: function (fData) {
                 return Ramp.getLayerConfigWithId(fData.parent.layerId);
             },
 
@@ -110,12 +115,17 @@ define([
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
 
-                //grab the attribute data bound to this graphic
-                var datawrapper = TmplHelper.dataBuilder(this.getDataForGraphic(graphic), graphic.getLayer().ramp.config);
-
-                return tmpl(templateName, datawrapper);
+                //grab the attribute data bound to this graphic               
+                var fData = this.getFDataForGraphic(graphic);
+                if (fData) {
+                    var datawrapper = TmplHelper.dataBuilder(fData, graphic.getLayer().ramp.config);
+                    return tmpl(templateName, datawrapper);
+                } else {
+                    //rare case where graphic has no current feature data
+                    return "";
+                }
             },
-            
+
             /**
             * Get popup content for a feature data object
             *
@@ -146,7 +156,14 @@ define([
             * @return {}
             */
             getGraphicTitle: function (graphic) {
-                return this.getDataForGraphic(graphic).attributes[graphic.getLayer().ramp.config.nameField];
+                var fData = this.getFDataForGraphic(graphic);
+                if (fData) {
+                    return fData.attributes[graphic.getLayer().ramp.config.nameField];
+                } else {
+                    //rare case where graphic has no current feature data
+                    return "";
+                }
+               
             },
 
             /**

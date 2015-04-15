@@ -15,14 +15,14 @@
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/feature_hovertip_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/feature_anchortip_template.json"}}{{/crossLink}}
-* 
+*
 * @class Maptips
 * @static
 * @uses dojo/topic
@@ -164,12 +164,16 @@ define([
 
             //because of highlight layer tricks, don't use the standard GraphicExtension methods here to get the feature data
             lData = RAMP.data[layerId];
-            fData = lData.index[graphic.attributes[lData.idField]];
+            if (lData) {
+                fData = lData.index[graphic.attributes[lData.idField].toString()];
 
-            datawrapper = TmplHelper.dataBuilder(fData, layerConfig);
-            maptipContent = tmpl(templateKey, datawrapper);
-
-            return maptipContent;
+                datawrapper = TmplHelper.dataBuilder(fData, layerConfig);
+                maptipContent = tmpl(templateKey, datawrapper);
+            } else {
+                //rare case where feature data has not been downloaded or does not exist
+                maptipContent = "";
+            }
+                return maptipContent;
         }
 
         /**

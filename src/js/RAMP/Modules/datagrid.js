@@ -14,23 +14,23 @@
 * details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/extended_datagrid_template.json"}}{{/crossLink}}
-* 
+*
 * @class Datagrid
 * @static
 * @uses dojo/_base/declare
@@ -335,7 +335,7 @@ define([
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (!(datagridMode in obj)) {
-                            //first time rendering this row.  
+                            //first time rendering this row.
                             //we will run the template engine, then store the result in the last column.
 
                             //bundle feature into the template data object
@@ -353,7 +353,7 @@ define([
                         return obj[datagridMode];
                     } else {
                         if (!(datagridMode in obj)) {
-                            //first time rendering this row.  
+                            //first time rendering this row.
                             //we will generate it (template engine), then store the result in the last column.
 
                             obj[datagridMode] = [];
@@ -567,16 +567,16 @@ define([
 
                     // Event handling for "Zoom To" button
                     sectionNode.on("click", "button.zoomto", function (evt) {
-                        var zoomNode = $(this), 
+                        var zoomNode = $(this),
                             fData = getAttribFromButton(zoomNode);
 
                         zoomlightRow.focusedButton = "button.zoomto";
 
                         // Zoom To
                         if (zoomNode.text() === i18n.t("datagrid.zoomTo")) {
-                            handleGridEvent(evt, function () {                               
+                            handleGridEvent(evt, function () {
                                 zoomToGraphic = getGraphicFromAttrib(fData);
-                               
+
                                 //store the current extent, then zoom to point.
                                 lastExtent = RampMap.getMap().extent.clone();
 
@@ -644,7 +644,7 @@ define([
 
                         updateDatasetSelectorState(state, true);
                     });
-                    
+
                     sectionNode.on("click", "#datasetSelectorSubmitButton", function () {
                         var optionSelected = datasetSelector.find("option:selected");
 
@@ -1488,7 +1488,6 @@ define([
             utilDict.forEachEntry(visibleFeatures, function (key, features) {
                 //ensure attribute data has been downloaded
                 if (RAMP.data[key]) {
-
                     //for each feature in a specific layer
                     data = data.concat(dojoArray.map(features, function (feature) {
                         //get the feature data for this feature
@@ -1497,9 +1496,28 @@ define([
                         //return the appropriate data object for the feature (.map puts them in array form)
                         // "cache" the data object so we don't have to generate it again
                         return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
+
+                        //TODO test if we need this type of logic, and the .filter below.  ideally the if (RAMP.data) check above should have us in the clear.
+                        /*
+                        if (fData) {
+                            //return the appropriate data object for the feature (.map puts them in array form)
+                            // "cache" the data object so we don't have to generate it again
+                            return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
+                        } else {
+                            //odd case where there is no feature data for graphic
+                            return undefined;
+                        }
+                        */
                     }));
                 }
             });
+
+            /*
+            //remove any bad rows
+            data = data.filter(function (elem) {
+                return typeof elem !== "undefined";
+            });
+            */
 
             updateRecordsCount(data.length);
 
@@ -1533,7 +1551,7 @@ define([
         function getGraphicFromFData(fData) {
             //TODO move this into graphicExtension?  check for RampMap import circular reference.
 
-            var layerId = fData.parent.layerId,            
+            var layerId = fData.parent.layerId,
                 oid = GraphicExtension.getFDataOid(fData),
                 featureLayer = RampMap.getFeatureLayer(layerId),
 
@@ -1555,11 +1573,10 @@ define([
         */
         function getFDataFromButton(buttonNode) {
             var layerId = buttonNode.data(layerIdField),
-            // Need to parse the index into an integer since it
-            // comes as a String
-                oid = parseInt(buttonNode.data(featureOidField)),
+                oid = buttonNode.data(featureOidField),
                 layerData = RAMP.data[layerId];
 
+            //since button.data returns in string format, we don't need to convert the oid to a string for the index
             return layerData.features[layerData.index[oid]];
         }
 
@@ -1581,9 +1598,9 @@ define([
                     if (idx === -1 && event.state) {
                         // add
                         invisibleLayerToggleOn.push(event.id);
-                    }else if (idx !== -1 && !event.state) {
+                    } else if (idx !== -1 && !event.state) {
                         // remove
-                        invisibleLayerToggleOn.splice(idx,1);
+                        invisibleLayerToggleOn.splice(idx, 1);
                     }
                 }
             });

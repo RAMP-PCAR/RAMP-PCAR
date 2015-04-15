@@ -15,10 +15,10 @@
 * specific event.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class FeatureClickHandler
 * @static
 * @uses dojo/topic
@@ -59,42 +59,45 @@ define([
                 var selectedGraphic = evt.graphic,
                     fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
 
-                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                    panelName: i18n.t('datagrid.details'),
-                    title: GraphicExtension.getFDataTitle(fData),
-                    content: GraphicExtension.getFDataTextContent(fData),
-                    target: $("#map-div"),
-                    origin: "rampPopup",
-                    consumeOrigin: "datagrid",
-                    guid: UtilMisc.guid(),
-                    showChars: 70,
-                    doOnOpen: function () {
-                        //topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                        //    graphic: selectedGraphic
-                        //});
+                //TODO how best to handle a lack of attribute data for a graphic?
+                if (fData) {
+                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                        panelName: i18n.t('datagrid.details'),
+                        title: GraphicExtension.getFDataTitle(fData),
+                        content: GraphicExtension.getFDataTextContent(fData),
+                        target: $("#map-div"),
+                        origin: "rampPopup",
+                        consumeOrigin: "datagrid",
+                        guid: UtilMisc.guid(),
+                        showChars: 70,
+                        doOnOpen: function () {
+                            //topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
+                            //    graphic: selectedGraphic
+                            //});
 
-                        UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
-                            var scroll = evt.scroll;
-                            topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                fData: fData,
-                                scroll: scroll
+                            UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
+                                var scroll = evt.scroll;
+                                topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
+                                    fData: fData,
+                                    scroll: scroll
+                                });
                             });
-                        });
 
-                        // Note: the following will in turn trigger maptip/showInteractive
-                        topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                            graphic: selectedGraphic
-                        });
-                    },
-                    doOnHide: function () {
-                        topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
-                    },
-                    doOnDestroy: function () {
-                        selectedGraphic = null;
+                            // Note: the following will in turn trigger maptip/showInteractive
+                            topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
+                                graphic: selectedGraphic
+                            });
+                        },
+                        doOnHide: function () {
+                            topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
+                        },
+                        doOnDestroy: function () {
+                            selectedGraphic = null;
 
-                        //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
-                    }
-                });
+                            //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
+                        }
+                    });
+                }
             },
 
             /**
