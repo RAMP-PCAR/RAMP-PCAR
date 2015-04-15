@@ -14,16 +14,17 @@
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Ramp"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "AttributeLoader"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Ramp"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -43,7 +44,7 @@ define([
 
 /* RAMP */
 "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
-"ramp/filterManager", "ramp/layerItem",
+"ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader",
 
 /* Util */
 "utils/util"],
@@ -57,7 +58,7 @@ define([
 
     /* RAMP */
     EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
-    FilterManager, LayerItem,
+    FilterManager, LayerItem, AttributeLoader,
 
      /* Util */
     UtilMisc) {
@@ -278,6 +279,9 @@ define([
 
                 case GlobalStorage.layerType.feature:
 
+                    //initiate the feature data download
+                    AttributeLoader.loadAttributeData(layer.id, layer.url, layer.ramp.type);
+
                     //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
 
                     //wire up click handler
@@ -384,12 +388,12 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-                
+
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
                     // generic error notice
-                    errorMessage  = i18n.t("filterManager.notices.error.load"),
+                    errorMessage = i18n.t("filterManager.notices.error.load"),
                     options;
 
                 //get that failed layer outta here
@@ -435,7 +439,7 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -532,10 +536,10 @@ define([
                     idArray,
                     cleanIdArray;
 
-               removeFromMap(evt.layerId);
+                removeFromMap(evt.layerId);
 
-               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
-             
+                curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+
                 if (curlayer) {
                     inMap = true;
                 } else {
