@@ -11,14 +11,13 @@
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
 *
 * @class TmplUtil
 * @static
 */
 
-define(["ramp/globalStorage", "ramp/graphicExtension"],
-    function (GlobalStorage, GraphicExtension) {
+define(["ramp/globalStorage"],
+    function (GlobalStorage) {
         "use strict";
 
         return {
@@ -126,7 +125,9 @@ define(["ramp/globalStorage", "ramp/graphicExtension"],
             * @return {Integer} objectId
             */
             getObjectId: function (fData) {
-                return GraphicExtension.getFDataOid(fData);               
+                //circular reference prevents us from using GraphicExtension.getFDataOid
+                //duplicate logic locally
+                return fData.attributes[fData.parent.idField];
             },
 
             /*

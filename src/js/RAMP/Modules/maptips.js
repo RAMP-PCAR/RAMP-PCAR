@@ -165,7 +165,7 @@ define([
             //because of highlight layer tricks, don't use the standard GraphicExtension methods here to get the feature data
             lData = RAMP.data[layerId];
             if (lData) {
-                fData = lData.index[graphic.attributes[lData.idField].toString()];
+                fData = lData.features[lData.index[graphic.attributes[lData.idField].toString()]];
 
                 datawrapper = TmplHelper.dataBuilder(fData, layerConfig);
                 maptipContent = tmpl(templateKey, datawrapper);

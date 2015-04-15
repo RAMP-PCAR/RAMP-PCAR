@@ -97,7 +97,15 @@ define([
             * @return {Object} layer config node
             */
             getConfigForFData: function (fData) {
-                return Ramp.getLayerConfigWithId(fData.parent.layerId);
+                //DOJO circular reference nonsense not letting us use the Ramp module.  will duplicate the function locally :'(
+                //return Ramp.getLayerConfigWithId(fData.parent.layerId);
+
+                return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature),
+                    function (layerConfig) {
+                        return layerConfig.id === fData.parent.layerId;
+                    });
+
+                
             },
 
             /**

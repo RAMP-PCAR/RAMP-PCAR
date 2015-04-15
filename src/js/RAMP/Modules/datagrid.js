@@ -331,7 +331,14 @@ define([
                     var obj = row.last(),
                         datagridMode = ui.getDatagridMode(),
                         tmplData,
-                        layerConfig = GraphicExtension.getConfigForFData(obj.fData);
+                            layerConfig;
+
+                    if (!obj || !obj.fData) {
+                        //weird case where grid tries to render on non-existant row
+                        return "";
+                    }
+
+                    layerConfig = GraphicExtension.getConfigForFData(obj.fData);
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (!(datagridMode in obj)) {
@@ -1298,14 +1305,16 @@ define([
             var elements = oTable.rows().data();
             featureToPage = {};
             $.each(elements, function (idx, val) {
-                var layer = val.last().layerId,
-                    fid = GraphicExtension.getFDataOid(val.last().fData);
+                if (val.last()) {
+                    var layer = val.last().layerId,
+                        fid = GraphicExtension.getFDataOid(val.last().fData);
 
-                if (!(layer in featureToPage)) {
-                    featureToPage[layer] = {
-                    };
+                    if (!(layer in featureToPage)) {
+                        featureToPage[layer] = {
+                        };
+                    }
+                    featureToPage[layer][fid] = idx;
                 }
-                featureToPage[layer][fid] = idx;
             });
         }
 
