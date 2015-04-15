@@ -1566,11 +1566,21 @@ define([
             var layerId = fData.parent.layerId,
                 oid = GraphicExtension.getFDataOid(fData),
                 featureLayer = RampMap.getFeatureLayer(layerId),
+                graphic;
 
-                graphic = UtilArray.binaryFind(featureLayer.graphics,
-                    function (a_graphic) {
-                        return GraphicExtension.getGraphicOid(a_graphic) - oid;
-                    });
+            //with ondemand layers, graphics arrays are no longer guaranteed to be sorted by objectid.
+            //we only use this to find graphics when clicking the details / zoom button, so speed loss isn't felt often
+            /*
+            graphic = UtilArray.binaryFind(featureLayer.graphics,
+                function (a_graphic) {
+                    return GraphicExtension.getGraphicOid(a_graphic) - oid;
+                });
+                */
+
+            graphic = UtilArray.find(featureLayer.graphics,
+                function (a_graphic) {
+                    return GraphicExtension.getGraphicOid(a_graphic) === oid;
+                });
 
             return graphic;
         }
