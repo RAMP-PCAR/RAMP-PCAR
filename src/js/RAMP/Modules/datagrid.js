@@ -107,8 +107,7 @@ define([
 
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
-            //layerConfig,
-            gridConfig,
+            currentRowsPerPage = 1, //keeps track of the rows-per-page of the active grid
 
             /**
             * The jquery table
@@ -185,7 +184,7 @@ define([
                         navigateToRow: function () {
                             if (index !== -1) {
                                 // Figure out which page the entry is in and navigate to that page
-                                var page = Math.floor(index / gridConfig.rowsPerPage);
+                                var page = Math.floor(index / currentRowsPerPage);
                                 if (oTable.page() !== page) {
                                     // False tells draw not to navigate to the first page
                                     jqgrid.DataTable().page(page).draw(false);
@@ -239,7 +238,7 @@ define([
                         * @return {{node: jObject, page: number}} A row node that displays graphic information. If none found, returns an object with empty jNode.
                         */
                         getNode: function () {
-                            return $(String.format("#jqgrid tbody tr:nth-child({0})", index % gridConfig.rowsPerPage + 1));
+                            return $(String.format("#jqgrid tbody tr:nth-child({0})", index % currentRowsPerPage + 1));
                         },
 
                         /**
@@ -410,7 +409,6 @@ define([
                             pagingType: "ramp", //"full_numbers",
                             scrollX: true,
                             destroy: true,
-                            pageLength: gridConfig.rowsPerPage,
                             language: i18n.t("datagrid.gridstrings", { returnObjectTrees: true }),
                             getTotalRecords: function () {
                                 return totalRecords;
@@ -418,6 +416,7 @@ define([
                         };
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
+                        currentRowsPerPage = RAMP.config.rowsPerPage;
                         tableOptions = lang.mixin(tableOptions,
                             {
                                 columns: [{
@@ -429,15 +428,18 @@ define([
                                     orderable: true
                                 }],
                                 dom: '<"jqgrid_table_wrapper summary-table"t><"status-line"p>',
-                                searching: true
+                                searching: true,
+                                pageLength: currentRowsPerPage
                             }
                         );
                     } else {
                         //layout for variable column (extended grid)
                         //grab config for active dataset and generate a table layout based on gridColumns
+                        var focusConfig = Ramp.getLayerConfigWithId(ui.getSelectedDatasetId());
+                        currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(focusConfig.datagrid.gridColumns, function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -449,7 +451,8 @@ define([
                                 }),
                                 dom: '<"jqgrid_table_wrapper full-table"t><"datagrid-info-notice simple"><"status-line"p>',
                                 scrollY: "500px", // just a placeholder; it will be dynamically updated later
-                                searching: RAMP.config.extendedDatagridExtentFilterEnabled
+                                searching: RAMP.config.extendedDatagridExtentFilterEnabled,
+                                pageLength: currentRowsPerPage
                             }
                         );
                     }
@@ -1687,27 +1690,9 @@ define([
             * @method init
             */
             init: function () {
-                // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
-                    return !layerConfig.isStatic;
-                });
+                initListeners();
 
-                if (layerConfigs.length !== 0) {
-                    // layerConfig = config.featureLayers;
-                    //TODO we are using this for rowsPerPage.  need to change that!
-                    gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
-
-                    /*
-                    $.fn.dataTable.ext.search.push(
-                        function (settings, data, dataIndex) {
-                            return data[0].indexOf("Water Regions") > -1;
-                        }
-                    );*/
-
-                    initListeners();
-
-                    ui.init();
-                }
+                ui.init();
             } //InitDataGrid
         };
     });
