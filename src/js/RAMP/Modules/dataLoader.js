@@ -13,14 +13,14 @@
 * API.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "LayerLoader"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "LayerLoader"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
 * {{#crossLink "Util"}}{{/crossLink}}
-* 
+*
 * @class DataLoader
 * @static
-* @uses dojo/Deferred 
+* @uses dojo/Deferred
 * @uses dojo/query
 * @uses dojo/_base/array
 * @uses esri/request
@@ -105,7 +105,7 @@ define([
                                 // jshint bitwise:true
                             }
 
-                            return buf.slice(0,j);
+                            return buf.slice(0, j);
                         }
 
                         if (args.type === 'binary') {
@@ -352,7 +352,7 @@ define([
             };
 
             dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon', { orderable: false }));
-            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button',{ orderable: false }));
+            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button', { orderable: false }));
 
             if (fields && fields.length) {
                 fields.forEach(function (field, idx) {
@@ -444,7 +444,7 @@ define([
 
         /**
          * Scan a geojson fragment and if plugins are available attempt to load new projection information
-         * 
+         *
          */
         function scanCrs(geoJson) {
             if (!geoJson.crs || geoJson.crs.type !== 'name') { return; }
@@ -545,15 +545,15 @@ define([
         function enhanceFileFeatureLayer(featureLayer, opts) {
             //make a minimal config object for this layer
             var newConfig = {
-                    id: featureLayer.id,
-                    displayName: opts.datasetName,
-                    nameField: opts.nameField,
-                    symbology: {
-                        type: "simple",
-                        imageUrl: opts.icon
-                    },
-                    datagrid: createDatagridConfig(opts.fields)
+                id: featureLayer.id,
+                displayName: opts.datasetName,
+                nameField: opts.nameField,
+                symbology: {
+                    type: "simple",
+                    imageUrl: opts.icon
                 },
+                datagrid: createDatagridConfig(opts.fields)
+            },
                 defaultRenderers = GlobalStorage.DefaultRenderers;
 
             //backfill the rest of the config object with default values

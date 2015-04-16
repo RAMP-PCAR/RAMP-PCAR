@@ -280,7 +280,13 @@ define([
                 case GlobalStorage.layerType.feature:
 
                     //initiate the feature data download
-                    AttributeLoader.loadAttributeData(layer.id, layer.url, layer.ramp.type);
+                    if (layer.url) {
+                        //service based. get feature data from the service
+                        AttributeLoader.loadAttributeData(layer.id, layer.url, layer.ramp.type);
+                    } else {
+                        //file based. scrape data from the layer
+                        AttributeLoader.extractAttributeData(layer);
+                    }
 
                     //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
 
@@ -432,7 +438,7 @@ define([
             },
 
             /**
-            * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
+            * Rettcts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
             * @method onLayerUpdateEnd
             * @param  {Object} evt

@@ -41,13 +41,33 @@ define([
         "use strict";
 
         /**
+        * Will generate object id indexes and parent pointers on a layer data object.
+        * Assumes data object already has features and object id field defined
+        *
+        * @method enhanceData
+        * @private
+        * @param  {Object} layerData layer data object        
+        */
+        function enhanceData(layerData) {
+            //make parent pointers and a fun index on object id
+            layerData.features.forEach(function (elem, idx) {
+                //map object id to index of object in feature array
+                //use toString, as objectid is integer and will act funny using array notation.
+                layerData.index[elem.attributes[layerData.idField].toString()] = idx;
+
+                //pointer back to parent
+                elem.parent = layerData;
+            });
+        }
+
+        /**
         * Will download the attribute data for a layer.
         *
         * @method loadAttributeData
         * @private
         * @param  {String} layerId id of the layer
         * @param  {String} layerUrl the URL of the layer
-        * @param  {String} layerType type of the layer. should be a value from GlobalStorage.layerType       
+        * @param  {String} layerType type of the layer. should be a value from GlobalStorage.layerType
         */
         function loadAttributeData(layerId, layerUrl, layerType) {
             switch (layerType) {
@@ -64,7 +84,7 @@ define([
                     function (result) {
                         //change to standard format and store.
                         //TODO change if we decide on a non-esri standard format
-                        var attribData = {
+                        var layerData = {
                             layerId: layerId,
                             features: result.features,
                             index: {}
@@ -75,24 +95,16 @@ define([
                         //find object id field
                         result.fields.every(function (elem) {
                             if (elem.type === 'esriFieldTypeOID') {
-                                attribData.idField = elem.name;
+                                layerData.idField = elem.name;
                                 return false; //break the loop
                             }
                             return true; //keep looping
                         });
 
-                        //make parent pointers and a fun index on object id
-                        attribData.features.forEach(function (elem, idx) {
-                            //map object id to index of object in feature array
-                            //use toString, as objectid is integer and will act funny using array notation.
-                            attribData.index[elem.attributes[attribData.idField].toString()] = idx;
-
-                            //pointer back to parent
-                            elem.parent = attribData;
-                        });
+                        enhanceData(layerData);
 
                         //store attribData
-                        RAMP.data[layerId] = attribData;
+                        RAMP.data[layerId] = layerData;
                         //new data. tell grid to reload
                         topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         console.log('END ATTRIB LOAD: ' + layerId);
@@ -107,10 +119,55 @@ define([
                     console.log("Layer type not supported by attribute loader: " + layerType);
             }
 
-            //TODO do we need to return any sort of promise to indicate when the loading has finished?          
+            //TODO do we need to return any sort of promise to indicate when the loading has finished?
+        }
+
+        /**
+        * Will extract the attribute data from a file based layer.
+        *
+        * @method extractAttributeData
+        * @private
+        * @param  {Object} layer the layer object
+        */
+        function extractAttributeData(layer) {
+            switch (layer.ramp.type) {
+                case GlobalStorage.layerType.feature:
+
+                    //change to standard format and store.
+                    //TODO change if we decide on a non-esri standard format
+                    var layerData = {
+                        layerId: layer.id,
+                        features: [],
+                        index: {},
+                        idField: layer.objectIdField
+                    };
+
+                    //TODO consider having the following stuff in a different function, that can be called when file based stuff is loaded.
+
+                    //find object id field
+                    layerData.features = layer.graphics.map(function (elem) {
+                        return { attributes: elem.attributes };
+                    });
+
+                    enhanceData(layerData);
+
+                    //store attribData
+                    RAMP.data[layer.id] = layerData;
+                    //new data. tell grid to reload
+                    topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                    console.log('END ATTRIB LOAD: ' + layer.id);
+
+                    break;
+
+                default:
+                    console.log("Layer type not supported by attribute extractor: " + layer.ramp.type);
+            }
+
+            //TODO do we need to return any sort of promise to indicate when the loading has finished?
         }
 
         return {
-            loadAttributeData: loadAttributeData
+            loadAttributeData: loadAttributeData,
+            extractAttributeData: extractAttributeData
         };
     });
