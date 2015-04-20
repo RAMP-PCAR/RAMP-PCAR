@@ -1,4 +1,4 @@
-﻿/*global define, tmpl, i18n, console, $, RAMP, alert */
+﻿/*global define, tmpl, i18n, console, $, RAMP */
 
 /**
 * FilterManager submodule
@@ -507,8 +507,7 @@ define([
 
                                 metadataClickHandler(this.target);
                             } else {
-                                alert("Metadata: coming soon!");
-                                //metadataClickHandler(this.target);
+                                metadataClickHandler(this.target);
 
                                 d.resolve();
                             }

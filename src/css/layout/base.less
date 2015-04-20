@@ -5,7 +5,7 @@
 main {
     position: absolute;
     top: @header-height;
-    bottom: 100px !important;
+    bottom: 30px;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -25,8 +25,6 @@ html {
 
 body {
     height: 100%;
-    background: @stars repeat;
-    font-family: 'Comic Sans MS', sans-serif;
 }
 
 .cn-site-title-italic {
@@ -42,15 +40,18 @@ body {
     visibility: hidden;
 }
 
+main,
 .nvbar,
 #wb-bc > .container,
 #wb-bnr > .container,
-#wb-bar > .container {
+#wb-bar > .container,
+footer {
     width: 100% !important;
 }
 
 #wb-sttl .ramp-brand {
-    width: auto;
+    display: table;
+    width: 100%;
     margin-left: 1px;
 
     > img {
@@ -67,8 +68,6 @@ body {
     text-align: right;
     z-index: 1;
     margin: 0;
-    color: white;
-    font-weight: bold;
 }
 
 #gcwu-psnb-in, .mb-menu, /* menu and breadcrumb width reset */
@@ -79,8 +78,8 @@ body {
 }
 
 footer {
-    height: 30px !important;
-    bottom: 40px;
+    height: 30px;
+    bottom: 0;
     position: absolute;
     overflow: visible;
     border-top: 1px solid @medium-grey-color;
