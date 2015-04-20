@@ -136,7 +136,7 @@ define([
 
                         var strings = dojoArray.map(results, function (response, index) {
                             var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
-                                      RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response);
+                                      RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response,visibleLayers[index].wmsLayer.id);
                             return res;
                         });
 
