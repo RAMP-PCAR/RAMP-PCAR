@@ -68,6 +68,16 @@ RAMP = {
             sidePanelOpened: true,
             fullscreen: false,
             wmsQuery: true
+        },
+        hilite: { //tracks active hilights to allow them to refresh if feature graphics redraw at different resolution
+            click: {
+                objId: -1,
+                layerId: ''
+            },
+            zoom: {
+                objId: -1,
+                layerId: ''
+            }
         }
     },
 
@@ -93,26 +103,47 @@ RAMP = {
     * @property data
     * @type Object
     */
-    data: {}
+    data: {},
+
+    /**
+    * Store layer object.  Keyed by layer id, value layer object.
+    *
+    * @property layerRegistry
+    * @type Object
+    */
+    layerRegistry: {},
+
+    /**
+    * Store layer counts.  Used to accurately determine layer ordering and insertion positions in the map stack
+    * default basemap count to 1, as we always load 1 to begin with.
+    *
+    * @property layerCounts
+    * @type Object
+    */
+    layerCounts: {
+        feature: 0,
+        bb: 0,
+        wms: 0,
+        base: 1
+    }
 };
 
 var importScript = (function (oHead) {
-        'use strict';
+    'use strict';
 
-        function loadError (oError) {
-            throw new URIError("The script " + oError.target.src + " is not accessible.");
-        }
+    function loadError(oError) {
+        throw new URIError("The script " + oError.target.src + " is not accessible.");
+    }
 
-        return function (sSrc, fOnload) {
-            var oScript = document.createElement("script");
-            oScript.type = "text\/javascript";
-            oScript.onerror = loadError;
-            if (fOnload) { oScript.onload = fOnload; }
-                oHead.appendChild(oScript);
-                oScript.src = sSrc;
-            };
-
-    })(document.head || document.getElementsByTagName("head")[0]);
+    return function (sSrc, fOnload) {
+        var oScript = document.createElement("script");
+        oScript.type = "text\/javascript";
+        oScript.onerror = loadError;
+        if (fOnload) { oScript.onload = fOnload; }
+        oHead.appendChild(oScript);
+        oScript.src = sSrc;
+    };
+})(document.head || document.getElementsByTagName("head")[0]);
 
 dojoConfig = {
     parseOnLoad: false,

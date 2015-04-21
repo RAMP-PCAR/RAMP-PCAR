@@ -19,6 +19,7 @@
 * {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
 * {{#crossLink "FilterManager"}}{{/crossLink}}
 * {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
 * {{#crossLink "LayerItem"}}{{/crossLink}}
 * {{#crossLink "Map"}}{{/crossLink}}
 * {{#crossLink "MapClickHandler"}}{{/crossLink}}
@@ -44,7 +45,7 @@ define([
 
 /* RAMP */
 "ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
-"ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader",
+"ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader", "ramp/graphicExtension",
 
 /* Util */
 "utils/util"],
@@ -58,7 +59,7 @@ define([
 
     /* RAMP */
     EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
-    FilterManager, LayerItem, AttributeLoader,
+    FilterManager, LayerItem, AttributeLoader, GraphicExtension,
 
      /* Util */
     UtilMisc) {
@@ -100,6 +101,27 @@ define([
 
             //set layer selector to new state
             FilterManager.setLayerState(layerId, newState, options);
+        }
+
+        /**
+        * Determines if the layer has an active hilight for the highlight type (defined by the state).
+        *
+        * @method isValidHilight
+        * @private
+        * @param  {Object} layer map layer object
+        * @param  {Object} state the state of a highlight (defines if active and layer it applies to)
+        * @returns {Boolean} if layer has valid highlight
+        */
+        function isValidHilight(layer, state) {
+            var ret = false;
+            if (state.objId >= 0) {
+                //there is an active highlight
+                if (layer.id === state.layerId) {
+                    //it belongs to this layer
+                    ret = true;
+                }
+            }
+            return ret;
         }
 
         /**
@@ -364,18 +386,6 @@ define([
             * @method init
             */
             init: function () {
-                //counters for layers loaded, so we know where to insert things
-                //default basemap count to 1, as we always load 1 to begin with
-
-                RAMP.layerCounts = {
-                    feature: 0,
-                    bb: 0,
-                    wms: 0,
-                    base: 1
-                };
-
-                RAMP.layerRegistry = {};
-
                 topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, this.onLayerLoaded);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, this.onLayerUpdateEnd);
                 topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, this.onLayerUpdateStart);
@@ -436,15 +446,39 @@ define([
                 //console.log("LAYER UPDATE START: " + evt.layer.url);
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.UPDATING, true);
             },
-
+            /*
+            x: function () {
+                GraphicExtension.getGraphicTitle(undefined);
+                UtilArray.find(undefined);
+            },
+            */
             /**
-            * Rettcts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
+            * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
             * @method onLayerUpdateEnd
             * @param  {Object} evt
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
+                var g;
+
+                //check if we have any active highlites for this layer
+                if (isValidHilight(evt.layer, RAMP.state.hilite.click)) {
+                    //re-request the click hilight
+                    g = GraphicExtension.findGraphic(RAMP.state.hilite.click.objId, evt.layer.id);
+                    topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
+                        graphic: g
+                    });
+                }
+
+                if (isValidHilight(evt.layer, RAMP.state.hilite.zoom)) {
+                    //re-request the zoom hilight
+                    g = GraphicExtension.findGraphic(RAMP.state.hilite.zoom.objId, evt.layer.id);
+                    topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
+                        graphic: g
+                    });
+                }
+
                 //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {

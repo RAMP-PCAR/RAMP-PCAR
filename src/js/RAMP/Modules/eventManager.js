@@ -293,7 +293,9 @@ define([],
                 *
                 * @event FeatureHighlighter.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
+
                 */
                 HIGHLIGHT_SHOW: "highlighter/highlight-show",
 
@@ -333,7 +335,8 @@ define([],
                 *
                 * @event FeatureHighlighter.ZOOMLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
                 */
                 ZOOMLIGHT_SHOW: "highlighter/zoomlight-show",
 

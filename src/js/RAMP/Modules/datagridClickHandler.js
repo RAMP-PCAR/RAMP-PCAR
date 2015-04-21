@@ -1,4 +1,4 @@
-﻿/*global define, i18n */
+﻿/*global define, i18n, RAMP */
 
 /**
 *
@@ -89,6 +89,8 @@ define([
                                 });
                             });
 
+                            RAMP.state.hilite.click.objId = GraphicExtension.getFDataOid(fData);
+                            RAMP.state.hilite.click.layerId = fData.parent.layerId;
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
                                 graphic: selectedGraphic
                             });
@@ -165,6 +167,8 @@ define([
                 zoomBackExtent = currentExtent;
 
                 function callback() {
+                    RAMP.state.hilite.zoom.objId = GraphicExtension.getFDataOid(fData);
+                    RAMP.state.hilite.zoom.layerId = fData.parent.layerId;
                     topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
                         graphic: zoomToGraphic
                     });

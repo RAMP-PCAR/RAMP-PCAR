@@ -104,8 +104,6 @@ define([
                     function (layerConfig) {
                         return layerConfig.id === fData.parent.layerId;
                     });
-
-                
             },
 
             /**
@@ -123,7 +121,7 @@ define([
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
 
-                //grab the attribute data bound to this graphic               
+                //grab the attribute data bound to this graphic
                 var fData = this.getFDataForGraphic(graphic);
                 if (fData) {
                     var datawrapper = TmplHelper.dataBuilder(fData, graphic.getLayer().ramp.config);
@@ -171,7 +169,6 @@ define([
                     //rare case where graphic has no current feature data
                     return "";
                 }
-               
             },
 
             /**
@@ -183,6 +180,24 @@ define([
             */
             getFDataTitle: function (fData) {
                 return fData.attributes[this.getConfigForFData(fData).nameField];
+            },
+
+            /**
+            * Will find a graphic in a feature layer
+            *
+            * @method findGraphic
+            * @param {Integer} objectId an object id to find
+            * @param {String} layerId a feature layer id containing the graphic
+            * @return {esri/Graphic} graphic in the layer with the object id
+            */
+            findGraphic: function (objectId, layerId) {
+                var layer = RAMP.layerRegistry[layerId];
+
+                //with ondemand layers, graphics arrays are no longer guaranteed to be sorted by objectid.  we can no longer use binaryFind.
+                //we only use this to find graphics when clicking the details / zoom button, so speed loss isn't felt often
+                return UtilArray.find(layer.graphics, function (a_graphic) {
+                    return this.getGraphicOid(a_graphic) === objectId;
+                }, this);
             }
         };
     });

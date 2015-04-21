@@ -604,7 +604,7 @@ define([
                                 });
                             });
                         } else { // Zoom back
-                            DatagridClickHandler.onZoomBack(zoomToGraphic);
+                            DatagridClickHandler.onZoomBack();
                             zoomNode.text(i18n.t("datagrid.zoomTo"));
 
                             // Reset focus back to "Zoom To" link after map extent change
@@ -1565,25 +1565,10 @@ define([
         function getGraphicFromFData(fData) {
             //TODO move this into graphicExtension?  check for RampMap import circular reference.
 
-            var layerId = fData.parent.layerId,
-                oid = GraphicExtension.getFDataOid(fData),
-                featureLayer = RampMap.getFeatureLayer(layerId),
+            var oid = GraphicExtension.getFDataOid(fData),
                 graphic;
 
-            //with ondemand layers, graphics arrays are no longer guaranteed to be sorted by objectid.
-            //we only use this to find graphics when clicking the details / zoom button, so speed loss isn't felt often
-            /*
-            graphic = UtilArray.binaryFind(featureLayer.graphics,
-                function (a_graphic) {
-                    return GraphicExtension.getGraphicOid(a_graphic) - oid;
-                });
-                */
-
-            graphic = UtilArray.find(featureLayer.graphics,
-                function (a_graphic) {
-                    return GraphicExtension.getGraphicOid(a_graphic) === oid;
-                });
-
+            graphic = GraphicExtension.findGraphic(oid, fData.parent.layerId);
             return graphic;
         }
 

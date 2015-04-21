@@ -1,4 +1,4 @@
-﻿/* global define, i18n, $ */
+﻿/* global define, i18n, $, RAMP */
 
 /**
 *
@@ -84,6 +84,8 @@ define([
                             });
 
                             // Note: the following will in turn trigger maptip/showInteractive
+                            RAMP.state.hilite.click.objId = GraphicExtension.getFDataOid(fData);
+                            RAMP.state.hilite.click.layerId = fData.parent.layerId;
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
                                 graphic: selectedGraphic
                             });

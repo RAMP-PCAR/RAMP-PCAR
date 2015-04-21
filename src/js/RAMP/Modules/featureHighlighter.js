@@ -19,12 +19,12 @@
 * and changing the opacity of the `graphicGroup` while adding shapes to one or more of the additional group objects.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* 
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+*
 * @class FeatureHighlighter
 * @static
 * @uses dojo/_base/declare
@@ -169,6 +169,7 @@ define([
                 zoomLightHide();
                 highlightLayer.clear();
             }
+            RAMP.state.hilite.click.objId = -1;
         }
 
         /**
@@ -243,6 +244,7 @@ define([
                     });
                 }
             }
+            RAMP.state.hilite.zoom.objId = -1;
         }
 
         /**
@@ -261,7 +263,7 @@ define([
                     // TODO: Update Snap to the latest version
 
                     if (snapGraphic) {
-                        snapGraphic._.dirty = true; // (fixed in 0.1.1) dirty hack to a bug: https://github.com/adobe-webplatform/Snap.svg/issues/80 
+                        snapGraphic._.dirty = true; // (fixed in 0.1.1) dirty hack to a bug: https://github.com/adobe-webplatform/Snap.svg/issues/80
                         offset = snapGraphic.getBBox().width / 2;
 
                         topic.publish(EventManager.Maptips.REPOSITION_INTERACTIVE, {
