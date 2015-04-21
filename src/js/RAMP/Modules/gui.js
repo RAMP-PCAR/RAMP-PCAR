@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
+﻿/* global define, $, window, TweenLite, TimelineLite, i18n, console, jQuery, RAMP */
 /*jslint white: true */
 
 /**
@@ -65,7 +65,7 @@ define([
         subPanelTemplate,
 
     // Util
-        UtilMisc, utilDict, popupManager, tmplHelper) {
+        UtilMisc, utilDict, popupManager, TmplHelper) {
         "use strict";
 
         var jWindow = $(window),
@@ -73,12 +73,12 @@ define([
             sidePanelWbTabs = $("#panel-div > .wb-tabs"),
             sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
             sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
-                   
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
-
+            
             subPanels = {},
+            subPanelLoadingAnimation,
 
         // subPanelAttribute definition
 
@@ -371,7 +371,7 @@ define([
                 * Returns this SubPanel's container `div`.
                 *
                 * @method getContainer
-                * @return {jobject} This SubPanel's `div`
+                * @return {jObject} This SubPanel's `div`
                 */
                 getContainer: function () {
                     return this.container;
@@ -523,17 +523,14 @@ define([
 
                     dojoLang.mixin(this._attr, a);
 
-                    tmpl.cache = {};
-                    tmpl.templates = subPanelTemplate;
-
-                    subPanelString = tmpl(this._attr.templateKey,
+                    subPanelString = TmplHelper.template(this._attr.templateKey, 
                         dojoLang.mixin(
                             this._attr,
                             {
                                 closeTitle: i18n.t('gui.actions.close')
                             }
-                        )
-                    );
+                        ),
+                        subPanelTemplate);
 
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
@@ -575,7 +572,6 @@ define([
                 update: function (a) {
                     // helper functions
                     var animateContentDuration = 300,
-                        sOut = '<ul class="loadingAnimation"><li></li><li></li><li></li><li></li><li></li><li></li></ul>',
 
                         updateDefered = [new Deferred(), new Deferred()],
 
@@ -597,7 +593,7 @@ define([
                         },
 
                         setContent = function (node, oldData, newData, parsedData, visible, d) {
-                            newData = (newData === null) ? parsedData = sOut : newData;
+                            newData = (newData === null) ? parsedData = subPanelLoadingAnimation : newData;
                             if (newData) {
                                 if (newData !== oldData) {
                                     if (visible) {
@@ -1344,7 +1340,8 @@ define([
             load: function (id, req, load) {
                 // measure available space on every page resize
 
-                subPanelTemplate = JSON.parse(tmplHelper.stringifyTemplate(subPanelTemplate));
+                subPanelTemplate = JSON.parse(TmplHelper.stringifyTemplate(subPanelTemplate));
+                subPanelLoadingAnimation = TmplHelper.template('loading_simple', null, subPanelTemplate);
 
                 layoutController.init();
 
