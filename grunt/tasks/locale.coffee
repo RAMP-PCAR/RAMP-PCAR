@@ -4,21 +4,24 @@ module.exports = (grunt) ->
     deepCheck = (o1, o2) ->
         k1 = Object.keys(o1).sort()
         k2 = Object.keys(o2).sort()
+
+        console.log(k1)
         
         if k1.length != k2.length
             return false
         
         for key in k1
+            console.log(key)
             if o1.hasOwnProperty(key) != o2.hasOwnProperty(key)
                 return false
             else if typeof o1[key] != typeof o2[key]
                 return false
             
             if typeof o1[key] == 'object'
-                return deepCheck(o1[key], o2[key])
-            else
-                return true 
-                # o1[key] === o2[key] # use this for value comparison
+                if not deepCheck(o1[key], o2[key])
+                    return false
+        return true 
+        # o1[key] === o2[key] # use this for value comparison
 
     mergeLocale = (o1, o2, prefix) ->
         # Properties from the Souce1 object will be copied to Source2 Object.
