@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
+﻿/* global define, $, window, TweenLite, TimelineLite, i18n, console, jQuery, RAMP */
 /*jslint white: true */
 
 /**
@@ -523,17 +523,14 @@ define([
 
                     dojoLang.mixin(this._attr, a);
 
-                    tmpl.cache = {};
-                    tmpl.templates = subPanelTemplate;
-
-                    subPanelString = tmpl(this._attr.templateKey,
+                    subPanelString = TmplHelper.template(this._attr.templateKey, 
                         dojoLang.mixin(
                             this._attr,
                             {
                                 closeTitle: i18n.t('gui.actions.close')
                             }
-                        )
-                    );
+                        ),
+                        subPanelTemplate);
 
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
