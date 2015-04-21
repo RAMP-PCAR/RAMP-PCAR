@@ -1,4 +1,4 @@
-﻿/* global define, RAMP, console, i18n, $ */
+﻿/* global define, RAMP, console, i18n, $, document, window */
 
 /**
 * @module RAMP
@@ -40,9 +40,7 @@ define([
 
         "use strict";
         var wmsClickQueue = [], // the queue of WMS layers registered to trigger on click
-            esriMap, // a local reference to the map object (for pull extent and dimensions)
-            modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle')),
-            modalClose = '<button class="btn btn-primary popup-modal-dismiss" type="button">{0}</button>'.format(i18n.t('gui.actions.close'));
+            esriMap; // a local reference to the map object (for pull extent and dimensions)
 
         return {
 
@@ -55,6 +53,10 @@ define([
             * @param  {Object} map an EsriMap instance
             */
             init: function (map) {
+
+                var modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle')),
+                    modalClose = '<button class="btn btn-primary popup-modal-dismiss" type="button">{0}</button>'.format(i18n.t('gui.actions.close'));
+
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
                     var visibleLayers = [],
@@ -66,6 +68,7 @@ define([
 
                     // filter only currently visible layers
                     visibleLayers = wmsClickQueue.filter(function (wmsData) {
+                        console.log(wmsData.wmsLayer);
                         return wmsData.wmsLayer.visible;
                     });
 
@@ -142,8 +145,14 @@ define([
                             return res;
                         }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}{2}</div></section>'.format(modalHeader,strings,modalClose);
 
+                        $('.sub-panel').on('click', '#wms-expand', function () {
+                            $(document).trigger('open.wb-lbx', [{ src: '#wms-results-large', type: 'inline' }]);
+                            $('#wms-results-large').css('width', Math.round(window.innerWidth * 0.9) + 'px');
+                            $('#wms-results-large .modal-body').css('height', Math.round(window.innerHeight * 0.75) + 'px');
+                        });
+
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: '{0}{1}<a href="#wms-results-large" role="button" aria-controls="wms-results-large" class="wb-lbx lbx-modal">Expand</a>'.format(modalBox,strings),
+                            content: '{0}{1}<a id="wms-expand" href="#wms-results-large" role="button" aria-controls="wms-results-large">{2}</a>'.format(modalBox,strings,i18n.t('gui.actions.expand')),
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'

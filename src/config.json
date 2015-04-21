@@ -5,7 +5,7 @@
     "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "geonameUrl": "http://geogratis.gc.ca/services/geoname/",
-    "geolocationUrl":  "http://geogratis.gc.ca/services/geolocation/",
+    "geolocationUrl": "http://geogratis.gc.ca/services/geolocation/",
     "advancedToolbar": {
         "enabled": false,
         "tools": [
@@ -402,7 +402,7 @@
                 },
                 "aliasMap": {
                     "PRJ_ID": "Project ID",
-                    "CATEG_NAM_ENG":  "Category Name"
+                    "CATEG_NAM_ENG": "Category Name"
                 }
             },
             {
@@ -708,6 +708,18 @@
                     "parser": "windParse"
                 },
                 "settings": { "opacity": { "default": 0.4 } }
+            },
+            {
+                "id": "test_long",
+                "displayName": "Test",
+                "format": "image/jpeg",
+                "layerName": "0",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://services.aadnc-aandc.gc.ca/geomatics/services/Donnees_Ouvertes-Open_Data/Conseil_Tribal_Tribal_Council/MapServer/WmsServer",
+                "featureInfo": {
+                    "mimeType": "text/html",
+                    "parser": "htmlRawParse"
+                }
             },
             {
                 "id": "geomet_temp",
