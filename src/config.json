@@ -710,18 +710,6 @@
                 "settings": { "opacity": { "default": 0.4 } }
             },
             {
-                "id": "test_long",
-                "displayName": "Test",
-                "format": "image/jpeg",
-                "layerName": "0",
-                "imageUrl": "assets/images/wms.png",
-                "url": "http://services.aadnc-aandc.gc.ca/geomatics/services/Donnees_Ouvertes-Open_Data/Conseil_Tribal_Tribal_Council/MapServer/WmsServer",
-                "featureInfo": {
-                    "mimeType": "text/html",
-                    "parser": "htmlRawParse"
-                }
-            },
-            {
                 "id": "geomet_temp",
                 "displayName": "@@config.layers.wms.geomet_temp.displayName",
                 "format": "image/jpeg",
