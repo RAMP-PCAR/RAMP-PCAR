@@ -66,10 +66,10 @@ define([
                         return;
                     }
 
+                    console.log(RAMP.layerRegistry);
                     // filter only currently visible layers
                     visibleLayers = wmsClickQueue.filter(function (wmsData) {
-                        console.log(wmsData.wmsLayer);
-                        return wmsData.wmsLayer.visible;
+                        return wmsData.wmsLayer.visible && wmsData.wmsLayer.id in RAMP.layerRegistry && RAMP.layerRegistry[wmsData.wmsLayer.id];
                     });
 
                     // if no visible layers return early and do not open the panel
