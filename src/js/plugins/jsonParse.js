@@ -5,7 +5,6 @@ RAMP.plugins.featureInfoParser.jsonParse = function (data, layerId) {
     'use strict';
     var summary, txArea;
 
-    data = { a: 1, b: '2', c: true, d: [1, 2, 3], e: { f: 1, g: 2 }, h: layerId };
     if (typeof data === 'string') {
         data = JSON.parse(data);
     }
