@@ -223,6 +223,9 @@ define([
             //object to make state decisions
             map.addLayer(layer, insertIdx);
 
+            // publish LAYER_ADDED event for every user-added layer
+            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
+
             //derive initial state
             switch (layer.ramp.load.state) {
                 case "loaded":

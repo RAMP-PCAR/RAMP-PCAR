@@ -108,18 +108,16 @@
                                             <h3>{{t "mapExport.error.generalTitle"}}</h3>
                                             <p>{{t "mapExport.error.generalMessage"}}</p>
                                         </section>
-                                    <div class="sk-spinner sk-spinner-chasing-dots">
-                                        <div class="sk-dot1"></div>
-                                        <div class="sk-dot2"></div>
-                                    </div>
-                                    <span class="wb-inv">{{t "mapExport.loading"}}</span>
+                                    {{>loadingsimple}}
                                 </div>
                                 <div class="map-export-image">
                                     <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" alt="">
                                 </div>
                             </div>
                             <div class="map-export-controls">
-                                <h2 class="mrgn-tp-sm mrgn-bttm-sm page-header h3">{{t "mapExport.title"}}</h2>
+                                <header>
+                                    <h2 class="mrgn-tp-sm mrgn-bttm-md h3">{{t "mapExport.title"}}</h2>
+                                </header>
                                 <button class="button-none button-close _tooltip popup-modal-dismiss" title="{{t "gui.actions.close"}}">
                                     <span class="wb-invisible">{{t "gui.actions.close"}}</span>
                                 </button>
@@ -180,11 +178,7 @@
                     </div>
                 </div>
                 <div id="map-load-indicator" class="">
-                    <span>{{t "map.loadingTitle"}}</span><ul>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                    </ul>
+                    {{>loadingsimple}}
                 </div>
             </div>
         </div>
@@ -203,14 +197,9 @@
                         </h2>-->
                         <div id="searchMapSectionBody">
                             <!--LAYER SELECTION BEGINS-->
-                            <ul class="loadingAnimation">
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
+                            <div class="loadingAnimation">
+                                {{>loadingsimple}}
+                            </div>
                             <!--LAYER SECTION END-->
                         </div>
                     <!--</div>-->
@@ -219,14 +208,9 @@
                 <details id="tabs1_2" data-panel-name="datagrid">
                     <summary class="">{{t "datagrid.dataTabTitle"}}</summary>
                     <div id="gridpane">
-                        <ul class="loadingAnimation">
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                        </ul>
+                        <div class="loadingAnimation">
+                            {{>loadingsimple}}
+                        </div>
                     </div>
                 </details>
             </div>
