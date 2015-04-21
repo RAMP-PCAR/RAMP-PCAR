@@ -1,4 +1,4 @@
-﻿/*global define, $, window, TweenLite, TimelineLite, tmpl, i18n, console, jQuery, RAMP */
+﻿/* global define, $, window, TweenLite, TimelineLite, i18n, console, jQuery, RAMP */
 /*jslint white: true */
 
 /**
@@ -65,7 +65,7 @@ define([
         subPanelTemplate,
 
     // Util
-        UtilMisc, utilDict, popupManager, tmplHelper) {
+        UtilMisc, utilDict, popupManager, TmplHelper) {
         "use strict";
 
         var jWindow = $(window),
@@ -73,12 +73,12 @@ define([
             sidePanelWbTabs = $("#panel-div > .wb-tabs"),
             sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
             sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
-                   
 
             mapContent = $("#mapContent"),
             loadIndicator = mapContent.find("#map-load-indicator"),
 
             subPanels = {},
+            subPanelLoadingAnimation,
 
         // subPanelAttribute definition
 
@@ -371,7 +371,7 @@ define([
                 * Returns this SubPanel's container `div`.
                 *
                 * @method getContainer
-                * @return {jobject} This SubPanel's `div`
+                * @return {jObject} This SubPanel's `div`
                 */
                 getContainer: function () {
                     return this.container;
@@ -523,17 +523,14 @@ define([
 
                     dojoLang.mixin(this._attr, a);
 
-                    tmpl.cache = {};
-                    tmpl.templates = subPanelTemplate;
-
-                    subPanelString = tmpl(this._attr.templateKey,
+                    subPanelString = TmplHelper.template(this._attr.templateKey,
                         dojoLang.mixin(
                             this._attr,
                             {
                                 closeTitle: i18n.t('gui.actions.close')
                             }
-                        )
-                    );
+                        ),
+                        subPanelTemplate);
 
                     this.container = $(subPanelString).insertAfter(this._attr.target);
                     this.panel = this.container.find(".sub-panel");
@@ -575,7 +572,6 @@ define([
                 update: function (a) {
                     // helper functions
                     var animateContentDuration = 300,
-                        sOut = '<ul class="loadingAnimation"><li></li><li></li><li></li><li></li><li></li><li></li></ul>',
 
                         updateDefered = [new Deferred(), new Deferred()],
 
@@ -597,7 +593,7 @@ define([
                         },
 
                         setContent = function (node, oldData, newData, parsedData, visible, d) {
-                            newData = (newData === null) ? parsedData = sOut : newData;
+                            newData = (newData === null) ? parsedData = subPanelLoadingAnimation : newData;
                             if (newData) {
                                 if (newData !== oldData) {
                                     if (visible) {
@@ -757,6 +753,9 @@ define([
 
                         //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+
+                        // kill key events to stop tab switching when the other tab is hidden
+                        panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     },
                     onReverseComplete: function () {
                         viewport.removeClass("full-data-mode");
@@ -778,10 +777,23 @@ define([
 
                         //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        // restore key events
+                        panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     }
                 }),
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
                 fullDataSubpanelChangeTimeLine = new TimelineLite({ paused: true }),
+                noDataTimeLine = new TimelineLite({
+                    paused: true,
+                    onComplete: function () {
+                        // kill key events to stop tab switching when the other tab is hidden
+                        panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                    },
+                    onReverseComplete: function () {
+                        // restore key events
+                        panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                    }
+                }),
 
                 // timeline generating functions
                 createFullDataTL,
@@ -850,6 +862,13 @@ define([
                     generator: createFullDataSubpanelChangeTL
                 }
             ];
+
+            // timeline that hides Data tab
+            noDataTimeLine
+                .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
+                .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
+                .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+            ;
 
             /**
             * Fires an event when the layout of the page changes.
@@ -967,7 +986,7 @@ define([
             * @private
             */
             function _toggleFullDataMode(fullData) {
-                _isFullData = UtilMisc.isUndefined(fullData) ? !_isFullData : fullData;
+                _isFullData = typeof fullData === 'boolean' ? fullData : !_isFullData;
 
                 // if the timeline duration is 0, reset it
                 // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when creating timelines
@@ -1079,6 +1098,20 @@ define([
                 */
                 toggleFullScreenMode: function (fullscreen) {
                     fullScreenPopup.toggle(null, fullscreen);
+                },
+
+                /**
+                 * Toggles the visibility of Data tab in the side panel
+                 * 
+                 * @method toggleDataTab
+                 * @param  {Boolean} open true - show; false - hide;
+                 */
+                toggleDataTab: function (open) {
+                    if (open) {
+                        noDataTimeLine.reverse();
+                    } else {
+                        noDataTimeLine.play();
+                    }
                 },
 
                 /**
@@ -1316,6 +1349,7 @@ define([
          * A helper method that fires WMS_QUERY_CHANGE event.
          * 
          * @method wmsQueryPopupHelper
+         * @private
          * @param {Object} d deferred to be resolved
          */
         function wmsQueryPopupHelper(d) {
@@ -1332,6 +1366,57 @@ define([
             d.resolve();
         }
 
+        /**
+         * Stops event propagation.
+         * 
+         * @method stopEventPropagation
+         * @private
+         */
+        function stopEventPropagation(event) {
+            event.stopPropagation();
+        }
+
+        /**
+         * A helper function that shows/hides Data tab if there some/none feature layers in the layer selector.
+         * 
+         * @method autoHideDataTab
+         * @private
+         */
+        function autoHideDataTab() {
+            // initialize to the correct state (this might be happening after some layers have already loaded)
+            if (RAMP.layerRegistry) {
+                var features = Object
+                    .keys(RAMP.layerRegistry)
+                    .some(function (layer) {
+                        return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.feature;
+                    })
+                ;
+
+                if (features) {
+                    layoutController.toggleDataTab();
+                }
+            }
+            
+            // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
+            topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
+                if (args.layer.ramp.type === GlobalStorage.layerType.feature) {
+                    layoutController.toggleDataTab(true);
+                }
+            });
+
+            // on each remove check if there are still feature layers in the layer list
+            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                var features = Object.keys(RAMP.layerRegistry).filter(function (layer) {
+                    var l = RAMP.layerRegistry[layer];
+                    return l ? l.ramp.type === GlobalStorage.layerType.feature : false;
+                });
+                console.log('features left (including the layer to be removed): ' + features.length);
+                if (features.length === 1) {
+                    layoutController.toggleDataTab();
+                }
+            });
+        }
+
         return {
             /**
             * Call load to initialize the GUI module.
@@ -1344,7 +1429,8 @@ define([
             load: function (id, req, load) {
                 // measure available space on every page resize
 
-                subPanelTemplate = JSON.parse(tmplHelper.stringifyTemplate(subPanelTemplate));
+                subPanelTemplate = JSON.parse(TmplHelper.stringifyTemplate(subPanelTemplate));
+                subPanelLoadingAnimation = TmplHelper.template('loading_simple', null, subPanelTemplate);
 
                 layoutController.init();
 
@@ -1398,11 +1484,46 @@ define([
                     }
                 );
 
+                if (RAMP.config.ui.mapQueryToggle.autoHide) {
+
+                    // initialize to the correct state (this might be happening after some layers have already loaded)
+                    if (RAMP.layerRegistry) {
+                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) { return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.wms; });
+                        if (wmses.length === 0) {
+                            wmsToggle.hide();
+                        } else {
+                            wmsToggle.show();
+                        }
+                    }
+
+                    // on each load if the layer is a WMS make sure the button is visible
+                    topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, function (args) {
+                        if (args.layer.ramp.type === GlobalStorage.layerType.wms) {
+                            wmsToggle.show();
+                        }
+                    });
+
+                    // on each remove check if there are still WMSes in the layer list
+                    topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                        if (wmsToggle.is(':hidden')) { return; }
+                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) {
+                            var l = RAMP.layerRegistry[layer];
+                            return l ? l.ramp.type === GlobalStorage.layerType.wms : false;
+                        });
+                        console.log('wmses left (including the layer to be removed): ' + wmses.length);
+                        if (wmses.length === 1) {
+                            wmsToggle.hide();
+                        }
+                    });
+                }
+
                 // if the query is disabled (from bookmarklink) toggle the button
                 if (!RAMP.state.ui.wmsQuery) {
                     wmsQueryPopup.open();
                 }
                 // WMS query end
+
+                autoHideDataTab();
 
                 //Start AddLayer popup controller
                 addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",
@@ -1505,15 +1626,14 @@ define([
                             captureSubPanel(na);
                         });
                     } else {
-                            dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
-                                na = Object.create(attr);
-                                na.consumeOrigin = element;
-                                captureSubPanel(na);
-                            });
+                        dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
+                            na = Object.create(attr);
+                            na.consumeOrigin = element;
+                            captureSubPanel(na);
+                        });
                     }
                 });
-                
-             
+
                 sidePanelTabList.find("li a").click(function () {
 
                     console.log("inside side panel tab list on click");

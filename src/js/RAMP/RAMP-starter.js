@@ -36,7 +36,8 @@ RAMP = {
      * @property configServiceURL
      * @type String
      */
-    configServiceURL: "http://localhost:5000/",
+    configServiceURL: "http://sncr01wbingsdv1.ncr.int.ec.gc.ca:8000/v1/",
+    // FIXME move the config service URL out of this file since it is now minified and appended to lib.js in the build
 
     /**
      * The RAMP application config, it should be treated as read only by all modules other than globalStorage and bootstrapper

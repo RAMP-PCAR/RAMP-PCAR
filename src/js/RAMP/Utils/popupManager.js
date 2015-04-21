@@ -462,7 +462,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open; false - close;
                 */
                 toggle: function (state) {
-                    state = UtilMisc.isUndefined(state) ? this.isOpen() : !state;
+                    state = typeof state === 'boolean' ? !state : this.isOpen();
                     if (state) {
                         this.close();
                     } else {

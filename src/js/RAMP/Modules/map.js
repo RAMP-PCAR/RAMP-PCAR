@@ -680,7 +680,7 @@ define([
         function prepLayer(layer, config, userLayer) {
             layer.ramp = {
                 config: config,
-                user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                user: typeof userLayer === 'boolean' ? userLayer : false,
                 load: {
                     state: "loading",
                     inLS: false,  //layer has entry in layer selector

@@ -19,8 +19,8 @@
 * @uses dojo/_base/lang
 */
 
-define(["dojo/_base/lang", "utils/util"],
-    function (lang, UtilMisc) {
+define(["dojo/_base/lang"],
+    function (lang) {
         "use strict";
 
         var body = $("body"),
@@ -82,7 +82,7 @@ define(["dojo/_base/lang", "utils/util"],
                     { top: layout.headerHeight, bottom: layout.footerHeight },
                     { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0);
 
-            isFullScreen = UtilMisc.isUndefined(fullscreen) ? !isFullScreen : fullscreen;
+            isFullScreen = typeof fullscreen === 'boolean' ? fullscreen : !isFullScreen ;
 
             if (isFullScreen) {
                 // need to tween datatables separately since it's very cumbersome to calculate their exact height - easier just to adjust height up/down by height gained when fullscreening the template

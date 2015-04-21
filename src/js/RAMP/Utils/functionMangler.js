@@ -58,7 +58,7 @@ define([
 
             var originalSubscribe = topic.subscribe;
             topic.subscribe = function (eventName, listener) {
-                if (UtilMisc.isUndefined(eventName)) {
+                if (!eventName) {
                     console.error("Trying to subscribe to an undefined event");
                     console.trace();
                 } else {

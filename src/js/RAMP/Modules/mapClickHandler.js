@@ -1,4 +1,4 @@
-﻿/* global define, RAMP, console, i18n, $ */
+﻿/* global define, RAMP, console, i18n, $, document, window */
 
 /**
 * @module RAMP
@@ -27,7 +27,7 @@ define([
     "ramp/eventManager",
 
 /* Dojo */
-    "esri/request", "dojo/promise/all", "dojo/_base/array", "dojo/topic"
+    "esri/request", "dojo/promise/all", "dojo/topic"
     ],
 
     function (
@@ -35,7 +35,7 @@ define([
     EventManager,
 
     /* Dojo */
-    EsriRequest, all, dojoArray, topic
+    EsriRequest, all, topic
     ) {
 
         "use strict";
@@ -53,6 +53,10 @@ define([
             * @param  {Object} map an EsriMap instance
             */
             init: function (map) {
+
+                var modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle')),
+                    modalClose = '<button class="btn btn-primary popup-modal-dismiss" type="button">{0}</button>'.format(i18n.t('gui.actions.close'));
+
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
                     var visibleLayers = [],
@@ -62,9 +66,10 @@ define([
                         return;
                     }
 
+                    console.log(RAMP.layerRegistry);
                     // filter only currently visible layers
-                    visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
-                        return wmsData.wmsLayer.visible;
+                    visibleLayers = wmsClickQueue.filter(function (wmsData) {
+                        return wmsData.wmsLayer.visible && wmsData.wmsLayer.id in RAMP.layerRegistry && RAMP.layerRegistry[wmsData.wmsLayer.id];
                     });
 
                     // if no visible layers return early and do not open the panel
@@ -82,7 +87,7 @@ define([
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
-                    rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
+                    rqPromises = visibleLayers.map(function (wmsData) {
                         try {
                             var req = {}, wkid, mapSR, srList;
                             mapSR = wmsData.wmsLayer.getMap().spatialReference;
@@ -134,14 +139,20 @@ define([
                         console.log('all success');
                         console.log(results);
 
-                        var strings = dojoArray.map(results, function (response, index) {
+                        var strings = results.map(function (response, index) {
                             var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
                                       RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response,visibleLayers[index].wmsLayer.id);
                             return res;
+                        }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}{2}</div></section>'.format(modalHeader,strings,modalClose);
+
+                        $('.sub-panel').on('click', '#wms-expand', function () {
+                            $(document).trigger('open.wb-lbx', [{ src: '#wms-results-large', type: 'inline' }]);
+                            $('#wms-results-large').css('width', Math.round(window.innerWidth * 0.9) + 'px');
+                            $('#wms-results-large .modal-body').css('height', Math.round(window.innerHeight * 0.75) + 'px');
                         });
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: strings.join(''),
+                            content: '{0}{1}<a id="wms-expand" href="#wms-results-large" role="button" aria-controls="wms-results-large">{2}</a>'.format(modalBox,strings,i18n.t('gui.actions.expand')),
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'
