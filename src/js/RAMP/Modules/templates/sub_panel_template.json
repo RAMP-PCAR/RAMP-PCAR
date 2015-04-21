@@ -53,9 +53,9 @@
             </div>
         </div>",
 
-    "full_sub_panel_content":
-        
-        "<div class='bg-white panel-name-div'>
+    "full_sub_panel_content":"
+
+        <div class='bg-white panel-name-div'>
             <h3 class='panel-name h5'>
                 {%=o.panelName%}</h3>
         </div>
@@ -64,5 +64,18 @@
                 {%=o.title%}</h4>
             <div class='mrgn-rght-sm mrgn-lft-md small panel-content-div'>
             </div>
-        </div>"
+        </div>
+
+    ",
+
+    "loading_simple": "
+        <div class='loading-simple'>
+            <span>{%= i18n.t('map.loadingTitle') %}</span>    
+            <ul role='presentation'>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    "
 }
