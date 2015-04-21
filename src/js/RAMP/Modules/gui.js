@@ -753,6 +753,9 @@ define([
 
                         //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+
+                        // kill key events to stop tab switching when the other tab is hidden
+                        panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     },
                     onReverseComplete: function () {
                         viewport.removeClass("full-data-mode");
@@ -774,6 +777,8 @@ define([
 
                         //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
                         //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        // restore key events
+                        panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     }
                 }),
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
@@ -781,9 +786,11 @@ define([
                 noDataTimeLine = new TimelineLite({
                     paused: true,
                     onComplete: function () {
+                        // kill key events to stop tab switching when the other tab is hidden
                         panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     },
                     onReverseComplete: function () {
+                        // restore key events
                         panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     }
                 }),
@@ -1359,6 +1366,12 @@ define([
             d.resolve();
         }
 
+        /**
+         * Stops event propagation.
+         * 
+         * @method stopEventPropagation
+         * @private
+         */
         function stopEventPropagation(event) {
             event.stopPropagation();
         }
