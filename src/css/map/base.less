@@ -26,10 +26,8 @@
         left: 0;
     }
 
-
     #map-load-indicator {
         bottom: 0;
-        font-weight: bold;
         padding: 3px 10px 3px 35px;
         position: absolute;
         right: 3px;
@@ -53,87 +51,6 @@
         &.hidden {
             .transition(300ms, ease);
             opacity: 0;
-        }
-
-        ul {
-            display: inline-block;
-            margin: 0 0 0 9px !important;
-            padding: 0 !important;
-            list-style: none;
-
-            li {
-                background-color: #000000;
-                border-radius: 20%;
-                float: left;
-                height: 3px;
-                margin: 0 0 0 3px;
-                padding: 0;
-                width: 3px;
-
-                .dot-animation (@keyframe) {
-                    animation: 5s cubic-bezier(0.03, 0.615, 0.995, 0.415) 0s normal both infinite @keyframe;
-                }
-
-                .default-keyframes() {
-                    0% {
-                        opacity: 0;
-                    }
-
-                    10% {
-                        opacity: 0;
-                    }
-
-                    85% {
-                        opacity: 1;
-                    }
-
-                    95% {
-                        opacity: 0;
-                    }
-
-                    100% {
-                        opacity: 0;
-                    }
-                }
-
-                @keyframes dot-1 {
-                    .default-keyframes; 20% {
-                        opacity: 1;
-                    }
-                }
-
-                @keyframes dot-2 {
-                    .default-keyframes; 40% {
-                        opacity: 0;
-                    }
-
-                    50% {
-                        opacity: 1;
-                    }
-                }
-
-                @keyframes dot-3 {
-                    .default-keyframes; 60% {
-                        opacity: 0;
-                    }
-
-                    70% {
-                        opacity: 1;
-                    }
-                }
-
-                &:nth-child(1) {
-                    .dot-animation (dot-1);
-                }
-
-                &:nth-child(2) {
-                    .dot-animation (dot-2);
-                }
-
-                &:nth-child(3) {
-                    .dot-animation (dot-3);
-                }
-            }
         }
     }
 
