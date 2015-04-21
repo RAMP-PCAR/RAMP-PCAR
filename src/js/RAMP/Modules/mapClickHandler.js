@@ -27,7 +27,7 @@ define([
     "ramp/eventManager",
 
 /* Dojo */
-    "esri/request", "dojo/promise/all", "dojo/_base/array", "dojo/topic"
+    "esri/request", "dojo/promise/all", "dojo/topic"
     ],
 
     function (
@@ -35,12 +35,14 @@ define([
     EventManager,
 
     /* Dojo */
-    EsriRequest, all, dojoArray, topic
+    EsriRequest, all, topic
     ) {
 
         "use strict";
         var wmsClickQueue = [], // the queue of WMS layers registered to trigger on click
-            esriMap; // a local reference to the map object (for pull extent and dimensions)
+            esriMap, // a local reference to the map object (for pull extent and dimensions)
+            modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle')),
+            modalClose = '<button class="btn btn-primary popup-modal-dismiss" type="button">{0}</button>'.format(i18n.t('gui.actions.close'));
 
         return {
 
@@ -63,7 +65,7 @@ define([
                     }
 
                     // filter only currently visible layers
-                    visibleLayers = dojoArray.filter(wmsClickQueue, function (wmsData) {
+                    visibleLayers = wmsClickQueue.filter(function (wmsData) {
                         return wmsData.wmsLayer.visible;
                     });
 
@@ -82,7 +84,7 @@ define([
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
-                    rqPromises = dojoArray.map(visibleLayers, function (wmsData) {
+                    rqPromises = visibleLayers.map(function (wmsData) {
                         try {
                             var req = {}, wkid, mapSR, srList;
                             mapSR = wmsData.wmsLayer.getMap().spatialReference;
@@ -134,14 +136,14 @@ define([
                         console.log('all success');
                         console.log(results);
 
-                        var strings = dojoArray.map(results, function (response, index) {
+                        var strings = results.map(function (response, index) {
                             var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
                                       RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response);
                             return res;
-                        });
+                        }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}{2}</div></section>'.format(modalHeader,strings,modalClose);
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: strings.join(''),
+                            content: '{0}{1}<a href="#wms-results-large" role="button" aria-controls="wms-results-large" class="wb-lbx lbx-modal">Expand</a>'.format(modalBox,strings),
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'
