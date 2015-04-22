@@ -33,30 +33,25 @@
 * 
 * @class Datagrid
 * @static
-* @uses dojo/_base/declare
 * @uses dojo/_base/lang
-* @uses dojo/query
-* @uses dojo/_base/array
 * @uses dojo/dom-class
 * @uses dojo/dom-attr
 * @uses dojo/dom-construct
 * @uses dojo/topic
 * @uses dojo/on
-* @uses esri/layers/FeatureLayer
 * @uses esri/tasks/query
 */
 
 define([
 /* Dojo */
-    "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/dom-class",
-    "dojo/dom-attr", "dojo/dom-construct", "dojo/topic", "dojo/on", "dojo/Deferred",
+    "dojo/_base/lang", "dojo/topic", "dojo/Deferred",
 
 /* Text */
      "dojo/text!./templates/datagrid_template.json",
      "dojo/text!./templates/extended_datagrid_template.json",
 
 // Esri
-        "esri/layers/FeatureLayer", "esri/tasks/query",
+        "esri/tasks/query",
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
@@ -67,15 +62,14 @@ define([
 
     function (
     // Dojo
-        declare, lang, dojoQuery, dojoArray, domClass, domAttr,
-        domConstruct, topic, dojoOn, Deferred,
+        lang, topic, Deferred,
 
     //Text
         data_grid_template,
         extended_datagrid_template,
 
     // Esri
-        FeatureLayer, EsriQuery,
+        EsriQuery,
 
     // Ramp
         Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
@@ -362,7 +356,7 @@ define([
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
 
-                            dojoArray.forEach(extendedGrid, function (col, i) {
+                            extendedGrid.forEach(function (col, i) {
                                 // add columnIdx property, and set initial value
                                 tmplData.columnIdx = i;
                                 var result = tmpl(col.columnTemplate, tmplData);
@@ -423,7 +417,7 @@ define([
                         //layout for variable column (extended grid)
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns.map(function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -873,10 +867,9 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(RAMP.config.layers.feature,
-                        function (layer) {
-                            return layer.id === selectedDatasetId;
-                        });
+                    layer = RAMP.config.layers.feature.filter(function (layer) {
+                        return layer.id === selectedDatasetId;
+                    });
 
                     if (extendedTabTitle && layer.length > 0) {
                         extendedTabTitle.text(": " + layer[0].displayName);
@@ -982,7 +975,7 @@ define([
                         selectedDatasetId = "";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
+                        var nonStaticFeatureLayers = RAMP.config.layers.feature.filter(function (layerConfig) {
                             var layer = RAMP.map.getLayer(layerConfig.id);
                             if (layer) {
                                 if (layer.loaded) {
@@ -1333,14 +1326,14 @@ define([
             //console.time('applyExtentFilter:part 1 - 1');
 
             // filter out static layers
-            visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+            visibleGridLayers = visibleGridLayers.filter(function (layer) {
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
             //console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
 
             if (dataGridMode === GRID_MODE_FULL) {
-                visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                visibleGridLayers = visibleGridLayers.filter(function (layer) {
                     return layer.id === ui.getSelectedDatasetId();
                 });
 
@@ -1361,13 +1354,13 @@ define([
 
             // Update total records
             totalRecords = 0;
-            dojoArray.forEach(visibleGridLayers, function (layer) {
+            visibleGridLayers.forEach(function (layer) {
                 totalRecords += layer.graphics.length;
             });
 
             //console.time('applyExtentFilter:part 1 - 2');
 
-            var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
+            var deferredList = visibleGridLayers.map(function (gridLayer) {
                 return gridLayer.queryFeatures(q).then(function (features) {
                     //console.timeEnd('applyExtentFilter:part 1 - 2');
 
@@ -1424,7 +1417,7 @@ define([
                 var extendedGrid = layerConfig.datagrid.gridColumns;
 
                 // process each column and add to row
-                dojoArray.forEach(extendedGrid, function (column) {
+                extendedGrid.map(function (column) {
                     innerArray.push(feature.attributes[column.fieldName] || "");
                 });
             }
@@ -1474,7 +1467,7 @@ define([
             //for each feature layer
             utilDict.forEachEntry(visibleFeatures, function (key, features) {
                 //for each feature in a specific layer
-                data = data.concat(dojoArray.map(features, function (feature) {
+                data = data.concat(features.map(function (feature) {
                     //return the appropriate data object for the feature (.map puts them in array form)
 
                     // "cache" the data object so we don't have to generate it again
@@ -1540,7 +1533,7 @@ define([
 
                 // added by Jack to make sure layer visibility is added or removed from checkedLayerVisibility
                 if (event.id !== null) {
-                    var idx = dojoArray.indexOf(invisibleLayerToggleOn, event.id);
+                    var idx = invisibleLayerToggleOn.indexOf(event.id);
                     if (idx === -1 && event.state) {
                         // add
                         invisibleLayerToggleOn.push(event.id);
@@ -1625,7 +1618,7 @@ define([
             */
             init: function () {
                 // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
+                var layerConfigs = RAMP.config.layers.feature.filter(function (layerConfig) {
                     return !layerConfig.isStatic;
                 });
 
