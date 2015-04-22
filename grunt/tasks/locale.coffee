@@ -86,3 +86,36 @@ module.exports = (grunt) ->
                             grunt.file.write 'src/locales/' + lang + '-CA/translation.json', JSON.stringify(merged, null, '    ')
             )
     )
+
+    grunt.registerTask(
+        'locale:merge'
+        'INTERNAL Merge theme locale files is any.'
+        () ->
+            # use different path depending on what is building
+            corepkg = grunt.option 'corepkg'
+            isTheme = corepkg.isTheme
+
+            if isTheme
+
+                languages = corepkg.ramp.locale.languages
+                tasks = []
+
+                coreLocale = {}
+                themeLocale = {}
+                mergedLocale = {}
+                
+                # iterate over available languages and merge theme and core locale files
+                languages.forEach(
+                    (lang) ->
+                        coreLocale = grunt.file.readJSON 'build/locales/' + lang + '-CA/translation.json'
+                        themeLocale = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+                        mergedLocale = mergeLocale coreLocale, themeLocale, '', true
+                        
+                        grunt.file.write 'build/locales/' + lang + '-CA/translation.json', JSON.stringify(mergedLocale, null, '    ')
+                )
+                
+                # lint merged files
+                tasks.push 'jsonlint:mergedLocales'
+                
+                grunt.task.run tasks
+    )
