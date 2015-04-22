@@ -1,7 +1,7 @@
 ﻿/* global RAMP, console */
 
 console.log('loading jsonParse');
-RAMP.plugins.featureInfoParser.jsonParse = function (data, layerId) {
+RAMP.plugins.featureInfoParser.jsonParse = function (data) {
     'use strict';
     var summary, txArea;
 
