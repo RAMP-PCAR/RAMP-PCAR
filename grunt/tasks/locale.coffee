@@ -15,16 +15,18 @@ module.exports = (grunt) ->
                 return false
             
             if typeof o1[key] == 'object'
-                return deepCheck(o1[key], o2[key])
-            else
-                return true 
-                # o1[key] === o2[key] # use this for value comparison
+                if not deepCheck(o1[key], o2[key])
+                    return false
+        return true 
+        # o1[key] === o2[key] # use this for value comparison
 
-    mergeLocale = (o1, o2, prefix) ->
+
+    mergeLocale = (o1, o2, prefix, extend) ->
+        # `extend`: if true, o2 will be extended with o1; the result might not be sorted
         # Properties from the Souce1 object will be copied to Source2 Object.
         # prefix will be added to the missing properties
 
-        mj = {}        
+        mj = if extend then o2 else {}
 
         # get the keys
         ps = Object.keys(o1).sort()
@@ -35,12 +37,12 @@ module.exports = (grunt) ->
                 # Recursive call if the property is an object,
                 # Iterate the object and set all properties of the inner object.
             
-                    mj[p] = mergeLocale o1[p], o2[p], prefix
+                    mj[p] = mergeLocale o1[p], o2[p], prefix, extend
                 else
                     mj[p] = o2[p]
             else
                 if typeof o1[p] == 'object'
-                    mj[p] = mergeLocale o1[p], {}, prefix
+                    mj[p] = mergeLocale o1[p], {}, prefix, extend
                 #else copy the property from source1
                 else 
                     mj[p] = prefix + o1[p]
