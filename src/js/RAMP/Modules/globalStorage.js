@@ -48,7 +48,7 @@ define(["dojo/_base/array", "utils/util"],
                 layers: { feature: [], wms: [] },
                 divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
                 advancedToolbar: { enabled: false, tools: [] },
-                ui: { mapQueryToggle: { show: true } }
+                ui: { mapQueryToggle: { show: true, autoHide: true } }
             },
 
             defaultRenderers = {

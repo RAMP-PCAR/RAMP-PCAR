@@ -40,6 +40,16 @@
 *    (a name is required for efficiency, this way the URL will only need to
 *    serialize and update the given object instead of all objects).
 *
+* ####Imports RAMP Modules:
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "RAMP"}}{{/crossLink}}  
+* {{#crossLink "Url"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* 
 * @class BookmarkLink
 * @static
 * @uses dojo/_base/declare
@@ -53,13 +63,6 @@
 * @uses dijit/form/TextBox
 * @uses dijit/TitlePane
 * @uses esri/geometry/Extent
-* @uses GlobalStorage
-* @uses Map
-* @uses EventManager
-* @uses Url
-* @uses Util
-* @uses Dictionary
-* @uses PopupManager
 */
 
 define([
@@ -432,12 +435,19 @@ define([
             }
 
             var paras = link.split('?')[1],
-                element = $("#wb-lng").find("li a"),
-                url = element.attr("href");
+                element = $('#wb-lng').find('li a'),
+                url = element.attr('href'),
+                dstLang = element.attr('lang'),
+                srcLang = RAMP.locale,
+                re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang),'g');
 
-            url = url.split('?')[0] + "?" + paras;
+            console.log(paras);
+            paras = paras.replace(re,'rcs.$1.{0}'.format(dstLang));
+            console.log(paras);
 
-            element.attr("href", url);
+            url = url.split('?')[0] + '?' + paras;
+
+            element.attr('href', url);
         }
 
         /**
@@ -705,15 +715,8 @@ define([
         */
         function isBookmarkLayer(layerId) {
             var layer = RampMap.getMap().getLayer(layerId);
-
-            if (UtilMisc.isUndefined(layer)) {
-                return false;
-            } else if (layer.ramp.user) {
-                //we do not store user-added layers in the bookmark link (as they will not be reloaded).
-                return false;
-            } else {
-                return true;
-            }
+            // false if layer is undefined; if layer is defined then only if it is not a user-added layer
+            return layer ? !layer.ramp.user : false;
         }
 
         return {

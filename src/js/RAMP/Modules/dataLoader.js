@@ -1,4 +1,10 @@
-﻿/* global define, console, Terraformer, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
+﻿/* global define, console, Terraformer, proj4, shp, csv2geojson, RAMP, ArrayBuffer, Uint16Array */
+
+/**
+* @module RAMP
+* @submodule DataLoader
+* @main DataLoader
+*/
 
 /**
 * A module for loading from web services and local files.  Fetches data via File API (IE9 is currently not supported) or
@@ -6,8 +12,14 @@
 * (currently the selected intermediate format) and converting GeoJSON into FeatureLayers for consumption by the ESRI JS
 * API.
 *
-* @module RAMP
-* @submodule DataLoader
+* ####Imports RAMP Modules:
+* {{#crossLink "LayerLoader"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}
+* 
+* @class DataLoader
+* @static
 * @uses dojo/Deferred 
 * @uses dojo/query
 * @uses dojo/_base/array
@@ -15,20 +27,18 @@
 * @uses esri/SpatialReference
 * @uses esri/layers/FeatureLayer
 * @uses esri/renderers/SimpleRenderer
-* @uses ramp/layerLoader
-* @uses ramp/globalStorage
-* @uses ramp/map
-* @uses utils/util
 */
 
 define([
-        "dojo/Deferred", "dojo/query", "dojo/_base/array",
+        "dojo/Deferred", "dojo/query", "dojo/promise/first",
         "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "esri/renderers/SimpleRenderer",
+
         "ramp/layerLoader", "ramp/globalStorage", "ramp/map",
+
         "utils/util"
 ],
     function (
-            Deferred, query, dojoArray,
+            Deferred, query, first,
             EsriRequest, SpatialReference, FeatureLayer, SimpleRenderer,
             LayerLoader, GlobalStorage, RampMap,
             Util
@@ -133,7 +143,7 @@ define([
                 function (data) {
                     try {
                         var alias = {};
-                        dojoArray.forEach(data.fields, function (field) {
+                        data.fields.forEach(function (field) {
                             alias[field.name] = field.alias;
                         });
 
@@ -142,7 +152,7 @@ define([
                             layerName: data.name,
                             layerUrl: featureLayerEndpoint,
                             geometryType: data.geometryType,
-                            fields: dojoArray.map(data.fields, function (x) { return x.name; }),
+                            fields: data.fields.map(function (x) { return x.name; }),
                             renderer: data.drawingInfo.renderer,
                             aliasMap: alias,
                             maxScale: data.maxScale,
@@ -196,9 +206,9 @@ define([
                 function (data) {
                     //find our layer in the legend
                     var res = {};
-                    dojoArray.forEach(data.layers, function (layer) {
+                    data.layers.forEach(function (layer) {
                         if (layer.layerId === layerIdx) {
-                            dojoArray.forEach(layer.legend, function (legendItem) {
+                            layer.legend.forEach(function (legendItem) {
                                 res[legendItem.label] = "data:" + legendItem.contentType + ';base64,' + legendItem.imageData;
                             });
                         }
@@ -253,8 +263,8 @@ define([
                     var layers, res = {};
 
                     try {
-                        layers = dojoArray.map(query('Layer > Name', data), function (nameNode) { return nameNode.parentNode; });
-                        res.layers = dojoArray.map(layers, function (x) {
+                        layers = query('Layer > Name', data).map(function (nameNode) { return nameNode.parentNode; });
+                        res.layers = layers.map(function (x) {
                             var nameNode = getImmediateChild(x, 'Name'),
                                 name = nameNode.textContent || nameNode.text,
                                 // .text is for IE9's benefit, even though it claims to support .textContent
@@ -265,7 +275,7 @@ define([
                                 queryable: x.getAttribute('queryable') === '1'
                             };
                         });
-                        res.queryTypes = dojoArray.map(query('GetFeatureInfo > Format', data), function (node) { return node.textContent || node.text; });
+                        res.queryTypes = query('GetFeatureInfo > Format', data).map(function (node) { return node.textContent || node.text; });
                     } catch (e) {
                         def.reject(e);
                     }
@@ -288,7 +298,7 @@ define([
             if (geoJson.type !== 'FeatureCollection') {
                 throw new Error("Assignment can only be performed on FeatureCollections");
             }
-            dojoArray.forEach(geoJson.features, function (val, idx) {
+            geoJson.features.forEach(function (val, idx) {
                 if (typeof val.id === "undefined") {
                     val.id = idx;
                 }
@@ -304,7 +314,7 @@ define([
                 throw new Error("Field extraction requires at least one feature");
             }
 
-            return dojoArray.map(Object.keys(geoJson.features[0].properties), function (prop) {
+            return Object.keys(geoJson.features[0].properties).map(function (prop) {
                 return { name: prop, type: "esriFieldTypeString" };
             });
         }
@@ -317,17 +327,23 @@ define([
         * @returns {Object} an JSON config object for feature datagrid
         */
         function createDatagridConfig(fields, aliases) {
-            function makeField(id, fn, wd, ttl, tp) {
-                return {
+            function makeField(id, fn, wd, ttl, tp, opts) {
+                var r = {
                     id: id,
                     fieldName: fn,
                     width: wd,
-                    orderable: false,
-                    type: 'string',
-                    alignment: 0,
                     title: ttl,
                     columnTemplate: tp
-                };
+                },
+                optFields = ['type', 'orderable', 'alignment'];
+
+                optFields.forEach(function (opt) {
+                    if (opts && opt in opts) {
+                        r[opt] = opts[opt];
+                    }
+                });
+
+                return r;
             }
 
             var dg = {
@@ -335,18 +351,21 @@ define([
                 gridColumns: []
             };
 
-            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon'));
-            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button'));
+            dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon', { orderable: false }));
+            dg.gridColumns.push(makeField('detailsCol', '', '60px', 'Details', 'details_button',{ orderable: false }));
 
-            dojoArray.forEach(fields, function (field, idx) {
-                var fieldTitle = field;
-                if (aliases) {
-                    if (aliases[field]) {
-                        fieldTitle = aliases[field];
+            if (fields && fields.length) {
+                fields.forEach(function (field, idx) {
+                    var fieldTitle = field;
+                    if (field.toLowerCase() === "shape") { return; }
+                    if (aliases) {
+                        if (aliases[field]) {
+                            fieldTitle = aliases[field];
+                        }
                     }
-                }
-                dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
-            });
+                    dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
+                });
+            }
 
             return dg;
         }
@@ -378,7 +397,7 @@ define([
                     symb.field1 = renderer.field1;
                     symb.field2 = renderer.field2;
                     symb.field3 = renderer.field3;
-                    symb.valueMaps = dojoArray.map(renderer.uniqueValueInfos, function (uvi) {
+                    symb.valueMaps = renderer.uniqueValueInfos.map(function (uvi) {
                         return {
                             label: uvi.label,
                             value: uvi.value,
@@ -393,7 +412,7 @@ define([
                     }
                     symb.field = renderer.field;
                     symb.minValue = renderer.minValue;
-                    symb.rangeMaps = dojoArray.map(renderer.classBreakInfos, function (cbi) {
+                    symb.rangeMaps = renderer.classBreakInfos.map(function (cbi) {
                         return {
                             label: cbi.label,
                             maxValue: cbi.classMaxValue,
@@ -421,6 +440,23 @@ define([
         */
         function csvPeek(data, delimiter) {
             return csv2geojson.dsv(delimiter).parseRows(data);
+        }
+
+        /**
+         * Scan a geojson fragment and if plugins are available attempt to load new projection information
+         * 
+         */
+        function scanCrs(geoJson) {
+            if (!geoJson.crs || geoJson.crs.type !== 'name') { return; }
+
+            var name = geoJson.crs.properties.name,
+                promises = Object.keys(RAMP.plugins.projectionLookup).map(function (plugin) { return RAMP.plugins.projectionLookup[plugin](name); });
+            first(promises).then(function (projString) {
+                console.log(projString);
+                proj4.defs(name, projString);
+            }, function (fail) {
+                console.log(fail);
+            });
         }
 
         /**
@@ -455,6 +491,7 @@ define([
             targetWkid = RAMP.map.spatialReference.wkid;
             assignIds(geoJson);
             layerDefinition.drawingInfo = defaultRenderers[featureTypeToRenderer[geoJson.features[0].geometry.type]];
+            scanCrs(geoJson);
 
             if (opts) {
                 if (opts.sourceProjection) {
@@ -473,12 +510,9 @@ define([
             }
 
             console.log('reprojecting ' + srcProj + ' -> EPSG:' + targetWkid);
-            //console.log(geoJson);
             Terraformer.Proj.convert(geoJson, 'EPSG:' + targetWkid, srcProj);
-            //console.log(geoJson);
             esriJson = Terraformer.ArcGIS.convert(geoJson, { sr: targetWkid });
             console.log('geojson -> esrijson converted');
-            //console.log(esriJson);
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT, id: layerID });
@@ -582,7 +616,7 @@ define([
                     console.log('csv parsed');
                     console.log(data);
                     // csv2geojson will not include the lat and long in the feature
-                    dojoArray.forEach(data.features, function (feature) {
+                    data.features.map(function (feature) {
                         // add new property Long and Lat before layer is generated
                         feature.properties[csvOpts.lonfield] = feature.geometry.coordinates[0];
                         feature.properties[csvOpts.latfield] = feature.geometry.coordinates[1];

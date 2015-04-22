@@ -4,8 +4,10 @@
     "proxyUrl": "http://cp.zz9.ca/index",
     "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
+    "geonameUrl": "http://geogratis.gc.ca/services/geoname/",
+    "geolocationUrl": "http://geogratis.gc.ca/services/geolocation/",
     "advancedToolbar": {
-        "enabled": true,
+        "enabled": false,
         "tools": [
             {
                 "name": "areaTool",
@@ -400,7 +402,7 @@
                 },
                 "aliasMap": {
                     "PRJ_ID": "Project ID",
-                    "CATEG_NAM_ENG":  "Category Name"
+                    "CATEG_NAM_ENG": "Category Name"
                 }
             },
             {
@@ -759,10 +761,10 @@
     "plugins": [
         "stringParse.js",
         "htmlRawParse.js",
-        "jsonRawParse.js",
+        "jsonParse.js",
         "tempParse.js",
-        "windParse.js"
+        "windParse.js",
+        "epsgio.js"
     ],
-
     "mapInitFailUrl": "./error-@@page.lang.main.html"
 }

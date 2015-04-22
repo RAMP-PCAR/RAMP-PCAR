@@ -1,5 +1,37 @@
 ﻿/* global define, console, window, $, i18n, RAMP, t, TimelineLite */
 
+/**
+* @module RAMP
+* @submodule FilterManager
+* @main FilterManager
+*/
+
+/**
+* Creates a choice tree for adding datasets.
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "PopupManager"}}{{/crossLink}}  
+* {{#crossLink "DataLoader"}}{{/crossLink}}  
+* {{#crossLink "Theme"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "LayerLoader"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "StepItem"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "TmplUtil"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "Bricks"}}{{/crossLink}}    
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
+* 
+* @class DataLoaderGui
+* @static
+* @uses dojo/lang
+*/
+
 define([
     /* Dojo */
     "dojo/_base/lang",
@@ -33,7 +65,6 @@ define([
 
             symbologyPreset = {},
 
-            //steps,
             choiceTree,
             choiceTreeCallbacks,
             choiceTreeErrors,
@@ -45,11 +76,35 @@ define([
 
             templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
 
+        /**
+         * A collection of callbacks used by the choice tree.
+         * 
+         * @property choiceTreeCallbacks
+         * @private
+         * @type {Object}
+         */
         choiceTreeCallbacks = {
+            /**
+             * A callback that advances the choice tree to the specified child step of the supplied step item.
+             * 
+             * @method choiceTreeCallbacks.simpleAdvance
+             * @private
+             * @param  {StepItem} step            step item to advance from
+             * @param  {Object} data            data from the choice brick in step item
+             * @param  {Object} targetChildData data to be passed to the step being advanced to
+             */
             simpleAdvance: function (step, data, targetChildData) {
                 step.advance(data.selectedChoice, targetChildData);
             },
 
+            /**
+             * A callback that retreats part of the choice tree to the step item specified.
+             * 
+             * @method choiceTreeCallbacks.simpleCancel
+             * @private
+             * @param  {StepItem} step step item to retreat to
+             * @param  {Object} data data from the callback function
+             */
             simpleCancel: function (step, data) {
                 console.log("Step cancel click:", this, step, data);
 
@@ -60,6 +115,14 @@ define([
                 }
             },
 
+            /**
+             * A callback to guess the service type from the service url provided in step data.
+             * 
+             * @method choiceTreeCallbacks.serviceTypeStepGuess
+             * @private
+             * @param  {StepItem} step step item to guess service type on
+             * @param  {[type]} data data from the callback function
+             */
             serviceTypeStepGuess: function (step, data) {
                 var value = data.inputValue,
                     serviceTypeBrick = step.contentBricks.serviceType,
@@ -67,7 +130,6 @@ define([
 
                 // make a guess if it's a feature or wms server only if the user hasn't already selected the type
                 if (!serviceTypeBrick.isUserSelected()) {
-
                     if (value.match(/ArcGIS\/rest\/services/ig)) {
                         guess = "featureServiceAttrStep";
                     } else if (value.match(/wms/ig)) {
@@ -78,6 +140,14 @@ define([
                 }
             },
 
+            /**
+             * A callback to guess the file type from the file url or file object provided in step data.
+             * 
+             * @method choiceTreeCallbacks.fileTypeStepGuess
+             * @private
+             * @param  {StepItem} step step item to guess file type on
+             * @param  {[type]} data data from the callback function
+             */
             fileTypeStepGuess: function (step, data) {
                 var fileName = data.inputValue,
                     serviceFileBrick = step.contentBricks.fileType,
@@ -104,7 +174,13 @@ define([
          * @private
          */
         function prepareChoiceTreeStructure() {
-
+            /**
+             * A collection of precanned error messages that are used by the choice tree.
+             * 
+             * @property choiceTreeErrors
+             * @private
+             * @type {Object}
+             */
             choiceTreeErrors = {
                 base: {
                     type: "error",
@@ -137,6 +213,15 @@ define([
                 header: i18n.t("addDataset.error.headerShapefile")
             });
 
+            /**
+             * A choice tree config object
+             *
+             * Config has a simple tree structure, with content being an array of Brick object to be placed inside a StepItem.
+             * 
+             * @property choiceTree
+             * @private
+             * @type {Object}
+             */
             choiceTree = {
                 // step for choosing between adding a service or a file
                 id: "sourceTypeStep",
@@ -287,7 +372,6 @@ define([
                                                                             })
                                                                     });
                                                                 } else {
-
                                                                     choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
                                                                         stepData: data,
                                                                         bricksData: {
@@ -297,7 +381,6 @@ define([
                                                                         }
                                                                     });
                                                                 }
-
                                                             }, function (event) {
                                                                 console.error(event);
                                                                 handleFailure(step, handle, {
@@ -342,7 +425,6 @@ define([
                                                                     })
                                                             });
                                                         } else {
-
                                                             choiceTreeCallbacks.simpleAdvance(step, bricksData.serviceType, {
                                                                 stepData: {
                                                                     wmsData: data,
@@ -355,7 +437,6 @@ define([
                                                                 }
                                                             });
                                                         }
-
                                                     }, function (event) {
                                                         console.error(event);
                                                         handleFailure(step, handle, {
@@ -413,7 +494,7 @@ define([
                                                             id: LayerLoader.nextId(),
                                                             displayName: layerData.layerName,
                                                             nameField: bricksData.primaryAttribute.dropDownValue,
-                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields),
+                                                            datagrid: DataLoader.createDatagridConfig(layerData.fields, layerData.aliasMap),
                                                             symbology: DataLoader.createSymbologyConfig(layerData.renderer, layerData.legendLookup),
                                                             url: layerData.layerUrl,
                                                             aliasMap: layerData.aliasMap
@@ -476,7 +557,7 @@ define([
                                                         function (l) {
                                                             return l.name === wmsLayerName;
                                                         }
-                                            );
+                                                    );
 
                                                     wmsConfig = {
                                                         id: LayerLoader.nextId(),
@@ -627,7 +708,6 @@ define([
                                                                         })
                                                                 });
                                                             } else {
-
                                                                 choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
                                                                     stepData: featureLayer,
                                                                     bricksData: {
@@ -640,7 +720,6 @@ define([
                                                                     }
                                                                 });
                                                             }
-
                                                         }, function (event) {
                                                             //error building geojson
                                                             console.error(event);
@@ -658,9 +737,9 @@ define([
                                                         var rows,
                                                             delimiter = UtilMisc.detectDelimiter(data),
 
-                                                                            guess,
-                                                                            primaryAttribute,
-                                                                            headers;
+                                                            guess,
+                                                            primaryAttribute,
+                                                            headers;
 
                                                         window.clearTimeout(handle);
 
@@ -692,7 +771,6 @@ define([
                                                                     })
                                                             });
                                                         } else {
-
                                                             guess = guessLatLong(rows);
 
                                                             // preselect primary attribute so it's not one of the lat or long guesses;
@@ -750,7 +828,6 @@ define([
                                                                         })
                                                                 });
                                                             } else {
-
                                                                 choiceTreeCallbacks.simpleAdvance(step, bricksData.fileType, {
                                                                     stepData: featureLayer,
                                                                     bricksData: {
@@ -763,7 +840,6 @@ define([
                                                                     }
                                                                 });
                                                             }
-
                                                         }, function (event) {
                                                             // error to build shapefiles
                                                             console.error(event);
@@ -777,7 +853,6 @@ define([
 
                                                         break;
                                                 }
-
                                             }, function (event) {
                                                 //error loading file
                                                 console.error(event);
@@ -820,14 +895,14 @@ define([
                                             header: i18n.t("addDataset.primaryAttribute")
                                         }
                                     },
-            {
-                id: "color",
-                type: Bricks.ColorPickerBrick,
-                config: {
-                    instructions: i18n.t("addDataset.help.geojsonColour"),
-                    header: i18n.t("addDataset.colour")
-                }
-            },
+                                    {
+                                        id: "color",
+                                        type: Bricks.ColorPickerBrick,
+                                        config: {
+                                            instructions: i18n.t("addDataset.help.geojsonColour"),
+                                            header: i18n.t("addDataset.colour")
+                                        }
+                                    },
                                     {
                                         id: "addDataset",
                                         type: Bricks.ButtonBrick,
@@ -839,7 +914,7 @@ define([
                                         on: [
                                             {
                                                 eventName: Bricks.ButtonBrick.event.CLICK,
-                                                // add wms service layer to the map
+                                                // add geojson layer to the map
                                                 callback: function (step /*,data*/) {
                                                     var data = step.getData(),
                                                         bricksData = data.bricksData,
@@ -857,7 +932,8 @@ define([
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
-                                                        datasetName: bricksData.datasetName.inputValue
+                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        fields: featureLayer.fields.map(function (field) { return field.name; })
                                                     });
 
                                                     LayerLoader.loadLayer(featureLayer);
@@ -960,9 +1036,9 @@ define([
                                                         DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                             renderer: "circlePoint",
                                                             colour: [
-                                                                                                        bricksData.color.rgb_[0],
-                                                                                                        bricksData.color.rgb_[1],
-                                                                                                        bricksData.color.rgb_[2],
+                                                                bricksData.color.rgb_[0],
+                                                                bricksData.color.rgb_[1],
+                                                                bricksData.color.rgb_[2],
                                                                 255
                                                             ],
                                                             nameField: bricksData.primaryAttribute.dropDownValue,
@@ -974,7 +1050,6 @@ define([
                                                         //TODO: set symbology and colour on feature layer (obj.data)
                                                         LayerLoader.loadLayer(featureLayer);
                                                         addDatasetPopup.close();
-
                                                     }, function () {
                                                         // can't construct csv
                                                         handleFailure(step, null, {
@@ -1039,14 +1114,15 @@ define([
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                         //renderer: obj.style,
                                                         colour: [
-                                                                                                    bricksData.color.rgb_[0],
-                                                                                                    bricksData.color.rgb_[1],
-                                                                                                    bricksData.color.rgb_[2],
+                                                            bricksData.color.rgb_[0],
+                                                            bricksData.color.rgb_[1],
+                                                            bricksData.color.rgb_[2],
                                                             255
                                                         ],
                                                         nameField: bricksData.primaryAttribute.dropDownValue,
                                                         icon: iconTemplate,
-                                                        datasetName: bricksData.datasetName.inputValue
+                                                        datasetName: bricksData.datasetName.inputValue,
+                                                        fields: featureLayer.fields.map(function (field) { return field.name; })
                                                     });
 
                                                     LayerLoader.loadLayer(featureLayer);
@@ -1061,11 +1137,15 @@ define([
                     }
                 ]
             };
-
         }
 
+        /**
+         * Creates a new choice tree html representation and appends it to the page.
+         * 
+         * @method createChoiceTree
+         * @private
+         */
         function createChoiceTree() {
-
             // clear steps
             t.dfs(choiceTree, function (node) {
                 node.stepItem = null;
@@ -1102,7 +1182,7 @@ define([
             // set the first step as active
             stepLookup.sourceTypeStep.currentStep(1);
 
-            // It's IE9. 
+            // It's IE9. Run Away!
             if (!window.FileReader) {
                 var fileOrFileURL = stepLookup.fileTypeStep.contentBricks.fileOrFileURL;
 
@@ -1121,6 +1201,14 @@ define([
             Theme.tooltipster(addDatasetContainer);
         }
 
+        /**
+         * From provided CSV data, guesses which columns are long and lat.
+         * 
+         * @method guessLatLong
+         * @private
+         * @param  {Array} rows csv data
+         * @return {Object}      an object with lat and long string properties indicating corresponding field names
+         */
         function guessLatLong(rows) {
             // try guessing lat and long columns
             var latRegex = new RegExp(/^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$/i),
@@ -1132,7 +1220,7 @@ define([
                 guessedLatHeader,
                 guessedLongHeader;
 
-            // first filter out all columns that are not lat
+            // first filter out all columns that are not lat fro sure
             guessesLat = rows[0].filter(function (header, i) {
                 return rows.every(function (row, rowi) {
                     return rowi === 0 || latRegex.test(row[i]);
@@ -1187,8 +1275,10 @@ define([
         }
 
         /**
+         * Creates a icon base64 template to be displayed in the layer selector.
          * 
          * @method makeIconTemplate
+         * @private 
          * @param {String} templateName a name of the template to use for an icon
          * @param {String} hex color value in hex
          * @return {String} a base64 encoded icon template
@@ -1204,7 +1294,7 @@ define([
         }
 
         /**
-         * Delay setting loading state to the step for a specified time in case it happens really fast and 
+         * Delay setting loading state to the step for a specified time in case it happens really fast and it will flicker.
          * 
          * @method delayLoadingState
          * @param {StepItem} step step to delay setting loading state on
@@ -1218,6 +1308,15 @@ define([
             }, time);
         }
 
+        /**
+         * Handles any failure happening in the choice tree by setting the responsible step to error and displaying appropriate notices.
+         * 
+         * @method handleFailure
+         * @private
+         * @param  {StepItem} step         a step item that should handle failure
+         * @param  {Number} handle       a timeout handle to be canceled
+         * @param  {Object} brickNotices brick notices to be displayed 
+         */
         function handleFailure(step, handle, brickNotices) {
             if (handle) {
                 window.clearTimeout(handle);
@@ -1229,12 +1328,28 @@ define([
             ;
         }
 
+        /**
+         * Notifies all step items in the tree which step is current at the moment.
+         * 
+         * @method setCurrentStep
+         * @private
+         * @param {String} event a StepItem.CURRENT_STEP_CHANGE event
+         */
         function setCurrentStep(event) {
             t.dfs(choiceTree, function (node) {
                 node.stepItem.currentStep(event.level, event.id);
             });
         }
 
+        /**
+         * Notifies all step items in the tree that a certain step has changed its state.
+         * 
+         * @method setStepState
+         * @private
+         * @param {Object} event a StepItem.STATE_CHANGE event
+         * @param {StepItem} step  a step item; this doesn't seem to be used
+         * @param {String} state a state; this doesn't seem to be used
+         */
         function setStepState(event, step, state) {
             if (step && state) {
                 event = {
@@ -1249,11 +1364,23 @@ define([
             });
         }
 
+        /**
+         * Closes the add dataset choice tree.
+         * 
+         * @method closeChoiceTree
+         * @private
+         */
         function closeChoiceTree() {
             stepLookup.sourceTypeStep.retreat();
         }
 
         return {
+            /**
+             * Initialize add-dataset functionality and creates a add-dataset choice tree.
+             * 
+             * @method init
+             * @static
+             */
             init: function () {
                 var tl = new TimelineLite({ paused: true });
 
@@ -1312,8 +1439,6 @@ define([
                         resetFocusOnClose: true
                     }
                 );
-
-                //addDatasetPopup.open();
 
                 UtilDict.forEachEntry(GlobalStorage.DefaultRenderers,
                     function (key) {

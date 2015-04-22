@@ -12,15 +12,19 @@
 /**
 * GraphicExtension class containing helper functions for graphic objects.
 * Note this class requires the config object.
-*
+* 
+* ####Imports RAMP Modules:
+* {{#crossLink "Dictionary"}}{{/crossLink}}  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink "Array"}}{{/crossLink}}  
+* 
+* ####Uses RAMP Templates:
+* {{#crossLink "templates/point_details_list_Template.json"}}{{/crossLink}}
+* {{#crossLink "templates/point_details_list_item_Template.json"}}{{/crossLink}}
+
 * @class GraphicExtension
 * @static
-* @uses RAMP
-* @uses Array
-* @uses Dictionary
-* @uses Util
-* @uses templates/point_details_list_Template.html
-* @uses templates/point_details_list_item_Template.html
 */
 
 define([

@@ -9,6 +9,7 @@ module.exports = (grunt) ->
                 'notify_hooks': 'grunt-notify'
                 'changelog': 'grunt-conventional-changelog'
                 'github-release': 'grunt-github-releaser'
+                'htmllint': 'grunt-html'
         configPath: [
             path.join(process.cwd(), 'grunt/options')
             path.join(process.cwd(), 'grunt_overrider/options')

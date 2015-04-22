@@ -491,7 +491,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
+        * @extends Brick
         * 
         */
         MultiBrick = Brick.extend({
@@ -696,7 +696,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
+        * @extends Brick
         * 
         */
         ButtonBrick = Brick.extend({
@@ -845,8 +845,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * @uses MultiBrick
+        * @extends MultiBrick
         */
         OkCancelButtonBrick = MultiBrick.extend({
             
@@ -1042,8 +1041,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * 
+        * @extends Brick
         */
         ChoiceBrick = Brick.extend({
             
@@ -1268,8 +1266,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * 
+        * @extends Brick
         */
         SimpleInputBrick = Brick.extend({
             /**
@@ -1524,8 +1521,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * 
+        * @extends Brick
         */
         DropDownBrick = Brick.extend({
             /**
@@ -1801,8 +1797,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * @uses SimpleInputBrick
+        * @extends SimpleInputBrick
         * 
         */
         ColorPickerBrick = SimpleInputBrick.extend({
@@ -1976,9 +1971,7 @@ define([
         * @for Bricks
         * @static
         * @uses dojo/_base/lang
-        * @uses Brick
-        * @uses SimpleInputBrick
-        * 
+        * @extends SimpleInputBrick
         */
         FileInputBrick = SimpleInputBrick.extend({
             /**
