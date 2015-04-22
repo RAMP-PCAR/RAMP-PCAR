@@ -441,6 +441,23 @@ define([
             }
         });
 
+        /**
+         * Helper function to check if `states` parameter is false or [].
+         * 
+         * @param {Array} [states] state names
+         * @method getStateNames
+         * @private
+         */
+        function getStateNames(states) {
+            if (typeof states === 'undefined' || !states || states.length === 0) {
+                states = Object
+                    .getOwnPropertyNames(LayerItem.state)
+                    .map(function (key) { return LayerItem.state[key]; });
+            }
+
+            return states;
+        }
+
         lang.mixin(LayerItem,
             {
                 /**
@@ -659,8 +676,7 @@ define([
                 LayerItem.controls.REMOVE
             ],
             toggles: [
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.QUERY
+                LayerItem.toggles.EYE
             ],
             notices: []
         };
@@ -686,8 +702,7 @@ define([
                 LayerItem.controls.REMOVE
             ],
             toggles: [
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.QUERY
+                LayerItem.toggles.EYE
             ],
             notices: [
                 LayerItem.notices.UPDATE
@@ -713,8 +728,7 @@ define([
             ],
             toggles: [
                 LayerItem.toggles.ZOOM,
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.QUERY
+                LayerItem.toggles.EYE
             ],
             notices: [
                 LayerItem.notices.SCALE
@@ -752,23 +766,6 @@ define([
             LayerItem.state.DEFAULT,
             LayerItem.state.UPDATING
         ];
-
-        /**
-         * Helper function to check if `states` parameter is false or [].
-         * 
-         * @param {Array} [states] state names
-         * @method getStateNames
-         * @private
-         */
-        function getStateNames(states) {
-            if (typeof states === 'undefined' || !states || states.length === 0) {
-                states = Object
-                    .getOwnPropertyNames(LayerItem.state)
-                    .map(function (key) { return LayerItem.state[key]; });
-            }
-
-            return states;
-        }
 
         /**
         * Modifies a given state matrix by adding specified partKey to the specified partType collection.

@@ -1034,6 +1034,7 @@ define([
 
                 return fl.queryFeatures(queryTask);
             },
+
             /**
             * Grabs all distinct values of the given field from a featureLayer.
             * @method _getField
