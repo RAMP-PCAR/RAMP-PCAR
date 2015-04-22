@@ -99,6 +99,9 @@ module.exports =
             'jsonlint:oneConfig'
             'zs3'
             'assembleConfigs'
+            'jsonlint:generatedConfigs'
+            'notify:generatedConfigsLint'
+            'clean:oneConfig'
         ]            
 
     # 'INTERNAL: Runs JSHint on JS code.'

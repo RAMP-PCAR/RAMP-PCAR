@@ -29,3 +29,7 @@ module.exports =
         src: [
             ##'<%= pkg.ramp.deployFolder %>'
         ]
+
+    oneConfig: [
+        'build/config.json'
+    ]
