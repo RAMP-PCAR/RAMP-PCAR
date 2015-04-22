@@ -8,7 +8,6 @@ module.exports = (grunt, options)->
         corepkg.corepath = corepath
         corepkg.isTheme = true
 
-        isTheme = false
     else
         corepkg = 
             corepath: '_/'

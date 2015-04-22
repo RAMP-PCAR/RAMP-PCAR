@@ -17,6 +17,8 @@ module.exports =
         [
             'clean:build'
             'copy:build'
+            'prepareLocale'
+            'generateConfig' # generate config after copying locale files
             'assemble'
             'notify:page'
             'js:prep'
@@ -28,7 +30,6 @@ module.exports =
     # 'INTERNAL: Copies files (except JS and CSS) needed for a build.'
     'copy:build': 
         [
-            'generateConfig'
             'copy:polyfillBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
@@ -84,13 +85,19 @@ module.exports =
             'notify:dist'
         ]
 
+    # 'INTERNAL: Prepare locale files'
+    'prepareLocale':
+        [
+            'jsonlint:locales' # lint src locales
+            'locale:check' # check src locales for consistence; assuming core locales are correct
+            'locale:merge' # used for theme builds
+        ]
+
     # 'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
     'generateConfig':
         [   
-            'locale:check'
             'jsonlint:oneConfig'
             'zs3'
-            'jsonlint:locales'
             'assembleConfigs'
         ]            
 

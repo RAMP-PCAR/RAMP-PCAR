@@ -15,3 +15,8 @@ module.exports =
         src: [
             'src/locales/**/*.json'
         ]
+
+    mergedLocales:
+        src: [
+            'build/locales/**/*.json'
+        ]
