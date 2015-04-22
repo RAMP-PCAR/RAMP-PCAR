@@ -54,8 +54,7 @@ define([
             */
             init: function (map) {
 
-                var modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle')),
-                    modalClose = '<button class="btn btn-primary popup-modal-dismiss" type="button">{0}</button>'.format(i18n.t('gui.actions.close'));
+                var modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle'));
 
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
@@ -143,7 +142,7 @@ define([
                             var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
                                       RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response,visibleLayers[index].wmsLayer.id);
                             return res;
-                        }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}{2}</div></section>'.format(modalHeader,strings,modalClose);
+                        }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}</div></section>'.format(modalHeader,strings);
 
                         $('.sub-panel').on('click', '#wms-expand', function () {
                             $(document).trigger('open.wb-lbx', [{ src: '#wms-results-large', type: 'inline' }]);
