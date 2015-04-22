@@ -660,7 +660,6 @@ define([
             ],
             toggles: [
                 LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX,
                 LayerItem.toggles.QUERY
             ],
             notices: []
@@ -688,7 +687,7 @@ define([
             ],
             toggles: [
                 LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
+                LayerItem.toggles.QUERY
             ],
             notices: [
                 LayerItem.notices.UPDATE
@@ -715,7 +714,7 @@ define([
             toggles: [
                 LayerItem.toggles.ZOOM,
                 LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
+                LayerItem.toggles.QUERY
             ],
             notices: [
                 LayerItem.notices.SCALE
@@ -755,22 +754,43 @@ define([
         ];
 
         /**
+         * Helper function to check if `states` parameter is false or [].
+         * 
+         * @param {Array} [states] state names
+         * @method getStateNames
+         * @private
+         */
+        function getStateNames(states) {
+            if (typeof states === 'undefined' || !states || states.length === 0) {
+                states = Object
+                    .getOwnPropertyNames(LayerItem.state)
+                    .map(function (key) { return LayerItem.state[key]; });
+            }
+
+            return states;
+        }
+
+        /**
         * Modifies a given state matrix by adding specified partKey to the specified partType collection.
         *
         * @param {Object} stateMatrix matrix to modify
         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
         * @param {String} partKey part key to be inserted into the collection
-        * @param {Boolean} prepend indicates if the part key should be prepended or appended
+        * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
+        * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
         * @method addStateMatrixPart
         * @static
-        * @private
         */
-        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, prepend) {
+        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, states, prepend) {
+            states = getStateNames(states);
+
             UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                if (prepend) {
-                    data[partType].unshift(partKey);
-                } else {
-                    data[partType].push(partKey);
+                if (states.indexOf(state) !== -1) {
+                    if (prepend) {
+                        data[partType].unshift(partKey);
+                    } else {
+                        data[partType].push(partKey);
+                    }
                 }
             });
         };
@@ -781,13 +801,17 @@ define([
          * @param {Object} stateMatrix matrix to modify
          * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
          * @param {String} partKey part key to be removed into the collection
+         * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
          * @method addStateMatrixPart
          * @static
-         * @private
          */
-        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey) {
+        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey, states) {
+            states = getStateNames(states);
+
             UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                UtilArray.remove(data[partType], partKey);
+                if (states.indexOf(state) !== -1) {
+                    UtilArray.remove(data[partType], partKey);
+                }
             });
         };
 
