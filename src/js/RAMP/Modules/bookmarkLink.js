@@ -52,25 +52,15 @@
 * 
 * @class BookmarkLink
 * @static
-* @uses dojo/_base/declare
 * @uses require
-* @uses dojo/dom-construct
 * @uses dojo/io-query
 * @uses dojo/_base/lang
-* @uses dojo/dom
-* @uses dojo/_base/array
 * @uses dojo/topic
-* @uses dijit/form/TextBox
-* @uses dijit/TitlePane
-* @uses esri/geometry/Extent
 */
 
 define([
 // Dojo
-        "dojo/_base/declare", "require", "dojo/dom-construct", "dojo/io-query", "dojo/_base/lang",
-        "dojo/dom", "dojo/_base/array", "dojo/topic", "dijit/form/TextBox", "dijit/TitlePane",
-// Esri
-        "esri/geometry/Extent",
+        "require", "dojo/io-query", "dojo/_base/lang", "dojo/topic",
 // Ramp
         "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/ramp",
 // Util
@@ -79,10 +69,7 @@ define([
 
     function (
     // Dojo
-        declare, dojoRequire, dojoDomConstruct, dojoQuery, dojoLang,
-        dojoDom, dojoArray, topic, TextBox, TitlePane,
-    // Esri
-        Extent,
+        dojoRequire, dojoQuery, dojoLang, topic,
     // Ramp
         GlobalStorage, RampMap, EventManager, Ramp,
     // Util
