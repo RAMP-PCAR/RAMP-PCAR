@@ -25,7 +25,7 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array", "dojo/Deferred",
+"dojo/topic", "dojo/Deferred",
 
 /* ESRI */
 "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
@@ -35,7 +35,7 @@ define([
 
     function (
     /* Dojo */
-    topic, dojoArray, Deferred,
+    topic, Deferred,
 
     /* ESRI */
     PrintTemplate, PrintParameters, PrintTask,
@@ -148,7 +148,7 @@ define([
                 visState.empty = false;
 
                 //go through feature layer config
-                dojoArray.forEach(RAMP.config.layers.feature, function (fl) {
+                RAMP.config.layers.feature.forEach(function (fl) {
                     var flObj = RAMP.layerRegistry[fl.id];
 
                     //find if feature layer, user added, visible, and has no URL
@@ -170,7 +170,7 @@ define([
         function restoreFileLayers() {
             if (!visState.empty) {
                 //go through feature layer config
-                dojoArray.forEach(visState.layers, function (flObj) {
+                visState.layers.forEach(function (flObj) {
                     flObj.setVisibility(true);
                 });
 
