@@ -35,7 +35,7 @@
 */
 define([
 // Dojo
-        "dojo/_base/array", "dojo/topic", "dojo/_base/lang", "dojo/Deferred",
+        "dojo/topic", "dojo/_base/lang", "dojo/Deferred",
 
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
@@ -54,7 +54,7 @@ define([
 
     function (
     // Dojo
-        dojoArray, topic, dojoLang, Deferred,
+        topic, dojoLang, Deferred,
 
     // Ramp
         GlobalStorage, EventManager,
@@ -1590,7 +1590,7 @@ define([
                             });
                         });
                     } else {
-                        dojoArray.forEach(attr.origin.split(","), function (element) {
+                        attr.origin.split(",").forEach(function (element) {
                             //attr.origin = element;
                             hideSubPanel({
                                 origin: element
@@ -1608,7 +1608,7 @@ define([
                             dockSubPanel(na);
                         });
                     } else {
-                        dojoArray.forEach(attr.origin.split(","), function (element) {
+                        attr.origin.split(",").forEach(function (element) {
                             na = Object.create(attr);
                             na.origin = element;
                             dockSubPanel(na);
@@ -1626,7 +1626,7 @@ define([
                             captureSubPanel(na);
                         });
                     } else {
-                        dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
+                        attr.consumeOrigin.split(",").forEach(function (element) {
                             na = Object.create(attr);
                             na.consumeOrigin = element;
                             captureSubPanel(na);
@@ -1702,7 +1702,7 @@ define([
                     // using the waitList (otherwise if we just publish the
                     // event like above, then subscribe to it here, the event
                     // might have completed before reaching this point)
-                    var eventNames = dojoArray.map(waitList, function (obj) {
+                    var eventNames = waitList.map(function (obj) {
                         return obj.subscribeName;
                     });
 
@@ -1710,7 +1710,7 @@ define([
                         topic.publish(EventManager.GUI.UPDATE_COMPLETE);
                     });
 
-                    dojoArray.forEach(waitList, function (obj) {
+                    waitList.forEach(function (obj) {
                         topic.publish(obj.publishName, obj.eventArg);
                     });
                 }
