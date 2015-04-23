@@ -15,13 +15,11 @@
 * These zoom in services rely on web services which return extent values based the user-entered province, city, or postal code
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
 * {{#crossLink "Map"}}{{/crossLink}}  
 * {{#crossLink "Util"}}{{/crossLink}}  
 * 
 * @class QuickZoom
 * @uses dojo/_base/declare
-* @uses dojo/_base/array
 * @uses dojo/_base/lang
 * @uses dojo/dom
 * @uses dojo/dom-construct
@@ -29,7 +27,6 @@
 * @uses dijit/form/TextBox
 * @uses dijit/form/Select
 * @uses dijit/form/Button
-* @uses esri/geometry/Extent
 * @uses esri/tasks/QueryTask
 * @uses esri/tasks/query
 */
@@ -37,14 +34,14 @@
 define([
 
     /* Dojo */
-    "dojo/_base/declare", "dojo/_base/array", "dojo/_base/lang", "dojo/dom", "dojo/dom-construct", "dijit/form/Form",
+    "dojo/_base/declare", "dojo/_base/lang", "dojo/dom", "dojo/dom-construct", "dijit/form/Form",
     "dijit/form/TextBox", "dijit/form/Select", "dijit/form/Button",
 
     /* Esri */
-    "esri/geometry/Extent", "esri/tasks/QueryTask", "esri/tasks/query",
+    "esri/tasks/QueryTask", "esri/tasks/query",
 
     /* Ramp */
-    "ramp/globalStorage", "ramp/map",
+    "ramp/map",
 
     /* Util */
     "utils/util"
@@ -53,11 +50,11 @@ define([
     function (
 
         /* Dojo */
-        declare, dojoArray, dojoLang, dom, domConstruct, Form, TextBox, Select, Button,
-        Extent, QueryTask, Query,
+        declare, dojoLang, dom, domConstruct, Form, TextBox, Select, Button,
+        QueryTask, Query,
 
         /* Ramp */
-        GlobalStorage, RampMap,
+        RampMap,
 
         /* Util */
         UtilMisc
@@ -198,7 +195,7 @@ define([
                         function (featureSet) {
                             // Populate the dropdown from a list retrieved
                             // from service
-                            select.addOption(dojoArray.map(featureSet.features, mapFunc));
+                            select.addOption(featureSet.features.map(mapFunc));
                         },
                         function (error) {
                             console.log("Could not populate dropdown");
