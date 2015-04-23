@@ -700,9 +700,7 @@ define([
                 LayerItem.controls.SETTINGS,
                 LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.EYE
-            ],
+            toggles: [],
             notices: []
         };
 
@@ -726,9 +724,7 @@ define([
                 LayerItem.controls.SETTINGS,
                 LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.EYE
-            ],
+            toggles: [],
             notices: [
                 LayerItem.notices.UPDATE
             ]
@@ -752,8 +748,7 @@ define([
                 LayerItem.controls.REMOVE
             ],
             toggles: [
-                LayerItem.toggles.ZOOM,
-                LayerItem.toggles.EYE
+                LayerItem.toggles.ZOOM
             ],
             notices: [
                 LayerItem.notices.SCALE
@@ -828,7 +823,7 @@ define([
         };
 
         /**
-        * Sets given matrix states by adding specified partKeys to the specified partType collection. Existing collection is replaced by supplied keys.
+        * Sets given matrix states by adding specified partKeys to the specified partType collection.
         *
         * @param {Object} stateMatrix matrix to modify
         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
