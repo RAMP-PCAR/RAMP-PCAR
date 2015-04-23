@@ -1384,36 +1384,18 @@ define([
          */
         function autoHideDataTab() {
             // initialize to the correct state (this might be happening after some layers have already loaded)
-            if (RAMP.layerRegistry) {
-                var features = Object
-                    .keys(RAMP.layerRegistry)
-                    .some(function (layer) {
-                        return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.feature;
-                    })
-                ;
-
-                if (features) {
-                    layoutController.toggleDataTab();
-                }
+            if (RAMP.layerCounts && RAMP.layerCounts.feature === 0) {
+                layoutController.toggleDataTab();
             }
             
             // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
             topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
-                if (args.layer.ramp.type === GlobalStorage.layerType.feature) {
-                    layoutController.toggleDataTab(true);
-                }
+                layoutController.toggleDataTab(args.layerCounts.feature > 0);
             });
 
             // on each remove check if there are still feature layers in the layer list
-            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
-                var features = Object.keys(RAMP.layerRegistry).filter(function (layer) {
-                    var l = RAMP.layerRegistry[layer];
-                    return l ? l.ramp.type === GlobalStorage.layerType.feature : false;
-                });
-                console.log('features left (including the layer to be removed): ' + features.length);
-                if (features.length === 1) {
-                    layoutController.toggleDataTab();
-                }
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (args) {
+                layoutController.toggleDataTab(args.layerCounts.feature > 0);
             });
         }
 
