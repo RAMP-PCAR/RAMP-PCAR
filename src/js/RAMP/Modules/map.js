@@ -1139,6 +1139,23 @@ define([
             */
             localProjectExtent: localProjectExtent,
 
+            // a temporary function with a silly name to update global ui state
+            // TODO: move into state manager module when it's created
+            updateDatagridUpdatingState: function (layer, value) {
+                var oldState = RAMP.state.ui.datagridUpdating;
+
+                if (layer.ramp.type === GlobalStorage.layerType.feature) {
+                    value = value ? 1 : -1;
+
+                    RAMP.state.ui.datagridUpdating += value;
+
+                    // only fire event when the number of updating layers is going from  0 to 1 or back
+                    if (oldState + RAMP.state.ui.datagridUpdating === 1) {
+                        topic.publish(EventManager.Datagrid.UPDATING, RAMP.state.ui.datagridUpdating ? true : false);
+                    }
+                }
+            },
+
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.
             *

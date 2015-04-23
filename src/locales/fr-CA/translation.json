@@ -350,8 +350,9 @@
         "zoomBack": "Zoom arrière", 
         "details": "Détails", 
         "notices": {
-            "offScaleFullData": "Les données ne sont pas visibles à ce niveau du Zoom", 
-            "offScaleSummary": "Quelques données ne sont pas visibles à ce niveau du Zoom"
+            "offScaleFullData": "Les données ne sont pas visibles à ce niveau du Zoom",
+            "offScaleSummary": "Quelques données ne sont pas visibles à ce niveau du Zoom",
+            "update": "Mise à jour"
         }, 
         "dataTabTitle": "Données", 
         "ex": {

@@ -67,7 +67,8 @@ RAMP = {
         ui: {
             sidePanelOpened: true,
             fullscreen: false,
-            wmsQuery: true
+            wmsQuery: true,
+            datagridUpdating: 0
         },
         hilite: { //tracks active hilights to allow them to refresh if feature graphics redraw at different resolution
             click: {
