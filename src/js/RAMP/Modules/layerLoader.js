@@ -27,7 +27,6 @@
 * @class LayerLoader
 * @static
 * @uses dojo/topic
-* @uses dojo/_base/array
 * @uses esri/geometry/Extent
 * @uses esri/layers/GraphicsLayer
 * @uses esri/tasks/GeometryService
@@ -36,7 +35,7 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array",
+"dojo/topic",
 
 /* ESRI */
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
@@ -50,7 +49,7 @@ define([
 
     function (
     /* Dojo */
-    topic, dojoArray,
+    topic,
 
     /* ESRI */
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
@@ -567,7 +566,7 @@ define([
                 });
 
                 //find where our index is
-                layerIndex = dojoArray.indexOf(cleanIdArray, evt.layerId);
+                layerIndex = cleanIdArray.indexOf(evt.layerId);
 
                 if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
