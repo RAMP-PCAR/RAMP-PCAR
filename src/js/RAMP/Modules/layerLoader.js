@@ -443,6 +443,8 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateStart: function (evt) {
+                RampMap.updateDatagridUpdatingState(evt.layer, true);
+
                 //console.log("LAYER UPDATE START: " + evt.layer.url);
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.UPDATING, true);
             },
@@ -484,6 +486,9 @@ define([
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
                 }
+
+                RampMap.updateDatagridUpdatingState(evt.layer);
+
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
             },
 
