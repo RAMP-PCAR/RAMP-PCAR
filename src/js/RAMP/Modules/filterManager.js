@@ -52,7 +52,7 @@ define([
         "esri/tasks/query",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
+        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem", "ramp/layerLoader",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkboxGroup"],
@@ -68,7 +68,7 @@ define([
         EsriQuery,
 
     /* Ramp */
-        Ramp, GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
+        GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem, LayerLoader,
 
     /* Util */
         TmplHelper, UtilMisc, UtilDict, PopupManager, CheckboxGroup) {
@@ -310,7 +310,8 @@ define([
                                     //check if layer is in error state.  error layers should not be part of the count
                                     return (getLayerItem(elm).state !== LayerItem.state.ERROR);
                                 }),
-                                index = cleanIdArray.indexOf(layerId);
+                                index;
+                            index = cleanIdArray.toArray().indexOf(layerId);
 
                             if (index < 0) {
                                 return;
@@ -555,7 +556,7 @@ define([
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
                             var id = button.data("layer-id"),
-                                layerConfig = Ramp.getLayerConfigWithId(id),
+                                layerConfig = LayerLoader.getLayerConfig(id),
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {

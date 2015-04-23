@@ -68,11 +68,24 @@ define([
         * Get an auto-generated layer id.  This works because javascript is single threaded: if this gets called
         * from a web-worker at some point it will need to be synchronized.
         *
+        * @method  nextId
         * @returns {String} an auto-generated layer id
         */
         function nextId() {
             idCounter += 1;
             return 'rampAutoId_' + idCounter;
+        }
+
+        /**
+        * Get a layer config for a given layer ID.
+        *
+        * @method  getLayerConfig
+        * @param   {String} layerId a RAMP layer ID
+        * @returns {Object} a RAMP config object from the layer registry
+        */
+        function getLayerConfig(layerId) {
+            var layer = RAMP.layerRegistry[layerId];
+            return layer ? layer.ramp.config : null;
         }
 
         /**
@@ -608,6 +621,8 @@ define([
             loadLayer: function (layer, reloadIndex) {
                 _loadLayer(layer, reloadIndex);
             },
+
+            getLayerConfig: getLayerConfig,
 
             nextId: nextId
         };

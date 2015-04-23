@@ -62,7 +62,7 @@ define([
 // Dojo
         "require", "dojo/io-query", "dojo/_base/lang", "dojo/topic",
 // Ramp
-        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/ramp",
+        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/layerLoader",
 // Util
         "utils/url", "utils/util", "utils/dictionary", "utils/array", "utils/popupManager"
 ],
@@ -71,7 +71,7 @@ define([
     // Dojo
         dojoRequire, dojoQuery, dojoLang, topic,
     // Ramp
-        GlobalStorage, RampMap, EventManager, Ramp,
+        GlobalStorage, RampMap, EventManager, LayerLoader,
     // Util
         Url, UtilMisc, UtilDict, UtilArray, PopupManager) {
         "use strict";
@@ -607,7 +607,7 @@ define([
                 layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    var layerConfig = LayerLoader.getLayerConfig(layerId);
                     // make sure not null
                     if (layerConfig !== null) {
                         layerConfig.settings.visible = true;
@@ -625,7 +625,7 @@ define([
                 layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    var layerConfig = LayerLoader.getLayerConfig(layerId);
 
                     if (layerConfig !== null) {
                         layerConfig.settings.visible = false;
@@ -643,7 +643,7 @@ define([
                 layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    var layerConfig = LayerLoader.getLayerConfig(layerId);
                     if (layerConfig !== null) {
                         layerConfig.settings.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
@@ -659,7 +659,7 @@ define([
                 layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = Ramp.getLayerConfigWithId(layerId);
+                    var layerConfig = LayerLoader.getLayerConfig(layerId);
 
                     if (layerConfig !== null) {
                         layerConfig.settings.boundingBoxVisible = false;
@@ -811,10 +811,10 @@ define([
 
                     // Only keep attributes that are different from the default config
                     var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
-                        return layerVisible && !Ramp.getLayerConfigWithId(key).settings.visible;
+                        return layerVisible && !LayerLoader.getLayerConfig(key).settings.visible;
                     }),
                         hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
-                            return !boxVisible && Ramp.getLayerConfigWithId(key).settings.visible;
+                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.visible;
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
@@ -842,10 +842,10 @@ define([
 
                     // Only keep attributes that are different from the default config
                     var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
-                        return boxVisible && !Ramp.getLayerConfigWithId(key).settings.boundingBoxVisible;
+                        return boxVisible && !LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
                     }),
                         hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
-                            return !boxVisible && Ramp.getLayerConfigWithId(key).settings.boundingBoxVisible;
+                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {

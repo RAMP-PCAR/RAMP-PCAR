@@ -36,7 +36,7 @@ define([
         "dojo/topic",
 
 /* Ramp */
-        "ramp/ramp", "ramp/eventManager",
+        "ramp/ramp", "ramp/eventManager", "ramp/layerLoader",
 
 /*tmplHelper */
         "utils/tmplHelper",
@@ -51,7 +51,7 @@ define([
     /* Dojo */
         topic,
     /* Ramp */
-        Ramp, EventManager,
+        Ramp, EventManager, LayerLoader,
 
     /*tmplHelper */
         TmplHelper, hovertips_template, anchortips_template
@@ -146,10 +146,10 @@ define([
                 layerId = graphic.getLayer().id;
             }
 
-            var layerConfig = Ramp.getLayerConfigWithId(layerId),
-               templateKey = "",
-               datawrapper,
-               maptipContent;
+            var layerConfig = LayerLoader.getLayerConfig(layerId),
+                templateKey = "",
+                datawrapper,
+                maptipContent;
 
             tmpl.cache = {};
 

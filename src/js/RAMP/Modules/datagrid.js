@@ -55,7 +55,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "ramp/theme",
+        "ramp/eventManager", "ramp/theme", "ramp/layerLoader",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -72,7 +72,7 @@ define([
         EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
+        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
 
     // Util
         utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
@@ -417,7 +417,7 @@ define([
                         //layout for variable column (extended grid)
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns.map(function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : LayerLoader.getLayerConfig(ui.getSelectedDatasetId()).datagrid.gridColumns.map(function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
