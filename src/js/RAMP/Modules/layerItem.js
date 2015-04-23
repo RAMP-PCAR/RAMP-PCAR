@@ -442,7 +442,7 @@ define([
         });
 
         /**
-         * Helper function to check if `states` parameter is false or [].
+         * Helper function to check if `states` parameter is false or []. If empty array is supplied, all available states are returned
          * 
          * @param {Array} [states] state names
          * @method getStateNames
@@ -456,6 +456,25 @@ define([
             }
 
             return states;
+        }
+
+        /**
+         * Helper function to check if `partKeys` parameter is false or []. If empty array is supplied, all available partKeys for the specified partType are returned.
+         * 
+         * @param {String} partType a part type
+         * @param {Array} [partKeys] part keys
+         * @method getPartKeys
+         * @return {Array} an array of partKeys
+         * @private
+         */
+        function getPartKeys(partType, partKeys) {
+            if (typeof partKeys === 'undefined' || !partKeys || partKeys.length === 0) {
+                partKeys = Object
+                    .getOwnPropertyNames(LayerItem[partType])
+                    .map(function (key) { return LayerItem[partType][key]; });
+            }
+
+            return partKeys;
         }
 
         lang.mixin(LayerItem,
@@ -483,6 +502,12 @@ define([
                     UPDATING: "layer-state-updating",
                     ERROR: "layer-state-error",
                     OFF_SCALE: "layer-state-off-scale"
+                },
+
+                partTypes: {
+                    TOGGLES: "toggles",
+                    CONTROLS: "controls",
+                    NOTICES: "notices"
                 },
 
                 /**
@@ -779,9 +804,19 @@ define([
         * @static
         */
         LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, states, prepend) {
-            states = getStateNames(states);
+            var parts;
 
-            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+            states = getStateNames(states);
+            states.forEach(function (state) {
+                parts = stateMatrix[state][partType];
+                if (prepend) {
+                    parts.unshift(partKey);
+                } else {
+                    parts.push(partKey);
+                }
+            });
+
+            /*UtilDict.forEachEntry(stateMatrix, function (state, data) {
                 if (states.indexOf(state) !== -1) {
                     if (prepend) {
                         data[partType].unshift(partKey);
@@ -789,6 +824,33 @@ define([
                         data[partType].push(partKey);
                     }
                 }
+            });*/
+        };
+
+        /**
+        * Sets given matrix states by adding specified partKeys to the specified partType collection. Existing collection is replaced by supplied keys.
+        *
+        * @param {Object} stateMatrix matrix to modify
+        * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+        * @param {Array} partKeys an array of part key names to be inserted into the collection
+        * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
+        * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
+        * @method addStateMatrixPart
+        * @static
+        */
+        LayerItem.setStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend) {
+            var that = this;
+            partKeys = getPartKeys(partType, partKeys);
+            states = getStateNames(states);
+
+            // remove partkeys
+            states.forEach(function (state) {
+                stateMatrix[state][partType] = [];
+            });
+
+            // add new ones
+            partKeys.forEach(function (partKey) {
+                that.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
             });
         };
 
@@ -804,12 +866,15 @@ define([
          */
         LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey, states) {
             states = getStateNames(states);
+            states.forEach(function (state) {
+                UtilArray.remove(stateMatrix[state][partType], partKey);
+            });
 
-            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+            /*UtilDict.forEachEntry(stateMatrix, function (state, data) {
                 if (states.indexOf(state) !== -1) {
                     UtilArray.remove(data[partType], partKey);
                 }
-            });
+            });*/
         };
 
         /**
