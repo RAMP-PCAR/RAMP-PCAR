@@ -13,11 +13,10 @@
 * 
 * @class Array
 * @static
-* @uses dojo/_base/array
 * @uses dojo/_base/lang
 */
-define(["dojo/_base/array", "dojo/_base/lang", "utils/util"],
-    function (dojoArray, dojoLang, Util) {
+define(["dojo/_base/lang", "utils/util"],
+    function (dojoLang, Util) {
         "use strict";
         return {
             /**
