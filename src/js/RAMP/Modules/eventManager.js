@@ -407,15 +407,29 @@ define([],
                 LAYER_LOADED: "layerLoader/layer-loaded",
 
                 /**
-                * Indicates that a map layer has been added to the layer selector
+                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has added a layer to the map.
                 *
                 * @event LayerLoader.LAYER_ADDED
                 * @for LayerLoader
                 * @param event {Object}
                 * @param event.layer {Object} layer object that has been added
+                * @param event.layerCounts {Object} layer counts
                 *
                 */
                 LAYER_ADDED: "layerLoader/layer-added",
+
+                /**
+                * Indicates that a map layer has been removed to the layer selector. This means the LayerLoader has removed a layer from the map. 
+                * When a layer errors, it's removed from the map, but it might still be in the layer selector in the error state.
+                *
+                * @event LayerLoader.LAYER_REMOVED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} layer object that has been added
+                * @param event.layerCounts {Object} layer counts
+                *
+                */
+                LAYER_REMOVED: "layerLoader/layer-removed",
 
                 /**
                 * Indicates that a map layer has updated.  This means the data it is showing is visible and up-to-date

@@ -223,9 +223,6 @@ define([
             //object to make state decisions
             map.addLayer(layer, insertIdx);
 
-            // publish LAYER_ADDED event for every user-added layer
-            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
-
             //derive initial state
             switch (layer.ramp.load.state) {
                 case "loaded":
@@ -348,6 +345,9 @@ define([
                     }
                     break;
             }
+
+            // publish LAYER_ADDED event for every added layer
+            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer, layerCounts: RAMP.layerCounts });
         }
 
         return {
@@ -514,6 +514,9 @@ define([
                 configCollection.splice(configIdx, 1);
 
                 RAMP.layerRegistry[evt.layerId] = undefined;
+
+                // publish LAYER_REMOVED event for every removed layer
+                topic.publish(EventManager.LayerLoader.LAYER_REMOVED, { layer: layer, layerCounts: RAMP.layerCounts });
             },
 
             /**
