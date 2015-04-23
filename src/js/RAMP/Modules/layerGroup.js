@@ -38,21 +38,21 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
+    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
 
     /* Text */
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/tmplHelper", "utils/array", "utils/dictionary",
+    "utils/tmplHelper", "utils/array",
 
     /* RAMP */
     "ramp/layerItem"
 ],
     function (
-        Evented, declare, lang, dojoArray,
+        Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, UtilArray, UtilDict,
+        TmplHelper, UtilArray,
         LayerItem) {
         "use strict";
 
