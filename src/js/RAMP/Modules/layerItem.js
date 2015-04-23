@@ -835,18 +835,21 @@ define([
         * @param {Array} partKeys an array of part key names to be inserted into the collection
         * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
         * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
-        * @method addStateMatrixPart
+        * @param {Boolean} [clear] a flag to clear existing partKey collections
+        * @method addStateMatrixParts
         * @static
         */
-        LayerItem.setStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend) {
+        LayerItem.addStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend, clear) {
             var that = this;
             partKeys = getPartKeys(partType, partKeys);
             states = getStateNames(states);
 
             // remove partkeys
-            states.forEach(function (state) {
-                stateMatrix[state][partType] = [];
-            });
+            if (clear) {
+                states.forEach(function (state) {
+                    stateMatrix[state][partType] = [];
+                });
+            }
 
             // add new ones
             partKeys.forEach(function (partKey) {

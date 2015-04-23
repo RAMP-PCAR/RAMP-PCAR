@@ -166,11 +166,11 @@ define([
                     layerItemOptions = {};
 
                 // augment existing stateMatrix or create a new one
-                if (options && options.stateMatrix) {
+                /*if (options && options.stateMatrix) {
                     options.stateMatrix = this._constructStateMatrix(layer, options.stateMatrix);
                 } else {
                     layerItemOptions.stateMatrix = this._constructStateMatrix(layer);
-                }
+                }*/
 
                 lang.mixin(layerItemOptions,
                     {

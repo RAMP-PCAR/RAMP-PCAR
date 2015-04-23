@@ -903,6 +903,50 @@ define([
             });
         }
 
+        function getStateMatrixTemplate(layerType) {
+            var stateMatrix = LayerItem.getStateMatrixTemplate(),
+                featureToggles = [
+                    LayerItem.toggles.EYE,
+                    LayerItem.toggles.PLACEHOLDER
+                ];
+
+            switch (layerType) {
+                case GlobalStorage.layerType.feature:
+                    // remove placeholder toggle if there are wms layers
+                    if (RAMP.layerCounts.wms === 0) {
+                        featureToggles.pop();
+                    }
+
+                    LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
+                        featureToggles,
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
+
+                    break;
+
+                case GlobalStorage.layerType.wms:
+                    LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.EYE,
+                            LayerItem.toggles.QUERY
+                        ],
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
+
+                    break;
+            }
+
+            return stateMatrix;
+        }
+
         return {
             /**
             * Reads the application configuration and creates the legend and filter management widget
@@ -951,16 +995,13 @@ define([
                     ui.addLayerGroup(layerGroup.node);
                 }
 
+                // generate a state matrix based on layer type
+                options.stateMatrix = getStateMatrixTemplate(layerType);
+
                 // layer is user-added, add an extra notice to all states
                 if (layerRamp.user) {
-                    options = lang.mixin(options,
-                        {
-                            stateMatrix: LayerItem.getStateMatrixTemplate()
-                        }
-                    );
-
-                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, [], true);
-                    LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
+                    LayerItem.addStateMatrixPart(options.stateMatrix, LayerItem.partTypes.NOTICES, LayerItem.notices.USER, [], true);
+                    LayerItem.removeStateMatrixPart(options.stateMatrix, LayerItem.partTypes.CONTROLS, LayerItem.controls.METADATA);
                 }
 
                 newLayer = layerGroup.addLayerItem(layerRamp.config, options);
