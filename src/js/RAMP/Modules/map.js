@@ -26,8 +26,6 @@
 * 
 * @class Map
 * @static
-* @uses dojo/_base/declare
-* @uses dojo/_base/array
 * @uses dojo/dom
 * @uses dojo/dom-construct
 * @uses dojo/number
@@ -43,17 +41,15 @@
 * @uses esri/dijit/Scalebar
 * @uses esri/geometry/Extent
 * @uses esri/tasks/GeometryService
-* @uses esri/tasks/ProjectParameters
 */
 
 define([
 /* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/dom",
-        "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
+"dojo/dom", "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters",
+"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService",
 
 /* Ramp */
 "ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
@@ -63,11 +59,11 @@ define([
 
     function (
     /* Dojo */
-    declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
+    dom, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
-    SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService, ProjectParameters,
+    SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService,
 
     /* Ramp */
     GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
@@ -293,7 +289,7 @@ define([
                 layer.setVisibility(setTo);
                 //loops through any static layers that are mapped to the feature layer being toggled
                 try {
-                    dojoArray.forEach(GlobalStorage.LayerMap[layerId], function (staticLayer) {
+                    GlobalStorage.LayerMap[layerId].forEach(function (staticLayer) {
                         var layer = map.getLayer(staticLayer);
                         layer.setVisibility(setTo);
                     });
@@ -309,7 +305,7 @@ define([
                     layer.setOpacity(evt.value);
                     //loops through any static layers that are mapped to the feature layer being toggled
                     try {
-                        dojoArray.forEach(GlobalStorage.LayerMap[evt.layerId], function (staticLayer) {
+                        GlobalStorage.LayerMap[evt.layerId].forEach(function (staticLayer) {
                             var layer = map.getLayer(staticLayer);
                             layer.setOpacity(evt.value);
                         });
@@ -333,7 +329,7 @@ define([
                     featureLayers;
 
                 if (map.layerIds.contains(evt.id)) {
-                    featureLayers = dojoArray.map(map.graphicsLayerIds, function (x) {
+                    featureLayers = map.graphicsLayerIds.map(function (x) {
                         return map.getLayer(x).type === 'Feature Layer' ? 1 : 0;
                     }).sum();
                     newIndex += 1 - featureLayers; // offset by 1 basemap not accounted for
@@ -861,7 +857,7 @@ define([
             getVisibleFeatureLayers: function () {
                 // Return only the feature layers
                 //TODO do we need to consider static layers here?
-                return dojoArray.filter(map.getLayersVisibleAtScale(), function (layer) {
+                return map.getLayersVisibleAtScale().filter(function (layer) {
                     return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
             },
@@ -1223,12 +1219,12 @@ define([
                 maxExtent = new EsriExtent(RAMP.config.extents.maximumExtent);
 
                 //generate WMS layers array
-                wmsLayers = dojoArray.map(RAMP.config.layers.wms, function (layer) {
+                wmsLayers = RAMP.config.layers.wms.map(function (layer) {
                     return that.makeWmsLayer(layer);
                 });
 
                 //generate feature layers array
-                featureLayers = dojoArray.map(RAMP.config.layers.feature, function (layerConfig) {
+                featureLayers = RAMP.config.layers.feature.map(function (layerConfig) {
                     var fl;
 
                     if (layerConfig.isStatic) {
@@ -1285,9 +1281,12 @@ define([
                     perLayerStaticMaps = [],
                     staticLayerMap = [];
 
-                dojoArray.forEach(RAMP.config.layers.feature, function (layer) {
+                RAMP.config.layers.feature.forEach(function (layer) {
                     perLayerStaticMaps = [];
-                    dojoArray.forEach(layer.staticLayers, function (staticLayer, i) {
+                    if (!layer.staticLayers) {
+                        return;
+                    }
+                    layer.staticLayers.forEach(function (staticLayer, i) {
                         var tempLayer = that.makeStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
