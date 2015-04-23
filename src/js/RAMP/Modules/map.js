@@ -52,7 +52,7 @@ define([
 "esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService",
 
 /* Ramp */
-"ramp/globalStorage", "ramp/ramp", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
+"ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
 
 /* Util */
 "utils/util", "utils/array", "utils/dictionary"],
@@ -66,7 +66,7 @@ define([
     SpatialReference, EsriScalebar, EsriExtent, WMSLayer, GeometryService,
 
     /* Ramp */
-    GlobalStorage, Ramp, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
+    GlobalStorage, FeatureClickHandler, MapClickHandler, Navigation, EventManager,
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {

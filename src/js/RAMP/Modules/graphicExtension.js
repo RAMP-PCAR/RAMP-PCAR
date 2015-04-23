@@ -28,9 +28,6 @@
 */
 
 define([
-// RAMP
-    "ramp/ramp",
-
 // Utils
     "utils/array", "utils/dictionary", "utils/util", "utils/tmplHelper",
 
@@ -38,9 +35,6 @@ define([
     "dojo/text!./templates/feature_details_template.json"],
 
     function (
-    // RAMP
-    Ramp,
-
     // Utils
     UtilArray, UtilDict, UtilMisc, TmplHelper,
 

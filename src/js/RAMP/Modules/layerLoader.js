@@ -21,7 +21,6 @@
 * {{#crossLink "LayerItem"}}{{/crossLink}}  
 * {{#crossLink "Map"}}{{/crossLink}}  
 * {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Ramp"}}{{/crossLink}}  
 * {{#crossLink "Util"}}{{/crossLink}}  
 * 
 * @class LayerLoader
@@ -41,7 +40,7 @@ define([
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
+"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler",
 "ramp/filterManager", "ramp/layerItem",
 
 /* Util */
@@ -55,7 +54,7 @@ define([
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
 
     /* RAMP */
-    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler,
     FilterManager, LayerItem,
 
      /* Util */

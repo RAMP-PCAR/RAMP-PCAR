@@ -54,7 +54,7 @@ define([
         "esri/tasks/query",
 
 // Ramp
-        "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
+        "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
         "ramp/eventManager", "ramp/theme", "ramp/layerLoader",
 
 // Util
@@ -72,7 +72,7 @@ define([
         EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
+        GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
 
     // Util
         utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {

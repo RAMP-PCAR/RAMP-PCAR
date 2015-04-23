@@ -15,7 +15,6 @@
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
 * {{#crossLink "EventManager"}}{{/crossLink}}  
 * {{#crossLink "TmplHelper"}}{{/crossLink}}  
 * 
@@ -36,7 +35,7 @@ define([
         "dojo/topic",
 
 /* Ramp */
-        "ramp/ramp", "ramp/eventManager", "ramp/layerLoader",
+        "ramp/eventManager", "ramp/layerLoader",
 
 /*tmplHelper */
         "utils/tmplHelper",
@@ -51,7 +50,7 @@ define([
     /* Dojo */
         topic,
     /* Ramp */
-        Ramp, EventManager, LayerLoader,
+        EventManager, LayerLoader,
 
     /*tmplHelper */
         TmplHelper, hovertips_template, anchortips_template
