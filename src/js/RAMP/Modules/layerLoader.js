@@ -446,12 +446,7 @@ define([
                 //console.log("LAYER UPDATE START: " + evt.layer.url);
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.UPDATING, true);
             },
-            /*
-            x: function () {
-                GraphicExtension.getGraphicTitle(undefined);
-                UtilArray.find(undefined);
-            },
-            */
+
             /**
             * Reacts when a layer has updated successfully.  This means the layer has pulled its data and displayed it.
             *
@@ -466,17 +461,21 @@ define([
                 if (isValidHilight(evt.layer, RAMP.state.hilite.click)) {
                     //re-request the click hilight
                     g = GraphicExtension.findGraphic(RAMP.state.hilite.click.objId, evt.layer.id);
-                    topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                        graphic: g
-                    });
+                    if (g) {
+                        topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
+                            graphic: g
+                        });
+                    } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
 
                 if (isValidHilight(evt.layer, RAMP.state.hilite.zoom)) {
                     //re-request the zoom hilight
                     g = GraphicExtension.findGraphic(RAMP.state.hilite.zoom.objId, evt.layer.id);
-                    topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
-                        graphic: g
-                    });
+                    if (g) {
+                        topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
+                            graphic: g
+                        });
+                    } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
 
                 //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.

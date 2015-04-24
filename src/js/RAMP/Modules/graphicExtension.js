@@ -79,14 +79,17 @@ define([
             * @return {Object} feature data object of the given graphic object. undefined if feature data object doesn't exist
             */
             getFDataForGraphic: function (graphic) {
-                var data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic belongs to
+                var idx, ret,
+                    data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic belongs to
 
                 if (data) {
                     //use graphic object id as key in index to get position of data object
-                    return data.features[data.index[this.getGraphicOid(graphic).toString()]];
-                } else {
-                    return undefined;
+                    idx = data.index[this.getGraphicOid(graphic).toString()];
+                    if (typeof idx !== undefined) {
+                        ret = data.features[idx];
+                    }
                 }
+                return ret;
             },
 
             /**

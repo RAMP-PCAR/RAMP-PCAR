@@ -60,7 +60,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "ramp/theme",
+        "ramp/eventManager", "ramp/theme", "ramp/attributeLoader",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -78,7 +78,8 @@ define([
         FeatureLayer, EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
+        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap,
+        EventManager, Theme, AttributeLoader,
 
     // Util
         utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
@@ -1496,42 +1497,53 @@ define([
                 return;
             }
 
-            var data = [];
+            var data = [], 
+                mode = ui.getDatagridMode();
 
             //for each feature layer
             utilDict.forEachEntry(visibleFeatures, function (key, features) {
                 //ensure attribute data has been downloaded
                 if (RAMP.data[key]) {
                     //for each feature in a specific layer
-                    data = data.concat(dojoArray.map(features, function (feature) {
+
+                    var newData, needsUpdate = false;
+
+                    newData = dojoArray.map(features, function (feature) {
                         //get the feature data for this feature
                         var fData = GraphicExtension.getFDataForGraphic(feature);
 
-                        //return the appropriate data object for the feature (.map puts them in array form)
-                        // "cache" the data object so we don't have to generate it again
-                        return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
-
-                        //TODO test if we need this type of logic, and the .filter below.  ideally the if (RAMP.data) check above should have us in the clear.
-                        /*
                         if (fData) {
                             //return the appropriate data object for the feature (.map puts them in array form)
                             // "cache" the data object so we don't have to generate it again
                             return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
                         } else {
-                            //odd case where there is no feature data for graphic
+                            //we have a graphic that does not yet have layer data downloaded.
+                            //request a download on first occurance. return undefined.
+                            if (!needsUpdate) {
+                                needsUpdate = true;
+                                if (mode !== GRID_MODE_FULL) {
+                                    //only bother triggering an update in map view.
+                                    var faultLayer = feature.getLayer();
+                                    AttributeLoader.updateAttributeData(key, faultLayer.url, faultLayer.ramp.type, GraphicExtension.getGraphicOid(feature));
+                                }
+                            }
                             return undefined;
                         }
-                        */
-                    }));
+                    });
+
+                    if (!needsUpdate) {
+                        //only add data to the grid if we did not encounter an update request for this layer
+                        data = data.concat(newData);
+                    } else if (mode === GRID_MODE_FULL) {
+                        //since map is hidden, the result of the update won't trigger any refresh.
+                        //take what we have, filter out the undefined entries, and proceed.
+                        newData = newData.filter(function (elem) {
+                            return typeof elem !== "undefined";
+                        });
+                        data = data.concat(newData);
+                    }
                 }
             });
-
-            /*
-            //remove any bad rows
-            data = data.filter(function (elem) {
-                return typeof elem !== "undefined";
-            });
-            */
 
             updateRecordsCount(data.length);
 
