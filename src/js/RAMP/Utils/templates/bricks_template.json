@@ -92,10 +92,24 @@
         {% include('default_brick_header', o); %}
 
         {% include('default_brick_notice_placeholder', o); %}
-        <div class='checkbox-content'>
+        <div class='checkbox checkbox-content'>
             <fieldset>
-                <label for='{%= o.guid %}checkbox'>{%= o.label %}
-                    <input type='checkbox' name='{%= o.guid %}checkbox' id='{%= o.guid %}checkbox' checked='{%= o.checked ? 'checked' : '' %}' value='{%= o.value %}'>
+                <label for='{%= o.guid %}'>{%= o.label %}
+                    <input type='checkbox' name='{%= o.guid %}' id='{%= o.guid %}' {%= o.checked ? 'checked' : '' %} value='{%= o.value %}'>
+                </label>
+            </fieldset>
+        </div>
+    ",
+
+    "default_toggle_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='checkbox toggle-content'>
+            <fieldset>
+                <label for='{%= o.guid %}'><span class='wb-inv'>{%= o.label %}</span>
+                    <input type='checkbox' name='{%= o.guid %}' id='{%= o.guid %}' {%= o.checked ? 'checked' : '' %} value='{%= o.value %}'>
                 </label>
             </fieldset>
         </div>

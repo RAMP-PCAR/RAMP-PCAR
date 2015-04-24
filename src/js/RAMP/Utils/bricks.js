@@ -46,6 +46,7 @@ define([
 
             ButtonBrick,
             CheckboxBrick,
+            ToggleBrick,
             OkCancelButtonBrick,
 
             MultiBrick,
@@ -925,7 +926,7 @@ define([
                 lang.mixin(this,
                     {
                         userChecked: false,
-                        inputNode: this.node.find("input[type='checkbox']#" + this.guid + 'checkbox')
+                        inputNode: this.node.find("input[type='checkbox']#" + this.guid)
                     }
                 );
 
@@ -946,7 +947,7 @@ define([
             },
 
             /**
-             * Check or unckeck the checkbox.
+             * Check or uncheck the checkbox.
              * 
              * @method setChecked
              * @param {Boolean} value    true - checked; or false - unchecked
@@ -966,7 +967,7 @@ define([
 
                 // fire change event
                 this.notify(this.event.CHANGE, this.getData());
-                
+
                 return this;
             },
 
@@ -989,7 +990,7 @@ define([
              * Checks if the checkbox was checked by the user or not.
              * 
              * @method isUserEntered
-             * @return {Boolean} true if the user checked the checkbxo; false, otherwise
+             * @return {Boolean} true if the user checked the checkbox; false, otherwise
              */
             isUserEntered: function () {
                 return this.userChecked;
@@ -1025,6 +1026,121 @@ define([
                 };
 
                 return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
+        /**
+        * ToggleBrick is just a Brick with a checkbox inside it. The checkbox can be styled through its checkbox-container. 
+        * To instantiate, call {{#crossLink "ToggleBrick/new:method"}}{{/crossLink}} on the ToggleBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ToggleBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @extends CheckboxBrick
+        * 
+        */
+        ToggleBrick = CheckboxBrick.extend({
+
+            /**
+             * A CSS class of the CheckboxBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "checkbox-brick-container"
+             */
+
+            /**
+             * A name of the default CheckboxBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_checkbox_brick_template"
+             */
+
+            /**
+             * A checkbox value.
+             *
+             * @property value
+             * @private
+             * @type {String}
+             * @default "on"
+             */
+
+            /**
+             * A checkbox label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * ButtonBrick is a simple button in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.value] a checkbox value
+             * @param  {String} [config.label] a checkbox label
+             * @chainable
+             * @return {CheckboxBrick}
+             */
+            initialize: function (id, config) {
+                //var that = this;
+                var newConfig = {};
+
+                lang.mixin(newConfig,
+                    {
+                        template: "default_toggle_brick_template",
+                        containerClass: "toggle-brick-container",
+                        onLabel: 'on',
+                        offLabel: 'off',
+                        value: 'on'
+                    },
+                    config
+                );
+
+                CheckboxBrick.initialize.call(this, id, newConfig);
+
+                this.inputNode.checkbox({
+                    toggle: true,
+                    labels: {
+                        on: this.onLabel,
+                        off: this.offLabel
+                    }
+                });
+
+                // move the on/off labels out of the toggle
+                this.node
+                    .find('.fs-checkbox.fs-checkbox-toggle')
+                    .prepend(
+                        this.node.find('.fs-checkbox-state')
+                    )
+                ;                
             }
         });
 
@@ -2471,6 +2587,15 @@ define([
             CheckboxBrick: CheckboxBrick,
 
             /**
+             * The ToggleBrick prototype. A simple Brick with a checkbox toggle template.
+             *
+             * @property ToggleBrick
+             * @static
+             * @type ToggleBrick
+             */
+            ToggleBrick: ToggleBrick,
+
+            /**
              * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
              *
              * @property OkCancelButtonBrick
@@ -2496,6 +2621,7 @@ define([
              * @type DropDownBrick
              */
             DropDownBrick: DropDownBrick,
+
             /**
              * The ColorPickerBrick prototype. Provides a control to select a color.
              *
@@ -2504,6 +2630,7 @@ define([
              * @type ColorPickerBrick
              */
             ColorPickerBrick: ColorPickerBrick,
+
             /**
              * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
              *
@@ -2512,6 +2639,7 @@ define([
              * @type SimpleInputBrick
              */
             SimpleInputBrick: SimpleInputBrick,
+
             /**
              * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
              *
