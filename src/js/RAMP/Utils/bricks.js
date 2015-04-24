@@ -45,6 +45,7 @@ define([
         var Brick,
 
             ButtonBrick,
+            CheckboxBrick,
             OkCancelButtonBrick,
 
             MultiBrick,
@@ -264,7 +265,8 @@ define([
                         required: null,
                         freezeStates: [],
                         baseTemplate: "default_base_template",
-                        noticeTemplate: "default_brick_notice"
+                        noticeTemplate: "default_brick_notice",
+                        guid: UtilMisc.guid()
                     },
                     config,
                     {
@@ -826,6 +828,206 @@ define([
             }
         });
         
+        /**
+        * CheckboxBrick is just a Brick with a checkbox inside it. The checkbox can be styled through its checkbox-container. 
+        * To instantiate, call {{#crossLink "CheckboxBrick/new:method"}}{{/crossLink}} on the CheckboxBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class CheckboxBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @extends Brick
+        * 
+        */
+        CheckboxBrick = Brick.extend({
+
+            /**
+             * A CSS class of the CheckboxBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "checkbox-brick-container"
+             */
+
+            /**
+             * A name of the default CheckboxBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_checkbox_brick_template"
+             */
+
+            /**
+             * A checkbox value.
+             *
+             * @property value
+             * @private
+             * @type {String}
+             * @default "on"
+             */
+
+            /**
+             * A checkbox label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
+             * ButtonBrick is a simple button in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.value] a checkbox value
+             * @param  {String} [config.label] a checkbox label
+             * @chainable
+             * @return {CheckboxBrick}
+             */
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_checkbox_brick_template",
+                        containerClass: "checkbox-brick-container",
+                        label: config.header,
+                        checked: false
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        userChecked: false,
+                        inputNode: this.node.find("input[type='checkbox']#" + this.guid + 'checkbox')
+                    }
+                );
+
+                this.inputNode.on("change", function () {
+                    var value = that.inputNode.is(':checked');
+                    that.setChecked(value, true);
+                });
+            },
+
+            /**
+             * Returns true. CheckboxBrick is always valid
+             *
+             * @method isValid
+             * @return {Boolean}           true
+             */
+            isValid: function () {
+                return true;
+            },
+
+            /**
+             * Check or unckeck the checkbox.
+             * 
+             * @method setChecked
+             * @param {Boolean} value    true - checked; or false - unchecked
+             * @param {Boolean} userChecked boolean value indicating if the user is the source of the value
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            setChecked: function (value, userChecked) {
+                this.userChecked = userChecked ? true : false;
+                this.checked = value;
+
+                // if user checked it, the checkbox is already changed;
+                // if not, need to set property
+                if (!userChecked) {
+                    this.inputNode.prop('checked', this.checked ? 'checked' : '');
+                }
+
+                // fire change event
+                this.notify(this.event.CHANGE, this.getData());
+                
+                return this;
+            },
+
+            /**
+             * Clears the Brick by unchecking it.
+             *
+             * @method clear
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            clear: function () {
+                this.setChecked(false, false);
+
+                Brick.clear.call(this);
+
+                return this;
+            },
+
+            /**
+             * Checks if the checkbox was checked by the user or not.
+             * 
+             * @method isUserEntered
+             * @return {Boolean} true if the user checked the checkbxo; false, otherwise
+             */
+            isUserEntered: function () {
+                return this.userChecked;
+            },
+
+            /**
+             * Sets CheckboxBrick's data. First calls setChecked and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            setData: function (data) {
+                this.setChecked(data.inputValue, data.userChecked);
+
+                Brick.setData.call(data);
+
+                return this;
+            },
+
+            /**
+             * Returns CheckboxBrick's data. Returns whether it's checked or unchecked.
+             *
+             * @method getData
+             * @for CheckboxBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         CheckboxBrick's data
+             */
+            getData: function (wrap) {
+                var payload = {
+                    checked: this.checked
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
         /**
         * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
         * To instantiate, call {{#crossLink "OkCancelButtonBrick/new:method"}}{{/crossLink}} on the OkCancelButtonBrick prototype.
@@ -2258,6 +2460,16 @@ define([
              * @type ButtonBrick
              */
             ButtonBrick: ButtonBrick,
+
+            /**
+             * The CheckboxBrick prototype. A simple Brick with a checkbox template.
+             *
+             * @property CheckboxBrick
+             * @static
+             * @type CheckboxBrick
+             */
+            CheckboxBrick: CheckboxBrick,
+
             /**
              * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
              *
