@@ -710,9 +710,18 @@ define([],
                 *
                 * @event Datagrid.ZOOMLIGHTROW_HIDE
                 *
+                */
+                ZOOMLIGHTROW_HIDE: "datagrid/zoomlightrow-hide",
+
+                /**
+                * Is fired by the state manager when datagrid is being updated.
+                *
+                * @event Datagrid.UPDATING
+                * @param event {Boolean} true if updating; false if not 
+                * 
                 * @for Datagrid
                 */
-                ZOOMLIGHTROW_HIDE: "datagrid/zoomlightrow-hide"
+                UPDATING: 'datagrid/updating'
             },
 
             Navigation: {
