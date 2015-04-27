@@ -104,7 +104,10 @@
                 "RandomColor/rcolor.js",
                 "btoa-umd/dist/btoa-umd.js",
                 "selfish/selfish.js",
-                "t/t.js"
+                "t/t.js",
+                "formstone/dist/js/core.js",
+                "formstone/dist/js/touch.js",
+                "formstone/dist/js/checkbox.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
