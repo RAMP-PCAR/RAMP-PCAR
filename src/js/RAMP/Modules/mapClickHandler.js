@@ -155,7 +155,7 @@ define([
                         });
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                            content: '{0}{1}<a id="wms-expand" href="#wms-results-large" role="button" aria-controls="wms-results-large">{2}</a>'.format(modalBox,strings,i18n.t('gui.actions.expand')),
+                            content: '{0}<a id="wms-expand" href="#wms-results-large" role="button" aria-controls="wms-results-large">{2}</a>{1}'.format(modalBox,strings,i18n.t('gui.actions.expand')),
                             origin: "wmsFeatureInfo",
                             update: true,
                             guid: 'wms-guid'
