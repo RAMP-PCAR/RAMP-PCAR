@@ -917,7 +917,10 @@ define([
                         template: "default_checkbox_brick_template",
                         containerClass: "checkbox-brick-container",
                         label: config.header,
-                        checked: false
+                        checked: false,
+                        onLabel: 'on',
+                        offLabel: 'off',
+                        value: 'on'
                     }
                 );
 
@@ -926,7 +929,8 @@ define([
                 lang.mixin(this,
                     {
                         userChecked: false,
-                        inputNode: this.node.find("input[type='checkbox']#" + this.guid)
+                        inputNode: this.node.find("input[type='checkbox']#" + this.guid),
+                        contentNode: this.node.find('.checkbox.checkbox-content')
                     }
                 );
 
@@ -964,6 +968,8 @@ define([
                 if (!userChecked) {
                     this.inputNode.prop('checked', this.checked ? 'checked' : '');
                 }
+
+                this.contentNode.toggleClass('checkbox-checked', this.checked);
 
                 // fire change event
                 this.notify(this.event.CHANGE, this.getData());
