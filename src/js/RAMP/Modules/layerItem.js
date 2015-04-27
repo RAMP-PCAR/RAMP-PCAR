@@ -131,6 +131,26 @@ define([
                         _togglesNode: null,
 
                         /**
+                         * A node of the layer toggles.
+                         *
+                         * @property _togglesNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _noticesNode: null,
+
+                        /**
+                         * A node of the layer toggles.
+                         *
+                         * @property _togglesNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _settingsNode: null,
+
+                        /**
                          * A dictionary of control nodes available for this layer.
                          *
                          * @property _controlStore
@@ -159,6 +179,16 @@ define([
                          * @default {}
                          */
                         _noticeStore: {},
+
+                        /**
+                         * A dictionary of setting nodes available for this layer.
+                         *
+                         * @property _settingStore
+                         * @private
+                         * @type Object
+                         * @default {}
+                         */
+                        _settingsStore: {},
 
                         /**
                          * Templates to be used in construction of the layer nodes.
@@ -227,10 +257,12 @@ define([
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
                 this._noticesNode = this.node.find(".layer-notices");
+                this._settingsNode = this.node.find(".layer-settings");
 
                 this._generateParts("controls", "layer_control_", this._controlStore);
                 this._generateParts("toggles", "layer_toggle_", this._toggleStore);
                 this._generateParts("notices", "layer_notice_", this._noticeStore);
+                this._generateParts("settings", "layer_setting_", this._settingsStore);
 
                 this.setState(this.state, options, true);
 
@@ -347,6 +379,7 @@ define([
                     this._setParts("controls", this._controlStore, this._controlsNode);
                     this._setParts("toggles", this._toggleStore, this._togglesNode);
                     this._setParts("notices", this._noticeStore, this._noticesNode);
+                    this._setParts("settings", this._settingsStore, this._settingsNode);
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
@@ -504,10 +537,25 @@ define([
                     OFF_SCALE: "layer-state-off-scale"
                 },
 
+                /**
+                * A default collection of possible LayerItem part types.
+                *
+                * @property LayerItem.partTypes
+                * @static
+                * @type Object
+                * @example 
+                *     partTypes: {
+                *       TOGGLES: "toggles",
+                *       CONTROLS: "controls",
+                *       NOTICES: "notices",
+                *       SETTINGS: 'settings'
+                *       }
+                */
                 partTypes: {
                     TOGGLES: "toggles",
                     CONTROLS: "controls",
-                    NOTICES: "notices"
+                    NOTICES: "notices",
+                    SETTINGS: 'settings'
                 },
 
                 /**
@@ -580,6 +628,25 @@ define([
                     ERROR: "error",
                     UPDATE: "update",
                     USER: "user"
+                },
+
+                /**
+                * A default collection of possible LayerItem settings.
+                *
+                * @property LayerItem.settings
+                * @static
+                * @type Object
+                * @example 
+                *     settings: {
+                *           OPACITY: 'opacity',
+                *           BOUNDING_BOX: 'bounding_box',
+                *           SNAPSHOT: 'snapshot'
+                *           }
+                */
+                settings: {
+                    OPACITY: 'opacity',
+                    BOUNDING_BOX: 'bounding_box',
+                    SNAPSHOT: 'snapshot'
                 },
 
                 /**
@@ -701,7 +768,10 @@ define([
                 LayerItem.controls.REMOVE
             ],
             toggles: [],
-            notices: []
+            notices: [],
+            settings: [
+                LayerItem.settings.OPACITY
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
@@ -709,13 +779,19 @@ define([
                 LayerItem.controls.LOADING
             ],
             toggles: [],
-            notices: []
+            notices: [],
+            settings: [
+                LayerItem.settings.OPACITY
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADED] = {
             controls: [],
             toggles: [],
-            notices: []
+            notices: [],
+            settings: [
+                LayerItem.settings.OPACITY
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
@@ -727,6 +803,9 @@ define([
             toggles: [],
             notices: [
                 LayerItem.notices.UPDATE
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
@@ -738,6 +817,9 @@ define([
             toggles: [],
             notices: [
                 LayerItem.notices.ERROR
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
@@ -752,6 +834,9 @@ define([
             ],
             notices: [
                 LayerItem.notices.SCALE
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
