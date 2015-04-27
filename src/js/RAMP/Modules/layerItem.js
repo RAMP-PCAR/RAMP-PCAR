@@ -45,12 +45,12 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", 'utils/bricks'
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
-        Util, TmplHelper, TmplUtil, UtilArray, UtilDict
+        Util, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
         "use strict";
 
@@ -283,7 +283,10 @@ define([
 
                     stateKey,
                     partKeys = [],
-                    part;
+                    part,
+
+                    brickTemplate,
+                    brickPart;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
@@ -295,8 +298,20 @@ define([
                 partKeys = UtilArray.unique(partKeys);
 
                 partKeys.forEach(function (pKey) {
-                    part = that._generatePart(templateKey, pKey);
+                    if (LayerItem.brickTemplates[pKey]) {
+                        brickTemplate = LayerItem.brickTemplates[pKey];
 
+                        brickPart = brickTemplate.type.new(pKey, brickTemplate.config);
+                        // TODO: fix
+                        // hack to get the data-layer-id attribute onto checkboxBrick input node
+                        // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem is switched full to Bricks and 
+                        // LayerCollection controller is added in between filterManager and LayerGroup.
+                        brickPart.inputNode.attr('data-layer-id', that._config.id);
+                        part = brickPart.node;
+
+                    } else {
+                        part = that._generatePart(templateKey, pKey);
+                    }
                     partStore[pKey] = (part);
                 });
             },
@@ -375,7 +390,7 @@ define([
 
                     // store reference to a focused node inside this layer item if any
                     focusedNode = this.node.find(":focus");
-                    
+
                     this._setParts("controls", this._controlStore, this._controlsNode);
                     this._setParts("toggles", this._toggleStore, this._togglesNode);
                     this._setParts("notices", this._noticeStore, this._noticesNode);
@@ -448,7 +463,7 @@ define([
                 // http://api.jquery.com/detach/
                 target
                     .children()
-                    .detach() 
+                    .detach()
                     .end()
                     .append(controls)
                 ;
@@ -645,7 +660,7 @@ define([
                 */
                 settings: {
                     OPACITY: 'opacity',
-                    BOUNDING_BOX: 'bounding_box',
+                    BOUNDING_BOX: 'bounding_box_brick',
                     SNAPSHOT: 'snapshot'
                 },
 
@@ -756,7 +771,31 @@ define([
                 *        ]
                 * 
                 */
-                transitionMatrix: {}
+                transitionMatrix: {},
+
+                /**
+                 * A temporary store for brick templates.
+                 * TODO: re-think how to best use brick/templates inside the layer item
+                 * 
+                 * @property LayerItem.brickTemplates
+                 * @static
+                 * @type Object
+                 */
+                brickTemplates: {
+                    bounding_box_brick: {
+                        type: Bricks.CheckboxBrick,
+                        config: {
+                            //header: 'Dynamic Loading',
+                            label: 'Bounding Box',
+                            customContainerClass: 'bbox',
+                            //value: "on",
+                            //onLabel: 'on1',
+                            //offLabel: 'off',
+                            checked: false//,
+                            //instructions: i18n.t("addDataset.help.dataSource")
+                        }
+                    }
+                }
             }
         );
 
@@ -770,7 +809,8 @@ define([
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY
+                LayerItem.settings.OPACITY,
+                LayerItem.settings.BOUNDING_BOX
             ]
         };
 
@@ -789,9 +829,7 @@ define([
             controls: [],
             toggles: [],
             notices: [],
-            settings: [
-                LayerItem.settings.OPACITY
-            ]
+            settings: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {

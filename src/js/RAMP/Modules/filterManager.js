@@ -186,7 +186,7 @@ define([
                     */
                     function createGroups() {
                         boxCheckboxGroup = new CheckboxGroup(
-                            mainList.find(".checkbox-custom .box + input"),
+                            mainList.find(".checkbox-brick-container.bbox input:first"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -197,7 +197,7 @@ define([
 
                                 onChange: function () {
                                     Theme.tooltipster(this.labelNode.parent(), null, "update");
-                                },
+                                }/*,
 
                                 master: {
                                     node: globalToggleSection.find(".checkbox-custom .box + input"),
@@ -208,7 +208,7 @@ define([
                                         check: i18n.t('filterManager.hideAllBounds'),
                                         uncheck: i18n.t('filterManager.showAllBounds')
                                     }
-                                }
+                                }*/
                             });
 
                         boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -220,9 +220,9 @@ define([
                             });
                         });
 
-                        boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                        /*boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                        });
+                        });*/
 
                         eyeCheckboxGroup = new CheckboxGroup(
                             mainList.find(".checkbox-custom .eye + input"),
@@ -286,7 +286,7 @@ define([
                         update: function () {
                             Theme.tooltipster(mainList);
 
-                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .box + input"));
+                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-brick-container.bbox input:first"));
                             eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
                         },
 

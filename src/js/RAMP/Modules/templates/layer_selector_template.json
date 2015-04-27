@@ -341,6 +341,13 @@
 
     // Level 2
     // Filter row overall layout for a given layer
+    "layer_settings":"
+        <div class='filter-row-settings bg-medium'>            
+            <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
+            <div class='layer-settings'></div>
+        </div>
+    ",
+
     "layer_setting_opacity": "
         <div class='transparency-setting'>
             <span class='pull-left'>{%= i18n.t('filterManager.settingsOpacity') %}</span>                
@@ -358,10 +365,9 @@
         </div>
     ",
 
-    "layer_settings":"
-        <div class='filter-row-settings bg-medium'>            
-            <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
-            <div class='layer-settings'></div>
+    "layer_setting_bounding_box": "
+        <div class='bounding-box-setting'>
+            
         </div>
     "
 }
