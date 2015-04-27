@@ -116,6 +116,15 @@ define([
              */
 
             /**
+             * Any other custom CSS class to be added to the Brick container node.
+             *
+             * @property customContainerClass
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
              * A name of the specific Brick template.
              *
              * @property template
@@ -254,6 +263,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun Brick
              * @chainable
@@ -556,6 +566,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun MultiBrick
              * @chainable
@@ -778,6 +789,7 @@ define([
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.buttonClass] a CSS class of the button in the ButtonBrick
@@ -903,6 +915,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.value] a checkbox value
              * @param  {String} [config.label] a checkbox label
@@ -1109,6 +1122,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.value] a checkbox value
              * @param  {String} [config.label] a checkbox label
@@ -1272,6 +1286,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.buttonClass] a CSS class of the button in the OkCancelButtonBrick
              * @param  {String} [config.okLabel] an OK button label
@@ -1438,6 +1453,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {Array} [config.choices] a set of choices that will be presented to the user
              * @chainable
@@ -1661,6 +1677,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
@@ -1916,6 +1933,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun DropDownBrick
              * @chainable
@@ -2183,6 +2201,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
@@ -2372,6 +2391,7 @@ define([
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field

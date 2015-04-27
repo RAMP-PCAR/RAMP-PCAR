@@ -24,7 +24,7 @@
     ",
 
     "default_base_template": "
-        <div class='brick {%= o.containerClass %} {%= o.header ? '' : 'empty-header' %}'>
+        <div class='brick {%= o.containerClass %} {%= o.customContainerClass %} {%= o.header ? '' : 'empty-header' %}'>
 
             {% include(o.template, o); %}
 
