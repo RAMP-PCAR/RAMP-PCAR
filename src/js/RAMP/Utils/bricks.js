@@ -1122,10 +1122,7 @@ define([
                 lang.mixin(newConfig,
                     {
                         template: "default_toggle_brick_template",
-                        containerClass: "toggle-brick-container",
-                        onLabel: 'on',
-                        offLabel: 'off',
-                        value: 'on'
+                        containerClass: "toggle-brick-container"
                     },
                     config
                 );
@@ -1140,13 +1137,15 @@ define([
                     }
                 });
 
-                // move the on/off labels out of the toggle
-                this.node
-                    .find('.fs-checkbox.fs-checkbox-toggle')
-                    .prepend(
-                        this.node.find('.fs-checkbox-state')
-                    )
-                ;                
+                if (this.header) {
+                    // move the on/off labels out of the toggle if there is a brick header
+                    this.node
+                        .find('.fs-checkbox.fs-checkbox-toggle')
+                        .prepend(
+                            this.node.find('.fs-checkbox-state')
+                        )
+                    ;
+                }
             }
         });
 

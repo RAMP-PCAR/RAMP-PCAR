@@ -111,7 +111,7 @@
         {% include('default_brick_notice_placeholder', o); %}
         <div class='checkbox toggle-content'>
             <fieldset>
-                <label for='{%= o.guid %}'><span class='wb-inv'>{%= o.label %}</span>
+                <label for='{%= o.guid %}'><span class='{%= o.header ? 'wb-inv' : '' %}'>{%= o.label %}</span>
                     <input type='checkbox' name='{%= o.guid %}' id='{%= o.guid %}' {%= o.checked ? 'checked' : '' %} value='{%= o.value %}'>
                 </label>
             </fieldset>

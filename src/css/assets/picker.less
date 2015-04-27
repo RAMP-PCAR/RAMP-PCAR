@@ -1,5 +1,10 @@
 ﻿@import '../../lib/formstone/src/less/checkbox.less';
 
+
+// Label
+@fs-checkbox-label-color: #000;
+//@fs-checkbox-label-font-size: 14px;
+
 // Marker
 
 @fs-checkbox-marker-background: @very-light-grey-color;
@@ -41,7 +46,7 @@
             }
         }
 
-        .fs-checkbox-state {
+        /*.fs-checkbox-state {
             &_off {
                 display: none;
             }
@@ -49,24 +54,11 @@
             &_on {
                 display: block;
             }
-        }
+        }*/
     }
 
-    &-toggle &-marker {
-        float: right;
-        margin: 0;
-        border-style: outset;
-    }
-
-    &-toggle &-state_on {
+    /*&-toggle &-state_on {
         display: none;
-    }
-
-    &-toggle &-flag {
-        width: calc(~'50% - 4px');
-        height: calc(~'100% - 4px');
-        border: 0;
-        margin: 2px 0 0 2px;
     }
 
     &-toggle &-state {
@@ -75,5 +67,19 @@
         width: auto;
         font-size: 14px;
         color: #000;
+    }*/
+
+    &-toggle &-marker {
+        float: right;
+        margin: 0;
+        border-style: outset;
+    }
+
+    
+    &-toggle &-flag {
+        width: calc(~'50% - 4px');
+        height: calc(~'100% - 4px');
+        border: 0;
+        margin: 2px 0 0 2px;
     }
 }
