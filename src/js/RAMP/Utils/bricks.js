@@ -948,8 +948,7 @@ define([
                 lang.mixin(this,
                     {
                         userChecked: false,
-                        inputNode: this.node.find("input[type='checkbox']#" + this.guid),
-                        contentNode: this.node.find('.checkbox.checkbox-content')
+                        inputNode: this.node.find("input[type='checkbox']#" + this.guid)
                     }
                 );
 
@@ -988,7 +987,7 @@ define([
                     this.inputNode.prop('checked', this.checked ? 'checked' : '');
                 }
 
-                this.contentNode.toggleClass('checkbox-checked', this.checked);
+                this.node.toggleClass('checkbox-checked', this.checked);
 
                 // fire change event
                 this.notify(this.event.CHANGE, this.getData());
