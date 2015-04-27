@@ -274,9 +274,8 @@ define([
 
                     // WMS binding for getFeatureInfo calls
                     if (layerConfig.featureInfo) {
-                        MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                        MapClickHandler.registerWMSClick(layer);
                     }
-
                     break;
 
                 case GlobalStorage.layerType.feature:

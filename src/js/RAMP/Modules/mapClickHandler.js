@@ -67,8 +67,10 @@ define([
 
                     console.log(RAMP.layerRegistry);
                     // filter only currently visible layers
-                    visibleLayers = wmsClickQueue.filter(function (wmsData) {
-                        return wmsData.wmsLayer.visible && wmsData.wmsLayer.id in RAMP.layerRegistry && RAMP.layerRegistry[wmsData.wmsLayer.id];
+                    visibleLayers = wmsClickQueue.filter(function (wmsLayer) {
+                        console.log(wmsLayer);
+                        return wmsLayer.visible && wmsLayer.id in RAMP.layerRegistry && RAMP.layerRegistry[wmsLayer.id] && wmsLayer.ramp.loadOk !== false;
+                        // can't use loadOk directly because nothing sets it to true
                     });
 
                     // if no visible layers return early and do not open the panel
@@ -86,18 +88,18 @@ define([
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
-                    rqPromises = visibleLayers.map(function (wmsData) {
+                    rqPromises = visibleLayers.map(function (wmsLayer) {
                         try {
                             var req = {}, wkid, mapSR, srList;
-                            mapSR = wmsData.wmsLayer.getMap().spatialReference;
-                            srList = wmsData.wmsLayer.spatialReferences;
+                            mapSR = wmsLayer.getMap().spatialReference;
+                            srList = wmsLayer.spatialReferences;
 
                             if (srList && srList.length > 1) {
                                 wkid = srList[0];
                             } else if (mapSR.wkid) {
                                 wkid = mapSR.wkid;
                             }
-                            if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
+                            if (wmsLayer.version === "1.3" || wmsLayer.version === "1.3.0") {
                                 req = { CRS: "EPSG:" + wkid, I: evt.screenPoint.x, J: evt.screenPoint.y };
                             } else {
                                 req = { SRS: "EPSG:" + wkid, X: evt.screenPoint.x, Y: evt.screenPoint.y };
@@ -105,20 +107,20 @@ define([
                             $.extend(req, {
                                 SERVICE: "WMS",
                                 REQUEST: "GetFeatureInfo",
-                                VERSION: wmsData.wmsLayer.version,
+                                VERSION: wmsLayer.version,
                                 BBOX: esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax,
                                 WIDTH: esriMap.width,
                                 HEIGHT: esriMap.height,
-                                QUERY_LAYERS: wmsData.layerConfig.layerName,
-                                LAYERS: wmsData.layerConfig.layerName,
-                                INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
+                                QUERY_LAYERS: wmsLayer.ramp.config.layerName,
+                                LAYERS: wmsLayer.ramp.config.layerName,
+                                INFO_FORMAT: wmsLayer.ramp.config.featureInfo.mimeType
                             });
                             //console.log('BBOX: ' + esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax);
                             //console.log('Clicked at (map units): ' + evt.mapPoint.x + ',' + evt.mapPoint.y);
                             //console.log('Clicked at (pixels): ' + evt.screenPoint.x + ',' + evt.screenPoint.y);
                             //console.log('Clicked at (pixels): ' + evt.layerX + ',' + evt.layerY);
                             return new EsriRequest({
-                                url: wmsData.wmsLayer.url.split('?')[0],
+                                url: wmsLayer.url.split('?')[0],
                                 content: req,
                                 handleAs: "text"
                             });
@@ -143,8 +145,8 @@ define([
                         console.log(results);
 
                         var strings = results.map(function (response, index) {
-                            var res = "<h5 class='margin-top-none'>" + visibleLayers[index].layerConfig.displayName + "</h5>" +
-                                      RAMP.plugins.featureInfoParser[visibleLayers[index].layerConfig.featureInfo.parser](response,visibleLayers[index].wmsLayer.id);
+                            var res = "<h5 class='margin-top-none'>" + visibleLayers[index].ramp.config.displayName + "</h5>" +
+                                      RAMP.plugins.featureInfoParser[visibleLayers[index].ramp.config.featureInfo.parser](response,visibleLayers[index].id);
                             return res;
                         }).join(''), modalBox = '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">{0}<div class="modal-body">{1}</div></section>'.format(modalHeader,strings);
 
