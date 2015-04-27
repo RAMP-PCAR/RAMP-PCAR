@@ -841,6 +841,7 @@ define([
             }
         });
         
+        // TODO: create another checkboxBrick that uses Formstone Checkbox but regular one, not toggle.
         /**
         * CheckboxBrick is just a Brick with a checkbox inside it. The checkbox can be styled through its checkbox-container. 
         * To instantiate, call {{#crossLink "CheckboxBrick/new:method"}}{{/crossLink}} on the CheckboxBrick prototype.
@@ -902,8 +903,13 @@ define([
              */
 
             /**
-             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
-             * ButtonBrick is a simple button in the Brick container.
+             * Initializes the CheckboxBrick by generating a specified template and setting defaults. Also sets a click listener on the template input checkbox.
+             * CheckboxBrick is a simple button in the Brick container.
+             * 
+             * If the `header` is provided, the Brick display it as a header element while hiding checkbox label and displaying on/off labels beside the checkbox depending on the state.
+             * If the `header` is no provided, Brick's label is displayed beside the checkbox.
+             * 
+             * Provide header if the checkbox is a standalone feature or you have lots of space; omit header if the checkbox is a part of a group of checkboxes or you want to conserve space. 
              * 
              * @method new
              * @param  {String} id     specified id of the Brick
@@ -1049,7 +1055,7 @@ define([
         });
 
         /**
-        * ToggleBrick is just a Brick with a checkbox inside it. The checkbox can be styled through its checkbox-container. 
+        * ToggleBrick is just a Brick with a checkbox inside it that is styles as a toggle. The toggle can be further styled through its checkbox-container. 
         * To instantiate, call {{#crossLink "ToggleBrick/new:method"}}{{/crossLink}} on the ToggleBrick prototype.
         *
         * 
@@ -1073,25 +1079,25 @@ define([
         ToggleBrick = CheckboxBrick.extend({
 
             /**
-             * A CSS class of the CheckboxBrick container node.
+             * A CSS class of the ToggleBrick container node.
              *
              * @property containerClass
              * @private
              * @type {String}
-             * @default "checkbox-brick-container"
+             * @default "toggle-brick-container"
              */
 
             /**
-             * A name of the default CheckboxBrick template.
+             * A name of the default ToggleBrick template.
              *
              * @property template
              * @private
              * @type {String}
-             * @default "default_checkbox_brick_template"
+             * @default "default_toggle_brick_template"
              */
 
             /**
-             * A checkbox value.
+             * A toggle value.
              *
              * @property value
              * @private
@@ -1100,7 +1106,7 @@ define([
              */
 
             /**
-             * A checkbox label.
+             * A toggle label.
              *
              * @property label
              * @private
@@ -1109,8 +1115,8 @@ define([
              */
 
             /**
-             * Initializes the ButtonBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
-             * ButtonBrick is a simple button in the Brick container.
+             * Initializes the ToggleBrick by generating a specified template and setting defaults. Also sets a change listener on the template input checkbox.
+             * ToggleBrick is a simple button in the Brick container.
              * 
              * @method new
              * @param  {String} id     specified id of the Brick
@@ -1143,6 +1149,7 @@ define([
 
                 CheckboxBrick.initialize.call(this, id, newConfig);
 
+                // ToggleBrick uses Formstone checkbox component to create toggles.
                 this.inputNode.checkbox({
                     toggle: true,
                     labels: {
@@ -1151,8 +1158,8 @@ define([
                     }
                 });
 
+                // move the on/off labels out of the toggle if there is a brick header
                 if (this.header) {
-                    // move the on/off labels out of the toggle if there is a brick header
                     this.node
                         .find('.fs-checkbox.fs-checkbox-toggle')
                         .prepend(
