@@ -98,9 +98,9 @@ define([
                                 wkid = mapSR.wkid;
                             }
                             if (wmsData.wmsLayer.version === "1.3" || wmsData.wmsLayer.version === "1.3.0") {
-                                req = { CRS: "EPSG:" + wkid, I: evt.layerX, J: evt.layerY };
+                                req = { CRS: "EPSG:" + wkid, I: evt.screenPoint.x, J: evt.screenPoint.y };
                             } else {
-                                req = { SRS: "EPSG:" + wkid, X: evt.layerX, Y: evt.layerY };
+                                req = { SRS: "EPSG:" + wkid, X: evt.screenPoint.x, Y: evt.screenPoint.y };
                             }
                             $.extend(req, {
                                 SERVICE: "WMS",
@@ -113,6 +113,10 @@ define([
                                 LAYERS: wmsData.layerConfig.layerName,
                                 INFO_FORMAT: wmsData.layerConfig.featureInfo.mimeType
                             });
+                            //console.log('BBOX: ' + esriMap.extent.xmin + "," + esriMap.extent.ymin + "," + esriMap.extent.xmax + "," + esriMap.extent.ymax);
+                            //console.log('Clicked at (map units): ' + evt.mapPoint.x + ',' + evt.mapPoint.y);
+                            //console.log('Clicked at (pixels): ' + evt.screenPoint.x + ',' + evt.screenPoint.y);
+                            //console.log('Clicked at (pixels): ' + evt.layerX + ',' + evt.layerY);
                             return new EsriRequest({
                                 url: wmsData.wmsLayer.url.split('?')[0],
                                 content: req,
