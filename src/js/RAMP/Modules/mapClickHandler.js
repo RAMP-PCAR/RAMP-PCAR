@@ -150,8 +150,10 @@ define([
 
                         $('.sub-panel').on('click', '#wms-expand', function () {
                             $(document).trigger('open.wb-lbx', [{ src: '#wms-results-large', type: 'inline' }]);
-                            $('#wms-results-large').css('width', Math.round(window.innerWidth * 0.9) + 'px');
-                            $('#wms-results-large .modal-body').css('height', Math.round(window.innerHeight * 0.75) + 'px');
+                            $('#wms-results-large').css({
+                                width: Math.round(window.innerWidth * 0.9) + 'px',
+                                'max-height': Math.round(window.innerHeight * 0.75) + 'px'
+                            });
                         });
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
