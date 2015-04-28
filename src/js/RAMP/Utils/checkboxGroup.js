@@ -186,14 +186,14 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         nodes: nodes
                     }
                 );
-                
+
                 masterCheckboxOptions = {
                     nodeIdAttr: this.nodeIdAttr,
                     cssClass: this.cssClass,
                     label: this.label,
                     onChange: this.onChange
                 };
-                
+
                 if (this.master.node) {
                     this.master.checkbox = new Checkbox(
                         this.master.node,
@@ -312,7 +312,10 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
                         }
                     }
 
-                    checkbox.setState(state);
+                    // make sure there is a checkbox to set state on
+                    if (checkbox) {
+                        checkbox.setState(state);
+                    }
 
                     this._checkMaster();
                 }
