@@ -156,6 +156,8 @@
 
 .checkbox-brick-container {
     .checkbox-content {
+        margin: 0;
+
         .checkbox-state {
             display: none;
             text-transform: uppercase;
@@ -170,7 +172,14 @@
         }
     }
 
+    &.empty-header {
+        .checkbox-content label {
+            padding-left: 0;
+        }
+    }
+
     &:not(.empty-header) {
+
         .checkbox-state-off {
             display: inline;
         }
@@ -191,6 +200,12 @@
 
     .toggle-content {
         margin: 0;
+    }
+
+    &.empty-header {
+        .toggle-content label {
+            padding-left: 0;
+        }
     }
 
     &:not(.empty-header) {
