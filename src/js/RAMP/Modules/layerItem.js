@@ -809,8 +809,7 @@ define([
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY,
-                LayerItem.settings.BOUNDING_BOX
+                LayerItem.settings.OPACITY
             ]
         };
 

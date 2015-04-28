@@ -903,7 +903,7 @@ define([
             });
         }
 
-        function getStateMatrixTemplate(layerType) {
+        function getStateMatrixTemplate(layerType, layerRamp) {
             var stateMatrix = LayerItem.getStateMatrixTemplate(),
                 featureToggles = [
                     LayerItem.toggles.EYE,
@@ -925,6 +925,20 @@ define([
                             LayerItem.state.OFF_SCALE
                         ]
                     );
+
+                    // add a bounding box settings to the non-static feature layers only
+                    if (!layerRamp.config.isStatic) {
+                        LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
+                          [
+                              LayerItem.settings.BOUNDING_BOX
+                          ],
+                          [
+                              LayerItem.state.DEFAULT,
+                              LayerItem.state.UPDATING,
+                              LayerItem.state.OFF_SCALE
+                          ]
+                      );
+                    }
 
                     break;
 
@@ -996,7 +1010,7 @@ define([
                 }
 
                 // generate a state matrix based on layer type
-                options.stateMatrix = getStateMatrixTemplate(layerType);
+                options.stateMatrix = getStateMatrixTemplate(layerType, layerRamp);
 
                 // layer is user-added, add an extra notice to all states
                 if (layerRamp.user) {
