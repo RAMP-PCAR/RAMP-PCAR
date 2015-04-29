@@ -221,6 +221,15 @@
 
             &.query {
                 text-align: center;
+                color: @layer-toggle-off-color;
+                
+                &:hover, &.focused {
+                    color: @layer-toggle-hover-color;
+                }
+
+                &.checked {
+                    color: @layer-toggle-on-color;
+                }
             }
 
             &:hover, &.focused {
@@ -264,7 +273,6 @@
         .record-row .record-details,
         .record-row .record-controls,
         .sort-handle {
-
             color: #FFFFFF !important;
 
             button {
@@ -286,7 +294,7 @@
 
         td {
             color: #FFFFFF !important;
-            
+
             > button {
                 color: #FFFFFF !important;
                 outline-color: #fff !important;
@@ -380,7 +388,6 @@
 .checkbox-custom-inverted() {
     .checkbox-custom {
         &.checkbox-button button {
-
             color: @light-light-grey-color !important;
 
             &:hover {
