@@ -172,7 +172,8 @@ define([
                 layerToggles = (function () {
                     var globalToggleSection,
                         boxCheckboxGroup,
-                        eyeCheckboxGroup;
+                        eyeCheckboxGroup,
+                        queryCheckboxGroup;
 
                     /**
                     * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
@@ -264,6 +265,45 @@ define([
                         eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                         });
+
+                        queryCheckboxGroup = new CheckboxGroup(
+                            mainList.find(".checkbox-custom .query + input"),
+                            {
+                                nodeIdAttr: layerIdField,
+
+                                label: {
+                                    check: i18n.t('filterManager.hideFeatures'),
+                                    uncheck: i18n.t('filterManager.showFeatures')
+                                },
+
+                                onChange: function () {
+                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                },
+
+                                master: {
+                                    node: globalToggleSection.find(".checkbox-custom .query + input"),
+
+                                    nodeIdAttr: "id",
+
+                                    label: {
+                                        check: i18n.t('filterManager.hideAllFeatures'),
+                                        uncheck: i18n.t('filterManager.showAllFeatures')
+                                    }
+                                }
+                            });
+
+                        queryCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                            /*topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
+                                id: evt.checkbox.id,
+                                state: evt.checkbox.state
+                            });*/
+                        });
+
+                        queryCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        });
                     }
 
                     function initListeners() {
@@ -290,10 +330,20 @@ define([
 
                             boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-brick-container.bbox input:first"));
                             eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
+                            queryCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .query + input"));
                         },
 
                         globalToggleSection: function () {
                             return globalToggleSection;
+                        },
+
+                        // TODO: refactor - temp function
+                        hideQueryToggles: function (value) {
+
+                            globalToggleSection
+                                .find(".checkbox-custom .query")
+                                .parent()
+                                .toggle(!value);
                         }
                     };
                 }());
@@ -759,6 +809,11 @@ define([
                     */
                     addLayerGroup: function (layerGroupNode) {
                         mainList.prepend(layerGroupNode);
+                    },
+
+                    // TODO: refactor - temp function
+                    hideQueryToggles: function (value) {
+                        layerToggles.hideQueryToggles(value);
                     }
                 };
             }());
@@ -951,6 +1006,8 @@ define([
                     layerItem.refresh();
                 });
 
+                ui.hideQueryToggles(false);
+
             } else if (layerCounts.wms === 0 && !isLayerAdded) {
                 featureLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
@@ -966,6 +1023,8 @@ define([
 
                     layerItem.refresh();
                 });
+
+                ui.hideQueryToggles(true);
             }
         }
 
@@ -1103,7 +1162,7 @@ define([
 
                 if (!layerGroup) {
                     //tried to remove a layer that doesn't exist
-                    console.log("tried to remove layer from nonexistant group: " + layerType);
+                    console.log("tried to remove layer from nonexistent group: " + layerType);
                 } else {
                     layerGroup.removeLayerItem(layerId);
 
