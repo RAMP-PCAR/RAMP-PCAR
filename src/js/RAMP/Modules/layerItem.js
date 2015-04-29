@@ -442,6 +442,10 @@ define([
                 }
             },
 
+            refresh: function () {
+                this.setState(this.state, null, true);
+            },
+
             /**
              * Sets controls, toggles, and notices of the LayerItem according to its state.
              *
@@ -949,7 +953,7 @@ define([
         *
         * @param {Object} stateMatrix matrix to modify
         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-        * @param {Array} partKeys an array of part key names to be inserted into the collection
+        * @param {Array} [partKeys] an array of part key names to be inserted into the collection; if false or [], all part keys are assumed
         * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
         * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
         * @param {Boolean} [clear] a flag to clear existing partKey collections
@@ -979,7 +983,7 @@ define([
          *
          * @param {Object} stateMatrix matrix to modify
          * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-         * @param {String} partKey part key to be removed into the collection
+         * @param {String} partKey part key to be removed from the collection
          * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
          * @method addStateMatrixPart
          * @static
@@ -989,12 +993,27 @@ define([
             states.forEach(function (state) {
                 UtilArray.remove(stateMatrix[state][partType], partKey);
             });
+        };
 
-            /*UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                if (states.indexOf(state) !== -1) {
-                    UtilArray.remove(data[partType], partKey);
-                }
-            });*/
+        /**
+         * Modifies a given state matrix by removing specified partKeys to the specified partType collection.
+         *
+         * @param {Object} stateMatrix matrix to modify
+         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+         * @param {String} [partKeys] array of part key names to be removed from the collection; if false or [], all part keys are assumed
+         * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
+         * @method removeStateMatrixParts
+         * @static
+         */
+        LayerItem.removeStateMatrixParts = function (stateMatrix, partType, partKeys, states) {
+            var that = this;
+            partKeys = getPartKeys(partType, partKeys);
+            states = getStateNames(states);
+
+            // remove partkey from states
+            partKeys.forEach(function (partKey) {
+                that.removeStateMatrixPart(stateMatrix, partType, partKey, states);
+            });
         };
 
         /**
