@@ -903,6 +903,70 @@ define([
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 setLayerOffScaleStates();
             });
+
+            // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
+            topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
+                updateLayersStateMatrix(args.layerCounts, true);
+            });
+
+            // on each remove check if there are still wms layers in the layer list
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (args) {
+                updateLayersStateMatrix(args.layerCounts, false);
+            });
+        }
+
+        function updateLayersStateMatrix(layerCounts, isLayerAdded) {
+            var featureLayerGroup = layerGroups[GlobalStorage.layerType.feature],
+                wmsLayerGroup = layerGroups[GlobalStorage.layerType.wms];
+
+            if (layerCounts.wms === 1 && isLayerAdded) {
+
+                featureLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER
+                        ],
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
+
+                    layerItem.refresh();
+                });
+
+                wmsLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.QUERY
+                        ],
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
+
+                    layerItem.refresh();
+                });
+
+            } else if (layerCounts.wms === 0 && !isLayerAdded) {
+                featureLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER
+                        ],
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
+
+                    layerItem.refresh();
+                });
+            }
         }
 
         function getStateMatrixTemplate(layerType, layerRamp) {
