@@ -1350,7 +1350,8 @@ define([
             var visibleFeatures = {},
                 visibleGridLayers = RampMap.getVisibleFeatureLayers(),
                 dataGridMode = ui.getDatagridMode(),
-                q = new EsriQuery();
+                q = new EsriQuery(),
+                bigGridNoFilter = false;
 
             //console.time('applyExtentFilter:part 1');
             //console.time('applyExtentFilter:part 1 - 1');
@@ -1362,16 +1363,16 @@ define([
 
             //figure out what extent to use
             if (dataGridMode === GRID_MODE_FULL) {
-                visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
-                    return layer.id === ui.getSelectedDatasetId();
-                });
-
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
                     q.geometry = RampMap.getMap().extent;
+                    //in this case, we only consider the layer if it is visible
+                    visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                        return layer.id === ui.getSelectedDatasetId();
+                    });
                 } else {
-                    // Grab everything!
-                    q.geometry = RampMap.getMaxExtent();
-                    //q.where = "1 = 1";
+                    // Grab everything!  even if it's not visible on the map
+                    bigGridNoFilter = true;
+                    visibleGridLayers = [RAMP.layerRegistry[ui.getSelectedDatasetId()]];
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
@@ -1392,16 +1393,31 @@ define([
 
             //console.time('applyExtentFilter:part 1 - 2');
 
-            var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
-                return gridLayer.queryFeatures(q).then(function (features) {
-                    //console.timeEnd('applyExtentFilter:part 1 - 2');
+            var deferredList;
 
-                    if (features.features.length > 0) {
-                        var layer = features.features[0].getLayer();
-                        visibleFeatures[layer.id] = features.features;
-                    }
+            if (bigGridNoFilter) {
+                deferredList = []; //nothing to wait for.  empty array will satisfy afterAll()
+                //we only have one layer, and will want all the data. flag as raw, and pass in the layer id
+                visibleFeatures[visibleGridLayers[0].id] = {
+                    type: 'raw',
+                    layerId: visibleGridLayers[0].id
+                };
+            } else {
+                //apply spatial query to the layers, collect deferred results in the array.
+                deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
+                    return gridLayer.queryFeatures(q).then(function (features) {
+                        //console.timeEnd('applyExtentFilter:part 1 - 2');
+
+                        if (features.features.length > 0) {
+                            var layer = features.features[0].getLayer();
+                            visibleFeatures[layer.id] = {
+                                type: 'features',
+                                features: features.features
+                            };
+                        }
+                    });
                 });
-            });
+            }
 
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
@@ -1497,50 +1513,40 @@ define([
                 return;
             }
 
-            var data = [], 
-                mode = ui.getDatagridMode();
+            var data = [], newData, dgMode = ui.getDatagridMode();
 
             //for each feature layer
-            utilDict.forEachEntry(visibleFeatures, function (key, features) {
+            utilDict.forEachEntry(visibleFeatures, function (key, layerBundle) {
                 //ensure attribute data has been downloaded
                 if (RAMP.data[key]) {
-                    //for each feature in a specific layer
+                    switch (layerBundle.type) {
+                        case 'features':
 
-                    var newData, needsUpdate = false;
+                            //for each feature in a specific layer
+                            newData = dojoArray.map(layerBundle.features, function (feature) {
+                                //get the feature data for this feature
+                                var fData = GraphicExtension.getFDataForGraphic(feature);
 
-                    newData = dojoArray.map(features, function (feature) {
-                        //get the feature data for this feature
-                        var fData = GraphicExtension.getFDataForGraphic(feature);
+                                //return the appropriate data object for the feature (.map puts them in array form)
+                                // "cache" the data object so we don't have to generate it again
+                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
+                            });
 
-                        if (fData) {
-                            //return the appropriate data object for the feature (.map puts them in array form)
-                            // "cache" the data object so we don't have to generate it again
-                            return fData[ui.getDatagridMode()] ? fData[ui.getDatagridMode()] : fData[ui.getDatagridMode()] = getDataObject(fData);
-                        } else {
-                            //we have a graphic that does not yet have layer data downloaded.
-                            //request a download on first occurance. return undefined.
-                            if (!needsUpdate) {
-                                needsUpdate = true;
-                                if (mode !== GRID_MODE_FULL) {
-                                    //only bother triggering an update in map view.
-                                    var faultLayer = feature.getLayer();
-                                    AttributeLoader.updateAttributeData(key, faultLayer.url, faultLayer.ramp.type, GraphicExtension.getGraphicOid(feature));
-                                }
-                            }
-                            return undefined;
-                        }
-                    });
+                            data = data.concat(newData);
 
-                    if (!needsUpdate) {
-                        //only add data to the grid if we did not encounter an update request for this layer
-                        data = data.concat(newData);
-                    } else if (mode === GRID_MODE_FULL) {
-                        //since map is hidden, the result of the update won't trigger any refresh.
-                        //take what we have, filter out the undefined entries, and proceed.
-                        newData = newData.filter(function (elem) {
-                            return typeof elem !== "undefined";
-                        });
-                        data = data.concat(newData);
+                            break;
+
+                        case 'raw':
+                            //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
+                            newData = dojoArray.map(RAMP.data[layerBundle.layerId].features, function (fData) {
+                                //return the appropriate data object for the feature (.map puts them in array form)
+                                // "cache" the data object so we don't have to generate it again
+                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
+                            });
+
+                            data = data.concat(newData);
+
+                            break;
                     }
                 }
             });
