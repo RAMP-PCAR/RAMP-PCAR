@@ -30,14 +30,14 @@ define([
 "dojo/topic", "dojo/request/script", "dojo/Deferred",
 
 /* RAMP */
-"ramp/eventManager", "ramp/globalStorage"],
+"ramp/eventManager", "ramp/globalStorage", "ramp/map"],
 
     function (
     /* Dojo */
     topic, script, Deferred,
 
     /* RAMP */
-    EventManager, GlobalStorage) {
+    EventManager, GlobalStorage, RampMap) {
         "use strict";
 
         /**
@@ -143,6 +143,7 @@ define([
                 case GlobalStorage.layerType.feature:
 
                     console.log('BEGIN ATTRIB LOAD: ' + layerId);
+                    RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
 
                     //extract info for this service
                     var defService = script.get(layerUrl, {
@@ -177,6 +178,8 @@ define([
                             RAMP.data[layerId] = layerData;
                             //new data. tell grid to reload
                             topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+
+                            RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
                             console.log('END ATTRIB LOAD: ' + layerId);
                         },
                         function (error) {
