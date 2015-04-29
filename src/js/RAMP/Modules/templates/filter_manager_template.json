@@ -68,11 +68,13 @@
                             </label>
                             <input id='globalVisibility' checked='checked' class='layerList_legend' type='checkbox' ></input>
                         </div>
+                        
                         <div class='checkbox-custom'>
-                            <label for='globalBox' class='form-checkbox _tooltip box checked' title=''>
+                            <label for='globalQuery' class='form-checkbox _tooltip query checked' title=''>
+                                <i class='fa fa-map-marker'></i>
                                 <span class='wb-invisible'></span>
                             </label>
-                            <input id='globalBox' checked='checked' class='layerList_legend' type='checkbox' ></input>
+                            <input id='globalQuery' checked='checked' class='layerList_legend' type='checkbox'></input>
                         </div>
                     </div>
                 </div>
