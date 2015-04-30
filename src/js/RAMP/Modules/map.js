@@ -685,6 +685,10 @@ define([
                     state: "loading",
                     inLS: false,  //layer has entry in layer selector
                     inCount: false  //layer is included in the layer counts
+                },
+                // hold layer state like wmsQuery being on or off
+                state: {
+
                 }
             };
 

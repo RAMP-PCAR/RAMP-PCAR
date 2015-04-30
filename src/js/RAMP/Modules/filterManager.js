@@ -295,10 +295,9 @@ define([
                         queryCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
 
-                            /*topic.publish(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, {
-                                id: evt.checkbox.id,
-                                state: evt.checkbox.state
-                            });*/
+                            // TODO: temp function; move or connect to the ramp state manager later.
+                            var wmsLayer = RAMP.layerRegistry[evt.checkbox.id];
+                            wmsLayer.ramp.state.wmsQuery = evt.checkbox.state;
                         });
 
                         queryCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
