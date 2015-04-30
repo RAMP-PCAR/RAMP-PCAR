@@ -685,10 +685,6 @@ define([
             helpSectionContainer = $("#help-section-container"),
             helpSection = $("#help-section"),
 
-            addLayerToggle = $("#addLayer-toggle"),
-            addLayerSectionContainer = $("#addLayer-section-container"),
-            //AddLayerSection = $("#addLayer-section"),
-
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
 
@@ -1427,48 +1423,6 @@ define([
                 // TODO: remove mapQueryToggle.autoHide from config schema
 
                 autoHideDataTab();
-
-                //Start AddLayer popup controller
-                addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",
-                    function (d) {
-                        topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: true });
-                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "add-layer-section" });
-                        console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", true);
-
-                        // close this panel if any other panel is opened
-                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
-                            function () {
-                                if (this.isOpen()) {
-                                    this.close();
-                                }
-                            })
-                        );
-
-                        addLayerSectionContainer.slideToggle("fast", function () {
-                            d.resolve();
-                        });
-                    }, {
-                        activeClass: cssButtonPressedClass,
-                        target: addLayerSectionContainer,
-                        closeHandler: function (d) {
-                            topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: false });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "add-layer-section" });
-                            console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", false);
-
-                            addLayerSectionContainer.slideToggle("fast", function () {
-                                d.resolve();
-                            });
-                        },
-                        resetFocusOnClose: true
-                    }
-                );
-
-                $("#addLayer-add").on("click", function () {
-                    topic.publish(EventManager.Map.ADD_LAYER, null);
-
-                    addLayerPanelPopup.close();
-                });
-                //End Add Layer
 
                 //start extended grid
                 topic.subscribe(EventManager.GUI.DATAGRID_EXPAND, function () {
