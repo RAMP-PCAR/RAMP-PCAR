@@ -69,8 +69,11 @@ define([
                     // filter only currently visible layers
                     visibleLayers = wmsClickQueue.filter(function (wmsLayer) {
                         console.log(wmsLayer);
-                        return wmsLayer.visible && wmsLayer.id in RAMP.layerRegistry && RAMP.layerRegistry[wmsLayer.id] && wmsLayer.ramp.loadOk !== false;
-                        // can't use loadOk directly because nothing sets it to true
+                        return wmsLayer.visible &&
+                            wmsLayer.id in RAMP.layerRegistry &&
+                            RAMP.layerRegistry[wmsLayer.id] &&
+                            wmsLayer.ramp.loadOk !== false && // can't use loadOk directly because nothing sets it to true
+                            wmsLayer.ramp.state.wmsQuery === true; // check if wmsQuery toggle is set to true
                     });
 
                     // if no visible layers return early and do not open the panel
