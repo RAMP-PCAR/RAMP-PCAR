@@ -298,7 +298,7 @@ define([
                             // TODO: temp function; move or connect to the ramp state manager later.
                             var wmsLayer = RAMP.layerRegistry[evt.checkbox.id];
                             if (wmsLayer.ramp.config.featureInfo) {
-                                wmsLayer.ramp.state.wmsQuery = evt.checkbox.state;
+                                wmsLayer.ramp.state.queryEnabled = evt.checkbox.state;
                             }
                         });
 

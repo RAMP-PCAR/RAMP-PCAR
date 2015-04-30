@@ -46,7 +46,7 @@ define([
 
             /**
             * This function should be called after the map has been created.  It will subscribe to the Map.CLICK event
-            * and trigger GUI.SUBPANEL_OPEN events for displaying the response data.  Tests RAMP.state.ui.wmsQuery to
+            * and trigger GUI.SUBPANEL_OPEN events for displaying the response data.  Tests RAMP.config.ui.mapQueryToggle.show to
             * determine if it should process the query or not.
             *
             * @method registerWMSClick
@@ -61,7 +61,7 @@ define([
                     var visibleLayers = [],
                         rqPromises = [];
 
-                    if (!RAMP.state.ui.wmsQuery) {
+                    if (!RAMP.config.ui.mapQueryToggle.show) {
                         return;
                     }
 
@@ -73,7 +73,7 @@ define([
                             wmsLayer.id in RAMP.layerRegistry &&
                             RAMP.layerRegistry[wmsLayer.id] &&
                             wmsLayer.ramp.loadOk !== false && // can't use loadOk directly because nothing sets it to true
-                            wmsLayer.ramp.state.wmsQuery === true; // check if wmsQuery toggle is set to true
+                            wmsLayer.ramp.state.queryEnabled === true; // check if wmsQuery toggle is set to true
                     });
 
                     // if no visible layers return early and do not open the panel
