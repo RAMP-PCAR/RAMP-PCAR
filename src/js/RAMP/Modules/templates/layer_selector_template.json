@@ -262,7 +262,8 @@
     "layer_toggle_query": "{% include('layer_toggle_awesome', {
                                 id: o.id,
                                 displayName: o.config.displayName,
-                                checked: o.config.settings.visible,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
+                                checked: o.config.settings.queryEnabled,
                                 nameKey: o.nameKey,
                                 icon: 'map-marker'
                             }); %}
@@ -271,6 +272,7 @@
     "layer_toggle_eye": "{% include('layer_toggle_generic', {
                                 id: o.id,
                                 displayName: o.config.displayName,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
                                 checked: o.config.settings.visible,
                                 nameKey: o.nameKey
                             }); %}
@@ -279,6 +281,7 @@
     "layer_toggle_box": "{% include('layer_toggle_generic', {
                                 id: o.id,
                                 displayName: o.config.displayName,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
                                 checked: o.config.settings.boundingBoxVisible,
                                 nameKey: o.nameKey
                             }); %}
