@@ -297,7 +297,9 @@ define([
 
                             // TODO: temp function; move or connect to the ramp state manager later.
                             var wmsLayer = RAMP.layerRegistry[evt.checkbox.id];
-                            wmsLayer.ramp.state.wmsQuery = evt.checkbox.state;
+                            if (wmsLayer.ramp.config.featureInfo) {
+                                wmsLayer.ramp.state.wmsQuery = evt.checkbox.state;
+                            }
                         });
 
                         queryCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
@@ -968,12 +970,32 @@ define([
                 updateLayersStateMatrix(args.layerCounts, false);
             });
         }
+        
+        // TODO: temp function to be moved to state manager
+        // returns an array of wms layers that can be queried
+        function getQueryWMSLayers() {
+            return Object
+                .keys(RAMP.layerRegistry)
+                .filter(function (layerId) {
+                    var layer = RAMP.layerRegistry[layerId];
+                    return layer.ramp.type === GlobalStorage.layerType.wms &&
+                        layer.ramp.config.featureInfo;
+                });
+        }
 
+        // TODO: temp function to be moved to state manager
+        // returns true if there are wms layer that can be queries or false if there are no such layers 
+        function isThereQueryWMSLayers() {
+            return getQueryWMSLayers().length > 0;
+        }
+        
+        // updates layer item state matrixes based on whether any queriable wms layers are present in layer selector
         function updateLayersStateMatrix(layerCounts, isLayerAdded) {
             var featureLayerGroup = layerGroups[GlobalStorage.layerType.feature],
                 wmsLayerGroup = layerGroups[GlobalStorage.layerType.wms];
-
-            if (layerCounts.wms === 1 && isLayerAdded) {
+            
+            // if there is at least one queriable wms layer, add placeholder toggles to feature layers and 
+            if (getQueryWMSLayers().length === 1 && isLayerAdded) {
 
                 featureLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
@@ -993,7 +1015,7 @@ define([
                 wmsLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
                         [
-                            LayerItem.toggles.QUERY
+                            RAMP.layerRegistry[layerItem.id].ramp.config.featureInfo ? LayerItem.toggles.QUERY : LayerItem.toggles.PLACEHOLDER 
                         ],
                         [
                             LayerItem.state.DEFAULT,
@@ -1007,7 +1029,7 @@ define([
 
                 ui.hideQueryToggles(false);
 
-            } else if (layerCounts.wms === 0 && !isLayerAdded) {
+            } else if (getQueryWMSLayers().length === 0 && !isLayerAdded) {
                 featureLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
                         [
@@ -1022,14 +1044,34 @@ define([
 
                     layerItem.refresh();
                 });
+                
+                wmsLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER 
+                        ],
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]
+                    );
 
+                    layerItem.refresh();
+                });
+                
                 ui.hideQueryToggles(true);
             }
         }
-
+        
+        // updates default layer item state matrix based on whether any queriable wms layers are present in layer selector
         function getStateMatrixTemplate(layerType, layerRamp) {
             var stateMatrix = LayerItem.getStateMatrixTemplate(),
                 featureToggles = [
+                    LayerItem.toggles.EYE,
+                    LayerItem.toggles.PLACEHOLDER
+                ],
+                wmsToggles = [
                     LayerItem.toggles.EYE,
                     LayerItem.toggles.PLACEHOLDER
                 ];
@@ -1037,7 +1079,7 @@ define([
             switch (layerType) {
                 case GlobalStorage.layerType.feature:
                     // remove placeholder toggle if there are wms layers
-                    if (RAMP.layerCounts.wms === 0) {
+                    if (!isThereQueryWMSLayers()) {
                         featureToggles.pop();
                     }
 
@@ -1067,11 +1109,15 @@ define([
                     break;
 
                 case GlobalStorage.layerType.wms:
+                    if (layerRamp.config.featureInfo) {
+                        wmsToggles.pop();
+                        wmsToggles.push(LayerItem.toggles.QUERY);
+                    } else if (!isThereQueryWMSLayers()) {
+                        wmsToggles.pop();
+                    } 
+                    
                     LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
-                        [
-                            LayerItem.toggles.EYE,
-                            LayerItem.toggles.QUERY
-                        ],
+                        wmsToggles,
                         [
                             LayerItem.state.DEFAULT,
                             LayerItem.state.UPDATING,
