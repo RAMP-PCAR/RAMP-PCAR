@@ -29,6 +29,7 @@
 * @uses dojo/_base/declare
 * @uses dojo/_base/array
 * @uses dojo/dom
+* @uses dojo/_base/lang
 * @uses dojo/dom-construct
 * @uses dojo/number
 * @uses dojo/query
@@ -48,7 +49,7 @@
 
 define([
 /* Dojo */
-"dojo/_base/declare", "dojo/_base/array", "dojo/dom",
+"dojo/_base/declare", "dojo/_base/array", "dojo/dom", 'dojo/_base/lang',
         "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
@@ -63,7 +64,7 @@ define([
 
     function (
     /* Dojo */
-    declare, dojoArray, dom, domConstruct, number, query, topic, dojoOn,
+    declare, dojoArray, dom, lang, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
@@ -687,9 +688,7 @@ define([
                     inCount: false  //layer is included in the layer counts
                 },
                 // hold layer state like wmsQuery being on or off
-                state: {
-
-                }
+                state: lang.clone(config.settings)
             };
 
             layer.on('load', function (evt) {
@@ -1027,7 +1026,7 @@ define([
                 });
 
                 prepLayer(fl, layerConfig, userLayer);
-
+        
                 fl.ramp.type = GlobalStorage.layerType.feature;
 
                 return fl;
