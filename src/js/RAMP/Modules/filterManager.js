@@ -272,8 +272,8 @@ define([
                                 nodeIdAttr: layerIdField,
 
                                 label: {
-                                    check: i18n.t('filterManager.hideFeatures'),
-                                    uncheck: i18n.t('filterManager.showFeatures')
+                                    check: i18n.t('filterManager.WMSQueryDisable'),
+                                    uncheck: i18n.t('filterManager.WMSQueryEnable')
                                 },
 
                                 onChange: function () {
@@ -286,8 +286,8 @@ define([
                                     nodeIdAttr: "id",
 
                                     label: {
-                                        check: i18n.t('filterManager.hideAllFeatures'),
-                                        uncheck: i18n.t('filterManager.showAllFeatures')
+                                        check: i18n.t('filterManager.WMSAllQueryDisable'),
+                                        uncheck: i18n.t('filterManager.WMSAllQueryEnable')
                                     }
                                 }
                             });

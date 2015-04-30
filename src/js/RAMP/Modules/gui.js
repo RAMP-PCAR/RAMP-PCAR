@@ -689,7 +689,6 @@ define([
             cssExpandedClass = "state-expanded",
 
             helpPanelPopup,
-            addLayerPanelPopup,
             
             transitionDuration = 0.5,
 

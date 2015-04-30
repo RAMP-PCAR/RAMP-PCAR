@@ -146,6 +146,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 this._initListeners();
 
                 this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
+                
+                // TODO: refactor/fix; fintInputLabel doesn't work for checkbox bricks                
                 this.labelNode = this.node.findInputLabel();
 
                 this._toggleLabel();
