@@ -32,7 +32,13 @@ define(["dojo/_base/array", "utils/util"],
             },
 
             wmsLayerDefaults = {
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }
+                settings: { 
+                    panelEnabled: true, 
+                    opacity: { enabled: true, default: 1 }, 
+                    visible: true, 
+                    boundingBoxVisible: true, 
+                    queryEnabled: true // queryEnabled refers to the state of the wms query toggle, not whether the layer is queryable in principle or not 
+                }
             },
 
             gridColumnDefaults = { orderable: true, type: "string", alignment: 1 },
