@@ -21,14 +21,15 @@ define(["dojo/_base/array", "utils/util"],
         "use strict";
 
         var featureLayerDefaults = {
-            layerAttributes: '*',
-            minScale: 0,
-            maxScale: 0,
-            settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-            datagrid: { rowsPerPage: 50 },
-            templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' },
-            maxAllowableOffset: 0
-        },
+                layerAttributes: '*',
+                minScale: 0,
+                maxScale: 0,
+                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
+                mode: 'ondemand',
+                datagrid: { rowsPerPage: 50 },
+                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' },
+                maxAllowableOffset: 0
+            },
 
             wmsLayerDefaults = {
                 settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: true }

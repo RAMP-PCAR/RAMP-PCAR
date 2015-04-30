@@ -34,6 +34,14 @@
     width: auto;
     border-radius: 0;
 
+    header {
+        border-bottom: 1px solid @very-light-grey-color;
+        background-color: inherit;
+        color: inherit;
+        display: inherit;
+        padding: inherit;
+    }
+
     .modal-body {
         padding: 25px;
     }
@@ -46,6 +54,10 @@
     .map-export-controls {
         position: relative;
         float: left;
+
+        > header h2 {
+            max-width: calc(~'100% - 25px');
+        }
     }
 
     .map-export-stretcher {

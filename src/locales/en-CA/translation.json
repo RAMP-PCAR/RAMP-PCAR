@@ -333,6 +333,7 @@
     "gui": {
         "actions": {
             "close": "Close",
+            "expand": "Expand",
             "fullScreen": "Full Screen",
             "mapExport": "Map Export",
             "open": "Open",

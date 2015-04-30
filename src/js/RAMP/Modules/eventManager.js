@@ -410,6 +410,17 @@ define([],
                 LAYER_LOADED: "layerLoader/layer-loaded",
 
                 /**
+                * Indicates that a map layer has been added to the layer selector
+                *
+                * @event LayerLoader.LAYER_ADDED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} layer object that has been added
+                *
+                */
+                LAYER_ADDED: "layerLoader/layer-added",
+
+                /**
                 * Indicates that a map layer has updated.  This means the data it is showing is visible and up-to-date
                 *
                 * @event LayerLoader.LAYER_UPDATED

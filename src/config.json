@@ -1,11 +1,11 @@
 {
-    "version": "1.1.0",
+    "version": "1.2.0",
     "geometryServiceUrl": "http://sncr01wbingsdv1.ncr.int.ec.gc.ca/arcgis/rest/services/Utilities/Geometry/GeometryServer",
     "proxyUrl": "http://cp.zz9.ca/index",
     "exportMapUrl": "http://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task",
     "exportProxyUrl": "http://142.135.82.123/proxy/proxy.ashx",
     "geonameUrl": "http://geogratis.gc.ca/services/geoname/",
-    "geolocationUrl":  "http://geogratis.gc.ca/services/geolocation/",
+    "geolocationUrl": "http://geogratis.gc.ca/services/geolocation/",
     "advancedToolbar": {
         "enabled": false,
         "tools": [
@@ -314,6 +314,7 @@
                 "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/ECNY/MapServer/0",
                 "metadataUrl": "http://intranet.ecdmp-stage.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id=1c0eb1b2-93ae-49ae-a3ce-e495d8fd767b&_=1417717957845",
                 "catalogueUrl": "http://www.google.ca",
+                "mode": "snapshot",
                 "minScale": 0,
                 "datagrid": {
                     "rowsPerPage": 50,
@@ -402,7 +403,7 @@
                 },
                 "aliasMap": {
                     "PRJ_ID": "Project ID",
-                    "CATEG_NAM_ENG":  "Category Name"
+                    "CATEG_NAM_ENG": "Category Name"
                 }
             },
             {
@@ -762,7 +763,7 @@
     "plugins": [
         "stringParse.js",
         "htmlRawParse.js",
-        "jsonRawParse.js",
+        "jsonParse.js",
         "tempParse.js",
         "windParse.js",
         "epsgio.js"
