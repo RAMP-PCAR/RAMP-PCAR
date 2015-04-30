@@ -668,6 +668,36 @@ define([
         }
 
         /**
+        * Sets up layer option object
+        *
+        * @private
+        * @method setLayerMode
+        * @param  {Object} config config object for the layer
+        * @return {Object} an options object with settings based on the config
+        */
+        function makeFeatureLayerOptions(config) {
+            var opts = {
+                id: config.id,
+                //outFields: [config.layerAttributes],
+                visible: config.settings.visible,
+                opacity: resolveLayerOpacity(config.settings.opacity)
+            };
+
+            switch (config.mode) {
+                case 'ondemand':
+                    opts.mode = FeatureLayer.MODE_ONDEMAND;
+                    break;
+
+                case 'snapshot':
+                    opts.mode = FeatureLayer.MODE_SNAPSHOT;
+                    opts.maxAllowableOffset = config.maxAllowableOffset;
+                    break;
+            }
+
+            return opts;
+        }
+
+        /**
         * Sets up loading event handlers and initializes the .ramp object of a layer
         * Circular reference errors prevent us from calling LayerLoader directly from this module
         *
@@ -1012,14 +1042,8 @@ define([
            */
             makeFeatureLayer: function (layerConfig, userLayer) {
                 // TODO: source of possible errors; add error handling
-                var fl = new FeatureLayer(layerConfig.url, {
-                    id: layerConfig.id,
-                    mode: FeatureLayer.MODE_ONDEMAND,
-                    //outFields: [layerConfig.layerAttributes],
-                    visible: layerConfig.settings.visible,
-                    opacity: resolveLayerOpacity(layerConfig.settings.opacity)
-                    //maxAllowableOffset: layerConfig.maxAllowableOffset
-                });
+
+                var fl = new FeatureLayer(layerConfig.url, makeFeatureLayerOptions(layerConfig));
 
                 prepLayer(fl, layerConfig, userLayer);
 
@@ -1074,13 +1098,8 @@ define([
                 //determine layer type and process
                 switch (layerType) {
                     case "feature":
-                        tempLayer = new FeatureLayer(layerConfig.url, {
-                            opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                            mode: FeatureLayer.MODE_ONDEMAND,
-                            visible: layerConfig.settings.visible,
-                            id: layerConfig.id
-                            //maxAllowableOffset: layerConfig.maxAllowableOffset
-                        });
+
+                        tempLayer = new FeatureLayer(layerConfig.url, makeFeatureLayerOptions(layerConfig));
 
                         prepLayer(tempLayer, layerConfig, userLayer);
 
