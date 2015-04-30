@@ -151,6 +151,11 @@ define([
                 }
             }
 
+            //remove data, if it exists
+            if (RAMP.data[layerId]) {
+                delete RAMP.data[layerId];
+            }
+
             //just incase its really weird and layer is not in the registry
             if (layer) {
                 //adjust layer counts
