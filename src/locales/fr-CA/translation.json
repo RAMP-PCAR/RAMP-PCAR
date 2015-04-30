@@ -287,6 +287,10 @@
         "zoomTo": "Zoom vers"
     },
     "filterManager": {
+        "WMSAllQueryDisable": "Désactiver les requêtes sur toutes les couches WMS",
+        "WMSAllQueryEnable": "Activer les requêtes sur toutes les couches WMS",
+        "WMSQueryDisable": "[fr] Disable query on {0}",
+        "WMSQueryEnable": "[fr] Enable query on {0}",
         "allData": "Toutes les données",
         "controlsMatrix": {
             "error": "Erreur",
@@ -335,11 +339,7 @@
             "expand": "[fr] Expand",
             "fullScreen": "Plein écran",
             "mapExport": "Exportation de la carte",
-            "open": "Ouvrir",
-            "wmsQueryDisable": "Désactiver les requêtes",
-            "wmsQueryDisableTooltip": "Désactiver les requêtes sur toutes les couches WMS",
-            "wmsQueryEnable": "Requêtes",
-            "wmsQueryEnableTooltip": "Activer les requêtes sur toutes les couches WMS"
+            "open": "Ouvrir"
         }
     },
     "help": {

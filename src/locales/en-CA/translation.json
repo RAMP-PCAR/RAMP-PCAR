@@ -287,6 +287,10 @@
         "zoomTo": "Zoom To"
     },
     "filterManager": {
+        "WMSAllQueryDisable": "Disable queries on all WMS layers",
+        "WMSAllQueryEnable": "Enable queries on all WMS layers",
+        "WMSQueryDisable": "Disable query on {0}",
+        "WMSQueryEnable": "Enable query on {0}",
         "allData": "All Data",
         "controlsMatrix": {
             "error": "Error",
@@ -335,11 +339,7 @@
             "expand": "Expand",
             "fullScreen": "Full Screen",
             "mapExport": "Map Export",
-            "open": "Open",
-            "wmsQueryDisable": "Disable Queries",
-            "wmsQueryDisableTooltip": "Disable queries on all WMS layers",
-            "wmsQueryEnable": "Enable Queries",
-            "wmsQueryEnableTooltip": "Enable queries on all WMS layers"
+            "open": "Open"
         }
     },
     "help": {
