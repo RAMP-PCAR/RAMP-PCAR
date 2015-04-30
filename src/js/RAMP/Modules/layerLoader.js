@@ -512,7 +512,7 @@ define([
                 configIdx = configCollection.indexOf(layer.ramp.config);
                 configCollection.splice(configIdx, 1);
 
-                RAMP.layerRegistry[evt.layerId] = undefined;
+                delete RAMP.layerRegistry[evt.layerId];
 
                 // publish LAYER_REMOVED event for every removed layer
                 topic.publish(EventManager.LayerLoader.LAYER_REMOVED, { layer: layer, layerCounts: RAMP.layerCounts });
