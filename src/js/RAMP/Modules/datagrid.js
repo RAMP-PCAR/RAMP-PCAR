@@ -1237,15 +1237,15 @@ define([
                                 RampMap.getInvisibleLayers()
                                 .filter(function (l) {
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
-                                }),
-
-                            selectedDatasetId,
-                            index;
+                                });
 
                         if (this.isReady()) {
                             tmpl.cache = {};
                             tmpl.templates = data_grid_template_json;
 
+                            //We now download attributes separate from the map layer, so no need to show the warning in full grid
+                            //as well, the warning covers the grid column labels
+                            /*
                             if (datagridMode === GRID_MODE_FULL) {
                                 // check if the selected layer is off scale at the current extent
                                 selectedDatasetId = ui.getSelectedDatasetId();
@@ -1256,16 +1256,15 @@ define([
                                 if (index !== -1) {
                                     notice = tmpl("datagrid_full_info_notice", data);
                                 }
-                            } else {
-                                if (invisibleLayers.length > 0) {
-                                    data.layers = invisibleLayers.map(function (il) {
-                                        return il.ramp.config;
-                                    });
+                            } else { */
+                            if ((datagridMode !== GRID_MODE_FULL) && (invisibleLayers.length > 0)) {
+                                data.layers = invisibleLayers.map(function (il) {
+                                    return il.ramp.config;
+                                });
 
-                                    // display notice only if invisibleLayer has eyeToggle on
-                                    if (invisibleLayerToggleOn.length > 0) {
-                                        notice = tmpl("datagrid_info_notice", data);
-                                    }
+                                // display notice only if invisibleLayer has eyeToggle on
+                                if (invisibleLayerToggleOn.length > 0) {
+                                    notice = tmpl("datagrid_info_notice", data);
                                 }
                             }
 
