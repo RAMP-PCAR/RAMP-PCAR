@@ -14,23 +14,23 @@
 * details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/extended_datagrid_template.json"}}{{/crossLink}}
-* 
+*
 * @class Datagrid
 * @static
 * @uses dojo/_base/declare
@@ -60,7 +60,7 @@ define([
 
 // Ramp
         "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "ramp/theme",
+        "ramp/eventManager", "ramp/theme", "ramp/attributeLoader",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -78,7 +78,8 @@ define([
         FeatureLayer, EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme,
+        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap,
+        EventManager, Theme, AttributeLoader,
 
     // Util
         utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
@@ -107,8 +108,7 @@ define([
 
             data_grid_template_json = JSON.parse(tmplHelper.stringifyTemplate(data_grid_template)),
             extended_datagrid_template_json = JSON.parse(tmplHelper.stringifyTemplate(extended_datagrid_template)),
-            //layerConfig,
-            gridConfig,
+            currentRowsPerPage = 1, //keeps track of the rows-per-page of the active grid
 
             /**
             * The jquery table
@@ -146,9 +146,9 @@ define([
             ui = (function () {
                 /**
                 * creates a datagrid row that has the following features:
-                * highlight for a give graphic
+                * highlight for a given feature
                 * un-highlight
-                * scroll to for a give graphic
+                * scroll to for a given feature
                 *
                 * @method createRowPrototype
                 * @private
@@ -157,18 +157,18 @@ define([
                 */
                 function createRowPrototype(cssClass) {
                     var index = -1,
-                        graphic = null;
+                        fData = null;
 
                     return {
                         focusedButton: null,
 
                         isActive: function () {
-                            return graphic !== null;
+                            return fData !== null;
                         },
 
                         isEqual: function (layerId, oid) {
-                            var thisId = graphic.getLayer().id,
-                                thisOid = GraphicExtension.getOid(graphic);
+                            var thisId = fData.parent.layerId,
+                                thisOid = GraphicExtension.getFDataOid(fData);
 
                             return (thisId === layerId) && (thisOid === oid);
                         },
@@ -185,7 +185,7 @@ define([
                         navigateToRow: function () {
                             if (index !== -1) {
                                 // Figure out which page the entry is in and navigate to that page
-                                var page = Math.floor(index / gridConfig.rowsPerPage);
+                                var page = Math.floor(index / currentRowsPerPage);
                                 if (oTable.page() !== page) {
                                     // False tells draw not to navigate to the first page
                                     jqgrid.DataTable().page(page).draw(false);
@@ -204,23 +204,23 @@ define([
                             return false;
                         },
 
-                        setGraphic: function (newGraphic) {
-                            graphic = newGraphic;
+                        setFeatureData: function (newFData) {
+                            fData = newFData;
 
                             this.refresh();
                         },
 
                         /**
-                        * Finds a row node corresponding to the given graphic object.
+                        * Refresh the page index of this row
                         *
                         * @method refresh
                         * @private
                         * @return {{node: jObject, page: number}} A row node that displays graphic information. If none found, returns an object with empty jNode.
                         */
                         refresh: function () {
-                            if (graphic) {
-                                var layerId = graphic.getLayer().id,
-                                    id = GraphicExtension.getOid(graphic);
+                            if (fData) {
+                                var layerId = fData.parent.layerId,
+                                    id = GraphicExtension.getFDataOid(fData);
                                 if ((layerId in featureToPage) && (id in featureToPage[layerId])) {
                                     index = featureToPage[layerId][id];
                                 } else {
@@ -232,24 +232,24 @@ define([
                         },
 
                         /**
-                        * Finds a row node corresponding to the given graphic object.
+                        * Finds a row node corresponding to this object.
                         *
                         * @method getNode
                         * @private
                         * @return {{node: jObject, page: number}} A row node that displays graphic information. If none found, returns an object with empty jNode.
                         */
                         getNode: function () {
-                            return $(String.format("#jqgrid tbody tr:nth-child({0})", index % gridConfig.rowsPerPage + 1));
+                            return $(String.format("#jqgrid tbody tr:nth-child({0})", index % currentRowsPerPage + 1));
                         },
 
                         /**
-                        * Highlights the given graphic object using the specified cssClass.
+                        * Highlights this row using the specified cssClass.
                         *
                         * @method activate
                         * @private
                         */
                         activate: function () {
-                            if (graphic) {
+                            if (fData) {
                                 this.getNode().addClass(cssClass);
 
                                 if (this.focusedButton) {
@@ -260,15 +260,15 @@ define([
                         },
 
                         /**
-                        * Removes a specified cssClass from a given graphic object in the data grid
+                        * Removes a specified cssClass from this row in the data grid
                         *
                         * @method deactivate
                         * @private
                         */
                         deactivate: function () {
-                            if (graphic) {
+                            if (fData) {
                                 this.getNode().removeClass(cssClass);
-                                graphic = null;
+                                fData = null;
                             }
                         }
                     };
@@ -331,12 +331,22 @@ define([
                     var obj = row.last(),
                         datagridMode = ui.getDatagridMode(),
                         tmplData,
-                        layerConfig = obj.feature.getLayer().ramp.config;
+                            layerConfig;
+
+                    if (!obj || !obj.fData) {
+                        //weird case where grid tries to render on non-existant row
+                        return "";
+                    }
+
+                    layerConfig = GraphicExtension.getConfigForFData(obj.fData);
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         if (!(datagridMode in obj)) {
+                            //first time rendering this row.
+                            //we will run the template engine, then store the result in the last column.
+
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
 
                             var sumTemplate = layerConfig.templates.summary;
 
@@ -350,6 +360,9 @@ define([
                         return obj[datagridMode];
                     } else {
                         if (!(datagridMode in obj)) {
+                            //first time rendering this row.
+                            //we will generate it (template engine), then store the result in the last column.
+
                             obj[datagridMode] = [];
 
                             //make array containing values for each column in the full grid
@@ -360,7 +373,7 @@ define([
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.feature, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
 
                             dojoArray.forEach(extendedGrid, function (col, i) {
                                 // add columnIdx property, and set initial value
@@ -397,7 +410,6 @@ define([
                             pagingType: "ramp", //"full_numbers",
                             scrollX: true,
                             destroy: true,
-                            pageLength: gridConfig.rowsPerPage,
                             language: i18n.t("datagrid.gridstrings", { returnObjectTrees: true }),
                             getTotalRecords: function () {
                                 return totalRecords;
@@ -405,6 +417,7 @@ define([
                         };
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
+                        currentRowsPerPage = RAMP.config.rowsPerPage;
                         tableOptions = lang.mixin(tableOptions,
                             {
                                 columns: [{
@@ -416,14 +429,18 @@ define([
                                     orderable: true
                                 }],
                                 dom: '<"jqgrid_table_wrapper summary-table"t><"status-line"p>',
-                                searching: true
+                                searching: true,
+                                pageLength: currentRowsPerPage
                             }
                         );
                     } else {
                         //layout for variable column (extended grid)
+                        //grab config for active dataset and generate a table layout based on gridColumns
+                        var focusConfig = Ramp.getLayerConfigWithId(ui.getSelectedDatasetId());
+                        currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(Ramp.getLayerConfigWithId(ui.getSelectedDatasetId()).datagrid.gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(focusConfig.datagrid.gridColumns, function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -435,7 +452,8 @@ define([
                                 }),
                                 dom: '<"jqgrid_table_wrapper full-table"t><"datagrid-info-notice simple"><"status-line"p>',
                                 scrollY: "500px", // just a placeholder; it will be dynamically updated later
-                                searching: RAMP.config.extendedDatagridExtentFilterEnabled
+                                searching: RAMP.config.extendedDatagridExtentFilterEnabled,
+                                pageLength: currentRowsPerPage
                             }
                         );
                     }
@@ -551,27 +569,29 @@ define([
                         if (highlightRow.isActive() && highlightRow.isEqual(layerId, oid)) {
                             DatagridClickHandler.onDetailDeselect(datagridMode);
                         } else {
-                            var graphic = getGraphicFromButton(buttonNode);
+                            var fData = getFDataFromButton(buttonNode),
+                                graphic = getGraphicFromFData(fData);
 
-                            DatagridClickHandler.onDetailSelect(buttonNode, graphic, datagridMode);
+                            DatagridClickHandler.onDetailSelect(buttonNode, fData, graphic, datagridMode);
                         }
                     });
 
                     // Event handling for "Zoom To" button
                     sectionNode.on("click", "button.zoomto", function (evt) {
-                        var zoomNode = $(this);
+                        var zoomNode = $(this),
+                            fData = getFDataFromButton(zoomNode);
 
                         zoomlightRow.focusedButton = "button.zoomto";
 
                         // Zoom To
                         if (zoomNode.text() === i18n.t("datagrid.zoomTo")) {
                             handleGridEvent(evt, function () {
-                                zoomToGraphic = getGraphicFromButton(zoomNode);
+                                zoomToGraphic = getGraphicFromFData(fData);
 
                                 //store the current extent, then zoom to point.
                                 lastExtent = RampMap.getMap().extent.clone();
 
-                                DatagridClickHandler.onZoomTo(RampMap.getMap().extent.clone(), zoomToGraphic);
+                                DatagridClickHandler.onZoomTo(RampMap.getMap().extent.clone(), fData, zoomToGraphic);
 
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
@@ -579,20 +599,20 @@ define([
                                 utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
-                                                    featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                                    layerIdField, zoomToGraphic.getLayer().id));
+                                                    featureOidField, GraphicExtension.getFDataOid(fData),
+                                                    layerIdField, fData.parent.layerId));
                                     newNode.text(i18n.t("datagrid.zoomBack"));
                                 });
                             });
                         } else { // Zoom back
-                            DatagridClickHandler.onZoomBack(zoomToGraphic);
+                            DatagridClickHandler.onZoomBack();
                             zoomNode.text(i18n.t("datagrid.zoomTo"));
 
                             // Reset focus back to "Zoom To" link after map extent change
                             utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
-                                        featureOidField, GraphicExtension.getOid(zoomToGraphic),
-                                        layerIdField, zoomToGraphic.getLayer().id));
+                                        featureOidField, GraphicExtension.getFDataOid(fData),
+                                        layerIdField, fData.parent.layerId));
                                 newNode.focus();
                             });
                         }
@@ -793,7 +813,7 @@ define([
                 function highlightrowShow(event) {
                     highlightrowHide();
 
-                    highlightRow.setGraphic(event.graphic);
+                    highlightRow.setFeatureData(event.fData);
 
                     if (event.scroll) {
                         ui.activateRows();
@@ -821,7 +841,7 @@ define([
                 * @param {Object} event A thrown event that contains a graphic object inside the grid
                 */
                 function zoomlightrowShow(event) {
-                    zoomlightRow.setGraphic(event.graphic);
+                    zoomlightRow.setFeatureData(event.fData);
                 }
 
                 /**
@@ -1217,15 +1237,15 @@ define([
                                 RampMap.getInvisibleLayers()
                                 .filter(function (l) {
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
-                                }),
-
-                            selectedDatasetId,
-                            index;
+                                });
 
                         if (this.isReady()) {
                             tmpl.cache = {};
                             tmpl.templates = data_grid_template_json;
 
+                            //We now download attributes separate from the map layer, so no need to show the warning in full grid
+                            //as well, the warning covers the grid column labels
+                            /*
                             if (datagridMode === GRID_MODE_FULL) {
                                 // check if the selected layer is off scale at the current extent
                                 selectedDatasetId = ui.getSelectedDatasetId();
@@ -1236,16 +1256,15 @@ define([
                                 if (index !== -1) {
                                     notice = tmpl("datagrid_full_info_notice", data);
                                 }
-                            } else {
-                                if (invisibleLayers.length > 0) {
-                                    data.layers = invisibleLayers.map(function (il) {
-                                        return il.ramp.config;
-                                    });
+                            } else { */
+                            if ((datagridMode !== GRID_MODE_FULL) && (invisibleLayers.length > 0)) {
+                                data.layers = invisibleLayers.map(function (il) {
+                                    return il.ramp.config;
+                                });
 
-                                    // display notice only if invisibleLayer has eyeToggle on
-                                    if (invisibleLayerToggleOn.length > 0) {
-                                        notice = tmpl("datagrid_info_notice", data);
-                                    }
+                                // display notice only if invisibleLayer has eyeToggle on
+                                if (invisibleLayerToggleOn.length > 0) {
+                                    notice = tmpl("datagrid_info_notice", data);
                                 }
                             }
 
@@ -1289,14 +1308,16 @@ define([
             var elements = oTable.rows().data();
             featureToPage = {};
             $.each(elements, function (idx, val) {
-                var layer = val.last().layerId,
-                    fid = GraphicExtension.getOid(val.last().feature);
+                if (val.last()) {
+                    var layer = val.last().layerId,
+                        fid = GraphicExtension.getFDataOid(val.last().fData);
 
-                if (!(layer in featureToPage)) {
-                    featureToPage[layer] = {
-                    };
+                    if (!(layer in featureToPage)) {
+                        featureToPage[layer] = {
+                        };
+                    }
+                    featureToPage[layer][fid] = idx;
                 }
-                featureToPage[layer][fid] = idx;
             });
         }
 
@@ -1316,18 +1337,20 @@ define([
                 //Ramp.setHTML(oid); // just update info hit
             }
         }
+
         /**
         * Gets all layer data in the current map extent that are visible, and put the data into the data grid.
         *
         * @method applyExtentFilter
-        * @param {A Deferred object} d
+        * @param {Deferred} d
         *
         */
         function applyExtentFilter(d) {
             var visibleFeatures = {},
                 visibleGridLayers = RampMap.getVisibleFeatureLayers(),
                 dataGridMode = ui.getDatagridMode(),
-                q = new EsriQuery();
+                q = new EsriQuery(),
+                bigGridNoFilter = false;
 
             //console.time('applyExtentFilter:part 1');
             //console.time('applyExtentFilter:part 1 - 1');
@@ -1337,24 +1360,24 @@ define([
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
-            //console.log('HOGG - applying extent filter.  visible layers: ' + visibleGridLayers.length.toString());
-
+            //figure out what extent to use
             if (dataGridMode === GRID_MODE_FULL) {
-                visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
-                    return layer.id === ui.getSelectedDatasetId();
-                });
-
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
                     q.geometry = RampMap.getMap().extent;
+                    //in this case, we only consider the layer if it is visible
+                    visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                        return layer.id === ui.getSelectedDatasetId();
+                    });
                 } else {
-                    // Grab everything!
-                    q.geometry = RampMap.getMaxExtent();
-                    //q.where = "1 = 1";
+                    // Grab everything!  even if it's not visible on the map
+                    bigGridNoFilter = true;
+                    visibleGridLayers = [RAMP.layerRegistry[ui.getSelectedDatasetId()]];
                 }
             } else { // Summary Mode
                 q.geometry = RampMap.getMap().extent;
             }
 
+            //this will result in just objectid fields, as that is all we have in feature layers
             q.outFields = ["*"];
 
             //console.timeEnd('applyExtentFilter:part 1 - 1');
@@ -1362,21 +1385,38 @@ define([
             // Update total records
             totalRecords = 0;
             dojoArray.forEach(visibleGridLayers, function (layer) {
-                totalRecords += layer.graphics.length;
+                if (RAMP.data[layer.id]) {
+                    totalRecords += RAMP.data[layer.id].features.length;
+                }
             });
 
             //console.time('applyExtentFilter:part 1 - 2');
 
-            var deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
-                return gridLayer.queryFeatures(q).then(function (features) {
-                    //console.timeEnd('applyExtentFilter:part 1 - 2');
+            var deferredList;
 
-                    if (features.features.length > 0) {
-                        var layer = features.features[0].getLayer();
-                        visibleFeatures[layer.id] = features.features;
-                    }
+            if (bigGridNoFilter) {
+                deferredList = []; //nothing to wait for.  empty array will satisfy afterAll()
+                //we only have one layer, and will want all the data. flag as raw, and pass in the layer id
+                visibleFeatures[visibleGridLayers[0].id] = {
+                    type: 'raw',
+                    layerId: visibleGridLayers[0].id
+                };
+            } else {
+                //apply spatial query to the layers, collect deferred results in the array.
+                deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
+                    return gridLayer.queryFeatures(q).then(function (features) {
+                        //console.timeEnd('applyExtentFilter:part 1 - 2');
+
+                        if (features.features.length > 0) {
+                            var layer = features.features[0].getLayer();
+                            visibleFeatures[layer.id] = {
+                                type: 'features',
+                                features: features.features
+                            };
+                        }
+                    });
                 });
-            });
+            }
 
             // Execute this only after all the deferred objects has resolved
             utilMisc.afterAll(deferredList, function () {
@@ -1400,22 +1440,25 @@ define([
         }
 
         /**
-        * Given a map feature, return a data object used to represent the feature in the datagrid.
+        * Given a feature data object, return a data object used to represent the feature in the datagrid.
+        * The data object is an ordered array of raw values
         *
         * @method getDataObject
         * @private
-        * @param {Object} feature the feature needs to be represented in the datagrid
+        * @param {Object} fData data the feature needs to be represented in the datagrid
         * return {Array} an array representing the data the given feature contains.
         */
-        function getDataObject(feature) {
-            var layerConfig = feature.getLayer().ramp.config,
+        function getDataObject(fData) {
+            //TODO it may be possible to take the logic in function rowRenderer (which applies templating) and apply it here. try after things are working as-is
+
+            var layerConfig = GraphicExtension.getConfigForFData(fData),
                 innerArray;
             //attribute = feature.attributes;
 
             //Remember, case sensitivity MATTERS in the attribute name.
 
             if (ui.getDatagridMode() === GRID_MODE_SUMMARY) {
-                innerArray = [feature.attributes[layerConfig.nameField]];
+                innerArray = [GraphicExtension.getFDataTitle(fData)];
             } else {
                 //make array containing values for each column in the full grid
                 innerArray = [];
@@ -1425,7 +1468,7 @@ define([
 
                 // process each column and add to row
                 dojoArray.forEach(extendedGrid, function (column) {
-                    innerArray.push(feature.attributes[column.fieldName] || "");
+                    innerArray.push(fData.attributes[column.fieldName] || "");
                 });
             }
 
@@ -1437,7 +1480,7 @@ define([
             innerArray.push({
                 layerId: layerConfig.id,
                 layerName: layerConfig.displayName,
-                feature: feature
+                fData: fData
             });
 
             return innerArray;
@@ -1452,7 +1495,7 @@ define([
         *
         * @method fetchRecords
         * @param {Array} visibleFeatures a dictionary mapping
-        * layer id to an array of feature objects
+        * layer id to an array of on-map feature objects
         * @private
         */
         function fetchRecords(visibleFeatures) {
@@ -1469,17 +1512,42 @@ define([
                 return;
             }
 
-            var data = [];
+            var data = [], newData, dgMode = ui.getDatagridMode();
 
             //for each feature layer
-            utilDict.forEachEntry(visibleFeatures, function (key, features) {
-                //for each feature in a specific layer
-                data = data.concat(dojoArray.map(features, function (feature) {
-                    //return the appropriate data object for the feature (.map puts them in array form)
+            utilDict.forEachEntry(visibleFeatures, function (key, layerBundle) {
+                //ensure attribute data has been downloaded
+                if (RAMP.data[key]) {
+                    switch (layerBundle.type) {
+                        case 'features':
 
-                    // "cache" the data object so we don't have to generate it again
-                    return feature[ui.getDatagridMode()] ? feature[ui.getDatagridMode()] : feature[ui.getDatagridMode()] = getDataObject(feature);
-                }));
+                            //for each feature in a specific layer
+                            newData = dojoArray.map(layerBundle.features, function (feature) {
+                                //get the feature data for this feature
+                                var fData = GraphicExtension.getFDataForGraphic(feature);
+
+                                //return the appropriate data object for the feature (.map puts them in array form)
+                                // "cache" the data object so we don't have to generate it again
+                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
+                            });
+
+                            data = data.concat(newData);
+
+                            break;
+
+                        case 'raw':
+                            //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
+                            newData = dojoArray.map(RAMP.data[layerBundle.layerId].features, function (fData) {
+                                //return the appropriate data object for the feature (.map puts them in array form)
+                                // "cache" the data object so we don't have to generate it again
+                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
+                            });
+
+                            data = data.concat(newData);
+
+                            break;
+                    }
+                }
             });
 
             updateRecordsCount(data.length);
@@ -1496,7 +1564,7 @@ define([
 
             //console.timeEnd('fetchRecords: fnAddData');
 
-            console.log("jqgrid.dataTable().fnAddData(data);");
+            //console.log("jqgrid.dataTable().fnAddData(data);");
 
             // NOTE: fnAddData should be the last thing that happens in this function
             // if you want to add something after this point, use the fnDrawCallback
@@ -1504,26 +1572,38 @@ define([
         }
 
         /**
-        * Returns the graphic object of a feature layer which is contained in the given buttonNode.
+        * Returns the graphic object of a feature layer for the corresponding feature data object.
         *
-        * @method getGraphicFromButton
+        * @method getGraphicFromFData
         * @private
-        * @param {JObject} buttonNode   the node containing the feature layer
+        * @param {Object} fData a feature data object
         * @return {Object}   the graphic object of the feature layer.
         */
-        function getGraphicFromButton(buttonNode) {
-            var layerId = buttonNode.data(layerIdField),
-            // Need to parse the index into an integer since it
-            // comes as a String
-                oid = parseInt(buttonNode.data(featureOidField)),
-                featureLayer = RampMap.getFeatureLayer(layerId),
+        function getGraphicFromFData(fData) {
+            //TODO move this into graphicExtension?  check for RampMap import circular reference.
 
-                graphic = UtilArray.binaryFind(featureLayer.graphics,
-                    function (a_graphic) {
-                        return GraphicExtension.getOid(a_graphic) - oid;
-                    });
+            var oid = GraphicExtension.getFDataOid(fData),
+                graphic;
 
+            graphic = GraphicExtension.findGraphic(oid, fData.parent.layerId);
             return graphic;
+        }
+
+        /**
+        * Returns the feature data object which is encoded in the given buttonNode.
+        *
+        * @method getFDataFromButton
+        * @private
+        * @param {JObject} buttonNode   the node containing button for the row
+        * @return {Object}   the feature data object
+        */
+        function getFDataFromButton(buttonNode) {
+            var layerId = buttonNode.data(layerIdField),
+                oid = buttonNode.data(featureOidField),
+                layerData = RAMP.data[layerId];
+
+            //since button.data returns in string format, we don't need to convert the oid to a string for the index
+            return layerData.features[layerData.index[oid]];
         }
 
         /**
@@ -1544,9 +1624,9 @@ define([
                     if (idx === -1 && event.state) {
                         // add
                         invisibleLayerToggleOn.push(event.id);
-                    }else if (idx !== -1 && !event.state) {
+                    } else if (idx !== -1 && !event.state) {
                         // remove
-                        invisibleLayerToggleOn.splice(idx,1);
+                        invisibleLayerToggleOn.splice(idx, 1);
                     }
                 }
             });
@@ -1624,26 +1704,9 @@ define([
             * @method init
             */
             init: function () {
-                // Added to make sure the layer is not static
-                var layerConfigs = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
-                    return !layerConfig.isStatic;
-                });
+                initListeners();
 
-                if (layerConfigs.length !== 0) {
-                    // layerConfig = config.featureLayers;
-                    gridConfig = layerConfigs[0].datagrid;  //this is just to configure the structure of the grid.  since all layers have same structure, just pick first one
-
-                    /*
-                    $.fn.dataTable.ext.search.push(
-                        function (settings, data, dataIndex) {
-                            return data[0].indexOf("Water Regions") > -1;
-                        }
-                    );*/
-
-                    initListeners();
-
-                    ui.init();
-                }
+                ui.init();
             } //InitDataGrid
         };
     });

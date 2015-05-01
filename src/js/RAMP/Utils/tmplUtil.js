@@ -22,17 +22,14 @@ define(["ramp/globalStorage"],
 
         return {
             /**
-            * Given a feature object or a graphic object (or any object that has a getLayer method and an
-            * attributes field) return the image URL for that feature/graphic object.
-            *
-            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * Given a feature data object return the image URL for that feature/graphic object.                        
             *
             * @method getGraphicIcon
-            * @param {Graphic} graphic
-            * @param {Object} layerConfig
+            * @param {Object} fData feature data object
+            * @param {Object} layerConfig layer config for feature
             * @return {String} imageUrl Url to the features symbology image
             */
-            getGraphicIcon: function (graphic, layerConfig) {
+            getGraphicIcon: function (fData, layerConfig) {
                 var i, symbolConfig = layerConfig.symbology, img = "";
 
                 switch (symbolConfig.type) {
@@ -41,7 +38,7 @@ define(["ramp/globalStorage"],
 
                     case "uniqueValue":
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
-                        var graphicKey = graphic.attributes[symbolConfig.field1];
+                        var graphicKey = fData.attributes[symbolConfig.field1];
 
                         //all key values are stored as strings.  if the attribute is in a numeric column, we must convert it to a string to ensure the === operator still works.
                         if (typeof graphicKey !== "string") {
@@ -49,9 +46,9 @@ define(["ramp/globalStorage"],
                         }
 
                         if (symbolConfig.field2) {
-                            graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field2];
+                            graphicKey = graphicKey + ", " + fData.attributes[symbolConfig.field2];
                             if (symbolConfig.field3) {
-                                graphicKey = graphicKey + ", " + graphic.attributes[symbolConfig.field3];
+                                graphicKey = graphicKey + ", " + fData.attributes[symbolConfig.field3];
                             }
                         }
 
@@ -72,7 +69,7 @@ define(["ramp/globalStorage"],
                     case "classBreaks":
 
                         var gVal, lower, upper;
-                        gVal = graphic.attributes[symbolConfig.field];
+                        gVal = fData.attributes[symbolConfig.field];
 
                         //find where the value exists in the range
                         lower = symbolConfig.minValue;
@@ -109,43 +106,39 @@ define(["ramp/globalStorage"],
             },
 
             /**
-            * Given a feature object or a graphic object (or any object that has a getLayer method and an
-            * attributes field) return the attribute value for its designed "name" field
-            *
-            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * Given a feature data object return the attribute value for its designed "name" field           
             *
             * @method getFeatureName
-            * @param {Graphic} graphic
-            * @param {Object} layerConfig
+            * @param {Object} fData feature data object
+            * @param {Object} layerConfig layer config for feature
             * @return {String} imageUrl Url to the features symbology image
             */
-            getFeatureName: function (graphic, layerConfig) {
-                return graphic.attributes[layerConfig.nameField];
+            getFeatureName: function (fData, layerConfig) {
+                return fData.attributes[layerConfig.nameField];
             },
 
             /**
-            * Given a feature object return the objectid for that item.
-            * This will likely fail on a non-feature object (e.g. a plain graphic)
-            *
-            * NOTE: all dependent functions should be written as nested functions inside the caller function, otherwise TmplEx templating library won't identify
+            * Given a feature data object return the objectid for that item.            
             *
             * @method getObjectId
-            * @param {Graphic} graphic
+            * @param {Object} fData feature data object
             * @return {Integer} objectId
             */
-            getObjectId: function (graphic) {
-                return graphic.attributes[graphic.getLayer().objectIdField];
+            getObjectId: function (fData) {
+                //circular reference prevents us from using GraphicExtension.getFDataOid
+                //duplicate logic locally
+                return fData.attributes[fData.parent.idField];
             },
 
             /*
             * Helper function, get attribute value by field name
             *
             * @method getAttributeValueByName
-            * @param {Object} graphic ?
-            * @param {String} fieldName ?
+            * @param {Object} fData feature data object
+            * @param {String} fieldName attribute field name
             */
-            getAttributeValueByName: function (graphic, fieldName) {
-                return graphic.attributes[fieldName];
+            getAttributeValueByName: function (fData, fieldName) {
+                return fData.attributes[fieldName];
             },
 
             /*

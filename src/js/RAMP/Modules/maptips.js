@@ -1,4 +1,4 @@
-﻿/*global define, $, window, Modernizr, tmpl */
+﻿/*global define, $, window, Modernizr, tmpl, RAMP */
 /*jslint white: true */
 
 /**
@@ -15,14 +15,14 @@
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/feature_hovertip_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/feature_anchortip_template.json"}}{{/crossLink}}
-* 
+*
 * @class Maptips
 * @static
 * @uses dojo/topic
@@ -107,7 +107,7 @@ define([
         * @method checkMaptipPosition
         * @private
         * @param  {jObject} target a node to which the tooltip will be attached
-        * @param  {Object} graphic [description]
+        * @param  {Object} graphic a graphic on the map
         */
         function checkMaptipPosition(target, graphic) {
             graphic = graphic || highTooltip.graphic || null;
@@ -140,7 +140,8 @@ define([
         */
         function getMaptipContent(graphic, interactive) {
             //the graphic might be in a highlight layer, if so we need the source layer id
-            var layerId = graphic.getLayer().sourceLayerId;
+            var layerId = graphic.getLayer().sourceLayerId,
+                lData, fData;
             if (!layerId) {
                 //graphic was not in a highlight layer
                 layerId = graphic.getLayer().id;
@@ -161,10 +162,18 @@ define([
                 tmpl.templates = hovertips_template_json;
             }
 
-            datawrapper = TmplHelper.dataBuilder(graphic, layerConfig);
-            maptipContent = tmpl(templateKey, datawrapper);
+            //because of highlight layer tricks, don't use the standard GraphicExtension methods here to get the feature data
+            lData = RAMP.data[layerId];
+            if (lData) {
+                fData = lData.features[lData.index[graphic.attributes[lData.idField].toString()]];
 
-            return maptipContent;
+                datawrapper = TmplHelper.dataBuilder(fData, layerConfig);
+                maptipContent = tmpl(templateKey, datawrapper);
+            } else {
+                //rare case where feature data has not been downloaded or does not exist
+                maptipContent = "";
+            }
+                return maptipContent;
         }
 
         /**

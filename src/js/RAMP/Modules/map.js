@@ -15,15 +15,15 @@
 * Map class represents the ESRI map object. The map is generated based on the application configuration and templates.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Navigation"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* 
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Navigation"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+*
 * @class Map
 * @static
 * @uses dojo/_base/declare
@@ -593,7 +593,7 @@ define([
                 case "feature":
                     tempLayer = new FeatureLayer(layer_url, {
                         opacity: layer_op,
-                        mode: FeatureLayer.MODE_SNAPSHOT
+                        mode: FeatureLayer.MODE_ONDEMAND
                     });
                     break;
 
@@ -666,6 +666,36 @@ define([
 
         function resolveLayerOpacity(layerOpacity) {
             return layerOpacity.default || 1;
+        }
+
+        /**
+        * Sets up layer option object
+        *
+        * @private
+        * @method setLayerMode
+        * @param  {Object} config config object for the layer
+        * @return {Object} an options object with settings based on the config
+        */
+        function makeFeatureLayerOptions(config) {
+            var opts = {
+                id: config.id,
+                //outFields: [config.layerAttributes],
+                visible: config.settings.visible,
+                opacity: resolveLayerOpacity(config.settings.opacity)
+            };
+
+            switch (config.mode) {
+                case 'ondemand':
+                    opts.mode = FeatureLayer.MODE_ONDEMAND;
+                    break;
+
+                case 'snapshot':
+                    opts.mode = FeatureLayer.MODE_SNAPSHOT;
+                    opts.maxAllowableOffset = config.maxAllowableOffset;
+                    break;
+            }
+
+            return opts;
         }
 
         /**
@@ -785,7 +815,7 @@ define([
             * @type { boolean }
             */
             layerInLODRange: function (maxScale, minScale) {
-                var lods = map._params.lods,                    
+                var lods = map._params.lods,
                     topLod = -1,
                     bottomLod = -1,
                     lod,
@@ -796,9 +826,9 @@ define([
                 //min scale means dont show the layer if zoomed out beyond the min scale
                 //max scale means dont show the layer if zoomed in beyond the max scale
                 //from a numerical perspective, min > max (as the scale number represents 1/number )
-                
+
                 if (maxScale === 0) {
-                    bottomLod = 0; 
+                    bottomLod = 0;
                 }
 
                 if (minScale === 0) {
@@ -814,23 +844,22 @@ define([
 
                     if (bottomLod === -1 && lod.scale <= maxScale) {
                         bottomLod = lods[Math.max(0, i - 1)];
-                    } 
+                    }
                 }
 
-                if (maxScale === 0 && minScale === 0) {                    
+                if (maxScale === 0 && minScale === 0) {
                     inRange = true;
                 } else if (minScale === 0) {
                     // check only maxScale (bottomLod)
-                    inRange = (bottomLod === -1) ? false : true; 
+                    inRange = (bottomLod === -1) ? false : true;
                 } else if (maxScale === 0) {
                     // check only minScale (topLod)
-                    inRange = (topLod === -1) ? false : true; 
+                    inRange = (topLod === -1) ? false : true;
                 } else {
                     inRange = (topLod !== -1 && bottomLod !== -1);
                 }
 
                 return inRange;
-                
             },
 
             /**
@@ -1016,14 +1045,8 @@ define([
            */
             makeFeatureLayer: function (layerConfig, userLayer) {
                 // TODO: source of possible errors; add error handling
-                var fl = new FeatureLayer(layerConfig.url, {
-                    id: layerConfig.id,
-                    mode: FeatureLayer.MODE_SNAPSHOT,
-                    outFields: [layerConfig.layerAttributes],
-                    visible: layerConfig.settings.visible,
-                    opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                    maxAllowableOffset: layerConfig.maxAllowableOffset
-                });
+
+                var fl = new FeatureLayer(layerConfig.url, makeFeatureLayerOptions(layerConfig));
 
                 prepLayer(fl, layerConfig, userLayer);
         
@@ -1078,13 +1101,8 @@ define([
                 //determine layer type and process
                 switch (layerType) {
                     case "feature":
-                        tempLayer = new FeatureLayer(layerConfig.url, {
-                            opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                            mode: FeatureLayer.MODE_SNAPSHOT,
-                            visible: layerConfig.settings.visible,
-                            id: layerConfig.id,
-                            maxAllowableOffset: layerConfig.maxAllowableOffset
-                        });
+
+                        tempLayer = new FeatureLayer(layerConfig.url, makeFeatureLayerOptions(layerConfig));
 
                         prepLayer(tempLayer, layerConfig, userLayer);
 
@@ -1142,6 +1160,23 @@ define([
             * @return {Esri/Extent} extent in the desired projection
             */
             localProjectExtent: localProjectExtent,
+
+            // a temporary function with a silly name to update global ui state
+            // TODO: move into state manager module when it's created
+            updateDatagridUpdatingState: function (layer, value) {
+                var oldState = RAMP.state.ui.datagridUpdating;
+
+                if (layer.ramp.type === GlobalStorage.layerType.feature) {
+                    value = value ? 1 : -1;
+
+                    RAMP.state.ui.datagridUpdating += value;
+
+                    // only fire event when the number of updating layers is going from  0 to 1 or back
+                    if (oldState + RAMP.state.ui.datagridUpdating === 1) {
+                        topic.publish(EventManager.Datagrid.UPDATING, RAMP.state.ui.datagridUpdating ? true : false);
+                    }
+                }
+            },
 
             /*
             * Initialize map control with configuration objects provided in the bootstrapper.js file.

@@ -696,6 +696,7 @@
             }
         ],
         "wms": [
+           
             {
                 "id": "geomet_wind",
                 "displayName": "@@config.layers.wms.geomet_wind.displayName",
