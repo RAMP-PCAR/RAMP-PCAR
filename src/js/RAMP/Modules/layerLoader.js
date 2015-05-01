@@ -149,6 +149,7 @@ define([
                     map.removeLayer(bbLayer);
                     RAMP.layerCounts.bb -= 1;
                 }
+                delete RampMap.getBoundingBoxMapping()[layer.id];
             }
 
             //remove data, if it exists
@@ -336,53 +337,52 @@ define([
                     });
 
                     //generate bounding box
-                    //if a reload, the bounding box still exists from the first load
-                    if (isNotReload) {
-                        var boundingBoxExtent,
-                            boundingBox = new GraphicsLayer({
-                                id: String.format("boundingBoxLayer_{0}", layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible
+
+                    var boundingBoxExtent,
+                        boundingBox = new GraphicsLayer({
+                            id: String.format("boundingBoxLayer_{0}", layer.id),
+                            visible: layerConfig.settings.boundingBoxVisible
+                        });
+
+                    boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                    //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                    if (layerConfig.layerExtent) {
+                        boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                            //layer is in same projection as basemap.  can directly use the extent
+                            boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                        } else {
+                            //layer is in different projection.  reproject to basemap
+
+                            var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
+                            boundingBox.add(UtilMisc.createGraphic(box));
+
+                            //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
+                            /*
+                            var params = new ProjectParameters(),
+                                gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                            params.geometries = [boundingBoxExtent];
+                            params.outSR = map.spatialReference;
+
+                            gsvc.project(params, function (projectedExtents) {
+                                console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
+                                console.log('proj4 says: ' + JSON.stringify(box));
                             });
-
-                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (layerConfig.layerExtent) {
-                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                //layer is in same projection as basemap.  can directly use the extent
-                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                            } else {
-                                //layer is in different projection.  reproject to basemap
-
-                                var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
-                                boundingBox.add(UtilMisc.createGraphic(box));
-
-                                //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
-                                /*
-                                var params = new ProjectParameters(),
-                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                params.geometries = [boundingBoxExtent];
-                                params.outSR = map.spatialReference;
-
-                                gsvc.project(params, function (projectedExtents) {
-                                    console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
-                                    console.log('proj4 says: ' + JSON.stringify(box));
-                                });
-                                */
-                            }
+                            */
                         }
-
-                        //add mapping to bounding box
-                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
-
-                        //bounding boxes are on top of feature layers
-                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                        RAMP.layerCounts.bb += 1;
-
-                        map.addLayer(boundingBox, insertIdx);
                     }
+
+                    //add mapping to bounding box
+                    RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+
+                    //bounding boxes are on top of feature layers
+                    insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                    RAMP.layerCounts.bb += 1;
+
+                    map.addLayer(boundingBox, insertIdx);
+
                     break;
             }
         }
