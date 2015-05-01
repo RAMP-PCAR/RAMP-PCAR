@@ -79,7 +79,7 @@ define([
         /**
         * Will set a layerId's layer selector state to a new state.
         *
-        * @method onLayerError
+        * @method updateLayerSelectorState
         * @private
         * @param  {String} layerId config id of the layer
         * @param  {String} newState the state to set the layer to in the layer selector
@@ -179,7 +179,7 @@ define([
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
                     layerSection = GlobalStorage.layerType.wms;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
 
                         // generate wms legend image url and store in the layer config
@@ -206,7 +206,7 @@ define([
                 case GlobalStorage.layerType.feature:
                 case GlobalStorage.layerType.Static:
                     layerSection = GlobalStorage.layerType.feature;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                     } else {
@@ -222,6 +222,9 @@ define([
             //do this before creating layer selector item, as the layer selector inspects the map
             //object to make state decisions
             map.addLayer(layer, insertIdx);
+
+            // publish LAYER_ADDED event for every user-added layer
+            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
 
             //derive initial state
             switch (layer.ramp.load.state) {
@@ -248,7 +251,7 @@ define([
             }
 
             //add entry to layer selector
-            if (UtilMisc.isUndefined(reloadIndex)) {
+            if (!reloadIndex) {
                 options.state = lsState; // pass initial state in the options object
                 FilterManager.addLayer(layerSection, layer.ramp, options);
             } else {
@@ -270,10 +273,9 @@ define([
                 case GlobalStorage.layerType.wms:
 
                     // WMS binding for getFeatureInfo calls
-                    if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
-                        MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                    if (layerConfig.featureInfo) {
+                        MapClickHandler.registerWMSClick(layer);
                     }
-
                     break;
 
                 case GlobalStorage.layerType.feature:
@@ -297,7 +299,7 @@ define([
 
                     //generate bounding box
                     //if a reload, the bounding box still exists from the first load
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (!reloadIndex) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
@@ -307,7 +309,7 @@ define([
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                        if (layerConfig.layerExtent) {
                             boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                             if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
@@ -482,7 +484,7 @@ define([
 
                 layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
-                if (UtilMisc.isUndefined(layer)) {
+                if (!layer) {
                     //layer was kicked out of the map.  grab it from the registry
                     layer = RAMP.layerRegistry[evt.layerId];
                 }
@@ -522,7 +524,7 @@ define([
             */
             onLayerReload: function (evt) {
                 var map = RampMap.getMap(),
-                    layer,
+                    curlayer,
                     layerConfig,
                     user,
                     newLayer,
@@ -532,18 +534,20 @@ define([
                     idArray,
                     cleanIdArray;
 
-                layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+               removeFromMap(evt.layerId);
 
-                if (layer) {
+               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+             
+                if (curlayer) {
                     inMap = true;
                 } else {
                     //layer was kicked out of the map.  grab it from the registry
                     inMap = false;
-                    layer = RAMP.layerRegistry[evt.layerId];
+                    curlayer = RAMP.layerRegistry[evt.layerId];
                 }
 
-                layerConfig = layer.ramp.config;
-                user = layer.ramp.user;
+                layerConfig = curlayer.ramp.config;
+                user = curlayer.ramp.user;
 
                 //figure out index of layer
                 //since the layer may not be in the map, we have to use some trickery to derive where it is sitting
@@ -564,18 +568,18 @@ define([
                 //find where our index is
                 layerIndex = dojoArray.indexOf(cleanIdArray, evt.layerId);
 
-                if (layer.ramp.type === GlobalStorage.layerType.wms) {
+                if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
                     layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
                 }
 
                 //remove layer from map
                 if (inMap) {
-                    map.removeLayer(layer);
+                    map.removeLayer(curlayer);
                 }
 
                 //generate new layer
-                switch (layer.ramp.type) {
+                switch (curlayer.ramp.type) {
                     case GlobalStorage.layerType.wms:
                         newLayer = RampMap.makeWmsLayer(layerConfig, user);
                         break;

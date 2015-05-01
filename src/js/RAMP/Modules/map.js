@@ -432,6 +432,7 @@ define([
         */
         function localProjectExtent(extent, sr) {
             //TODO can we handle WKT?
+            // we can now
 
             // interpolates two points by splitting the line in half recursively
             function interpolate(p0, p1, steps) {
@@ -451,14 +452,21 @@ define([
             }
 
             var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
-                projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [];
+                projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [], srcProj;
 
             // interpolate each edge by splitting it in half 3 times (since lines are not guaranteed to project to lines we need to consider
             // max / min points in the middle of line segments)
             [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 3).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
 
             //reproject the extent
-            projConvert = proj4('EPSG:' + extent.spatialReference.wkid, 'EPSG:' + sr.wkid);
+            if (extent.spatialReference.wkid) {
+                srcProj = 'EPSG:' + extent.spatialReference.wkid;
+            } else if (extent.spatialReference.wkt) {
+                srcProj = extent.spatialReference.wkt;
+            } else {
+                throw new Error('No WKT or WKID specified on extent.spatialReference');
+            }
+            projConvert = proj4(srcProj, 'EPSG:' + sr.wkid);
             transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
 
             xvals = transformed.map(function (x) { return x[0]; });
@@ -672,7 +680,7 @@ define([
         function prepLayer(layer, config, userLayer) {
             layer.ramp = {
                 config: config,
-                user: UtilMisc.isUndefined(userLayer) ? false : userLayer,
+                user: typeof userLayer === 'boolean' ? userLayer : false,
                 load: {
                     state: "loading",
                     inLS: false,  //layer has entry in layer selector
@@ -838,7 +846,7 @@ define([
             *
             */
             getMap: function () {
-                if (UtilMisc.isUndefined(map)) {
+                if (!map) {
                     console.log("trying to get map before it is available!");
                 }
                 return map;
@@ -1236,7 +1244,7 @@ define([
                 var tileSchema = schemaBasemap.tileSchema;
 
                 // add custom level of details if lod exists in config.json
-                if (!UtilMisc.isUndefined(tileSchema)) {
+                if (tileSchema) {
                     var levelOfDetails = UtilArray.find(RAMP.config.LODs, function (configLOD) {
                         return configLOD.tileSchema === tileSchema;
                     });
