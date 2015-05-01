@@ -105,23 +105,28 @@ define([
             });
 
             defData.then(function (dataResult) {
-                var len = dataResult.features.length;
-                if (len > 0) {
-                    if (maxBatch === -1) {
-                        //this is our first batch and our server is 10.0.  set the max batch size to this batch size
-                        maxBatch = len;
-                    }
-                    if (len < maxBatch) {
-                        //this batch is less than the max.  this is last batch.  no need to query again.
-                        callerDef.resolve(dataArray.concat(dataResult.features));
+                if (dataResult.features) {
+                    var len = dataResult.features.length;
+                    if (len > 0) {
+                        if (maxBatch === -1) {
+                            //this is our first batch and our server is 10.0.  set the max batch size to this batch size
+                            maxBatch = len;
+                        }
+                        if (len < maxBatch) {
+                            //this batch is less than the max.  this is last batch.  no need to query again.
+                            callerDef.resolve(dataArray.concat(dataResult.features));
+                        } else {
+                            //stash the result and call the service again for the next batch of data.
+                            //max id becomes last object id in the current batch
+                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, dataArray.concat(dataResult.features), layerUrl, idField, callerDef);
+                        }
                     } else {
-                        //stash the result and call the service again for the next batch of data.
-                        //max id becomes last object id in the current batch
-                        loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, dataArray.concat(dataResult.features), layerUrl, idField, callerDef);
+                        //no more data.  we are done
+                        callerDef.resolve(dataArray);
                     }
                 } else {
-                    //no more data.  we are done
-                    callerDef.resolve(dataArray);
+                    //it is possible to have an error, but it comes back on the "success" channel.
+                    callerDef.reject(dataResult.error);
                 }
             },
             function (error) {
@@ -143,7 +148,6 @@ define([
                 case GlobalStorage.layerType.feature:
 
                     console.log('BEGIN ATTRIB LOAD: ' + layerId);
-                    RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
 
                     //extract info for this service
                     var defService = script.get(layerUrl, {
@@ -152,6 +156,8 @@ define([
                     });
 
                     defService.then(function (serviceResult) {
+                        RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
+
                         //set up layer data object based on layer data
                         var maxBatchSize = serviceResult.maxRecordCount || -1, //10.0 server will not supply a max record value
                             defFinished = new Deferred(),
@@ -183,8 +189,10 @@ define([
                             console.log('END ATTRIB LOAD: ' + layerId);
                         },
                         function (error) {
-                            console.log('error getting attribute data');
-                            console.log(error);
+                            console.log('error getting attribute data for id ' + layerId);
+                            //set layer to error state
+                            RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
+                            topic.publish(EventManager.LayerLoader.LAYER_ERROR, { layer: RAMP.layerRegistry[layerId], error: error });
                         });
                     },
                      function (error) {
