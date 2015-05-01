@@ -901,6 +901,24 @@ define([
              * @type {String}
              * @default "Ok"
              */
+             
+             /**
+             * A checkbox on label.
+             *
+             * @property onLabel
+             * @private
+             * @type {String}
+             * @default "on"
+             */
+             
+             /**
+             * A checkbox off label.
+             *
+             * @property offLabel
+             * @private
+             * @type {String}
+             * @default "off"
+             */
 
             /**
              * Initializes the CheckboxBrick by generating a specified template and setting defaults. Also sets a click listener on the template input checkbox.
@@ -925,6 +943,8 @@ define([
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.value] a checkbox value
              * @param  {String} [config.label] a checkbox label
+             * @param  {String} [config.onLabel] a checkbox on label
+             * @param  {String} [config.offLabel] a checkbox off label
              * @chainable
              * @return {CheckboxBrick}
              */
@@ -956,6 +976,8 @@ define([
                     var value = that.inputNode.is(':checked');
                     that.setChecked(value, true);
                 });
+                
+                this.inputNode.checkbox();
             },
 
             /**
@@ -1132,7 +1154,7 @@ define([
              * @param  {String} [config.value] a checkbox value
              * @param  {String} [config.label] a checkbox label
              * @chainable
-             * @return {CheckboxBrick}
+             * @return {ToggleBrick}
              */
             initialize: function (id, config) {
                 //var that = this;
