@@ -14,16 +14,16 @@
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Ramp"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Ramp"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -169,7 +169,8 @@ define([
                 map = RampMap.getMap(),
                 layerConfig = layer.ramp.config,
                 lsState,
-                options = {};
+                options = {},
+                isNotReload = typeof reloadIndex === 'undefined';
 
             if (!layer.ramp) {
                 console.log('you failed to supply a ramp.type to the layer!');
@@ -179,7 +180,7 @@ define([
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
                     layerSection = GlobalStorage.layerType.wms;
-                    if (!reloadIndex) {
+                    if (isNotReload) {
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
 
                         // generate wms legend image url and store in the layer config
@@ -206,7 +207,7 @@ define([
                 case GlobalStorage.layerType.feature:
                 case GlobalStorage.layerType.Static:
                     layerSection = GlobalStorage.layerType.feature;
-                    if (!reloadIndex) {
+                    if (isNotReload) {
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                     } else {
@@ -251,7 +252,7 @@ define([
             }
 
             //add entry to layer selector
-            if (!reloadIndex) {
+            if (isNotReload) {
                 options.state = lsState; // pass initial state in the options object
                 FilterManager.addLayer(layerSection, layer.ramp, options);
             } else {
@@ -299,7 +300,7 @@ define([
 
                     //generate bounding box
                     //if a reload, the bounding box still exists from the first load
-                    if (!reloadIndex) {
+                    if (isNotReload) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
@@ -386,12 +387,12 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-                
+
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
                     // generic error notice
-                    errorMessage  = i18n.t("filterManager.notices.error.load"),
+                    errorMessage = i18n.t("filterManager.notices.error.load"),
                     options;
 
                 //get that failed layer outta here
@@ -437,7 +438,7 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -534,10 +535,10 @@ define([
                     idArray,
                     cleanIdArray;
 
-               removeFromMap(evt.layerId);
+                removeFromMap(evt.layerId);
 
-               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
-             
+                curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+
                 if (curlayer) {
                     inMap = true;
                 } else {
