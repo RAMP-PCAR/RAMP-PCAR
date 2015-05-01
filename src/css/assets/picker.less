@@ -13,6 +13,7 @@
 //@fs-checkbox-marker-height-width: 20px;
 //@fs-checkbox-marker-margin: 0 10px 0 0;
 
+@fs-checkbox-flag-background: #545454;
 
 // Focus
 @fs-dropdown-focus-marker-box-shadow: @default-focus-shadow;
@@ -38,7 +39,7 @@
     &-toggle&-checked {
 
         .fs-checkbox-flag {
-            background: #545454;
+            background:@fs-checkbox-flag-background;
             border: 1px @medium-dark-grey-color outset;
 
             &:after {
@@ -69,9 +70,10 @@
         color: #000;
     }*/
 
-    &-toggle &-marker {
-        float: right;
-        margin: 0;
+    &-marker {
+        position: absolute !important;
+        right: 0;
+        margin-right: 0;
         border-style: outset;
     }
 
