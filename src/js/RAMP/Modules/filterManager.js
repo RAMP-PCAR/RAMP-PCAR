@@ -324,6 +324,9 @@ define([
 
                             createGroups();
                             initListeners();
+                            
+                            // wms query toggles are hidden by default as we don't know if there are any wms layers
+                            this.hideQueryToggles(true);
                         },
 
                         update: function () {
@@ -992,7 +995,12 @@ define([
         // updates layer item state matrixes based on whether any queriable wms layers are present in layer selector
         function updateLayersStateMatrix(layerCounts, isLayerAdded) {
             var featureLayerGroup = layerGroups[GlobalStorage.layerType.feature],
-                wmsLayerGroup = layerGroups[GlobalStorage.layerType.wms];
+                wmsLayerGroup = layerGroups[GlobalStorage.layerType.wms],
+                states = [
+                    LayerItem.state.DEFAULT,
+                    LayerItem.state.UPDATING,
+                    LayerItem.state.OFF_SCALE
+                ];
             
             // if there is at least one queriable wms layer, add placeholder toggles to feature layers and 
             if (getQueryWMSLayers().length === 1 && isLayerAdded) {
@@ -1002,11 +1010,7 @@ define([
                         [
                             LayerItem.toggles.PLACEHOLDER
                         ],
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     layerItem.refresh();
@@ -1017,11 +1021,7 @@ define([
                         [
                             RAMP.layerRegistry[layerItem.id].ramp.config.featureInfo ? LayerItem.toggles.QUERY : LayerItem.toggles.PLACEHOLDER 
                         ],
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     layerItem.refresh();
@@ -1035,11 +1035,7 @@ define([
                         [
                             LayerItem.toggles.PLACEHOLDER
                         ],
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     layerItem.refresh();
@@ -1050,11 +1046,7 @@ define([
                         [
                             LayerItem.toggles.PLACEHOLDER 
                         ],
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     layerItem.refresh();
@@ -1074,6 +1066,11 @@ define([
                 wmsToggles = [
                     LayerItem.toggles.EYE,
                     LayerItem.toggles.PLACEHOLDER
+                ],
+                states = [
+                    LayerItem.state.DEFAULT,
+                    LayerItem.state.UPDATING,
+                    LayerItem.state.OFF_SCALE
                 ];
 
             switch (layerType) {
@@ -1085,11 +1082,7 @@ define([
 
                     LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
                         featureToggles,
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     // add a bounding box settings to the non-static feature layers only
@@ -1098,11 +1091,7 @@ define([
                           [
                               LayerItem.settings.BOUNDING_BOX
                           ],
-                          [
-                              LayerItem.state.DEFAULT,
-                              LayerItem.state.UPDATING,
-                              LayerItem.state.OFF_SCALE
-                          ]
+                          states
                       );
                     }
 
@@ -1118,11 +1107,7 @@ define([
                     
                     LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
                         wmsToggles,
-                        [
-                            LayerItem.state.DEFAULT,
-                            LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
-                        ]
+                        states
                     );
 
                     break;
