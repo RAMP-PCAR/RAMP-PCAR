@@ -15,17 +15,17 @@
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "AttributeLoader"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
 * {{#crossLink "GraphicExtension"}}{{/crossLink}}
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Ramp"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Ramp"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -125,9 +125,9 @@ define([
         }
 
         /**
-        * Will remove a layer from the map, and adjust counts.
+        * Will remove a layer from the map, along with any related items (bounding box, feature data) and adjust counts.
         *
-        * @method onLayerError
+        * @method removeFromMap
         * @private
         * @param {String} layerId config id of the layer
         */
@@ -412,7 +412,7 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-                
+
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
@@ -488,7 +488,7 @@ define([
                     } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
 
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -523,25 +523,19 @@ define([
             },
 
             /**
-            * Reacts to a request for a layer to be removed.  Usually the case when a layer errors and the user clicks remove.
+            * Reacts to a request for a layer to be removed.  This removes the layer from the entire app.
             *
             * @method onLayerRemove
             * @param  {Object} evt
             * @param  {Object} evt.layerId the layer id to be removed
             */
             onLayerRemove: function (evt) {
-                var map = RampMap.getMap(),
-                    layer,
+                var layer,
                     configIdx,
                     layerSection,
                     configCollection;
 
-                layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
-
-                if (!layer) {
-                    //layer was kicked out of the map.  grab it from the registry
-                    layer = RAMP.layerRegistry[evt.layerId];
-                }
+                layer = RAMP.layerRegistry[evt.layerId];
 
                 //derive section layer is in and the config collection it is in
                 switch (layer.ramp.type) {
@@ -572,33 +566,23 @@ define([
             /**
             * Reacts to a request for a layer to be reloaded.  Usually the case when a layer errors and user wants to try again
             *
-            * @method onLayerRemove
+            * @method onLayerReload
             * @param  {Object} evt
             * @param  {Object} evt.layerId the layer id to be reloaded
             */
             onLayerReload: function (evt) {
-                var map = RampMap.getMap(),
-                    curlayer,
+                var curlayer,
                     layerConfig,
                     user,
                     newLayer,
                     layerIndex,
-                    inMap,
                     layerList,
                     idArray,
                     cleanIdArray;
 
-               removeFromMap(evt.layerId);
+                removeFromMap(evt.layerId);
 
-               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
-             
-                if (curlayer) {
-                    inMap = true;
-                } else {
-                    //layer was kicked out of the map.  grab it from the registry
-                    inMap = false;
-                    curlayer = RAMP.layerRegistry[evt.layerId];
-                }
+                curlayer = RAMP.layerRegistry[evt.layerId];
 
                 layerConfig = curlayer.ramp.config;
                 user = curlayer.ramp.user;
@@ -625,11 +609,6 @@ define([
                 if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
                     layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
-                }
-
-                //remove layer from map
-                if (inMap) {
-                    map.removeLayer(curlayer);
                 }
 
                 //generate new layer
