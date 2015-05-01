@@ -787,7 +787,7 @@ define([
                  */
                 brickTemplates: {
                     bounding_box_brick: {
-                        type: Bricks.CheckboxBrick,
+                        type: Bricks.CheckboxfsBrick,
                         config: {
                             //header: 'Dynamic Loading',
                             label: 'Bounding Box',
