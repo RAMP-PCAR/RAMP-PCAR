@@ -393,6 +393,7 @@ define([
                 */
                 function createDatatable() {
                     var forcedWidth,
+                        focusConfig,
                         tableOptions = {
                             info: false,
                             columnDefs: [],
@@ -429,8 +430,12 @@ define([
                     } else {
                         //layout for variable column (extended grid)
                         //grab config for active dataset and generate a table layout based on gridColumns
-                        var focusConfig = Ramp.getLayerConfigWithId(ui.getSelectedDatasetId());
-                        currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
+                        if (ui.getSelectedDatasetId() in RAMP.layerRegistry) {
+                            focusConfig = RAMP.layerRegistry[ui.getSelectedDatasetId()].ramp.config;
+                        }
+                        if (focusConfig && focusConfig.datagrid) {
+                            currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
+                        }
                         tableOptions = lang.mixin(tableOptions,
                             {
                                 columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : focusConfig.datagrid.gridColumns.map(function (column) {
@@ -1529,7 +1534,7 @@ define([
 
                         case 'raw':
                             //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
-                            newData = dojoArray.map(RAMP.data[layerBundle.layerId].features, function (fData) {
+                            newData = RAMP.data[layerBundle.layerId].features.map(function (fData) {
                                 //return the appropriate data object for the feature (.map puts them in array form)
                     // "cache" the data object so we don't have to generate it again
                                 return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);

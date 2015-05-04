@@ -42,7 +42,7 @@ define([
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
+"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler",
 "ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader", "ramp/graphicExtension",
 
 /* Util */
@@ -56,7 +56,7 @@ define([
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
 
     /* RAMP */
-    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler,
     FilterManager, LayerItem, AttributeLoader, GraphicExtension,
 
      /* Util */
@@ -609,7 +609,7 @@ define([
                             .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                             .map(function (i, elm) { return elm.id; });
 
-                cleanIdArray = idArray.filter(function (i, elm) {
+                cleanIdArray = idArray.toArray().filter(function (i, elm) {
                     //check if layer is in error state.  error layers should not be part of the count.  exception being the layer we are reloading
                     return ((FilterManager.getLayerState(elm) !== LayerItem.state.ERROR) || (elm === evt.layerId));
                 });
