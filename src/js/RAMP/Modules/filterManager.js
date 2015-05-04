@@ -324,7 +324,7 @@ define([
 
                             createGroups();
                             initListeners();
-                            
+
                             // wms query toggles are hidden by default as we don't know if there are any wms layers
                             this.hideQueryToggles(true);
                         },
@@ -973,7 +973,7 @@ define([
                 updateLayersStateMatrix(args.layerCounts, false);
             });
         }
-        
+
         // TODO: temp function to be moved to state manager
         // returns an array of wms layers that can be queried
         function getQueryWMSLayers() {
@@ -991,7 +991,7 @@ define([
         function isThereQueryWMSLayers() {
             return getQueryWMSLayers().length > 0;
         }
-        
+
         // updates layer item state matrixes based on whether any queriable wms layers are present in layer selector
         function updateLayersStateMatrix(layerCounts, isLayerAdded) {
             var featureLayerGroup = layerGroups[GlobalStorage.layerType.feature],
@@ -1001,7 +1001,7 @@ define([
                     LayerItem.state.UPDATING,
                     LayerItem.state.OFF_SCALE
                 ];
-            
+
             // if there is at least one queriable wms layer, add placeholder toggles to feature layers and 
             if (getQueryWMSLayers().length === 1 && isLayerAdded) {
 
@@ -1019,7 +1019,7 @@ define([
                 wmsLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
                         [
-                            RAMP.layerRegistry[layerItem.id].ramp.config.featureInfo ? LayerItem.toggles.QUERY : LayerItem.toggles.PLACEHOLDER 
+                            RAMP.layerRegistry[layerItem.id].ramp.config.featureInfo ? LayerItem.toggles.QUERY : LayerItem.toggles.PLACEHOLDER
                         ],
                         states
                     );
@@ -1040,22 +1040,22 @@ define([
 
                     layerItem.refresh();
                 });
-                
+
                 wmsLayerGroup.layerItems.forEach(function (layerItem) {
                     LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
                         [
-                            LayerItem.toggles.PLACEHOLDER 
+                            LayerItem.toggles.PLACEHOLDER
                         ],
                         states
                     );
 
                     layerItem.refresh();
                 });
-                
+
                 ui.hideQueryToggles(true);
             }
         }
-        
+
         // updates default layer item state matrix based on whether any queriable wms layers are present in layer selector
         function getStateMatrixTemplate(layerType, layerRamp) {
             var stateMatrix = LayerItem.getStateMatrixTemplate(),
@@ -1095,6 +1095,16 @@ define([
                       );
                     }
 
+                    // add switch to snapshot mode if it's a service-based feature layer
+                    if (layerRamp.config.url) {
+                        LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
+                          [
+                              LayerItem.settings.ALL_DATA
+                          ],
+                          states
+                      );
+                    }
+
                     break;
 
                 case GlobalStorage.layerType.wms:
@@ -1103,8 +1113,8 @@ define([
                         wmsToggles.push(LayerItem.toggles.QUERY);
                     } else if (!isThereQueryWMSLayers()) {
                         wmsToggles.pop();
-                    } 
-                    
+                    }
+
                     LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
                         wmsToggles,
                         states
