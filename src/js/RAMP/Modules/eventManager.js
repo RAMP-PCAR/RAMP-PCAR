@@ -474,6 +474,7 @@ define([],
                 * @for LayerLoader
                 * @param event {Object}
                 * @param event.layerId {String} ESRI layer id to be reloaded
+                * @param event.mode {String} layer mode: ondemand or snapshot
                 *
                 */
                 RELOAD_LAYER: "layerLoader/reload-layer",

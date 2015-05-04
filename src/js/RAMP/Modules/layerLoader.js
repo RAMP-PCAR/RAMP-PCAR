@@ -614,6 +614,10 @@ define([
                     layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
                 }
 
+                if (evt.mode) {
+                    layerConfig.mode = evt.mode;
+                }
+
                 //generate new layer
                 switch (curlayer.ramp.type) {
                     case GlobalStorage.layerType.wms:
