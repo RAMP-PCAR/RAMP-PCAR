@@ -69,6 +69,15 @@
         </div>
     ",
 
+    "default_button_brick_inline_template": "
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='button-content'>
+            <span class=''>{%= o.header %}</span>
+            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
+        </div>
+    ",
+
     "default_choice_brick_template": "
         
         {% include('default_brick_header', o); %}
@@ -83,9 +92,30 @@
         </div>
     ",
 
+    "default_choice_brick_inline_template": "
+        
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='btn-group choice-group'>
+            <span class=''>{%= o.header %}</span>
+
+            {%  
+                o.choices.forEach(function(choice) {
+                    include('default_choice_brick_inline_button_template', choice);
+                });
+            %}
+        </div>
+    ",
+
     "default_choice_brick_button_template": "
         <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
     ",
+
+    "default_choice_brick_inline_button_template": "
+        <button class='btn btn-xs button-none btn-choice' data-key='{%= o.key %}'>
+            <i class='fa fa-check on-left'></i>{%= o.value %}
+        </button>        
+    ",
+    
 
     "default_checkbox_brick_template": "
         

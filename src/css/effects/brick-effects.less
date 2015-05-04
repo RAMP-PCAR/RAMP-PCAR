@@ -154,7 +154,34 @@
     }
 }
 
+.button-brick-inline-container {
+    .button-brick-container;
+    margin: 0 0 10px 0;
+
+    .button-content {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 100%;
+
+        span {
+            line-height: 31px;
+            //display: inline-block;
+        }
+
+        button {
+            //position: absolute;
+            //right: 0;
+            float: right;
+        }
+    }
+}
+
 .checkbox-brick-container {
+    .checkbox {
+        min-height: inherit;
+    }
+
     .checkbox-content {
         margin: 0;
 
@@ -292,6 +319,42 @@
         button:first-child:nth-last-child(4),
         button:first-child:nth-last-child(4) ~ button {
             width: 25%;
+        }
+    }
+}
+
+.choice-brick-inline-container {
+    .choice-brick-container;
+
+    .choice-group {
+
+        span {
+            //line-height: 31px;
+        }
+
+        button {
+            float: right;
+            font-size: 95%;
+            border: none !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            color: @light-light-grey-color;
+
+            &.focused, &:focus, &:hover {
+                color: #fff !important;
+            }
+
+            &.button-pressed {
+                text-decoration: none;
+
+                .fa {
+                    display: inline-block;
+                }
+            }
+
+            .fa {
+                display: none;
+            }
         }
     }
 }
