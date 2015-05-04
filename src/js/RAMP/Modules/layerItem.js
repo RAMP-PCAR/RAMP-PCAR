@@ -1,4 +1,4 @@
-﻿/* global define, tmpl, $, console */
+﻿/* global define, tmpl, $, console, i18n */
 
 /**
 * @module RAMP
@@ -251,6 +251,39 @@ define([
                     }
                 );
 
+                // can't use i18n before locale files are loaded, so have to set brick templates after 
+                if (!LayerItem.brickTemplates) {
+                    LayerItem.brickTemplates = {
+                        bounding_box_brick: {
+                            type: Bricks.CheckboxfsBrick,
+                            config: {
+                                label: 'Bounding Box',
+                                customContainerClass: 'bbox',
+                                checked: false//,
+                                //instructions: i18n.t("addDataset.help.dataSource")
+                            }
+                        },
+
+                        all_data_brick: {
+                            type: Bricks.ChoiceBrick,
+                            config: {
+                                header: i18n.t('filterManager.layerData'),
+                                template: 'default_choice_brick_inline_template',
+                                containerClass: 'choice-brick-inline-container',
+                                customContainerClass: 'all-data',
+                                choices: [
+                                    {
+                                        key: "featureServiceAttrStep",
+                                        value: i18n.t('filterManager.layerDataPrefetch')
+                                    }
+                                ]
+                                //instructions: i18n.t("addDataset.help.dataSource")
+                            }
+
+                        }
+                    };
+                }
+
                 this.node = $(this._template(this.type, this._config));
                 this._imageBoxNode = this.node.find(".layer-details > div:first");
                 this._displayNameNode = this.node.find(".layer-name > span");
@@ -306,7 +339,13 @@ define([
                         // hack to get the data-layer-id attribute onto checkboxBrick input node
                         // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem is switched full to Bricks and 
                         // LayerCollection controller is added in between filterManager and LayerGroup.
-                        brickPart.inputNode.attr('data-layer-id', that._config.id);
+
+                        if (Bricks.CheckboxBrick.isPrototypeOf(brickPart)) {
+                            brickPart.inputNode.attr('data-layer-id', that._config.id);
+                        } else {
+                            brickPart.choiceButtons.attr('data-layer-id', that._config.id);
+                        }
+
                         part = brickPart.node;
 
                     } else {
@@ -665,7 +704,8 @@ define([
                 settings: {
                     OPACITY: 'opacity',
                     BOUNDING_BOX: 'bounding_box_brick',
-                    SNAPSHOT: 'snapshot'
+                    SNAPSHOT: 'snapshot',
+                    ALL_DATA: 'all_data_brick'
                 },
 
                 /**
@@ -784,22 +824,9 @@ define([
                  * @property LayerItem.brickTemplates
                  * @static
                  * @type Object
+                 * @default null
                  */
-                brickTemplates: {
-                    bounding_box_brick: {
-                        type: Bricks.CheckboxfsBrick,
-                        config: {
-                            //header: 'Dynamic Loading',
-                            label: 'Bounding Box',
-                            customContainerClass: 'bbox',
-                            //value: "on",
-                            //onLabel: 'on1',
-                            //offLabel: 'off',
-                            checked: false//,
-                            //instructions: i18n.t("addDataset.help.dataSource")
-                        }
-                    }
-                }
+                brickTemplates: null
             }
         );
 
