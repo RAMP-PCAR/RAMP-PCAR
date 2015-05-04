@@ -293,7 +293,9 @@ define([],
                 *
                 * @event FeatureHighlighter.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
+
                 */
                 HIGHLIGHT_SHOW: "highlighter/highlight-show",
 
@@ -333,7 +335,8 @@ define([],
                 *
                 * @event FeatureHighlighter.ZOOMLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
                 */
                 ZOOMLIGHT_SHOW: "highlighter/zoomlight-show",
 
@@ -694,7 +697,7 @@ define([],
                 *
                 * @event Datagrid.HIGHLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the selected feature
+                * @param event.fData {Object} feature data object corresponding to the selected feature
                 */
                 HIGHLIGHTROW_SHOW: "datagrid/highlightrow-show",
 
@@ -709,7 +712,7 @@ define([],
                 *
                 * @event Datagrid.ZOOMLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the zoomed to feature
+                * @param event.fData {Object} feature data object corresponding to the zoomed to feature
                 */
                 ZOOMLIGHTROW_SHOW: "datagrid/zoomlightrow-show",
 
@@ -718,9 +721,18 @@ define([],
                 *
                 * @event Datagrid.ZOOMLIGHTROW_HIDE
                 *
+                */
+                ZOOMLIGHTROW_HIDE: "datagrid/zoomlightrow-hide",
+
+                /**
+                * Is fired by the state manager when datagrid is being updated.
+                *
+                * @event Datagrid.UPDATING
+                * @param event {Boolean} true if updating; false if not 
+                * 
                 * @for Datagrid
                 */
-                ZOOMLIGHTROW_HIDE: "datagrid/zoomlightrow-hide"
+                UPDATING: 'datagrid/updating'
             },
 
             Navigation: {

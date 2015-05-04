@@ -218,3 +218,6 @@ tarball/
 
 *.swo
 *.swp
+
+### Changelog
+CHANGELOG.md

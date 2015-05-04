@@ -802,6 +802,9 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
 
                 // Distinguish between XML/XSL deferred objects to resolve and set response
                 function resolveDeferred(filename, responseObj) {
+                    console.log('resolving');
+                    console.log(filename);
+                    console.log(responseObj.responseText);
                     if (filename.endsWith(".xsl")) {
                         xsl = responseObj.responseText;
                         xsld.resolve();
@@ -810,25 +813,20 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                         xmld.resolve();
                     }
                 }
-                /*
-               function loadXMLFileIE9(filename) {
-                   var xdr = new XDomainRequest();
-                    xdr.contentType = "text/plain";
+                    
+                function loadXMLFileIE9(filename) {
+                    var xdr = new window.XDomainRequest();
                     xdr.open("GET", filename);
-                    xdr.onload = function () {
-                        resolveDeferred(filename, xdr);
-                    };
-                    xdr.onprogress = function () { };
-                    xdr.ontimeout = function () { };
-                    xdr.onerror = function () {
+                    xdr.onload = function () { resolveDeferred(filename, xdr); };
+                    xdr.ontimeout = function () { console.log('xdr timeout'); };
+                    xdr.onprogress = function () { console.log('xdr progress'); };
+                    xdr.onerror = function (e) {
+                        console.log(e);
                         error = true;
                         resolveDeferred(filename, xdr);
                     };
-                    window.setTimeout(function () {
-                        xdr.send();
-                    }, 0);
-               }
-               */
+                    window.setTimeout(function () { xdr.send(); }, 0);
+                }
                 // IE10+
                 function loadXMLFileIE(filename) {
                     var xhttp = new XMLHttpRequest();
@@ -850,41 +848,13 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                 if ('withCredentials' in new XMLHttpRequest() && "ActiveXObject" in window) { // IE10 and above
                     loadXMLFileIE(xmlurl);
                     loadXMLFileIE(xslurl);
-                } else if (window.XDomainRequest) { // IE9 and below
-                    /*
-                     loadXMLFileIE9(xmlurl);
-                     loadXMLFileIE9(xslurl);
-                    */
-                    // dataType need to be set to "text" for xml doc requests.
-                    $.ajax({
-                        type: "GET",
-                        url: xmlurl,
-                        dataType: "text",
-                        cache: false,
-                        success: function (data) {
-                            xml = data;
-                            xmld.resolve();
-                        },
-                        error: function () {
-                            error = true;
-                            xmld.resolve();
-                        }
-                    });
-
-                    $.ajax({
-                        type: "GET",
-                        url: xslurl,
-                        dataType: "text",
-                        cache: false,
-                        success: function (data) {
-                            xsl = data;
-                            xsld.resolve();
-                        },
-                        error: function () {
-                            error = true;
-                            xsld.resolve();
-                        }
-                    });
+                } else if (window.XDomainRequest) {
+                    // for IE9 use loadXMLFileIE9 for the metadata XML -- uses XDomainRequest internally and allows cross domain requests
+                    // use regular XHR for the XSLT as that should be located on the same server as RAMP
+                    // XDR will break on same origin requests unless the same response headers are set allowing cross domain
+                    // FIXME: delete all this as soon as IE9 is off the support list as it is fragile and unpleasant to maintain
+                    loadXMLFileIE9(xmlurl);
+                    loadXMLFileIE(xslurl);
                 } else { // Good browsers (Chrome/FF)
                     $.ajax({
                         type: "GET",
