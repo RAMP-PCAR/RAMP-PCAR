@@ -523,6 +523,24 @@ define([
                         }
                     );
 
+                    // reload layer in snapshot mode
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            // TODO: rework hack: for some reason brick kills the event propagation so can't catch event with proper selector. see below.
+                            // disable button manually; idealy it should be done by brick
+                            var id = $(this.target).data("layer-id");
+                            this.target
+                                .addClass("disabled")
+                                .attr("aria-disabled", true)
+                            ;
+                            topic.publish(EventManager.LayerLoader.RELOAD_LAYER, { layerId: id, mode: 'snapshot' });
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".brick.all-data .btn-choice" //.brick.all-data .btn-choice:not(.button-pressed)
+                        }
+                    );
+
                     // open renderers sections when the renderer button (layer icon) is clicked;
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
