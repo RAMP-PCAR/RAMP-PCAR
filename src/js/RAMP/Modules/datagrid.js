@@ -1006,6 +1006,7 @@ define([
                     section = tmpl(templateKey, templateData);
 
                     DatagridClickHandler.onDetailDeselect(datagridMode);
+                    DatagridClickHandler.onZoomCancel();
 
                     tl.set(sectionNode, { className: "+=animated fadeOut" });
                     if (jqgrid) {
