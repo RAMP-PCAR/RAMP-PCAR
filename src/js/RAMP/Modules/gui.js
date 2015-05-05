@@ -795,11 +795,6 @@ define([
 
                     jWindow.on("resize", updateToolbarStats);
 
-                    toolsTimeline
-                        .fromTo(toolbarController.mapTools().find("> span"), transitionDuration / 2, { width: "auto" }, { width: 0, ease: "easeOutCirc" }, 0)
-                        .fromTo(toolbarController.mapTools().find("> span"), 0, { display: "inline-block" }, { display: "none" }, transitionDuration / 2)
-                    ;
-
                     return this;
                 },
 
