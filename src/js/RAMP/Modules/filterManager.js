@@ -856,7 +856,8 @@ define([
         function setLayerOffScaleState(layerId) {
             var visibleLayers = RampMap.getVisibleLayers(),
                 invisibleLayers = RampMap.getInvisibleLayers(),
-                layer = RAMP.layerRegistry[layerId];
+                layer = RAMP.layerRegistry[layerId],
+                layerItem;
 
             function filterLayerIds(layers) {
                 layers = layers
@@ -888,6 +889,9 @@ define([
                     setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
                 } else {
                     setLayerState(layerId, LayerItem.state.ERROR, { notices: { error: { message: i18n.t("addDataset.error.messageFeatureOutsideZoomRange") } } });
+                    layerItem = layerGroups[GlobalStorage.layerType.feature].getLayerItem(layerId);
+                    LayerItem.removeStateMatrixPart(layerItem.stateMatrix, "controls", LayerItem.controls.RELOAD);
+                    layerItem.setState(LayerItem.state.ERROR, null, true);
                 }
 
             }
