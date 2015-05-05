@@ -224,6 +224,11 @@ define([
             //object to make state decisions
             map.addLayer(layer, insertIdx);
 
+            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+            //store a pointer here so we can find it (and it's information)
+            // TODO - this write to layer registry should be refactored into a call to state manager
+            RAMP.layerRegistry[layer.id] = layer;
+
             // publish LAYER_ADDED event for every user-added layer
             topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
 
@@ -259,10 +264,6 @@ define([
                 updateLayerSelectorState(layerConfig.id, lsState, false, options);
             }
             layer.ramp.load.inLS = true;
-
-            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
-            //store a pointer here so we can find it (and it's information)
-            RAMP.layerRegistry[layer.id] = layer;
 
             //this will force a recreation of the highlighting graphic group.
             //if not done, can cause mouse interactions to get messy if adding more than
