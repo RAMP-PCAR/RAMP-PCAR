@@ -25,7 +25,7 @@
         "./lib"
     ],
     "dependencies": {
-        "wet-boew": "https://github.com/wet-boew/wet-boew.git#4.0.5",
+        "wet-boew": "https://github.com/RAMP-PCAR/ramp-wet-dep/raw/dep/v4.0.5/wet-boew.zip",
         "DataTables": "1.10.1",
         "jquery": "~2.1.1",
         "gsap": "~1.14.2",
