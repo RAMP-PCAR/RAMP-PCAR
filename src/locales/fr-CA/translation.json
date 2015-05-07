@@ -549,6 +549,9 @@
         "loading": "Génération de l’image Veuillez attendre.",
         "title": "Exportation de carte"
     },
+    "maptips": {
+        "attribsDownloading": "[fr] Attribute data is still downloading"
+    },
     "page": {
         "footer": {
             "dateModifiedTitle": "Date de modification",
