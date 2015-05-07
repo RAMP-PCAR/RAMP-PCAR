@@ -548,6 +548,9 @@
         "loading": "Generating image. Please wait.",
         "title": "Map Export"
     },
+    "maptips": { 
+        "attribsDownloading" : "Attribute data is still downloading"
+    },
     "page": {
         "footer": {
             "dateModifiedTitle": "Date Modified",
