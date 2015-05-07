@@ -41,15 +41,15 @@
 *    serialize and update the given object instead of all objects).
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "Url"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* 
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "Url"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+*
 * @class BookmarkLink
 * @static
 * @uses require
@@ -111,7 +111,7 @@ define([
                 HIDDEN_BOXES: "hb"
             },
 
-            HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}%0D%0A%0D%0A{2}",
+            HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}",
 
             config,
 
@@ -233,13 +233,13 @@ define([
                             topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
                             topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "get-link-section" });
                             console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", true);
-                            
+
                             //when called in gui.js, elements for sidePanelTabList is not available yet
                             //re-publish on selected tab
                             sidePanelWbTabs = $("#panel-div > .wb-tabs");
                             sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]");
                             sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels");
-                            
+
                             sidePanelTabList.find("li a").click(function () {
                                 console.log("inside side panel tab list on click");
                                 var selectedPanelId = $(this).attr("href").substr(1);
@@ -337,7 +337,6 @@ define([
         function setNewUrl(url) {
             var mailToHref = String.format(HREF_MAILTO_TEMPLATE,
                 i18n.t("bookmarkLink.emailUrlSubject"),
-                i18n.t("bookmarkLink.emailUrlBody"),
                 encodeURIComponent(url));
 
             linkPaneTextbox.val(url);
@@ -364,7 +363,6 @@ define([
                         //first param has a question mark in front of it.  all others have an &
                         delim = "&";
                     }
-                   
                 }
             });
 
@@ -426,10 +424,10 @@ define([
                 url = element.attr('href'),
                 dstLang = element.attr('lang'),
                 srcLang = RAMP.locale,
-                re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang),'g');
+                re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang), 'g');
 
             console.log(paras);
-            paras = paras.replace(re,'rcs.$1.{0}'.format(dstLang));
+            paras = paras.replace(re, 'rcs.$1.{0}'.format(dstLang));
             console.log(paras);
 
             url = url.split('?')[0] + '?' + paras;
@@ -496,7 +494,7 @@ define([
 
             //replace "#" with "st=", otherwise RAMP treats as regular parameters, not archors
             urlObj.query = urlObj.query.replace("#", URL_KEYS.SELECT_TAB + "=");
-          
+
             queryObject = dojoQuery.queryToObject(urlObj.query);
 
             //adds homePage (e.g. default.aspx or rampmap.aspx) if not present;
@@ -596,9 +594,8 @@ define([
                 //addParameter(EVENT_TAB_CHANGE, {
                 //    index: queryObject[URL_KEYS.SELECT_TAB]
                 //});
-                                
-                addAnchor(EVENT_TAB_CHANGE,queryObject[URL_KEYS.SELECT_TAB]);
-               
+
+                addAnchor(EVENT_TAB_CHANGE, queryObject[URL_KEYS.SELECT_TAB]);
             }
 
             var layerIds;
