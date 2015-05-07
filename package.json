@@ -10,7 +10,7 @@
     },
     "scripts": {
         "test": "grunt test",
-        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && cd ../.. && grunt init"
+        "postinstall": "bower install && grunt init"
     },
     "keywords": [
         "ramp",
@@ -47,7 +47,6 @@
         "grunt-docco": "~0.3.3",
         "grunt-gh-pages": "~0.9.1",
         "grunt-github-releaser": "~0.1.17",
-        "grunt-hub": "~0.7.0",
         "grunt-jscs": "~0.7.1",
         "grunt-json-minify": "~0.4.0",
         "grunt-jsonlint": "~1.0.4",
