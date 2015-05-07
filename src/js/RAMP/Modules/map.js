@@ -263,6 +263,7 @@ define([
             });
 
             /* GUI EVENTS */
+            // GUI Layout_change happens whenever size of map portion is changed
             topic.subscribe(EventManager.GUI.LAYOUT_CHANGE, function () {
                 map.resize(true);
             });
