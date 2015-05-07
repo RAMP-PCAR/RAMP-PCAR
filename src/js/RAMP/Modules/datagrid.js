@@ -14,23 +14,23 @@
 * details (same as clicking the map object) and navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "DatagridClickHandler"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/extended_datagrid_template.json"}}{{/crossLink}}
-* 
+*
 * @class Datagrid
 * @static
 * @uses dojo/_base/lang
@@ -892,8 +892,8 @@ define([
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
                     layer = RAMP.config.layers.feature.filter(function (layer) {
-                            return layer.id === selectedDatasetId;
-                        });
+                        return layer.id === selectedDatasetId;
+                    });
 
                     if (extendedTabTitle && layer.length > 0) {
                         extendedTabTitle.text(": " + layer[0].displayName);
@@ -1255,15 +1255,15 @@ define([
                                 }
                             } else { */
                             if ((datagridMode !== GRID_MODE_FULL) && (invisibleLayers.length > 0)) {
-                                    data.layers = invisibleLayers.map(function (il) {
-                                        return il.ramp.config;
-                                    });
+                                data.layers = invisibleLayers.map(function (il) {
+                                    return il.ramp.config;
+                                });
 
-                                    // display notice only if invisibleLayer has eyeToggle on
-                                    if (invisibleLayerToggleOn.length > 0) {
-                                        notice = tmpl("datagrid_info_notice", data);
-                                    }
+                                // display notice only if invisibleLayer has eyeToggle on
+                                if (invisibleLayerToggleOn.length > 0) {
+                                    notice = tmpl("datagrid_info_notice", data);
                                 }
+                            }
 
                             // if a notice was created, add it to the DOM
                             if (notice) {
@@ -1306,14 +1306,14 @@ define([
             featureToPage = {};
             $.each(elements, function (idx, val) {
                 if (val.last()) {
-                var layer = val.last().layerId,
-                        fid = GraphicExtension.getFDataOid(val.last().fData);
+                    var layer = val.last().layerId,
+                            fid = GraphicExtension.getFDataOid(val.last().fData);
 
-                if (!(layer in featureToPage)) {
-                    featureToPage[layer] = {
-                    };
-                }
-                featureToPage[layer][fid] = idx;
+                    if (!(layer in featureToPage)) {
+                        featureToPage[layer] = {
+                        };
+                    }
+                    featureToPage[layer][fid] = idx;
                 }
             });
         }
@@ -1363,8 +1363,8 @@ define([
                     q.geometry = RampMap.getMap().extent;
                     //in this case, we only consider the layer if it is visible
                     visibleGridLayers = visibleGridLayers.filter(function (layer) {
-                    return layer.id === ui.getSelectedDatasetId();
-                });
+                        return layer.id === ui.getSelectedDatasetId();
+                    });
                 } else {
                     // Grab everything!  even if it's not visible on the map
                     bigGridNoFilter = true;
@@ -1401,18 +1401,18 @@ define([
             } else {
                 //apply spatial query to the layers, collect deferred results in the array.
                 deferredList = visibleGridLayers.map(function (gridLayer) {
-                return gridLayer.queryFeatures(q).then(function (features) {
-                    //console.timeEnd('applyExtentFilter:part 1 - 2');
+                    return gridLayer.queryFeatures(q).then(function (features) {
+                        //console.timeEnd('applyExtentFilter:part 1 - 2');
 
-                    if (features.features.length > 0) {
-                        var layer = features.features[0].getLayer();
+                        if (features.features.length > 0) {
+                            var layer = features.features[0].getLayer();
                             visibleFeatures[layer.id] = {
                                 type: 'features',
                                 features: features.features
                             };
-                    }
+                        }
+                    });
                 });
-            });
             }
 
             // Execute this only after all the deferred objects has resolved
@@ -1518,12 +1518,12 @@ define([
                     switch (layerBundle.type) {
                         case 'features':
 
-                //for each feature in a specific layer
+                            //for each feature in a specific layer
                             newData = layerBundle.features.map(function (feature) {
                                 //get the feature data for this feature
                                 var fData = GraphicExtension.getFDataForGraphic(feature);
 
-                    //return the appropriate data object for the feature (.map puts them in array form)
+                                //return the appropriate data object for the feature (.map puts them in array form)
                                 // "cache" the data object so we don't have to generate it again
                                 return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
                             });
@@ -1536,7 +1536,7 @@ define([
                             //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
                             newData = RAMP.data[layerBundle.layerId].features.map(function (fData) {
                                 //return the appropriate data object for the feature (.map puts them in array form)
-                    // "cache" the data object so we don't have to generate it again
+                                // "cache" the data object so we don't have to generate it again
                                 return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
                             });
 
@@ -1681,6 +1681,11 @@ define([
                 }
             });
 
+            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                //layer has been removed, notify the ui incase the layer was scale dependent
+                ui.updateNotice();
+            });
+
             // update notice after zoom end event since some of the scale-dependent layers might end up off scale
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 ui.updateNotice();
@@ -1701,9 +1706,9 @@ define([
             * @method init
             */
             init: function () {
-                    initListeners();
+                initListeners();
 
-                    ui.init();
+                ui.init();
             } //InitDataGrid
         };
     });
