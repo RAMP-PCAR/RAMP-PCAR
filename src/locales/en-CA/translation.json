@@ -112,7 +112,6 @@
     "bookmarkLink": {
         "description": "Link to Map Viewer",
         "email": "Email",
-        "emailUrlBody": "Here's a cool map:",
         "emailUrlSubject": "RAMP GIS Viewer",
         "longLink": "Long link",
         "shortLink": "Short link",

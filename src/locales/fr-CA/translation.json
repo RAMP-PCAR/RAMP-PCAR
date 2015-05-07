@@ -112,7 +112,6 @@
     "bookmarkLink": {
         "description": "Lien vers le visualiseur de cartes",
         "email": "Courriel",
-        "emailUrlBody": "",
         "emailUrlSubject": "Visionneuse de PCAR des SIG",
         "longLink": "Lien intégral",
         "shortLink": "Lien raccourci",
