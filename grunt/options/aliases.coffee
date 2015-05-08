@@ -105,7 +105,6 @@ module.exports =
     # 'Only needed when the repo is first cloned. It\'s automatically run after \'npm install\''
     'init':
         [
-            'hub'
             'thanks'
             'yuiapi:enhance'
         ]
