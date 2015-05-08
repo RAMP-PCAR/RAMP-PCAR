@@ -111,7 +111,8 @@ define([
 
             fullExtent,
             maxExtent,
-            initExtent;
+            initExtent,
+            oldCenter;
 
         /**
         * Shows the loading image.
@@ -222,7 +223,9 @@ define([
         function _initListeners(map) {
             /* SUBSCRIBED EVENTS */
             topic.subscribe(EventManager.Map.CENTER_AT, function (event) {
+                console.log(event.point);
                 map.centerAt(event.point);
+                console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             });
 
             topic.subscribe(EventManager.Map.CENTER_AND_ZOOM, function (event) {
@@ -243,29 +246,58 @@ define([
                 }
             });
 
+            // Distinguishing PAN/ZOOM from EXTENT_CHANGE now
+            topic.subscribe(EventManager.Map.PAN_END, function () {
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            });
+
+            topic.subscribe(EventManager.Map.ZOOM_END, function () {
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            });
+
             /* NAVIGATION EVENTS */
             topic.subscribe(EventManager.Navigation.PAN, function (event) {
                 // event.direction panUp, panDown, panLeft, panRight
                 // this same as calling map.panUp(), map.panDown(), map.panLeft(), map.panRight()
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map[event.direction]();
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM_STEP, function (event) {
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setLevel(map.getLevel() + event.level);
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM, function (event) {
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setLevel(event.level);
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             topic.subscribe(EventManager.Navigation.FULL_EXTENT, function () {
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setExtent(fullExtent);
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             /* GUI EVENTS */
-            // GUI Layout_change happens whenever size of map portion is changed
+            // GUI Layout_change happens whenever size of the map portion is changed
+            // Call recentering function when any kind of layout change happens (including window resize)
             topic.subscribe(EventManager.GUI.LAYOUT_CHANGE, function () {
                 map.resize(true);
+                console.log("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+                _mapRecenter();
             });
 
             // Unhighlight the point when the subpanel is collapsed
@@ -365,6 +397,28 @@ define([
                 map.addLayer(temp_layer);
             });
         }
+
+        /**
+        * Publishes an event to resize the map when called.
+        */
+        function _mapRecenter() {
+            console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+            console.log(oldCenter);
+            if (oldCenter !== undefined) {
+                topic.publish(EventManager.Map.CENTER_AT, {
+                    point: new esri.geometry.Point(oldCenter[0], oldCenter[1], map.spatialReference)
+                });
+            } else {
+                topic.publish(EventManager.Map.CENTER_AT, {
+                    point: map.extent.getCenter()
+                });
+            }
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+        }
+
+ 
+
         /**
         * Creates event handlers for the map control: click, mouse-over, load, extent change, and update events.
         *
@@ -374,6 +428,7 @@ define([
         */
         function _initEventHandlers(map) {
             map.on("load", _initScale);
+
             map.on("extent-change", function (event) {
                 _updateScale(event);
 
@@ -393,6 +448,10 @@ define([
             // Show/Hide spinner for map loading
             map.on("update-start", _showLoadingImg);
             map.on("update-end", _hideLoadingImg);
+
+            /* map.on("resize", function () {
+                topic.publish(EventManager.GUI.LAYOUT_CHANGE);
+            }); */
 
             // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep around to steal later
             /*
@@ -1295,6 +1354,7 @@ define([
                     map = new EsriMap(RAMP.config.divNames.map, {
                         extent: initExtent,
                         logo: false,
+                        autoResize: true,
                         minZoom: RAMP.config.zoomLevels.min,
                         maxZoom: RAMP.config.zoomLevels.max,
                         slider: false
