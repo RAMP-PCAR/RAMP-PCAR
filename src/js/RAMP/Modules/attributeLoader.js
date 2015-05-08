@@ -27,10 +27,10 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/request/script", "dojo/Deferred",
+'dojo/topic', 'dojo/request/script', 'dojo/Deferred',
 
 /* RAMP */
-"ramp/eventManager", "ramp/globalStorage", "ramp/map"],
+'ramp/eventManager', 'ramp/globalStorage', 'ramp/map'],
 
     function (
     /* Dojo */
@@ -38,7 +38,7 @@ define([
 
     /* RAMP */
     EventManager, GlobalStorage, RampMap) {
-        "use strict";
+        'use strict';
 
         /**
         * Will generate object id indexes and parent pointers on a layer data object.
@@ -100,8 +100,8 @@ define([
         function loadDataBatch(maxId, maxBatch, dataArray, layerUrl, idField, callerDef) {
             //fetch attributes from feature layer. where specifies records with id's higher than stuff already downloaded. outFields * (all attributes). no geometry.
             var defData = script.get(layerUrl + '/query', {
-                query: "where=" + idField + ">" + maxId + "&outFields=*&returnGeometry=false&f=json",
-                jsonp: "callback"
+                query: 'where=' + idField + '>' + maxId + '&outFields=*&returnGeometry=false&f=json',
+                jsonp: 'callback'
             });
 
             defData.then(function (dataResult) {
@@ -151,8 +151,8 @@ define([
 
                     //extract info for this service
                     var defService = script.get(layerUrl, {
-                        query: "f=json",
-                        jsonp: "callback"
+                        query: 'f=json',
+                        jsonp: 'callback'
                     });
 
                     defService.then(function (serviceResult) {
@@ -196,13 +196,13 @@ define([
                         });
                     },
                      function (error) {
-                         console.log("Max Record count load error : " + error);
+                         console.log('Max Record count load error : ' + error);
                      });
 
                     break;
 
                 default:
-                    console.log("Layer type not supported by attribute loader: " + layerType);
+                    console.log('Layer type not supported by attribute loader: ' + layerType);
             }
 
             //TODO do we need to return any sort of promise to indicate when the loading has finished?
@@ -239,7 +239,7 @@ define([
                     break;
 
                 default:
-                    console.log("Layer type not supported by attribute extractor: " + layer.ramp.type);
+                    console.log('Layer type not supported by attribute extractor: ' + layer.ramp.type);
             }
 
             //TODO do we need to return any sort of promise to indicate when the loading has finished?

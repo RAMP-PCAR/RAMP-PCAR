@@ -19,16 +19,16 @@
 * @uses dojo/_base/lang
 */
 
-define(["dojo/_base/lang"],
+define(['dojo/_base/lang'],
     function (lang) {
-        "use strict";
+        'use strict';
 
-        var body = $("body"),
-            wbCore = $("main"),
-            wbFoot = $("footer"),
+        var body = $('body'),
+            wbCore = $('main'),
+            wbFoot = $('footer'),
 
-            megaMenuDiv = $("#wb-sm"),
-            navigation = $("#wb-bar"),
+            megaMenuDiv = $('#wb-sm'),
+            navigation = $('#wb-bar'),
 
             header = $("body>header"),
 
@@ -56,13 +56,13 @@ define(["dojo/_base/lang"],
 
         // tweening wet template parts
         fullScreenTimeLine
-            .to(header, transitionDuration, { top: navigation.outerHeight() * -1, position: "relative", ease: "easeOutCirc" }, 0)
-            .set([navigation, megaMenuDiv], { display: "none !important" })
+            .to(header, transitionDuration, { top: navigation.outerHeight() * -1, position: 'relative', ease: 'easeOutCirc' }, 0)
+            .set([navigation, megaMenuDiv], { display: 'none !important' })
 
-            .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
-            .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
+            .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
+            .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
 
-            .call(function () { body.addClass("full-screen"); }) // set full-screen class here, not in the callback since callbacks can be overwritten by fullScreenCallback function
+            .call(function () { body.addClass('full-screen'); }) // set full-screen class here, not in the callback since callbacks can be overwritten by fullScreenCallback function
 
             .add(subpanelTimeline, 0); // special timeline to tween subpanels
 
@@ -75,29 +75,29 @@ define(["dojo/_base/lang"],
         function _toggleFullScreenMode(fullscreen) {
             subpanelTimeline
                 .clear() // need to recreate this timeline every time to capture newly created subpanels
-                .fromTo(".sub-panel-container.summary-data-details", transitionDuration,
+                .fromTo('.sub-panel-container.summary-data-details', transitionDuration,
                     { top: layout.headerHeight + layout.toolbarHeight, bottom: layout.footerHeight },
-                    { top: layout.headerHeightCollapsed + layout.toolbarHeight, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
-                .fromTo(".sub-panel-container.full-data-details", transitionDuration,
+                    { top: layout.headerHeightCollapsed + layout.toolbarHeight, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
+                .fromTo('.sub-panel-container.full-data-details', transitionDuration,
                     { top: layout.headerHeight, bottom: layout.footerHeight },
-                    { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0);
+                    { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0);
 
             isFullScreen = typeof fullscreen === 'boolean' ? fullscreen : !isFullScreen ;
 
             if (isFullScreen) {
                 // need to tween datatables separately since it's very cumbersome to calculate their exact height - easier just to adjust height up/down by height gained when fullscreening the template
                 TweenLite
-                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration,
-                        { height: "+=" + heightGain, ease: "easeOutCirc", delay: 0.02 }); // animate height of the datatable scrollBody since it's explicitly set ,
+                    .to('.full-data-mode .dataTables_scrollBody', transitionDuration,
+                        { height: '+=' + heightGain, ease: 'easeOutCirc', delay: 0.02 }); // animate height of the datatable scrollBody since it's explicitly set ,
 
                 fullScreenTimeLine.play();
 
             } else {
                 TweenLite
-                    .to(".full-data-mode .dataTables_scrollBody", transitionDuration - 0.02,
-                        { height: "-=" + heightGain, ease: "easeInCirc" }); // animate height of the datatable scrollBody since it's explicitly set ,
+                    .to('.full-data-mode .dataTables_scrollBody', transitionDuration - 0.02,
+                        { height: '-=' + heightGain, ease: 'easeInCirc' }); // animate height of the datatable scrollBody since it's explicitly set ,
 
-                body.removeClass("full-screen");
+                body.removeClass('full-screen');
                 fullScreenTimeLine.reverse();
             }
         }
@@ -155,10 +155,10 @@ define(["dojo/_base/lang"],
              */
             tooltipster: function (target, type, action, options) {
                 var attr;
-                target = target || $("body");
+                target = target || $('body');
 
                 switch (type) {
-                    case "map":
+                    case 'map':
                         break;
 
                     default:
@@ -170,26 +170,26 @@ define(["dojo/_base/lang"],
                 }
 
                 switch (action) {
-                    case "update":
+                    case 'update':
 
                         target
-                            .find(".tooltipstered")
+                            .find('.tooltipstered')
                             .each(function (i, obj) {
                                 var node = $(obj);
                                 node
-                                    .attr("data-tooltip", node.attr("title"))
-                                    .tooltipster("content", node.attr("title"))
-                                    .removeAttr("title");
+                                    .attr('data-tooltip', node.attr('title'))
+                                    .tooltipster('content', node.attr('title'))
+                                    .removeAttr('title');
                             });
                         break;
 
-                    case "destroy":
+                    case 'destroy':
                         target
-                            .find(".tooltipstered")
+                            .find('.tooltipstered')
                             .each(function (i, obj) {
                                 var node = $(obj);
                                 node
-                                    .tooltipster("destroy");
+                                    .tooltipster('destroy');
                             });
                         break;
 
@@ -199,26 +199,26 @@ define(["dojo/_base/lang"],
                             // preserve title value for future use 
                             .each(function (i, obj) {
                                 var node = $(obj),
-                                    title = node.attr("title");
+                                    title = node.attr('title');
 
                                 if (title) {
-                                    node.attr("data-tooltip", node.attr("title"));
+                                    node.attr('data-tooltip', node.attr('title'));
                                 } else {
-                                    node.attr("title", node.data("tooltip"));
+                                    node.attr('title', node.data('tooltip'));
                                 }
 
                                 node.tooltipster(
                                     lang.mixin({
-                                        theme: node.data("tooltip-theme") || attr.theme,
+                                        theme: node.data('tooltip-theme') || attr.theme,
                                         //autoClose: false,
-                                        maxWidth: node.data("tooltip-maxwidth") || null,
+                                        maxWidth: node.data('tooltip-maxwidth') || null,
                                         delay: attr.delay
                                     },
                                         options
                                     )
                                 );
                             })
-                            .removeAttr("title");
+                            .removeAttr('title');
                         break;
                 }
 

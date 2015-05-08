@@ -28,10 +28,10 @@
 
 define([
 // Utils
-    "utils/array", "utils/dictionary", "utils/util", "utils/tmplHelper",
+    'utils/array', 'utils/dictionary', 'utils/util', 'utils/tmplHelper',
 
 //details template
-    "dojo/text!./templates/feature_details_template.json"],
+    'dojo/text!./templates/feature_details_template.json'],
 
     function (
     // Utils
@@ -39,7 +39,7 @@ define([
 
     //json details template
     feature_details_template) {
-        "use strict";
+        'use strict';
 
         return {
             /**
@@ -125,7 +125,7 @@ define([
                     return tmpl(templateName, datawrapper);
                 } else {
                     //rare case where graphic has no current feature data
-                    return "";
+                    return '';
                 }
             },
 
@@ -164,7 +164,7 @@ define([
                     return fData.attributes[graphic.getLayer().ramp.config.nameField];
                 } else {
                     //rare case where graphic has no current feature data
-                    return "";
+                    return '';
                 }
             },
 
