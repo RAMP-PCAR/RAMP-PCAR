@@ -24,7 +24,7 @@
     ",
 
     "default_base_template": "
-        <div class='brick {%= o.containerClass %}'>
+        <div class='brick {%= o.containerClass %} {%= o.customContainerClass %} {%= o.header ? '' : 'empty-header' %}'>
 
             {% include(o.template, o); %}
 
@@ -69,6 +69,15 @@
         </div>
     ",
 
+    "default_button_brick_inline_template": "
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='button-content'>
+            <span class=''>{%= o.header %}</span>
+            <button class='btn {%= o.buttonClass %}'>{%= o.label %}</button>
+        </div>
+    ",
+
     "default_choice_brick_template": "
         
         {% include('default_brick_header', o); %}
@@ -83,8 +92,60 @@
         </div>
     ",
 
+    "default_choice_brick_inline_template": "
+        
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='btn-group choice-group'>
+            <span class=''>{%= o.header %}</span>
+
+            {%  
+                o.choices.forEach(function(choice) {
+                    include('default_choice_brick_inline_button_template', choice);
+                });
+            %}
+        </div>
+    ",
+
     "default_choice_brick_button_template": "
         <button class='btn btn-sm btn-default btn-choice' data-key='{%= o.key %}'>{%= o.value %}</button>
+    ",
+
+    "default_choice_brick_inline_button_template": "
+        <button class='btn btn-xs button-none btn-choice' data-key='{%= o.key %}'>
+            <i class='fa fa-check on-left'></i>{%= o.value %}
+        </button>        
+    ",
+    
+
+    "default_checkbox_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='checkbox checkbox-content'>
+            <fieldset>
+                <label for='{%= o.guid %}'>
+                    <span class='{%= o.header ? 'wb-inv' : '' %}'>{%= o.label %}</span>
+                    <span class='checkbox-state checkbox-state-on'>{%= o.onLabel %}</span>
+                    <span class='checkbox-state checkbox-state-off'>{%= o.offLabel %}</span>
+                    <input type='checkbox' name='{%= o.guid %}' id='{%= o.guid %}' {%= o.checked ? 'checked' : '' %} value='{%= o.value %}'>
+                </label>
+            </fieldset>
+        </div>
+    ",
+
+    "default_toggle_brick_template": "
+        
+        {% include('default_brick_header', o); %}
+
+        {% include('default_brick_notice_placeholder', o); %}
+        <div class='checkbox toggle-content'>
+            <fieldset>
+                <label for='{%= o.guid %}'><span class='{%= o.header ? 'wb-inv' : '' %}'>{%= o.label %}</span>
+                    <input type='checkbox' name='{%= o.guid %}' id='{%= o.guid %}' {%= o.checked ? 'checked' : '' %} value='{%= o.value %}'>
+                </label>
+            </fieldset>
+        </div>
     ",
 
     "default_dropdown_brick_template": "

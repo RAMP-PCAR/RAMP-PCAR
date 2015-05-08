@@ -1,4 +1,4 @@
-﻿/* global define, tmpl, $, console */
+﻿/* global define, tmpl, $, console, i18n */
 
 /**
 * @module RAMP
@@ -45,12 +45,12 @@ define([
     "dojo/text!./templates/layer_selector_template.json",
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary"
+    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", 'utils/bricks'
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
-        Util, TmplHelper, TmplUtil, UtilArray, UtilDict
+        Util, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
         "use strict";
 
@@ -131,6 +131,26 @@ define([
                         _togglesNode: null,
 
                         /**
+                         * A node of the layer toggles.
+                         *
+                         * @property _togglesNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _noticesNode: null,
+
+                        /**
+                         * A node of the layer toggles.
+                         *
+                         * @property _togglesNode
+                         * @private
+                         * @type JObject
+                         * @default null
+                         */
+                        _settingsNode: null,
+
+                        /**
                          * A dictionary of control nodes available for this layer.
                          *
                          * @property _controlStore
@@ -159,6 +179,16 @@ define([
                          * @default {}
                          */
                         _noticeStore: {},
+
+                        /**
+                         * A dictionary of setting nodes available for this layer.
+                         *
+                         * @property _settingStore
+                         * @private
+                         * @type Object
+                         * @default {}
+                         */
+                        _settingsStore: {},
 
                         /**
                          * Templates to be used in construction of the layer nodes.
@@ -221,16 +251,51 @@ define([
                     }
                 );
 
+                // can't use i18n before locale files are loaded, so have to set brick templates after 
+                if (!LayerItem.brickTemplates) {
+                    LayerItem.brickTemplates = {
+                        bounding_box_brick: {
+                            type: Bricks.CheckboxfsBrick,
+                            config: {
+                                label: 'Bounding Box',
+                                customContainerClass: 'bbox',
+                                checked: false//,
+                                //instructions: i18n.t("addDataset.help.dataSource")
+                            }
+                        },
+
+                        all_data_brick: {
+                            type: Bricks.ChoiceBrick,
+                            config: {
+                                header: i18n.t('filterManager.layerData'),
+                                template: 'default_choice_brick_inline_template',
+                                containerClass: 'choice-brick-inline-container',
+                                customContainerClass: 'all-data',
+                                choices: [
+                                    {
+                                        key: "featureServiceAttrStep",
+                                        value: i18n.t('filterManager.layerDataPrefetch')
+                                    }
+                                ]
+                                //instructions: i18n.t("addDataset.help.dataSource")
+                            }
+
+                        }
+                    };
+                }
+
                 this.node = $(this._template(this.type, this._config));
                 this._imageBoxNode = this.node.find(".layer-details > div:first");
                 this._displayNameNode = this.node.find(".layer-name > span");
                 this._controlsNode = this.node.find(".layer-controls-group");
                 this._togglesNode = this.node.find(".layer-checkboxes");
                 this._noticesNode = this.node.find(".layer-notices");
+                this._settingsNode = this.node.find(".layer-settings");
 
                 this._generateParts("controls", "layer_control_", this._controlStore);
                 this._generateParts("toggles", "layer_toggle_", this._toggleStore);
                 this._generateParts("notices", "layer_notice_", this._noticeStore);
+                this._generateParts("settings", "layer_setting_", this._settingsStore);
 
                 this.setState(this.state, options, true);
 
@@ -251,7 +316,10 @@ define([
 
                     stateKey,
                     partKeys = [],
-                    part;
+                    part,
+
+                    brickTemplate,
+                    brickPart;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
@@ -263,8 +331,26 @@ define([
                 partKeys = UtilArray.unique(partKeys);
 
                 partKeys.forEach(function (pKey) {
-                    part = that._generatePart(templateKey, pKey);
+                    if (LayerItem.brickTemplates[pKey]) {
+                        brickTemplate = LayerItem.brickTemplates[pKey];
 
+                        brickPart = brickTemplate.type.new(pKey, brickTemplate.config);
+                        // TODO: fix
+                        // hack to get the data-layer-id attribute onto checkboxBrick input node
+                        // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem is switched full to Bricks and 
+                        // LayerCollection controller is added in between filterManager and LayerGroup.
+
+                        if (Bricks.CheckboxBrick.isPrototypeOf(brickPart)) {
+                            brickPart.inputNode.attr('data-layer-id', that._config.id);
+                        } else {
+                            brickPart.choiceButtons.attr('data-layer-id', that._config.id);
+                        }
+
+                        part = brickPart.node;
+
+                    } else {
+                        part = that._generatePart(templateKey, pKey);
+                    }
                     partStore[pKey] = (part);
                 });
             },
@@ -343,10 +429,11 @@ define([
 
                     // store reference to a focused node inside this layer item if any
                     focusedNode = this.node.find(":focus");
-                    
+
                     this._setParts("controls", this._controlStore, this._controlsNode);
                     this._setParts("toggles", this._toggleStore, this._togglesNode);
                     this._setParts("notices", this._noticeStore, this._noticesNode);
+                    this._setParts("settings", this._settingsStore, this._settingsNode);
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
@@ -394,6 +481,10 @@ define([
                 }
             },
 
+            refresh: function () {
+                this.setState(this.state, null, true);
+            },
+
             /**
              * Sets controls, toggles, and notices of the LayerItem according to its state.
              *
@@ -415,7 +506,7 @@ define([
                 // http://api.jquery.com/detach/
                 target
                     .children()
-                    .detach() 
+                    .detach()
                     .end()
                     .append(controls)
                 ;
@@ -440,6 +531,42 @@ define([
                 return tmpl(key, data);
             }
         });
+
+        /**
+         * Helper function to check if `states` parameter is false or []. If empty array is supplied, all available states are returned
+         * 
+         * @param {Array} [states] state names
+         * @method getStateNames
+         * @private
+         */
+        function getStateNames(states) {
+            if (typeof states === 'undefined' || !states || states.length === 0) {
+                states = Object
+                    .getOwnPropertyNames(LayerItem.state)
+                    .map(function (key) { return LayerItem.state[key]; });
+            }
+
+            return states;
+        }
+
+        /**
+         * Helper function to check if `partKeys` parameter is false or []. If empty array is supplied, all available partKeys for the specified partType are returned.
+         * 
+         * @param {String} partType a part type
+         * @param {Array} [partKeys] part keys
+         * @method getPartKeys
+         * @return {Array} an array of partKeys
+         * @private
+         */
+        function getPartKeys(partType, partKeys) {
+            if (typeof partKeys === 'undefined' || !partKeys || partKeys.length === 0) {
+                partKeys = Object
+                    .getOwnPropertyNames(LayerItem[partType])
+                    .map(function (key) { return LayerItem[partType][key]; });
+            }
+
+            return partKeys;
+        }
 
         lang.mixin(LayerItem,
             {
@@ -466,6 +593,27 @@ define([
                     UPDATING: "layer-state-updating",
                     ERROR: "layer-state-error",
                     OFF_SCALE: "layer-state-off-scale"
+                },
+
+                /**
+                * A default collection of possible LayerItem part types.
+                *
+                * @property LayerItem.partTypes
+                * @static
+                * @type Object
+                * @example 
+                *     partTypes: {
+                *       TOGGLES: "toggles",
+                *       CONTROLS: "controls",
+                *       NOTICES: "notices",
+                *       SETTINGS: 'settings'
+                *       }
+                */
+                partTypes: {
+                    TOGGLES: "toggles",
+                    CONTROLS: "controls",
+                    NOTICES: "notices",
+                    SETTINGS: 'settings'
                 },
 
                 /**
@@ -515,7 +663,8 @@ define([
                     RELOAD: "reload",
                     HIDE: "hide",
                     ZOOM: "zoom",
-                    PLACEHOLDER: "placeholder"
+                    PLACEHOLDER: "placeholder",
+                    QUERY: "query"
                 },
 
                 /**
@@ -537,6 +686,26 @@ define([
                     ERROR: "error",
                     UPDATE: "update",
                     USER: "user"
+                },
+
+                /**
+                * A default collection of possible LayerItem settings.
+                *
+                * @property LayerItem.settings
+                * @static
+                * @type Object
+                * @example 
+                *     settings: {
+                *           OPACITY: 'opacity',
+                *           BOUNDING_BOX: 'bounding_box',
+                *           SNAPSHOT: 'snapshot'
+                *           }
+                */
+                settings: {
+                    OPACITY: 'opacity',
+                    BOUNDING_BOX: 'bounding_box_brick',
+                    SNAPSHOT: 'snapshot',
+                    ALL_DATA: 'all_data_brick'
                 },
 
                 /**
@@ -646,7 +815,18 @@ define([
                 *        ]
                 * 
                 */
-                transitionMatrix: {}
+                transitionMatrix: {},
+
+                /**
+                 * A temporary store for brick templates.
+                 * TODO: re-think how to best use brick/templates inside the layer item
+                 * 
+                 * @property LayerItem.brickTemplates
+                 * @static
+                 * @type Object
+                 * @default null
+                 */
+                brickTemplates: null
             }
         );
 
@@ -657,11 +837,11 @@ define([
                 LayerItem.controls.SETTINGS,
                 LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
-            ],
-            notices: []
+            toggles: [],
+            notices: [],
+            settings: [
+                LayerItem.settings.OPACITY
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
@@ -669,13 +849,17 @@ define([
                 LayerItem.controls.LOADING
             ],
             toggles: [],
-            notices: []
+            notices: [],
+            settings: [
+                LayerItem.settings.OPACITY
+            ]
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADED] = {
             controls: [],
             toggles: [],
-            notices: []
+            notices: [],
+            settings: []
         };
 
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
@@ -684,12 +868,12 @@ define([
                 LayerItem.controls.SETTINGS,
                 LayerItem.controls.REMOVE
             ],
-            toggles: [
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
-            ],
+            toggles: [],
             notices: [
                 LayerItem.notices.UPDATE
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
@@ -701,6 +885,9 @@ define([
             toggles: [],
             notices: [
                 LayerItem.notices.ERROR
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
@@ -711,12 +898,13 @@ define([
                 LayerItem.controls.REMOVE
             ],
             toggles: [
-                LayerItem.toggles.ZOOM,
-                LayerItem.toggles.EYE,
-                LayerItem.toggles.BOX
+                LayerItem.toggles.ZOOM
             ],
             notices: [
                 LayerItem.notices.SCALE
+            ],
+            settings: [
+                LayerItem.settings.OPACITY
             ]
         };
 
@@ -758,18 +946,62 @@ define([
         * @param {Object} stateMatrix matrix to modify
         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
         * @param {String} partKey part key to be inserted into the collection
-        * @param {Boolean} prepend indicates if the part key should be prepended or appended
+        * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
+        * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
         * @method addStateMatrixPart
         * @static
-        * @private
         */
-        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, prepend) {
-            UtilDict.forEachEntry(stateMatrix, function (state, data) {
+        LayerItem.addStateMatrixPart = function (stateMatrix, partType, partKey, states, prepend) {
+            var parts;
+
+            states = getStateNames(states);
+            states.forEach(function (state) {
+                parts = stateMatrix[state][partType];
                 if (prepend) {
-                    data[partType].unshift(partKey);
+                    parts.unshift(partKey);
                 } else {
-                    data[partType].push(partKey);
+                    parts.push(partKey);
                 }
+            });
+
+            /*UtilDict.forEachEntry(stateMatrix, function (state, data) {
+                if (states.indexOf(state) !== -1) {
+                    if (prepend) {
+                        data[partType].unshift(partKey);
+                    } else {
+                        data[partType].push(partKey);
+                    }
+                }
+            });*/
+        };
+
+        /**
+        * Sets given matrix states by adding specified partKeys to the specified partType collection.
+        *
+        * @param {Object} stateMatrix matrix to modify
+        * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+        * @param {Array} [partKeys] an array of part key names to be inserted into the collection; if false or [], all part keys are assumed
+        * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
+        * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
+        * @param {Boolean} [clear] a flag to clear existing partKey collections
+        * @method addStateMatrixParts
+        * @static
+        */
+        LayerItem.addStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend, clear) {
+            var that = this;
+            partKeys = getPartKeys(partType, partKeys);
+            states = getStateNames(states);
+
+            // remove partkeys
+            if (clear) {
+                states.forEach(function (state) {
+                    stateMatrix[state][partType] = [];
+                });
+            }
+
+            // add new ones
+            partKeys.forEach(function (partKey) {
+                that.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
             });
         };
 
@@ -778,14 +1010,36 @@ define([
          *
          * @param {Object} stateMatrix matrix to modify
          * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-         * @param {String} partKey part key to be removed into the collection
+         * @param {String} partKey part key to be removed from the collection
+         * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
          * @method addStateMatrixPart
          * @static
-         * @private
          */
-        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey) {
-            UtilDict.forEachEntry(stateMatrix, function (state, data) {
-                UtilArray.remove(data[partType], partKey);
+        LayerItem.removeStateMatrixPart = function (stateMatrix, partType, partKey, states) {
+            states = getStateNames(states);
+            states.forEach(function (state) {
+                UtilArray.remove(stateMatrix[state][partType], partKey);
+            });
+        };
+
+        /**
+         * Modifies a given state matrix by removing specified partKeys to the specified partType collection.
+         *
+         * @param {Object} stateMatrix matrix to modify
+         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
+         * @param {String} [partKeys] array of part key names to be removed from the collection; if false or [], all part keys are assumed
+         * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
+         * @method removeStateMatrixParts
+         * @static
+         */
+        LayerItem.removeStateMatrixParts = function (stateMatrix, partType, partKeys, states) {
+            var that = this;
+            partKeys = getPartKeys(partType, partKeys);
+            states = getStateNames(states);
+
+            // remove partkey from states
+            partKeys.forEach(function (partKey) {
+                that.removeStateMatrixPart(stateMatrix, partType, partKey, states);
             });
         };
 

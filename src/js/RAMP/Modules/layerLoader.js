@@ -264,9 +264,6 @@ define([
             //object to make state decisions
             map.addLayer(layer, insertIdx);
 
-            // publish LAYER_ADDED event for every user-added layer
-            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
-
             //derive initial state
             switch (layer.ramp.load.state) {
                 case "loaded":
@@ -396,6 +393,9 @@ define([
 
                     break;
             }
+
+            // publish LAYER_ADDED event for every added layer
+            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer, layerCounts: RAMP.layerCounts });
         }
 
         return {
@@ -571,7 +571,10 @@ define([
                 configIdx = configCollection.indexOf(layer.ramp.config);
                 configCollection.splice(configIdx, 1);
 
-                RAMP.layerRegistry[evt.layerId] = undefined;
+                delete RAMP.layerRegistry[evt.layerId];
+
+                // publish LAYER_REMOVED event for every removed layer
+                topic.publish(EventManager.LayerLoader.LAYER_REMOVED, { layer: layer, layerCounts: RAMP.layerCounts });
             },
 
             /**
@@ -620,6 +623,10 @@ define([
                 if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
                     layerIndex = layerIndex + RAMP.layerCounts.base - RAMP.layerCounts.feature;
+                }
+
+                if (evt.mode) {
+                    layerConfig.mode = evt.mode;
                 }
 
                 //generate new layer

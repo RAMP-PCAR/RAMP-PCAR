@@ -259,9 +259,20 @@
         </div>
     ",
 
+    "layer_toggle_query": "{% include('layer_toggle_awesome', {
+                                id: o.id,
+                                displayName: o.config.displayName,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
+                                checked: o.config.settings.queryEnabled,
+                                nameKey: o.nameKey,
+                                icon: 'map-marker'
+                            }); %}
+    ",
+
     "layer_toggle_eye": "{% include('layer_toggle_generic', {
                                 id: o.id,
                                 displayName: o.config.displayName,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
                                 checked: o.config.settings.visible,
                                 nameKey: o.nameKey
                             }); %}
@@ -270,6 +281,7 @@
     "layer_toggle_box": "{% include('layer_toggle_generic', {
                                 id: o.id,
                                 displayName: o.config.displayName,
+                                /* TODO: change settings to state when the state manager is ready and you can pull layer state using it */
                                 checked: o.config.settings.boundingBoxVisible,
                                 nameKey: o.nameKey
                             }); %}
@@ -279,6 +291,18 @@
         <div class='checkbox-custom'>
             <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
                 data-label-name='{%= o.displayName %}'>
+                <span class='wb-invisible'>{%= o.displayName %}</span>
+            </label>
+            <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
+                class='layerList_legend' type='checkbox'></input>
+        </div>
+    ",
+
+    "layer_toggle_awesome": "
+        <div class='checkbox-custom'>
+            <label for='layer_toggle_{%= o.nameKey %}_{%= o.id %}' class='form-checkbox _tooltip {%= o.nameKey %}' data-layer-id='{%= o.id %}' 
+                data-label-name='{%= o.displayName %}'>
+                <i class='fa fa-{%= o.icon %}'></i>
                 <span class='wb-invisible'>{%= o.displayName %}</span>
             </label>
             <input id='layer_toggle_{%= o.nameKey %}_{%= o.id %}' value='{%= o.id %}' {%= o.checked ? 'checked' : '' %} data-layer-id='{%= o.id %}' 
@@ -321,31 +345,32 @@
     // Level 2
     // Filter row overall layout for a given layer
     "layer_settings":"
-        {% if (o.settings.panelEnabled) { %}
+        <div class='filter-row-settings bg-medium'>            
+            <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
+            <div class='layer-settings'></div>
+        </div>
+    ",
 
-            <div class='filter-row-settings bg-medium'>            
-                <h4 class='mrgn-tp-0 mrgn-bttm-0 smaller'>{%= i18n.t('filterManager.settingsLayerSettings') %}</h4>
+    "layer_setting_opacity": "
+        <div class='transparency-setting'>
+            <span class='pull-left'>{%= i18n.t('filterManager.settingsOpacity') %}</span>                
+        
+            <div class='nstSlider _slider' data-aria_enabled='true'
+                data-range_min='0' data-range_max='1' 
+                data-cur_min='{%= o.config.settings.opacity.default %}'
 
-                {% if (o.settings.opacity.enabled) { %}
-            
-                    <div class='transparency-setting'>
-                        <span class='pull-left'>{%= i18n.t('filterManager.settingsOpacity') %}</span>                
-                    
-                        <div class='nstSlider _slider' data-aria_enabled='true'
-                            data-range_min='0' data-range_max='1' 
-                            data-cur_min='{%= o.settings.opacity.default %}'
-
-                            data-layer-id='{%= o.id %}' >                                                      
-                    
-                            <div class='highlightPanel'></div>
-                            <div class='leftGrip'></div>              
-                        </div>
-                        <span class='leftLabel'></span>                
-                    </div>
-
-                {% } %}
+                data-layer-id='{%= o.id %}' >                                                      
+        
+                <div class='highlightPanel'></div>
+                <div class='leftGrip'></div>              
             </div>
+            <span class='leftLabel'></span>                
+        </div>
+    ",
 
-        {% } %}
+    "layer_setting_bounding_box": "
+        <div class='bounding-box-setting'>
+            
+        </div>
     "
 }
