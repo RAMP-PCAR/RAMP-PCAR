@@ -23,13 +23,13 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager",
+    'ramp/graphicExtension', 'ramp/eventManager',
 
 /* Dojo */
-    "dojo/topic", "dojo/dom-construct",
+    'dojo/topic', 'dojo/dom-construct',
 
 /* Utils */
-    "utils/util"],
+    'utils/util'],
 
     function (
     /* RAMP */
@@ -40,7 +40,7 @@ define([
 
     /* Utils */
     UtilMisc) {
-        "use strict";
+        'use strict';
         var zoomBackExtent;
 
         /**
@@ -53,7 +53,7 @@ define([
         function onZoomCancel() {
             topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_HIDE);
 
-            topic.publish("datagrid/zoomlightrow-hide");
+            topic.publish('datagrid/zoomlightrow-hide');
         }
 
         return {
@@ -66,19 +66,19 @@ define([
             * @param {esri/Graphic} selectedGraphic the on-map graphic object associated with the entry in the datagrid
             */
             onDetailSelect: function (buttonNode, fData, selectedGraphic, mode) {
-                var guid = buttonNode.data("guid") || buttonNode.data("guid", UtilMisc.guid()).data("guid"),
+                var guid = buttonNode.data('guid') || buttonNode.data('guid', UtilMisc.guid()).data('guid'),
                     content = GraphicExtension.getFDataTextContent(fData),
                     title = GraphicExtension.getFDataTitle(fData),
-                    node = buttonNode.parents(".record-row").parent();
+                    node = buttonNode.parents('.record-row').parent();
 
-                if (mode === "summary") {
+                if (mode === 'summary') {
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                         panelName: i18n.t('datagrid.details'),
                         title: title,
                         content: content,
-                        target: node.find(".record-controls"),
-                        origin: "datagrid",
-                        consumeOrigin: "rampPopup",
+                        target: node.find('.record-controls'),
+                        origin: 'datagrid',
+                        consumeOrigin: 'rampPopup',
                         guid: guid,
                         doOnOpen: function () {
                             UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
@@ -112,8 +112,8 @@ define([
                         title: title,
                         content: content,
                         target: node,
-                        origin: "ex-datagrid",
-                        templateKey: "full_sub_panel_container",
+                        origin: 'ex-datagrid',
+                        templateKey: 'full_sub_panel_container',
                         guid: guid,
                         //doOnOpen: function () {
                         doAfterUpdate: function () {
@@ -144,13 +144,13 @@ define([
             * @method onDetailDeselect
             */
             onDetailDeselect: function (mode) {
-                if (mode === "summary") {
+                if (mode === 'summary') {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                        origin: "rampPopup,datagrid"
+                        origin: 'rampPopup,datagrid'
                     });
                 } else {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                        origin: "ex-datagrid"
+                        origin: 'ex-datagrid'
                     });
                 }
             },
@@ -173,11 +173,11 @@ define([
                         graphic: zoomToGraphic
                     });
 
-                    UtilMisc.subscribeOnceAny(["map/pan-start", "map/zoom-start"], onZoomCancel);
+                    UtilMisc.subscribeOnceAny(['map/pan-start', 'map/zoom-start'], onZoomCancel);
                 }
 
                 switch (zoomToGraphic.geometry.type) {
-                    case "point":
+                    case 'point':
                         topic.publish(EventManager.Map.CENTER_AND_ZOOM, {
                             graphic: zoomToGraphic,
                             level: 9,
@@ -185,7 +185,7 @@ define([
                         });
                         break;
 
-                    case "polygon":
+                    case 'polygon':
 
                         topic.publish(EventManager.Map.SET_EXTENT, {
                             extent: zoomToGraphic._extent.expand(1.5),

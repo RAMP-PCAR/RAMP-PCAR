@@ -30,12 +30,12 @@
 */
 
 define([
-        "dojo/Deferred", "dojo/query", "dojo/promise/first",
-        "esri/request", "esri/SpatialReference", "esri/layers/FeatureLayer", "esri/renderers/SimpleRenderer",
+        'dojo/Deferred', 'dojo/query', 'dojo/promise/first',
+        'esri/request', 'esri/SpatialReference', 'esri/layers/FeatureLayer', 'esri/renderers/SimpleRenderer',
 
-        "ramp/layerLoader", "ramp/globalStorage", "ramp/map",
+        'ramp/layerLoader', 'ramp/globalStorage', 'ramp/map',
 
-        "utils/util"
+        'utils/util'
 ],
     function (
             Deferred, query, first,
@@ -43,7 +43,7 @@ define([
             LayerLoader, GlobalStorage, RampMap,
             Util
         ) {
-        "use strict";
+        'use strict';
 
         /**
         * Maps GeoJSON geometry types to a set of default renders defined in GlobalStorage.DefaultRenders
@@ -51,9 +51,9 @@ define([
         * @private
         */
         var featureTypeToRenderer = {
-            Point: "circlePoint", MultiPoint: "circlePoint",
-            LineString: "solidLine", MultiLineString: "solidLine",
-            Polygon: "outlinedPoly", MultiPolygon: "outlinedPoly"
+            Point: 'circlePoint', MultiPoint: 'circlePoint',
+            LineString: 'solidLine', MultiLineString: 'solidLine',
+            Polygon: 'outlinedPoly', MultiPolygon: 'outlinedPoly'
         };
 
         /**
@@ -70,10 +70,10 @@ define([
 
             if (args.file) {
                 if (args.url) {
-                    throw new Error("Either url or file should be specified, not both");
+                    throw new Error('Either url or file should be specified, not both');
                 }
 
-                if (args.type === "binary") {
+                if (args.type === 'binary') {
                     promise = Util.readFileAsArrayBuffer(args.file);
                 } else {
                     promise = Util.readFileAsText(args.file);
@@ -82,7 +82,7 @@ define([
                 promise.then(function (data) { def.resolve(data); }, function (error) { def.reject(error); });
             } else if (args.url) {
                 try {
-                    promise = (new EsriRequest({ url: args.url, handleAs: "text" })).promise;
+                    promise = (new EsriRequest({ url: args.url, handleAs: 'text' })).promise;
                 } catch (e) {
                     def.reject(e);
                 }
@@ -117,7 +117,7 @@ define([
                     function (error) { def.reject(error); }
                 );
             } else {
-                throw new Error("One of url or file should be specified");
+                throw new Error('One of url or file should be specified');
             }
 
             return def.promise;
@@ -209,7 +209,7 @@ define([
                     data.layers.forEach(function (layer) {
                         if (layer.layerId === layerIdx) {
                             layer.legend.forEach(function (legendItem) {
-                                res[legendItem.label] = "data:" + legendItem.contentType + ';base64,' + legendItem.imageData;
+                                res[legendItem.label] = 'data:' + legendItem.contentType + ';base64,' + legendItem.imageData;
                             });
                         }
                     });
@@ -296,10 +296,10 @@ define([
         */
         function assignIds(geoJson) {
             if (geoJson.type !== 'FeatureCollection') {
-                throw new Error("Assignment can only be performed on FeatureCollections");
+                throw new Error('Assignment can only be performed on FeatureCollections');
             }
             geoJson.features.forEach(function (val, idx) {
-                if (typeof val.id === "undefined") {
+                if (typeof val.id === 'undefined') {
                     val.id = idx;
                 }
             });
@@ -311,11 +311,11 @@ define([
          */
         function extractFields(geoJson) {
             if (geoJson.features.length < 1) {
-                throw new Error("Field extraction requires at least one feature");
+                throw new Error('Field extraction requires at least one feature');
             }
 
             return Object.keys(geoJson.features[0].properties).map(function (prop) {
-                return { name: prop, type: "esriFieldTypeString" };
+                return { name: prop, type: 'esriFieldTypeString' };
             });
         }
 
@@ -357,13 +357,13 @@ define([
             if (fields && fields.length) {
                 fields.forEach(function (field, idx) {
                     var fieldTitle = field;
-                    if (field.toLowerCase() === "shape") { return; }
+                    if (field.toLowerCase() === 'shape') { return; }
                     if (aliases) {
                         if (aliases[field]) {
                             fieldTitle = aliases[field];
                         }
                     }
-                    dg.gridColumns.push(makeField("col" + idx.toString(), field, '100px', fieldTitle, 'title_span'));
+                    dg.gridColumns.push(makeField('col' + idx.toString(), field, '100px', fieldTitle, 'title_span'));
                 });
             }
 
@@ -384,13 +384,13 @@ define([
             };
 
             switch (symb.type) {
-                case "simple":
+                case 'simple':
                     symb.label = renderer.label;
                     symb.imageUrl = legendLookup[renderer.label];
 
                     break;
 
-                case "uniqueValue":
+                case 'uniqueValue':
                     if (renderer.defaultLabel) {
                         symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
                     }
@@ -406,7 +406,7 @@ define([
                     });
 
                     break;
-                case "classBreaks":
+                case 'classBreaks':
                     if (renderer.defaultLabel) {
                         symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
                     }
@@ -481,10 +481,10 @@ define([
                 layerID = LayerLoader.nextId();
 
             layerDefinition = {
-                objectIdField: "OBJECTID",
+                objectIdField: 'OBJECTID',
                 fields: [{
-                    name: "OBJECTID",
-                    type: "esriFieldTypeOID"
+                    name: 'OBJECTID',
+                    type: 'esriFieldTypeOID'
                 }]
             };
 
@@ -549,7 +549,7 @@ define([
                 displayName: opts.datasetName,
                 nameField: opts.nameField,
                 symbology: {
-                    type: "simple",
+                    type: 'simple',
                     imageUrl: opts.icon
                 },
                 datagrid: createDatagridConfig(opts.fields)
@@ -562,8 +562,8 @@ define([
             //add custom properties and event handlers to layer object
             RampMap.enhanceLayer(featureLayer, newConfig, true);
             featureLayer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
-            featureLayer.ramp.load.state = "loaded"; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
-            featureLayer.type = "Feature Layer"; //required to visible layer function
+            featureLayer.ramp.load.state = 'loaded'; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            featureLayer.type = 'Feature Layer'; //required to visible layer function
 
             //plop config in global config object so everyone can access it.
             RAMP.config.layers.feature.push(newConfig);
@@ -609,7 +609,7 @@ define([
 
                     if (err) {
                         def.reject(err);
-                        console.log("conversion error");
+                        console.log('conversion error');
                         console.log(err);
                         return;
                     }
@@ -640,7 +640,7 @@ define([
             var def = new Deferred();
 
             try {
-                // window.crypto.subtle.digest({ name: "SHA-256" }, shpData).then(function (h) { var u8 = new Uint16Array(h); console.log(u8); });
+                // window.crypto.subtle.digest({ name: 'SHA-256' }, shpData).then(function (h) { var u8 = new Uint16Array(h); console.log(u8); });
                 shp.getShapefile(shpData).then(function (geojson) {
                     var jsonLayer;
                     try {

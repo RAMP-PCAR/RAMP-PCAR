@@ -33,13 +33,13 @@
 
 define([
 /* Dojo */
-        "dojo/_base/declare", "dojo/topic",
+        'dojo/_base/declare', 'dojo/topic',
 
 /* Ramp */
-        "ramp/globalStorage", "ramp/map", "ramp/eventManager",
+        'ramp/globalStorage', 'ramp/map', 'ramp/eventManager',
 
 /* Util */
-        "utils/util", "utils/dictionary"
+        'utils/util', 'utils/dictionary'
 ],
 
     function (
@@ -51,7 +51,7 @@ define([
 
     /* Util*/
         UtilMisc, UtilDict) {
-        "use strict";
+        'use strict';
 
         var map,
             config,
@@ -103,11 +103,11 @@ define([
         */
         function sortLayers() {
             if (!graphicGroup) {
-                var svg = Snap.select("svg"),
-                    layers = svg.selectAll("svg g"), // > g:not(.highlightLayer)"),
-                    hoverl = svg.select(".hoverlightLayer"),
-                    zooml = svg.select(".zoomlightLayer"),
-                    hightl = svg.select(".highlightLayer");
+                var svg = Snap.select('svg'),
+                    layers = svg.selectAll('svg g'), // > g:not(.highlightLayer)'),
+                    hoverl = svg.select('.hoverlightLayer'),
+                    zooml = svg.select('.zoomlightLayer'),
+                    hightl = svg.select('.highlightLayer');
 
                 graphicGroup = svg.group(layers);
 
@@ -116,7 +116,7 @@ define([
                 graphicGroup.before(hoverl);
                 graphicGroup.before(zooml);
                 graphicGroup.attr({
-                    class: "graphics"
+                    class: 'graphics'
                 });
             }
         }
@@ -257,7 +257,7 @@ define([
         function repositionInteractive() {
             if (highlightedGraphic) {
                 window.setTimeout(function () {
-                    var snapGraphic = Snap.select("svg .highlightLayer > *:first-child"),
+                    var snapGraphic = Snap.select('svg .highlightLayer > *:first-child'),
                         offset;
 
                     // TODO: Update Snap to the latest version
@@ -296,7 +296,7 @@ define([
 
             // Trigger maptips/showInteractive --> display anchoredMapTip
             // detect when a new graphic is added to the highlihgt layer and display in interactive tooltip
-            highlightLayer.on("graphic-node-add", function (evt) {
+            highlightLayer.on('graphic-node-add', function (evt) {
                 topic.publish(EventManager.Maptips.SHOW_INTERACTIVE, {
                     target: $(evt.node),
                     graphic: highlightedGraphic
@@ -305,9 +305,9 @@ define([
 
             // detect when a new graphic is added to the zoomlight layer and display a
             // temporary tooltip only if the zoomlighted graphic is not already highlighted
-            zoomlightLayer.on("graphic-node-add", function (evt) {
-                var zgKey = "0",
-                    hgKey = "1",
+            zoomlightLayer.on('graphic-node-add', function (evt) {
+                var zgKey = '0',
+                    hgKey = '1',
                     objectIdField,
                     zgLayer,
                     hgLayer;
@@ -350,8 +350,8 @@ define([
 
                 //
                 highlightLayer = new esri.layers.GraphicsLayer({
-                    id: "highlightLayer",
-                    className: "highlightLayer"
+                    id: 'highlightLayer',
+                    className: 'highlightLayer'
                 });
                 highlightLayer.ramp = {
                     type: GlobalStorage.layerType.Highlight
@@ -361,8 +361,8 @@ define([
                 // has the mouse hovering over it but the point has not been
                 // selected
                 hoverlightLayer = new esri.layers.GraphicsLayer({
-                    id: "hoverlightLayer",
-                    className: "hoverlightLayer"
+                    id: 'hoverlightLayer',
+                    className: 'hoverlightLayer'
                 });
                 hoverlightLayer.ramp = {
                     type: GlobalStorage.layerType.Hoverlight
@@ -371,8 +371,8 @@ define([
                 // Layer for showing the graphic that appears after the user
                 // presses zoom to on a point
                 zoomlightLayer = new esri.layers.GraphicsLayer({
-                    id: "zoomLightLayer",
-                    className: "zoomlightLayer"
+                    id: 'zoomLightLayer',
+                    className: 'zoomlightLayer'
                 });
                 zoomlightLayer.ramp = {
                     type: GlobalStorage.layerType.Zoomlight

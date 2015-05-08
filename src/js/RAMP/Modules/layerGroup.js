@@ -38,23 +38,23 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+    'dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang',
 
     /* Text */
-    "dojo/text!./templates/layer_selector_template.json",
+    'dojo/text!./templates/layer_selector_template.json',
 
     /* Util */
-    "utils/tmplHelper", "utils/array",
+    'utils/tmplHelper', 'utils/array',
 
     /* RAMP */
-    "ramp/layerItem"
+    'ramp/layerItem'
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
         TmplHelper, UtilArray,
         LayerItem) {
-        "use strict";
+        'use strict';
 
         return declare([Evented], {
             constructor: function (layers, options) {
@@ -96,9 +96,9 @@ define([
                          *
                          * @property groupType
                          * @type String
-                         * @default "layer_group"
+                         * @default 'layer_group'
                          */
-                        groupType: "layer_group",
+                        groupType: 'layer_group',
 
                         /**
                          * Specifies type of any LayerItem added to this group during initialization and the name of the layer item template to use; is set by `layerType` value;; can be overwritten when adding individual layers by `options.type`.
@@ -144,7 +144,7 @@ define([
 
                 // create group node from the template
                 this.node = $(this._template(this.groupType));
-                this._listNode = this.node.find("ul");
+                this._listNode = this.node.find('ul');
 
                 console.debug(LayerItem.state);
 
@@ -230,12 +230,12 @@ define([
                 stateMatrix = stateMatrix || LayerItem.getStateMatrixTemplate();
 
                 if (!layerConfig.settings.panelEnabled) {
-                    LayerItem.removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
+                    LayerItem.removeStateMatrixPart(stateMatrix, 'controls', LayerItem.controls.SETTINGS);
                 }
 
                 // add wms query toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent && !layerConfig.isStatic) {
-                    LayerItem.addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.QUERY, 
+                    LayerItem.addStateMatrixPart(stateMatrix, 'toggles', LayerItem.toggles.QUERY, 
                         [
                             LayerItem.state.DEFAULT,
                             LayerItem.state.UPDATING,

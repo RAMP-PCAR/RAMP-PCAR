@@ -39,20 +39,20 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+    'dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang',
 
     /* Text */
-    "dojo/text!./templates/layer_selector_template.json",
+    'dojo/text!./templates/layer_selector_template.json',
 
     /* Util */
-    "utils/util", "utils/tmplHelper", "utils/tmplUtil", "utils/array", "utils/dictionary", 'utils/bricks'
+    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks'
 ],
     function (
         Evented, declare, lang,
         layer_selector_template,
         Util, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
-        "use strict";
+        'use strict';
 
         var LayerItem,
             ALL_STATES_CLASS;
@@ -260,7 +260,7 @@ define([
                                 label: 'Bounding Box',
                                 customContainerClass: 'bbox',
                                 checked: false//,
-                                //instructions: i18n.t("addDataset.help.dataSource")
+                                //instructions: i18n.t('addDataset.help.dataSource')
                             }
                         },
 
@@ -273,11 +273,11 @@ define([
                                 customContainerClass: 'all-data',
                                 choices: [
                                     {
-                                        key: "featureServiceAttrStep",
+                                        key: 'featureServiceAttrStep',
                                         value: i18n.t('filterManager.layerDataPrefetch')
                                     }
                                 ]
-                                //instructions: i18n.t("addDataset.help.dataSource")
+                                //instructions: i18n.t('addDataset.help.dataSource')
                             }
 
                         }
@@ -285,27 +285,27 @@ define([
                 }
 
                 this.node = $(this._template(this.type, this._config));
-                this._imageBoxNode = this.node.find(".layer-details > div:first");
-                this._displayNameNode = this.node.find(".layer-name > span");
-                this._controlsNode = this.node.find(".layer-controls-group");
-                this._togglesNode = this.node.find(".layer-checkboxes");
-                this._noticesNode = this.node.find(".layer-notices");
-                this._settingsNode = this.node.find(".layer-settings");
+                this._imageBoxNode = this.node.find('.layer-details > div:first');
+                this._displayNameNode = this.node.find('.layer-name > span');
+                this._controlsNode = this.node.find('.layer-controls-group');
+                this._togglesNode = this.node.find('.layer-checkboxes');
+                this._noticesNode = this.node.find('.layer-notices');
+                this._settingsNode = this.node.find('.layer-settings');
 
-                this._generateParts("controls", "layer_control_", this._controlStore);
-                this._generateParts("toggles", "layer_toggle_", this._toggleStore);
-                this._generateParts("notices", "layer_notice_", this._noticeStore);
-                this._generateParts("settings", "layer_setting_", this._settingsStore);
+                this._generateParts('controls', 'layer_control_', this._controlStore);
+                this._generateParts('toggles', 'layer_toggle_', this._toggleStore);
+                this._generateParts('notices', 'layer_notice_', this._noticeStore);
+                this._generateParts('settings', 'layer_setting_', this._settingsStore);
 
                 this.setState(this.state, options, true);
 
-                console.debug("-->", this.state, options);
+                console.debug('-->', this.state, options);
             },
 
             /**
              * Generates control, toggle, and notice nodes for the LayerItem object to be used in different states.
              *
-             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
+             * @param {String} partType name of the part type - 'controls', 'toggles', or 'notices'
              * @param {String} templateKey a template name prefix for the template parts
              * @param {Object} partStore a dictionary to store generated nodes
              * @method _generateParts
@@ -420,7 +420,7 @@ define([
                         if (options.notices) {
 
                             UtilDict.forEachEntry(options.notices, function (pKey, data) {
-                                notice = that._generatePart("layer_notice_", pKey, data);
+                                notice = that._generatePart('layer_notice_', pKey, data);
 
                                 that._noticeStore[pKey] = (notice);
                             });
@@ -428,12 +428,12 @@ define([
                     }
 
                     // store reference to a focused node inside this layer item if any
-                    focusedNode = this.node.find(":focus");
+                    focusedNode = this.node.find(':focus');
 
-                    this._setParts("controls", this._controlStore, this._controlsNode);
-                    this._setParts("toggles", this._toggleStore, this._togglesNode);
-                    this._setParts("notices", this._noticeStore, this._noticesNode);
-                    this._setParts("settings", this._settingsStore, this._settingsNode);
+                    this._setParts('controls', this._controlStore, this._controlsNode);
+                    this._setParts('toggles', this._toggleStore, this._togglesNode);
+                    this._setParts('notices', this._noticeStore, this._noticesNode);
+                    this._setParts('settings', this._settingsStore, this._settingsNode);
 
                     switch (this.state) {
                         case LayerItem.state.DEFAULT:
@@ -441,13 +441,13 @@ define([
                             break;
 
                         case LayerItem.state.LOADING:
-                            this.node.attr("aria-busy", true); // indicates that the region is loading
+                            this.node.attr('aria-busy', true); // indicates that the region is loading
 
                             console.log(LayerItem.state.LOADING);
                             break;
 
                         case LayerItem.state.LOADED:
-                            this.node.attr("aria-busy", false); // indicates that the loading is complete
+                            this.node.attr('aria-busy', false); // indicates that the loading is complete
                             this.setState(LayerItem.state.DEFAULT);
 
                             console.log(LayerItem.state.LOADED);
@@ -471,7 +471,7 @@ define([
                         if (Util.containsInDom(focusedNode[0])) {
                             focusedNode.focus();
                         } else { // if this node is no longer in DOM, set focus to the first focusable element in layer item
-                            this.node.find(":focusable:first").focus();
+                            this.node.find(':focusable:first').focus();
                         }
                     }
 
@@ -488,7 +488,7 @@ define([
             /**
              * Sets controls, toggles, and notices of the LayerItem according to its state.
              *
-             * @param {String} partType name of the part type - "controls", "toggles", or "notices"
+             * @param {String} partType name of the part type - 'controls', 'toggles', or 'notices'
              * @param {Object} partStore a dictionary to store generated nodes
              * @param {JObject} target a jQuery node where the nodes should be appended
              * @method _setParts
@@ -578,21 +578,21 @@ define([
                 * @type Object
                 * @example 
                 *     state: {
-                *       DEFAULT: "layer-state-default",
-                *       LOADING: "layer-state-loading",
-                *       LOADED: "layer-state-loaded",
-                *       UPDATING: "layer-state-updating",
-                *       ERROR: "layer-state-error",
-                *       OFF_SCALE: "layer-state-off-scale"
+                *       DEFAULT: 'layer-state-default',
+                *       LOADING: 'layer-state-loading',
+                *       LOADED: 'layer-state-loaded',
+                *       UPDATING: 'layer-state-updating',
+                *       ERROR: 'layer-state-error',
+                *       OFF_SCALE: 'layer-state-off-scale'
                 *       }
                 */
                 state: {
-                    DEFAULT: "layer-state-default",
-                    LOADING: "layer-state-loading",
-                    LOADED: "layer-state-loaded",
-                    UPDATING: "layer-state-updating",
-                    ERROR: "layer-state-error",
-                    OFF_SCALE: "layer-state-off-scale"
+                    DEFAULT: 'layer-state-default',
+                    LOADING: 'layer-state-loading',
+                    LOADED: 'layer-state-loaded',
+                    UPDATING: 'layer-state-updating',
+                    ERROR: 'layer-state-error',
+                    OFF_SCALE: 'layer-state-off-scale'
                 },
 
                 /**
@@ -603,16 +603,16 @@ define([
                 * @type Object
                 * @example 
                 *     partTypes: {
-                *       TOGGLES: "toggles",
-                *       CONTROLS: "controls",
-                *       NOTICES: "notices",
+                *       TOGGLES: 'toggles',
+                *       CONTROLS: 'controls',
+                *       NOTICES: 'notices',
                 *       SETTINGS: 'settings'
                 *       }
                 */
                 partTypes: {
-                    TOGGLES: "toggles",
-                    CONTROLS: "controls",
-                    NOTICES: "notices",
+                    TOGGLES: 'toggles',
+                    CONTROLS: 'controls',
+                    NOTICES: 'notices',
                     SETTINGS: 'settings'
                 },
 
@@ -624,21 +624,21 @@ define([
                 * @type Object
                 * @example 
                 *     controls: {
-                *            METADATA: "metadata",
-                *            SETTINGS: "settings",
-                *            LOADING: "loading",
-                *            REMOVE: "remove",
-                *            RELOAD: "reload",
-                *            ERROR: "error"
+                *            METADATA: 'metadata',
+                *            SETTINGS: 'settings',
+                *            LOADING: 'loading',
+                *            REMOVE: 'remove',
+                *            RELOAD: 'reload',
+                *            ERROR: 'error'
                 *           }
                 */
                 controls: {
-                    METADATA: "metadata",
-                    SETTINGS: "settings",
-                    LOADING: "loading",
-                    REMOVE: "remove",
-                    RELOAD: "reload",
-                    ERROR: "error"
+                    METADATA: 'metadata',
+                    SETTINGS: 'settings',
+                    LOADING: 'loading',
+                    REMOVE: 'remove',
+                    RELOAD: 'reload',
+                    ERROR: 'error'
                 },
 
                 /**
@@ -649,22 +649,22 @@ define([
                 * @type Object
                 * @example 
                 *     toggles: {
-                *           EYE: "eye",
-                *           BOX: "box",
-                *            RELOAD: "reload",
-                *            HIDE: "hide",
-                *            ZOOM: "zoom",
-                *            PLACEHOLDER: "placeholder"
+                *           EYE: 'eye',
+                *           BOX: 'box',
+                *            RELOAD: 'reload',
+                *            HIDE: 'hide',
+                *            ZOOM: 'zoom',
+                *            PLACEHOLDER: 'placeholder'
                 *        }
                 */
                 toggles: {
-                    EYE: "eye",
-                    BOX: "box",
-                    RELOAD: "reload",
-                    HIDE: "hide",
-                    ZOOM: "zoom",
-                    PLACEHOLDER: "placeholder",
-                    QUERY: "query"
+                    EYE: 'eye',
+                    BOX: 'box',
+                    RELOAD: 'reload',
+                    HIDE: 'hide',
+                    ZOOM: 'zoom',
+                    PLACEHOLDER: 'placeholder',
+                    QUERY: 'query'
                 },
 
                 /**
@@ -675,17 +675,17 @@ define([
                 * @type Object
                 * @example 
                 *     notices: {
-                *            SCALE: "scale"
-                *            ERROR: "error",
-                *            UPDATE: "update",
-                *            USER: "user"
+                *            SCALE: 'scale'
+                *            ERROR: 'error',
+                *            UPDATE: 'update',
+                *            USER: 'user'
                 *           }
                 */
                 notices: {
-                    SCALE: "scale",
-                    ERROR: "error",
-                    UPDATE: "update",
-                    USER: "user"
+                    SCALE: 'scale',
+                    ERROR: 'error',
+                    UPDATE: 'update',
+                    USER: 'user'
                 },
 
                 /**
@@ -1054,12 +1054,12 @@ define([
             return lang.clone(LayerItem.stateMatrix);
         };
 
-        // a string with all possible layerItem state CSS classes joined by " "; used to clear any CSS state class from the node
+        // a string with all possible layerItem state CSS classes joined by ' '; used to clear any CSS state class from the node
         ALL_STATES_CLASS =
             Object
                 .getOwnPropertyNames(LayerItem.state)
                 .map(function (key) { return LayerItem.state[key]; })
-                .join(" ");
+                .join(' ');
 
         return LayerItem;
     });
