@@ -49,7 +49,8 @@
         "RandomColor": "https://github.com/sterlingwes/RandomColor.git",
         "btoa-umd": "~0.7.5",
         "t": "~0.5.1",
-        "selfish": "~0.3.3"
+        "selfish": "~0.3.3",
+        "formstone": "~0.5.8"
     },
     "moduleType": [
         "globals"
