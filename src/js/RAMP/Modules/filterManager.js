@@ -52,7 +52,7 @@ define([
         "esri/tasks/query",
 
 /* Ramp */
-        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem", "ramp/layerLoader",
+        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
 
 /* Util */
         "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkboxGroup"],
@@ -68,7 +68,7 @@ define([
         EsriQuery,
 
     /* Ramp */
-        GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem, LayerLoader,
+        GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
 
     /* Util */
         TmplHelper, UtilMisc, UtilDict, PopupManager, CheckboxGroup) {
@@ -558,7 +558,8 @@ define([
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
                             var id = button.data("layer-id"),
-                                layerConfig = LayerLoader.getLayerConfig(id),
+                                layer = RAMP.layerRegistry[id],
+                                layerConfig = layer ? layer.ramp.config : null,
                                 metadataUrl;
 
                             topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
