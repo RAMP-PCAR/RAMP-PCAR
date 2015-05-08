@@ -112,7 +112,6 @@
     "bookmarkLink": {
         "description": "Link to Map Viewer",
         "email": "Email",
-        "emailUrlBody": "Here's a cool map:",
         "emailUrlSubject": "RAMP GIS Viewer",
         "longLink": "Long link",
         "shortLink": "Short link",
@@ -551,6 +550,9 @@
         "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
         "title": "Map Export"
+    },
+    "maptips": { 
+        "attribsDownloading" : "Attribute data is still downloading"
     },
     "page": {
         "footer": {

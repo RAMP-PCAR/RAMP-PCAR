@@ -15,21 +15,19 @@
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "AttributeLoader"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
-* {{#crossLink "FilterManager"}}{{/crossLink}}
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
+* {{#crossLink "FilterManager"}}{{/crossLink}}  
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
 * {{#crossLink "GraphicExtension"}}{{/crossLink}}
-* {{#crossLink "LayerItem"}}{{/crossLink}}
-* {{#crossLink "Map"}}{{/crossLink}}
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}
-* {{#crossLink "Ramp"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
-*
+* {{#crossLink "LayerItem"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}  
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
+* {{#crossLink "Util"}}{{/crossLink}}  
+* 
 * @class LayerLoader
 * @static
 * @uses dojo/topic
-* @uses dojo/_base/array
 * @uses esri/geometry/Extent
 * @uses esri/layers/GraphicsLayer
 * @uses esri/tasks/GeometryService
@@ -38,13 +36,13 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array",
+"dojo/topic",
 
 /* ESRI */
 "esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/ramp",
+"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler",
 "ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader", "ramp/graphicExtension",
 
 /* Util */
@@ -52,13 +50,13 @@ define([
 
     function (
     /* Dojo */
-    topic, dojoArray,
+    topic,
 
     /* ESRI */
     GraphicsLayer, GeometryService, ProjectParameters, EsriExtent,
 
     /* RAMP */
-    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler, Ramp,
+    EventManager, RampMap, GlobalStorage, FeatureClickHandler, MapClickHandler,
     FilterManager, LayerItem, AttributeLoader, GraphicExtension,
 
      /* Util */
@@ -71,11 +69,24 @@ define([
         * Get an auto-generated layer id.  This works because javascript is single threaded: if this gets called
         * from a web-worker at some point it will need to be synchronized.
         *
+        * @method  nextId
         * @returns {String} an auto-generated layer id
         */
         function nextId() {
             idCounter += 1;
             return 'rampAutoId_' + idCounter;
+        }
+
+        /**
+        * Get a layer config for a given layer ID.
+        *
+        * @method  getLayerConfig
+        * @param   {String} layerId a RAMP layer ID
+        * @returns {Object} a RAMP config object from the layer registry
+        */
+        function getLayerConfig(layerId) {
+            var layer = RAMP.layerRegistry[layerId];
+            return layer ? layer.ramp.config : null;
         }
 
         /**
@@ -335,50 +346,50 @@ define([
 
                     //generate bounding box
 
-                    var boundingBoxExtent,
-                        boundingBox = new GraphicsLayer({
-                            id: String.format("boundingBoxLayer_{0}", layer.id),
-                            visible: layerConfig.settings.boundingBoxVisible
-                        });
-
-                    boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
-
-                    //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                    if (layerConfig.layerExtent) {
-                        boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-
-                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                            //layer is in same projection as basemap.  can directly use the extent
-                            boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                        } else {
-                            //layer is in different projection.  reproject to basemap
-
-                            var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
-                            boundingBox.add(UtilMisc.createGraphic(box));
-
-                            //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
-                            /*
-                            var params = new ProjectParameters(),
-                                gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                            params.geometries = [boundingBoxExtent];
-                            params.outSR = map.spatialReference;
-
-                            gsvc.project(params, function (projectedExtents) {
-                                console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
-                                console.log('proj4 says: ' + JSON.stringify(box));
+                        var boundingBoxExtent,
+                            boundingBox = new GraphicsLayer({
+                                id: String.format("boundingBoxLayer_{0}", layer.id),
+                                visible: layerConfig.settings.boundingBoxVisible
                             });
-                            */
+
+                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+
+                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                        if (layerConfig.layerExtent) {
+                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
+                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                                //layer is in same projection as basemap.  can directly use the extent
+                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                            } else {
+                                //layer is in different projection.  reproject to basemap
+
+                                var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
+                                boundingBox.add(UtilMisc.createGraphic(box));
+
+                                //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
+                                /*
+                                var params = new ProjectParameters(),
+                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                                params.geometries = [boundingBoxExtent];
+                                params.outSR = map.spatialReference;
+
+                                gsvc.project(params, function (projectedExtents) {
+                                    console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
+                                    console.log('proj4 says: ' + JSON.stringify(box));
+                                });
+                                */
+                            }
                         }
-                    }
 
-                    //add mapping to bounding box
-                    RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
+                        //add mapping to bounding box
+                        RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
 
-                    //bounding boxes are on top of feature layers
-                    insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
-                    RAMP.layerCounts.bb += 1;
+                        //bounding boxes are on top of feature layers
+                        insertIdx = RAMP.layerCounts.feature + RAMP.layerCounts.bb;
+                        RAMP.layerCounts.bb += 1;
 
-                    map.addLayer(boundingBox, insertIdx);
+                        map.addLayer(boundingBox, insertIdx);
 
                     break;
             }
@@ -412,7 +423,7 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-
+                
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
@@ -488,7 +499,7 @@ define([
                     } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
 
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -535,7 +546,7 @@ define([
                     layerSection,
                     configCollection;
 
-                layer = RAMP.layerRegistry[evt.layerId];
+                    layer = RAMP.layerRegistry[evt.layerId];
 
                 //derive section layer is in and the config collection it is in
                 switch (layer.ramp.type) {
@@ -583,9 +594,9 @@ define([
                     idArray,
                     cleanIdArray;
 
-                removeFromMap(evt.layerId);
+               removeFromMap(evt.layerId);
 
-                curlayer = RAMP.layerRegistry[evt.layerId];
+                    curlayer = RAMP.layerRegistry[evt.layerId];
 
                 layerConfig = curlayer.ramp.config;
                 user = curlayer.ramp.user;
@@ -601,13 +612,13 @@ define([
                             .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                             .map(function (i, elm) { return elm.id; });
 
-                cleanIdArray = idArray.filter(function (i, elm) {
+                cleanIdArray = idArray.toArray().filter(function (i, elm) {
                     //check if layer is in error state.  error layers should not be part of the count.  exception being the layer we are reloading
                     return ((FilterManager.getLayerState(elm) !== LayerItem.state.ERROR) || (elm === evt.layerId));
                 });
 
                 //find where our index is
-                layerIndex = dojoArray.indexOf(cleanIdArray, evt.layerId);
+                layerIndex = cleanIdArray.indexOf(evt.layerId);
 
                 if (curlayer.ramp.type === GlobalStorage.layerType.wms) {
                     //adjust for wms, as it's in a different layer list on the map
@@ -648,6 +659,8 @@ define([
             loadLayer: function (layer, reloadIndex) {
                 _loadLayer(layer, reloadIndex);
             },
+
+            getLayerConfig: getLayerConfig,
 
             nextId: nextId
         };

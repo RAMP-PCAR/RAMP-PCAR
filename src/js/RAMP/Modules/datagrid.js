@@ -33,53 +33,46 @@
 *
 * @class Datagrid
 * @static
-* @uses dojo/_base/declare
 * @uses dojo/_base/lang
-* @uses dojo/query
-* @uses dojo/_base/array
 * @uses dojo/dom-class
 * @uses dojo/dom-attr
 * @uses dojo/dom-construct
 * @uses dojo/topic
 * @uses dojo/on
-* @uses esri/layers/FeatureLayer
 * @uses esri/tasks/query
 */
 
 define([
 /* Dojo */
-    "dojo/_base/declare", "dojo/_base/lang", "dojo/query", "dojo/_base/array", "dojo/dom-class",
-    "dojo/dom-attr", "dojo/dom-construct", "dojo/topic", "dojo/on", "dojo/Deferred",
+    "dojo/_base/lang", "dojo/topic", "dojo/Deferred",
 
 /* Text */
      "dojo/text!./templates/datagrid_template.json",
      "dojo/text!./templates/extended_datagrid_template.json",
 
 // Esri
-        "esri/layers/FeatureLayer", "esri/tasks/query",
+        "esri/tasks/query",
 
 // Ramp
-        "ramp/ramp", "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "ramp/theme", "ramp/attributeLoader",
+        "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
+        "ramp/eventManager", "ramp/theme", "ramp/layerLoader",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
 
     function (
     // Dojo
-        declare, lang, dojoQuery, dojoArray, domClass, domAttr,
-        domConstruct, topic, dojoOn, Deferred,
+        lang, topic, Deferred,
 
     //Text
         data_grid_template,
         extended_datagrid_template,
 
     // Esri
-        FeatureLayer, EsriQuery,
+        EsriQuery,
 
     // Ramp
-        Ramp, GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap,
-        EventManager, Theme, AttributeLoader,
+        GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
 
     // Util
         utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
@@ -375,7 +368,7 @@ define([
                             //bundle feature into the template data object
                             tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
 
-                            dojoArray.forEach(extendedGrid, function (col, i) {
+                            extendedGrid.forEach(function (col, i) {
                                 // add columnIdx property, and set initial value
                                 tmplData.columnIdx = i;
                                 var result = tmpl(col.columnTemplate, tmplData);
@@ -400,6 +393,7 @@ define([
                 */
                 function createDatatable() {
                     var forcedWidth,
+                        focusConfig,
                         tableOptions = {
                             info: false,
                             columnDefs: [],
@@ -436,11 +430,15 @@ define([
                     } else {
                         //layout for variable column (extended grid)
                         //grab config for active dataset and generate a table layout based on gridColumns
-                        var focusConfig = Ramp.getLayerConfigWithId(ui.getSelectedDatasetId());
-                        currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
+                        if (ui.getSelectedDatasetId() in RAMP.layerRegistry) {
+                            focusConfig = RAMP.layerRegistry[ui.getSelectedDatasetId()].ramp.config;
+                        }
+                        if (focusConfig && focusConfig.datagrid) {
+                            currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
+                        }
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : dojoArray.map(focusConfig.datagrid.gridColumns, function (column) {
+                                columns: ui.getSelectedDatasetId() === null ? [{ title: "" }] : focusConfig.datagrid.gridColumns.map(function (column) {
                                     return {
                                         title: column.title,
                                         width: column.width ? column.width : "100px",
@@ -893,10 +891,9 @@ define([
                                 : i18n.t("datagrid.ex.datasetSelectorButtonLoading"))
                             : i18n.t("datagrid.ex.datasetSelectorButtonLoad"));
 
-                    layer = dojoArray.filter(RAMP.config.layers.feature,
-                        function (layer) {
-                            return layer.id === selectedDatasetId;
-                        });
+                    layer = RAMP.config.layers.feature.filter(function (layer) {
+                        return layer.id === selectedDatasetId;
+                    });
 
                     if (extendedTabTitle && layer.length > 0) {
                         extendedTabTitle.text(": " + layer[0].displayName);
@@ -1002,7 +999,7 @@ define([
                         selectedDatasetId = "";
 
                         // filter out static layers
-                        var nonStaticFeatureLayers = dojoArray.filter(RAMP.config.layers.feature, function (layerConfig) {
+                        var nonStaticFeatureLayers = RAMP.config.layers.feature.filter(function (layerConfig) {
                             var layer = RAMP.map.getLayer(layerConfig.id);
                             if (layer) {
                                 if (layer.loaded) {
@@ -1310,7 +1307,7 @@ define([
             $.each(elements, function (idx, val) {
                 if (val.last()) {
                     var layer = val.last().layerId,
-                        fid = GraphicExtension.getFDataOid(val.last().fData);
+                            fid = GraphicExtension.getFDataOid(val.last().fData);
 
                     if (!(layer in featureToPage)) {
                         featureToPage[layer] = {
@@ -1356,7 +1353,7 @@ define([
             //console.time('applyExtentFilter:part 1 - 1');
 
             // filter out static layers
-            visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+            visibleGridLayers = visibleGridLayers.filter(function (layer) {
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
@@ -1365,7 +1362,7 @@ define([
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
                     q.geometry = RampMap.getMap().extent;
                     //in this case, we only consider the layer if it is visible
-                    visibleGridLayers = dojoArray.filter(visibleGridLayers, function (layer) {
+                    visibleGridLayers = visibleGridLayers.filter(function (layer) {
                         return layer.id === ui.getSelectedDatasetId();
                     });
                 } else {
@@ -1384,7 +1381,7 @@ define([
 
             // Update total records
             totalRecords = 0;
-            dojoArray.forEach(visibleGridLayers, function (layer) {
+            visibleGridLayers.forEach(function (layer) {
                 if (RAMP.data[layer.id]) {
                     totalRecords += RAMP.data[layer.id].features.length;
                 }
@@ -1403,7 +1400,7 @@ define([
                 };
             } else {
                 //apply spatial query to the layers, collect deferred results in the array.
-                deferredList = dojoArray.map(visibleGridLayers, function (gridLayer) {
+                deferredList = visibleGridLayers.map(function (gridLayer) {
                     return gridLayer.queryFeatures(q).then(function (features) {
                         //console.timeEnd('applyExtentFilter:part 1 - 2');
 
@@ -1467,7 +1464,7 @@ define([
                 var extendedGrid = layerConfig.datagrid.gridColumns;
 
                 // process each column and add to row
-                dojoArray.forEach(extendedGrid, function (column) {
+                extendedGrid.forEach(function (column) {
                     innerArray.push(fData.attributes[column.fieldName] || "");
                 });
             }
@@ -1522,7 +1519,7 @@ define([
                         case 'features':
 
                             //for each feature in a specific layer
-                            newData = dojoArray.map(layerBundle.features, function (feature) {
+                            newData = layerBundle.features.map(function (feature) {
                                 //get the feature data for this feature
                                 var fData = GraphicExtension.getFDataForGraphic(feature);
 
@@ -1537,7 +1534,7 @@ define([
 
                         case 'raw':
                             //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
-                            newData = dojoArray.map(RAMP.data[layerBundle.layerId].features, function (fData) {
+                            newData = RAMP.data[layerBundle.layerId].features.map(function (fData) {
                                 //return the appropriate data object for the feature (.map puts them in array form)
                                 // "cache" the data object so we don't have to generate it again
                                 return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
@@ -1620,7 +1617,7 @@ define([
 
                 // added by Jack to make sure layer visibility is added or removed from checkedLayerVisibility
                 if (event.id !== null) {
-                    var idx = dojoArray.indexOf(invisibleLayerToggleOn, event.id);
+                    var idx = invisibleLayerToggleOn.indexOf(event.id);
                     if (idx === -1 && event.state) {
                         // add
                         invisibleLayerToggleOn.push(event.id);
@@ -1682,6 +1679,11 @@ define([
                         datasetSelector.add(optElem);
                     }*/
                 }
+            });
+
+            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                //layer has been removed, notify the ui incase the layer was scale dependent
+                ui.updateNotice();
             });
 
             // update notice after zoom end event since some of the scale-dependent layers might end up off scale

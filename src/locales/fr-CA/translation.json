@@ -112,7 +112,6 @@
     "bookmarkLink": {
         "description": "Lien vers le visualiseur de cartes",
         "email": "Courriel",
-        "emailUrlBody": "",
         "emailUrlSubject": "Visionneuse de PCAR des SIG",
         "longLink": "Lien intégral",
         "shortLink": "Lien raccourci",
@@ -551,6 +550,9 @@
         "includeLegend": "Ajouter la légende",
         "loading": "Génération de l’image Veuillez attendre.",
         "title": "Exportation de carte"
+    },
+    "maptips": {
+        "attribsDownloading": "[fr] Attribute data is still downloading"
     },
     "page": {
         "footer": {

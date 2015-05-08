@@ -27,14 +27,13 @@
 * @class AdvancedToolbar
 * @static
 * @uses dojo/_base/lang
-* @uses dojo/_base/array
 * @uses dojo/topic
 * @uses dojo/Deferred
 */
 
 define([
     // Dojo
-            "dojo/_base/lang", "dojo/_base/array", "dojo/topic", "dojo/Deferred",
+            "dojo/_base/lang", "dojo/topic", "dojo/Deferred",
     // Ramp
             "ramp/eventManager", "ramp/map", "ramp/globalStorage",
     // Util
@@ -45,7 +44,7 @@ define([
 ],
     function (
     // Dojo
-        dojoLang, dojoArray, topic, Deferred,
+        dojoLang, topic, Deferred,
     // Ramp
         EventManager, RampMap, globalStorage,
     // Util

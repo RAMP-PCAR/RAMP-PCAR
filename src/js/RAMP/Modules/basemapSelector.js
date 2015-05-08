@@ -24,7 +24,6 @@
 *
 * @class BaseMapSelector
 * @static
-* @uses dojo/_base/array
 * @uses dojo/_base/lang
 * @uses dojo/dom-attr
 * @uses dojo/query
@@ -34,7 +33,7 @@
 
 define([
 // Dojo
-    "dojo/_base/array", "dojo/_base/lang", "dojo/dom-attr", "dojo/query", "dojo/topic",
+    "dojo/_base/lang", "dojo/dom-attr", "dojo/query", "dojo/topic",
 // Templates
     "dojo/text!./templates/basemap_selector_template.json",
 // Ramp
@@ -46,7 +45,7 @@ define([
 
 function (
         // Dojo
-        dojoArray, dojoLang, domAttr, query, topic,
+        dojoLang, domAttr, query, topic,
         // Templates
         basemapselectorTemplate,
         // Ramp
@@ -354,7 +353,7 @@ function (
 
             RAMP.basemapIndex = {};
 
-            dojoArray.forEach(basemaps, function (basemap, i) {
+            basemaps.forEach(function (basemap, i) {
                 var basemapDijit,
                     basemapLayers = [];
 

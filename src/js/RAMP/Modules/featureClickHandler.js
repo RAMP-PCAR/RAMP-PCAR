@@ -27,13 +27,13 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager",
+    'ramp/graphicExtension', 'ramp/eventManager',
 
 /* Dojo */
-    "dojo/topic", "dojo/dom-construct",
+    'dojo/topic', 'dojo/dom-construct',
 
 /* Utils */
-    "utils/util"],
+    'utils/util'],
 
     function (
     /* RAMP */
@@ -44,7 +44,7 @@ define([
 
     /* Utils */
     UtilMisc) {
-        "use strict";
+        'use strict';
         return {
             /**
             * This function is called whenever the feature on the map is clicked/selected by the user.
@@ -58,16 +58,15 @@ define([
             onFeatureSelect: function (evt) {
                 var selectedGraphic = evt.graphic,
                     fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
-
-                //TODO how best to handle a lack of attribute data for a graphic?
+               
                 if (fData) {
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                         panelName: i18n.t('datagrid.details'),
                         title: GraphicExtension.getFDataTitle(fData),
                         content: GraphicExtension.getFDataTextContent(fData),
-                        target: $("#map-div"),
-                        origin: "rampPopup",
-                        consumeOrigin: "datagrid",
+                        target: $('#map-div'),
+                        origin: 'rampPopup',
+                        consumeOrigin: 'datagrid',
                         guid: UtilMisc.guid(),
                         showChars: 70,
                         doOnOpen: function () {
@@ -99,7 +98,11 @@ define([
                             //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
                         }
                     });
-                }
+                } 
+                //if there is no fData, the attribute data has not downloaded yet.  given that we have a warning on a hover, the user will see that message
+                //before they can initiate a click. by not supporting a separate message on no-attrib click, we avoid having to worry about missing datagrid rows
+                //(there will be no rows until the attribs have downloaded), nor worry about detail panels (that have no data).
+                //so, we do nothing. hurrah!
             },
 
             /**
@@ -111,7 +114,7 @@ define([
             */
             onFeatureDeselect: function () {
                 topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                    origin: "rampPopup,datagrid"
+                    origin: 'rampPopup,datagrid'
                 });
             },
 
