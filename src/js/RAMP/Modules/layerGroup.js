@@ -166,11 +166,11 @@ define([
                     layerItemOptions = {};
 
                 // augment existing stateMatrix or create a new one
-                if (options && options.stateMatrix) {
+                /*if (options && options.stateMatrix) {
                     options.stateMatrix = this._constructStateMatrix(layer, options.stateMatrix);
                 } else {
                     layerItemOptions.stateMatrix = this._constructStateMatrix(layer);
-                }
+                }*/
 
                 lang.mixin(layerItemOptions,
                     {
@@ -233,10 +233,14 @@ define([
                     LayerItem.removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
                 }
 
-                // remove bounding box toggle if there is no layer extent property - layer is a wms layer
-                if (!layerConfig.layerExtent || layerConfig.isStatic) {
-                    LayerItem.removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
-                    LayerItem.addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
+                // add wms query toggle if there is no layer extent property - layer is a wms layer
+                if (!layerConfig.layerExtent && !layerConfig.isStatic) {
+                    LayerItem.addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.QUERY, 
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]);
                 }
 
                 return stateMatrix;

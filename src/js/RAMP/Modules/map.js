@@ -27,6 +27,7 @@
 * @class Map
 * @static
 * @uses dojo/dom
+* @uses dojo/_base/lang
 * @uses dojo/dom-construct
 * @uses dojo/number
 * @uses dojo/query
@@ -45,7 +46,7 @@
 
 define([
 /* Dojo */
-"dojo/dom", "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
+"dojo/dom", "dojo/_base/lang", "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
 
 /* Esri */
 "esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
@@ -59,7 +60,7 @@ define([
 
     function (
     /* Dojo */
-    dom, domConstruct, number, query, topic, dojoOn,
+    dom, lang, domConstruct, number, query, topic, dojoOn,
 
     /* Esri */
     EsriMap, FeatureLayer, ArcGISTiledMapServiceLayer, ArcGISDynamicMapServiceLayer,
@@ -682,7 +683,9 @@ define([
                     state: "loading",
                     inLS: false,  //layer has entry in layer selector
                     inCount: false  //layer is included in the layer counts
-                }
+                },
+                // hold layer state like wmsQuery being on or off
+                state: lang.clone(config.settings)
             };
 
             layer.on('load', function (evt) {

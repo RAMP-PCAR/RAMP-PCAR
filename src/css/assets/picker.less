@@ -1,0 +1,87 @@
+﻿@import '../../lib/formstone/src/less/checkbox.less';
+
+
+// Label
+@fs-checkbox-label-color: #000;
+//@fs-checkbox-label-font-size: 14px;
+
+// Marker
+
+@fs-checkbox-marker-background: @very-light-grey-color;
+@fs-checkbox-marker-border-color: @light-grey-color;
+@fs-checkbox-marker-border-radius: 0;
+//@fs-checkbox-marker-height-width: 20px;
+//@fs-checkbox-marker-margin: 0 10px 0 0;
+
+@fs-checkbox-flag-background: #545454;
+
+// Focus
+@fs-dropdown-focus-marker-box-shadow: @default-focus-shadow;
+@fs-checkbox-focus-marker-border-color: @default-focus-color;
+
+// Toggle
+//@fs-checkbox-toggle-marker-background: #999;
+//@fs-checkbox-toggle-marker-border-color: #fff;
+//@fs-checkbox-toggle-marker-border-size: 2px;
+@fs-checkbox-toggle-marker-height: 28px;
+@fs-checkbox-toggle-marker-width: 84px;
+
+//@fs-checkbox-toggle-state-color: #666;
+//@fs-checkbox-toggle-state-font-size: 12px;
+
+//@fs-checkbox-toggle-icon-color: #fff;
+//@fs-checkbox-toggle-icon-width: 2px;
+//@fs-checkbox-toggle-icon-height: 10px;
+//@fs-checkbox-toggle-icon-gap: 1px;
+
+.fs-checkbox {
+
+    &-toggle&-checked {
+
+        .fs-checkbox-flag {
+            background:@fs-checkbox-flag-background;
+            border: 1px @medium-dark-grey-color outset;
+
+            &:after {
+                opacity: 0.9;
+            }
+        }
+
+        /*.fs-checkbox-state {
+            &_off {
+                display: none;
+            }
+
+            &_on {
+                display: block;
+            }
+        }*/
+    }
+
+    /*&-toggle &-state_on {
+        display: none;
+    }
+
+    &-toggle &-state {
+        position: absolute;
+        padding-left: 20px;
+        width: auto;
+        font-size: 14px;
+        color: #000;
+    }*/
+
+    &-marker {
+        position: absolute !important;
+        right: 0;
+        margin-right: 0;
+        border-style: outset;
+    }
+
+    
+    &-toggle &-flag {
+        width: calc(~'50% - 4px');
+        height: calc(~'100% - 4px');
+        border: 0;
+        margin: 2px 0 0 2px;
+    }
+}

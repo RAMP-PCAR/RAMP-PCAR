@@ -287,7 +287,12 @@
         "zoomTo": "Zoom To"
     },
     "filterManager": {
+        "WMSAllQueryDisable": "Disable queries on all WMS layers",
+        "WMSAllQueryEnable": "Enable queries on all WMS layers",
+        "WMSQueryDisable": "Disable query on {0}",
+        "WMSQueryEnable": "Enable query on {0}",
         "allData": "All Data",
+        "boundingBox": "Bounding Box",
         "controlsMatrix": {
             "error": "Error",
             "metadata": "Metadata",
@@ -301,6 +306,8 @@
         "hideBounds": "Hide Bounds of {0}",
         "hideFeatures": "Hide {0}",
         "hideLegend": "Hide Legend",
+        "layerData": "Layer data",
+        "layerDataPrefetch": "Download all data",
         "layerHandle": "Layer Handle",
         "layerHandleLabel": "Layer handle for __layerName__",
         "layerListLabel": "Sortable layer list",
@@ -335,11 +342,7 @@
             "expand": "Expand",
             "fullScreen": "Full Screen",
             "mapExport": "Map Export",
-            "open": "Open",
-            "wmsQueryDisable": "Disable Queries",
-            "wmsQueryDisableTooltip": "Disable queries on all WMS layers",
-            "wmsQueryEnable": "Enable Queries",
-            "wmsQueryEnableTooltip": "Enable queries on all WMS layers"
+            "open": "Open"
         }
     },
     "help": {
@@ -547,6 +550,9 @@
         "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
         "title": "Map Export"
+    },
+    "maptips": { 
+        "attribsDownloading" : "Attribute data is still downloading"
     },
     "page": {
         "footer": {
