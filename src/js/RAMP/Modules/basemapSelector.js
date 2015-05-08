@@ -254,6 +254,8 @@ function (
 
                     selectorSectionContainer.hide(); // hide baseselector after it's initiated
 
+                    this.updateToggleLabel();
+
                     topic.publish(EventManager.BasemapSelector.UI_COMPLETE);
 
                     return this;
@@ -404,7 +406,7 @@ function (
 
             ui
                 .init(basemapId, currentTileSchema)
-                .updateToggleLabel();
+            ;
         }
     };
 });

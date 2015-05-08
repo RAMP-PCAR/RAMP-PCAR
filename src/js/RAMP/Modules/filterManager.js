@@ -933,7 +933,9 @@ define([
        */
         function setLayerOffScaleState(layerId) {
             var visibleLayers = RampMap.getVisibleLayers(),
-                invisibleLayers = RampMap.getInvisibleLayers();
+                invisibleLayers = RampMap.getInvisibleLayers(),
+                layer = RAMP.layerRegistry[layerId],
+                layerItem;
 
             function filterLayerIds(layers) {
                 layers = layers
@@ -961,7 +963,15 @@ define([
             }
 
             if (invisibleLayers.contains(layerId)) {
-                setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+                if (layer && RampMap.layerInLODRange(layer.maxScale, layer.minScale)) {
+                    setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+                } else {
+                    setLayerState(layerId, LayerItem.state.ERROR, { notices: { error: { message: i18n.t("addDataset.error.messageFeatureOutsideZoomRange") } } });
+                    layerItem = layerGroups[GlobalStorage.layerType.feature].getLayerItem(layerId);
+                    LayerItem.removeStateMatrixPart(layerItem.stateMatrix, "controls", LayerItem.controls.RELOAD);
+                    layerItem.setState(LayerItem.state.ERROR, null, true);
+                }
+
             }
         }
 

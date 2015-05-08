@@ -12,6 +12,12 @@
     overflow: hidden;
     padding: 0;
 
+    &.compact {
+        .map-toolbar-item-button:not(#baseMapToggle) > span {
+            display: none !important;
+        }
+    }
+
     .map-toolbar-item {
         //float: right;
         display: inline;
