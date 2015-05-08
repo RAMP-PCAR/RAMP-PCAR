@@ -249,7 +249,7 @@ require([
                     } else {
                         //TODO verify endpoint is correct
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 2000 });
+                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 

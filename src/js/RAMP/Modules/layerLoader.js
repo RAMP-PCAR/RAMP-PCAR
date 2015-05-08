@@ -15,16 +15,16 @@
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "AttributeLoader"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
 * {{#crossLink "GraphicExtension"}}{{/crossLink}}
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -264,6 +264,11 @@ define([
             //object to make state decisions
             map.addLayer(layer, insertIdx);
 
+            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+            //store a pointer here so we can find it (and it's information)
+            // TODO - this write to layer registry should be refactored into a call to state manager
+            RAMP.layerRegistry[layer.id] = layer;
+
             //derive initial state
             switch (layer.ramp.load.state) {
                 case "loaded":
@@ -296,10 +301,6 @@ define([
                 updateLayerSelectorState(layerConfig.id, lsState, false, options);
             }
             layer.ramp.load.inLS = true;
-
-            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
-            //store a pointer here so we can find it (and it's information)
-            RAMP.layerRegistry[layer.id] = layer;
 
             //this will force a recreation of the highlighting graphic group.
             //if not done, can cause mouse interactions to get messy if adding more than
@@ -423,7 +424,7 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-                
+
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
@@ -499,7 +500,7 @@ define([
                     } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
 
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -594,7 +595,7 @@ define([
                     idArray,
                     cleanIdArray;
 
-               removeFromMap(evt.layerId);
+                removeFromMap(evt.layerId);
 
                     curlayer = RAMP.layerRegistry[evt.layerId];
 
