@@ -63,8 +63,8 @@ require([
 
     function (
     /* Dojo */
-    parser, topic, requestScript, xhr,
-    esriConfig, esriUrlUtils, number, dom, domConstruct, query,
+    parser, topic, requestScript, xhr, number, dom, domConstruct, query,
+    esriConfig, esriUrlUtils,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
