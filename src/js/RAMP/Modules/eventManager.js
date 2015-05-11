@@ -647,6 +647,14 @@ define([],
                 * @for RampMap
                 */
                 ADD_LAYER_READY: 'map/add-layer-ready'
+
+                /**
+                * Fires when map container is resized in any way
+                *
+                * @event RampMap.RESIZE
+                * @for RampMap
+                */
+                RESIZE: 'map/resize'
             },
 
             BasemapSelector: {
