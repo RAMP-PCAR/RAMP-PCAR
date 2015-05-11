@@ -646,7 +646,7 @@ define([],
                 * @event RampMap.ADD_LAYER_READY
                 * @for RampMap
                 */
-                ADD_LAYER_READY: 'map/add-layer-ready'
+                ADD_LAYER_READY: 'map/add-layer-ready',
 
                 /**
                 * Fires when map container is resized in any way

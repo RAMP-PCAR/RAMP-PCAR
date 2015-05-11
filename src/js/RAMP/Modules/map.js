@@ -385,8 +385,6 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            map.on("load", _initScale);
-
             map.on("extent-change", function (event) {
                 _updateScale(event);
 
