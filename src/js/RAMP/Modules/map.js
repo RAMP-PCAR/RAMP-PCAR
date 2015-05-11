@@ -142,7 +142,6 @@ define([
         * @param {Object} event
         */
         function _updateScale(event) {
-            console.log("hjkl");
             if (event.levelChange) {
                 var currentScale = number.format(event.lod.scale),
                     scaleLabelText = "1 : " + currentScale;
