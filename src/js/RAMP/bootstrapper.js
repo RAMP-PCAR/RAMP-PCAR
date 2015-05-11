@@ -70,7 +70,7 @@ require([
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
     GlobalStorage, gui, EventManager, AdvancedToolbar, GeoSearch,
-    theme, LayerLoader, DataLoadedGui,
+    theme, LayerLoader, DataLoaderGui,
 
     /* Utils */
     UtilMisc
@@ -163,7 +163,7 @@ require([
                         //initialize the map export after everything is done
                         ImageExport.init();
 
-                        DataLoadedGui.init();
+                        DataLoaderGui.init();
                     });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
