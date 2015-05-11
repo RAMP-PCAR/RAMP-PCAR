@@ -223,9 +223,7 @@ define([
         function _initListeners(map) {
             /* SUBSCRIBED EVENTS */
             topic.subscribe(EventManager.Map.CENTER_AT, function (event) {
-                console.log(event.point);
                 map.centerAt(event.point);
-                console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             });
 
             topic.subscribe(EventManager.Map.CENTER_AND_ZOOM, function (event) {
@@ -248,55 +246,44 @@ define([
 
             // Distinguishing PAN/ZOOM from EXTENT_CHANGE now
             topic.subscribe(EventManager.Map.PAN_END, function () {
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             /* NAVIGATION EVENTS */
             topic.subscribe(EventManager.Navigation.PAN, function (event) {
                 // event.direction panUp, panDown, panLeft, panRight
                 // this same as calling map.panUp(), map.panDown(), map.panLeft(), map.panRight()
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map[event.direction]();
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM_STEP, function (event) {
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setLevel(map.getLevel() + event.level);
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM, function (event) {
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setLevel(event.level);
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             topic.subscribe(EventManager.Navigation.FULL_EXTENT, function () {
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
                 map.setExtent(fullExtent);
                 oldCenter = [map.extent.centerX(), map.extent.centerY()];
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
             });
 
             /* GUI EVENTS */
             // GUI Layout_change happens whenever size of the map portion is changed
-            // Call recentering function when any kind of layout change happens (including window resize)
+            // Call recentering function when any kind of layout change happens (including window resize but calls it too many times)
             topic.subscribe(EventManager.GUI.LAYOUT_CHANGE, function () {
-                map.resize(true);
-                console.log("RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+                _mapRecenter();
+            });
+
+            topic.subscribe(EventManager.Map.RESIZE, function () {
                 _mapRecenter();
             });
 
@@ -402,7 +389,7 @@ define([
         * Publishes an event to resize the map when called.
         */
         function _mapRecenter() {
-            console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+            map.resize(true);
             console.log(oldCenter);
             if (oldCenter !== undefined) {
                 topic.publish(EventManager.Map.CENTER_AT, {
@@ -413,7 +400,7 @@ define([
                     point: map.extent.getCenter()
                 });
             }
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+            console.log(oldCenter);
 
         }
 
@@ -449,8 +436,10 @@ define([
             map.on("update-start", _showLoadingImg);
             map.on("update-end", _hideLoadingImg);
 
+            window.onresize = _mapRecenter;
+
             /* map.on("resize", function () {
-                topic.publish(EventManager.GUI.LAYOUT_CHANGE);
+                topic.publish(EventManager.Map.RESIZE);
             }); */
 
             // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep around to steal later
@@ -1423,6 +1412,8 @@ define([
                 _initRepublishers(map);
                 _initListeners(map);
                 _initEventHandlers(map);
+
+                oldCenter = [map.extent.centerX(), map.extent.centerY()];
             }
         };
     });
