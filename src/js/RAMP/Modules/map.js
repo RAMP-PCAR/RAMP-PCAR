@@ -1,4 +1,4 @@
-﻿/*global define, esri, i18n, console, $, RAMP, proj4, window */
+﻿/*global define, esri, console, $, RAMP, proj4, window */
 
 /**
 *
@@ -145,6 +145,7 @@ define([
         * @param {Object} event
         */
         function _updateScale(event) {
+            console.log("hjkl");
             if (event.levelChange) {
                 var currentScale = number.format(event.lod.scale),
                     scaleLabelText = "1 : " + currentScale;
@@ -152,36 +153,6 @@ define([
                 domConstruct.empty('scaleLabel');
                 $("#scaleLabel").text(scaleLabelText);
             }
-        }
-
-        /**
-        * Initialize Map Scale
-        *
-        * @private
-        * @method _initScale
-        * @param {Object} event
-        */
-        function _initScale(event) {
-            var map = event.map,
-                scaleDiv = domConstruct.create("div", {
-                    id: "scaleDiv",
-                    class: "esriScalebarLabel"
-                }),
-                currentScale,
-                scaleLabelText;
-            $(scaleDiv).html("<span>" + i18n.t('map.scale') + "</span><br><span id='scaleLabel'><span/>");
-            currentScale = number.format(map.getScale());
-            scaleLabelText = "1 : " + currentScale;
-
-            domConstruct.place(scaleDiv, query(".esriScalebarRuler")[0], "before");
-            domConstruct.empty('scaleLabel');
-            $("#scaleLabel").text(scaleLabelText);
-
-            // Change the css class of the scale bar so it shows up against
-            // the map
-            topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (attr) {
-                $(".esriScalebar > div").removeClass().addClass(attr.cssStyle);
-            });
         }
 
         /**
@@ -376,7 +347,6 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            map.on("load", _initScale);
             map.on("extent-change", function (event) {
                 _updateScale(event);
 
