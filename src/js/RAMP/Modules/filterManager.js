@@ -124,7 +124,9 @@ define([
                                     // Setting Opacity to >0.0, sets layer to visible
                                     newState = leftValue === 0 ? false : slider.hasClass("disabled") ? true : newState;
 
-                                    if (!UtilMisc.isUndefined(newState) && !UtilMisc.isUndefined(cause) && cause !== "refresh") {
+                                    // TODO: refactor; this is a bit unclear
+                                    // fire event only if newState is false or true; do nothing if undefined
+                                    if (typeof newState !== 'undefined' && cause && cause !== "refresh") {
                                         topic.publish(EventManager.FilterManager.TOGGLE_LAYER_VISIBILITY, {
                                             state: newState,
                                             layerId: sliderId
@@ -624,7 +626,7 @@ define([
                                 // set it to null when layerConfig.catalogueUrl does not exist
                                 // instead of key with empty value
                                 var params = null;
-                                if (!UtilMisc.isUndefined(layerConfig.catalogueUrl)) {
+                                if (layerConfig.catalogueUrl) {
                                     params = [{ key: "catalogue_url", value: layerConfig.catalogueUrl }];
                                 }
 
@@ -853,7 +855,9 @@ define([
        */
         function setLayerOffScaleState(layerId) {
             var visibleLayers = RampMap.getVisibleLayers(),
-                invisibleLayers = RampMap.getInvisibleLayers();
+                invisibleLayers = RampMap.getInvisibleLayers(),
+                layer = RAMP.layerRegistry[layerId],
+                layerItem;
 
             function filterLayerIds(layers) {
                 layers = layers
@@ -881,7 +885,15 @@ define([
             }
 
             if (invisibleLayers.contains(layerId)) {
-                setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+                if (layer && RampMap.layerInLODRange(layer.maxScale, layer.minScale)) {
+                    setLayerState(invisibleLayers, LayerItem.state.OFF_SCALE, true);
+                } else {
+                    setLayerState(layerId, LayerItem.state.ERROR, { notices: { error: { message: i18n.t("addDataset.error.messageFeatureOutsideZoomRange") } } });
+                    layerItem = layerGroups[GlobalStorage.layerType.feature].getLayerItem(layerId);
+                    LayerItem.removeStateMatrixPart(layerItem.stateMatrix, "controls", LayerItem.controls.RELOAD);
+                    layerItem.setState(LayerItem.state.ERROR, null, true);
+                }
+
             }
         }
 

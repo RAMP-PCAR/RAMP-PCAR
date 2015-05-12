@@ -52,7 +52,7 @@ require([
     "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
     "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
-    "ramp/advancedToolbar",
+    "ramp/advancedToolbar", "ramp/geoSearch",
     "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
     
 /* Utils */
@@ -69,7 +69,8 @@ require([
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
+    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, GeoSearch,
+    theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
 
     /* Utils */
         UtilMisc
@@ -224,7 +225,7 @@ require([
                     } else {
                         //TODO verify endpoint is correct
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 2000 });
+                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 
@@ -275,6 +276,7 @@ require([
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
+            GeoSearch.init();
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server

@@ -18,13 +18,10 @@
 * @uses dojo/_base/lang
 */
 define([
-        "dojo/_base/array", "dojo/_base/lang",
-        "utils/util"
+        "dojo/_base/array", "dojo/_base/lang"
 ],
-
     function (
-        dojoArray, dojoLang,
-        UtilMisc) {
+        dojoArray, dojoLang) {
         "use strict";
 
         return {
@@ -45,7 +42,7 @@ define([
             * @param {Object} [scope] The scope to be hitched to the given fcn
             */
             forEachEntry: function (dict, fcn, sortFcn, scope) {
-                if (!UtilMisc.isUndefined(scope)) {
+                if (scope) {
                     fcn = dojoLang.hitch(scope, fcn);
                 }
 

@@ -14,16 +14,16 @@
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}  
-* {{#crossLink "Ramp"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "MapClickHandler"}}{{/crossLink}}
+* {{#crossLink "Ramp"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class LayerLoader
 * @static
 * @uses dojo/topic
@@ -169,7 +169,8 @@ define([
                 map = RampMap.getMap(),
                 layerConfig = layer.ramp.config,
                 lsState,
-                options = {};
+                options = {},
+                isNotReload = typeof reloadIndex === 'undefined';
 
             if (!layer.ramp) {
                 console.log('you failed to supply a ramp.type to the layer!');
@@ -179,7 +180,7 @@ define([
             switch (layer.ramp.type) {
                 case GlobalStorage.layerType.wms:
                     layerSection = GlobalStorage.layerType.wms;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (isNotReload) {
                         insertIdx = RAMP.layerCounts.base + RAMP.layerCounts.wms;
 
                         // generate wms legend image url and store in the layer config
@@ -206,7 +207,7 @@ define([
                 case GlobalStorage.layerType.feature:
                 case GlobalStorage.layerType.Static:
                     layerSection = GlobalStorage.layerType.feature;
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (isNotReload) {
                         //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                     } else {
@@ -222,6 +223,14 @@ define([
             //do this before creating layer selector item, as the layer selector inspects the map
             //object to make state decisions
             map.addLayer(layer, insertIdx);
+
+            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
+            //store a pointer here so we can find it (and it's information)
+            // TODO - this write to layer registry should be refactored into a call to state manager
+            RAMP.layerRegistry[layer.id] = layer;
+
+            // publish LAYER_ADDED event for every user-added layer
+            topic.publish(EventManager.LayerLoader.LAYER_ADDED, { layer: layer });
 
             //derive initial state
             switch (layer.ramp.load.state) {
@@ -248,17 +257,13 @@ define([
             }
 
             //add entry to layer selector
-            if (UtilMisc.isUndefined(reloadIndex)) {
+            if (isNotReload) {
                 options.state = lsState; // pass initial state in the options object
                 FilterManager.addLayer(layerSection, layer.ramp, options);
             } else {
                 updateLayerSelectorState(layerConfig.id, lsState, false, options);
             }
             layer.ramp.load.inLS = true;
-
-            //sometimes the ESRI api will kick a layer out of the map if it errors after the add process.
-            //store a pointer here so we can find it (and it's information)
-            RAMP.layerRegistry[layer.id] = layer;
 
             //this will force a recreation of the highlighting graphic group.
             //if not done, can cause mouse interactions to get messy if adding more than
@@ -270,10 +275,9 @@ define([
                 case GlobalStorage.layerType.wms:
 
                     // WMS binding for getFeatureInfo calls
-                    if (!UtilMisc.isUndefined(layerConfig.featureInfo)) {
-                        MapClickHandler.registerWMSClick({ wmsLayer: layer, layerConfig: layerConfig });
+                    if (layerConfig.featureInfo) {
+                        MapClickHandler.registerWMSClick(layer);
                     }
-
                     break;
 
                 case GlobalStorage.layerType.feature:
@@ -297,7 +301,7 @@ define([
 
                     //generate bounding box
                     //if a reload, the bounding box still exists from the first load
-                    if (UtilMisc.isUndefined(reloadIndex)) {
+                    if (isNotReload) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
@@ -307,7 +311,7 @@ define([
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (!UtilMisc.isUndefined(layerConfig.layerExtent)) {
+                        if (layerConfig.layerExtent) {
                             boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                             if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
@@ -384,12 +388,12 @@ define([
             */
             onLayerError: function (evt) {
                 console.error("failed to load layer " + evt.layer.url, evt.error);
-                
+
                 evt.layer.ramp.load.state = "error";
 
                 var layerId = evt.layer.id,
                     // generic error notice
-                    errorMessage  = i18n.t("filterManager.notices.error.load"),
+                    errorMessage = i18n.t("filterManager.notices.error.load"),
                     options;
 
                 //get that failed layer outta here
@@ -435,7 +439,7 @@ define([
             * @param  {Object} evt.layer the layer object that loaded
             */
             onLayerUpdateEnd: function (evt) {
-                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here. 
+                //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
                 if (evt.layer.ramp.load.state !== "error") {
                     evt.layer.ramp.load.state = "loaded";
@@ -482,7 +486,7 @@ define([
 
                 layer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
 
-                if (UtilMisc.isUndefined(layer)) {
+                if (!layer) {
                     //layer was kicked out of the map.  grab it from the registry
                     layer = RAMP.layerRegistry[evt.layerId];
                 }
@@ -532,10 +536,10 @@ define([
                     idArray,
                     cleanIdArray;
 
-               removeFromMap(evt.layerId);
+                removeFromMap(evt.layerId);
 
-               curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
-             
+                curlayer = map._layers[evt.layerId];  //map.getLayer is not reliable, so we use this
+
                 if (curlayer) {
                     inMap = true;
                 } else {

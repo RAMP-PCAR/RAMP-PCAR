@@ -51,7 +51,15 @@ module.exports = (grunt) ->
     sortLocale = (lang) ->
         localeData = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
         sorted = mergeLocale localeData, {}, ''
-        grunt.file.write 'src/locales/' + lang + '-CA/translation.json', JSON.stringify(sorted, null, '    ')
+
+        # check if the original and sorted locales differ
+        localeStringified = JSON.stringify(localeData, null, '    ')
+        sortedStringified = JSON.stringify(sorted, null, '    ')
+
+        # saving merged locale if it differes
+        if localeStringified != sortedStringified
+            console.log lang, 'locale is sorted; saving'
+            grunt.file.write 'src/locales/' + lang + '-CA/translation.json', sortedStringified
 
     grunt.registerTask(
         'locale:check'
@@ -87,7 +95,13 @@ module.exports = (grunt) ->
                             merged = mergeLocale localeData[main], localeData[lang], '[' + lang + '] '
                             # console.log merged
                             
-                            # saving merged locale
+                            # check if the original and merged locales differ
+                            localeStringified = JSON.stringify(localeData[lang], null, '    ')
+                            mergedStringified = JSON.stringify(merged, null, '    ')
+
+                            # saving merged locale if it differes
+                            if localeStringified != mergedStringified
+                                console.log lang, 'locale is merged; saving'
                             grunt.file.write 'src/locales/' + lang + '-CA/translation.json', JSON.stringify(merged, null, '    ')
             )
     )

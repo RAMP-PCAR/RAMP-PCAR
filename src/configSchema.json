@@ -6,7 +6,7 @@
     "description": "RAMP Configuration",
     "additionalProperties": false,
     "comments": "FIXME: when draft 05 is release redo schema inheritance with patching / merging if they are accepted",
-    "version": "1.1.0",
+    "version": "1.2.0",
 
     "definitions": {
         "spatialReference": {
@@ -220,6 +220,7 @@
                 "catalogueUrl": { "type": "string", "format": "uri", "description": "Link back to the catalogue page for the layer" },
                 "minScale": { "type": "integer", "default": 0, "description": "Minimum zoom scale at which this layer is visible" },
                 "maxScale": { "type": "integer", "default": 0, "description": "Maximum zoom scale at which this layer is visible" },
+                "mode": { "type": "string", "default": "ondemand", "enum": ["ondemand","snapshot"], "description": "Specifies the layer loading mode: either snapshot (load all data upfront) or ondemand (load data as needed)" },
                 "nameField": { "type": "string" },
                 "layerAttributes": { "type": "string", "default": "*" },
                 "maxAllowableOffset": { "type": "integer", "default": 0, "description": "Simplification factor.  Two points closer than the factor will be converted to one.  A value of 0 turns off the simplification." },
@@ -308,11 +309,13 @@
 
     "properties": {
 
-        "version": { "type": "string", "enum": [ "1.0.0", "1.0.1", "1.1.0" ], "description": "List of schema versions accepted by this version of RAMP." },
+        "version": { "type": "string", "enum": [ "1.0.0", "1.0.1", "1.1.0", "1.2.0" ], "description": "List of schema versions accepted by this version of RAMP." },
         "proxyUrl": { "type": "string", "description": "A proxy service for non-CORS enabled services (e.g. most WMS servers), must be on the same origin or be CORS enabled itself." },
         "geometryServiceUrl": { "type": "string", "description": "ESRI Geometry Service: currently used for advanced toolbar operations." },
         "exportMapUrl": { "type": "string", "description": "Map export service endpoint: should point directly to an endpoint that can be consumed by ESRI PrintTask." },
-        "exportProxyUrl": { "type": "string", "description": "Proxy URL required for IE9 to support map export.  Deprecate this the minute IE9 is unsupported."},
+        "exportProxyUrl": { "type": "string", "description": "Proxy URL required for IE9 to support map export.  Deprecate this the minute IE9 is unsupported." },
+        "geonameUrl": { "type": "string", "description": "Geonames service root. Supplies detailed info on geonames. Service should conform to geogratis geoname request and return value schemas." },
+        "geolocationUrl": { "type": "string", "description": "Geolocations service root. Supplies basic information but supports more location types. Service should conform to geogratis geolocation request and return value schemas."},
         "initialBasemapIndex": { "type": "number", "default": 0, "minimum": 0, "description": "Basemap to be loaded if no argument is specified in the query string." },
         "extendedDatagridExtentFilterEnabled": { "type": "boolean", "default": false },
         "rowsPerPage": { "type": "number", "default": 50, "minimum": 1 },
@@ -522,7 +525,8 @@
                     "type": "object",
                     "description": "State of the map query button in the toolbar",
                     "properties": {
-                        "show": { "type": "boolean", "default": true, "description": "If the button should be displayed to the user." }
+                        "show": { "type": "boolean", "default": true, "description": "If the button should be displayed to the user." },
+                        "autoHide": { "type": "boolean", "default": true, "description": "If the button should hidden when no WMS layers are present in the map." }
                     },
                     "comment":  "add autoHide property at a later time, default true, automatically hide the button if no queryable layers are present"
                 }

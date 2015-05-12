@@ -78,6 +78,7 @@ module.exports =
             'json-minify'
             'cssmin'
             'htmlmin'
+            'htmllint'
             'useMinAssets'
             'imagemin'
             'notify:min'
