@@ -1,4 +1,8 @@
-# Reusable, Accessible, Mapping Platform (RAMP) [![build status](https://api.travis-ci.com/RAMP-PCAR/RAMP-PCAR.svg?token=anSdnpWxEpyskkPtDLjm)](https://travis-ci.com) [![build status](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
+# Reusable, Accessible, Mapping Platform (RAMP) 
+
+[![build status](https://api.travis-ci.com/RAMP-PCAR/RAMP-PCAR.svg?token=anSdnpWxEpyskkPtDLjm)](https://travis-ci.com)
+[![build status](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
+[![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/RAMP-PCAR)
 
 ## What is the RAMP?
 
