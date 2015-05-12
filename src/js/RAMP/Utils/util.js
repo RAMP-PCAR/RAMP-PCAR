@@ -1296,6 +1296,25 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                 return new Btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
                     return String.fromCharCode('0x' + p1);
                 })).a;
+            },
+
+            // Converts image to canvas; returns new canvas element
+            convertImageToCanvas: function (image) {
+                var canvas = document.createElement("canvas");
+                canvas.width = image.width;
+                canvas.height = image.height;
+                canvas.getContext("2d").drawImage(image, 0, 0);
+
+                return canvas;
+            },
+
+            // Converts canvas to an image
+            convertCanvasToDataURL: function (canvas, type) {
+                var data;
+                type = type || "image/png";
+
+                data = canvas.toDataURL(type);
+                return data;
             }
         };
     });
