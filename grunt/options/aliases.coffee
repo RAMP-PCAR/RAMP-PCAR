@@ -30,6 +30,7 @@ module.exports =
     # 'INTERNAL: Copies files (except JS and CSS) needed for a build.'
     'copy:build': 
         [
+            'copy:configBuild'
             'copy:polyfillBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
@@ -42,6 +43,7 @@ module.exports =
     #'INTERNAL: Copies files (except JS and CSS) needed for a distribution package.'
     'copy:dist': 
         [
+            'copy:configDist'
             'copy:polyfillDist'
             'copy:wetboewDist'
             'copy:assetsDist'
