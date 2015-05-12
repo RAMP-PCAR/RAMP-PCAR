@@ -1,4 +1,4 @@
-﻿/*global define, i18n, RAMP */
+﻿/*global define, i18n, RAMP, $*/
 
 /**
 * @module Tools
@@ -11,10 +11,11 @@
 * in the bottom right corner, then draw a polygon on the map.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
 * {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class BufferTool
 * @uses dojo/_base/array
 * @uses dojo/_base/Color
@@ -82,10 +83,15 @@ define([
           map.graphics.add(graphic);
 
           //setup the buffer parameters
-          var params = new BufferParameters(),
 
-              // Get rid of all non-numerical/non-period characters.
-              distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, '');
+          var params = new BufferParameters(),
+               // Get rid of all non-numerical/non-period characters.
+               distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, ''),
+               firstIndex = distanceInput.indexOf('.');
+          // Get rid of all extra decimal points
+          distanceInput = distanceInput.substring(0, firstIndex + 1).concat(distanceInput.substring(firstIndex + 1).replace(/[.]+/g, ''));
+          // Show what value is actually being used
+          $("#buffer-input").val(distanceInput);
 
           if (distanceInput === "") {
               that.working(false);
@@ -218,7 +224,6 @@ define([
                       defaultAction: clearMap
                   }
               );
-
               ui.init();
 
               return this;
