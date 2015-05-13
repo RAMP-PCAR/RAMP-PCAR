@@ -226,6 +226,15 @@ define([
               );
               ui.init();
 
+              d.then(function () {
+                  that.outputFloat.on('keydown', '#buffer-input', function (event) {
+                      return (event.keyCode === 17 || event.keyCode === 18 ||
+                      (event.keyCode > 47 && event.keyCode < 58 && event.shiftKey === false) || (event.keyCode === 110) ||
+                      (event.keyCode > 95 && event.keyCode < 106) || (event.keyCode === 8) || (event.keyCode === 9) ||
+                      (event.keyCode === 190 && event.shiftKey === false) || (event.keyCode > 34 && event.keyCode < 40) || (event.keyCode === 46));
+                  });
+              });
+
               return this;
           },
 
