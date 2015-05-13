@@ -968,13 +968,6 @@ define([
                 }
             ];
 
-            // timeline that hides Data tab
-            noDataTimeLine
-                .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
-                .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
-                .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
-            ;
-
             /**
             * Fires an event when the layout of the page changes.
             *
@@ -1146,6 +1139,22 @@ define([
                 }
             }
 
+            /**
+             * Setup noDataTimeLine for data tab animation
+             * 
+             * @method setupNoDataTimeLine
+             * @private
+             */
+            function setupNoDataTimeLine() {
+
+                // timeline that hides Data tab
+                noDataTimeLine
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
+                    .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+                ;
+            }
+
             return {
                 /**
                 * Initializes layout controller.
@@ -1200,6 +1209,10 @@ define([
                     }
 
                     adjustHeight();
+
+                    // setup noDataTimeLine here to allow IE9 to have enough time to 
+                    // create the tab
+                    setupNoDataTimeLine();
                 },
 
                 /**

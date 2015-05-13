@@ -1605,6 +1605,11 @@ define([
                 }
             });
 
+            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
+                //layer has been removed, notify the ui incase the layer was scale dependent
+                ui.updateNotice();
+            });
+
             // update notice after zoom end event since some of the scale-dependent layers might end up off scale
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 ui.updateNotice();
