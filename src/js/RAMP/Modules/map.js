@@ -217,11 +217,11 @@ define([
 
             // Distinguishing PAN/ZOOM from EXTENT_CHANGE now
             topic.subscribe(EventManager.Map.PAN_END, function () {
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             /* NAVIGATION EVENTS */
@@ -229,22 +229,22 @@ define([
                 // event.direction panUp, panDown, panLeft, panRight
                 // this same as calling map.panUp(), map.panDown(), map.panLeft(), map.panRight()
                 map[event.direction]();
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM_STEP, function (event) {
                 map.setLevel(map.getLevel() + event.level);
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             topic.subscribe(EventManager.Navigation.ZOOM, function (event) {
                 map.setLevel(event.level);
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             topic.subscribe(EventManager.Navigation.FULL_EXTENT, function () {
                 map.setExtent(fullExtent);
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             });
 
             /* GUI EVENTS */
@@ -361,18 +361,15 @@ define([
         */
         function _mapRecenter() {
             map.resize(true);
-            console.log(oldCenter);
             if (oldCenter !== undefined) {
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: new esri.geometry.Point(oldCenter[0], oldCenter[1], map.spatialReference)
+                    point: oldCenter
                 });
             } else {
                 topic.publish(EventManager.Map.CENTER_AT, {
                     point: map.extent.getCenter()
                 });
             }
-            console.log(oldCenter);
-
         }
 
  
@@ -1384,7 +1381,7 @@ define([
                 _initListeners(map);
                 _initEventHandlers(map);
 
-                oldCenter = [map.extent.centerX(), map.extent.centerY()];
+                oldCenter = map.extent.getCenter();
             }
         };
     });
