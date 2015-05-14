@@ -263,7 +263,6 @@ define([
                     // TODO: Update Snap to the latest version
 
                     if (snapGraphic) {
-                        snapGraphic._.dirty = true; // (fixed in 0.1.1) dirty hack to a bug: https://github.com/adobe-webplatform/Snap.svg/issues/80
                         offset = snapGraphic.getBBox().width / 2;
 
                         topic.publish(EventManager.Maptips.REPOSITION_INTERACTIVE, {
