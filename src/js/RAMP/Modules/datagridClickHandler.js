@@ -200,7 +200,6 @@ define([
                         });
                         break;
                 }
-
                 topic.publish(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, {
                     fData: fData
                 });
