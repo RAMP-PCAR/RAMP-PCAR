@@ -594,25 +594,27 @@ define([
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
                                 // repopulated after an extent change
-                                utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                                utilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getFDataOid(fData),
                                                     layerIdField, fData.parent.layerId));
+                                    // Change node's text to Zoom Back
                                     newNode.text(i18n.t("datagrid.zoomBack"));
                                 });
                             });
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack();
-                            zoomNode.text(i18n.t("datagrid.zoomTo"));
-
                             // Reset focus back to "Zoom To" link after map extent change
-                            utilMisc.subscribeOnce(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                            utilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                         featureOidField, GraphicExtension.getFDataOid(fData),
                                         layerIdField, fData.parent.layerId));
+                                // Change node's text back to Zoom To
+                                newNode.text(i18n.t("datagrid.zoomTo"));
                                 newNode.focus();
                             });
+                            zoomNode.text(i18n.t("datagrid.zoomTo"));
                         }
                     });
 
