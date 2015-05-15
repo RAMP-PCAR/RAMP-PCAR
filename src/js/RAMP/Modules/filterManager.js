@@ -16,24 +16,24 @@
 * http://ecollab.ncr.int.ec.gc.ca/projects/science-apps/priv/RAMP/RAMP%20AMD%20Filter%20Module.docx
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "LayerGroup"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "Checkbox"}}{{/crossLink}}  
-* {{#crossLink "CheckboxGroup"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "LayerGroup"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "Checkbox"}}{{/crossLink}}
+* {{#crossLink "CheckboxGroup"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/filter_wms_meta_Template.json"}}{{/crossLink}}
-* 
+*
 * @class FilterManager
 * @static
 * @uses dojo/Deferred
@@ -78,6 +78,8 @@ define([
             layerIdField = "layer-id",
 
             layerGroups = {},
+
+            updatingLayers = [],
 
             ui = (function () {
                 var sectionNode,
@@ -182,7 +184,7 @@ define([
                     * easier to write a function that takes a list of checkboxes
                     * than to write two functions, one to take a list and one to
                     * take an individual checkbox
-                    * 
+                    *
                     * @method createGroups
                     * @private
                     */
@@ -971,7 +973,6 @@ define([
                     LayerItem.removeStateMatrixPart(layerItem.stateMatrix, "controls", LayerItem.controls.RELOAD);
                     layerItem.setState(LayerItem.state.ERROR, null, true);
                 }
-
             }
         }
 
@@ -990,6 +991,36 @@ define([
 
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 setLayerOffScaleStates();
+            });
+
+            // Layer loading features
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, function (arg) {
+                // Add to list of updating layers and disable sorting handles
+                updatingLayers.push(arg.layer);
+                $('.sort-handle').hide();
+            });
+
+            // Layer done loading features
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, function (arg) {
+                // Remove the layer from the array and check if any more layers are loading
+                updatingLayers.splice(updatingLayers.indexOf(arg.layer), 1);
+                if (updatingLayers.length === 0) {
+                    // If no layers are loading re-enable the sorting handles
+                    $('.sort-handle').show();
+                }
+            });
+
+            // Layer removed from list
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (arg) {
+                // Remove the layer from the array if it was loading, and check if any others are
+                var index = updatingLayers.indexOf(arg.layer);
+                if (index > -1) {
+                    updatingLayers.splice(index, 1);
+                    if (updatingLayers.length === 0) {
+                        // If no layers are loading re-enable sorting handles
+                        $('.sort-handle').show();
+                    }
+                }
             });
 
             // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
