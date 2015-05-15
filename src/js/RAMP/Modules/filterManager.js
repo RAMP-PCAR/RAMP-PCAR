@@ -593,7 +593,8 @@ define([
                                     wmsmeta = tmpl("wms_meta_main",
                                         {
                                             legendUrl: layerConfig.legend.imageUrl,
-                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
+                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities",
+                                            serviceEndPointUrl: layerConfig.url
                                         }
                                     );
 
@@ -605,7 +606,7 @@ define([
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><b>Service End Point URL</b><br><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -616,7 +617,7 @@ define([
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
                                 var metadataError = function () {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -641,7 +642,7 @@ define([
                                                 metadataError();
                                             } else {
                                                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                    content: $(data),
+                                                    content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
                                                     origin: "filterManager",
                                                     update: true,
                                                     guid: id
