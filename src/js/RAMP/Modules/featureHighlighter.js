@@ -213,8 +213,6 @@ define([
 
             sortLayers();
 
-            //TODO: ensure that graphics are different
-
             zoomlightGraphic = newGraphic;
 
             zoomlightLayer.clear();
@@ -259,8 +257,6 @@ define([
                 window.setTimeout(function () {
                     var snapGraphic = Snap.select('svg .highlightLayer > *:first-child'),
                         offset;
-
-                    // TODO: Update Snap to the latest version
 
                     if (snapGraphic) {
                         offset = snapGraphic.getBBox().width / 2;
