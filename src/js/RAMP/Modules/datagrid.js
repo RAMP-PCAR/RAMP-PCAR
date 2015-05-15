@@ -292,31 +292,6 @@ define([
 
                     _isReady = false; // indicates if the ui has fully rendered
 
-                /**
-                * Generates a data grid row data with a checkbox to be used in template
-                *
-                * @method generateToggleButtonDataForTemplate
-                * @private
-                * @return {String} the generated row data object.
-                */
-                function generateToggleButtonDataForTemplate() {
-                    // TODO: if no more modification is needed, this can be omitted and merged in the higher level.
-                    // create object for template
-                    // TODO: JKW
-                    // Note, the following object is for passing to the template, properties
-                    // were guessed. Need to add more detail later on. Empty values were provided,
-                    // for example, there were value of "" assigned to the toggle button template, in the code
-                    // provided. A temporary property name "attribute" is used. Not sure if this will be
-                    // used by ECDMP, therefore, leave the empty value in the template
-                    var toggleButtonData = {
-                        buttonLabel: i18n.t("datagrid.sort"),
-                        classAddition: "font-medium global-button",
-                        someAttribute: ""
-                    };
-
-                    return toggleButtonData;
-                }
-
                 function rowRenderer(data, type, row, meta) {
                     //attribute = feature.attributes;
                     //Remember, case sensitivity MATTERS in the attribute name.
@@ -972,7 +947,10 @@ define([
                 //recreates the datagrid panel with the new grid + stuff ( summary or extended )
                 function refreshPanel(d) {
                     // using template to generate global checkboxes
-                    var globalCheckBoxesData = generateToggleButtonDataForTemplate(),
+                    var globalCheckBoxesData = {
+                        buttonLabel: i18n.t("datagrid.sort"),
+                        classAddition: "font-medium global-button",
+                        },
                         templateData = {
                             buttons: globalCheckBoxesData,
                             tableId: "jqgrid",
