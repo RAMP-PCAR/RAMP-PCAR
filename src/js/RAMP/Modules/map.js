@@ -442,9 +442,6 @@ define([
         * @return {Esri/Extent} extent in the desired projection
         */
         function localProjectExtent(extent, sr) {
-            //TODO can we handle WKT?
-            // we can now
-
             // interpolates two points by splitting the line in half recursively
             function interpolate(p0, p1, steps) {
                 var mid, i0, i1;
@@ -902,7 +899,6 @@ define([
             */
             getVisibleFeatureLayers: function () {
                 // Return only the feature layers
-                //TODO do we need to consider static layers here?
                 return map.getLayersVisibleAtScale().filter(function (layer) {
                     return layer.type && (layer.type === "Feature Layer") && layer.visible;
                 });
