@@ -949,7 +949,7 @@ define([
                     // using template to generate global checkboxes
                     var globalCheckBoxesData = {
                         buttonLabel: i18n.t("datagrid.sort"),
-                        classAddition: "font-medium global-button",
+                        classAddition: "font-medium global-button"
                         },
                         templateData = {
                             buttons: globalCheckBoxesData,
