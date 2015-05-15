@@ -329,7 +329,6 @@ define([
                     }
 
                     //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
-
                     //wire up click handler
                     layer.on("click", function (evt) {
                         evt.stopImmediatePropagation();
@@ -345,19 +344,18 @@ define([
                         FeatureClickHandler.onFeatureMouseOut(evt);
                     });
 
-                    //generate bounding box
-
+                    //generate bounding box                        
+                    if (layerConfig.layerExtent) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
                                 visible: layerConfig.settings.boundingBoxVisible
                             });
-
+                   
+                        boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
-                        if (layerConfig.layerExtent) {
-                            boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
                             if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
                                 //layer is in same projection as basemap.  can directly use the extent
@@ -381,7 +379,6 @@ define([
                                 });
                                 */
                             }
-                        }
 
                         //add mapping to bounding box
                         RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
@@ -393,6 +390,7 @@ define([
                         map.addLayer(boundingBox, insertIdx);
 
                     break;
+                    }
             }
 
             // publish LAYER_ADDED event for every added layer
