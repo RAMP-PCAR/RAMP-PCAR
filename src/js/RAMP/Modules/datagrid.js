@@ -535,7 +535,7 @@ define([
                     sectionNode.on("click", "button.details", function () {
                         var buttonNode = $(this),
                             layerId = buttonNode.data(layerIdField),
-                            oid = buttonNode.data(featureOidField);  //TODO: replace with better selector
+                            oid = buttonNode.data(featureOidField);
 
                         highlightRow.focusedButton = "button.details";
 
@@ -1450,9 +1450,6 @@ define([
                 });
             }
 
-            //TODO may want to move the generation of this custom object to a separate area, as this data will be useful in
-            //     both the summary and full grid state.  Will need some thinking.
-
             // Includes fields that are useful which are not derived from the config.featureSources
             // this should not draw, as there will be no column defined for it
             innerArray.push({
@@ -1479,7 +1476,7 @@ define([
         function fetchRecords(visibleFeatures) {
             if (jqgrid === undefined) {
                 // fetchRecords call made prior ty jqgrid creation
-                // TODO: consider adding a log.warning('fetchRecords called prior to grid initialization')
+                console.warn('fetchRecords called prior to grid initialization');
                 return;
             }
             jqgrid.DataTable().clear(); // Do NOT redraw the datatable at this point
