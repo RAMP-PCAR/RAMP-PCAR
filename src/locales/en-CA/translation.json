@@ -326,6 +326,7 @@
             "update": "Updating",
             "user": "User-added Dataset"
         },
+        "serviceEndPointLabel": "Service End Point",
         "settings": "Settings",
         "settingsLayerSettings": "Layer Settings",
         "settingsOpacity": "Opacity",

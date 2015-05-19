@@ -178,7 +178,7 @@ define([
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImg = $(".map-export-image > img");
-                    mapExportSpinner = mapExportStretcher.find(".sk-spinner");
+                    mapExportSpinner = mapExportStretcher.find(".loading-simple");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
 
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
