@@ -391,7 +391,6 @@ define([
                 } else {
                     $('#mainMap_container').css('background-image', 'none');
                 }
-                console.log(map.minScale);
 
                 console.log("map - >> extent-change", event);
                 dojoOn.once(map, "update-end", function () {
