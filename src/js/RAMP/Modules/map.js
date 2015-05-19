@@ -385,6 +385,13 @@ define([
             map.on("extent-change", function (event) {
                 _updateScale(event);
 
+                // if the first visble layer is not the basemap
+                if (map.getLayersVisibleAtScale(map.getScale())[0].id !== map.layerIds[0]) {
+                    $('#mainMap_container').css('background-image', 'url("assets/images/no_data.png")');
+                } else {
+                    $('#mainMap_container').css('background-image', 'none');
+                }
+
                 console.log("map - >> extent-change", event);
                 dojoOn.once(map, "update-end", function () {
                     console.log("map - >> update-end - >> Apply extent Filter");
