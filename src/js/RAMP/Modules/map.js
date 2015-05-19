@@ -387,7 +387,7 @@ define([
 
                 // if the first visble layer is not the basemap
                 if (map.getLayersVisibleAtScale(map.getScale())[0].id !== map.layerIds[0]) {
-                    $('#mainMap_container').css('background-image', 'url("assets/images/backgroundTest.png")');
+                    $('#mainMap_container').css('background-image', 'url("assets/images/no_data.png")');
                 } else {
                     $('#mainMap_container').css('background-image', 'none');
                 }
