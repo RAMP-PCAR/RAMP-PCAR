@@ -13,35 +13,33 @@
     // Filter overall structure, contains 1 to many filter row for the available layers.
     "feature_layer":"
         <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
-            <fieldset>
-                <legend>
-                    <div class='filter-row'>
-                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
-                        <div class='layer-details'>
+        <div class='filter-row-container'>
+            <div class='filter-row'>
+                <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                <div class='layer-details'>
 
-                            {% include('feature_' + o.symbology.type + '_layer_image', o); %}
-                            
-                            <div class='layer-notices'></div>
+                    {% include('feature_' + o.symbology.type + '_layer_image', o); %}
+                    
+                    <div class='layer-notices'></div>
 
-                            <div class='layer-controls'>
-                                <div class='layer-name'>
-                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
-                                </div>
-
-                                <div class='layer-controls-group'>
-                                </div>                                
-
-                            </div>
-
+                    <div class='layer-controls'>
+                        <div class='layer-name'>
+                            <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
                         </div>
 
-                        <div class='layer-checkboxes'>                            
-                        </div>
+                        <div class='layer-controls-group'>
+                        </div>                                
 
-                        <div class='clearfix'></div>
                     </div>
-                </legend>                                                                                       
-            </fieldset>
+
+                </div>
+
+                <div class='layer-checkboxes'>                            
+                </div>
+
+                <div class='clearfix'></div>
+            </div>
+        </div>                                                                                       
 
             {% include('feature_' + o.symbology.type + '_renderer', o.symbology); %}
 
@@ -106,35 +104,33 @@
 
     "wms_layer":"
         <li id='{%= o.id %}' class='layerList1' role='option' aria-selected='false' aria-grabbed='false'>
-            <fieldset>
-                <legend>
-                    <div class='filter-row'>
-                        <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
-                        <div class='layer-details'>
+            <div class='filter-row-container'>
+                <div class='filter-row'>
+                    <div class='sort-handle' tabindex='0' aria-label='{%= i18n.t('filterManager.layerHandleLabel', { layerName: o.displayName }) %}'></div>
+                    <div class='layer-details'>
 
-                            {% include('wms_layer_image', o); %}
+                        {% include('wms_layer_image', o); %}
 
-                            <div class='layer-notices'></div>
+                        <div class='layer-notices'></div>
 
-                            <div class='layer-controls'>
-                                <div class='layer-name'>
-                                    <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
-                                </div>
+                        <div class='layer-controls'>
+                            <div class='layer-name'>
+                                <span title='{%= o.displayName%}'>{%= o.displayName %}</span>
+                            </div>
 
-                                <div class='layer-controls-group'>
-                                </div>
-
+                            <div class='layer-controls-group'>
                             </div>
 
                         </div>
 
-                        <div class='layer-checkboxes'>                            
-                        </div>
-
-                        <div class='clearfix'></div>
                     </div>
-                </legend>                                                                                       
-            </fieldset>
+
+                    <div class='layer-checkboxes'>                            
+                    </div>
+
+                    <div class='clearfix'></div>
+                </div>
+            </div>                                                                                       
 
             {% include('wms_layer_renderer', o); %}
 
