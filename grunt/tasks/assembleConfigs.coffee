@@ -5,9 +5,9 @@ module.exports = (grunt) ->
         'INTERNAL'
         () ->
             # get RAMP core package to get language info
-            pkg = if grunt.option('corepkg').isTheme then grunt.option('corepkg') else grunt.option('pkg')
+            pkg = grunt.option 'pkg'
 
-            languages = pkg.ramp.locale.languages
+            languages = pkg.core.ramp.locale.languages
             tasks = []
             
             languages.forEach(
