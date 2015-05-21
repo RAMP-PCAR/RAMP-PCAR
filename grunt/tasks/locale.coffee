@@ -67,10 +67,10 @@ module.exports = (grunt) ->
         'INTERNAL Checks locale files for completeness.'
         () ->
             # get RAMP core package to get language info
-            pkg = if grunt.option('corepkg').isTheme then grunt.option('corepkg') else grunt.option('pkg')
+            pkg = grunt.option 'pkg'
 
-            main = pkg.ramp.locale.main
-            languages = pkg.ramp.locale.languages
+            main = pkg.core.ramp.locale.main
+            languages = pkg.core.ramp.locale.languages
             localeData = {}
             isValid = false
             
@@ -112,12 +112,11 @@ module.exports = (grunt) ->
         'INTERNAL Merge theme locale files is any.'
         () ->
             # get RAMP core package to get language info
-            corepkg = grunt.option 'corepkg'
-            isTheme = corepkg.isTheme
+            pkg = grunt.option 'pkg'
+            
+            if pkg.isTheme
 
-            if isTheme
-
-                languages = corepkg.ramp.locale.languages
+                languages = pkg.core.ramp.locale.languages
                 tasks = []
 
                 coreLocale = {}
