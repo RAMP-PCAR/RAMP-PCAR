@@ -145,13 +145,13 @@ define([
                                 topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'advanced-toolbar' });
 
                                 // close this panel if any other panel is opened
-                                UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                                var that = this;
+                                UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, 
                                     function (evt) {
-                                        if (evt.id !== 'advanced-toolbar' && this.isOpen()) {
-                                            this.close();
+                                        if (evt.id !== 'advanced-toolbar' && that.isOpen()) {
+                                            that.close();
                                         }
-                                    })
-                                );
+                                    });
 
                                 toggleToolbar(d, true);
                             },
