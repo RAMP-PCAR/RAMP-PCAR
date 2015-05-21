@@ -262,13 +262,14 @@ define([
                                     });
                             });
 
+                            var that = this;
                             // close this panel if any other panel is opened
-                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, 
                                 function () {
-                                    if (this.isOpen()) {
-                                        this.close();
+                                    if (that.isOpen()) {
+                                        that.close();
                                     }
-                                })
+                                }
                             );
 
                             getlinkSectionContainer.slideDown("fast", function () {
