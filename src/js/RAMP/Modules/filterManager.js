@@ -773,7 +773,7 @@ define([
                             that = this;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
-                        section = tmpl('filter_manager_template2', { config: RAMP.config });
+                        section = TmplHelper.template('filter_manager_template2', { config: RAMP.config }, JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json)));
 
                         sectionNode.empty().append(section);
 
