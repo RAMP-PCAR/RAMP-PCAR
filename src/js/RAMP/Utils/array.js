@@ -75,12 +75,12 @@ define(["dojo/_base/lang", "utils/util"],
             * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element is found
             */
             indexOf: function (arr, predicate, scope) {
-                if (typeof scope !== 'undefined') {
-                    predicate = predicate.call(scope);
-                }
+                /* if (typeof scope !== 'undefined') {
+                    predicate = predicate.call(scope);dojoLang.hitch(scope, predicate);
+                } */
                 var i;
                 for (i = 0; i < arr.length; i++) {
-                    if (predicate(arr[i], i)) {
+                    if (predicate.call(scope, arr[i], i)) {
                         return i;
                     }
                 }
