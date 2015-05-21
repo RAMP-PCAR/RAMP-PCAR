@@ -204,7 +204,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             */
             subscribe: function (name, callback, scope) {
                 if (scope) {
-                    topic.subscribe(name, dojoLang.hitch(scope, callback));
+                    topic.subscribe(name, callback.call(scope));
                 } else {
                     topic.subscribe(name, callback);
                 }
@@ -238,7 +238,8 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             * @param  {Function} callback The callback to be executed
             */
             subscribeOnceAny: function (names, callback) {
-                var handles = [];
+                var handles = [],
+                    that = this;
 
                 function wrapper(evt) {
                     handles.forEach(function (handle) {
@@ -248,10 +249,10 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                     callback(evt);
                 }
 
-                names.forEach(dojoLang.hitch(this,
+                names.forEach(
                     function (name) {
-                        handles.push(this.subscribeOnce(name, wrapper));
-                    }));
+                        handles.push(that.subscribeOnce(name, wrapper));
+                    });
             },
 
             /**

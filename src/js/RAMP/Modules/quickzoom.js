@@ -294,7 +294,7 @@ define([
                     return false;
                 }
 
-                this.button.on("click", dojoLang.hitch(this, function () {
+                this.button.on("click", function () {
                     var postalCode = this.postalCodeTextbox.get("value");
                     if (validatePostalCode(postalCode)) {
                         var postalConfig = config.quickzoom.postalCode,
@@ -305,7 +305,7 @@ define([
                         console.log("invalid postal code!");
                         that._setError("invalid postal code");
                     }
-                }));
+                });
 
                 var whereNode = dom.byId(where);
                 domConstruct.place(this.form.domNode, whereNode, "replace");

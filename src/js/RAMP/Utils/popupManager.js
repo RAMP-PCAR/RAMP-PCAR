@@ -206,31 +206,32 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 _spawnPopups: function (selector) {
                     var popups = [],
                         actualHandle = this._getActualHandle(selector),
-                        actualTarget;
+                        actualTarget,
+                        that = this;
 
-                    actualHandle.each(lang.hitch(this,
+                    actualHandle.each(
                         function (i, ah) {
                             ah = $(ah);
 
-                            if (this._attr.target) {
-                                actualTarget = this._attr.targetSelector ? this._attr.target.find(this._attr.targetSelector) : this._attr.target;
-                            } else if (this._attr.containerSelector && this._attr.targetSelector) {
-                                actualTarget = ah.parents(this._attr.containerSelector).find(this._attr.targetSelector);
+                            if (that._attr.target) {
+                                actualTarget = that._attr.targetSelector ? that._attr.target.find(that._attr.targetSelector) : that._attr.target;
+                            } else if (that._attr.containerSelector && that._attr.targetSelector) {
+                                actualTarget = ah.parents(that._attr.containerSelector).find(that._attr.targetSelector);
                             } else {
                                 // if the target cannot be found, a handle its returned
-                                actualTarget = this._attr.targetSelector ? ah.find(this._attr.targetSelector) : ah;
+                                actualTarget = that._attr.targetSelector ? ah.find(that._attr.targetSelector) : ah;
                             }
 
                             if (actualTarget.length > 0) {
                                 popups.push(
                                     lang.mixin(Object.create(popupTempate), {
-                                        openHandler: this._attr.openHandler,
-                                        closeHandler: this._attr.closeHandler || this._attr.openHandler,
+                                        openHandler: that._attr.openHandler,
+                                        closeHandler: that._attr.closeHandler || that._attr.openHandler,
 
-                                        activeClass: this._attr.activeClass,
-                                        setClassBefore: this._attr.setClassBefore,
-                                        useAria: this._attr.useAria,
-                                        resetFocusOnClose: this._attr.resetFocusOnClose,
+                                        activeClass: that._attr.activeClass,
+                                        setClassBefore: that._attr.setClassBefore,
+                                        useAria: that._attr.useAria,
+                                        resetFocusOnClose: that._attr.resetFocusOnClose,
 
                                         //handle: actualHandle,
                                         handle: ah, // one actual handle per spawned popup
@@ -238,7 +239,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                     })
                                 );
                             }
-                        }));
+                        });
 
                     return popups;
                 },

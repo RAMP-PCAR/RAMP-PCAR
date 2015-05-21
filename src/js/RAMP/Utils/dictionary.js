@@ -18,7 +18,7 @@
 * @uses dojo/_base/lang
 */
 define(["dojo/_base/lang"],
-    function (dojoLang) {
+    function () {
         "use strict";
 
         return {
@@ -36,11 +36,11 @@ define(["dojo/_base/lang"],
             * forEachEntry terminates right away (without iterating over the rest of the dictionary). The
             * return value of forEackKeyValuePair is returnVal (which by default is undefined).</param>
             * @param {Function} [sortFcn] true if the dictionary keys are to be sorted before iterating
-            * @param {Object} [scope] The scope to be hitched to the given fcn
+            * @param {Object} [scope] The scope called with the given fcn
             */
             forEachEntry: function (dict, fcn, sortFcn, scope) {
                 if (scope) {
-                    fcn = dojoLang.hitch(scope, fcn);
+                    fcn = fcn.call(scope);
                 }
 
                 var keys = [];
