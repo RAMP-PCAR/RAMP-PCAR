@@ -271,7 +271,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                 var allChecked;
 
                 // "INVALID" state is parsed as "true" so it's counted in, but is ignored otherwise
-                allChecked = this.checkboxes.every(function (checkbox) { return !checkbox.validate().state; }).length === 0;
+                allChecked = this.checkboxes.every(function (checkbox) { return checkbox.validate().state; }) === true;
 
                 // set state to the master checkbox only if you have one
                 if (this.master) {
