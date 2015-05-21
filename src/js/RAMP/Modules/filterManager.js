@@ -555,7 +555,7 @@ define([
 
                     function metadataClickHandler(target) {
                         var button = $(target),
-                            node = button.parents("legend");
+                            node = button.parents(".filter-row-container");
 
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
