@@ -1,7 +1,52 @@
-module.exports = (grunt)->
-    pkg = grunt.file.readJSON('package.json')
-    pkg.series = 'v' + pkg.version.split('.').slice(0,2).join('.') + '-dist'
+module.exports = (grunt, options)->
     
+    # core pkg always contains package data from RAMP core
+    # in case of a RAMP theme, it additionally contains a path to the RAMP core dependency 
+
+    corepath = 'lib/ramp-pcar/'
+    corepackagepath = corepath + 'package.json'
+
+    wetcorepath = 'lib/wet-boew/'
+    
+    pkg =        
+        core:
+            path: null
+            wet: null
+
+        theme:
+            path: null
+            wet: null
+
+    if grunt.file.exists corepackagepath
+        pkg.isTheme = true
+        
+        pkg.core = grunt.file.readJSON(corepackagepath)
+
+        pkg.core.path = corepath
+        pkg.core.wet = wetcorepath
+
+        pkg.theme = grunt.file.readJSON('package.json')
+        pkg.theme.path = ''
+        pkg.theme.wet = pkg.theme.themepath
+
+    else
+        pkg.isTheme = false
+        
+        pkg.core = grunt.file.readJSON('package.json')
+
+        pkg.core.path = ''
+        pkg.core.wet = wetcorepath
+
+        pkg.theme.path =  '_/'
+        pkg.theme.wet = '_/'
+
+    # derive the series number
+    pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.') + '-dist'
+
     grunt.option 'pkg', pkg
 
     return pkg
+
+
+
+
