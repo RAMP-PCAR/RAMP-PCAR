@@ -76,7 +76,7 @@ define(["dojo/_base/lang", "utils/util"],
             */
             indexOf: function (arr, predicate, scope) {
                 if (typeof scope !== 'undefined') {
-                    predicate = dojoLang.hitch(scope, predicate);
+                    predicate = predicate.call(scope);
                 }
                 var i;
                 for (i = 0; i < arr.length; i++) {
