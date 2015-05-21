@@ -50,6 +50,7 @@ module.exports = (grunt) ->
 
     sortLocale = (lang) ->
         localeData = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+        # re-merge locale into an empty object; this will sort the locale
         sorted = mergeLocale localeData, {}, ''
 
         # check if the original and sorted locales differ
@@ -129,7 +130,9 @@ module.exports = (grunt) ->
                         coreLocale = grunt.file.readJSON 'build/locales/' + lang + '-CA/translation.json'
                         themeLocale = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
                         mergedLocale = mergeLocale coreLocale, themeLocale, '', true
-                        
+                        # sort the merged locale
+                        mergedLocale = mergeLocale mergedLocale, {}, ''
+
                         grunt.file.write 'build/locales/' + lang + '-CA/translation.json', JSON.stringify(mergedLocale, null, '    ')
                 )
                 
