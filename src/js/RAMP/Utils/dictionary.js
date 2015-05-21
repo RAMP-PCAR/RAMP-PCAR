@@ -43,13 +43,7 @@ define(["dojo/_base/lang"],
                     fcn = fcn.call(scope);
                 }
 
-                var keys = [];
-
-                for (var key in dict) {
-                    if (dict.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
-                }
+                var keys = Object.keys(dict);
 
                 if (sortFcn) {
                     keys.sort(sortFcn);
