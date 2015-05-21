@@ -780,18 +780,6 @@ define([
                         mainList = sectionNode.find("#layerList");
                         layerList = mainList.find("> li > ul");
 
-                        // fade out the loading animation
-                        //sectionNode.addClass('animated fadeOut');
-                        /*window.setTimeout(
-                            function () {*/
-                        /*sectionNode
-                            .empty().append(section)
-                            .removeClass("fadeOut")
-                            .addClass('animated fadeIn');*/
-
-                        // remove the animating css class
-                        //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
-
                         GlobalStorage.layerSelectorGroups.forEach(function (layerType) {
                             layerGroup = new LayerGroup([], {
                                 layerType: layerType
