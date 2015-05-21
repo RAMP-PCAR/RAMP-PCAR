@@ -574,13 +574,14 @@ define([
                 update: function (a) {
                     // helper functions
                     var animateContentDuration = 300,
+                        that = this,
 
                         updateDefered = [new Deferred(), new Deferred()],
 
                         animateContent = function (node, newData, d) {
                             if (newData) {
                                 node.addClass('animated fadeOutDown');
-                                window.setTimeout(dojoLang.hitch(this,
+                                window.setTimeout(
                                         function () {
                                             node
                                             //.html(newData)
@@ -589,7 +590,7 @@ define([
                                                 .addClass('animated fadeInDown'); //.find(".shorten-candidate").shorten();
 
                                             d.resolve();
-                                        }),
+                                        },
                                     animateContentDuration);
                             }
                         },
@@ -613,18 +614,16 @@ define([
                             }
                         },
 
-                        updateContent = dojoLang.hitch(this,
-                            function (a) {
+                        updateContent = function (a) {
                                 // if the content in the subpanel is scrolled down, scroll back to the top
-                                TweenLite.to(this._subPanelContentDiv, animateContentDuration / 1000,
+                                TweenLite.to(that._subPanelContentDiv, animateContentDuration / 1000,
                                     { scrollTop: 0, ease: "easeOutCirc" });
 
-                                setContent(this._panelTitle, this._attr.title, a.title, a.title, this._visible, updateDefered[0]);
-                                setContent(this._panelContentDiv, this._attr.content, a.content, this.parseContent(a.content), this._visible, updateDefered[1]);
+                                setContent(that._panelTitle, that._attr.title, a.title, a.title, that._visible, updateDefered[0]);
+                                setContent(that._panelContentDiv, that._attr.content, a.content, that.parseContent(a.content), that._visible, updateDefered[1]);
 
-                                dojoLang.mixin(this._attr, a);
-                            }
-                        );
+                                dojoLang.mixin(that._attr, a);
+                            };
 
                     // doAfterUpdate should be called AFTER update (animation) completes...
                     UtilMisc.afterAll(updateDefered, function () {
@@ -1357,14 +1356,14 @@ define([
 
                 subPanel.open();
                 subPanel.getPanel().find(".sub-panel-toggle")
-                    .on("click", dojoLang.hitch(this, function () {
+                    .on("click", function () {
                         hideSubPanel(attr);
 
                         // reset focus back to link where the subpanel was created from
                         if (attr.target.selector !== "#map-div") {
                             $(attr.target).find(":tabbable").first().focus();
                         }
-                    }));
+                    });
             });
 
             // take over the panel spawned by other components
@@ -1531,14 +1530,14 @@ define([
                         topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "help-section" });
                         console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", true);
 
+                        var that = this;
                         // close this panel if any other panel is opened
-                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
+                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN,
                             function () {
-                                if (this.isOpen()) {
-                                    this.close();
+                                if (that.isOpen()) {
+                                    that.close();
                                 }
-                            })
-                        );
+                            });
 
                         helpSectionContainer.slideToggle("fast", function () {
                             d.resolve();
