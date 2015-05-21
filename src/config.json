@@ -530,6 +530,10 @@
                         {
                             "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IB2cksfwAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAthJREFUSImdlV2ITGEYx3/HnJlnGLuNkXHOalvLZvJV63PzTS6Ve7lcKVK4EuXGnaJccLmllCsuXFAohahRWLIyGTEW75jas8Syz+zHcTErZubM7OG5Op3n4/c+//d539dmynp6evxYLEaQRSLABEwEeuutXC6TzWYtABvAdV0/m83WBYrAdkdY54D5AjfeKUbDQVzX9Y0xlp3JZPxcLlcX0J0SjqyDrY7ixmFkHDYuFHpvhiMYY+jq6vLtdDpNEKDfU66+EralIQK02rB3kfJxo3DuseKF4LiuW5GokT0vKp9HoW0WWMCMSTiYUWZF4OwjQsnVFFAGJier/7XGoHcJRBCO3p+e0BTgAcNlAaoLJWw4sEx57Ql9A0ozTFOAKjwtwU4XLKvaNwPYt1x5bCDr/ScA4OUQ+A18mSTsXyO8vtd406cFXB1UTv2E9qmN/tuiFuzpVIZGhJMPg6WaFqAKF18Kx1YpEgkoYEHvUuX2W+F2wFhNCwC49EJZmhZ2tytS2wbQYsOhtfDiVv3ohgIUFPr6IRkTVqeUVKxernlx2NIuXMtXSxUKABBByRaFWwVhVyeMjcOKlOLEK7ALT+GZB9RMdWjAGALA3ffw/js8GVS6HTixXuieowx4kAsYpVAAARYkoDMJq9wElwc8FCgUKufhzGZwW6A/4DyEArSn4PBqWJJUrryqPtc3isrKvLBodnBu6A6Sosy0YI0D1wt/fKpwvl85vkFq5Q8PGAd+jFW+d7Qpp6VS+Ld5Ct432OQKd2rmNBRggj+3ajIKCxOQq1nqm6/Q0wYPDP8+pmMj8G3qQW6NwgKB2ifq/qDyYUTqcm1jDCKCauNLtwwMjwI+xKMwN1EfYxTMX/KICMYY7Hw+b3V0dPjFYrEhRIHhcuVWtYBos3anijuOQz6ft2yAQqFgZTIZP51OByZEmeBTvMSd7x4/xoXZi+ezxW1pCCiVSuRyOQvgF9wkEE6egRfZAAAAAElFTkSuQmCC",
                             "value": "f7e60a2b-5598-4c0d-9855-c371306d23e5"
+                        },
+                        {
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAADxQTFRF/v//AAAAAAAHBwcHBwcSJB8fKCwsLCgoQEVHRT1aRUVFSUlJS0dHS0tLTU1NU1NTWlpabluDcVuFdmCKI7ALzgAAABR0Uk5TAP////////////////////////+64WOpAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAcUlEQVQokZ3RSRKAIAxEUdo4DyDm/ncVFFhIwsK/ouoRCtGYRnCoohMIZGsJzZFIJEzxQLmjEJcaxDWh7NEIv4hU8nmx6ZeXSJhKuxfmTqH8YRJ5nS6d1ANJesPGy6fyT18DjZCLU70Ew0PY3Tf7TqndcBgMT5sJIY8AAAAASUVORK5CYII=",
+                            "value": "232700af-a900-412b-bda8-459b7abe9f69"
                         }
                     ]
                 },
@@ -696,6 +700,7 @@
             }
         ],
         "wms": [
+           
             {
                 "id": "geomet_wind",
                 "displayName": "@@config.layers.wms.geomet_wind.displayName",

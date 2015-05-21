@@ -1,4 +1,4 @@
-﻿/*global define, $, window, Modernizr, tmpl */
+﻿/*global define, $, window, Modernizr, tmpl, RAMP, i18n */
 /*jslint white: true */
 
 /**
@@ -15,14 +15,13 @@
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/feature_hovertip_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/feature_anchortip_template.json"}}{{/crossLink}}
-* 
+*
 * @class Maptips
 * @static
 * @uses dojo/topic
@@ -33,30 +32,30 @@
 
 define([
 /* Dojo */
-        "dojo/topic",
+        'dojo/topic',
 
 /* Ramp */
-        "ramp/ramp", "ramp/eventManager",
+        'ramp/eventManager', 'ramp/layerLoader',
 
 /*tmplHelper */
-        "utils/tmplHelper",
+        'utils/tmplHelper',
 
 /* json hover template file */
-        "dojo/text!./templates/feature_hovertip_template.json",
+        'dojo/text!./templates/feature_hovertip_template.json',
 /* json archor template file*/
-        "dojo/text!./templates/feature_anchortip_template.json"
+        'dojo/text!./templates/feature_anchortip_template.json'
 ],
 
     function (
     /* Dojo */
         topic,
     /* Ramp */
-        Ramp, EventManager,
+        EventManager, LayerLoader,
 
     /*tmplHelper */
         TmplHelper, hovertips_template, anchortips_template
     ) {
-        "use strict";
+        'use strict';
 
         var hovertips_template_json = JSON.parse(TmplHelper.stringifyTemplate(hovertips_template)),
             anchortips_template_json = JSON.parse(TmplHelper.stringifyTemplate(anchortips_template)),
@@ -95,7 +94,7 @@ define([
             var offset = 0;
 
             if (highTooltip.handle !== null && highTooltip.node !== null) {
-                offset = parseInt(highTooltip.node.css("left"), 10) + highTooltip.node.width() / 2 - 20;
+                offset = parseInt(highTooltip.node.css('left'), 10) + highTooltip.node.width() / 2 - 20;
             }
 
             return offset;
@@ -107,7 +106,7 @@ define([
         * @method checkMaptipPosition
         * @private
         * @param  {jObject} target a node to which the tooltip will be attached
-        * @param  {Object} graphic [description]
+        * @param  {Object} graphic a graphic on the map
         */
         function checkMaptipPosition(target, graphic) {
             graphic = graphic || highTooltip.graphic || null;
@@ -140,13 +139,14 @@ define([
         */
         function getMaptipContent(graphic, interactive) {
             //the graphic might be in a highlight layer, if so we need the source layer id
-            var layerId = graphic.getLayer().sourceLayerId;
+            var layerId = graphic.getLayer().sourceLayerId,
+                lData, fData;
             if (!layerId) {
                 //graphic was not in a highlight layer
                 layerId = graphic.getLayer().id;
             }
 
-            var layerConfig = Ramp.getLayerConfigWithId(layerId),
+            var layerConfig = LayerLoader.getLayerConfig(layerId),
                templateKey = "",
                datawrapper,
                maptipContent;
@@ -161,9 +161,18 @@ define([
                 tmpl.templates = hovertips_template_json;
             }
 
-            datawrapper = TmplHelper.dataBuilder(graphic, layerConfig);
-            maptipContent = tmpl(templateKey, datawrapper);
+            //because of highlight layer tricks, don't use the standard GraphicExtension methods here to get the feature data
+            lData = RAMP.data[layerId];
+            if (lData) {
+                fData = lData.features[lData.index[graphic.attributes[lData.idField].toString()]];
 
+                datawrapper = TmplHelper.dataBuilder(fData, layerConfig);
+                maptipContent = tmpl(templateKey, datawrapper);
+            } else {
+                //feature data is still downloading
+                //TODO should this be it's own template?
+                maptipContent = '<div class="map-tip-content">' + i18n.t("maptips.attribsDownloading") + '</div>';
+            }
             return maptipContent;
         }
 
@@ -184,7 +193,7 @@ define([
             }
             target.tooltipster({
                 offsetX: $(target)[0].getBBox().width / 2,
-                content: $(maptipContent),
+                //content: $(maptipContent),
                 interactive: true,
                 arrow: true,
                 updateAnimation: Modernizr.csstransitions, // known bug in tooltipster when browsers not supporting CSS animation don't display tooltips at all
@@ -195,25 +204,28 @@ define([
                 theme: (interactive === true) ? '.tooltipster-noir' : '.tooltipster-shadow'
             });
 
+            //tooltipster fails to refresh content using the above settings object.  a direct call to 'content' seems to fix the issue.
+            target.tooltipster('content', $(maptipContent));
+
             if (!interactive) {
                 target
-                    .tooltipster("offsetX", $(target)[0].getBBox().width / 2) // ?
+                    .tooltipster('offsetX', $(target)[0].getBBox().width / 2) // ?
                     .mouseover();
             } else {
                 // add a close button
                 target
-                        .tooltipster("show")
-                        .tooltipster("content", $(maptipContent).append('<button class="button-none button-close"><span class="wb-invisible">Close</span></button>'));
+                        .tooltipster('show')
+                        .tooltipster('content', $(maptipContent).append('<button class="button-none button-close"><span class="wb-invisible">Close</span></button>'));
 
                 // set a listener to that close button
-                $(target.tooltipster("elementTooltip"))
-                        .find(".button-close")
-                        .on("click", function () {
-                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "all" });
+                $(target.tooltipster('elementTooltip'))
+                        .find('.button-close')
+                        .on('click', function () {
+                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: 'all' });
                         });
 
                 // keep pointers to the tooltip parts
-                highTooltip.node = $(target.tooltipster("elementTooltip"));
+                highTooltip.node = $(target.tooltipster('elementTooltip'));
                 highTooltip.handle = target.tooltipster();
                 highTooltip.graphic = graphic;
             }

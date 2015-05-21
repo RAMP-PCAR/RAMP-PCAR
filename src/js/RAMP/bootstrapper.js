@@ -13,25 +13,25 @@
 * Phase X?: For mobile support, there can be a different mobileBootstrapper with only the mobile modules loaded
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "BaseMapSelector"}}{{/crossLink}}  
-* {{#crossLink "Maptips"}}{{/crossLink}}  
-* {{#crossLink "Datagrid"}}{{/crossLink}}  
-* {{#crossLink "Navigation"}}{{/crossLink}}  
-* {{#crossLink "FilterManager"}}{{/crossLink}}  
-* {{#crossLink "BookmarkLink"}}{{/crossLink}}  
-* {{#crossLink "Url"}}{{/crossLink}}  
-* {{#crossLink "FeatureHighlighter"}}{{/crossLink}}  
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "GUI"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "AdvancedToolbar"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Prototype"}}{{/crossLink}}  
-* {{#crossLink "FunctionMangler"}}{{/crossLink}}  
-* {{#crossLink "LayerLoader"}}{{/crossLink}}  
-* 
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "BaseMapSelector"}}{{/crossLink}}
+* {{#crossLink "Maptips"}}{{/crossLink}}
+* {{#crossLink "Datagrid"}}{{/crossLink}}
+* {{#crossLink "Navigation"}}{{/crossLink}}
+* {{#crossLink "FilterManager"}}{{/crossLink}}
+* {{#crossLink "BookmarkLink"}}{{/crossLink}}
+* {{#crossLink "Url"}}{{/crossLink}}
+* {{#crossLink "FeatureHighlighter"}}{{/crossLink}}
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "GUI"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "AdvancedToolbar"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Prototype"}}{{/crossLink}}
+* {{#crossLink "FunctionMangler"}}{{/crossLink}}
+* {{#crossLink "LayerLoader"}}{{/crossLink}}
+*
 * @class Bootstrapper
 * @static
 *
@@ -44,17 +44,17 @@
 
 require([
 /* Dojo */
-    "dojo/parser", "dojo/on", "dojo/topic", "dojo/request/script", "dojo/request/xhr",
+    "dojo/parser", "dojo/topic", "dojo/request/script", "dojo/request/xhr", "dojo/number", "dojo/dom", "dojo/dom-construct", "dojo/query",
     "esri/config", "esri/urlUtils",
 
 /* RAMP */
     "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
     "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
     "utils/url", "ramp/featureHighlighter",
-    "ramp/ramp", "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
+    "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar", "ramp/geoSearch",
-    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/dataLoader", "ramp/stepItem",
-    
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui",
+
 /* Utils */
     "utils/util",
 
@@ -63,17 +63,17 @@ require([
 
     function (
     /* Dojo */
-    parser, dojoOn, topic, requestScript, xhr,
+    parser, topic, requestScript, xhr, number, dom, domConstruct, query,
     esriConfig, esriUrlUtils,
 
     /* RAMP */
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
-    Ramp, GlobalStorage, gui, EventManager, AdvancedToolbar, GeoSearch,
-    theme, LayerLoader, DataLoadedGui, DataLoader, StepItem,
+    GlobalStorage, gui, EventManager, AdvancedToolbar, GeoSearch,
+    theme, LayerLoader, DataLoaderGui,
 
     /* Utils */
-        UtilMisc
+    UtilMisc
     ) {
         "use strict";
 
@@ -96,6 +96,30 @@ require([
 
         function initializeMap() {
             /* Start - RAMP Events, after map is loaded */
+
+            function initScale() {
+                var map = RAMP.map,
+                    scaleDiv = domConstruct.create("div", {
+                        id: "scaleDiv",
+                        class: "esriScalebarLabel"
+                    }),
+                    currentScale,
+                    scaleLabelText;
+
+                $(scaleDiv).html("<span>" + i18n.t('map.scale') + "</span><br><span id='scaleLabel'><span/>");
+                currentScale = number.format(map.getScale());
+                scaleLabelText = "1 : " + currentScale;
+
+                domConstruct.place(scaleDiv, query(".esriScalebarRuler")[0], "before");
+                domConstruct.empty('scaleLabel');
+                $("#scaleLabel").text(scaleLabelText);
+
+                // Change the css class of the scale bar so it shows up against
+                // the map
+                topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (attr) {
+                    $(".esriScalebar > div").removeClass().addClass(attr.cssStyle);
+                });
+            }
 
             // this split exists solely to separate out the parts that IE9 is
             // bad at handling there is a DOM race condition somewhere in here,
@@ -121,6 +145,8 @@ require([
             topic.subscribe(EventManager.Map.INITIAL_BASEMAP_LOADED, function () {
                 console.log("map - >> first update-end; init the rest");
 
+                initScale();
+
                 // Only initialize the bookmark link after all the UI events of all other modules have
                 // finished loading
                 // IMPORTANT: for now, only basemapselector and filtermanager have a UI complete event
@@ -137,8 +163,7 @@ require([
                         //initialize the map export after everything is done
                         ImageExport.init();
 
-                        DataLoadedGui.init();
-                        //RampMap.zoomToLayerScale();
+                        DataLoaderGui.init();
                     });
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
@@ -157,7 +182,6 @@ require([
                 } else {
                     guiInits();
                 }
-
             });
 
             RampMap.init();
@@ -281,7 +305,7 @@ require([
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
             esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
-                // really IE9???  (╯°□°）╯︵ ┻━┻
+            // really IE9???  (╯°□°）╯︵ ┻━┻
             if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
                 esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
             }
@@ -324,8 +348,6 @@ require([
                 });
 
                 gui.load(null, null, function () { });
-                
-                Ramp.loadStrings();
             });
 
             //project extents to basemap

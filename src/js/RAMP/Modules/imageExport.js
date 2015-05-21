@@ -11,9 +11,9 @@
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}  
 * {{#crossLink "Map"}}{{/crossLink}}
-*
+* 
 * @class ImageExport
 * @static
 * @uses dojo/topic
@@ -25,23 +25,32 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/_base/array", "dojo/Deferred",
+"dojo/topic", "dojo/Deferred",
 
 /* ESRI */
 "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
 
 /* RAMP */
-"ramp/eventManager", "ramp/map"],
+    "ramp/eventManager", "ramp/map",
+
+    /* UTIL */
+
+    "utils/util", "utils/popupManager"
+],
 
     function (
     /* Dojo */
-    topic, dojoArray, Deferred,
+    topic, Deferred,
 
     /* ESRI */
     PrintTemplate, PrintParameters, PrintTask,
 
     /* RAMP */
-    EventManager, RampMap) {
+        EventManager, RampMap,
+
+        /* UTIL */
+        MiscUtil, PopupManager
+        ) {
         "use strict";
 
         var ui = (function () {
@@ -50,16 +59,29 @@ define([
                 mapExportImg,
                 mapExportSpinner,
                 mapExportNotice,
-                downloadButton,
+
+                mapExportCloseButton,
+
+                downloadDropdownToggle,
+                downloadDropdown,
+
+                downloadDropdownMenu,
+
+                downloadDefault,
+                downloadButtonJPG,
+                downloadButtonPNG,
+
+                downloadPopup,
 
                 promise,
 
                 jWindow,
+                cssButtonPressedClass = "button-pressed",
                 transitionDuration = 0.4;
 
             /**
              * Handles click event on the export image toggle.
-             *
+             * 
              * @private
              * @method ui.generateExportIamge
              */
@@ -77,7 +99,18 @@ define([
                 promise = result.promise;
 
                 tl
-                    .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
+                    .call(function () {
+                        downloadDropdown
+                            .find(".btn")
+                            .attr({ disabled: true })
+                            .end("a.btn-download")
+                            .find(".btn")
+                            .attr({ href: "" })
+                        ;
+
+                        //downloadButtonPNG.attr({ disabled: true, href: "" });
+                        //downloadButtonJPG.attr({ disabled: true, href: "" });
+                    })
                     .set(mapExportNotice, { display: "none" }) // hide error notice
                     .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
@@ -87,12 +120,35 @@ define([
 
                 promise.then(
                     function (event) {
+                        mapExportImg.on("load", function (event) {
+                            var canvas = MiscUtil.convertImageToCanvas(event.target),
+                                dataPNG = "",
+                                dataJPG = "";
+
+                            console.log(canvas);
+
+                            dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
+                            dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
+
+                            downloadDropdown
+                                .find(".btn")
+                                .attr({ disabled: false })
+                            ;
+
+                            downloadButtonJPG.attr({ disabled: false, href: dataJPG });
+                            downloadButtonPNG.attr({ disabled: false, href: dataPNG });
+                            downloadDefault.attr({ disabled: false, href: dataPNG });
+
+                            mapExportImg.off("load");
+                        });
+
                         tl
-                            .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); }) // enabled download button
+                            //.call(function () { downloadButtonPNG.attr({ disabled: false, href: event.result.url }); }) // enabled download button
                             .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
-                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }) // animate popup; 2 needed to account for the border
+                            // animate popup; 2 needed to account for the border
+                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" })
                         ;
 
                         console.log(event);
@@ -112,7 +168,7 @@ define([
             return {
                 /**
                  * Initializes ui and listeners.
-                 *
+                 * 
                  * @private
                  * @method ui.init
                  */
@@ -122,14 +178,48 @@ define([
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImg = $(".map-export-image > img");
-                    mapExportSpinner = mapExportStretcher.find(".sk-spinner");
+                    mapExportSpinner = mapExportStretcher.find(".loading-simple");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
-                    downloadButton = $(".map-export-controls .download-buttons > .btn");
+
+                    downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
+                    downloadDropdownMenu = $(".map-export-controls .download-buttons .dropdown-menu");
+
+                    downloadDropdownToggle = downloadDropdown.find(".toggle");
+                    downloadButtonPNG = downloadDropdown.find(".btn.download-png");
+                    downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
+                    downloadDefault = downloadDropdown.find(".btn.download-default");
+
+                    mapExportCloseButton = $("#map-export-modal .button-close");
 
                     mapExportToggle
                         .removeClass('disabled')
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
+
+                    downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, "click",
+                        function (d) {
+                            downloadDropdownMenu.show();
+                            d.resolve();
+                        },
+                        {
+                            activeClass: cssButtonPressedClass,
+                            target: downloadDropdownMenu,
+                            closeHandler: function (d) {
+                                downloadDropdownMenu.hide();
+                                d.resolve();
+                            },
+                            timeout: 500
+                        }
+                    );
+
+                    mapExportCloseButton.on("click", function () {
+                        downloadDropdown
+                            .find(".btn")
+                            .attr({ disabled: true, href: "" })
+                        ;
+
+                        mapExportImg.attr("src", "");
+                    });
                 }
             };
         }()),
@@ -148,7 +238,7 @@ define([
                 visState.empty = false;
 
                 //go through feature layer config
-                dojoArray.forEach(RAMP.config.layers.feature, function (fl) {
+                RAMP.config.layers.feature.forEach(function (fl) {
                     var flObj = RAMP.layerRegistry[fl.id];
 
                     //find if feature layer, user added, visible, and has no URL
@@ -170,7 +260,7 @@ define([
         function restoreFileLayers() {
             if (!visState.empty) {
                 //go through feature layer config
-                dojoArray.forEach(visState.layers, function (flObj) {
+                visState.layers.forEach(function (flObj) {
                     flObj.setVisibility(true);
                 });
 
@@ -218,7 +308,7 @@ define([
                     height: mapDom.clientHeight,
                     dpi: 96
                 };
-                template.format = "JPG";
+                template.format = "PNG32";
                 template.layout = "MAP_ONLY";
                 template.showAttribution = false;
 

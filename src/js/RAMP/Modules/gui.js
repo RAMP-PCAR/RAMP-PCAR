@@ -35,7 +35,7 @@
 */
 define([
 // Dojo
-        "dojo/_base/array", "dojo/topic", "dojo/_base/lang", "dojo/Deferred",
+        "dojo/topic", "dojo/_base/lang", "dojo/Deferred",
 
 // Ramp
         "ramp/globalStorage", "ramp/eventManager",
@@ -44,6 +44,7 @@ define([
 
 // Text
         "dojo/text!./templates/sub_panel_template.json",
+        "dojo/text!./templates/datagrid_template.json",
 
 // Util
         "utils/util", "utils/dictionary", "utils/popupManager", "utils/tmplHelper",
@@ -54,7 +55,7 @@ define([
 
     function (
     // Dojo
-        dojoArray, topic, dojoLang, Deferred,
+        topic, dojoLang, Deferred,
 
     // Ramp
         GlobalStorage, EventManager,
@@ -63,6 +64,7 @@ define([
 
     // Text
         subPanelTemplate,
+        datagridTemplate,
 
     // Util
         UtilMisc, utilDict, popupManager, TmplHelper) {
@@ -685,19 +687,11 @@ define([
             helpSectionContainer = $("#help-section-container"),
             helpSection = $("#help-section"),
 
-            addLayerToggle = $("#addLayer-toggle"),
-            addLayerSectionContainer = $("#addLayer-section-container"),
-            //AddLayerSection = $("#addLayer-section"),
-
-            wmsToggle = $("#uglyGetFiToggle"),
-
             cssButtonPressedClass = "button-pressed",
             cssExpandedClass = "state-expanded",
 
             helpPanelPopup,
-            addLayerPanelPopup,
-            wmsQueryPopup,
-
+            
             transitionDuration = 0.5,
 
             toolbarController,
@@ -849,6 +843,9 @@ define([
                 panelWidthDefault, // default width of the SidePanel.
                 layoutWidthThreshold = 1200, // minimum width of the wide layout
 
+                dataTabNode,
+                dataTabUpdateNotice,
+
                 windowWidth,
 
                 layoutChange,
@@ -967,13 +964,6 @@ define([
                     generator: createFullDataSubpanelChangeTL
                 }
             ];
-
-            // timeline that hides Data tab
-            noDataTimeLine
-                .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
-                .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
-                .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
-            ;
 
             /**
             * Fires an event when the layout of the page changes.
@@ -1146,6 +1136,22 @@ define([
                 }
             }
 
+            /**
+             * Setup noDataTimeLine for data tab animation
+             * 
+             * @method setupNoDataTimeLine
+             * @private
+             */
+            function setupNoDataTimeLine() {
+
+                // timeline that hides Data tab
+                noDataTimeLine
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
+                    .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
+                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+                ;
+            }
+
             return {
                 /**
                 * Initializes layout controller.
@@ -1178,11 +1184,6 @@ define([
                         panelPopup.toggle(null, event.visible);
                     });
 
-                    if (!RAMP.config.ui.mapQueryToggle.show) {
-                        RAMP.state.ui.wmsQuery = false;
-                        wmsToggle.remove();
-                    }
-
                     // set listener to the full-screen toggle
                     fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
                         function (d) {
@@ -1199,7 +1200,20 @@ define([
                         fullScreenPopup.open();
                     }
 
+                    // find a Data tab append an update notice to it
+                    dataTabUpdateNotice = $(TmplHelper.template('datagrid_notice_update', {}, datagridTemplate));
+                    dataTabNode = panelDiv.find(".wb-tabs > ul li:last");
+                    dataTabNode.append(dataTabUpdateNotice);
+
+                    topic.subscribe(EventManager.Datagrid.UPDATING, function (event) {
+                        dataTabUpdateNotice.toggle(event);
+                    });
+
                     adjustHeight();
+
+                    // setup noDataTimeLine here to allow IE9 to have enough time to 
+                    // create the tab
+                    setupNoDataTimeLine();
                 },
 
                 /**
@@ -1456,28 +1470,9 @@ define([
                 subPanels[attr.origin] = subPanel;
             }
         }
-
-        /**
-         * A helper method that fires WMS_QUERY_CHANGE event.
-         * 
-         * @method wmsQueryPopupHelper
-         * @private
-         * @param {Object} d deferred to be resolved
-         */
-        function wmsQueryPopupHelper(d) {
-            topic.publish(EventManager.FilterManager.WMS_QUERY_CHANGE, { allowed: RAMP.state.ui.wmsQuery });
-
-            /*jshint validthis: true */
-            // I think there is no need to change the label of the button as we are already changing its visual state
-            // this is also consistent with how fullscreen and other toolbar buttons work
-            /*this.handle
-                .children('span')
-                .html(i18n.t('gui.actions.wmsQueryEnable'))
-            ;*/
-
-            d.resolve();
-        }
-
+        
+        // TODO: notify bookmark module that layer query toggle has changed its state
+        
         /**
          * Stops event propagation.
          * 
@@ -1496,36 +1491,18 @@ define([
          */
         function autoHideDataTab() {
             // initialize to the correct state (this might be happening after some layers have already loaded)
-            if (RAMP.layerRegistry) {
-                var features = Object
-                    .keys(RAMP.layerRegistry)
-                    .some(function (layer) {
-                        return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.feature;
-                    })
-                ;
-
-                if (features) {
-                    layoutController.toggleDataTab();
-                }
+            if (RAMP.layerCounts && RAMP.layerCounts.feature === 0) {
+                layoutController.toggleDataTab();
             }
             
             // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
             topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
-                if (args.layer.ramp.type === GlobalStorage.layerType.feature) {
-                    layoutController.toggleDataTab(true);
-                }
+                layoutController.toggleDataTab(args.layerCounts.feature > 0);
             });
 
             // on each remove check if there are still feature layers in the layer list
-            topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
-                var features = Object.keys(RAMP.layerRegistry).filter(function (layer) {
-                    var l = RAMP.layerRegistry[layer];
-                    return l ? l.ramp.type === GlobalStorage.layerType.feature : false;
-                });
-                console.log('features left (including the layer to be removed): ' + features.length);
-                if (features.length === 1) {
-                    layoutController.toggleDataTab();
-                }
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (args) {
+                layoutController.toggleDataTab(args.layerCounts.feature > 0);
             });
         }
 
@@ -1543,6 +1520,7 @@ define([
 
                 subPanelTemplate = JSON.parse(TmplHelper.stringifyTemplate(subPanelTemplate));
                 subPanelLoadingAnimation = TmplHelper.template('loading_simple', null, subPanelTemplate);
+                datagridTemplate = JSON.parse(TmplHelper.stringifyTemplate(datagridTemplate));
 
                 layoutController.init();
 
@@ -1581,103 +1559,9 @@ define([
                     }
                 );
 
-                // WMS query Start
-                wmsQueryPopup = popupManager.registerPopup(wmsToggle, "click",
-                    function (d) {
-                        RAMP.state.ui.wmsQuery = false;
-                        wmsQueryPopupHelper.call(this, d);
-                    },
-                    {
-                        activeClass: cssButtonPressedClass,
-                        closeHandler: function (d) {
-                            RAMP.state.ui.wmsQuery = true;
-                            wmsQueryPopupHelper.call(this, d);
-                        }
-                    }
-                );
-
-                if (RAMP.config.ui.mapQueryToggle.autoHide) {
-
-                    // initialize to the correct state (this might be happening after some layers have already loaded)
-                    if (RAMP.layerRegistry) {
-                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) { return RAMP.layerRegistry[layer].ramp.type === GlobalStorage.layerType.wms; });
-                        if (wmses.length === 0) {
-                            wmsToggle.hide();
-                        } else {
-                            wmsToggle.show();
-                        }
-                    }
-
-                    // on each load if the layer is a WMS make sure the button is visible
-                    topic.subscribe(EventManager.LayerLoader.LAYER_LOADED, function (args) {
-                        if (args.layer.ramp.type === GlobalStorage.layerType.wms) {
-                            wmsToggle.show();
-                        }
-                    });
-
-                    // on each remove check if there are still WMSes in the layer list
-                    topic.subscribe(EventManager.LayerLoader.REMOVE_LAYER, function () {
-                        if (wmsToggle.is(':hidden')) { return; }
-                        var wmses = Object.keys(RAMP.layerRegistry).filter(function (layer) {
-                            var l = RAMP.layerRegistry[layer];
-                            return l ? l.ramp.type === GlobalStorage.layerType.wms : false;
-                        });
-                        console.log('wmses left (including the layer to be removed): ' + wmses.length);
-                        if (wmses.length === 1) {
-                            wmsToggle.hide();
-                        }
-                    });
-                }
-
-                // if the query is disabled (from bookmarklink) toggle the button
-                if (!RAMP.state.ui.wmsQuery) {
-                    wmsQueryPopup.open();
-                }
-                // WMS query end
+                // TODO: remove mapQueryToggle.autoHide from config schema
 
                 autoHideDataTab();
-
-                //Start AddLayer popup controller
-                addLayerPanelPopup = popupManager.registerPopup(addLayerToggle, "click",
-                    function (d) {
-                        topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: true });
-                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "add-layer-section" });
-                        console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", true);
-
-                        // close this panel if any other panel is opened
-                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, dojoLang.hitch(this,
-                            function () {
-                                if (this.isOpen()) {
-                                    this.close();
-                                }
-                            })
-                        );
-
-                        addLayerSectionContainer.slideToggle("fast", function () {
-                            d.resolve();
-                        });
-                    }, {
-                        activeClass: cssButtonPressedClass,
-                        target: addLayerSectionContainer,
-                        closeHandler: function (d) {
-                            topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, { visible: false });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "add-layer-section" });
-                            console.log(EventManager.GUI.ADD_LAYER_PANEL_CHANGE + " visible:", false);
-
-                            addLayerSectionContainer.slideToggle("fast", function () {
-                                d.resolve();
-                            });
-                        },
-                        resetFocusOnClose: true
-                    }
-                );
-
-                $("#addLayer-add").on("click", function () {
-                    topic.publish(EventManager.Map.ADD_LAYER, null);
-
-                    addLayerPanelPopup.close();
-                });
-                //End Add Layer
 
                 //start extended grid
                 topic.subscribe(EventManager.GUI.DATAGRID_EXPAND, function () {
@@ -1702,7 +1586,7 @@ define([
                             });
                         });
                     } else {
-                        dojoArray.forEach(attr.origin.split(","), function (element) {
+                        attr.origin.split(",").forEach(function (element) {
                             //attr.origin = element;
                             hideSubPanel({
                                 origin: element
@@ -1720,7 +1604,7 @@ define([
                             dockSubPanel(na);
                         });
                     } else {
-                        dojoArray.forEach(attr.origin.split(","), function (element) {
+                        attr.origin.split(",").forEach(function (element) {
                             na = Object.create(attr);
                             na.origin = element;
                             dockSubPanel(na);
@@ -1738,7 +1622,7 @@ define([
                             captureSubPanel(na);
                         });
                     } else {
-                        dojoArray.forEach(attr.consumeOrigin.split(","), function (element) {
+                        attr.consumeOrigin.split(",").forEach(function (element) {
                             na = Object.create(attr);
                             na.consumeOrigin = element;
                             captureSubPanel(na);
@@ -1822,7 +1706,7 @@ define([
                     // using the waitList (otherwise if we just publish the
                     // event like above, then subscribe to it here, the event
                     // might have completed before reaching this point)
-                    var eventNames = dojoArray.map(waitList, function (obj) {
+                    var eventNames = waitList.map(function (obj) {
                         return obj.subscribeName;
                     });
 
@@ -1830,7 +1714,7 @@ define([
                         topic.publish(EventManager.GUI.UPDATE_COMPLETE);
                     });
 
-                    dojoArray.forEach(waitList, function (obj) {
+                    waitList.forEach(function (obj) {
                         topic.publish(obj.publishName, obj.eventArg);
                     });
                 }

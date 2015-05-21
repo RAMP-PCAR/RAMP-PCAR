@@ -103,7 +103,6 @@
 .multi-brick-container {
     display: table;
     table-layout: fixed;
-
     margin-top: 21px;
 
     .multi-container {
@@ -112,7 +111,7 @@
         & > .brick {
             padding-right: 8px;
             padding-left: 8px;
-            
+
             &:first-child {
                 padding-left: 0;
             }
@@ -129,7 +128,7 @@
                 margin-bottom: 0;
             }
 
-            margin-bottom: 0;  
+            margin-bottom: 0;
         }
 
         & > div {
@@ -151,6 +150,119 @@
 
         button {
             width: 50%;
+        }
+    }
+}
+
+.button-brick-inline-container {
+    .button-brick-container;
+    margin: 0 0 10px 0;
+
+    .button-content {
+        position: relative;
+        display: inline-block;
+        vertical-align: middle;
+        width: 100%;
+
+        span {
+            line-height: 31px;
+            //display: inline-block;
+        }
+
+        button {
+            //position: absolute;
+            //right: 0;
+            float: right;
+        }
+    }
+}
+
+.checkbox-brick-container {
+    .checkbox {
+        min-height: inherit;
+    }
+
+    .checkbox-content {
+        margin: 0;
+
+        .checkbox-state {
+            display: none;
+            text-transform: uppercase;
+        }
+
+        input[type='checkbox'] {
+            right: 0;
+        }
+
+        label {
+            width: 100%;
+        }
+    }
+
+    &.empty-header {
+        .checkbox-content label {
+            padding-left: 0;
+        }
+    }
+
+    &:not(.empty-header) {
+
+        .checkbox-state-off {
+            display: inline;
+        }
+
+        &.checkbox-checked .checkbox-state {
+            &-off {
+                display: none;
+            }
+
+            &-on {
+                display: inline;
+            }
+        }
+    }
+}
+
+.toggle-brick-container {
+
+    .toggle-content {
+        margin: 0;
+    }
+
+    &.empty-header {
+        .toggle-content label {
+            padding-left: 0;
+        }
+    }
+
+    &:not(.empty-header) {
+        .fs-checkbox-toggle {
+
+            &.fs-checkbox-checked {
+                .fs-checkbox-state {
+                    &_off {
+                        display: none;
+                    }
+
+                    &_on {
+                        display: block;
+                    }
+                }
+            }
+
+            .fs-checkbox-state_on {
+                display: none;
+            }
+
+            .fs-checkbox-state {
+                position: absolute;
+                padding-left: 20px;
+                font-size: 14px;
+                color: #000;
+                text-align: left;
+                width: calc(~'100% - 84px');
+                cursor: pointer;
+            }
         }
     }
 }
@@ -207,6 +319,42 @@
         button:first-child:nth-last-child(4),
         button:first-child:nth-last-child(4) ~ button {
             width: 25%;
+        }
+    }
+}
+
+.choice-brick-inline-container {
+    .choice-brick-container;
+
+    .choice-group {
+
+        span {
+            //line-height: 31px;
+        }
+
+        button {
+            float: right;
+            font-size: 95%;
+            border: none !important;
+            box-shadow: none !important;
+            background-color: transparent !important;
+            color: @light-light-grey-color;
+
+            &.focused, &:focus, &:hover {
+                color: #fff !important;
+            }
+
+            &.button-pressed {
+                text-decoration: none;
+
+                .fa {
+                    display: inline-block;
+                }
+            }
+
+            .fa {
+                display: none;
+            }
         }
     }
 }

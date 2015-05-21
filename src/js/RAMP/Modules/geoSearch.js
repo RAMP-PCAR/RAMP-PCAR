@@ -24,10 +24,10 @@
 
 define([
 /* Dojo */
- "dojo/request/script", "dojo/Deferred"
+ 'dojo/request/script', 'dojo/Deferred'
 
 /* ESRI */
-//"esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
+//'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
 ],
 
     function (
@@ -37,18 +37,18 @@ define([
         /* ESRI */
         //GeometryService, ProjectParameters, EsriExtent,
 ) {
-        "use strict";
+        'use strict';
 
         //types of special inputs by the user
         var parseType = {
-            none: "none",
-            fsa: "fsa",
-            lonlat: "lonlat",
-            prov: "prov"
+            none: 'none',
+            fsa: 'fsa',
+            lonlat: 'lonlat',
+            prov: 'prov'
         }, statusType = {
-            list: "list",
-            none: "none",
-            hide: "hide"
+            list: 'list',
+            none: 'none',
+            hide: 'hide'
         }, provSearch = [],
             provList = [],
             conciseList = [];
@@ -215,7 +215,7 @@ define([
                     ret.type = parseType.prov;
                     ret.data = {
                         prov: getProvCode(provTest),
-                        searchVal: input.substring(0, input.lastIndexOf(","))
+                        searchVal: input.substring(0, input.lastIndexOf(','))
                     };
                 }
             }
@@ -239,8 +239,8 @@ define([
             var defResult = new Deferred(),
                 //launch the search for the fsa
                 defService = script.get(RAMP.config.geolocationUrl + RAMP.locale + '/locate', {
-                    query: "q=" + fsa,
-                    jsonp: "callback"
+                    query: 'q=' + fsa,
+                    jsonp: 'callback'
                 });
 
             defService.then(
@@ -252,7 +252,7 @@ define([
                 if (serviceContent.length > 0) {
                     //find first item that is a postal code
                     serviceContent.every(function (elem) {
-                        if (elem.type === "ca.gc.nrcan.geoloc.data.model.PostalCode") {
+                        if (elem.type === 'ca.gc.nrcan.geoloc.data.model.PostalCode') {
                             res.lonlat = elem.geometry.coordinates;
                             return false; //will cause the "every" loop to break
                         }
@@ -264,7 +264,7 @@ define([
                 defResult.resolve(res);
             },
             function (error) {
-                console.log("Geolocation search error : " + error);
+                console.log('Geolocation search error : ' + error);
                 defResult.reject(error);
             });
 
@@ -296,45 +296,45 @@ define([
             //build up our query string
             //http://www.nrcan.gc.ca/earth-sciences/geography/place-names/tools-applications/9249
 
-            var query = "",
+            var query = '',
                 defResult = new Deferred(),
                 listLimit = 10, //TODO should this be defined in the config?
                 defService;
 
             //search around a point
             if (params.lonlat) {
-                query += "lat=" + params.lonlat[1].toString() + "&lon=" + params.lonlat[0].toString() + "&";
+                query += 'lat=' + params.lonlat[1].toString() + '&lon=' + params.lonlat[0].toString() + '&';
 
                 if (params.radius) {
                     //should be between 1 and 100, and integer
-                    query += "radius=" + params.radius.toString() + "&";
+                    query += 'radius=' + params.radius.toString() + '&';
                 }
             }
 
             if (params.q) {
                 //inject wildcards after terms
-                query += "q=" + escape(params.q.trim().replace('%20', ' ').replace(' ', '* ') + '*') + "&";
+                query += 'q=' + escape(params.q.trim().replace('%20', ' ').replace(' ', '* ') + '*') + '&';
             }
 
             if (params.prov) {
-                query += "province=" + params.prov + "&";
+                query += 'province=' + params.prov + '&';
             }
 
             if (params.concise) {
-                query += "concise=" + params.concise + "&";
+                query += 'concise=' + params.concise + '&';
             }
 
             if (params.showAll) {
                 listLimit = 1000; //boost to max allowed by service
             }
-            query += "num=" + listLimit + "&";
+            query += 'num=' + listLimit + '&';
 
-            console.log("Executing Query: " + query);
+            console.log('Executing Query: ' + query);
 
             //launch the search
             defService = script.get(RAMP.config.geonameUrl + RAMP.locale + '/geonames.json', {
                 query: query,
-                jsonp: "callback"
+                jsonp: 'callback'
             });
 
             defService.then(
@@ -367,7 +367,7 @@ define([
                 }
             },
             function (error) {
-                console.log("Geoname search error : " + error);
+                console.log('Geoname search error : ' + error);
                 defResult.reject(error);
             });
 
@@ -553,7 +553,7 @@ define([
             var provUrl = '/codes/province.json',
                 conciseUrl = '/codes/concise.json',
                 defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
-                    jsonp: "callback"
+                    jsonp: 'callback'
                 });
 
             defEnProv.then(
@@ -572,7 +572,7 @@ define([
 
                 //now load the french provinces
                 var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
-                    jsonp: "callback"
+                    jsonp: 'callback'
                 });
 
                 defFrProv.then(
@@ -583,7 +583,7 @@ define([
                             provList.every(function (elem) {
                                 if (elem.code === provFr.code) {
                                     elem.name.fr = provFr.description;
-                                    return false; //will cause the "every" loop to break
+                                    return false; //will cause the 'every' loop to break
                                 }
                                 return true; //keep looping
                             });
@@ -595,16 +595,16 @@ define([
                         });
                     },
                      function (error) {
-                         console.log("Fail to load french province codes : " + error);
+                         console.log('Fail to load french province codes : ' + error);
                      });
             },
             function (error) {
-                console.log("Fail to load english province codes : " + error);
+                console.log('Fail to load english province codes : ' + error);
             });
 
             //get geonames concise codes list english
             var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
-                jsonp: "callback"
+                jsonp: 'callback'
             });
 
             defEnCon.then(
@@ -622,7 +622,7 @@ define([
 
                  //now load the french concise codes
                  var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
-                     jsonp: "callback"
+                     jsonp: 'callback'
                  });
 
                  defFrCon.then(
@@ -640,11 +640,11 @@ define([
                          });
                      },
                       function (error) {
-                          console.log("Fail to load french concise codes : " + error);
+                          console.log('Fail to load french concise codes : ' + error);
                       });
              },
              function (error) {
-                 console.log("Fail to load english concise codes : " + error);
+                 console.log('Fail to load english concise codes : ' + error);
              });
         }
 

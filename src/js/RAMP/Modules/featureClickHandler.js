@@ -1,4 +1,4 @@
-﻿/* global define, i18n, $ */
+﻿/* global define, i18n, $, RAMP */
 
 /**
 *
@@ -15,10 +15,10 @@
 * specific event.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink "GraphicExtension"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+*
 * @class FeatureClickHandler
 * @static
 * @uses dojo/topic
@@ -27,13 +27,13 @@
 
 define([
 /* RAMP */
-    "ramp/graphicExtension", "ramp/eventManager",
+    'ramp/graphicExtension', 'ramp/eventManager',
 
 /* Dojo */
-    "dojo/topic", "dojo/dom-construct",
+    'dojo/topic', 'dojo/dom-construct',
 
 /* Utils */
-    "utils/util"],
+    'utils/util'],
 
     function (
     /* RAMP */
@@ -44,7 +44,7 @@ define([
 
     /* Utils */
     UtilMisc) {
-        "use strict";
+        'use strict';
         return {
             /**
             * This function is called whenever the feature on the map is clicked/selected by the user.
@@ -56,44 +56,53 @@ define([
             * @param  {Object} evt.graphic ESRI graphic object
             */
             onFeatureSelect: function (evt) {
-                var selectedGraphic = evt.graphic;
+                var selectedGraphic = evt.graphic,
+                    fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
+               
+                if (fData) {
+                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                        panelName: i18n.t('datagrid.details'),
+                        title: GraphicExtension.getFDataTitle(fData),
+                        content: GraphicExtension.getFDataTextContent(fData),
+                        target: $('#map-div'),
+                        origin: 'rampPopup',
+                        consumeOrigin: 'datagrid',
+                        guid: UtilMisc.guid(),
+                        showChars: 70,
+                        doOnOpen: function () {
+                            //topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
+                            //    graphic: selectedGraphic
+                            //});
 
-                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                    panelName: i18n.t('datagrid.details'),
-                    title: GraphicExtension.getGraphicTitle(selectedGraphic),
-                    content: GraphicExtension.getTextContent(selectedGraphic),
-                    target: $("#map-div"),
-                    origin: "rampPopup",
-                    consumeOrigin: "datagrid",
-                    guid: UtilMisc.guid(),
-                    showChars: 70,
-                    doOnOpen: function () {
-                        //topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                        //    graphic: selectedGraphic
-                        //});
-
-                        UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
-                            var scroll = evt.scroll;
-                            topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
-                                graphic: selectedGraphic,
-                                scroll: scroll
+                            UtilMisc.subscribeOnce(EventManager.Maptips.EXTENT_CHANGE, function (evt) {
+                                var scroll = evt.scroll;
+                                topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
+                                    fData: fData,
+                                    scroll: scroll
+                                });
                             });
-                        });
 
-                        // Note: the following will in turn trigger maptip/showInteractive
-                        topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                            graphic: selectedGraphic
-                        });
-                    },
-                    doOnHide: function () {
-                        topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
-                    },
-                    doOnDestroy: function () {
-                        selectedGraphic = null;
+                            // Note: the following will in turn trigger maptip/showInteractive
+                            RAMP.state.hilite.click.objId = GraphicExtension.getFDataOid(fData);
+                            RAMP.state.hilite.click.layerId = fData.parent.layerId;
+                            topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
+                                graphic: selectedGraphic
+                            });
+                        },
+                        doOnHide: function () {
+                            topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
+                        },
+                        doOnDestroy: function () {
+                            selectedGraphic = null;
 
-                        //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
-                    }
-                });
+                            //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
+                        }
+                    });
+                } 
+                //if there is no fData, the attribute data has not downloaded yet.  given that we have a warning on a hover, the user will see that message
+                //before they can initiate a click. by not supporting a separate message on no-attrib click, we avoid having to worry about missing datagrid rows
+                //(there will be no rows until the attribs have downloaded), nor worry about detail panels (that have no data).
+                //so, we do nothing. hurrah!
             },
 
             /**
@@ -105,7 +114,7 @@ define([
             */
             onFeatureDeselect: function () {
                 topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                    origin: "rampPopup,datagrid"
+                    origin: 'rampPopup,datagrid'
                 });
             },
 
