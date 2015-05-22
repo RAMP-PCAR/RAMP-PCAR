@@ -119,15 +119,6 @@ define([
                         layerState: LayerItem.state.DEFAULT,
 
                         /**
-                         * An array of layer config definitions to be added to the group during initialization; is set to `layers` value.
-                         *
-                         * @property layers
-                         * @type Array
-                         * @default []
-                         */
-                        layers: [],
-
-                        /**
                          * An array of resulting LayerItem objects.
                          *
                          * @property layerItems
@@ -163,7 +154,10 @@ define([
              */
             addLayerItem: function (layer, options) {
                 var layerItem,
-                    layerItemOptions = {};
+                    layerItemOptions = {
+                        state: this.layerState,
+                        type: this.layerType
+                    };
 
                 // augment existing stateMatrix or create a new one
                 /*if (options && options.stateMatrix) {
@@ -172,13 +166,7 @@ define([
                     layerItemOptions.stateMatrix = this._constructStateMatrix(layer);
                 }*/
 
-                lang.mixin(layerItemOptions,
-                    {
-                        state: this.layerState,
-                        type: this.layerType
-                    },
-                    options
-                );
+                lang.mixin(layerItemOptions, options);
 
                 layerItem = new LayerItem(layer, layerItemOptions);
 
