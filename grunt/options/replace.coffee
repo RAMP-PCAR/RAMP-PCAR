@@ -7,7 +7,7 @@ module.exports =
         options:
             patterns: [
                 match: /$/
-                replacement: '\nconsole.log(\"<%= pkg.ramp.rampASCII %>\");'
+                replacement: '\nconsole.log(\"<%= pkg.core.ramp.rampASCII %>\");'
             ]
             usePrefix: false
 
@@ -21,7 +21,7 @@ module.exports =
         options:
             patterns: [
                 match: /$/
-                replacement: '\nconsole.log(\"<%= pkg.ramp.rampASCII %>\");'
+                replacement: '\nconsole.log(\"<%= pkg.core.ramp.rampASCII %>\");'
             ]
             usePrefix: false
 

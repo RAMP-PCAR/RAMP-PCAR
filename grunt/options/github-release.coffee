@@ -1,4 +1,5 @@
 module.exports = 
+    
     options:
         repository: process.env.HOME_REPO
         auth:

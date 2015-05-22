@@ -28,8 +28,12 @@ module.exports = (grunt, options)->
 
         pkg.theme = grunt.file.readJSON('package.json')
         pkg.theme.path = ''
-        pkg.theme.wet = pkg.theme.themepath
+        pkg.theme.wet = pkg.theme.ramp.themepath
 
+        pkg.name = pkg.theme.name
+        pkg.version = pkg.theme.version
+        pkg.description = pkg.theme.description
+        
         # store serve ports
         pkg.serve = pkg.theme.ramp.serve
     else
@@ -42,6 +46,10 @@ module.exports = (grunt, options)->
 
         pkg.theme.path =  '_/'
         pkg.theme.wet = '_/'
+
+        pkg.name = pkg.core.name
+        pkg.version = pkg.core.version
+        pkg.description = pkg.core.description
 
         # store serve ports
         pkg.serve = pkg.core.ramp.serve

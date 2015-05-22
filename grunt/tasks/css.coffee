@@ -12,7 +12,8 @@ module.exports = (grunt)->
                 'concat.cssLib.src'
                 knife.smartExpand(
                     'lib/'
-                    pkg.ramp.concat.cssLib
+                    # get the list of things to concatenate from core package data
+                    pkg.core.ramp.concat.cssLib
                 )
             )
 
