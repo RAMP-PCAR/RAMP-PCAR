@@ -9,6 +9,7 @@ module.exports =
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
             branch: '<%= pkg.series %>'
+            add: true
             message: ((
                 if process.env.TRAVIS_TAG
                     "Production files for the " + process.env.TRAVIS_TAG + " release"
@@ -20,7 +21,7 @@ module.exports =
                 if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
             ))
         src: [
-            'tarball/*.zip'
+            '<%= pkg.version %>/<%= pkg.name %>/*.zip'
         ]
         
     # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
