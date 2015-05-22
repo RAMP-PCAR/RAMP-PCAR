@@ -755,9 +755,8 @@ define([
                 */
                 function initScrollListeners() {
                     var globalToggleSection = layerToggles.globalToggleSection();
-
-                    layerList.scroll(function () {
-                        var currentScroll = layerList.scrollTop();
+                    mainList.scroll(function () {
+                        var currentScroll = mainList.scrollTop();
                         if (currentScroll === 0) {
                             globalToggleSection.removeClass("scroll");
                         } else {
