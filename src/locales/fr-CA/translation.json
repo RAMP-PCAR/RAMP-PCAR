@@ -326,6 +326,7 @@
             "update": "Mise à jour",
             "user": "Ensemble de données ajoutées par l’utilisateur"
         },
+        "serviceEndPointLabel": "[fr] Service End Point",
         "settings": "Paramètres",
         "settingsLayerSettings": "Paramètres de la couche",
         "settingsOpacity": "Opacité",
