@@ -15,7 +15,7 @@ module.exports =
     ]
 
     yuidoc: [
-        '<%= yuidocconfig.options.outdir %>'
+        '<%= pkg.yuiconfig.options.outdir %>'
     ]
 
     docco: [

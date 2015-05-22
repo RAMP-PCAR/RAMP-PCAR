@@ -9,6 +9,7 @@ module.exports = (grunt, options)->
     wetcorepath = 'lib/wet-boew/'
     
     pkg =        
+        yuiconfig: {}
         core:
             path: null
             wet: null
@@ -43,6 +44,12 @@ module.exports = (grunt, options)->
     # derive the series number
     pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.') + '-dist'
 
+    # read a yui config file from the core
+    yuiconfigpath = pkg.core.path + 'yuidoc.json'
+    if grunt.file.exists yuiconfigpath
+        pkg.yuiconfig = grunt.file.readJSON(yuiconfigpath)
+
+    # store package as grunt option
     grunt.option 'pkg', pkg
 
     return pkg

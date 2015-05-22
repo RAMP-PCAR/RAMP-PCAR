@@ -2,6 +2,7 @@ module.exports =
     options:
         force: true
 
+    # add ASCII art to the end of the lib file in dev build
     jsCoreBuild:
         options:
             patterns: [
@@ -15,6 +16,7 @@ module.exports =
             dest: 'build/js/lib/lib.js'
         ]
 
+    # add ASCII art to the end of the lib file in dist build
     jsCoreDist:
         options:
             patterns: [
@@ -30,34 +32,34 @@ module.exports =
 
     api_esri:
         options:
-            patterns: [json: '<%= yuidocconfig.options.exlinks.esri %>']
+            patterns: [json: '<%= pkg.yuiconfig.options.exlinks.esri %>']
             prefix: 'href="'
             preservePrefix: true
             preserveOrder: false
 
         files: [
             expand: true
-            cwd: '<%= yuidocconfig.options.outdir %>'
+            cwd: '<%= pkg.yuiconfig.options.outdir %>'
             src: [
                 '**/*.html'
                 '!**/*-src.html'
             ]
-            dest: '<%= yuidocconfig.options.outdir %>'
+            dest: '<%= pkg.yuiconfig.options.outdir %>'
         ]
 
     api_dojo:
         options:
-            patterns: [json: '<%= yuidocconfig.options.exlinks.dojo %>']
+            patterns: [json: '<%= pkg.yuiconfig.options.exlinks.dojo %>']
             prefix: 'href="'
             preservePrefix: true
             preserveOrder: false
 
         files: [
             expand: true
-            cwd: '<%= yuidocconfig.options.outdir %>'
+            cwd: '<%= pkg.yuiconfig.options.outdir %>'
             src: [
                 '**/*.html'
                 '!**/*-src.html'
             ]
-            dest: '<%= yuidocconfig.options.outdir %>'
+            dest: '<%= pkg.yuiconfig.options.outdir %>'
         ]

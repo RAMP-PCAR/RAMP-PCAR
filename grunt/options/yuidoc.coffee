@@ -1,2 +1,2 @@
 module.exports = 
-    compile: '<%= yuidocconfig %>'
+    compile: '<%= pkg.yuiconfig %>'
