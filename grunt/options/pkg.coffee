@@ -30,6 +30,8 @@ module.exports = (grunt, options)->
         pkg.theme.path = ''
         pkg.theme.wet = pkg.theme.themepath
 
+        # store serve ports
+        pkg.serve = pkg.theme.ramp.serve
     else
         pkg.isTheme = false
         
@@ -40,6 +42,9 @@ module.exports = (grunt, options)->
 
         pkg.theme.path =  '_/'
         pkg.theme.wet = '_/'
+
+        # store serve ports
+        pkg.serve = pkg.core.ramp.serve
 
     # derive the series number
     pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.') + '-dist'

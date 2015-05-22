@@ -1,6 +1,6 @@
 module.exports = 
     options:
-        livereload: true
+        livereload: '<%= pkg.serve.livereload %>'
         livereloadOnError: false
 
     pages:
@@ -9,7 +9,7 @@ module.exports =
         ]
         tasks: [
             #'build'
-            'assemble' #for quicker build only run a subset of build
+            'assemblePages' #for quicker build only run a subset of build
             'htmllint'
             'notify:page'
         ]
