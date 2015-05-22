@@ -6,11 +6,13 @@ module.exports = (grunt)->
         'css:build'
         'INTERNAL: Concatenates, processes and copies all CSS to the build folder.'
         ()->
+            pkg = grunt.option 'pkg'
+
             grunt.config(
                 'concat.cssLib.src'
                 knife.smartExpand(
                     'lib/'
-                    grunt.config 'pkg.ramp.concat.cssLib'
+                    pkg.ramp.concat.cssLib
                 )
             )
 
