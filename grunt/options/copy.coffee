@@ -310,3 +310,9 @@ module.exports =
         cwd: 'docs'
         src: '**/*.*'
         dest: 'api/' + process.env.TRAVIS_TAG + '/' 
+
+    tarballDist:
+        expand: true
+        cwd: 'tarball'
+        src: '*.zip'
+        dest: '<%= pkg.version %>/<%= pkg.name %>/'

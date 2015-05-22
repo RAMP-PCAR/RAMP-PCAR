@@ -55,7 +55,7 @@ module.exports = (grunt, options)->
         pkg.serve = pkg.core.ramp.serve
 
     # derive the series number
-    pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.') + '-dist'
+    pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.')# + '-dist'
 
     # read a yui config file from the core
     yuiconfigpath = pkg.core.path + 'yuidoc.json'
