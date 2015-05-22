@@ -19,7 +19,7 @@ module.exports =
             'copy:build'
             'prepareLocale'
             'generateConfig' # generate config after copying locale files
-            'assemble'
+            'assemblePages'
             'notify:page'
             'js:prep'
             'js:build'
@@ -152,7 +152,7 @@ module.exports =
         [
             'clean:build'
             'copy:build'
-            'assemble'
+            'assemblePages'
             'notify:page'
             'js:quietbuild'
             'css:build'
