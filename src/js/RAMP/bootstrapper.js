@@ -53,7 +53,7 @@ require([
     "utils/url", "ramp/featureHighlighter",
     "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
     "ramp/advancedToolbar", "ramp/geoSearch",
-    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui",
+    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/metadataHandler",
 
 /* Utils */
     "utils/util",
@@ -70,7 +70,7 @@ require([
     RampMap, BasemapSelector, Maptips, Datagrid, NavWidget, FilterManager, ImageExport,
     BookmarkLink, Url, FeatureHighlighter,
     GlobalStorage, gui, EventManager, AdvancedToolbar, GeoSearch,
-    theme, LayerLoader, DataLoaderGui,
+    theme, LayerLoader, DataLoaderGui, MetadataHandler,
 
     /* Utils */
     UtilMisc
@@ -127,6 +127,7 @@ require([
             function guiInits() {
                 //initialize the filter
                 FilterManager.init();
+                MetadataHandler.init();
 
                 // Initialize the advanced toolbar and tools.
                 if (RAMP.config.advancedToolbar.enabled) {
