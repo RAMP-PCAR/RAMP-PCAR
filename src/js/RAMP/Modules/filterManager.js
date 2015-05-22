@@ -84,7 +84,7 @@ define([
             ui = (function () {
                 var sectionNode,
                     mainList,
-                    layerList,
+                    layerGroupList,
 
                     layerSettings,
                     layerToggles,
@@ -96,7 +96,7 @@ define([
 
                     function initTransparencySliders() {
                         // initializes all sliders in the layer list
-                        transparencySliders = layerList.find(".nstSlider._slider")
+                        transparencySliders = layerGroupList.find(".nstSlider._slider")
                             .removeClass("_slider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
@@ -142,7 +142,7 @@ define([
 
                     function initListeners() {
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                            var slider = layerList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
+                            var slider = layerGroupList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
                                 value;
 
                             if (slider.length > 0) {
@@ -361,7 +361,7 @@ define([
 
                         onUpdate = function (event, ui) {
                             var layerId = ui.item[0].id,
-                                idArray = layerList
+                                idArray = layerGroupList
                                     .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                                     .map(function (i, elm) { return elm.id; }), // get ids
                                 cleanIdArray = idArray.filter(function (i, elm) {
@@ -388,7 +388,7 @@ define([
                         },
 
                         onStop = function () {
-                            layerList
+                            layerGroupList
                                 .removeClass("sort-active")
                                 .removeClass("sort-disabled");
 
@@ -398,7 +398,7 @@ define([
                         },
 
                         onStart = function (event, ui) {
-                            layerList
+                            layerGroupList
                                 .has(ui.item).addClass("sort-active")
                                 .end().filter(":not(.sort-active)").addClass("sort-disabled");
                             ui.item.removeClass("bg-very-light");
@@ -418,8 +418,8 @@ define([
                         * @private
                         */
                         update: function () {
-                            layerGroupSeparator = layerList.parent().find(".layer-group-separator");
-                            reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
+                            layerGroupSeparator = layerGroupList.parent().find(".layer-group-separator");
+                            reorderLists = layerGroupList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
 
                             if (sortableHandle) {
                                 sortableHandle.sortable("destroy");
@@ -666,7 +666,8 @@ define([
                                     wmsmeta = tmpl("wms_meta_main",
                                         {
                                             legendUrl: layerConfig.legend.imageUrl,
-                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
+                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities",
+                                            serviceEndPointUrl: layerConfig.url
                                         }
                                     );
 
@@ -678,7 +679,7 @@ define([
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><b>Service End Point URL</b><br><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -689,7 +690,7 @@ define([
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
                                 var metadataError = function () {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -714,7 +715,7 @@ define([
                                                 metadataError();
                                             } else {
                                                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                    content: $(data),
+                                                    content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
                                                     origin: "filterManager",
                                                     update: true,
                                                     guid: id
@@ -755,8 +756,8 @@ define([
                 function initScrollListeners() {
                     var globalToggleSection = layerToggles.globalToggleSection();
 
-                    layerList.scroll(function () {
-                        var currentScroll = layerList.scrollTop();
+                    layerGroupList.scroll(function () {
+                        var currentScroll = layerGroupList.scrollTop();
                         if (currentScroll === 0) {
                             globalToggleSection.removeClass("scroll");
                         } else {
@@ -777,7 +778,7 @@ define([
                         sectionNode.empty().append(section);
 
                         mainList = sectionNode.find("#layerList");
-                        layerList = mainList.find("> li > ul");
+                        layerGroupList = mainList.find("> li > ul");
 
                         // fade out the loading animation
                         //sectionNode.addClass('animated fadeOut');
@@ -820,7 +821,7 @@ define([
                     * @private
                     */
                     update: function () {
-                        layerList = mainList.find("> li > ul");
+                        layerGroupList = mainList.find("> li > ul");
 
                         layerSettings.update();
                         layerToggles.update();
