@@ -127,10 +127,7 @@ define([
                          */
                         layerItems: []
                     },
-                    options,
-                    {
-                        layers: layers
-                    }
+                    options
                 );
 
                 // create group node from the template
@@ -142,7 +139,7 @@ define([
 
                 console.debug(LayerItem.state);
 
-                this.layers.forEach(function (layer) {
+                this.layerItems.forEach(function (layer) {
                     that.addLayerItem(layer);
                 });
             },
