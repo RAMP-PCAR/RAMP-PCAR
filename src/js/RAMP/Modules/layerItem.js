@@ -284,7 +284,16 @@ define([
                     };
                 }
 
-                this.node = $(this._template(this.type, this._config));
+                tmpl.cache = {};
+                tmpl.templates = this.templates;
+
+                var info = this._config;
+                info.fn = TmplUtil;
+
+                this.node = $(tmpl(this.type, info));
+                console.log(this.node);
+                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
                 this._imageBoxNode = this.node.find('.layer-details > div:first');
                 this._displayNameNode = this.node.find('.layer-name > span');
                 this._controlsNode = this.node.find('.layer-controls-group');
@@ -366,14 +375,17 @@ define([
              * @return Created part node
              */
             _generatePart: function (templateKey, pKey, data) {
-                var part = $(this._template(templateKey + pKey,
-                    {
-                        id: this.id,
-                        config: this._config,
-                        nameKey: pKey,
-                        data: data
-                    }
-                ));
+                tmpl.cache = {};
+                tmpl.templates = this.templates;
+
+                var info = {
+                    id: this.id,
+                    config: this._config,
+                    nameKey: pKey,
+                    data: data
+                };
+                info.fn = TmplUtil;
+                var part = $(tmpl(templateKey + pKey, info));
 
                 return part;
             },
@@ -510,25 +522,6 @@ define([
                     .end()
                     .append(controls)
                 ;
-            },
-
-            /**
-             * Populates a template specified by the key with the supplied data.
-             *
-             * @param {String} key template name
-             * @param {Object} data data to be inserted into the template
-             * @method _template
-             * @private
-             * @return {String} a string template filled with supplied data
-             */
-            _template: function (key, data) {
-                tmpl.cache = {};
-                tmpl.templates = this.templates;
-
-                data = data || {};
-                data.fn = TmplUtil;
-
-                return tmpl(key, data);
             }
         });
 
