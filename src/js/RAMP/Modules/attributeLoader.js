@@ -100,12 +100,13 @@ define([
         * @param  {Integer} maxBatch maximum number of results the service will return. if -1, means currently unknown
         * @param  {String} layerUrl URL to feature layer endpoint
         * @param  {String} idField name of attribute containing the object id for the layer
+        * @param  {String} layerId id of the layer
         * @param  {dojo/Deferred} callerDef deferred object that resolves when current data has been downloaded
         */
-        function loadDataBatch(maxId, maxBatch, layerUrl, idField, callerDef) {
+        function loadDataBatch(maxId, maxBatch, layerUrl, idField, layerId, callerDef) {
             //fetch attributes from feature layer. where specifies records with id's higher than stuff already downloaded. outFields * (all attributes). no geometry.
             var defData = script.get(layerUrl + '/query', {
-                query: 'where=' + idField + '>' + maxId + '&outFields=*&returnGeometry=false&f=json',
+                query: 'where=' + idField + '>' + maxId + '&outFields=' + RAMP.layerRegistry[layerId].ramp.config.layerAttributes + '&returnGeometry=false&f=json',
                 jsonp: 'callback'
             });
 
@@ -124,7 +125,7 @@ define([
                             //stash the result and call the service again for the next batch of data.
                             //max id becomes last object id in the current batch
                             var thisDef = new Deferred();
-                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, layerUrl, idField, thisDef);
+                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, layerUrl, idField, layerId, thisDef);
 
                             thisDef.then(function (dataArray) {
                                 callerDef.resolve(dataResult.features.concat(dataArray));
@@ -188,7 +189,7 @@ define([
                         });
 
                         //begin the loading process
-                        loadDataBatch(-1, maxBatchSize, layerUrl, layerData.idField, defFinished);
+                        loadDataBatch(-1, maxBatchSize, layerUrl, layerData.idField, layerId, defFinished);
 
                         //after all data has been loaded
                         defFinished.promise.then(function (features) {
