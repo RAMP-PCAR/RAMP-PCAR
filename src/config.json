@@ -211,7 +211,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriWorld.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         },
         {
@@ -229,7 +230,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriPhysical.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         },
         {
@@ -247,7 +249,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriRelief.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         },
         {
@@ -265,7 +268,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriStreet.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         },
         {
@@ -283,7 +287,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriTerrain.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         },
         {
@@ -301,7 +306,8 @@
             "tileSchema": "ESRI_World_AuxMerc_3857",
             "description": "@@config.basemaps.baseEsriTopo.description",
             "spatialReference": {
-                "wkid": 102100
+                "wkid": 102100,
+                "latestWkid":  3857
             }
         }
     ],
@@ -549,7 +555,8 @@
                     "xmax": -10471824.465,
                     "ymax": 9225974.5022,
                     "spatialReference": {
-                        "wkid": 102100
+                        "wkid": 102100,
+                        "latestWkid":  3857
                     }
                 }
             },
