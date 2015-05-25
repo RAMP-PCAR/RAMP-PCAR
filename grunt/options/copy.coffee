@@ -315,4 +315,4 @@ module.exports =
         expand: true
         cwd: 'tarball'
         src: '*.zip'
-        dest: '<%= pkg.version %>/<%= pkg.name %>/'
+        dest: process.env.TRAVIS_TAG + '/<%= pkg.name %>/'
