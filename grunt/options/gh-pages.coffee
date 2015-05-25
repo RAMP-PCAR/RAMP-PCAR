@@ -10,16 +10,9 @@ module.exports =
             repo: process.env.DIST_REPO
             branch: '<%= pkg.series %>'
             add: true
-            message: ((
-                if process.env.TRAVIS_TAG
-                    "Production files for the " + process.env.TRAVIS_TAG + " release"
-                else
-                    "Travis build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
-            ))
+            message: 'chore(release): <%= pkg.name %> <%= pkg.version %> build files'
             silent: true
-            tag: ((
-                if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
-            ))
+            tag: '<%= pkg.version %>'
         src: [
             '<%= pkg.version %>/<%= pkg.name %>/*.zip'
         ]
@@ -32,12 +25,7 @@ module.exports =
             repo: process.env.DOCS_REPO
             branch: 'master'
             #base: 'demos/NRSTC'
-            message: ((
-                if process.env.TRAVIS_TAG
-                    process.env.TRAVIS_TAG + " release demo"
-                else
-                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] build demo"
-            ))
+            message: 'chore(release): <%= pkg.name %> <%= pkg.version %> demo files'
             silent: true
         src: [
             'demos/**/*.*'
@@ -51,12 +39,7 @@ module.exports =
             repo: process.env.DOCS_REPO
             branch: 'master'
             #base: 'demos/NRSTC'
-            message: ((
-                if process.env.TRAVIS_TAG
-                    process.env.TRAVIS_TAG + " API release"
-                else
-                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] API build"
-            ))
+            message: 'chore(release): <%= pkg.name %> <%= pkg.version %> API files'
             silent: true
         src: [
             'api/**/*.*'
