@@ -515,6 +515,8 @@ define([
                                 adjustPaneWidth();
                                 d.resolve();
                             });
+                            /* Parent node not visible upon slider creation; the slider plugin cannot calculate the slider's proper position. 
+                            You need to refresh it when the setting section is opened. Otherwise it won't display properly.*/
                             this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
@@ -779,18 +781,6 @@ define([
 
                         mainList = sectionNode.find("#layerList");
                         layerGroupList = mainList.find("> li > ul");
-
-                        // fade out the loading animation
-                        //sectionNode.addClass('animated fadeOut');
-                        /*window.setTimeout(
-                            function () {*/
-                        /*sectionNode
-                            .empty().append(section)
-                            .removeClass("fadeOut")
-                            .addClass('animated fadeIn');*/
-
-                        // remove the animating css class
-                        //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
 
                         GlobalStorage.layerSelectorGroups.forEach(function (layerType) {
                             layerGroup = new LayerGroup([], {
