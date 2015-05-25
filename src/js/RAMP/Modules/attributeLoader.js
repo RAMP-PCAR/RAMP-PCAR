@@ -29,12 +29,18 @@ define([
 /* Dojo */
 'dojo/topic', 'dojo/request/script', 'dojo/Deferred',
 
+/* Esri */
+'esri/request',
+
 /* RAMP */
 'ramp/eventManager', 'ramp/globalStorage', 'ramp/map'],
 
     function (
     /* Dojo */
     topic, script, Deferred,
+
+    /* Esri */
+    esriRequest,
 
     /* RAMP */
     EventManager, GlobalStorage, RampMap) {
@@ -91,13 +97,12 @@ define([
         * @method loadDataBatch
         * @private
         * @param  {Integer} maxId largest object id that has already been downloaded
-        * @param  {Integer} maxBatch maximum number of results the service will return. if -1, means currently unkown
-        * @param  {Array} dataArray feature data that has already been downloaded
+        * @param  {Integer} maxBatch maximum number of results the service will return. if -1, means currently unknown
         * @param  {String} layerUrl URL to feature layer endpoint
         * @param  {String} idField name of attribute containing the object id for the layer
-        * @param  {dojo/Deferred} callerDef deferred object that resolves when all data has been downloaded
+        * @param  {dojo/Deferred} callerDef deferred object that resolves when current data has been downloaded
         */
-        function loadDataBatch(maxId, maxBatch, dataArray, layerUrl, idField, callerDef) {
+        function loadDataBatch(maxId, maxBatch, layerUrl, idField, callerDef) {
             //fetch attributes from feature layer. where specifies records with id's higher than stuff already downloaded. outFields * (all attributes). no geometry.
             var defData = script.get(layerUrl + '/query', {
                 query: 'where=' + idField + '>' + maxId + '&outFields=*&returnGeometry=false&f=json',
@@ -114,15 +119,22 @@ define([
                         }
                         if (len < maxBatch) {
                             //this batch is less than the max.  this is last batch.  no need to query again.
-                            callerDef.resolve(dataArray.concat(dataResult.features));
+                            callerDef.resolve(dataResult.features);
                         } else {
                             //stash the result and call the service again for the next batch of data.
                             //max id becomes last object id in the current batch
-                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, dataArray.concat(dataResult.features), layerUrl, idField, callerDef);
+                            var thisDef = new Deferred();
+                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, layerUrl, idField, thisDef);
+
+                            thisDef.then(function (dataArray) {
+                                callerDef.resolve(dataResult.features.concat(dataArray));
+                            }, function (error) {
+                                callerDef.reject(error);
+                            });
                         }
                     } else {
                         //no more data.  we are done
-                        callerDef.resolve(dataArray);
+                        callerDef.resolve([]);
                     }
                 } else {
                     //it is possible to have an error, but it comes back on the "success" channel.
@@ -150,9 +162,11 @@ define([
                     console.log('BEGIN ATTRIB LOAD: ' + layerId);
 
                     //extract info for this service
-                    var defService = script.get(layerUrl, {
-                        query: 'f=json',
-                        jsonp: 'callback'
+                    var defService = esriRequest({
+                        url: layerUrl,
+                        content: { f: 'json' },
+                        callbackParamName: 'callback',
+                        handleAs: 'json'
                     });
 
                     defService.then(function (serviceResult) {
@@ -174,13 +188,15 @@ define([
                         });
 
                         //begin the loading process
-                        loadDataBatch(-1, maxBatchSize, [], layerUrl, layerData.idField, defFinished);
+                        loadDataBatch(-1, maxBatchSize, layerUrl, layerData.idField, defFinished);
 
                         //after all data has been loaded
                         defFinished.promise.then(function (features) {
                             addLayerData(layerData, features);
 
                             //store attribData
+                            // (Set layer data in global object only once all data has been downloaded
+                            //  Used as both a flag and a data store)
                             RAMP.data[layerId] = layerData;
                             //new data. tell grid to reload
                             topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
