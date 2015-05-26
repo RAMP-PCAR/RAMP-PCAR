@@ -17,11 +17,11 @@ module.exports = (grunt) ->
                 
                 if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+(-rc.+)?$/ # match only proper releases and release candidates
                     tasks.push 'github-release' # upload build files to GitHub release only 
-                    grunt.config 'github-release.options.release.body', 'Release Candidate'
+                    grunt.config 'github-release.options.release.body', 'Release Candidate ' + process.env.TRAVIS_TAG
 
                 if process.env.TRAVIS_TAG.match /^v\d+\.\d+\.\d+$/
                     grunt.config 'github-release.options.release.body', 
-                        '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html) <br>' + 
+                        '* [' + process.env.TRAVIS_TAG + ' release notes](http://ramp-pcar.github.io/versions/' + process.env.TRAVIS_TAG + '-en.html) \n' + 
                         '* [Live Demo](http://ramp-pcar.github.io/demos/NRSTC/' + process.env.TRAVIS_TAG + '/' +  grunt.config("pkg.name") + '/ramp-en.html)'
                 
                     # generate new api only for majour releases
