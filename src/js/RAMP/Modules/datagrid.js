@@ -113,7 +113,7 @@ define([
 
         // The JQuery Object representing the grid
             jqgrid,
-            featureToPage = {},
+            featureToIndex = {},
 
             currentSortingMode = "asc",
 
@@ -173,7 +173,6 @@ define([
                         * @method navigateToRow
                         * @return {Boolean} A value indicating is the navigation is successful
                         * @private
-                        * @method navigateToRow
                         */
                         navigateToRow: function () {
                             if (index !== -1) {
@@ -214,8 +213,8 @@ define([
                             if (fData) {
                                 var layerId = fData.parent.layerId,
                                     id = GraphicExtension.getFDataOid(fData);
-                                if ((layerId in featureToPage) && (id in featureToPage[layerId])) {
-                                    index = featureToPage[layerId][id];
+                                if ((layerId in featureToIndex) && (id in featureToIndex[layerId])) {
+                                    index = featureToIndex[layerId][id];
                                 } else {
                                     index = -1;
                                 }
@@ -292,29 +291,40 @@ define([
 
                     _isReady = false; // indicates if the ui has fully rendered
 
+                /**
+                * Generates the content for a grid cell.  Will use template engine the first time, cached value after that.
+                * Function must conform to datatables renderer api
+                * https://datatables.net/reference/option/columns.render
+                *
+                * @method rowRenderer
+                * @private
+                * @param {Object} data the data for this cell that was added to the grid. not used
+                * @param {String} type the type of request. not used
+                * @param {Array} row full data values for the current row
+                * @param {Object} meta additional information about the cell
+                * return {String} value to display in the given grid cell
+                */
                 function rowRenderer(data, type, row, meta) {
-                    //attribute = feature.attributes;
                     //Remember, case sensitivity MATTERS in the attribute name.
-
-                    var obj = row.last(),
+                    var rowMetadata = row.last(), //secret stash of info in invisible last column
                         datagridMode = ui.getDatagridMode(),
                         tmplData,
-                            layerConfig;
+                        layerConfig;
 
-                    if (!obj || !obj.fData) {
+                    if (!rowMetadata || !rowMetadata.fData) {
                         //weird case where grid tries to render on non-existant row
                         return "";
                     }
 
-                    layerConfig = GraphicExtension.getConfigForFData(obj.fData);
+                    layerConfig = GraphicExtension.getConfigForFData(rowMetadata.fData);
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        if (!(datagridMode in obj)) {
+                        if (!(datagridMode in rowMetadata)) {
                             //first time rendering this row.
                             //we will run the template engine, then store the result in the last column.
 
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(rowMetadata.fData, layerConfig);
 
                             var sumTemplate = layerConfig.templates.summary;
 
@@ -322,16 +332,16 @@ define([
 
                             tmpl.templates = data_grid_template_json;
 
-                            obj[datagridMode] = tmpl(sumTemplate, tmplData);
+                            rowMetadata[datagridMode] = tmpl(sumTemplate, tmplData);
                         }
 
-                        return obj[datagridMode];
+                        return rowMetadata[datagridMode];
                     } else {
-                        if (!(datagridMode in obj)) {
+                        if (!(datagridMode in rowMetadata)) {
                             //first time rendering this row.
                             //we will generate it (template engine), then store the result in the last column.
 
-                            obj[datagridMode] = [];
+                            rowMetadata[datagridMode] = [];
 
                             //make array containing values for each column in the full grid
                             // retrieve extendedGrid config object
@@ -341,7 +351,7 @@ define([
                             tmpl.templates = extended_datagrid_template_json;
 
                             //bundle feature into the template data object
-                            tmplData = tmplHelper.dataBuilder(obj.fData, layerConfig);
+                            tmplData = tmplHelper.dataBuilder(rowMetadata.fData, layerConfig);
 
                             extendedGrid.forEach(function (col, i) {
                                 // add columnIdx property, and set initial value
@@ -352,11 +362,11 @@ define([
                                 if (col.sortType === "numeric") {
                                     result = Number(result);
                                 }
-                                obj[datagridMode].push(result);
+                                rowMetadata[datagridMode].push(result);
                             });
                         }
 
-                        return obj[datagridMode][meta.col];
+                        return rowMetadata[datagridMode][meta.col];
                     }
                 }
 
@@ -451,7 +461,7 @@ define([
                             console.log("subPanleDock");
                         })
                         .on("draw.dt", function () {
-                            cacheSortedData();
+                            indexSortedData();
 
                             // Do not activateRows if we're doing a page change
                             if (pageChange) {
@@ -950,7 +960,7 @@ define([
                     var globalCheckBoxesData = {
                         buttonLabel: i18n.t("datagrid.sort"),
                         classAddition: "font-medium global-button"
-                        },
+                    },
                         templateData = {
                             buttons: globalCheckBoxesData,
                             tableId: "jqgrid",
@@ -1276,31 +1286,30 @@ define([
             }());
 
         /**
-        * Caches the sorted data from datatables for feature click events to consume.  Builds featureToPage as a
-        * mapping of (layerName,layerId) => page where layerName and layerId are strings and page is a zero based int.
+        * Caches the sorted data from datatables for feature click events to consume.  Builds featureToIndex as a
+        * mapping of (layerId,featureId) => row index in the table.
         *
-        * @method cacheSortedData
+        * @method indexSortedData
         * @private
         */
-        function cacheSortedData() {
+        function indexSortedData() {
             var elements = oTable.rows().data();
-            featureToPage = {};
+            featureToIndex = {};
             $.each(elements, function (idx, val) {
                 if (val.last()) {
                     var layer = val.last().layerId,
-                            fid = GraphicExtension.getFDataOid(val.last().fData);
+                        fid = GraphicExtension.getFDataOid(val.last().fData);
 
-                    if (!(layer in featureToPage)) {
-                        featureToPage[layer] = {
-                        };
+                    if (!(layer in featureToIndex)) {
+                        featureToIndex[layer] = {};
                     }
-                    featureToPage[layer][fid] = idx;
+                    featureToIndex[layer][fid] = idx;
                 }
             });
         }
 
         /**
-        * A handler that handlers the Enter key press and Click mouse event of the data grid.
+        * Handles the Enter key press and Click mouse event of the data grid.
         * It is actually a binder that binds the key / mouse event to a handler specified.
         * This is wired up to grid cells in the bootstrapper to achieve click/keypress functions
         *
@@ -1317,10 +1326,11 @@ define([
         }
 
         /**
-        * Gets all layer data in the current map extent that are visible, and put the data into the data grid.
+        * Rounds up all visible features in the current map extent, then triggers the process to add those
+        * features to the datagrid
         *
         * @method applyExtentFilter
-        * @param {Deferred} d
+        * @param {Deferred} d a deferred to resolve after the grid has been populated
         *
         */
         function applyExtentFilter(d) {
@@ -1411,7 +1421,7 @@ define([
                 ui.updateNotice();
 
                 if (d) {
-                    console.log("I'm calling reserve!!!");
+                    // console.log("I'm calling reserve!!!");
                     d.resolve();
                 }
             });
@@ -1427,11 +1437,8 @@ define([
         * return {Array} an array representing the data the given feature contains.
         */
         function getDataObject(fData) {
-            //TODO it may be possible to take the logic in function rowRenderer (which applies templating) and apply it here. try after things are working as-is
-
             var layerConfig = GraphicExtension.getConfigForFData(fData),
                 innerArray;
-            //attribute = feature.attributes;
 
             //Remember, case sensitivity MATTERS in the attribute name.
 
@@ -1466,11 +1473,10 @@ define([
         }
 
         /**
-        * Populate the datagrid with data in visibleFeatures
+        * Populate the datagrid with data belonging to features contained in visibleFeatures
         *
         * @method fetchRecords
-        * @param {Array} visibleFeatures a dictionary mapping
-        * layer id to an array of on-map feature objects
+        * @param {Array} visibleFeatures a dictionary mapping layer id to an array of on-map feature objects
         * @private
         */
         function fetchRecords(visibleFeatures) {
@@ -1569,7 +1575,7 @@ define([
         *
         * @method getFDataFromButton
         * @private
-        * @param {JObject} buttonNode   the node containing button for the row
+        * @param {JObject} buttonNode   the node containing the button
         * @return {Object}   the feature data object
         */
         function getFDataFromButton(buttonNode) {
