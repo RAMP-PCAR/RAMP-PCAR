@@ -171,49 +171,56 @@ define([
                     });
 
                     defService.then(function (serviceResult) {
-                        RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
+                        if (serviceResult && (typeof serviceResult.error === 'undefined')) {
+                            RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
 
-                        //set up layer data object based on layer data
-                        var maxBatchSize = serviceResult.maxRecordCount || -1, //10.0 server will not supply a max record value
-                            defFinished = new Deferred(),
-                            layerData = newLayerData();
-                        layerData.layerId = layerId;
+                            //set up layer data object based on layer data
+                            var maxBatchSize = serviceResult.maxRecordCount || -1, //10.0 server will not supply a max record value
+                                defFinished = new Deferred(),
+                                layerData = newLayerData();
+                            layerData.layerId = layerId;
 
-                        //find object id field
-                        serviceResult.fields.every(function (elem) {
-                            if (elem.type === 'esriFieldTypeOID') {
-                                layerData.idField = elem.name;
-                                return false; //break the loop
+                            //find object id field
+                            serviceResult.fields.every(function (elem) {
+                                if (elem.type === 'esriFieldTypeOID') {
+                                    layerData.idField = elem.name;
+                                    return false; //break the loop
+                                }
+                                return true; //keep looping
+                            });
+
+                            //begin the loading process
+                            loadDataBatch(-1, maxBatchSize, layerUrl, layerData.idField, layerId, defFinished);
+
+                            //after all data has been loaded
+                            defFinished.promise.then(function (features) {
+                                addLayerData(layerData, features);
+
+                                //store attribData
+                                // (Set layer data in global object only once all data has been downloaded
+                                //  Used as both a flag and a data store)
+                                RAMP.data[layerId] = layerData;
+                                //new data. tell grid to reload
+                                topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+
+                                RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
+                                console.log('END ATTRIB LOAD: ' + layerId);
+                            },
+                            function (error) {
+                                console.log('error getting attribute data for id ' + layerId);
+                                //set layer to error state
+                                RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
+                                topic.publish(EventManager.LayerLoader.LAYER_ERROR, { layer: RAMP.layerRegistry[layerId], error: error });
+                            });
+                        } else {
+                            console.log('Service metadata load error');
+                            if (serviceResult && serviceResult.error) {
+                                console.log(serviceResult.error);
                             }
-                            return true; //keep looping
-                        });
-
-                        //begin the loading process
-                        loadDataBatch(-1, maxBatchSize, layerUrl, layerData.idField, layerId, defFinished);
-
-                        //after all data has been loaded
-                        defFinished.promise.then(function (features) {
-                            addLayerData(layerData, features);
-
-                            //store attribData
-                            // (Set layer data in global object only once all data has been downloaded
-                            //  Used as both a flag and a data store)
-                            RAMP.data[layerId] = layerData;
-                            //new data. tell grid to reload
-                            topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
-
-                            RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
-                            console.log('END ATTRIB LOAD: ' + layerId);
-                        },
-                        function (error) {
-                            console.log('error getting attribute data for id ' + layerId);
-                            //set layer to error state
-                            RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
-                            topic.publish(EventManager.LayerLoader.LAYER_ERROR, { layer: RAMP.layerRegistry[layerId], error: error });
-                        });
+                        }
                     },
                      function (error) {
-                         console.log('Max Record count load error : ' + error);
+                         console.log('Service metadata load error : ' + error);
                      });
 
                     break;
