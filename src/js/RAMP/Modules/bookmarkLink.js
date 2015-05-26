@@ -875,6 +875,20 @@ define([
                     updateURL();
                 });
 
+                topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (event) {
+                    var id;
+                    // if event.layerId is undefined then the layer is WMS
+                    if (typeof event.layerId === 'undefined') {
+                        id = event.layer.id;
+                    } else {
+                        id = event.layerId;
+                    }
+
+                    //remove layers from transparency and visibility objects
+                    delete layerTransparency[id];
+                    delete layerVisibility[id];
+                });
+
                 // This call is necessary to fill in the URL in the bookmark link
                 // if this call is removed, there will be no URL in the bookmark link
                 // until one of the above events fires
