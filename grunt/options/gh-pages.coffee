@@ -9,18 +9,12 @@ module.exports =
             clone: 'ramp-pcar-dist'
             repo: process.env.DIST_REPO
             branch: '<%= pkg.series %>'
-            message: ((
-                if process.env.TRAVIS_TAG
-                    "Production files for the " + process.env.TRAVIS_TAG + " release"
-                else
-                    "Travis build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
-            ))
+            add: true
+            message: 'chore(release): <%= pkg.name %> ' + process.env.TRAVIS_TAG + ' build files'
             silent: true
-            tag: ((
-                if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
-            ))
+            tag: process.env.TRAVIS_TAG
         src: [
-            'tarball/*.zip'
+            process.env.TRAVIS_TAG + '/<%= pkg.name %>/*.zip'
         ]
         
     # push demo to the ramp docs repo to a related folder (ramp-pcar or ramp-theme-*)
@@ -31,12 +25,7 @@ module.exports =
             repo: process.env.DOCS_REPO
             branch: 'master'
             #base: 'demos/NRSTC'
-            message: ((
-                if process.env.TRAVIS_TAG
-                    process.env.TRAVIS_TAG + " release demo"
-                else
-                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] build demo"
-            ))
+            message: 'chore(release): <%= pkg.name %> ' + process.env.TRAVIS_TAG + ' demo files'
             silent: true
         src: [
             'demos/**/*.*'
@@ -50,12 +39,7 @@ module.exports =
             repo: process.env.DOCS_REPO
             branch: 'master'
             #base: 'demos/NRSTC'
-            message: ((
-                if process.env.TRAVIS_TAG
-                    process.env.TRAVIS_TAG + " API release"
-                else
-                    process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "] API build"
-            ))
+            message: 'chore(release): <%= pkg.name %> ' + process.env.TRAVIS_TAG + ' API files'
             silent: true
         src: [
             'api/**/*.*'

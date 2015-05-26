@@ -1,25 +1,32 @@
 module.exports =
     options:
         data: [
-            "lib/wet-boew/site/data/**/*.{yml,json}"
-            "site/data/**/*.{yml,json}"
+            '<%= pkg.core.wet %>site/data/**/*.{yml,json}'
+            '<%= pkg.core.path %>site/data/**/*.{yml,json}'
+            '<%= pkg.theme.wet %>site/data/**/*.{yml,json}'
+            '<%= pkg.theme.path %>site/data/**/*.{yml,json}'
         ]
         helpers: [
-            "lib/wet-boew/site/helpers/helper-*.js"
-            "site/helpers/helper-*.js"
+            '<%= pkg.core.wet %>site/helpers/helper-*.js'
+            '<%= pkg.core.path %>site/helpers/helper-*.js'
+            '<%= pkg.theme.wet %>site/helpers/helper-*.js'
+            '<%= pkg.theme.path %>site/helpers/helper-*.js'
         ]
         partials: [
-            "lib/wet-boew/site/includes/**/*.hbs"
-            "site/includes/**/*.hbs"
+            '<%= pkg.core.wet %>site/includes/**/*.hbs'
+            '<%= pkg.core.path %>site/includes/**/*.hbs'
+            '<%= pkg.theme.wet %>site/includes/**/*.hbs'
+            '<%= pkg.theme.path %>site/includes/**/*.hbs'
         ]
-        layoutdir: "site/layouts"
-        layout: "default.hbs"
+        layoutdir: 'site/layouts'
+        layout: 'default.hbs'
 
         i18next:
             countryCode: 'CA'
             debug: false
-            localePath: 'src/locales'
-            languages: ['en', 'fr']
+            localePath: 'build/locales'
+            languages: '<%= pkg.core.ramp.locale.languages %>'
+            #languages: ['en', 'fr']
 
     ramp:
         options:
@@ -33,7 +40,7 @@ module.exports =
             flatten: true
             plugins: ['assemble-contrib-i18n']
             i18n:
-                languages: ['en', 'fr']
+                languages: '<%= pkg.core.ramp.locale.languages %>'
                 templates: [
                     'site/pages/ramp.hbs'
                     'site/pages/error.hbs'
@@ -41,14 +48,41 @@ module.exports =
         dest: 'build/'
         src: '!*.*'
 
-    ajax:
+    ajaxCore:
         options:
+            layoutdir: '<%= pkg.core.path %>site/layouts'
             flatten: true
             plugins: ['assemble-contrib-i18n']
             i18n:
-                languages: ['en', 'fr']
+                languages: '<%= pkg.core.ramp.locale.languages %>'
                 templates: [
-                    'site/pages/ajax/*.hbs'
+                    '<%= pkg.core.path %>site/pages/ajax/*.hbs'
+                ]
+        dest: 'build/ajax/'
+        src: '!*.*'
+
+    ajaxWetTheme:
+        options:
+            layoutdir: '<%= pkg.theme.wet %>site/layouts'
+            flatten: true
+            plugins: ['assemble-contrib-i18n']
+            i18n:
+                languages: '<%= pkg.core.ramp.locale.languages %>'
+                templates: [
+                    '<%= pkg.theme.wet %>site/pages/ajax/*.hbs'
+                ]
+        dest: 'build/ajax/'
+        src: '!*.*'
+
+    ajaxTheme:
+        options:
+            layoutdir: '<%= pkg.theme.path %>site/layouts'
+            flatten: true
+            plugins: ['assemble-contrib-i18n']
+            i18n:
+                languages: '<%= pkg.core.ramp.locale.languages %>'
+                templates: [
+                    '<%= pkg.theme.path %>site/pages/ajax/*.hbs'
                 ]
         dest: 'build/ajax/'
         src: '!*.*'

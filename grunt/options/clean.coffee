@@ -15,7 +15,7 @@ module.exports =
     ]
 
     yuidoc: [
-        '<%= yuidocconfig.options.outdir %>'
+        '<%= pkg.yuiconfig.options.outdir %>'
     ]
 
     docco: [
@@ -29,3 +29,7 @@ module.exports =
         src: [
             ##'<%= pkg.ramp.deployFolder %>'
         ]
+
+    oneConfig: [
+        'build/config.json'
+    ]

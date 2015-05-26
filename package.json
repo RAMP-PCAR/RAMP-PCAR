@@ -1,125 +1,128 @@
 {
-  "name": "ramp-pcar",
-  "subname": "Reusable Accessible Mapping Platform",
-  "version": "5.4.0-8",
-  "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
-  "main": "",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RAMP-PCAR/RAMP-PCAR.git"
-  },
-  "scripts": {
-    "test": "grunt test",
-    "postinstall": "bower install && grunt init"
-  },
-  "keywords": [
-    "ramp",
-    "gis",
-    "viewer",
-    "web",
-    "map",
-    "javascript",
-    "map"
-  ],
-  "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
-  "license": "none",
-  "devDependencies": {
-    "assemble": "~0.4.12",
-    "assemble-contrib-i18n": "~0.1.2",
-    "fs-utils": "~0.5.0",
-    "grunt": "~0.4.2",
-    "grunt-autoprefixer": "~0.7.2",
-    "grunt-bower-install": "^1.6.0",
-    "grunt-bump": "~0.0.13",
-    "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-compress": "~0.9.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-connect": "~0.8.0",
-    "grunt-contrib-copy": "~0.5.0",
-    "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-htmlmin": "~0.3.0",
-    "grunt-contrib-imagemin": "~0.5.0",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-less": "~0.11.0",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-yuidoc": "~0.5.2",
-    "grunt-conventional-changelog": "~1.2.0",
-    "grunt-docco": "~0.3.3",
-    "grunt-gh-pages": "~0.9.1",
-    "grunt-github-releaser": "~0.1.17",
-    "grunt-html": "~4.0.2",
-    "grunt-jscs": "~0.7.1",
-    "grunt-json-minify": "~0.4.0",
-    "grunt-jsonlint": "~1.0.4",
-    "grunt-newer": "~0.7.0",
-    "grunt-notify": "~0.2.20",
-    "grunt-replace": "~0.8.0",
-    "i18next": "~1.7.4",
-    "load-grunt-config": "~0.16.0",
-    "request": "~2.34.0",
-    "time-grunt": "~1.0.0",
-    "z-schema": "~3.1.0"
-  },
-  "ramp": {
-    "locale": {
-      "main": "en",
-      "languages": [
-        "en",
-        "fr"
-      ]
+    "name": "ramp-pcar",
+    "subname": "Reusable Accessible Mapping Platform",
+    "version": "5.4.0-8",
+    "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RAMP-PCAR/RAMP-PCAR.git"
     },
-    "concat": {
-      "jsLib": [
-        "jquery/dist/jquery.js",
-        "DataTables/media/js/jquery.dataTables.js",
-        "gsap/src/uncompressed/TweenLite.js",
-        "gsap/src/uncompressed/TimelineLite.js",
-        "gsap/src/uncompressed/plugins/CSSPlugin.js",
-        "gsap/src/uncompressed/easing/EasePack.js",
-        "i18next/i18next.js",
-        "jquery-nstSlider/dist/jquery.nstSlider.js",
-        "jqueryui/ui/core.js",
-        "jqueryui/ui/widget.js",
-        "jqueryui/ui/mouse.js",
-        "jqueryui/ui/position.js",
-        "jqueryui/ui/draggable.js",
-        "jqueryui/ui/droppable.js",
-        "jqueryui/ui/sortable.js",
-        "jqueryui/ui/slider.js",
-        "jqueryui/ui/effect.js",
-        "jquery-hoverIntent/jquery.hoverIntent.js",
-        "jquery.scrollTo/jquery.scrollTo.js",
-        "shorten/src/jquery.shorten.js",
-        "Snap.svg/dist/snap.svg.js",
-        "tooltipster/js/jquery.tooltipster.js",
-        "urlshortener/jquery.urlshortener.js",
-        "blueimp-tmpl/js/tmpl.js",
-        "terraformer/terraformer.js",
-        "terraformer-arcgis-parser/terraformer-arcgis-parser.js",
-        "shapefile-js/dist/shp.js",
-        "csv2geojson/csv2geojson.js",
-        "proj4js/dist/proj4-src.js",
-        "terraformer-proj4js/src/terraformer-proj4js.js",
-        "RandomColor/rcolor.js",
-        "btoa-umd/dist/btoa-umd.js",
-        "selfish/selfish.js",
-        "t/t.js",
-        "formstone/src/js/core.js",
-        "formstone/src/js/touch.js",
-        "formstone/src/js/checkbox.js"
-      ],
-      "cssLib": [
-        "animate.css/animate.css",
-        "tooltipster/css/tooltipster.css",
-        "fontawesome/css/font-awesome.css"
-      ]
+    "scripts": {
+        "test": "grunt test",
+        "postinstall": "bower install && grunt init"
     },
-    "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
-    "docco": {
-      "path": "src/js/RAMP",
-      "outdir": "docs/docco"
+    "keywords": [
+        "ramp",
+        "gis",
+        "viewer",
+        "web",
+        "map",
+        "javascript",
+        "map"
+    ],
+    "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
+    "license": "none",
+    "devDependencies": {
+        "assemble": "~0.4.12",
+        "assemble-contrib-i18n": "~0.1.2",
+        "fs-utils": "~0.5.0",
+        "grunt": "~0.4.2",
+        "grunt-autoprefixer": "~0.7.2",
+        "grunt-bump": "~0.0.13",
+        "grunt-contrib-clean": "~0.5.0",
+        "grunt-contrib-compress": "~0.9.1",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-connect": "~0.8.0",
+        "grunt-contrib-copy": "~0.5.0",
+        "grunt-contrib-cssmin": "~0.7.0",
+        "grunt-contrib-htmlmin": "~0.3.0",
+        "grunt-contrib-imagemin": "~0.5.0",
+        "grunt-contrib-jshint": "~0.10.0",
+        "grunt-contrib-less": "~0.11.0",
+        "grunt-contrib-uglify": "~0.4.0",
+        "grunt-contrib-watch": "~0.6.1",
+        "grunt-contrib-yuidoc": "~0.5.2",
+        "grunt-conventional-changelog": "~1.2.0",
+        "grunt-docco": "~0.3.3",
+        "grunt-gh-pages": "~0.9.1",
+        "grunt-github-releaser": "~0.1.17",
+        "grunt-html": "~4.0.2",
+        "grunt-jscs": "~0.7.1",
+        "grunt-json-minify": "~0.4.0",
+        "grunt-jsonlint": "~1.0.4",
+        "grunt-newer": "~0.7.0",
+        "grunt-notify": "~0.2.20",
+        "grunt-replace": "~0.8.0",
+        "i18next": "~1.7.4",
+        "load-grunt-config": "~0.16.0",
+        "request": "~2.34.0",
+        "time-grunt": "~1.0.0",
+        "z-schema": "~3.1.0"
     },
-    "rampASCII": "   \\n                         _,-' ______\\n        WWWWWW| |WWWWWW'  .-'  ____7\\n         W W W| |W W W   /   ___7\\n              | |   |   /  ___7\\n            ( O O )_ \\\\ | ___7_\\n             /   \\\\          ~ \\\\\\n            /     |  ~   ~     \\\\\\n           /o   o/W          ~  \\\\         Elk:    Bernhard Schwarz\\n           \\\\____/ |_| |__| |_| | *        Wings:  jgs\\n                | | | |  | | | |\\n   ______ _    _| |_| | _| |_| |   _______    _ __    _____ _ _\\n   |  ___| |  (___|___|(___|___|  / /  ___|  | |\\\\ \\\\  |  ___| | |\\n   | |_  | |_   _ _ _ __   __ _  | || |_ __ _| |_| | | |__ | | | __\\n   |  _| | | | | | | '_ \\\\ / _` | | ||  _/ _` | __| | |  __|| | |/ /\\n   | |   | | |_| | | | | | (_| | | || || (_| | |_| | | |___| |   <\\n   \\\\_|   |_|\\\\__, |_|_| |_|\\\\__, | | |\\\\_| \\\\__,_|\\\\__| | \\\\____/|_|_|\\\\_\\\\\\n             __/ |         __/ |  \\\\_\\\\           /_/                                                                  \\n            |___/         |___/       ._ v5.4 _.\\n\\n"
-  }
+    "ramp": {
+        "locale": {
+            "main": "en",
+            "languages": [
+                "en",
+                "fr"
+            ]
+        },
+        "concat": {
+            "jsLib": [
+                "jquery/dist/jquery.js",
+                "DataTables/media/js/jquery.dataTables.js",
+                "gsap/src/uncompressed/TweenLite.js",
+                "gsap/src/uncompressed/TimelineLite.js",
+                "gsap/src/uncompressed/plugins/CSSPlugin.js",
+                "gsap/src/uncompressed/easing/EasePack.js",
+                "i18next/i18next.js",
+                "jquery-nstSlider/dist/jquery.nstSlider.js",
+                "jqueryui/ui/core.js",
+                "jqueryui/ui/widget.js",
+                "jqueryui/ui/mouse.js",
+                "jqueryui/ui/position.js",
+                "jqueryui/ui/draggable.js",
+                "jqueryui/ui/droppable.js",
+                "jqueryui/ui/sortable.js",
+                "jqueryui/ui/slider.js",
+                "jqueryui/ui/effect.js",
+                "jquery-hoverIntent/jquery.hoverIntent.js",
+                "jquery.scrollTo/jquery.scrollTo.js",
+                "shorten/src/jquery.shorten.js",
+                "Snap.svg/dist/snap.svg.js",
+                "tooltipster/js/jquery.tooltipster.js",
+                "urlshortener/jquery.urlshortener.js",
+                "blueimp-tmpl/js/tmpl.js",
+                "terraformer/terraformer.js",
+                "terraformer-arcgis-parser/terraformer-arcgis-parser.js",
+                "shapefile-js/dist/shp.js",
+                "csv2geojson/csv2geojson.js",
+                "proj4js/dist/proj4-src.js",
+                "terraformer-proj4js/src/terraformer-proj4js.js",
+                "RandomColor/rcolor.js",
+                "btoa-umd/dist/btoa-umd.js",
+                "selfish/selfish.js",
+                "t/t.js",
+                "formstone/src/js/core.js",
+                "formstone/src/js/touch.js",
+                "formstone/src/js/checkbox.js"
+            ],
+            "cssLib": [
+                "animate.css/animate.css",
+                "tooltipster/css/tooltipster.css",
+                "fontawesome/css/font-awesome.css"
+            ]
+        },
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
+        "docco": {
+            "path": "src/js/RAMP",
+            "outdir": "docs/docco"
+        },
+        "rampASCII": "   \\n                         _,-' ______\\n        WWWWWW| |WWWWWW'  .-'  ____7\\n         W W W| |W W W   /   ___7\\n              | |   |   /  ___7\\n            ( O O )_ \\\\ | ___7_\\n             /   \\\\          ~ \\\\\\n            /     |  ~   ~     \\\\\\n           /o   o/W          ~  \\\\         Elk:    Bernhard Schwarz\\n           \\\\____/ |_| |__| |_| | *        Wings:  jgs\\n                | | | |  | | | |\\n   ______ _    _| |_| | _| |_| |   _______    _ __    _____ _ _\\n   |  ___| |  (___|___|(___|___|  / /  ___|  | |\\\\ \\\\  |  ___| | |\\n   | |_  | |_   _ _ _ __   __ _  | || |_ __ _| |_| | | |__ | | | __\\n   |  _| | | | | | | '_ \\\\ / _` | | ||  _/ _` | __| | |  __|| | |/ /\\n   | |   | | |_| | | | | | (_| | | || || (_| | |_| | | |___| |   <\\n   \\\\_|   |_|\\\\__, |_|_| |_|\\\\__, | | |\\\\_| \\\\__,_|\\\\__| | \\\\____/|_|_|\\\\_\\\\\\n             __/ |         __/ |  \\\\_\\\\           /_/                                                                  \\n            |___/         |___/       ._ v5.4 _.\\n\\n",
+        "serve": {
+            "port": 3002,
+            "livereload": 35732
+        }
+    }
 }

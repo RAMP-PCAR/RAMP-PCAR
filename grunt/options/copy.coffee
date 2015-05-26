@@ -1,4 +1,20 @@
 module.exports = 
+    # used by theme build
+    
+    configBuild:
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>src'
+            src: 'config.json'
+            dest: 'build/'
+        # overrider core config with local if exists
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src'
+            src: 'config.json'
+            dest: 'build/'
+        ]
+
     configDist:
         expand: true
         cwd: 'build/'
@@ -6,133 +22,264 @@ module.exports =
         dest: 'dist/'
 
     wetboewBuild:
-        expand: true
-        cwd: 'lib/wet-boew/dist/unmin'
-        src: [
-            '**/*.*'
-            '!ajax/**/*.*'
-            '!**/logo.*'
-            '!**/favicon*.*'
-            '!demos/**/*.*'
-            '!docs/**/*.*'
-            '!test/**/*.*'
-            '!theme/**/*.*'
-            '!*.html'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.wet %>dist/unmin'
+            src: [
+                '**/*.*'
+                '!ajax/**/*.*'
+                '!**/logo.*'
+                '!**/favicon*.*'
+                '!demos/**/*.*'
+                '!docs/**/*.*'
+                '!test/**/*.*'
+                '!theme/**/*.*'
+                '!*.html'
+            ]
+            dest: 'build/js/lib/wet-boew/'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.wet %>dist/unmin'
+            src: [
+                '**/*.*'
+                '!ajax/**/*.*'
+                '!**/logo.*'
+                '!**/favicon*.*'
+                '!demos/**/*.*'
+                '!docs/**/*.*'
+                '!test/**/*.*'
+                '!theme/**/*.*'
+                '!*.html'
+            ]
+            dest: 'build/js/lib/wet-boew/'
         ]
-        dest: 'build/js/lib/wet-boew/'
 
     wetboewDist:
-        expand: true
-        cwd: 'lib/wet-boew/dist'
-        src: [
-            '**/*.*'
-            '!ajax/**/*.*'
-            '!**/logo.*'
-            '!**/favicon*.*'
-            '!demos/**/*.*'
-            '!docs/**/*.*'
-            '!test/**/*.*'
-            '!theme/**/*.*'
-            '!unmin/**/*.*'
-            '!*.html'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.wet %>dist'
+            src: [
+                '**/*.*'
+                '!ajax/**/*.*'
+                '!**/logo.*'
+                '!**/favicon*.*'
+                '!demos/**/*.*'
+                '!docs/**/*.*'
+                '!test/**/*.*'
+                '!theme/**/*.*'
+                '!unmin/**/*.*'
+                '!*.html'
+            ]
+            dest: 'dist/js/lib/wet-boew/'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.wet %>dist'
+            src: [
+                '**/*.*'
+                '!ajax/**/*.*'
+                '!**/logo.*'
+                '!**/favicon*.*'
+                '!demos/**/*.*'
+                '!docs/**/*.*'
+                '!test/**/*.*'
+                '!theme/**/*.*'
+                '!unmin/**/*.*'
+                '!*.html'
+            ]
+            dest: 'dist/js/lib/wet-boew/'
         ]
-        dest: 'dist/js/lib/wet-boew/'
 
     polyfillBuild:
-        expand: true
-        cwd: 'src/js/polyfill'
-        src: '*.*'
-        dest: 'build/js/polyfill'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/polyfill'
+            src: '*.*'
+            dest: 'build/js/polyfill'
+        ,   
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/polyfill'
+            src: '*.*'
+            dest: 'build/js/polyfill'
+        ]
 
     polyfillDist:
-        expand: true
-        cwd: 'src/js/polyfill'
-        src: '*.*'
-        dest: 'dist/js/polyfill'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/polyfill'
+            src: '*.*'
+            dest: 'dist/js/polyfill'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/polyfill'
+            src: '*.*'
+            dest: 'dist/js/polyfill'
+        ]
 
     assetsBuild:
-        expand: true
-        cwd: 'src/assets'
-        src: '**/*.*'
-        dest: 'build/assets'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/assets'
+            src: '**/*.*'
+            dest: 'build/assets'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/assets'
+            src: '**/*.*'
+            dest: 'build/assets'
+        ]
 
     assetsDist:
-        expand: true
-        cwd: 'src/assets'
-        src: '**/*.*'
-        dest: 'dist/assets'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/assets'
+            src: '**/*.*'
+            dest: 'dist/assets'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/assets'
+            src: '**/*.*'
+            dest: 'dist/assets'
+        ]
 
     proxyBuild:
-        expand: true
-        cwd: 'proxy'
-        src: '**/*.*'
-        dest: 'build/proxy'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>proxy'
+            src: '**/*.*'
+            dest: 'build/proxy'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>proxy'
+            src: '**/*.*'
+            dest: 'build/proxy'
+        ]
 
     proxyDist:
-        expand: true
-        cwd: 'proxy'
-        src: '**/*.*'
-        dest: 'dist/proxy'
-        
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>proxy'
+            src: '**/*.*'
+            dest: 'dist/proxy'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>proxy'
+            src: '**/*.*'
+            dest: 'dist/proxy'
+        ]
+    
+    # theme locales are merged with core locales in the build folder        
     localesBuild:
         expand: true
-        cwd: 'src/locales'
+        cwd: '<%= pkg.core.path %>src/locales'
         src: '**/*.json'
         dest: 'build/locales'
 
     localesDist:
         expand: true
-        cwd: 'src/locales'
+        cwd: 'build/locales'
         src: '**/*.json'
         dest: 'dist/locales'
 
     templatesBuild:
         files: [
+            # used by theme build
             expand: true
-            cwd: 'src/js/RAMP/Modules/templates'
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Modules/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Modules/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Tools/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Tools/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Utils/templates'
+            src: '**/*.json'
+            dest: 'build/js/RAMP/Utils/templates'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Modules/templates'
             src: '**/*.json'
             dest: 'build/js/RAMP/Modules/templates'
         ,
             expand: true
-            cwd: 'src/js/RAMP/Tools/templates'
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Tools/templates'
             src: '**/*.json'
             dest: 'build/js/RAMP/Tools/templates'
         ,
             expand: true
-            cwd: 'src/js/RAMP/Utils/templates'
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Utils/templates'
             src: '**/*.json'
             dest: 'build/js/RAMP/Utils/templates'
         ]
 
     templatesDist:
         files: [
+            # used by theme build
             expand: true
-            cwd: 'src/js/RAMP/Modules/templates'
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Modules/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Modules/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Tools/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Tools/templates'
+        ,
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Utils/templates'
+            src: '**/*.json'
+            dest: 'dist/js/RAMP/Utils/templates'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Modules/templates'
             src: '**/*.json'
             dest: 'dist/js/RAMP/Modules/templates'
         ,
             expand: true
-            cwd: 'src/js/RAMP/Tools/templates'
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Tools/templates'
             src: '**/*.json'
             dest: 'dist/js/RAMP/Tools/templates'
         ,
             expand: true
-            cwd: 'src/js/RAMP/Utils/templates'
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Utils/templates'
             src: '**/*.json'
             dest: 'dist/js/RAMP/Utils/templates'
         ]
 
     jsCore:
-        expand: true
-        cwd: 'src/js/RAMP/'
-        src: '**/*.js'
-        dest: 'build/js/RAMP/'
+        files: [
+            # used by theme build
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/'
+            src: '**/*.js'
+            dest: 'build/js/RAMP/'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/'
+            src: '**/*.js'
+            dest: 'build/js/RAMP/'
+        ]
 
     jsPlugins:
-        expand: true
-        cwd: 'src/js/plugins/'
-        src: '**/*.js'
-        dest: 'build/js/plugins/'
+        files: [
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/plugins/'
+            src: '**/*.js'
+            dest: 'build/js/plugins/'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/plugins/'
+            src: '**/*.js'
+            dest: 'build/js/plugins/'
+        ]
 
     cssLibResBuild:
         expand: true
@@ -146,11 +293,11 @@ module.exports =
         src: 'fonts/**/*.*'
         dest: 'dist/css/'
 
-    deploy:
-        expand: true
-        cwd: 'dist'
-        src: '**/*.*'
-        dest: '<%= pkg.ramp.deployFolder %>/'
+    #deploy:
+    #    expand: true
+    #    cwd: 'dist'
+    #    src: '**/*.*'
+    #    dest: '<%= pkg.ramp.deployFolder %>/'
 
     demo:
         expand: true
@@ -163,3 +310,9 @@ module.exports =
         cwd: 'docs'
         src: '**/*.*'
         dest: 'api/' + process.env.TRAVIS_TAG + '/' 
+
+    tarballDist:
+        expand: true
+        cwd: 'tarball'
+        src: '*.zip'
+        dest: process.env.TRAVIS_TAG + '/<%= pkg.name %>/'

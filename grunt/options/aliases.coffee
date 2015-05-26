@@ -17,7 +17,9 @@ module.exports =
         [
             'clean:build'
             'copy:build'
-            'assemble'
+            'prepareLocale'
+            'generateConfig' # generate config after copying locale files
+            'assemblePages'
             'notify:page'
             'js:prep'
             'js:build'
@@ -28,7 +30,7 @@ module.exports =
     # 'INTERNAL: Copies files (except JS and CSS) needed for a build.'
     'copy:build': 
         [
-            'generateConfig'
+            'copy:configBuild'
             'copy:polyfillBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
@@ -41,6 +43,7 @@ module.exports =
     #'INTERNAL: Copies files (except JS and CSS) needed for a distribution package.'
     'copy:dist': 
         [
+            'copy:configDist'
             'copy:polyfillDist'
             'copy:wetboewDist'
             'copy:assetsDist'
@@ -85,14 +88,23 @@ module.exports =
             'notify:dist'
         ]
 
+    # 'INTERNAL: Prepare locale files'
+    'prepareLocale':
+        [
+            'jsonlint:locales' # lint src locales
+            'locale:check' # check src locales for consistence; assuming core locales are correct
+            'locale:merge' # used for theme builds
+        ]
+
     # 'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
     'generateConfig':
         [   
-            'locale:check'
             'jsonlint:oneConfig'
             'zs3'
-            'jsonlint:locales'
             'assembleConfigs'
+            'jsonlint:generatedConfigs'
+            'notify:generatedConfigsLint'
+            'clean:oneConfig'
         ]            
 
     # 'INTERNAL: Runs JSHint on JS code.'
@@ -140,7 +152,7 @@ module.exports =
         [
             'clean:build'
             'copy:build'
-            'assemble'
+            'assemblePages'
             'notify:page'
             'js:quietbuild'
             'css:build'

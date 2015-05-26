@@ -5,11 +5,11 @@ module.exports =
     build:
         options:
             base: 'build'
-            port: 3002
-            livereload: true
+            port: '<%= pkg.serve.port %>'
+            livereload: '<%= pkg.serve.livereload %>'
 
     dist:
         options:
             base: 'dist'
-            port: 3002
+            port: '<%= pkg.serve.port %>'
             keepalive: true

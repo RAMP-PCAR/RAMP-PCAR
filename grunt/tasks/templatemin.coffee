@@ -25,8 +25,13 @@ module.exports = (grunt) ->
                     # strip some of the white space
                     contents = contents.replace />\s*?</g, '><'
 
-                    # stripping all space causes errors
-                    #contents = contents.replace /(\s){2,}/g, '><'
+                    # strip spaces between html and other tags
+                    contents
+                        .replace(/%}\s*?</g, "%}<")
+                        .replace(/>\s*?{%/g, ">{%")
+
+                        .replace(/"\s*?</g, '"<')
+                        .replace(/>\s*?"/g, '>"');
 
                     grunt.file.write file, contents
             )
