@@ -291,9 +291,6 @@ define([
                 info.fn = TmplUtil;
 
                 this.node = $(tmpl(this.type, info));
-                console.log(this.node);
-                console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-
                 this._imageBoxNode = this.node.find('.layer-details > div:first');
                 this._displayNameNode = this.node.find('.layer-name > span');
                 this._controlsNode = this.node.find('.layer-controls-group');
