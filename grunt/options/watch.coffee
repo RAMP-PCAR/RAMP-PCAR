@@ -53,7 +53,9 @@ module.exports =
             'src/config.json'
         ]
         tasks: [
-            'generateConfig'
+            # need to copy config source to build to generate language-specific config files
+            'copy:configBuild'
+            'generateConfig'            
         ]
     
     locales:
@@ -63,11 +65,13 @@ module.exports =
         
         tasks: [
             #'build'
-            'generateConfig'
-            'assemble' #for quicker build only run a subset of build
-            'htmllint'
-            'notify:page'
+            'copy:configBuild'
             'copy:localesBuild'
+            'prepareLocale'
+            'generateConfig'
+            'assemblePages' #for quicker build only run a subset of build
+            #'htmllint' do not lint pages since only translations changed
+            'notify:page'
         ]
     
     config:
