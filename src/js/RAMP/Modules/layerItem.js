@@ -400,7 +400,7 @@ define([
              *      {
              *          notices: {
              *              error: {
-             *                  message: "I'm error"
+             *                  message: "I am error"
              *              },
              *              scale: {
              *                  message: "All your base are belong to us"
