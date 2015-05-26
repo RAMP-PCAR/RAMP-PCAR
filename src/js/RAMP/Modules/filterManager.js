@@ -16,24 +16,24 @@
 * http://ecollab.ncr.int.ec.gc.ca/projects/science-apps/priv/RAMP/RAMP%20AMD%20Filter%20Module.docx
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-* {{#crossLink "LayerGroup"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "Checkbox"}}{{/crossLink}}  
-* {{#crossLink "CheckboxGroup"}}{{/crossLink}}  
-* 
+* {{#crossLink "RAMP"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+* {{#crossLink "LayerGroup"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "Checkbox"}}{{/crossLink}}
+* {{#crossLink "CheckboxGroup"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
 * {{#crossLink "templates/filter_wms_meta_Template.json"}}{{/crossLink}}
-* 
+*
 * @class FilterManager
 * @static
 * @uses dojo/_base/array
@@ -79,6 +79,8 @@ define([
             layerIdField = "layer-id",
 
             layerGroups = {},
+
+            updatingLayers = [],
 
             ui = (function () {
                 var sectionNode,
@@ -182,7 +184,7 @@ define([
                     * easier to write a function that takes a list of checkboxes
                     * than to write two functions, one to take a list and one to
                     * take an individual checkbox
-                    * 
+                    *
                     * @method createGroups
                     * @private
                     */
@@ -553,7 +555,7 @@ define([
 
                     function metadataClickHandler(target) {
                         var button = $(target),
-                            node = button.parents("legend");
+                            node = button.parents(".filter-row-container");
 
                         if (!node.hasClass("selected-row")) {
                             //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
@@ -591,7 +593,8 @@ define([
                                     wmsmeta = tmpl("wms_meta_main",
                                         {
                                             legendUrl: layerConfig.legend.imageUrl,
-                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities"
+                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities",
+                                            serviceEndPointUrl: layerConfig.url
                                         }
                                     );
 
@@ -603,7 +606,7 @@ define([
                                     });
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><b>Service End Point URL</b><br><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -614,7 +617,7 @@ define([
                                 // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
                                 var metadataError = function () {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p>",
+                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
                                         origin: "filterManager",
                                         update: true,
                                         guid: id
@@ -639,7 +642,7 @@ define([
                                                 metadataError();
                                             } else {
                                                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                    content: $(data),
+                                                    content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
                                                     origin: "filterManager",
                                                     update: true,
                                                     guid: id
@@ -893,7 +896,6 @@ define([
                     LayerItem.removeStateMatrixPart(layerItem.stateMatrix, "controls", LayerItem.controls.RELOAD);
                     layerItem.setState(LayerItem.state.ERROR, null, true);
                 }
-
             }
         }
 
@@ -912,6 +914,36 @@ define([
 
             topic.subscribe(EventManager.Map.ZOOM_END, function () {
                 setLayerOffScaleStates();
+            });
+
+            // Layer loading features
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATING, function (arg) {
+                // Add to list of updating layers and disable sorting handles
+                updatingLayers.push(arg.layer);
+                $('.sort-handle').hide();
+            });
+
+            // Layer done loading features
+            topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, function (arg) {
+                // Remove the layer from the array and check if any more layers are loading
+                updatingLayers.splice(updatingLayers.indexOf(arg.layer), 1);
+                if (updatingLayers.length === 0) {
+                    // If no layers are loading re-enable the sorting handles
+                    $('.sort-handle').show();
+                }
+            });
+
+            // Layer removed from list
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (arg) {
+                // Remove the layer from the array if it was loading, and check if any others are
+                var index = updatingLayers.indexOf(arg.layer);
+                if (index > -1) {
+                    updatingLayers.splice(index, 1);
+                    if (updatingLayers.length === 0) {
+                        // If no layers are loading re-enable sorting handles
+                        $('.sort-handle').show();
+                    }
+                }
             });
         }
 
