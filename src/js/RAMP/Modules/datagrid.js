@@ -1162,7 +1162,7 @@ define([
                                 var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature, function (layerConfig) {
                                     var layer = RAMP.map.getLayer(layerConfig.id);
                                     if (layer) {
-                                        return layer.visible && layer.ramp.type !== GlobalStorage.layerType.Static;
+                                        return layer.visible && (layer.ramp.type !== GlobalStorage.layerType.Static) && (layer.ramp.load.state !== 'error');
                                     } else {
                                         //layer failed to load.  it will not be visible
                                         return false;
