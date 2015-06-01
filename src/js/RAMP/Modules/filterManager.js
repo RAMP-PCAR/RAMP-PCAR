@@ -1003,7 +1003,7 @@ define([
                     );
 
                     // add a bounding box settings to the non-static feature layers only
-                    if (!layerRamp.config.isStatic) {
+                    if (!layerRamp.config.isStatic && layerRamp.config.layerExtent) {
                         LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
                           [
                               LayerItem.settings.BOUNDING_BOX
