@@ -307,7 +307,7 @@
         "hideFeatures": "Hide {0}",
         "hideLegend": "Hide Legend",
         "layerData": "Layer data",
-        "layerDataPrefetch": "Download all data",
+        "layerDataPrefetch": "Load all features",
         "layerHandle": "Layer Handle",
         "layerHandleLabel": "Layer handle for __layerName__",
         "layerListLabel": "Sortable layer list",
