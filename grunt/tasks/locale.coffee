@@ -106,6 +106,20 @@ module.exports = (grunt) ->
                             grunt.file.write 'src/locales/' + lang + '-CA/translation.json', JSON.stringify(merged, null, '    ')
             )
     )
+    
+    grunt.registerTask(
+        'locale:sort'
+        'INTERNAL Sorts all locale files'
+        () ->
+            # get RAMP core package to get language info
+            pkg = grunt.option 'pkg'
+            languages = pkg.core.ramp.locale.languages
+
+            languages.forEach(
+                (lang) ->
+                    sortLocale lang
+            )
+    )
 
     grunt.registerTask(
         'locale:merge'
