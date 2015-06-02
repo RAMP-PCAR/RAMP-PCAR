@@ -257,7 +257,7 @@ define([
                         bounding_box_brick: {
                             type: Bricks.CheckboxfsBrick,
                             config: {
-                                label: 'Bounding Box',
+                                label: i18n.t('filterManager.boundingBox'),
                                 customContainerClass: 'bbox',
                                 checked: false//,
                                 //instructions: i18n.t('addDataset.help.dataSource')
