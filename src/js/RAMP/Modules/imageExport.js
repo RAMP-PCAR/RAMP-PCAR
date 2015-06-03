@@ -11,9 +11,9 @@
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
+* {{#crossLink "EventManager"}}{{/crossLink}}
 * {{#crossLink "Map"}}{{/crossLink}}
-* 
+*
 * @class ImageExport
 * @static
 * @uses dojo/topic
@@ -31,11 +31,11 @@ define([
 "esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
 
 /* RAMP */
-    "ramp/eventManager", "ramp/map",
+    "ramp/eventManager", "ramp/map"
 
     /* UTIL */
 
-    "utils/util", "utils/popupManager"
+ //   "utils/util", "utils/popupManager"
 ],
 
     function (
@@ -46,10 +46,10 @@ define([
     PrintTemplate, PrintParameters, PrintTask,
 
     /* RAMP */
-        EventManager, RampMap,
+        EventManager, RampMap
 
         /* UTIL */
-        MiscUtil, PopupManager
+        //     MiscUtil, PopupManager
         ) {
         "use strict";
 
@@ -59,7 +59,8 @@ define([
                 mapExportImg,
                 mapExportSpinner,
                 mapExportNotice,
-
+                downloadButton,
+                /*
                 mapExportCloseButton,
 
                 downloadDropdownToggle,
@@ -72,16 +73,16 @@ define([
                 downloadButtonPNG,
 
                 downloadPopup,
-
+                */
                 promise,
 
                 jWindow,
-                cssButtonPressedClass = "button-pressed",
+                //cssButtonPressedClass = "button-pressed",
                 transitionDuration = 0.4;
 
             /**
              * Handles click event on the export image toggle.
-             * 
+             *
              * @private
              * @method ui.generateExportIamge
              */
@@ -99,7 +100,8 @@ define([
                 promise = result.promise;
 
                 tl
-                    .call(function () {
+                    .call(function () { downloadButton.attr({ disabled: true, href: "" }); }) // disabled download button
+                  /*  .call(function () {
                         downloadDropdown
                             .find(".btn")
                             .attr({ disabled: true })
@@ -110,7 +112,7 @@ define([
 
                         //downloadButtonPNG.attr({ disabled: true, href: "" });
                         //downloadButtonJPG.attr({ disabled: true, href: "" });
-                    })
+                    }) */
                     .set(mapExportNotice, { display: "none" }) // hide error notice
                     .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
@@ -120,6 +122,7 @@ define([
 
                 promise.then(
                     function (event) {
+                        /*
                         mapExportImg.on("load", function (event) {
                             var canvas = MiscUtil.convertImageToCanvas(event.target),
                                 dataPNG = "",
@@ -141,9 +144,10 @@ define([
 
                             mapExportImg.off("load");
                         });
-
+                        */
                         tl
-                            //.call(function () { downloadButtonPNG.attr({ disabled: false, href: event.result.url }); }) // enabled download button
+                             .call(function () { downloadButton.attr({ disabled: false, href: event.result.url }); }) // enabled download button
+                            //.call(function () { downloadButtonPNG.attr({ disabled: false, href: event.result.url }); })
                             .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
@@ -168,7 +172,7 @@ define([
             return {
                 /**
                  * Initializes ui and listeners.
-                 * 
+                 *
                  * @private
                  * @method ui.init
                  */
@@ -180,7 +184,8 @@ define([
                     mapExportImg = $(".map-export-image > img");
                     mapExportSpinner = mapExportStretcher.find(".loading-simple");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
-
+                    downloadButton = $(".map-export-controls .download-buttons > .btn");
+                    /*
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
                     downloadDropdownMenu = $(".map-export-controls .download-buttons .dropdown-menu");
 
@@ -190,12 +195,13 @@ define([
                     downloadDefault = downloadDropdown.find(".btn.download-default");
 
                     mapExportCloseButton = $("#map-export-modal .button-close");
+                    */
 
                     mapExportToggle
                         .removeClass('disabled')
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
-
+                    /*
                     downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, "click",
                         function (d) {
                             downloadDropdownMenu.show();
@@ -220,6 +226,7 @@ define([
 
                         mapExportImg.attr("src", "");
                     });
+                    */
                 }
             };
         }()),
