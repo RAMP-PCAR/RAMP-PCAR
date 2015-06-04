@@ -273,7 +273,27 @@ define([
                                 customContainerClass: 'all-data',
                                 choices: [
                                     {
-                                        key: 'featureServiceAttrStep',
+                                        key: 'layerDataPrefetch',
+                                        value: i18n.t('filterManager.layerDataPrefetch')
+                                    }
+                                ]
+                                //instructions: i18n.t('addDataset.help.dataSource')
+                            }
+
+                        },
+
+                        all_data_checked_brick: {
+                            type: Bricks.ChoiceBrick,
+                            config: {
+                                header: i18n.t('filterManager.layerData'),
+                                template: 'default_choice_brick_inline_template',
+                                containerClass: 'choice-brick-inline-container',
+                                customContainerClass: 'all-data',
+                                isEnabled: false,
+                                preselect: 'layerDataPrefetch',
+                                choices: [
+                                    {
+                                        key: 'layerDataPrefetch',
                                         value: i18n.t('filterManager.layerDataPrefetch')
                                     }
                                 ]
@@ -695,7 +715,8 @@ define([
                     OPACITY: 'opacity',
                     BOUNDING_BOX: 'bounding_box_brick',
                     SNAPSHOT: 'snapshot',
-                    ALL_DATA: 'all_data_brick'
+                    ALL_DATA: 'all_data_brick',
+                    ALL_DATA_CHECKED: 'all_data_checked_brick' // a Choice brick which is alreayd preselected
                 },
 
                 /**

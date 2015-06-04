@@ -20,7 +20,7 @@
 * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
 * 
 * 
-* @class Bricks
+* @class BricksChoiceBrick
 * @static
 * @uses dojo/_base/lang
 * 
@@ -162,6 +162,14 @@ define([
              */
 
             /**
+             * Specifies if the brick is enabled from creation. If false, the Brick is disabled after initialization.
+             * 
+             * @property isEnabled
+             * @type {Boolean}
+             * @default true
+             */
+
+            /**
              * A set of rules specifying states Brick should be frozen.
              *
              * @property freezeStates
@@ -260,6 +268,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -275,6 +284,7 @@ define([
                 lang.mixin(this,
                     {
                         required: null,
+                        isEnabled: true,
                         freezeStates: [],
                         baseTemplate: "default_base_template",
                         noticeTemplate: "default_brick_notice",
@@ -306,6 +316,10 @@ define([
                     }
                 }
 
+                // disable the brick if Computer demands it
+                if (this.isEnabled === false) {
+                    this.disable(true);
+                }
             },
 
             /**
@@ -563,6 +577,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -787,6 +802,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -936,6 +952,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -1117,6 +1134,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -1228,6 +1246,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -1395,6 +1414,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -1553,6 +1573,15 @@ define([
              */
 
             /**
+             * Preselects the specified option among available choices.
+             *
+             * @property preselect
+             * @private
+             * @type {String}
+             * @default ''
+             */
+
+            /**
              * Initializes the ChoiceBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
              * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
              * 
@@ -1562,6 +1591,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -1569,6 +1599,7 @@ define([
              * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {Array} [config.choices] a set of choices that will be presented to the user
+             * @param  {String} [config.preselect] a name of an option to preselect
              * @chainable
              * @return {ChoiceBrick}
              */
@@ -1597,6 +1628,10 @@ define([
                     var choiceKey = $(event.currentTarget).data("key");
                     that.setChoice(choiceKey, true);
                 });
+
+                if (this.preselect) {
+                    this.setChoice(this.preselect, false);
+                }
             },
 
             /**
@@ -1786,6 +1821,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -2042,6 +2078,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -2310,6 +2347,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
@@ -2500,6 +2538,7 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used

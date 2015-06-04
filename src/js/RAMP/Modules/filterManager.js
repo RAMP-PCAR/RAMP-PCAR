@@ -1016,7 +1016,9 @@ define([
                     if (layerRamp.config.url) {
                         LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
                           [
-                              LayerItem.settings.ALL_DATA
+                              // if layer is in snapshot mode already, add an already checked switch
+                              // TODO: dehardcode layer mode names
+                              layerRamp.config.mode === 'snapshot' ? LayerItem.settings.ALL_DATA_CHECKED : LayerItem.settings.ALL_DATA
                           ],
                           states
                       );
