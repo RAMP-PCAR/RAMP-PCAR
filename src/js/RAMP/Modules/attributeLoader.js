@@ -105,9 +105,16 @@ define([
         */
         function loadDataBatch(maxId, maxBatch, layerUrl, idField, layerId, callerDef) {
             //fetch attributes from feature layer. where specifies records with id's higher than stuff already downloaded. outFields * (all attributes). no geometry.
-            var defData = script.get(layerUrl + '/query', {
-                query: 'where=' + idField + '>' + maxId + '&outFields=' + RAMP.layerRegistry[layerId].ramp.config.layerAttributes + '&returnGeometry=false&f=json',
-                jsonp: 'callback'
+            var defData = esriRequest({
+                url: layerUrl + '/query',
+                content: {
+                    where: idField + '>' + maxId,
+                    outFields: RAMP.layerRegistry[layerId].ramp.config.layerAttributes,
+                    returnGeometry: 'false',
+                    f: 'json'
+                },
+                callbackParamName: 'callback',
+                handleAs: 'json'
             });
 
             defData.then(function (dataResult) {
