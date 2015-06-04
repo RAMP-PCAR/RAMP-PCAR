@@ -9,6 +9,17 @@
             width: @panel-width-medium;
             right: 0;
 
+            .wb-tabs {
+                
+                > ul[role="tablist"] { // WET Tabs override
+                
+                    li > a{
+                        font-size: smaller; // make font size smaller so long French words can fit in
+                        line-height: 20px;
+                    }
+                }
+            }
+
             #jqgrid .record-row .record-details .record-names {
                 width: 250px;
 
