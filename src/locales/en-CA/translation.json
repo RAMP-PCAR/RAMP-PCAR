@@ -399,6 +399,16 @@
             "p1": "Load times may vary based on network location and bandwidth availability, and unanticipated behaviour may occur if any map interactions occur before data is fully loaded. Please allow the webpage to load completely before triggering any map functions.",
             "p2": "If the \"Loading...\" text appears in the lower right corner of map or the data grid displays a loading message, please allow the loading indicator to disappear before triggering any function on the map."
         },
+        "s13": {
+            "h1": "Usage",
+            "h2": "Limitations",           
+            "header": "Map Export",
+            "img1": "The Toolbar Button",
+            "img2": "Download Image Button",            
+            "p1": "Map Export is used to convert the contents of the map into an image that can be downloaded by the user.",
+            "p2": "Click the Map Export button in the toolbar to initiate the image generation.  The Map Export window will open. A \"Loading\" message will display, and the image preview will appear once it is generated.  Click the Download Image button to save the image.  Click the X to close the Map Export window.",
+            "p3": "Currently Map Export will only capture layers that are hosted on a public internet service. Layers hosted privately (e.g. on an intranet) or added from file-based sources will not appear in the resultant image file. Images are currently only available in PNG format."
+        },
         "s2": {
             "h1": "Usage",
             "header": "Basemaps",
@@ -445,7 +455,7 @@
             "h10": "Zoom Scale Dependent Layers",
             "h2": "Layer Types",
             "h3": "Layer Visibility",
-            "h4": "Layer Bounding Box",
+            "h4": "WMS Queries Toggle",
             "h5": "Layer Legends",
             "h6": "Handling Layer Errors",
             "h7": "Layer Reordering",
@@ -454,25 +464,32 @@
             "header": "Datasets",
             "img10": "Zoom Scale Dependent Layers",
             "img2": "Datasets",
+            "img4": "WMS Queries Toggle",
             "img5": "Legends",
             "img6": "Layer Errors",
             "img7": "Layer Reordering",
             "img7a": "Layer Group Boundaries",
+            "img9": "Layer Settings",
             "p1": "The Datasets tab lists the layers available to display in the map.  Feature layers also display in the data grid. The Datasets tab also serves as a map legend.",
             "p10": "Some layers may only be visible at certain zoom levels.  If a layer is not visible at a given zoom level the layer selector will display a notice and have an action available to zoom to the closest zoom level at which the layer will be visible (this may involve either zooming in or zooming out).",
             "p2": "There are three types of layers that can reside in the Dataset tab.",
             "p3": "Select the \"eye\" icon next to a dataset name to toggle the layer on or off.",
-            "p4": "Use the \"cross hatch\" icon to the right of the eye icon to display the bounding box of the dataset.",
+            "p4": "When a user clicks on the map (and not on a feature), the results for any queryable WMS layer will be displayed for the location clicked. This behaviour may not be desired for certain layers. Clicking the WMS Query Enable/Disable icons on the right side of the layer selector will toggle this functionality for an individual layer. The global toggle at the top of the layer selector will enable or disable the function for all WMS layers.  WMS layers that are not queryable will not have a toggle icon.",
             "p5": "Each layer has some symbology associated with it.  For simple feature layers a single icon will be present next to the layer name.  For complex feature layers (i.e. those with multiple symbols used per layer) the icon will show as a stack and maybe toggled on and off.  When toggled on a section will expand beneath the layer name and show the full symbology for the layer.  WMS layers may optionally have a graphical legend defined, if one is present it will be displayed in the same drop down manner.",
             "p6": "If a layer fails to load correctly it will be identified by an error notice.  Instead of the standard layer actions you can select to either reload the layer (this is particularly helpful if there is a temporary network connectivity issue) or remove the layer.  If a layer is removed it will be taken out of the layer selector completely and if it is added back via \"Add Dataset\" it will lose any previous customizations.",
             "p7": "Click and drag the 6 dots to the left of the dataset up or down to re-order the layers on the map interface.",
             "p7a": "While all layers can be re-ordered, WMS layers and Feature / Static layers may not be mixed together.  When reordering layers, layers which cannot be mixed will be greyed out.  Although layers can be reordered within their groups the grouping is static with feature and static layers always displaying over the WMS layer group.",
             "p8": "Select the \"Metadata\" link to display relevant metadata for that source in a collapsible Info Panel.",
-            "p9": "Select the \"Settings\" link to change layer's opacity using the slider control.",
+            "p9": "Select the \"Settings\" link to access additional options for the layer.",
             "ul2": {
                 "li1": "Feature layers represent data that can be interacted with on the map, and viewed in the data grid.",
                 "li2": "Static layers provide additional geographical context against the basemap.  They are not interactive and do not show in the data grid.",
                 "li3": "WMS layers provide an overlay of data from a Web Map Service.  They can support a click interaction on the map, and do not show in the data grid."
+            },
+            "ul9": {
+                "li1": "The layer's opacity can be adjusted using the slider control.",
+                "li2": "If the layer has a bounding box, its visibility can be toggled using the checkbox.",
+                "li3": "If the layer is a feature layer, and is in on-demand mode, the option to Load All Features is available. On-demand mode means the layer will be downloaded in parts as needed. Clicking Load All Features will cause all layer data to be loaded in the browser at once, providing snappier response times once the download completes.  This is called snapshot mode.  Attempting this with very large datasets may cause the site to stall or the layer to crash.  A layer in snapshot mode will have the Load All Features link disabled and a checkmark beside the link."
             }
         },
         "s7": {
@@ -552,8 +569,8 @@
         "loading": "Generating image. Please wait.",
         "title": "Map Export"
     },
-    "maptips": { 
-        "attribsDownloading" : "Attribute data is still downloading"
+    "maptips": {
+        "attribsDownloading": "Attribute data is still downloading"
     },
     "page": {
         "footer": {
