@@ -1,11 +1,11 @@
 {
     "name": "ramp-pcar",
-    "version": "5.4.0-rc2",
+    "version": "5.5.0-0",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
     ],
-    "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
+    "description": "RAMP GIS viewer - Groundhog; Sample of an implementation of RAMP",
     "keywords": [
         "ramp",
         "gis",
