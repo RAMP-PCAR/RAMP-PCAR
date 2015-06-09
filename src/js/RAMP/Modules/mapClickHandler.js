@@ -54,12 +54,17 @@ define([
             */
             init: function (map) {
 
-                var modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle'));
+                var modalHeader;
 
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
                     var visibleLayers = [],
                         rqPromises = [];
+
+                    // construct modal header on the first call to prevent potential race condition when locale resources didn't have time to load just yet
+                    if (!modalHeader) {
+                        modalHeader = '<header class="modal-header"><h2 class="modal-title">{0}</h2></header>'.format(i18n.t('mapClickHandler.getFiPanelTitle'));
+                    }
 
                     if (!RAMP.config.ui.mapQueryToggle.show) {
                         return;
