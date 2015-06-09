@@ -9,7 +9,6 @@
         left: 0;
         right: 21px;
         z-index: 2;
-
         display: none;
 
         &.scroll {
@@ -27,7 +26,7 @@
     }
 
     &.notice {
-        
+
         .datagrid-info-notice {
             display: block;
         }
@@ -336,6 +335,42 @@
                         }
                     }
                 }
+
+                .two {
+                    &:after, &:before {
+                        left: 25%;
+                    }
+
+                    &.reverse {
+                        &:after, &:before {
+                            left: 75%;
+                        }
+                    }
+                }
+
+                .four {
+                    &:after, &:before {
+                        left: 37.5%;
+                    }
+
+                    &.reverse {
+                        &:after, &:before {
+                            left: 62.5%;
+                        }
+                    }
+                }
+
+                .six {
+                    &:after, &:before {
+                        left: 41.67%;
+                    }
+
+                    &.reverse {
+                        &:after, &:before {
+                            left: 58.33%;
+                        }
+                    }
+                }
             }
 
             .last.button div {
@@ -379,7 +414,7 @@
             }
         }
     }
-    
+
     .jqgrid_table_wrapper {
         bottom: 0;
         left: 0;

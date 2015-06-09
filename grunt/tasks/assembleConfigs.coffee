@@ -4,12 +4,15 @@ module.exports = (grunt) ->
         'assembleConfigs'
         'INTERNAL'
         () ->
-            languages = ['en', 'fr']
+            # get RAMP core package to get language info
+            pkg = grunt.option 'pkg'
+
+            languages = pkg.core.ramp.locale.languages
             tasks = []
             
             languages.forEach(
                 ( lang ) ->
-                    json = grunt.file.readJSON 'src/locales/' + lang + '-CA/translation.json'
+                    json = grunt.file.readJSON 'build/locales/' + lang + '-CA/translation.json'
                     
                     grunt.config 'replace.config-' + lang,
                         options:
@@ -17,7 +20,7 @@ module.exports = (grunt) ->
                                 json: json
                             ]
                         files: [
-                            src: 'src/config.json'
+                            src: 'build/config.json'
                             dest: 'build/config.' + lang + '.json'
                         ]
                         
@@ -25,8 +28,6 @@ module.exports = (grunt) ->
             )       
             
             tasks.push 'notify:configGenerated'
-            tasks.push 'jsonlint:generatedConfigs'
-            tasks.push 'notify:generatedConfigsLint'
             
             #console.log grunt.config 'replace'
             #console.log tasks

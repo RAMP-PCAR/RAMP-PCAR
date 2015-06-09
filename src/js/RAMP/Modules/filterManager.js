@@ -36,7 +36,6 @@
 *
 * @class FilterManager
 * @static
-* @uses dojo/_base/array
 * @uses dojo/Deferred
 * @uses dojo/topic
 * @uses esri/tasks/query
@@ -44,7 +43,7 @@
 
 define([
 /* Dojo */
-        "dojo/_base/lang", "dojo/_base/array", "dojo/Deferred", "dojo/topic",
+        "dojo/_base/lang", "dojo/Deferred", "dojo/topic",
 /* Text */
         "dojo/text!./templates/filter_manager_template.json",
         "dojo/text!./templates/filter_wms_meta_Template.json",
@@ -53,14 +52,14 @@ define([
         "esri/tasks/query",
 
 /* Ramp */
-        "ramp/ramp", "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
+        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/theme", "ramp/layerGroup", "ramp/layerItem",
 
 /* Util */
-        "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkbox", "utils/checkboxGroup"],
+        "utils/tmplHelper", "utils/util", "utils/dictionary", "utils/popupManager", "utils/checkboxGroup"],
 
     function (
     /* Dojo */
-        lang, dojoArray, Deferred, topic,
+        lang, Deferred, topic,
     /* Text */
         filter_manager_template_json,
         filter_wms_meta_Template,
@@ -69,10 +68,10 @@ define([
         EsriQuery,
 
     /* Ramp */
-        Ramp, GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
+        GlobalStorage, RampMap, EventManager, Theme, LayerGroup, LayerItem,
 
     /* Util */
-        TmplHelper, UtilMisc, UtilDict, PopupManager, Checkbox, CheckboxGroup) {
+        TmplHelper, UtilMisc, UtilDict, PopupManager, CheckboxGroup) {
         "use strict";
 
         var config,
@@ -85,7 +84,7 @@ define([
             ui = (function () {
                 var sectionNode,
                     mainList,
-                    layerList,
+                    layerGroupList,
 
                     layerSettings,
                     layerToggles,
@@ -97,7 +96,7 @@ define([
 
                     function initTransparencySliders() {
                         // initializes all sliders in the layer list
-                        transparencySliders = layerList.find(".nstSlider._slider")
+                        transparencySliders = layerGroupList.find(".nstSlider._slider")
                             .removeClass("_slider")
                             .nstSlider({
                                 left_grip_selector: ".leftGrip",
@@ -143,7 +142,7 @@ define([
 
                     function initListeners() {
                         topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                            var slider = layerList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
+                            var slider = layerGroupList.find(".nstSlider").filter("[data-layer-id='" + evt.id + "']"),
                                 value;
 
                             if (slider.length > 0) {
@@ -174,7 +173,8 @@ define([
                 layerToggles = (function () {
                     var globalToggleSection,
                         boxCheckboxGroup,
-                        eyeCheckboxGroup;
+                        eyeCheckboxGroup,
+                        queryCheckboxGroup;
 
                     /**
                     * Sets UI status of a layer presentation (checkbox and eye) according to the user action: select / de-select a layer.
@@ -190,7 +190,7 @@ define([
                     */
                     function createGroups() {
                         boxCheckboxGroup = new CheckboxGroup(
-                            mainList.find(".checkbox-custom .box + input"),
+                            mainList.find(".checkbox-brick-container.bbox input:first"),
                             {
                                 nodeIdAttr: layerIdField,
 
@@ -201,7 +201,7 @@ define([
 
                                 onChange: function () {
                                     Theme.tooltipster(this.labelNode.parent(), null, "update");
-                                },
+                                }/*,
 
                                 master: {
                                     node: globalToggleSection.find(".checkbox-custom .box + input"),
@@ -212,7 +212,7 @@ define([
                                         check: i18n.t('filterManager.hideAllBounds'),
                                         uncheck: i18n.t('filterManager.showAllBounds')
                                     }
-                                }
+                                }*/
                             });
 
                         boxCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
@@ -224,9 +224,9 @@ define([
                             });
                         });
 
-                        boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                        /*boxCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
-                        });
+                        });*/
 
                         eyeCheckboxGroup = new CheckboxGroup(
                             mainList.find(".checkbox-custom .eye + input"),
@@ -266,6 +266,46 @@ define([
                         eyeCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
                             console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
                         });
+
+                        queryCheckboxGroup = new CheckboxGroup(
+                            mainList.find(".checkbox-custom .query + input"),
+                            {
+                                nodeIdAttr: layerIdField,
+
+                                label: {
+                                    check: i18n.t('filterManager.WMSQueryDisable'),
+                                    uncheck: i18n.t('filterManager.WMSQueryEnable')
+                                },
+
+                                onChange: function () {
+                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                },
+
+                                master: {
+                                    node: globalToggleSection.find(".checkbox-custom .query + input"),
+
+                                    nodeIdAttr: "id",
+
+                                    label: {
+                                        check: i18n.t('filterManager.WMSAllQueryDisable'),
+                                        uncheck: i18n.t('filterManager.WMSAllQueryEnable')
+                                    }
+                                }
+                            });
+
+                        queryCheckboxGroup.on(CheckboxGroup.event.MEMBER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+
+                            // TODO: temp function; move or connect to the ramp state manager later.
+                            var wmsLayer = RAMP.layerRegistry[evt.checkbox.id];
+                            if (wmsLayer.ramp.config.featureInfo) {
+                                wmsLayer.ramp.state.queryEnabled = evt.checkbox.state;
+                            }
+                        });
+
+                        queryCheckboxGroup.on(CheckboxGroup.event.MASTER_TOGGLE, function (evt) {
+                            console.log("Filter Manager -> Master Checkbox", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        });
                     }
 
                     function initListeners() {
@@ -285,17 +325,30 @@ define([
 
                             createGroups();
                             initListeners();
+
+                            // wms query toggles are hidden by default as we don't know if there are any wms layers
+                            this.hideQueryToggles(true);
                         },
 
                         update: function () {
                             Theme.tooltipster(mainList);
 
-                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .box + input"));
+                            boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-brick-container.bbox input:first"));
                             eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
+                            queryCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .query + input"));
                         },
 
                         globalToggleSection: function () {
                             return globalToggleSection;
+                        },
+
+                        // TODO: refactor - temp function
+                        hideQueryToggles: function (value) {
+
+                            globalToggleSection
+                                .find(".checkbox-custom .query")
+                                .parent()
+                                .toggle(!value);
                         }
                     };
                 }());
@@ -308,14 +361,15 @@ define([
 
                         onUpdate = function (event, ui) {
                             var layerId = ui.item[0].id,
-                                idArray = layerList
+                                idArray = layerGroupList
                                     .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
                                     .map(function (i, elm) { return elm.id; }), // get ids
                                 cleanIdArray = idArray.filter(function (i, elm) {
                                     //check if layer is in error state.  error layers should not be part of the count
                                     return (getLayerItem(elm).state !== LayerItem.state.ERROR);
                                 }),
-                                index = dojoArray.indexOf(cleanIdArray, layerId);
+                                index;
+                            index = cleanIdArray.toArray().indexOf(layerId);
 
                             if (index < 0) {
                                 return;
@@ -334,7 +388,7 @@ define([
                         },
 
                         onStop = function () {
-                            layerList
+                            layerGroupList
                                 .removeClass("sort-active")
                                 .removeClass("sort-disabled");
 
@@ -344,7 +398,7 @@ define([
                         },
 
                         onStart = function (event, ui) {
-                            layerList
+                            layerGroupList
                                 .has(ui.item).addClass("sort-active")
                                 .end().filter(":not(.sort-active)").addClass("sort-disabled");
                             ui.item.removeClass("bg-very-light");
@@ -364,8 +418,8 @@ define([
                         * @private
                         */
                         update: function () {
-                            layerGroupSeparator = layerList.parent().find(".layer-group-separator");
-                            reorderLists = layerList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
+                            layerGroupSeparator = layerGroupList.parent().find(".layer-group-separator");
+                            reorderLists = layerGroupList.filter(function (i, elm) { return $(elm).find("> li").length > 1; });
 
                             if (sortableHandle) {
                                 sortableHandle.sortable("destroy");
@@ -439,8 +493,6 @@ define([
                 * @private
                 */
                 function setButtonEvents() {
-                    var metadataPopup;
-
                     // highlight layer item on hover/focus with a light gray background
                     PopupManager.registerPopup(mainList, "hover, focus",
                         function (d) {
@@ -461,6 +513,8 @@ define([
                                 adjustPaneWidth();
                                 d.resolve();
                             });
+                            /* Parent node not visible upon slider creation; the slider plugin cannot calculate the slider's proper position. 
+                            You need to refresh it when the setting section is opened. Otherwise it won't display properly.*/
                             this.target.find(".nstSlider").nstSlider("refresh");
                         },
                         {
@@ -468,6 +522,24 @@ define([
                             containerSelector: "li.layerList1",
                             targetSelector: ".filter-row-settings",
                             activeClass: "button-pressed"
+                        }
+                    );
+
+                    // reload layer in snapshot mode
+                    PopupManager.registerPopup(mainList, "click",
+                        function (d) {
+                            // TODO: rework hack: for some reason brick kills the event propagation so can't catch event with proper selector. see below.
+                            // disable button manually; idealy it should be done by brick
+                            var id = $(this.target).data("layer-id");
+                            this.target
+                                .addClass("disabled")
+                                .attr("aria-disabled", true)
+                            ;
+                            topic.publish(EventManager.LayerLoader.RELOAD_LAYER, { layerId: id, mode: 'snapshot' });
+                            d.resolve();
+                        },
+                        {
+                            handleSelector: ".brick.all-data .btn-choice" //.brick.all-data .btn-choice:not(.button-pressed)
                         }
                     );
 
@@ -494,34 +566,6 @@ define([
                             handleSelector: ".renderer-button",
                             containerSelector: "li.layerList1",
                             targetSelector: ".renderer-list",
-                            activeClass: "button-pressed"
-                        }
-                    );
-
-                    // display metadata when the metadata button is clicked;
-                    // TODO: move to a separate/different module?
-                    metadataPopup = PopupManager.registerPopup(mainList, "click",
-                        function (d) {
-                            // close the popup, this will update aria tags;
-                            // the metadata panel will be closed by metadataClickHandler if needed.
-                            if (metadataPopup.isOpen(null, "any")) {
-                                // need to reject the open promise since we are actually closing the popup
-                                d.reject();
-                                metadataPopup.close();
-
-                                metadataClickHandler(this.target);
-                            } else {
-                                metadataClickHandler(this.target);
-
-                                d.resolve();
-                            }
-                        },
-                        {
-                            closeHandler: function (d) {
-                                d.resolve();
-                            },
-                            handleSelector: ".metadata-button",
-                            openOnly: true,
                             activeClass: "button-pressed"
                         }
                     );
@@ -553,109 +597,6 @@ define([
                         }
                     );
 
-                    function metadataClickHandler(target) {
-                        var button = $(target),
-                            node = button.parents(".filter-row-container");
-
-                        if (!node.hasClass("selected-row")) {
-                            //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
-                            var id = button.data("layer-id"),
-                                layerConfig = Ramp.getLayerConfigWithId(id),
-                                metadataUrl;
-
-                            topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                panelName: i18n.t('filterManager.metadata'),
-                                title: node.find(".layer-name span").text(), // + " " + guid,
-                                content: null,
-                                target: node.find(".layer-details"),
-                                origin: "filterManager",
-                                guid: id,
-                                doOnOpen: function () {
-                                    node.addClass("selected-row");
-                                },
-                                doOnHide: function () {
-                                    //button.removeClass("button-pressed");
-                                    if (metadataPopup.isOpen(null, "any")) {
-                                        metadataPopup.close();
-                                    }
-                                    node.removeClass("selected-row");
-                                }
-                            });
-
-                            //only wms layers have this value
-                            if (layerConfig.layerInfo) {
-                                if (layerConfig.legend) {
-                                    var wmsmeta;
-
-                                    tmpl.cache = {};
-                                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(filter_wms_meta_Template));
-
-                                    wmsmeta = tmpl("wms_meta_main",
-                                        {
-                                            legendUrl: layerConfig.legend.imageUrl,
-                                            getCapabilitiesUrl: layerConfig.url + "&request=GetCapabilities",
-                                            serviceEndPointUrl: layerConfig.url
-                                        }
-                                    );
-
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: $(wmsmeta),
-                                        origin: "filterManager",
-                                        update: true,
-                                        guid: id
-                                    });
-                                } else {
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><b>Service End Point URL</b><br><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a>",
-                                        origin: "filterManager",
-                                        update: true,
-                                        guid: id
-                                    });
-                                }
-                            } else {
-                                //for feature layer
-                                // metadataUrl =String.format("http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}", guid);
-                                var metadataError = function () {
-                                    topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                        content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
-                                        origin: "filterManager",
-                                        update: true,
-                                        guid: id
-                                    });
-                                };
-
-                                metadataUrl = layerConfig.metadataUrl;
-
-                                // set it to null when layerConfig.catalogueUrl does not exist
-                                // instead of key with empty value
-                                var params = null;
-                                if (layerConfig.catalogueUrl) {
-                                    params = [{ key: "catalogue_url", value: layerConfig.catalogueUrl }];
-                                }
-
-                                if (!metadataUrl) {
-                                    metadataError();
-                                } else {
-                                    UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + RAMP.locale + ".xsl",
-                                        function (error, data) {
-                                            if (error) {
-                                                metadataError();
-                                            } else {
-                                                topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
-                                                    content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
-                                                    origin: "filterManager",
-                                                    update: true,
-                                                    guid: id
-                                                });
-                                            }
-                                        }, null, params);
-                                }
-                            }
-                        } else {
-                            topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
-                        }
-                    }
-
                     // for scale-dependent layers - zoom to data
                     PopupManager.registerPopup(mainList, "click",
                         function (d) {
@@ -683,8 +624,8 @@ define([
                 function initScrollListeners() {
                     var globalToggleSection = layerToggles.globalToggleSection();
 
-                    layerList.scroll(function () {
-                        var currentScroll = layerList.scrollTop();
+                    mainList.scroll(function () {
+                        var currentScroll = mainList.scrollTop();
                         if (currentScroll === 0) {
                             globalToggleSection.removeClass("scroll");
                         } else {
@@ -700,24 +641,12 @@ define([
                             that = this;
 
                         sectionNode = $("#" + RAMP.config.divNames.filter);
-                        section = tmpl('filter_manager_template2', { config: RAMP.config });
+                        section = TmplHelper.template('filter_manager_template2', { config: RAMP.config }, JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template_json)));
 
                         sectionNode.empty().append(section);
 
                         mainList = sectionNode.find("#layerList");
-                        layerList = mainList.find("> li > ul");
-
-                        // fade out the loading animation
-                        //sectionNode.addClass('animated fadeOut');
-                        /*window.setTimeout(
-                            function () {*/
-                        /*sectionNode
-                            .empty().append(section)
-                            .removeClass("fadeOut")
-                            .addClass('animated fadeIn');*/
-
-                        // remove the animating css class
-                        //window.setTimeout(function () { sectionNode.removeClass('animated fadeIn'); }, 300);
+                        layerGroupList = mainList.find("> li > ul");
 
                         GlobalStorage.layerSelectorGroups.forEach(function (layerType) {
                             layerGroup = new LayerGroup([], {
@@ -748,7 +677,7 @@ define([
                     * @private
                     */
                     update: function () {
-                        layerList = mainList.find("> li > ul");
+                        layerGroupList = mainList.find("> li > ul");
 
                         layerSettings.update();
                         layerToggles.update();
@@ -762,6 +691,11 @@ define([
                     */
                     addLayerGroup: function (layerGroupNode) {
                         mainList.prepend(layerGroupNode);
+                    },
+
+                    // TODO: refactor - temp function
+                    hideQueryToggles: function (value) {
+                        layerToggles.hideQueryToggles(value);
                     }
                 };
             }());
@@ -945,6 +879,170 @@ define([
                     }
                 }
             });
+
+            // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
+            topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
+                updateLayersStateMatrix(args.layerCounts, true);
+            });
+
+            // on each remove check if there are still wms layers in the layer list
+            topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (args) {
+                updateLayersStateMatrix(args.layerCounts, false);
+            });
+        }
+
+        // TODO: temp function to be moved to state manager
+        // returns an array of wms layers that can be queried
+        function getQueryWMSLayers() {
+            return Object
+                .keys(RAMP.layerRegistry)
+                .filter(function (layerId) {
+                    var layer = RAMP.layerRegistry[layerId];
+                    return layer.ramp.type === GlobalStorage.layerType.wms &&
+                        layer.ramp.config.featureInfo;
+                });
+        }
+
+        // TODO: temp function to be moved to state manager
+        // returns true if there are wms layer that can be queries or false if there are no such layers 
+        function isThereQueryWMSLayers() {
+            return getQueryWMSLayers().length > 0;
+        }
+
+        // updates layer item state matrixes based on whether any queriable wms layers are present in layer selector
+        function updateLayersStateMatrix(layerCounts, isLayerAdded) {
+            var featureLayerGroup = layerGroups[GlobalStorage.layerType.feature],
+                wmsLayerGroup = layerGroups[GlobalStorage.layerType.wms],
+                states = [
+                    LayerItem.state.DEFAULT,
+                    LayerItem.state.UPDATING,
+                    LayerItem.state.OFF_SCALE
+                ];
+
+            // if there is at least one queriable wms layer, add placeholder toggles to feature layers and 
+            if (getQueryWMSLayers().length === 1 && isLayerAdded) {
+
+                featureLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER
+                        ],
+                        states
+                    );
+
+                    layerItem.refresh();
+                });
+
+                wmsLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.addStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            RAMP.layerRegistry[layerItem.id].ramp.config.featureInfo ? LayerItem.toggles.QUERY : LayerItem.toggles.PLACEHOLDER
+                        ],
+                        states
+                    );
+
+                    layerItem.refresh();
+                });
+
+                ui.hideQueryToggles(false);
+
+            } else if (getQueryWMSLayers().length === 0 && !isLayerAdded) {
+                featureLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER
+                        ],
+                        states
+                    );
+
+                    layerItem.refresh();
+                });
+
+                wmsLayerGroup.layerItems.forEach(function (layerItem) {
+                    LayerItem.removeStateMatrixParts(layerItem.stateMatrix, LayerItem.partTypes.TOGGLES,
+                        [
+                            LayerItem.toggles.PLACEHOLDER
+                        ],
+                        states
+                    );
+
+                    layerItem.refresh();
+                });
+
+                ui.hideQueryToggles(true);
+            }
+        }
+
+        // updates default layer item state matrix based on whether any queriable wms layers are present in layer selector
+        function getStateMatrixTemplate(layerType, layerRamp) {
+            var stateMatrix = LayerItem.getStateMatrixTemplate(),
+                featureToggles = [
+                    LayerItem.toggles.EYE,
+                    LayerItem.toggles.PLACEHOLDER
+                ],
+                wmsToggles = [
+                    LayerItem.toggles.EYE,
+                    LayerItem.toggles.PLACEHOLDER
+                ],
+                states = [
+                    LayerItem.state.DEFAULT,
+                    LayerItem.state.UPDATING,
+                    LayerItem.state.OFF_SCALE
+                ];
+
+            switch (layerType) {
+                case GlobalStorage.layerType.feature:
+                    // remove placeholder toggle if there are wms layers
+                    if (!isThereQueryWMSLayers()) {
+                        featureToggles.pop();
+                    }
+
+                    LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
+                        featureToggles,
+                        states
+                    );
+
+                    // add a bounding box settings to the non-static feature layers only
+                    if (!layerRamp.config.isStatic && layerRamp.config.layerExtent) {
+                        LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
+                          [
+                              LayerItem.settings.BOUNDING_BOX
+                          ],
+                          states
+                      );
+                    }
+
+                    // add switch to snapshot mode if it's a service-based feature layer
+                    if (layerRamp.config.url) {
+                        LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.SETTINGS,
+                          [
+                              // if layer is in snapshot mode already, add an already checked switch
+                              // TODO: dehardcode layer mode names
+                              layerRamp.config.mode === 'snapshot' ? LayerItem.settings.ALL_DATA_CHECKED : LayerItem.settings.ALL_DATA
+                          ],
+                          states
+                      );
+                    }
+
+                    break;
+
+                case GlobalStorage.layerType.wms:
+                    if (layerRamp.config.featureInfo) {
+                        wmsToggles.pop();
+                        wmsToggles.push(LayerItem.toggles.QUERY);
+                    } else if (!isThereQueryWMSLayers()) {
+                        wmsToggles.pop();
+                    }
+
+                    LayerItem.addStateMatrixParts(stateMatrix, LayerItem.partTypes.TOGGLES,
+                        wmsToggles,
+                        states
+                    );
+
+                    break;
+            }
+
+            return stateMatrix;
         }
 
         return {
@@ -995,16 +1093,13 @@ define([
                     ui.addLayerGroup(layerGroup.node);
                 }
 
+                // generate a state matrix based on layer type
+                options.stateMatrix = getStateMatrixTemplate(layerType, layerRamp);
+
                 // layer is user-added, add an extra notice to all states
                 if (layerRamp.user) {
-                    options = lang.mixin(options,
-                        {
-                            stateMatrix: LayerItem.getStateMatrixTemplate()
-                        }
-                    );
-
-                    LayerItem.addStateMatrixPart(options.stateMatrix, "notices", LayerItem.notices.USER, true);
-                    LayerItem.removeStateMatrixPart(options.stateMatrix, "controls", LayerItem.controls.METADATA);
+                    LayerItem.addStateMatrixPart(options.stateMatrix, LayerItem.partTypes.NOTICES, LayerItem.notices.USER, [], true);
+                    LayerItem.removeStateMatrixPart(options.stateMatrix, LayerItem.partTypes.CONTROLS, LayerItem.controls.METADATA);
                 }
 
                 newLayer = layerGroup.addLayerItem(layerRamp.config, options);
@@ -1026,7 +1121,7 @@ define([
 
                 if (!layerGroup) {
                     //tried to remove a layer that doesn't exist
-                    console.log("tried to remove layer from nonexistant group: " + layerType);
+                    console.log("tried to remove layer from nonexistent group: " + layerType);
                 } else {
                     layerGroup.removeLayerItem(layerId);
 
@@ -1078,6 +1173,7 @@ define([
 
                 return fl.queryFeatures(queryTask);
             },
+
             /**
             * Grabs all distinct values of the given field from a featureLayer.
             * @method _getField
@@ -1089,7 +1185,7 @@ define([
                 var deferred = new Deferred();
 
                 this._getFeatures(fl).then(function (featureSet) {
-                    deferred.resolve(dojoArray.map(featureSet.features, function (feature) {
+                    deferred.resolve(featureSet.features.map(function (feature) {
                         return feature.attributes[field];
                     }));
                 });

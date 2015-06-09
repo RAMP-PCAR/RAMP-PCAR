@@ -20,7 +20,7 @@
 * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
 * 
 * 
-* @class Bricks
+* @class BricksChoiceBrick
 * @static
 * @uses dojo/_base/lang
 * 
@@ -45,6 +45,9 @@ define([
         var Brick,
 
             ButtonBrick,
+            CheckboxBrick,
+            CheckboxfsBrick,
+            ToggleBrick,
             OkCancelButtonBrick,
 
             MultiBrick,
@@ -114,6 +117,15 @@ define([
              */
 
             /**
+             * Any other custom CSS class to be added to the Brick container node.
+             *
+             * @property customContainerClass
+             * @private
+             * @type {String}
+             * @default ""
+             */
+
+            /**
              * A name of the specific Brick template.
              *
              * @property template
@@ -147,6 +159,14 @@ define([
              *               check: ["serviceType", "serviceURL"]
              *           }
              *      ]
+             */
+
+            /**
+             * Specifies if the brick is enabled from creation. If false, the Brick is disabled after initialization.
+             * 
+             * @property isEnabled
+             * @type {Boolean}
+             * @default true
              */
 
             /**
@@ -248,10 +268,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun Brick
              * @chainable
@@ -262,9 +284,11 @@ define([
                 lang.mixin(this,
                     {
                         required: null,
+                        isEnabled: true,
                         freezeStates: [],
                         baseTemplate: "default_base_template",
-                        noticeTemplate: "default_brick_notice"
+                        noticeTemplate: "default_brick_notice",
+                        guid: UtilMisc.guid()
                     },
                     config,
                     {
@@ -292,6 +316,10 @@ define([
                     }
                 }
 
+                // disable the brick if Computer demands it
+                if (this.isEnabled === false) {
+                    this.disable(true);
+                }
             },
 
             /**
@@ -345,7 +373,7 @@ define([
              */
             setState: function (state) {
                 this.freeze(this.freezeStates.indexOf(state) !== -1);
-                
+
                 return this;
             },
 
@@ -504,7 +532,7 @@ define([
              * @type {String}
              * @default "multi-brick-container"
              */
-            
+
             /**
              * A name of the default MultiBrick template.
              *
@@ -514,15 +542,15 @@ define([
              * @default "default_multi_brick_template"
              */
 
-             /**
-             * A collection of Brick objects to be displayed side by side in the MultiBrick.
-             *
-             * @property content
-             * @private
-             * @type {Array}
-             * @default []
-             */
-            
+            /**
+            * A collection of Brick objects to be displayed side by side in the MultiBrick.
+            *
+            * @property content
+            * @private
+            * @type {Array}
+            * @default []
+            */
+
             /**
              * A MultiBrick container node.
              *
@@ -530,7 +558,7 @@ define([
              * @private
              * @type {Object}
              */
-            
+
             /**
              * A dictionary of the initialized content Brick objects for easy lookup. 
              *
@@ -549,10 +577,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun MultiBrick
              * @chainable
@@ -700,7 +730,7 @@ define([
         * 
         */
         ButtonBrick = Brick.extend({
-            
+
             /**
              * A dictionary of possible ButtonBrick events. Add a CLICK event to the default Brick events.
              *
@@ -743,7 +773,7 @@ define([
              * @type {String}
              * @default "default_button_brick_template"
              */
-            
+
             /**
              * A CSS class of the button.
              *
@@ -752,7 +782,7 @@ define([
              * @type {String}
              * @default "btn-primary"
              */
-            
+
             /**
              * A button label.
              *
@@ -772,9 +802,11 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.buttonClass] a CSS class of the button in the ButtonBrick
@@ -825,7 +857,444 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-        
+
+        // TODO: create another checkboxBrick that uses Formstone Checkbox but regular one, not toggle.
+        /**
+        * CheckboxBrick is just a Brick with a checkbox inside it. The checkbox can be styled through its checkbox-container. 
+        * To instantiate, call {{#crossLink "CheckboxBrick/new:method"}}{{/crossLink}} on the CheckboxBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class CheckboxBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @extends Brick
+        * 
+        */
+        CheckboxBrick = Brick.extend({
+
+            /**
+             * A CSS class of the CheckboxBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "checkbox-brick-container"
+             */
+
+            /**
+             * A name of the default CheckboxBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_checkbox_brick_template"
+             */
+
+            /**
+             * A checkbox value.
+             *
+             * @property value
+             * @private
+             * @type {String}
+             * @default "on"
+             */
+
+            /**
+             * A checkbox label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+            * A checkbox on label.
+            *
+            * @property onLabel
+            * @private
+            * @type {String}
+            * @default "on"
+            */
+
+            /**
+            * A checkbox off label.
+            *
+            * @property offLabel
+            * @private
+            * @type {String}
+            * @default "off"
+            */
+
+            /**
+             * Initializes the CheckboxBrick by generating a specified template and setting defaults. Also sets a click listener on the template input checkbox.
+             * CheckboxBrick is a simple button in the Brick container.
+             * 
+             * If the `header` is provided, the Brick display it as a header element while hiding checkbox label and displaying on/off labels beside the checkbox depending on the state.
+             * If the `header` is no provided, Brick's label is displayed beside the checkbox.
+             * 
+             * Provide header if the checkbox is a standalone feature or you have lots of space; omit header if the checkbox is a part of a group of checkboxes or you want to conserve space. 
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.value] a checkbox value
+             * @param  {String} [config.label] a checkbox label
+             * @param  {String} [config.onLabel] a checkbox on label
+             * @param  {String} [config.offLabel] a checkbox off label
+             * @chainable
+             * @return {CheckboxBrick}
+             */
+            initialize: function (id, config) {
+                var that = this;
+
+                lang.mixin(this,
+                    {
+                        template: "default_checkbox_brick_template",
+                        containerClass: "checkbox-brick-container",
+                        label: config.header,
+                        checked: false,
+                        onLabel: 'on',
+                        offLabel: 'off',
+                        value: 'on'
+                    }
+                );
+
+                Brick.initialize.call(this, id, config);
+
+                lang.mixin(this,
+                    {
+                        userChecked: false,
+                        inputNode: this.node.find("input[type='checkbox']#" + this.guid)
+                    }
+                );
+
+                this.inputNode.on("change", function () {
+                    var value = that.inputNode.is(':checked');
+                    that.setChecked(value, true);
+                });
+            },
+
+            /**
+             * Returns true. CheckboxBrick is always valid
+             *
+             * @method isValid
+             * @return {Boolean}           true
+             */
+            isValid: function () {
+                return true;
+            },
+
+            /**
+             * Check or uncheck the checkbox.
+             * 
+             * @method setChecked
+             * @param {Boolean} value    true - checked; or false - unchecked
+             * @param {Boolean} userChecked boolean value indicating if the user is the source of the value
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            setChecked: function (value, userChecked) {
+                this.userChecked = userChecked ? true : false;
+                this.checked = value;
+
+                // if user checked it, the checkbox is already changed;
+                // if not, need to set property
+                if (!userChecked) {
+                    this.inputNode.prop('checked', this.checked ? 'checked' : '');
+                }
+
+                this.node.toggleClass('checkbox-checked', this.checked);
+
+                // fire change event
+                this.notify(this.event.CHANGE, this.getData());
+
+                return this;
+            },
+
+            /**
+             * Clears the Brick by unchecking it.
+             *
+             * @method clear
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            clear: function () {
+                this.setChecked(false, false);
+
+                Brick.clear.call(this);
+
+                return this;
+            },
+
+            /**
+             * Checks if the checkbox was checked by the user or not.
+             * 
+             * @method isUserEntered
+             * @return {Boolean} true if the user checked the checkbox; false, otherwise
+             */
+            isUserEntered: function () {
+                return this.userChecked;
+            },
+
+            /**
+             * Sets CheckboxBrick's data. First calls setChecked and calls set data on the Brick prototype.
+             *
+             * @method setData
+             * @param {Object} data a wrapper object for the data to be set.  
+             * @return {CheckboxBrick}           itself
+             * @chainable
+             */
+            setData: function (data) {
+                this.setChecked(data.inputValue, data.userChecked);
+
+                Brick.setData.call(data);
+
+                return this;
+            },
+
+            /**
+             * Returns CheckboxBrick's data. Returns whether it's checked or unchecked.
+             *
+             * @method getData
+             * @for CheckboxBrick
+             * @param  {Boolean} [wrap]    indicates of the payload should be wrapped with a Brick's id; useful when collection information from several Bricks at once. 
+             * @return {Object}         CheckboxBrick's data
+             */
+            getData: function (wrap) {
+                var payload = {
+                    checked: this.checked
+                };
+
+                return Brick.getData.call(this, payload, wrap);
+            }
+        });
+
+        /**
+        * CheckboxfsBrick is just a Brick with a checkbox inside it that is styles as a Formstone Checkbox. The CheckboxFS can be further styled through its checkbox-container. 
+        * To instantiate, call {{#crossLink "CheckboxfsBrick/new:method"}}{{/crossLink}} on the CheckboxfsBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class CheckboxfsBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @extends CheckboxBrick
+        * 
+        */
+        CheckboxfsBrick = CheckboxBrick.extend({
+
+            /**
+             * A container CSS class of the Brick.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "checkbox-brick-container formstone-checkbox"
+             */
+
+            /**
+             * Initializes the CheckboxfsBrick by generating a specified template and setting defaults. Also sets a change listener on the template input checkbox.
+             * CheckboxfsBrick is a simple checkbox styles with a Formstone lib in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.value] a checkbox value
+             * @param  {String} [config.label] a checkbox label
+             * @param  {String} [config.onLabel] a checkbox on label
+             * @param  {String} [config.offLabel] a checkbox off label
+             * @chainable
+             * @return {CheckboxfsBrick}
+             */
+            initialize: function (id, config) {
+                //var that = this;
+                var newConfig = {};
+
+                lang.mixin(newConfig,
+                    {
+                        containerClass: "checkbox-brick-container formstone-brick"
+                    },
+                    config
+                );
+
+                CheckboxBrick.initialize.call(this, id, newConfig);
+
+                // CheckboxfsBrick uses Formstone checkbox component to create CheckboxFSs.
+                this.inputNode.checkbox();
+
+                // move the on/off labels out of the CheckboxFS if there is a brick header
+                /*if (this.header) {
+                    this.node
+                        .find('.fs-checkbox.fs-checkbox-CheckboxFS')
+                        .prepend(
+                            this.node.find('.fs-checkbox-state')
+                        )
+                    ;
+                }*/
+            }
+        });
+
+        /**
+        * ToggleBrick is just a Brick with a checkbox inside it that is styles as a toggle. The toggle can be further styled through its checkbox-container. 
+        * To instantiate, call {{#crossLink "ToggleBrick/new:method"}}{{/crossLink}} on the ToggleBrick prototype.
+        *
+        * 
+        * ####Imports RAMP Modules:
+        * {{#crossLink "Util"}}{{/crossLink}}  
+        * {{#crossLink "TmplHelper"}}{{/crossLink}}  
+        * {{#crossLink "Array"}}{{/crossLink}}  
+        * {{#crossLink "Dictionary"}}{{/crossLink}}  
+        *  
+        * ####Uses RAMP Templates:
+        * {{#crossLink "templates/bricks_template.json"}}{{/crossLink}}
+        * 
+        * 
+        * @class ToggleBrick
+        * @for Bricks
+        * @static
+        * @uses dojo/_base/lang
+        * @extends CheckboxBrick
+        * 
+        */
+        ToggleBrick = CheckboxBrick.extend({
+
+            /**
+             * A CSS class of the ToggleBrick container node.
+             *
+             * @property containerClass
+             * @private
+             * @type {String}
+             * @default "toggle-brick-container"
+             */
+
+            /**
+             * A name of the default ToggleBrick template.
+             *
+             * @property template
+             * @private
+             * @type {String}
+             * @default "default_toggle_brick_template"
+             */
+
+            /**
+             * A toggle value.
+             *
+             * @property value
+             * @private
+             * @type {String}
+             * @default "on"
+             */
+
+            /**
+             * A toggle label.
+             *
+             * @property label
+             * @private
+             * @type {String}
+             * @default "Ok"
+             */
+
+            /**
+             * Initializes the ToggleBrick by generating a specified template and setting defaults. Also sets a change listener on the template input checkbox.
+             * ToggleBrick is a simple toggle in the Brick container.
+             * 
+             * @method new
+             * @param  {String} id     specified id of the Brick
+             * @param  {Object} config a configuration object for the Brick
+             * @param  {String} [config.header] a Brick header
+             * @param  {String} [config.instructions] a configuration object for the Brick
+             * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
+             * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
+             * @param  {String} [config.baseTemplate] a base template name to be used
+             * @param  {String} [config.noticeTemplate] a notice template name to be used
+             * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
+             * @param  {String} [config.template] a name of the specific Brick template
+             * @param  {String} [config.value] a checkbox value
+             * @param  {String} [config.label] a checkbox label
+             * @param  {String} [config.onLabel] a checkbox on label
+             * @param  {String} [config.offLabel] a checkbox off label
+             * * @chainable
+             * @return {ToggleBrick}
+             */
+            initialize: function (id, config) {
+                //var that = this;
+                var newConfig = {};
+
+                lang.mixin(newConfig,
+                    {
+                        template: "default_toggle_brick_template",
+                        containerClass: "toggle-brick-container"
+                    },
+                    config
+                );
+
+                CheckboxBrick.initialize.call(this, id, newConfig);
+
+                // ToggleBrick uses Formstone checkbox component to create toggles.
+                this.inputNode.checkbox({
+                    toggle: true,
+                    labels: {
+                        on: this.onLabel,
+                        off: this.offLabel
+                    }
+                });
+
+                // move the on/off labels out of the toggle if there is a brick header
+                if (this.header) {
+                    this.node
+                        .find('.fs-checkbox.fs-checkbox-toggle')
+                        .prepend(
+                            this.node.find('.fs-checkbox-state')
+                        )
+                    ;
+                }
+            }
+        });
+
         /**
         * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
         * To instantiate, call {{#crossLink "OkCancelButtonBrick/new:method"}}{{/crossLink}} on the OkCancelButtonBrick prototype.
@@ -848,7 +1317,7 @@ define([
         * @extends MultiBrick
         */
         OkCancelButtonBrick = MultiBrick.extend({
-            
+
             /**
              * A dictionary of possible OkCancelButtonBrick events. Adds a OK_CLICK and CANCEL_CLICK events to the default ButtonBrick events.
              *
@@ -893,7 +1362,7 @@ define([
              * @type {String}
              * @default "okcancelbutton-brick-container"
              */
-            
+
             /**
              * Default id of the OK button of the Brick, cannot be changed.
              *
@@ -920,7 +1389,7 @@ define([
              * @type {String}
              * @default "cancelButton"
              */
-            
+
             /**
              * Reverses the default visual order of OK, Cancel button to Cancel, OK.
              *
@@ -945,10 +1414,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.buttonClass] a CSS class of the button in the OkCancelButtonBrick
              * @param  {String} [config.okLabel] an OK button label
@@ -1044,7 +1515,7 @@ define([
         * @extends Brick
         */
         ChoiceBrick = Brick.extend({
-            
+
             /**
              * A CSS class of the MultiBrick container node.
              *
@@ -1063,7 +1534,7 @@ define([
              * @type {String}
              * @default "default_choice_brick_template"
              */
-            
+
             /**
              * Indicates which choice is currently selected
              *
@@ -1072,7 +1543,7 @@ define([
              * @type {String}
              * @default null
              */
-            
+
             /**
              * Indicates if the user made the selection or it was made programmatically
              *
@@ -1102,6 +1573,15 @@ define([
              */
 
             /**
+             * Preselects the specified option among available choices.
+             *
+             * @property preselect
+             * @private
+             * @type {String}
+             * @default ''
+             */
+
+            /**
              * Initializes the ChoiceBrick by generating a specified template and setting defaults. Also sets a click listener on the template button.
              * The ChoiceBrick prototype. Provides a user the ability to choose a single item among several.
              * 
@@ -1111,12 +1591,15 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {Array} [config.choices] a set of choices that will be presented to the user
+             * @param  {String} [config.preselect] a name of an option to preselect
              * @chainable
              * @return {ChoiceBrick}
              */
@@ -1145,6 +1628,10 @@ define([
                     var choiceKey = $(event.currentTarget).data("key");
                     that.setChoice(choiceKey, true);
                 });
+
+                if (this.preselect) {
+                    this.setChoice(this.preselect, false);
+                }
             },
 
             /**
@@ -1288,15 +1775,15 @@ define([
              * @default "default_simpleinput_brick_template"
              */
 
-             /**
-             * An input field label. Invisible. Defaults to the Brick's header.
-             *
-             * @property label
-             * @private
-             * @type {String}
-             * @default ""
-             */
-            
+            /**
+            * An input field label. Invisible. Defaults to the Brick's header.
+            *
+            * @property label
+            * @private
+            * @type {String}
+            * @default ""
+            */
+
             /**
              * A placeholder to be displayed inside the input field.
              *
@@ -1314,7 +1801,7 @@ define([
              * @type {String}
              * @default ""
              */
-            
+
             /**
              * Indicates if the user entered text into the input field or it was entered programmatically
              *
@@ -1334,10 +1821,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
@@ -1501,7 +1990,7 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-    
+
         /**
         * The DropDownBrick prototype. Provides a dropdown control to choose an item from.
         * To instantiate, call {{#crossLink "DropDownBrick/new:method"}}{{/crossLink}} on the DropDownBrick prototype.
@@ -1542,7 +2031,7 @@ define([
              * @type {String}
              * @default "default_dropdown_brick_template"
              */
-            
+
             /**
              * An input field label. Invisible. Defaults to the Brick's header.
              *
@@ -1560,7 +2049,7 @@ define([
              * @type {String}
              * @default ""
              */
-            
+
             /**
              * A text string of the currently selected item in the dropdown.
              *
@@ -1589,10 +2078,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @retun DropDownBrick
              * @chainable
@@ -1777,7 +2268,7 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-    
+
         /**
         * The ColorPickerBrick prototype. Provides a control to select a color.
         * To instantiate, call {{#crossLink "ColorPickerBrick/new:method"}}{{/crossLink}} on the ColorPickerBrick prototype.
@@ -1819,7 +2310,7 @@ define([
              * @type {String}
              * @default "default_colorpicker_brick_template"
              */
-            
+
             /**
              * Specifies positions of the actual color picker (square wheel) control 
              *
@@ -1829,14 +2320,14 @@ define([
              * @default "top"
              */
 
-             /**
-             * The actual node of the picker control.
-             *
-             * @property picker
-             * @private
-             * @type {Object}
-             */
-            
+            /**
+            * The actual node of the picker control.
+            *
+            * @property picker
+            * @private
+            * @type {Object}
+            */
+
             /**
              * A sample node that is coloured with the selected colour.
              *
@@ -1844,7 +2335,7 @@ define([
              * @private
              * @type {String}
              */
-            
+
             /**
              * Initializes the ColorPickerBrick by generating a specified template and setting defaults.
              * A random colour is picked as when this Brick is instantiated.
@@ -1856,10 +2347,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
@@ -1951,7 +2444,7 @@ define([
                 return Brick.getData.call(this, payload, wrap);
             }
         });
-        
+
         /**
         * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
         * To instantiate, call {{#crossLink "FileInputBrick/new:method"}}{{/crossLink}} on the FileInputBrick prototype.
@@ -1992,7 +2485,7 @@ define([
              * @type {String}
              * @default "default_fileinput_brick_template"
              */
-            
+
             /**
              * A file object that is selected through FileAPI.
              *
@@ -2001,7 +2494,7 @@ define([
              * @type {Object}
              * @default null
              */
-            
+
             /**
              * A flag indicating if the user has selected the file or the file has been selected using some magical means.
              *
@@ -2010,7 +2503,7 @@ define([
              * @type {Boolean}
              * @default false
              */
-            
+
             /**
              * A browse files container node
              *
@@ -2018,7 +2511,7 @@ define([
              * @private
              * @type {Object}
              */
-            
+
             /**
              * A node of the file input control.
              *
@@ -2026,7 +2519,7 @@ define([
              * @private
              * @type {Object}
              */
-            
+
             /**
              * A node of the styled pseudo file input control that just looks nice and doesn't do anything. 
              *
@@ -2045,10 +2538,12 @@ define([
              * @param  {String} [config.header] a Brick header
              * @param  {String} [config.instructions] a configuration object for the Brick
              * @param  {Array|Object} [config.required] collection of rules specifying what external conditions must be valid for the Brick to be enabled
+             * @param  {Boolean} [config.isEnabled] specifies if the brick is disabled from the start
              * @param  {Array} [config.freezeStates] a set of rules specifying states Brick should be frozen
              * @param  {String} [config.baseTemplate] a base template name to be used
              * @param  {String} [config.noticeTemplate] a notice template name to be used
              * @param  {String} [config.containerClass] a CSS class of the specific brick container
+             * @param  {String} [config.customContainerClass] any other optional CSS class to be added to the brick container
              * @param  {String} [config.template] a name of the specific Brick template
              * @param  {String} [config.label] an input field label. Invisible. Defaults to the Brick's header
              * @param  {String} [config.placeholder] a placeholder to be displayed inside the input field
@@ -2258,6 +2753,34 @@ define([
              * @type ButtonBrick
              */
             ButtonBrick: ButtonBrick,
+
+            /**
+             * The CheckboxBrick prototype. A simple Brick with a checkbox template.
+             *
+             * @property CheckboxBrick
+             * @static
+             * @type CheckboxBrick
+             */
+            CheckboxBrick: CheckboxBrick,
+
+            /**
+             * The CheckboxfaBrick prototype. A simple Brick with a checkbox template styled with Formstone lib.
+             *
+             * @property CheckboxfaBrick
+             * @static
+             * @type CheckboxfaBrick
+             */
+            CheckboxfsBrick: CheckboxfsBrick,
+
+            /**
+             * The ToggleBrick prototype. A simple Brick with a checkbox toggle template.
+             *
+             * @property ToggleBrick
+             * @static
+             * @type ToggleBrick
+             */
+            ToggleBrick: ToggleBrick,
+
             /**
              * The OkCancelButtonBrick prototype. A MultiBrick with two ButtonBricks displayed side by side and styled as OK and Cancel buttons.
              *
@@ -2284,6 +2807,7 @@ define([
              * @type DropDownBrick
              */
             DropDownBrick: DropDownBrick,
+
             /**
              * The ColorPickerBrick prototype. Provides a control to select a color.
              *
@@ -2292,6 +2816,7 @@ define([
              * @type ColorPickerBrick
              */
             ColorPickerBrick: ColorPickerBrick,
+
             /**
              * The SimpleInputBrick prototype. Provides a control for a simple text input. Can be potentially extended to serve more specific purposes.
              *
@@ -2300,6 +2825,7 @@ define([
              * @type SimpleInputBrick
              */
             SimpleInputBrick: SimpleInputBrick,
+
             /**
              * The FileInputBrick prototype extends SimpleInputBrick. Provides a control to either select a local file or enter its URL.
              *

@@ -26,7 +26,7 @@
 * @param {Array} layers an array of layer config definitions to be added to the group
 * @param {Object} [options] Additional options
 * 
-* @param {String} [options.groupType] Specifies type of this LayerGroup and the name of the layer group template to use
+* @param {String} [options.layerGroupType] Specifies type of this LayerGroup and the name of the layer group template to use
 * @param {String} [options.layerState] Specifies the initial state of any LyerItem added to this group; must be one of the `LayerItem.state` defaults
 * @param {String} [options.layerType] Specifies type of any LayerItem added to this group and the name of the layer item template to use
 * 
@@ -38,23 +38,23 @@
 */
 
 define([
-    "dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
+    'dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang',
 
     /* Text */
-    "dojo/text!./templates/layer_selector_template.json",
+    'dojo/text!./templates/layer_selector_template.json',
 
     /* Util */
-    "utils/tmplHelper", "utils/array", "utils/dictionary",
+    'utils/tmplHelper', 'utils/array',
 
     /* RAMP */
-    "ramp/layerItem"
+    'ramp/layerItem'
 ],
     function (
-        Evented, declare, lang, dojoArray,
+        Evented, declare, lang,
         layer_selector_template,
-        TmplHelper, UtilArray, UtilDict,
+        TmplHelper, UtilArray,
         LayerItem) {
-        "use strict";
+        'use strict';
 
         return declare([Evented], {
             constructor: function (layers, options) {
@@ -92,13 +92,13 @@ define([
                         templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
 
                         /**
-                         * Specifies type of this LayerGroup and the name of the layer group template to use; is set by `groupType` value;
+                         * Specifies type of this LayerGroup and the name of the layer group template to use; is set by `layerGroupType` value;
                          *
-                         * @property groupType
+                         * @property layerGroupType
                          * @type String
-                         * @default "layer_group"
+                         * @default 'layer_group'
                          */
-                        groupType: "layer_group",
+                        layerGroupType: 'layer_group',
 
                         /**
                          * Specifies type of any LayerItem added to this group during initialization and the name of the layer item template to use; is set by `layerType` value;; can be overwritten when adding individual layers by `options.type`.
@@ -119,15 +119,6 @@ define([
                         layerState: LayerItem.state.DEFAULT,
 
                         /**
-                         * An array of layer config definitions to be added to the group during initialization; is set to `layers` value.
-                         *
-                         * @property layers
-                         * @type Array
-                         * @default []
-                         */
-                        layers: [],
-
-                        /**
                          * An array of resulting LayerItem objects.
                          *
                          * @property layerItems
@@ -136,19 +127,19 @@ define([
                          */
                         layerItems: []
                     },
-                    options,
-                    {
-                        layers: layers
-                    }
+                    options
                 );
 
                 // create group node from the template
-                this.node = $(this._template(this.groupType));
-                this._listNode = this.node.find("ul");
+                tmpl.cache = {};
+                tmpl.templates = this.templates;
+
+                this.node = $(tmpl(this.layerGroupType, {}));
+                this._listNode = this.node.find('ul');
 
                 console.debug(LayerItem.state);
 
-                this.layers.forEach(function (layer) {
+                this.layerItems.forEach(function (layer) {
                     that.addLayerItem(layer);
                 });
             },
@@ -163,22 +154,19 @@ define([
              */
             addLayerItem: function (layer, options) {
                 var layerItem,
-                    layerItemOptions = {};
+                    layerItemOptions = {
+                        state: this.layerState,
+                        type: this.layerType
+                    };
 
                 // augment existing stateMatrix or create a new one
-                if (options && options.stateMatrix) {
+                /*if (options && options.stateMatrix) {
                     options.stateMatrix = this._constructStateMatrix(layer, options.stateMatrix);
                 } else {
                     layerItemOptions.stateMatrix = this._constructStateMatrix(layer);
-                }
+                }*/
 
-                lang.mixin(layerItemOptions,
-                    {
-                        state: this.layerState,
-                        type: this.layerType
-                    },
-                    options
-                );
+                lang.mixin(layerItemOptions, options);
 
                 layerItem = new LayerItem(layer, layerItemOptions);
 
@@ -230,13 +218,17 @@ define([
                 stateMatrix = stateMatrix || LayerItem.getStateMatrixTemplate();
 
                 if (!layerConfig.settings.panelEnabled) {
-                    LayerItem.removeStateMatrixPart(stateMatrix, "controls", LayerItem.controls.SETTINGS);
+                    LayerItem.removeStateMatrixPart(stateMatrix, 'controls', LayerItem.controls.SETTINGS);
                 }
 
-                // remove bounding box toggle if there is no layer extent property - layer is a wms layer
-                if (!layerConfig.layerExtent || layerConfig.isStatic) {
-                    LayerItem.removeStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.BOX);
-                    LayerItem.addStateMatrixPart(stateMatrix, "toggles", LayerItem.toggles.PLACEHOLDER);
+                // add wms query toggle if there is no layer extent property - layer is a wms layer
+                if (!layerConfig.layerExtent && !layerConfig.isStatic) {
+                    LayerItem.addStateMatrixPart(stateMatrix, 'toggles', LayerItem.toggles.QUERY, 
+                        [
+                            LayerItem.state.DEFAULT,
+                            LayerItem.state.UPDATING,
+                            LayerItem.state.OFF_SCALE
+                        ]);
                 }
 
                 return stateMatrix;
@@ -273,24 +265,6 @@ define([
                 });
 
                 return layerItem;
-            },
-
-            /**
-             * Populates a template specified by the key with the supplied data.
-             *
-             * @param {String} key template name
-             * @param {Object} data data to be inserted into the template
-             * @method _template
-             * @private
-             * @return {String} a string template filled with supplied data
-             */
-            _template: function (key, data) {
-                tmpl.cache = {};
-                tmpl.templates = this.templates;
-
-                data = data || {};
-
-                return tmpl(key, data);
             }
         });
     });

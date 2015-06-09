@@ -1,8 +1,8 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "5.3.2",
-    "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP",
+    "version": "5.4.0",
+    "description": "RAMP GIS viewer - Groundhog; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {
         "paths": [

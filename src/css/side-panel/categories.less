@@ -211,17 +211,17 @@
         .filter-row-settings {
             display: none;
             box-shadow: @upper-large-shadow, @lower-large-shadow;
-            background-image: @denim;
-            font-family: Arial,Verdana,Helvetica,sans-serif;
+            background-color: @denim-color !important;
+            font-family: Arial, Verdana, Helvetica, sans-serif;
             color: #fff;
-            padding: 0px 0px 15px 0px;
+            //padding: 0 0 15px 0;
             border-style: none solid none solid;
             border-color: @dark-grey-color;
             border-width: 1px;
 
             h4 {
                 text-align: center;
-                margin: 0 0 15px 0 !important;
+                //margin: 0 0 15px 0 !important;
                 padding: 6px 2px 3px !important;
                 border-bottom: 1px inset black;
                 box-shadow: @upper-large-shadow;
@@ -230,12 +230,22 @@
                 line-height: 150%;
             }
 
+            label {
+                color: white;
+            }
+
+            .layer-settings {
+                padding: 12px 22px 2px 35px;
+            }
+
             .transparency-setting {
                 text-align: right;
-                padding: 0 20px;
+                margin: 0 0 10px 0;
+                //padding: 0 20px;
 
                 .nstSlider {
                     display: inline-block;
+                    width: 60%;
 
                     &.disabled {
                         .highlightPanel {

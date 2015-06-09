@@ -18,19 +18,19 @@
 
 define([],
     function () {
-        "use strict";
+        'use strict';
         return {
             FilterManager: {
                 /**
-                * Published whenever the "eye" button for a layer is clicked
+                * Published whenever the 'eye' button for a layer is clicked
                 *
                 * @event FilterManager.LAYER_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
-                * @param event.checked {boolean} true if the "eye" button is checked, false otherwise
+                * @param event.checked {boolean} true if the 'eye' button is checked, false otherwise
                 * @param event.node {Object} the input dom node that represents the checkbox
                 */
-                LAYER_VISIBILITY_TOGGLED: "filterManager/layer-visibility-toggled",
+                LAYER_VISIBILITY_TOGGLED: 'filterManager/layer-visibility-toggled',
 
                 /**
                 * Published each time the transparency of a layer is modified.
@@ -41,18 +41,18 @@ define([],
                 * @param event.layerId {String} the id of the layer
                 * @param event.value {int} the value of the slider
                 */
-                LAYER_TRANSPARENCY_CHANGED: "filterManager/layer-transparency-changed",
+                LAYER_TRANSPARENCY_CHANGED: 'filterManager/layer-transparency-changed',
 
                 /**
-                * Published whenever the "box" button for a layer is clicked
+                * Published whenever the 'box' button for a layer is clicked
                 *
                 * @event FilterManager.BOX_VISIBILITY_TOGGLED
                 * @for FilterManager
                 * @param event {Object}
-                * @param event.checked {Boolean} true if the "box" button is checked, false otherwise
+                * @param event.checked {Boolean} true if the 'box' button is checked, false otherwise
                 * @param event.node {Object} the input dom node that represents the checkbox
                 */
-                BOX_VISIBILITY_TOGGLED: "filterManager/box-visibility-toggled",
+                BOX_VISIBILITY_TOGGLED: 'filterManager/box-visibility-toggled',
 
                 /**
                 * Published whenever the layer list is rearranged
@@ -64,7 +64,7 @@ define([],
                 * @param event.index {Integer} index of the layer that moved.  index is relative to the control,
                 * not the layer stack in the map
                 */
-                SELECTION_CHANGED: "filtermanager/selection-changed",
+                SELECTION_CHANGED: 'filtermanager/selection-changed',
 
                 /**
                 * Published after the ui for the filter manager finishes initializing.
@@ -72,7 +72,7 @@ define([],
                 * @event FilterManager.UI_COMPLETE
                 * @for FilterManager
                 */
-                UI_COMPLETE: "filterManager/UIComplete",
+                UI_COMPLETE: 'filterManager/UIComplete',
 
                 // SUBSCRIBED EVENTS
                 /**
@@ -84,7 +84,7 @@ define([],
                 * @param event.layerId {String} the name of the layer to toggle
                 * @param event.state {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_LAYER_VISIBILITY: "filterManager/toggle-layer-visibility",
+                TOGGLE_LAYER_VISIBILITY: 'filterManager/toggle-layer-visibility',
 
                 /**
                 * Tells the filter manager to toggle a layer on or off
@@ -94,7 +94,7 @@ define([],
                 * @param event.layerId {String} the name of the layer to toggle
                 * @param event.state {boolean} true if the layer should be visible, false otherwise
                 */
-                TOGGLE_BOX_VISIBILITY: "filterManager/toggle-box-visibility",
+                TOGGLE_BOX_VISIBILITY: 'filterManager/toggle-box-visibility',
 
                 /**
                 * Published each time wms query is toggled
@@ -103,7 +103,7 @@ define([],
                 * @param evt {Object} the event Object
                 * @param evt.allowed {boolean} true if wms query is allowed, false if wms query is turned off.
                 */
-                WMS_QUERY_CHANGE: "filterManager/wms-query-change"
+                WMS_QUERY_CHANGE: 'filterManager/wms-query-change'
             },
 
             GUI: {
@@ -113,7 +113,7 @@ define([],
                 * @event GUI.DATAGRID_EXPAND
                 * @for GUI
                 */
-                DATAGRID_EXPAND: "gui/datagrid-expand",
+                DATAGRID_EXPAND: 'gui/datagrid-expand',
 
                 /**
                 * Fires whenever a tab has been deselected in the main panel
@@ -124,7 +124,7 @@ define([],
                 * @param {String} evt.id  the id of the deselected tab
                 * @param {String} evt.tabName the name of the deselected tab
                 */
-                TAB_DESELECTED: "gui/tab-deselected",
+                TAB_DESELECTED: 'gui/tab-deselected',
 
                 /**
                 * Fires whenever a tab has been selected in the main panel
@@ -135,7 +135,7 @@ define([],
                 * @param {String} evt.id the id of the selected tab
                 * @param {String} evt.tabName the name of the selected tab
                 */
-                TAB_SELECTED: "gui/tab-selected",
+                TAB_SELECTED: 'gui/tab-selected',
 
                 /**
                 * Published each time the subpanel opens/closes
@@ -147,7 +147,7 @@ define([],
                 * @param {String} evt.origin
                 * @param {JObject} evt.container jQuery reference to the sub-panel container
                 */
-                SUBPANEL_CHANGE: "gui/subpanel-change",
+                SUBPANEL_CHANGE: 'gui/subpanel-change',
 
                 /**
                 * Published each time the panel opens/closes
@@ -157,7 +157,7 @@ define([],
                 * @param {Object} evt the event Object
                 * @param {boolean} evt.visible true if the panel is opened, false otherwise
                 */
-                PANEL_CHANGE: "gui/panel-change",
+                PANEL_CHANGE: 'gui/panel-change',
 
                 /**
                 * Published each time the help panel opens or closes.
@@ -167,7 +167,7 @@ define([],
                 * @param evt {Object} the event Object
                 * @param evt.visible {boolean} true if the help panel is opened, false if the help panel is closed
                 */
-                HELP_PANEL_CHANGE: "gui/help-panel-change",
+                HELP_PANEL_CHANGE: 'gui/help-panel-change',
 
                 /**
                 * Published each time fullscreen is toggled
@@ -177,7 +177,7 @@ define([],
                 * @param evt {Object} the event Object
                 * @param evt.fullscreen {boolean} true if fullscreen is on, false if fullscreen is off.
                 */
-                FULLSCREEN_CHANGE: "gui/fullscreen-change",
+                FULLSCREEN_CHANGE: 'gui/fullscreen-change',
 
                 /**
                 * Published each time the layout changes.
@@ -185,7 +185,7 @@ define([],
                 * @event GUI.LAYOUT_CHANGE
                 * @for GUI
                 */
-                LAYOUT_CHANGE: "gui/layout-change",
+                LAYOUT_CHANGE: 'gui/layout-change',
 
                 // SUBSCRIBED EVENTS
                 /**
@@ -194,7 +194,7 @@ define([],
                 * @event GUI.PANEL_TOGGLE [subscribed]
                 * @for GUI
                 */
-                PANEL_TOGGLE: "gui/panel-toggle",
+                PANEL_TOGGLE: 'gui/panel-toggle',
 
                 /**
                 * Opens the subpanel
@@ -203,26 +203,26 @@ define([],
                 * @for GUI
                 * @param {SubPanelSettings} attr Settings for the SubPanel
                 */
-                SUBPANEL_OPEN: "gui/subpanel-open",
+                SUBPANEL_OPEN: 'gui/subpanel-open',
 
                 /**
                 * Closes the sub panel
                 *
                 * @event GUI.SUBPANEL_CLOSE [subscribed]
                 * @for GUI
-                * @param origin {String} the name of the module that requested to close the subPanel (e.g. "filterManager")
+                * @param origin {String} the name of the module that requested to close the subPanel (e.g. 'filterManager')
                 */
-                SUBPANEL_CLOSE: "gui/subpanel-close",
+                SUBPANEL_CLOSE: 'gui/subpanel-close',
 
                 /**
                 * Moves the panel up DOM hierarchy next to the sidePanel, or to other target
                 *
                 * @event GUI.SUBPANEL_DOCK [subscribed]
                 * @for GUI
-                * @param origin {String} the name of the module that requested to dock the subPanel (e.g. "filterManager")
+                * @param origin {String} the name of the module that requested to dock the subPanel (e.g. 'filterManager')
                 * @param target {jNode} where to move the subPanel; if not supplied; sidePanel is used
                 */
-                SUBPANEL_DOCK: "gui/subpanel-dock",
+                SUBPANEL_DOCK: 'gui/subpanel-dock',
 
                 /**
                 * Attaches subPanel node to the module that calls it in the DOM hierarchy
@@ -231,7 +231,7 @@ define([],
                 * @for GUI
                 * @param consumeOrigin {}
                 */
-                SUBPANEL_CAPTURE: "gui/subpanel-capture",
+                SUBPANEL_CAPTURE: 'gui/subpanel-capture',
 
                 /**
                 * Toggles the fullscreen
@@ -243,7 +243,7 @@ define([],
                 * collapse to normal mode. If undefined, it toggles the fullscreen (i.e. make it fullscreen
                 * if it was not, make it collapse to regard mode if it was fullscreen).
                 */
-                TOGGLE_FULLSCREEN: "gui/toggle-fullscreen",
+                TOGGLE_FULLSCREEN: 'gui/toggle-fullscreen',
 
                 /**
                 * Published each time the Add Layer panel opens or closes.
@@ -253,7 +253,7 @@ define([],
                 * @param evt {Object} the event Object
                 * @param evt.visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
                 */
-                ADD_LAYER_PANEL_CHANGE: "gui/add-layer-panel-change",
+                ADD_LAYER_PANEL_CHANGE: 'gui/add-layer-panel-change',
 
                 /**
                  * Published each time a toolbar section / widget is opened. Used to close other toolbar sections / widgets.
@@ -263,7 +263,7 @@ define([],
                  * @param evt {Object} the event Object
                  * @param evt.id {String} id of the source section / widget
                  */
-                TOOLBAR_SECTION_OPEN: "gui/toolbar-section-open",
+                TOOLBAR_SECTION_OPEN: 'gui/toolbar-section-open',
 
                 /**
                  * Published each time a toolbar section / widget is closed.
@@ -273,7 +273,7 @@ define([],
                  * @param evt {Object} the event Object
                  * @param evt.id {String} id of the source section / widget
                  */
-                TOOLBAR_SECTION_CLOSE: "gui/toolbar-section-close",
+                TOOLBAR_SECTION_CLOSE: 'gui/toolbar-section-close',
 
                 /**
                 * Published when the gui module has completely finished rendering the UI.
@@ -282,7 +282,7 @@ define([],
                 * @event GUI.UPDATE_COMPLETE
                 * @for GUI
                 */
-                UPDATE_COMPLETE: "gui/update-complete"
+                UPDATE_COMPLETE: 'gui/update-complete'
             },
 
             FeatureHighlighter: {
@@ -293,9 +293,11 @@ define([],
                 *
                 * @event FeatureHighlighter.HIGHLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
+
                 */
-                HIGHLIGHT_SHOW: "highlighter/highlight-show",
+                HIGHLIGHT_SHOW: 'highlighter/highlight-show',
 
                 /**
                 * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the layers;
@@ -304,7 +306,7 @@ define([],
                 * @event FeatureHighlighter.HIGHLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
-                HIGHLIGHT_HIDE: "highlighter/highlight-hide",
+                HIGHLIGHT_HIDE: 'highlighter/highlight-hide',
 
                 /**
                 * Temporarilly highlights (hoverlights) a given feature on the map. Intended to be dehighlighted when the user moves the cursor away; to do that, publish HOVERLIGHT_HIDE event.
@@ -315,7 +317,7 @@ define([],
                 * @for FeatureHighlighter
                 * @param {Object} eventAttr ESRI feature click even attributes
                 */
-                HOVERLIGHT_SHOW: "highlighter/hoverlight-show",
+                HOVERLIGHT_SHOW: 'highlighter/hoverlight-show',
 
                 /**
                 * Dehighlights a currently highlighted (hoverlighted) feature on the map without restoring opacity of the rest of the layers;
@@ -323,7 +325,7 @@ define([],
                 * @event FeatureHighlighter.HOVERLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
-                HOVERLIGHT_HIDE: "highlighter/hoverlight-hide",
+                HOVERLIGHT_HIDE: 'highlighter/hoverlight-hide',
 
                 /**
                 * Temporarilly highlights (zoomlightes) a given feature on the map.
@@ -333,9 +335,10 @@ define([],
                 *
                 * @event FeatureHighlighter.ZOOMLIGHT_SHOW [subscribed]
                 * @for FeatureHighlighter
-                * @param {Object} eventAttr ESRI feature click even attributes
+                * @param evt {Object} the event Object
+                * @param evt.graphic {esri/Graphic} original graphic that should be highlighted
                 */
-                ZOOMLIGHT_SHOW: "highlighter/zoomlight-show",
+                ZOOMLIGHT_SHOW: 'highlighter/zoomlight-show',
 
                 /**
                 * Dehighlights a currently highlighted (zoomlighted) feature on the map;
@@ -345,7 +348,7 @@ define([],
                 * @event FeatureHighlighter.ZOOMLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
-                ZOOMLIGHT_HIDE: "highlighter/zoomlight-hide"
+                ZOOMLIGHT_HIDE: 'highlighter/zoomlight-hide'
             },
 
             Maptips: {
@@ -358,7 +361,7 @@ define([],
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
                 */
-                SHOW: "maptips/show",
+                SHOW: 'maptips/show',
 
                 /**
                 * Displays an permanent, interactive maptip with a close button, positioning it over the `target` jObject; the content of the maptip is build from the
@@ -369,7 +372,7 @@ define([],
                 * @param {jObject} target a node/svg object the user hovered over
                 * @param graphic {Object} ESRI graphic object belonging to the target
                 */
-                SHOW_INTERACTIVE: "maptips/showInteractive",
+                SHOW_INTERACTIVE: 'maptips/showInteractive',
 
                 /**
                 * Is fired when an interactive maptip is shown and {{#crossLink "Maptip"}}{{/crossLink}} detects if the maptip is hidden behind the
@@ -379,7 +382,7 @@ define([],
                 * @event Maptips.EXTENT_CHANGE [subscribed]
                 * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row
                 */
-                EXTENT_CHANGE: "maptip/extent-change",
+                EXTENT_CHANGE: 'maptip/extent-change',
 
                 /**
                 * Repositions the interactive tooltip that is already displayed when the user pans or zooms the map, or the map is otherwise
@@ -391,7 +394,7 @@ define([],
                 * @param {Number} offset New tooltip offset relative to the shape it's attached too; when zooming, the shape changes its size and the
                 * offset needs to be recalculated to keep the tooltip in relative center
                 */
-                REPOSITION_INTERACTIVE: "maptips/repositionInteractive"
+                REPOSITION_INTERACTIVE: 'maptips/repositionInteractive'
             },
 
             LayerLoader: {
@@ -404,18 +407,32 @@ define([],
                 * @param event.layer {Object} ESRI layer object that has loaded
                 *
                 */
-                LAYER_LOADED: "layerLoader/layer-loaded",
+                LAYER_LOADED: 'layerLoader/layer-loaded',
 
                 /**
-                * Indicates that a map layer has been added to the layer selector
+                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has added a layer to the map.
                 *
                 * @event LayerLoader.LAYER_ADDED
                 * @for LayerLoader
                 * @param event {Object}
                 * @param event.layer {Object} layer object that has been added
+                * @param event.layerCounts {Object} layer counts
                 *
                 */
-                LAYER_ADDED: "layerLoader/layer-added",
+                LAYER_ADDED: 'layerLoader/layer-added',
+
+                /**
+                * Indicates that a map layer has been removed to the layer selector. This means the LayerLoader has removed a layer from the map. 
+                * When a layer errors, it's removed from the map, but it might still be in the layer selector in the error state.
+                *
+                * @event LayerLoader.LAYER_REMOVED
+                * @for LayerLoader
+                * @param event {Object}
+                * @param event.layer {Object} layer object that has been added
+                * @param event.layerCounts {Object} layer counts
+                *
+                */
+                LAYER_REMOVED: 'layerLoader/layer-removed',
 
                 /**
                 * Indicates that a map layer has updated.  This means the data it is showing is visible and up-to-date
@@ -426,7 +443,7 @@ define([],
                 * @param event.layer {Object} ESRI layer object that has updated
                 *
                 */
-                LAYER_UPDATED: "layerLoader/layer-updated",
+                LAYER_UPDATED: 'layerLoader/layer-updated',
 
                 /**
                 * Indicates that a map layer has started updating.  This means it is getting data from its source
@@ -437,7 +454,7 @@ define([],
                 * @param event.layer {Object} ESRI layer object that is updating
                 *
                 */
-                LAYER_UPDATING: "layerLoader/layer-updating",
+                LAYER_UPDATING: 'layerLoader/layer-updating',
 
                 /**
                 * Indicates that a map layer should be removed from the map
@@ -448,7 +465,7 @@ define([],
                 * @param event.layerId {String} ESRI layer id to be removed
                 *
                 */
-                REMOVE_LAYER: "layerLoader/remove-layer",
+                REMOVE_LAYER: 'layerLoader/remove-layer',
 
                 /**
                 * Indicates that a map layer should be removed from the map
@@ -457,9 +474,10 @@ define([],
                 * @for LayerLoader
                 * @param event {Object}
                 * @param event.layerId {String} ESRI layer id to be reloaded
+                * @param event.mode {String} layer mode: ondemand or snapshot
                 *
                 */
-                RELOAD_LAYER: "layerLoader/reload-layer",
+                RELOAD_LAYER: 'layerLoader/reload-layer',
 
                 /**
                 * Indicates that a map layer has errored
@@ -471,7 +489,7 @@ define([],
                 * @param event.error {Object} the error object
                 *
                 */
-                LAYER_ERROR: "layerLoader/layer-error"
+                LAYER_ERROR: 'layerLoader/layer-error'
             },
 
             Map: {
@@ -485,7 +503,7 @@ define([],
                 * @for RampMap
                 *
                 */
-                ALL_LAYERS_LOADED: "rampMap/all-layers-loaded",
+                ALL_LAYERS_LOADED: 'rampMap/all-layers-loaded',
 
                 /**
                 * Indicates that the initial basemap has loaded.
@@ -494,7 +512,7 @@ define([],
                 * @for RampMap
                 *
                 */
-                INITIAL_BASEMAP_LOADED: "rampMap/initial-basemap-loaded",
+                INITIAL_BASEMAP_LOADED: 'rampMap/initial-basemap-loaded',
 
                 /**
                 * Centers the map at the given point.
@@ -507,7 +525,7 @@ define([],
                 * @param event.spatialReference {Object}
                 * @param event.spatialReference.wkid {Integer}
                 */
-                CENTER_AT: "rampMap/center-at",
+                CENTER_AT: 'rampMap/center-at',
 
                 /**
                 * Center and zoom the map to the given point.
@@ -520,7 +538,7 @@ define([],
                 * @param event.level {Integer} the zoom level
                 * @param event.callback {function} the function to call after the center and zoom action is complete
                 */
-                CENTER_AND_ZOOM: "rampMap/center-and-zoom",
+                CENTER_AND_ZOOM: 'rampMap/center-and-zoom',
 
                 /**
                 * Changes the current extent of the map.
@@ -534,7 +552,7 @@ define([],
                 * @param event.extent.ymax {number}
                 * @param event.callback {function} the function to call after the extent change is complete
                 */
-                SET_EXTENT: "rampMap/set-extent",
+                SET_EXTENT: 'rampMap/set-extent',
 
                 /**
                 * Changes the current extent of the map.
@@ -548,7 +566,7 @@ define([],
                 * @param event.extent.ymax {number}
                 * @param event.callback {function} the function to call after the extent change is complete
                 */
-                EXTENTS_REPROJECTED: "rampMap/extents-reprojected",
+                EXTENTS_REPROJECTED: 'rampMap/extents-reprojected',
 
                 /**
                 * Republishes a standard ESRI map click event 'click'.
@@ -556,7 +574,7 @@ define([],
                 * @event RampMap.CLICK
                 * @for RampMap
                 */
-                CLICK: "map/click",
+                CLICK: 'map/click',
 
                 /**
                 * Fires when the reorder of the layers in the layer managers has completed finished.
@@ -564,7 +582,7 @@ define([],
                 * @event RampMap.REORDER_END
                 * @for RampMap
                 */
-                REORDER_END: "map/reorder-end",
+                REORDER_END: 'map/reorder-end',
 
                 /**
                 * Republishes a standard ESRI map component event `update-end`.
@@ -572,7 +590,7 @@ define([],
                 * @event RampMap.UPDATE_END
                 * @for RampMap
                 */
-                UPDATE_END: "map/update-end",
+                UPDATE_END: 'map/update-end',
 
                 /**
                 * Republishes a standard ESRI map component event `extent-change`.
@@ -580,7 +598,7 @@ define([],
                 * @event RampMap.EXTENT_CHANGE
                 * @for RampMap
                 */
-                EXTENT_CHANGE: "map/extent-change",
+                EXTENT_CHANGE: 'map/extent-change',
 
                 /**
                 * Republishes a standard ESRI map component event `zoom-start`.
@@ -588,7 +606,7 @@ define([],
                 * @event RampMap.ZOOM_START
                 * @for RampMap
                 */
-                ZOOM_START: "map/zoom-start",
+                ZOOM_START: 'map/zoom-start',
 
                 /**
                 * Republishes a standard ESRI map component event `zoom-end`.
@@ -596,7 +614,7 @@ define([],
                 * @event RampMap.ZOOM_END
                 * @for RampMap
                 */
-                ZOOM_END: "map/zoom-end",
+                ZOOM_END: 'map/zoom-end',
 
                 /**
                 * Republishes a standard ESRI map component event `pan-start`.
@@ -604,7 +622,7 @@ define([],
                 * @event RampMap.PAN_START
                 * @for RampMap
                 */
-                PAN_START: "map/pan-start",
+                PAN_START: 'map/pan-start',
 
                 /**
                 * Republishes a standard ESRI map component event `pan-end`.
@@ -612,7 +630,7 @@ define([],
                 * @event RampMap.PAN_END
                 * @for RampMap
                 */
-                PAN_END: "map/pan-end",
+                PAN_END: 'map/pan-end',
 
                 /**
                 * Fires when a layer is added by a user
@@ -620,7 +638,7 @@ define([],
                 * @event RampMap.ADD_LAYER
                 * @for RampMap
                 */
-                ADD_LAYER: "map/add-layer",
+                ADD_LAYER: 'map/add-layer',
 
                 /**
                 * Fires when a layer added by a user is ready to view
@@ -628,7 +646,15 @@ define([],
                 * @event RampMap.ADD_LAYER_READY
                 * @for RampMap
                 */
-                ADD_LAYER_READY: "map/add-layer-ready"
+                ADD_LAYER_READY: 'map/add-layer-ready',
+
+                /**
+                * Fires when map container is resized in any way
+                *
+                * @event RampMap.RESIZE
+                * @for RampMap
+                */
+                RESIZE: 'map/resize'
             },
 
             BasemapSelector: {
@@ -641,7 +667,7 @@ define([],
                 * @param {String} evt.id the id of the selected basemap
                 * @param {String} evt.cssStyle
                 */
-                BASEMAP_CHANGED: "basemapSelector/basemap-changed",
+                BASEMAP_CHANGED: 'basemapSelector/basemap-changed',
 
                 /**
                 * Fires after the basemap selector finished updating its UI (on page load)
@@ -651,7 +677,7 @@ define([],
                 * @param {Object} evt the event object
                 * @param {String} evt.title the title of the basemap that is selected
                 */
-                UI_COMPLETE: "basemapSelector/UIComplete",
+                UI_COMPLETE: 'basemapSelector/UIComplete',
 
                 // SUBSCRIBED EVENTS
                 /**
@@ -662,7 +688,7 @@ define([],
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the basemap that is to be selected
                 */
-                TOGGLE: "basemapSelector/toggle"
+                TOGGLE: 'basemapSelector/toggle'
             },
 
             Datagrid: {
@@ -673,54 +699,63 @@ define([],
                 * @event Datagrid.APPLY_EXTENT_FILTER [subscribed]
                 * @for Datagrid
                 */
-                APPLY_EXTENT_FILTER: "datagrid/applyExtentFilter",
+                APPLY_EXTENT_FILTER: 'datagrid/applyExtentFilter',
 
                 /**
                 * Fires when the table has finished drawing
                 *
                 * @event Datagrid.DRAW_COMPLETE
                 */
-                DRAW_COMPLETE: "datagrid/draw-complete",
+                DRAW_COMPLETE: 'datagrid/draw-complete',
 
                 /**
                 * Fires when the extent-filter has finished updating
                 *
                 * @event Datagrid.EXTENT_FILTER_END
                 */
-                EXTENT_FILTER_END: "datagrid/extent-filter-end",
+                EXTENT_FILTER_END: 'datagrid/extent-filter-end',
 
                 /**
                 * Highlights the row corresponding to the given `graphic` object of the selected feature.
                 *
                 * @event Datagrid.HIGHLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the selected feature
+                * @param event.fData {Object} feature data object corresponding to the selected feature
                 */
-                HIGHLIGHTROW_SHOW: "datagrid/highlightrow-show",
+                HIGHLIGHTROW_SHOW: 'datagrid/highlightrow-show',
 
                 /**
                 * Dehighlights the currently highlighted row.
                 *
                 * @event Datagrid.HIGHLIGHTROW_HIDE
                 */
-                HIGHLIGHTROW_HIDE: "datagrid/highlightrow-hide",
+                HIGHLIGHTROW_HIDE: 'datagrid/highlightrow-hide',
                 /**
                 * Zoomlights the row corresponding to the given `graphic` object of the zoomed to feature.
                 *
                 * @event Datagrid.ZOOMLIGHTROW_SHOW
                 * @param event {Object}
-                * @param event.graphic {Object} ESRI graphic object corresponding to the zoomed to feature
+                * @param event.fData {Object} feature data object corresponding to the zoomed to feature
                 */
-                ZOOMLIGHTROW_SHOW: "datagrid/zoomlightrow-show",
+                ZOOMLIGHTROW_SHOW: 'datagrid/zoomlightrow-show',
 
                 /**
                 * Dehighlights the currently zoomlighted row.
                 *
                 * @event Datagrid.ZOOMLIGHTROW_HIDE
                 *
+                */
+                ZOOMLIGHTROW_HIDE: 'datagrid/zoomlightrow-hide',
+
+                /**
+                * Is fired by the state manager when datagrid is being updated.
+                *
+                * @event Datagrid.UPDATING
+                * @param event {Boolean} true if updating; false if not 
+                * 
                 * @for Datagrid
                 */
-                ZOOMLIGHTROW_HIDE: "datagrid/zoomlightrow-hide"
+                UPDATING: 'datagrid/updating'
             },
 
             Navigation: {
@@ -730,21 +765,21 @@ define([],
                 * @for Navigation
                 * @event Navigation.PAN
                 */
-                PAN: "navigation/pan",
+                PAN: 'navigation/pan',
 
                 /**
                 * Published whenever the user tries to zoom using the arrow buttons.
                 *
                 * @event Navigation.ZOOM_STEP
                 */
-                ZOOM_STEP: "navigation/zoom-step",
+                ZOOM_STEP: 'navigation/zoom-step',
 
                 /**
                 * Published whenever the user tries to zoom using the slider.
                 *
                 * @event Navigation.ZOOM
                 */
-                ZOOM: "navigation/zoom",
+                ZOOM: 'navigation/zoom',
 
                 /**
                 * Published whenever the user clicks on the full extent button in the
@@ -753,7 +788,7 @@ define([],
                 * @for Navigation
                 * @event Navigation.FULL_EXTENT
                 */
-                FULL_EXTENT: "navigation/full-extent"
+                FULL_EXTENT: 'navigation/full-extent'
             },
 
             BookmarkLink: {
@@ -764,7 +799,7 @@ define([],
                * @for BookmarkLink
                * @event BookmarkLink.GETLINK_PANEL_CHANGED
                */
-                GETLINK_PANEL_CHANGED: "bookmark/getlinkpanel-changed",
+                GETLINK_PANEL_CHANGED: 'bookmark/getlinkpanel-changed',
 
                 /**
                 * Published when a new link has been generated.
@@ -773,7 +808,7 @@ define([],
                 * @param event {Object}
                 * @param event.link {String} The bookmark URL that was generated
                 */
-                BOOKMARK_GENERATED: "bookmark/bookmark-generated"
+                BOOKMARK_GENERATED: 'bookmark/bookmark-generated'
             },
 
             AdvancedToolbar: {
@@ -783,7 +818,7 @@ define([],
                 * @for AdvancedToolbar
                 * @event advancedToolbar.ADVANCED_PANEL_CHANGED
                 */
-                ADVANCED_PANEL_CHANGED: "advanced/advancedpanel-changed"
+                ADVANCED_PANEL_CHANGED: 'advanced/advancedpanel-changed'
             }
         };
     });

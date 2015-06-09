@@ -1,7 +1,7 @@
 ﻿{
     "base_tool_output":  "<div class='buffer-info'>
                             <p class='info-label mrgn-bttm-sm mrgn-tp-0'>{%= o.distanceLabel %}:</p>                
-                            <input type='text' class='distance-input mrgn-bttm-sm' size='5' value='40'> km
+                            <input type='text' class='distance-input mrgn-bttm-sm' size='5' value='40' id='buffer-input'> km
                         </div>",
 
     "base_tool_button": "<li class='map-toolbar-item'>

@@ -17,11 +17,8 @@
 * @uses dojo/_base/array
 * @uses dojo/_base/lang
 */
-define([
-        "dojo/_base/array", "dojo/_base/lang"
-],
-    function (
-        dojoArray, dojoLang) {
+define(["dojo/_base/lang"],
+    function () {
         "use strict";
 
         return {
@@ -39,26 +36,20 @@ define([
             * forEachEntry terminates right away (without iterating over the rest of the dictionary). The
             * return value of forEackKeyValuePair is returnVal (which by default is undefined).</param>
             * @param {Function} [sortFcn] true if the dictionary keys are to be sorted before iterating
-            * @param {Object} [scope] The scope to be hitched to the given fcn
+            * @param {Object} [scope] The scope called with the given fcn
             */
             forEachEntry: function (dict, fcn, sortFcn, scope) {
                 if (scope) {
-                    fcn = dojoLang.hitch(scope, fcn);
+                    fcn = fcn.call(scope);
                 }
 
-                var keys = [];
-
-                for (var key in dict) {
-                    if (dict.hasOwnProperty(key)) {
-                        keys.push(key);
-                    }
-                }
+                var keys = Object.keys(dict);
 
                 if (sortFcn) {
                     keys.sort(sortFcn);
                 }
 
-                dojoArray.forEach(keys, function (key) {
+                keys.forEach(function (key) {
                     fcn(key, dict[key]);
                 });
             },
@@ -91,10 +82,9 @@ define([
                 }
 
                 var index = -1;
-                dojoArray.some(keys, function (key, i) {
-                    if (fcn(key, dict[key])) {
+                keys.forEach(function (key, i) {
+                    if (index === -1 && fcn(key, dict[key])) {
                         index = i;
-                        return true;
                     }
                 });
 
@@ -163,7 +153,7 @@ define([
             */
             arrayToMap: function (arr, fcn) {
                 var dict = {};
-                dojoArray.forEach(arr, function (element) {
+                arr.forEach(function (element) {
                     dict[fcn(arr)] = element;
                 });
                 return dict;
@@ -186,7 +176,7 @@ define([
                 }
 
                 var dict = {};
-                dojoArray.forEach(arr1, function (element, i) {
+                arr1.forEach(function (element, i) {
                     dict[element] = arr2[i];
                 });
                 return dict;

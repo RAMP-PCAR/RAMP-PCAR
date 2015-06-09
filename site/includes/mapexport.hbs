@@ -1,0 +1,45 @@
+﻿<section id="map-export-modal" class="mfp-hide modal-dialog modal-content overlay-def">
+    <div class="modal-body">
+        <div class="row">
+            <div class="map-export-preview">
+                <div class="map-export-stretcher" role="presentation">
+                    <section class="map-export-notice alert alert-danger">
+                        <h3>{{t "mapExport.error.generalTitle"}}</h3>
+                        <p>{{t "mapExport.error.generalMessage"}}</p>
+                    </section>
+                    {{>loadingsimple}}
+                </div>
+                <div class="map-export-image">
+                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" crossorigin="anonymous" alt="">
+                </div>
+            </div>
+            <div class="map-export-controls">
+                <header>
+                    <h2 class="mrgn-tp-sm mrgn-bttm-md h3">{{t "mapExport.title"}}</h2>
+                </header>
+                <button class="button-none button-close _tooltip popup-modal-dismiss" title="{{t "gui.actions.close"}}">
+                    <span class="wb-invisible">{{t "gui.actions.close"}}</span>
+                </button>
+                <div class="">
+                    <!--<div class="checkbox">
+                    <label>{{t "mapExport.includeLegend"}}<input type="checkbox" value="" /></label>
+                    </div>-->
+                    <div class="download-buttons mrgn-tp-lg">
+                        <!--<button class="btn btn-primary" type="button">
+                        <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                        </button>-->
+                        <a class="btn btn-primary" href="" target="_blank" download="">
+                            <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadImage"}}</span>
+                        </a>
+                        <!--<button class="btn btn-primary" type="button">
+                        <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadPNG"}}</span>
+                        </button>-->
+                        <!--<button class="btn btn-primary" type="button">
+                        <i class="fa fa-download"></i><span class="on-right">{{t "mapExport.downloadJPG"}}</span>
+                        </button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

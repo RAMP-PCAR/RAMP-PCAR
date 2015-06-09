@@ -19,10 +19,10 @@
 
     <div class="metadata-view">
 
-      <xsl:if test="//gmd:abstract//gmd:LocalisedCharacterString[@locale='#FRE']/text() != ''">
+      <xsl:if test="//gmd:abstract//gmd:LocalisedCharacterString[@locale='#fra']/text() != ''">
         <h5 class="margin-bottom-none margin-top-small">Résumé</h5>
         <p class="shorten-candidate margin-top-none margin-bottom-medium">
-          <xsl:value-of select="//gmd:abstract//gmd:LocalisedCharacterString[@locale='#FRE']/text()" />
+          <xsl:value-of select="//gmd:abstract//gmd:LocalisedCharacterString[@locale='#fra']/text()" />
         </p>
       </xsl:if>
 
@@ -48,14 +48,14 @@
         <xsl:if test="//gmd:supplementalInformation//gmd:LocalisedCharacterString[@locale='#FRE']/text() != ''">
           <h5 class="margin-bottom-none margin-top-small">Données supplémentaires</h5>
           <p class="shorten-candidate margin-top-none margin-bottom-medium">
-            <xsl:value-of select="//gmd:supplementalInformation//gmd:LocalisedCharacterString[@locale='#FRE']/text()" />
+            <xsl:value-of select="//gmd:supplementalInformation//gmd:LocalisedCharacterString[@locale='#fra']/text()" />
           </p>
         </xsl:if>
       </xsl:comment>
 
       <xsl:if test="//gmd:pointOfContact//gmd:individualName/* != '' 
-              or //gmd:pointOfContact//gmd:organisationName//gmd:LocalisedCharacterString[@locale='#FRE']/text() != ''
-              or //gmd:pointOfContact//gmd:positionName//gmd:LocalisedCharacterString[@locale='#FRE']/text() != ''
+              or //gmd:pointOfContact//gmd:organisationName//gmd:LocalisedCharacterString[@locale='#fra']/text() != ''
+              or //gmd:pointOfContact//gmd:positionName//gmd:LocalisedCharacterString[@locale='#fra']/text() != ''
               or //gmd:pointOfContact//gmd:electronicMailAddress/* != ''
               or //gmd:pointOfContact//gmd:role/gmd:CI_RoleCode/@codeListValue != ''">
         <h5 class="margin-bottom-none margin-top-small">Coordonnées</h5>
@@ -63,10 +63,10 @@
           <xsl:value-of select="//gmd:pointOfContact//gmd:individualName" />
         </p>
         <p class="shorten-candidate margin-top-none margin-bottom-medium">
-          <xsl:value-of select="//gmd:pointOfContact//gmd:organisationName//gmd:LocalisedCharacterString[@locale='#FRE']/text()" />
+          <xsl:value-of select="//gmd:pointOfContact//gmd:organisationName//gmd:LocalisedCharacterString[@locale='#fra']/text()" />
         </p>
         <p class="shorten-candidate margin-top-none margin-bottom-medium">
-          <xsl:value-of select="//gmd:pointOfContact//gmd:positionName//gmd:LocalisedCharacterString[@locale='#FRE']/text()" />
+          <xsl:value-of select="//gmd:pointOfContact//gmd:positionName//gmd:LocalisedCharacterString[@locale='#fra']/text()" />
         </p>
         <p class="shorten-candidate margin-top-none margin-bottom-medium">
           <a href="mailto:{//gmd:pointOfContact//gmd:electronicMailAddress}?Subject={//gmd:identificationInfo//gmd:title//gmd:LocalisedCharacterString/text()}">

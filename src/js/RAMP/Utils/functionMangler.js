@@ -52,7 +52,7 @@ define([
                 if (UtilMisc.isUndefined(scope)) {
                     return originalOn(target, type, listener);
                 } else {
-                    return originalOn(target, type, dojoLang.hitch(scope, listener));
+                    return originalOn(target, type, listener.call(scope));
                 }
             };
 

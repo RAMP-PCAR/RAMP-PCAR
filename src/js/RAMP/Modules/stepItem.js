@@ -498,7 +498,7 @@ define([
 
                         .to(this._optionsBackgroundNode, this._transitionDuration, {
                             height: targetChildStep.getContentOuterHeight(),
-                            "line-height": targetChildStep.getContentOuterHeight(),
+                            "line-height": targetChildStep.getContentOuterHeight() + 'px',
                             ease: "easeOutCirc"
                         }, 0)
 
@@ -582,7 +582,7 @@ define([
                             // animate step's background
                             .to(this._optionsBackgroundNode, 0, {
                                 height: targetChildStep.getContentOuterHeight(),
-                                "line-height": targetChildStep.getContentOuterHeight()
+                                "line-height": targetChildStep.getContentOuterHeight() + 'px'
                             }, 0)
 
                             // animate height and position of the options' container node
@@ -957,7 +957,7 @@ define([
                 if (this._parent) {
                     tl.to(this._parent._optionsBackgroundNode, this._transitionDuration / 2, {
                         height: contentHeight + heightChange,
-                        "line-height": contentHeight + heightChange,
+                        'line-height': contentHeight + heightChange + 'px',
                         ease: "easeOutCirc"
                     }, 0);
                 }

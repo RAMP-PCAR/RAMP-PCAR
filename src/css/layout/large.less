@@ -9,6 +9,16 @@
             width: @panel-width-large;
             right: 0;
             
+            .wb-tabs {
+                
+                > ul[role="tablist"] { // WET Tabs override
+                
+                    li > a{
+                        font-size: inherit; // make font size stays the same on the large layout
+                    }
+                }
+            }
+
             #jqgrid .record-row .record-details .record-names {
                 width: 347px;
 

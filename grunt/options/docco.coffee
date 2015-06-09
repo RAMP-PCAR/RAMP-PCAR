@@ -1,4 +1,4 @@
 module.exports = 
-    src: '<%= pkg.ramp.docco.path %>/**/*.js'
+    src: '<%= pkg.core.ramp.docco.path %>/**/*.js'
     options:
-        output: '<%= pkg.ramp.docco.outdir %>'
+        output: '<%= pkg.core.ramp.docco.outdir %>'

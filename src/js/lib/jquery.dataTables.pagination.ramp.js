@@ -76,13 +76,13 @@ $.fn.dataTableExt.oPagination.ramp = {
                 '</div>' +
             '</div>'
         );
-    
+
         els = $('button', nPaging);
         nFirst = els[1];
         nPrev = els[2];
         nNext = els[3];
         nLast = els[4];
-    
+
         $(nFirst).click(function () { fnClickHandler("first"); });
         $(nPrev).click(function () { fnClickHandler("previous"); });
         $(nNext).click(function () { fnClickHandler("next"); });
@@ -117,11 +117,24 @@ $.fn.dataTableExt.oPagination.ramp = {
                 pageButtons.width(itemMaxWidth);
                 leftOffset -= (itemMaxWidth * pageButtons.length + 2) / 2;
 
+                //Handle even numbers of pages (snap to center buttons)
+                if (pageButtons.length % 2 === 0) {
+                    // If one of the center buttons is selected
+                    if (gotoPagesDiv.hasClass('two') || gotoPagesDiv.hasClass('four') || gotoPagesDiv.hasClass('six')) {
+                        // Move box over half a button width
+                        if (gotoPagesDiv.hasClass('reverse')) {
+                            leftOffset -= itemMaxWidth / 2;
+                        } else {
+                            leftOffset += itemMaxWidth / 2;
+                        }
+                    }
+                }
+
                 pageNumberButton.addClass("button-pressed");
 
                 gotoPagesDiv
                 //.removeClass("wb-invisible")
-                    .css({ left: leftOffset })
+                    .css({ left: leftOffset + 'px' })
                     .removeClass("fadeOutDown")
                     .addClass("fadeInUp");
 
@@ -250,8 +263,30 @@ $.fn.dataTableExt.oPagination.ramp = {
         }
 
         var iPageDisplayCount = iEndButton - iStartButton + 1,
-            iPageCountMiddle = (iPageDisplayCount && 1) ? Math.floor(iPageDisplayCount / 2) + 1 + iStartButton - 1 : -1;
-        //console.log(iPageCountMiddle);
+            iPageCountMiddle = Math.floor(iPageDisplayCount / 2) + 1 + iStartButton - 1;
+
+        $('.pagination-goto-page').removeClass('reverse two four six');
+
+        //Handle even numbers of pages (snap to center buttons)
+        if (iPageDisplayCount % 2 === 0 && iPageDisplayCount <= 6) {
+            var pageCount;
+
+            if (iPageDisplayCount === 2) {
+                pageCount = 'two';
+            } else if (iPageDisplayCount === 4) {
+                pageCount = 'four';
+            } else {
+                pageCount = 'six';
+            }
+
+            if (iCurrentPage === iPageCountMiddle - 1) { // button left of center
+                $('.pagination-goto-page').addClass(pageCount);
+                iPageCountMiddle = iCurrentPage;
+            } else if (iCurrentPage === iPageCountMiddle) { // button right of center
+                $('.pagination-goto-page').addClass(pageCount);
+                $('.pagination-goto-page').addClass('reverse');
+            }
+        }
 
         /* Build the dynamic list */
         for (i = iStartButton; i <= iEndButton; i++) {

@@ -17,7 +17,6 @@
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/_base/lang
-* @uses dojo/_base/array
 * @uses Checkbox
 *
 * @param {JArray} nodes a jQuery object representing the checkboxes to be grouped
@@ -46,10 +45,10 @@
 * @return {CheckboxGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/array",
+define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
 
         "utils/checkbox", "utils/array"],
-    function (Evented, declare, lang, dojoArray,
+    function (Evented, declare, lang,
             Checkbox, Array) {
         "use strict";
 
@@ -271,12 +270,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "dojo/_base/arr
             _checkMaster: function () {
                 var allChecked;
 
-                allChecked = dojoArray.every(this.checkboxes, function (checkbox) {
-                    // "INVALID" state is parsed as "true" so it's counted in, but is ignored otherwise
-                    return checkbox
-                            .validate()
-                            .state;
-                });
+                // "INVALID" state is parsed as "true" so it's counted in, but is ignored otherwise
+                allChecked = this.checkboxes.every(function (checkbox) { return checkbox.validate().state; }) === true;
 
                 // set state to the master checkbox only if you have one
                 if (this.master) {

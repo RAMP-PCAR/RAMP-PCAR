@@ -9,6 +9,18 @@
             width: @panel-width-medium;
             right: 0;
 
+            .wb-tabs {
+                
+                > ul[role="tablist"] { // WET Tabs override
+                
+                    li > a {
+                        font-size: 80%; // make font size smaller so long French words can fit in
+                        // using % for IE; for some reason it doesn't want to scale text down using pt or smaller after it was scaled using %; arghh!
+                        line-height: 20px;
+                    }
+                }
+            }
+
             #jqgrid .record-row .record-details .record-names {
                 width: 250px;
 
