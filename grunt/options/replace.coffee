@@ -30,6 +30,39 @@ module.exports =
             dest: 'dist/js/lib/lib.min.js'
         ]
 
+    nfpBuild:
+        options:
+            patterns: [
+                match: /<\/head>/
+                replacement: '<%= pkg.nfp.head %>\n</head>\n'
+            ,
+                match: /<\/body>/
+                replacement: '<%= pkg.nfp.body %>\n</body>\n'
+            ]
+            usePrefix: false
+
+        files: [
+            expand: true
+            cwd: 'build/'
+            src: ['ramp-*.html']
+            dest: 'build/'
+        ]
+
+    nfpDist:
+        options:
+            patterns: [
+                match: /<!-- R-NFP:S -->[\s\S]*?<!-- R-NFP:E -->/g
+                replacement: ''
+            ]
+            usePrefix: false
+
+        files: [
+            expand: true
+            cwd: 'dist/'
+            src: ['ramp-*.html']
+            dest: 'dist/'
+        ]
+
     api_esri:
         options:
             patterns: [json: '<%= pkg.yuiconfig.options.exlinks.esri %>']
