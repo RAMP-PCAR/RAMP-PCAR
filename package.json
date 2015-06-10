@@ -123,6 +123,6 @@
         "serve": {
             "port": 3002,
             "livereload": 35732
-        }
     }
+}
 }
