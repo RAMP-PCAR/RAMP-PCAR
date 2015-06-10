@@ -1,4 +1,4 @@
-module.exports = 
+module.exports =
     
     # 'Generates API docs.'
     'api':
@@ -24,11 +24,12 @@ module.exports =
             'js:prep'
             'js:build'
             'css:build'
+            'nfp:build'
             'notify:build'
         ]
 
     # 'INTERNAL: Copies files (except JS and CSS) needed for a build.'
-    'copy:build': 
+    'copy:build':
         [
             'copy:configBuild'
             'copy:polyfillBuild'
@@ -41,7 +42,7 @@ module.exports =
         ]
 
     #'INTERNAL: Copies files (except JS and CSS) needed for a distribution package.'
-    'copy:dist': 
+    'copy:dist':
         [
             'copy:configDist'
             'copy:polyfillDist'
@@ -85,6 +86,7 @@ module.exports =
             'imagemin'
             'notify:min'
             'tarball'
+            'nfp:dist'
             'notify:dist'
         ]
 
@@ -98,14 +100,14 @@ module.exports =
 
     # 'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
     'generateConfig':
-        [   
+        [
             'jsonlint:oneConfig'
             'zs3'
             'assembleConfigs'
             'jsonlint:generatedConfigs'
             'notify:generatedConfigsLint'
             'clean:oneConfig'
-        ]            
+        ]
 
     # 'INTERNAL: Runs JSHint on JS code.'
     'hint':
@@ -130,9 +132,9 @@ module.exports =
             'copy:jsCore'
             'copy:jsPlugins'
             'replace:jsCoreBuild'
-            'notify:js'               
-        ]        
-
+            'notify:js'
+        ]
+        
     # 'INTERNAL: Minifies JS code.'
     'js:dist':
         [
@@ -188,4 +190,17 @@ module.exports =
             'clean:tarball'
             'compress'
             'notify:tarball'
+        ]
+
+    # 'INTERNAL: Add a not for production warning to the build.'
+    'nfp:build':
+        [
+            'replace:nfpBuild'
+            'nfp:file'
+        ]
+
+    # 'INTERNAL: Removes a not for production warning from the distribution package.'
+    'nfp:dist':
+        [
+            'replace:nfpDist'
         ]
