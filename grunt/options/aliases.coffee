@@ -20,6 +20,7 @@ module.exports =
             'prepareLocale'
             'generateConfig' # generate config after copying locale files
             'assemblePages'
+            'assemble:extra'
             'notify:page'
             'js:prep'
             'js:build'
@@ -27,6 +28,8 @@ module.exports =
             'nfp:build'
             'notify:build'
         ]
+    # extra pages to be assembled (to be overridden by themes as necessary)
+    'assemble:extra': []
 
     # 'INTERNAL: Copies files (except JS and CSS) needed for a build.'
     'copy:build':
@@ -132,9 +135,13 @@ module.exports =
             'copy:jsCore'
             'copy:jsPlugins'
             'replace:jsCoreBuild'
+            'js:build:after'
             'notify:js'
         ]
-        
+
+    # post build step for themes to override if they need to
+    'js:build:after': []
+
     # 'INTERNAL: Minifies JS code.'
     'js:dist':
         [
@@ -147,18 +154,6 @@ module.exports =
         [
             'jscs'
             'notify:jsstyle'
-        ]
-
-    # 'Run build without jscs.'
-    'quietbuild':
-        [
-            'clean:build'
-            'copy:build'
-            'assemblePages'
-            'notify:page'
-            'js:quietbuild'
-            'css:build'
-            'notify:build'
         ]
 
     # 'Creates an unminified development package, starts a node server the specified port, watches for modified JS, CSS and other files, and reloads HTML page on change.'
@@ -174,14 +169,6 @@ module.exports =
         [
             'dist'
             'connect:dist'
-        ]
-
-    # 'A nice quiet build to test stuff without JSCS complaining on every keypress.'
-    'serve:qbuild':
-        [
-            'quietbuild'
-            'connect:build'
-            'watch'
         ]
 
     # 'INTERNAL: Creates a tarball of the distribution package.'
