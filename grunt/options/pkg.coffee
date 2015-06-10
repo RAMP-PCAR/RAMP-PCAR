@@ -18,6 +18,8 @@ module.exports = (grunt, options)->
             path: null
             wet: null
 
+        nfp: {}
+
     if grunt.file.exists corepackagepath
         pkg.isTheme = true
         
@@ -56,6 +58,20 @@ module.exports = (grunt, options)->
 
     # derive the series number
     pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.')# + '-dist'
+
+    # not for production warning corner ribbon css
+    pkg.nfp.head = '<!-- R-NFP:S -->
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" />
+        <!--[if lt IE 9]>
+          <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css" />
+        <![endif]--><!-- R-NFP:E -->'
+    # not for production warning corner ribbon html
+    pkg.nfp.body = '<!-- R-NFP:S -->
+        <div class="github-fork-ribbon-wrapper left">
+            <div class="github-fork-ribbon">
+                <a href="">Not for Production</a>
+            </div>
+        </div><!-- R-NFP:E -->'
 
     # read a yui config file from the core
     yuiconfigpath = pkg.core.path + 'yuidoc.json'
