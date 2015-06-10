@@ -156,18 +156,6 @@ module.exports =
             'notify:jsstyle'
         ]
 
-    # 'Run build without jscs.'
-    'quietbuild':
-        [
-            'clean:build'
-            'copy:build'
-            'assemblePages'
-            'notify:page'
-            'js:quietbuild'
-            'css:build'
-            'notify:build'
-        ]
-
     # 'Creates an unminified development package, starts a node server the specified port, watches for modified JS, CSS and other files, and reloads HTML page on change.'
     'serve:build':
         [
@@ -181,14 +169,6 @@ module.exports =
         [
             'dist'
             'connect:dist'
-        ]
-
-    # 'A nice quiet build to test stuff without JSCS complaining on every keypress.'
-    'serve:qbuild':
-        [
-            'quietbuild'
-            'connect:build'
-            'watch'
         ]
 
     # 'INTERNAL: Creates a tarball of the distribution package.'
