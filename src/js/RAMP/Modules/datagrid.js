@@ -75,7 +75,7 @@ define([
         GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
 
     // Util
-        utilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
+        UtilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
         "use strict";
 
         var GRID_MODE_SUMMARY = "summary",
@@ -483,7 +483,7 @@ define([
 
                     datagridNotice = sectionNode.find('.datagrid-info-notice');
 
-                    Theme.tooltipster(jqgridWrapper);
+                    UtilMisc.tooltipster(jqgridWrapper);
 
                     // DO:Clean;
                     if (datagridMode !== GRID_MODE_SUMMARY) {
@@ -579,7 +579,7 @@ define([
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
                                 // repopulated after an extent change
-                                utilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                                UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getFDataOid(fData),
@@ -591,7 +591,7 @@ define([
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack();
                             // Reset focus back to "Zoom To" link after map extent change
-                            utilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                            UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                         featureOidField, GraphicExtension.getFDataOid(fData),
                                         layerIdField, fData.parent.layerId));
@@ -1123,7 +1123,7 @@ define([
 
                 function adjustPanelWidth() {
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        utilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine, datagridNotice]);
+                        UtilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles, datagridStatusLine, datagridNotice]);
                     } else {
                         if (jqgrid.outerWidth() === jqgridWrapper.outerWidth()) {
                             dataTablesScrollBody.addClass("overflow-x-hidden");
@@ -1141,7 +1141,7 @@ define([
                     * @constructor
                     *
                     */
-                    init: utilMisc.once(
+                    init: UtilMisc.once(
                         function () {
                             var d = new Deferred();
                             d.then(
@@ -1270,7 +1270,7 @@ define([
                         }
                     },
 
-                    initInvisibleLayerToggleCount: utilMisc.once(
+                    initInvisibleLayerToggleCount: UtilMisc.once(
                         function () {
                             invisibleLayerToggleOn = RampMap.getInvisibleLayers()
                             .filter(function (l) {
@@ -1407,7 +1407,7 @@ define([
             }
 
             // Execute this only after all the deferred objects has resolved
-            utilMisc.afterAll(deferredList, function () {
+            UtilMisc.afterAll(deferredList, function () {
                 //console.timeEnd('applyExtentFilter:part 1');
 
                 //console.time('applyExtentFilter:part 2 - fetchRecords');

@@ -1198,7 +1198,7 @@ define([
                 ;
             }
 
-            Theme.tooltipster(addDatasetContainer);
+            UtilMisc.tooltipster(addDatasetContainer);
         }
 
         /**

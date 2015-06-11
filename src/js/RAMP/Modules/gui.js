@@ -560,7 +560,7 @@ define([
                         .to(this.panel, this._animatePanelDuration, { left: 0, ease: "easeOutCirc" })
                         .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0); // 6 is double border width
 
-                    Theme.tooltipster(this.container);
+                    UtilMisc.tooltipster(this.container);
 
                     this.update(this._attr);
                 },
@@ -750,7 +750,7 @@ define([
                                 );
                         });
 
-                    Theme.tooltipster(mapToolbar);
+                    UtilMisc.tooltipster(mapToolbar);
 
                     isTooltipsSet = true;
                 }
@@ -760,7 +760,7 @@ define([
             function removeToolbarTooltips() {
                 if (isTooltipsSet && isToolbarWideEnough()) {
                     // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
-                    Theme.tooltipster(
+                    UtilMisc.tooltipster(
                         mapTools
                             .filter(".tooltip-temp")
                             .parent(),

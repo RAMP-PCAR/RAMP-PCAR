@@ -135,7 +135,7 @@ require([
                 }
 
                 Datagrid.init();
-                theme.tooltipster();
+                UtilMisc.tooltipster();
 
                 //start loading the layers
                 RAMP.startupLayers.forEach(function (layer) {
@@ -170,7 +170,7 @@ require([
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
                 NavWidget.init(currentLevel);
-                theme.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
+                UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
                 FeatureHighlighter.init();
 
@@ -191,7 +191,7 @@ require([
             NavWidget.construct();
 
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
-            theme.tooltipster();
+            UtilMisc.tooltipster();
 
             /* End - RAMP Events */
         }
