@@ -106,7 +106,10 @@
                 "t/t.js",
                 "formstone/src/js/core.js",
                 "formstone/src/js/touch.js",
-                "formstone/src/js/checkbox.js"
+                "formstone/src/js/checkbox.js",
+                "blob/Blob.js",
+                "canvasToBlob/canvas-toBlob.js",
+                "fileSaver/FileSaver.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
