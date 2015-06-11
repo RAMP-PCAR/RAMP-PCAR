@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $, TimelineLite, window */
+﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs */
 
 /**
 *
@@ -28,7 +28,7 @@ define([
 "dojo/topic", "dojo/Deferred",
 
 /* ESRI */
-"esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",
+"esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",// 'esri/request',
 
 /* RAMP */
     "ramp/eventManager", "ramp/map",
@@ -43,7 +43,7 @@ define([
     topic, Deferred,
 
     /* ESRI */
-    PrintTemplate, PrintParameters, PrintTask,
+    PrintTemplate, PrintParameters, PrintTask,// EsriRequest,
 
     /* RAMP */
         EventManager, RampMap,
@@ -60,7 +60,7 @@ define([
                 mapExportSpinner,
                 mapExportNotice,
                 downloadButton,
-                
+
                 mapExportCloseButton,
 
                 downloadDropdownToggle,
@@ -75,6 +75,8 @@ define([
                 downloadPopup,
 
                 promise,
+
+                canvas,
 
                 jWindow,
                 cssButtonPressedClass = "button-pressed",
@@ -121,30 +123,44 @@ define([
 
                 promise.then(
                     function (event) {
+                        console.log('--->', event);
+
+                        /*var p = (new EsriRequest({ url: event.result.url, handleAs: 'text' })).promise;
+
+                        p.then(function (data) {
+                            console.log(data);
+
+                        });*/
+
+                        // wait for the image to fully load
                         mapExportImg.on("load", function (event) {
-                            var canvas = MiscUtil.convertImageToCanvas(event.target),
-                                dataPNG = "",
-                                dataJPG = "";
+                            // convert image to canvas for saving
+                            canvas = MiscUtil.convertImageToCanvas(event.target);//,
+                            //dataPNG = "",
+                            //dataJPG = "";
 
-                            console.log(canvas);
+                            //console.log(canvas);
 
-                            dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
-                            dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
+                            // convert image to png and jpeg dataurls
+                            //dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
+                            //dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
 
+                            // enable download buttons
                             downloadDropdown
                                 .find(".btn")
                                 .attr({ disabled: false })
                             ;
 
+                            /*
                             downloadButtonJPG.attr({ disabled: false, href: dataJPG });
                             downloadButtonPNG.attr({ disabled: false, href: dataPNG });
-                            downloadDefault.attr({ disabled: false, href: dataPNG });
+                            downloadDefault.attr({ disabled: false, href: dataPNG });*/
 
                             mapExportImg.off("load");
                         });
 
                         tl
-                            .call(function () { downloadButtonPNG.attr({ disabled: false, href: event.result.url }); })
+                            .call(function () { downloadDefault.attr({ href: event.result.url }); }) // set default button url to image url - for IE9 sake
                             .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
@@ -182,7 +198,7 @@ define([
                     mapExportSpinner = mapExportStretcher.find(".loading-simple");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
-                    
+
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
                     downloadDropdownMenu = $(".map-export-controls .download-buttons .dropdown-menu");
 
@@ -192,12 +208,40 @@ define([
                     downloadDefault = downloadDropdown.find(".btn.download-default");
 
                     mapExportCloseButton = $("#map-export-modal .button-close");
-                    
+
                     mapExportToggle
                         .removeClass('disabled')
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
-                    
+
+                    // disable for IE9 and IE10
+                    // IE10 does not support CORS for canvases: http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10; http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
+                    if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
+                        console.warn('You have IE9');
+                        downloadDropdown.css('width', '100%');
+                        downloadDefault.css('width', '100%'); // make the default download button wider
+
+                        downloadDropdownToggle.css('display', 'none');
+                    } else {
+                        // 
+                        downloadDropdown
+                            .find('a.btn')
+                            .on('click', function (event) {
+                                var target = $(event.target),
+                                    type = target.hasClass('download-jpg') ? 'jpeg' : 'png';
+
+                                event.preventDefault();
+                                console.log("----Download button clicked");
+
+                                // save using FileSave
+                                canvas.toBlob(function (blob) {
+                                    saveAs(blob, 'download.' + type);
+                                }, 'image/' + type);
+
+                            })
+                        ;
+                    }
+
                     downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, "click",
                         function (d) {
                             downloadDropdownMenu.show();
