@@ -293,11 +293,17 @@ module.exports =
         src: 'fonts/**/*.*'
         dest: 'dist/css/'
 
-    #deploy:
-    #    expand: true
-    #    cwd: 'dist'
-    #    src: '**/*.*'
-    #    dest: '<%= pkg.ramp.deployFolder %>/'
+    deployBuild:
+        expand: true
+        cwd: 'build'
+        src: '**/*.*'
+        dest: '<%= pkg.deployFolder %>/v<%= pkg.version %>/<%= pkg.name %>'
+
+    deployDist:
+        expand: true
+        cwd: 'dist'
+        src: '**/*.*'
+        dest: '<%= pkg.deployFolder %>/v<%= pkg.version %>/<%= pkg.name %>'
 
     demo:
         expand: true

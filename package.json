@@ -114,7 +114,7 @@
                 "fontawesome/css/font-awesome.css"
             ]
         },
-        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
         "docco": {
             "path": "src/js/RAMP",
             "outdir": "docs/docco"

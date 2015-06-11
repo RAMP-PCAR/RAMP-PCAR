@@ -27,7 +27,7 @@ module.exports =
             force: false
         
         src: [
-            ##'<%= pkg.ramp.deployFolder %>'
+            '<%= pkg.deployFolder %>/v<%= pkg.version %>/<%= pkg.name %>'
         ]
 
     oneConfig: [
