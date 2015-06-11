@@ -200,7 +200,7 @@ define([
                                 },
 
                                 onChange: function () {
-                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                    UtilMisc.tooltipster(this.labelNode.parent(), null, "update");
                                 }/*,
 
                                 master: {
@@ -239,7 +239,7 @@ define([
                                 },
 
                                 onChange: function () {
-                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                    UtilMisc.tooltipster(this.labelNode.parent(), null, "update");
                                 },
 
                                 master: {
@@ -278,7 +278,7 @@ define([
                                 },
 
                                 onChange: function () {
-                                    Theme.tooltipster(this.labelNode.parent(), null, "update");
+                                    UtilMisc.tooltipster(this.labelNode.parent(), null, "update");
                                 },
 
                                 master: {
@@ -321,7 +321,7 @@ define([
                     return {
                         init: function () {
                             globalToggleSection = sectionNode.find("#filterGlobalToggles");
-                            Theme.tooltipster(mainList);
+                            UtilMisc.tooltipster(mainList);
 
                             createGroups();
                             initListeners();
@@ -331,7 +331,7 @@ define([
                         },
 
                         update: function () {
-                            Theme.tooltipster(mainList);
+                            UtilMisc.tooltipster(mainList);
 
                             boxCheckboxGroup.addCheckbox(mainList.find(".checkbox-brick-container.bbox input:first"));
                             eyeCheckboxGroup.addCheckbox(mainList.find(".checkbox-custom .eye + input"));
@@ -453,8 +453,8 @@ define([
                         * @private
                         */
                         init: function () {
-                            //Theme.tooltipster(_filterGlobalToggles_to_remove);
-                            Theme.tooltipster(mainList);
+                            //UtilMisc.tooltipster(_filterGlobalToggles_to_remove);
+                            UtilMisc.tooltipster(mainList);
 
                             PopupManager.registerPopup(mainList, "hoverIntent",
                                 function () {
@@ -557,7 +557,7 @@ define([
                                     .find("> .wb-invisible")
                                     .text(newTooltip);
 
-                                Theme.tooltipster(that.handle.parent(), null, "update");
+                                UtilMisc.tooltipster(that.handle.parent(), null, "update");
 
                                 d.resolve();
                             });
