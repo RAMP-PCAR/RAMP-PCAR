@@ -7,7 +7,8 @@ module.exports = (grunt) ->
                 'Bad value “menuitem” for attribute “role” on element “a”.'
             ]
         src: [
-            'build/*.html'
+                'build/*.html'
+                '!build/*-ckan.html'
         ]
 
     ajax:
