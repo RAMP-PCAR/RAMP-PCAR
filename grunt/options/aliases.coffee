@@ -16,6 +16,7 @@ module.exports =
     'build':
         [
             'clean:build'
+            'jsonlint:bower'
             'copy:build'
             'prepareLocale'
             'generateConfig' # generate config after copying locale files
