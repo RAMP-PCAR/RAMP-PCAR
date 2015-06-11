@@ -62,7 +62,7 @@ define([
                 downloadButton,
 
                 mapExportCloseButton,
-
+                
                 downloadDropdownToggle,
                 downloadDropdown,
 
@@ -206,7 +206,7 @@ define([
                     downloadButtonPNG = downloadDropdown.find(".btn.download-png");
                     downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
                     downloadDefault = downloadDropdown.find(".btn.download-default");
-
+                    
                     mapExportCloseButton = $("#map-export-modal .button-close");
 
                     mapExportToggle
