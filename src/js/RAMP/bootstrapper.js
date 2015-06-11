@@ -170,6 +170,8 @@ require([
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
                 NavWidget.init(currentLevel);
+                theme.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
+
                 FeatureHighlighter.init();
 
                 Maptips.init();

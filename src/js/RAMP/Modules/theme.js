@@ -150,10 +150,11 @@ define(['dojo/_base/lang'],
              * @param  {String} type    Type of the tooltips to set
              * @param  {String} [action] Action name: "update" will update all the tooltips on target with their respective title attributes;
              * null will create new tooltips
+             * @param  {String} customTheme The custom theme to be used. "null" for default.
              * @return {Object}         This
              * @chainable
              */
-            tooltipster: function (target, type, action, options) {
+            tooltipster: function (target, type, action, customTheme, options) {
                 var attr;
                 target = target || $('body');
 
@@ -163,7 +164,7 @@ define(['dojo/_base/lang'],
 
                     default:
                         attr = {
-                            theme: 'tooltipster-shadow',
+                            theme: customTheme || 'tooltipster-shadow',
                             delay: 500
                         };
                         break;
