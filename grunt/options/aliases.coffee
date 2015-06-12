@@ -88,8 +88,8 @@ module.exports =
             'useMinAssets'
             'imagemin'
             'notify:min'
-            'tarball'
             'nfp:dist'
+            'tarball'
             'notify:dist'
         ]
 
