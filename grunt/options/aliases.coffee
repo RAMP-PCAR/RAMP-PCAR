@@ -16,6 +16,7 @@ module.exports =
     'build':
         [
             'clean:build'
+            'jsonlint:bower'
             'copy:build'
             'prepareLocale'
             'generateConfig' # generate config after copying locale files
@@ -65,11 +66,20 @@ module.exports =
         ]
 
     # 'Deploys a dist into the specified folder.'
-    'deploy':
+    'deploy:build':
+        [
+            'build'
+            'clean:deploy'
+            'copy:deployBuild'
+            'notify:deploy'
+        ]
+
+    # 'Deploys a dist into the specified folder.'
+    'deploy:dist':
         [
             'dist'
             'clean:deploy'
-            'copy:deploy'
+            'copy:deployDist'
             'notify:deploy'
         ]
 
@@ -86,7 +96,7 @@ module.exports =
             'htmlmin'
             'htmllint'
             'useMinAssets'
-            'imagemin'
+            #'imagemin'
             'notify:min'
             'tarball'
             'nfp:dist'

@@ -106,7 +106,10 @@
                 "t/t.js",
                 "formstone/src/js/core.js",
                 "formstone/src/js/touch.js",
-                "formstone/src/js/checkbox.js"
+                "formstone/src/js/checkbox.js",
+                "blob/Blob.js",
+                "canvasToBlob/canvas-toBlob.js",
+                "fileSaver/FileSaver.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
@@ -114,7 +117,7 @@
                 "fontawesome/css/font-awesome.css"
             ]
         },
-        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/core",
+        "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample",
         "docco": {
             "path": "src/js/RAMP",
             "outdir": "docs/docco"
