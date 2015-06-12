@@ -59,6 +59,10 @@ module.exports = (grunt, options)->
     # derive the series number
     pkg.series = 'v' + pkg.core.version.split('.').slice(0,2).join('.')# + '-dist'
 
+    # store deploy folder reference
+    pkg.deployFolder = pkg.core.ramp.deployFolder
+
+
     # not for production warning corner ribbon css
     pkg.nfp.head = '<!-- R-NFP:S -->
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" />

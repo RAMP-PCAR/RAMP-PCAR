@@ -50,7 +50,10 @@
         "btoa-umd": "~0.7.5",
         "t": "~0.5.1",
         "selfish": "~0.3.3",
-        "formstone": "~0.5.8"
+        "formstone": "~0.5.8",
+        "fileSaver": "https://github.com/eligrey/FileSaver.js.git#master",
+        "blob": "https://github.com/eligrey/Blob.js.git#master",
+        "canvasToBlob": "https://github.com/eligrey/canvas-toBlob.js.git#master"
     },
     "moduleType": [
         "globals"

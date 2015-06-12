@@ -20,3 +20,8 @@ module.exports =
         src: [
             'build/locales/**/*.json'
         ]
+
+    bower:
+        src: [
+            'bower.json'
+        ]
