@@ -559,10 +559,202 @@
                         "latestWkid":  3857
                     }
                 }
+            },
+            {
+                "id": "cesi_ozone",
+                "displayName": "@@config.layers.feature.cesi_ozone.displayName",
+                "nameField": "stationno",
+                "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/CESI_Air_Ozone/MapServer/3",
+                "datagrid": {
+                    "rowsPerPage": 50,
+                    "gridColumns": [
+                        {
+                            "id": "iconCol",
+                            "fieldName": "",
+                            "width": "50px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Icon",
+                            "columnTemplate": "graphic_icon"
+                        },
+                        {
+                            "id": "nameCol",
+                            "fieldName": "OBJECTID",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Detais",
+                            "columnTemplate": "details_button"
+                        },
+                        {
+                            "id": "cityCol",
+                            "fieldName": "City",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "City",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "ozoneCol",
+                            "fieldName": "Ozone",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Ozone",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "unitCol",
+                            "fieldName": "Ozone_Unit",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Unit",
+                            "columnTemplate": "unformatted_grid_value"
+                        },
+                        {
+                            "id": "Symbol",
+                            "fieldName": "Ozone_Symbol",
+                            "width": "100px",
+                            "orderable": false,
+                            "type": "string",
+                            "alignment": 1,
+                            "title": "Symbol",
+                            "columnTemplate": "unformatted_grid_value"
+                        }
+                    ]
+                },
+                "symbology": {
+                    "field2": "",
+                    "field3": "",
+                    "field1": "Ozone_Symbol",
+                    "type": "uniqueValue",
+                    "valueMaps": [
+                        {
+                            "value": "0",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//g4OD3d3dsQG7pwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADNJREFUKJFjYBg2gBG3DE4pRiYmHHJAGRxyYBmsclAZbHJ4pPAYiM8Z+ByPz8v4AmqoAQCOlwBnb1jVQQAAAABJRU5ErkJggg=="
+                        },
+                        {
+                            "value": "1",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//AGB/g4ODRCjGUgAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAADxJREFUKJFjYBhSgIkJpwwjIw45oAwOObAMVjmoDBY5uAyGHJIMuhweKTwG4nMGPsfj8zK+gMIXvIMTAADCsgCNEf2xbAAAAABJRU5ErkJggg=="
+                        },
+                        {
+                            "value": "2",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//JLNLg4ODaQnrDQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAEZJREFUKJHF0UEKACAIRFH1/ocuIkJN/y6a7QPRUeRTzFpRbWxKY0tK21LYkcucJAsSLIk3IBhIa9DydDIVRfXSU+iVrzMAKvUA2TpxPugAAAAASUVORK5CYII="
+                        },
+                        {
+                            "value": "3",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAMAAACelLz8AAAAAXNSR0IB2cksfwAAAAlQTFRF/v//g4OD/8kSr70hXQAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAFNJREFUKJGN0lkKACAIRVFt/4tOKsIcLvkXB8LhifyVaitjNGbS2JLSjhR2JZmTYI88FsRZkmuFHCtlGxB8SG1Q8zQyLYrWS0ehU1IAKDYUNjP/mBi4AkIgPinwAAAAAElFTkSuQmCC"
+                        },
+                        {
+                            "value": "4",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB8AAAAfCAMAAAAocOYLAAAAAXNSR0IB2cksfwAAAAlQTFRF/v//g4ODyWgAy/5EnwAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAGdJREFUKJGFk1sOACEIxID7H3qzb0GY8mfaRIXBLJebLA8peIQSTiyEG4/Ciwfhx62w4kbIeBMqLsKOk9DhRejxJ0z4EWZ8CQqjABfAA+GD0CBoMAwIBgwBgYBBQCHgsCCwYLSg5XwA19oDh5udLfYAAAAASUVORK5CYII="
+                        },
+                        {
+                            "value": "5",
+                            "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAnCAMAAAC7faEHAAAAAXNSR0IB2cksfwAAAAlQTFRF/v//g4OD1AAH7EAAsAAAAAN0Uk5TAP//RFDWIQAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAH5JREFUOI2N1EkOACEIRFHl/ofu2JMDBXyX5CVGhGrNny5qihmC3YzAwQB8WAk/VsDJUriyBO4shCcLoGcSKiagZg5G7IAx22DGFpizH1bshTW7IWEYwovhQ2BjYKPhx8FBgIMFBxUOPlwkuJhw0WFwwCCCwQaDEgYvDXJRuwA83wWnixaLmAAAAABJRU5ErkJggg=="
+                        }
+                    ]
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.7
+                    },
+                    "visible": true
+                },
+                "layerExtent": {
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
+                }
+            },
+            {
+                "id": "oilAreaOverlay",
+                "displayName": "@@config.layers.feature.oilAreaOverlay.displayName",
+                "url": "http://maps-cartes.ec.gc.ca/ArcGIS/rest/services/RAMP_NRSTC/MapServer/0",
+                "symbology": {
+                    "type": "simple",
+                    "imageUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbCAMAAAC6CgRnAAAAP1BMVEUAAAB0MjJ2RER4XFx7fHyERESLAACMjIySS0uWAACfW1uifHymp6e4mpq8vb3JmprP0NDSAADmAADxfHz+//91aGULAAAAFXRSTlP//////////////////////////wAr2X3qAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAARUlEQVQokWMQwQ0YRuXAgJ+RgYFZAKscF5ugkJAgBw8WOV5OITDg5sOUY4JICQmzYMqxQuWE2EnTh88+fO7E6z8MMBzkAGdaNvfnBzzpAAAAAElFTkSuQmCC"
+                },
+                "settings": {
+                    "opacity": {
+                        "enabled": true,
+                        "default": 0.7
+                    },
+                    "visible": true
+                },
+                "layerExtent": {
+                    "xmin": -2566693.97839747,
+                    "ymin": -1104728.00466316,
+                    "xmax": 4021444.19787888,
+                    "ymax": 3657781.52035589,
+                    "spatialReference": {
+                        "wkid": 3978
+                    }
+                },
+                "isStatic": true
             }
         ],
         "wms": [
            
+            {
+                "id": "geomet_wind",
+                "displayName": "@@config.layers.wms.geomet_wind.displayName",
+                "format": "image/jpeg",
+                "layerName": "GDPS.ETA_UU",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "windParse"
+                },
+                "settings": { "opacity": { "default": 0.4 } }
+            },
+            {
+                "id": "geomet_temp",
+                "displayName": "@@config.layers.wms.geomet_temp.displayName",
+                "format": "image/jpeg",
+                "layerName": "GDPS.ETA_TT",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "featureInfo": {
+                    "mimeType": "text/plain",
+                    "parser": "tempParse"
+                },
+                "settings": { "opacity": { "default": 0.3 } }
+            },
+            {
+                "id": "geomet_rain",
+                "displayName": "@@config.layers.wms.geomet_rain.displayName",
+                "format": "image/jpeg",
+                "layerName": "RADAR_RRAI",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://geo.weather.gc.ca/geomet/",
+                "legendMimeType": "image/jpeg",
+                "settings": { "opacity": { "default": 0.8 } }
+            },
+            {
+                "id": "railroad",
+                "displayName": "@@config.layers.wms.wms6.displayName",
+                "format": "png",
+                "layerName": "railway.track",
+                "imageUrl": "assets/images/wms.png",
+                "url": "http://maps.geogratis.gc.ca/wms/railway_en",
+                "legendMimeType": "image/jpeg"
+            }
         ]
 
     },
