@@ -176,11 +176,32 @@ define([
                     UtilMisc.subscribeOnceAny(['map/pan-start', 'map/zoom-start'], onZoomCancel);
                 }
 
+                // Find level as close to and above scaleLimit
+                var scaleLimit = zoomToGraphic._layer.maxScale,
+                    lods = RAMP.map._params.lods,
+                    found = false,
+                    currentLod = RAMP.map._params.lods.length / 2,
+                    lowLod = 0,
+                    highLod = RAMP.map._params.lods.length - 1;
+
+                // Binary Search
+                while (!found) {
+                    if (lods[currentLod].scale >= scaleLimit) {
+                        lowLod = currentLod;
+                    } else {
+                        highLod = currentLod;
+                    }
+                    currentLod = Math.ceil((highLod + lowLod) / 2);
+                    if (highLod === lowLod + 1) {
+                        found = true;
+                    }
+                }
+
                 switch (zoomToGraphic.geometry.type) {
                     case 'point':
                         topic.publish(EventManager.Map.CENTER_AND_ZOOM, {
                             graphic: zoomToGraphic,
-                            level: 9,
+                            level: lowLod,
                             callback: callback
                         });
                         break;
