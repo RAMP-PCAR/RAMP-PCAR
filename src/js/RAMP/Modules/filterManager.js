@@ -484,6 +484,9 @@ define([
                 */
                 function adjustPaneWidth() {
                     UtilMisc.adjustWidthForSrollbar($("#layerList"), [layerToggles.globalToggleSection()]);
+                    layerGroupList.find(".nstSlider").each(function () {
+                        $(this).nstSlider("refresh");
+                    });
                 }
 
                 /**
@@ -883,6 +886,9 @@ define([
             // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
             topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
                 updateLayersStateMatrix(args.layerCounts, true);
+                $(".filter-row-settings:visible").find(".nstSlider").each(function () {
+                    $(this).nstSlider("refresh");
+                });
             });
 
             // on each remove check if there are still wms layers in the layer list
