@@ -96,10 +96,10 @@ module.exports =
             'htmlmin'
             'htmllint'
             'useMinAssets'
-            #'imagemin'
+            'imagemin'
             'notify:min'
-            'tarball'
             'nfp:dist'
+            'tarball'
             'notify:dist'
         ]
 
@@ -199,5 +199,5 @@ module.exports =
     # 'INTERNAL: Removes a not for production warning from the distribution package.'
     'nfp:dist':
         [
-            'replace:nfpDist'
+            'nfp:release'
         ]
