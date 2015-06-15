@@ -72,8 +72,19 @@ module.exports = (grunt, options)->
     # not for production warning corner ribbon html
     pkg.nfp.body = '<!-- R-NFP:S -->
         <div class="github-fork-ribbon-wrapper left">
-            <div class="github-fork-ribbon">
-                <a href="">Not for Production</a>
+            <div class="github-fork-ribbon" style="top: 34px; left: -50px">
+                <a href="" style="width: 210px; line-height: 27px">
+                    <span style="
+                        top: -6px;
+                        position: relative;
+                    ">Not for Production</span><br> <span style="
+                        top: 11px;
+                        position: absolute;
+                        left: 39%;
+                        font-size: smaller;
+                        font-weight: normal;
+                    ">v' + pkg.core.version + '</span>
+                </a>
             </div>
         </div><!-- R-NFP:E -->'
 
