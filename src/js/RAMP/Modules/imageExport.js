@@ -58,7 +58,10 @@ define([
                 mapExportStretcher,
                 mapExportImg,
                 mapExportSpinner,
+
+                mapExportNoticeContainer,
                 mapExportNotice,
+                mapExportNoticeIE,
                 downloadButton,
 
                 mapExportCloseButton,
@@ -165,7 +168,9 @@ define([
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
                             // animate popup; 2 needed to account for the border
-                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" })
+                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }, 0)
+                            .to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth - 15 }, 0)
+                        //.to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth + 2 })
                         ;
 
                         console.log(event);
@@ -174,7 +179,7 @@ define([
                         // show error notice
                         tl
                             .set(mapExportSpinner, { display: "none" })
-                            .set(mapExportNotice, { display: "inline-block", width: mapExportStretcher.width() })
+                            .set(mapExportNotice, { display: "block" })
                         ;
 
                         console.log(error);
@@ -196,7 +201,10 @@ define([
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImg = $(".map-export-image > img");
                     mapExportSpinner = mapExportStretcher.find(".loading-simple");
-                    mapExportNotice = mapExportStretcher.find(".map-export-notice");
+
+                    mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
+                    mapExportNotice = mapExportStretcher.find(".map-export-notice.notice-error");
+                    mapExportNoticeIE = mapExportStretcher.find(".map-export-notice.notice-ie");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
@@ -214,6 +222,9 @@ define([
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
 
+                    mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 15 });
+                    //mapExportNoticeContainer.css({ width: mapExportStretcher.width() + 2 });
+
                     // disable for IE9 and IE10
                     // IE10 does not support CORS for canvases: http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10; http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
                     if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
@@ -222,6 +233,8 @@ define([
                         downloadDefault.css('width', '100%'); // make the default download button wider
 
                         downloadDropdownToggle.css('display', 'none');
+
+                        mapExportNoticeIE.css({ display: 'block' });
                     } else {
                         // 
                         downloadDropdown
