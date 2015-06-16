@@ -285,13 +285,18 @@ define([
 
                 //go through feature layer config
                 RAMP.config.layers.feature.forEach(function (fl) {
-                    var flObj = RAMP.layerRegistry[fl.id];
+                    var flObj = RAMP.layerRegistry[fl.id],
+                        youHaveIE = RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client;
 
                     //find if feature layer, user added, visible, and has no URL
-                    if (flObj.ramp.user && flObj.visible && !(flObj.url)) {
-                        //turn off visibility.  remember the layer
-                        flObj.setVisibility(false);
-                        visState.layers.push(flObj);
+                    if (flObj.visible) { // turn off all visible feature layers, unless you have IE - then turn off only visible user layers
+
+                        if (youHaveIE && flObj.ramp.user && !(flObj.url) || !youHaveIE) {
+                            //turn off visibility.  remember the layer
+                            flObj.setVisibility(false);
+                            visState.layers.push(flObj);
+                        }
+
                     }
                 });
             }
@@ -334,15 +339,11 @@ define([
 
                 printTask.on('complete', function (event) {
                     //console.log('PRINT RESULT: ' + event.result.url);
-                    //turn hidden layers back on
-                    restoreFileLayers();
                     def.resolve(event);
                 });
 
                 printTask.on('error', function (event) {
                     //console.log('PRINT FAILED: ' + event.error.message);
-                    //turn hidden layers back on
-                    restoreFileLayers();
                     def.reject(event);
                 });
 
@@ -366,6 +367,8 @@ define([
             } catch (event) {
                 def.reject(event);
             }
+
+            restoreFileLayers();
 
             return {
                 promise: def.promise,
