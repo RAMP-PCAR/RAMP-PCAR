@@ -121,6 +121,9 @@ define([
                     .set(mapExportStretcher, { clearProps: "all" })
                 ;
 
+                // resize the notice container as it might be too large from the previous map export
+                mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 2 });
+
                 promise.then(
                     function (event) {
                         var localCanvas,
@@ -233,8 +236,6 @@ define([
                         .removeClass('disabled')
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
-
-                    mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 2 });
 
                     // disable for IE9 and IE10
                     // IE10 does not support CORS for canvases: http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10; http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
