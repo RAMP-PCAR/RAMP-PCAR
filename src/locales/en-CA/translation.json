@@ -565,6 +565,10 @@
             "generalMessage": "Image cannot be generated. Please try again later.",
             "generalTitle": "Error"
         },
+        "ie": {
+            "generalMessage": "You have IE9... no CORS image manipulations for you.",
+            "generalTitle": "Warning"
+        },
         "includeLegend": "Include Legend",
         "loading": "Generating image. Please wait.",
         "title": "Map Export"
