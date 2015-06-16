@@ -3,15 +3,21 @@
     <div class="modal-body">
         <div class="row">
             <div class="map-export-preview">
-                <div class="map-export-stretcher" role="presentation">
-                    <section class="map-export-notice alert alert-danger">
-                        <h3>{{t "mapExport.error.generalTitle"}}</h3>
-                        <p>{{t "mapExport.error.generalMessage"}}</p>
-                    </section>
-                    {{>loadingsimple}}
-                </div>
                 <div class="map-export-image">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" crossorigin="anonymous" alt="">
+                    <img class="blurred-5" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" crossorigin="anonymous" alt="">
+                </div>
+                <div class="map-export-stretcher" role="presentation">
+                    <div class="map-export-notice-container">
+                        <section class="map-export-notice notice-error alert alert-danger">
+                            <h3>{{t "mapExport.error.generalTitle"}}</h3>
+                            <p>{{t "mapExport.error.generalMessage"}}</p>
+                        </section>
+                        <section class="map-export-notice notice-ie alert alert-warning">
+                            <h3>{{t "mapExport.ie.generalTitle"}}</h3>
+                            <p>{{t "mapExport.ie.generalMessage"}}</p>
+                        </section>
+                    </div>
+                    {{>loadingsimple}}
                 </div>
             </div>
             <div class="map-export-controls">
