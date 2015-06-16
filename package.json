@@ -109,7 +109,8 @@
                 "formstone/src/js/checkbox.js",
                 "blob/Blob.js",
                 "canvasToBlob/canvas-toBlob.js",
-                "fileSaver/FileSaver.js"
+                "fileSaver/FileSaver.js",
+                "html2canvas/dist/html2canvas.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
