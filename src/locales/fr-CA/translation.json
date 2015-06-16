@@ -565,6 +565,10 @@
             "generalMessage": "L’image ne peut être générée. Veuillez essayer de nouveau plus tard.",
             "generalTitle": "Erreur"
         },
+        "ie": {
+            "generalMessage": "[fr] You have IE9...",
+            "generalTitle": "[fr] Warning"
+        },
         "includeLegend": "Ajouter la légende",
         "loading": "Génération de l’image Veuillez attendre.",
         "title": "Exportation de carte"

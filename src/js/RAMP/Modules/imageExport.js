@@ -182,8 +182,7 @@ define([
                             .call(function () { mapExportImg.attr("src", event.result.url); })
                             // animate popup; 2 needed to account for the border
                             .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }, 0)
-                            .to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth - 15 }, 0)
-                        //.to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth + 2 })
+                            .to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth }, 0)
                         ;
 
                         console.log(event);
@@ -235,8 +234,7 @@ define([
                         .attr('aria-disabled', false)
                         .on('click', generateExportImage);
 
-                    mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 15 });
-                    //mapExportNoticeContainer.css({ width: mapExportStretcher.width() + 2 });
+                    mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 2 });
 
                     // disable for IE9 and IE10
                     // IE10 does not support CORS for canvases: http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10; http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
