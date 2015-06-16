@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs */
+﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs, html2canvas */
 
 /**
 *
@@ -65,7 +65,7 @@ define([
                 downloadButton,
 
                 mapExportCloseButton,
-                
+
                 downloadDropdownToggle,
                 downloadDropdown,
 
@@ -113,12 +113,9 @@ define([
                             .find(".btn")
                             .attr({ href: "" })
                         ;
-
-                        //downloadButtonPNG.attr({ disabled: true, href: "" });
-                        //downloadButtonJPG.attr({ disabled: true, href: "" });
                     })
                     .set(mapExportNotice, { display: "none" }) // hide error notice
-                    .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
+                    .set(mapExportSpinner, { display: "block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
                     .call(function () { mapExportImg.attr("src", ""); })
                     .set(mapExportStretcher, { clearProps: "all" })
@@ -126,45 +123,61 @@ define([
 
                 promise.then(
                     function (event) {
+                        var localCanvas,
+                            d = new Deferred();
+
                         console.log('--->', event);
 
-                        /*var p = (new EsriRequest({ url: event.result.url, handleAs: 'text' })).promise;
+                        // no canvas smashing for IE...
+                        if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
+                            // wait for the image to fully load
+                            mapExportImg.on("load", function () {
+                                mapExportImg.attr({ class: '' });
+                                mapExportSpinner.css({ display: "none" });
 
-                        p.then(function (data) {
-                            console.log(data);
+                                downloadDropdown
+                                    .find(".btn")
+                                    .attr({ disabled: false })
+                                ;
+                                mapExportImg.off("load");
+                            });
+                        } else {
+                            // create a canvas out of feature and file layers
+                            html2canvas($("#mainMap_layers"), {
+                                onrendered: function (c) {
+                                    localCanvas = c;
+                                    d.resolve();
+                                }
+                            });
 
-                        });*/
+                            // wait for the image to fully load
+                            mapExportImg.on("load", function (event) {
+                                // convert image to canvas for saving
+                                canvas = MiscUtil.convertImageToCanvas(event.target);//,
+                                d.promise.then(function () {
+                                    // smash local and print service canvases
+                                    var tc = canvas.getContext('2d');
+                                    tc.drawImage(localCanvas, 0, 0);
+                                    canvas = tc.canvas;
 
-                        // wait for the image to fully load
-                        mapExportImg.on("load", function (event) {
-                            // convert image to canvas for saving
-                            canvas = MiscUtil.convertImageToCanvas(event.target);//,
-                            //dataPNG = "",
-                            //dataJPG = "";
+                                    // update preview image
+                                    mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
+                                    // hide loading animation
+                                    mapExportSpinner.css({ display: "none" });
 
-                            //console.log(canvas);
+                                    // enable download buttons
+                                    downloadDropdown
+                                        .find(".btn")
+                                        .attr({ disabled: false })
+                                    ;
+                                });
 
-                            // convert image to png and jpeg dataurls
-                            //dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
-                            //dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
-
-                            // enable download buttons
-                            downloadDropdown
-                                .find(".btn")
-                                .attr({ disabled: false })
-                            ;
-
-                            /*
-                            downloadButtonJPG.attr({ disabled: false, href: dataJPG });
-                            downloadButtonPNG.attr({ disabled: false, href: dataPNG });
-                            downloadDefault.attr({ disabled: false, href: dataPNG });*/
-
-                            mapExportImg.off("load");
-                        });
+                                mapExportImg.off("load");
+                            });
+                        }
 
                         tl
                             .call(function () { downloadDefault.attr({ href: event.result.url }); }) // set default button url to image url - for IE9 sake
-                            .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
                             // animate popup; 2 needed to account for the border
@@ -214,7 +227,7 @@ define([
                     downloadButtonPNG = downloadDropdown.find(".btn.download-png");
                     downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
                     downloadDefault = downloadDropdown.find(".btn.download-default");
-                    
+
                     mapExportCloseButton = $("#map-export-modal .button-close");
 
                     mapExportToggle
@@ -277,7 +290,7 @@ define([
                             .attr({ disabled: true, href: "" })
                         ;
 
-                        mapExportImg.attr("src", "");
+                        mapExportImg.attr({ src: '', class: 'blurred-5' });
                     });
                 }
             };
