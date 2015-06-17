@@ -563,10 +563,11 @@
         "downloadPNGdesc": "Télécharger en PNG",
         "error": {
             "generalMessage": "L’image ne peut être générée. Veuillez essayer de nouveau plus tard.",
-            "generalTitle": "Erreur"
+            "generalTitle": "Erreur",
+            "timeoutMessage": "[fr] The print service did not respond in a timely fashion. Please try again later."
         },
         "ie": {
-            "generalMessage": "[fr] You have IE9...",
+            "generalMessage": "[fr] Exporting file-based user-added layers is unsupported in versions of Internet Explorer 10 or lower. Please upgrade your browser, or use an alternative.",
             "generalTitle": "[fr] Warning"
         },
         "includeLegend": "Ajouter la légende",
