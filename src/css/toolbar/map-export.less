@@ -78,7 +78,7 @@
             display: inline-block;
             vertical-align: top;
             top: 1px;
-            
+
             .map-export-notice {
                 position: relative;
                 display: none;
@@ -88,11 +88,27 @@
                 width: 100%;
             }
         }
+    }
 
-        .loading-simple {
-            top: -50%;
-            position: relative;
+    .loading-simple {
+        top: 50%;
+        position: absolute;
+        left: calc(~'50% - 125px');
+        display: block;
+        width: 250px;
+        text-align: center;
+        vertical-align: top;
+
+        &:before {
+            content: '';
+            background-color: white;
+            width: 250px;
+            height: 50px;
+            position: absolute;
             display: block;
+            top: calc(~'50% - 25px');
+            border-radius: 2px;
+            opacity: 0.85;
         }
     }
 
