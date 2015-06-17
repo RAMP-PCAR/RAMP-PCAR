@@ -63,6 +63,7 @@ define([
                 mapExportNoticeContainer,
                 mapExportNotice,
                 mapExportNoticeIE,
+                mapExportNoticeTimeout,
                 downloadButton,
 
                 mapExportCloseButton,
@@ -158,7 +159,7 @@ define([
                                 }
                             });
                         }
-                        
+
                         // wait for the image to fully load
                         mapExportImg.on("load", function (event) {
 
@@ -212,10 +213,8 @@ define([
                     },
                     function (error) {
                         // show error notice
-                        tl
-                            .set(mapExportSpinner, { display: "none" })
-                            .set(mapExportNotice, { display: "block" })
-                        ;
+                        mapExportSpinner.css({ display: "none" });
+                        mapExportNotice.css({ display: "block" });
 
                         console.log(error);
                     }
@@ -241,6 +240,7 @@ define([
                     mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice.notice-error");
                     mapExportNoticeIE = mapExportStretcher.find(".map-export-notice.notice-ie");
+                    mapExportNoticeTimeout = mapExportStretcher.find(".map-export-notice.notice-timeout");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
