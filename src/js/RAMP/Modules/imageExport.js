@@ -228,7 +228,7 @@ define([
                     mapExportStretcher = $(".map-export-stretcher");
                     mapExportImgLocal = $(".map-export-image > img.local");
                     mapExportImg = $(".map-export-image > img.remote");
-                    mapExportSpinner = mapExportStretcher.find(".loading-simple");
+                    mapExportSpinner = $(".map-export-preview .loading-simple");
 
                     mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
                     mapExportNotice = mapExportStretcher.find(".map-export-notice.notice-error");
