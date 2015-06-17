@@ -78,9 +78,13 @@ define([
 
                 downloadPopup,
 
+                dLocal,
+
                 promise,
+                promiseLocal,
 
                 canvas,
+                localCanvas,
 
                 jWindow,
                 cssButtonPressedClass = "button-pressed",
@@ -100,9 +104,6 @@ define([
                     stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
                     stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
 
-                if (promise) {
-                    promise.cancel();
-                }
                 promise = result.promise;
 
                 tl
@@ -131,11 +132,33 @@ define([
 
                 promise.then(
                     function (event) {
-                        var localCanvas,
-                            d = new Deferred();
 
-                        console.log('--->', event);
+                        console.log('Print service has succeeded', event);
 
+                        // no canvas smashing for IE...
+                        if (!RAMP.flags.brokenWebBrowser && !RAMP.flags.ie10client) {
+                            // create a canvas out of feature and file layers not waiting for the print service image to load.
+                            if (dLocal) {
+                                dLocal.cancel('cancel');
+                            }
+                            dLocal = new Deferred();
+                            promiseLocal = dLocal.promise;
+
+                            html2canvas($("#mainMap_layers"), {
+                                onrendered: function (c) {
+                                    localCanvas = c;
+
+                                    //show image with local canvas
+                                    mapExportImgLocal
+                                        .attr({ src: c.toDataURL(), class: 'local' })
+                                        .css({ display: 'block' })
+                                    ;
+
+                                    dLocal.resolve();
+                                }
+                            });
+                        }
+                        
                         // wait for the image to fully load
                         mapExportImg.on("load", function (event) {
 
@@ -151,24 +174,9 @@ define([
                                 ;
                             } else {
 
-                                // create a canvas out of feature and file layers
-                                html2canvas($("#mainMap_layers"), {
-                                    onrendered: function (c) {
-                                        localCanvas = c;
-
-                                        //show image with local canvas
-                                        mapExportImgLocal
-                                            .attr({ src: c.toDataURL(), class: 'local' })
-                                            .css({ display: 'block' })
-                                        ;
-
-                                        d.resolve();
-                                    }
-                                });
-
                                 // convert image to canvas for saving
                                 canvas = MiscUtil.convertImageToCanvas(event.target);
-                                d.promise.then(function () {
+                                promiseLocal.then(function () {
                                     // smash local and print service canvases
                                     var tc = canvas.getContext('2d');
                                     tc.drawImage(localCanvas, 0, 0);
@@ -335,7 +343,6 @@ define([
                             flObj.setVisibility(false);
                             visState.layers.push(flObj);
                         }
-
                     }
                 });
             }
