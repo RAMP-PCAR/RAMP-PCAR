@@ -88,8 +88,9 @@ define([
 
         // Called by the metadataPopup
         function metadataClickHandler(target) {
+
             var button = $(target),
-                node = button.parents("legend");
+                node = button.parents(".filter-row-container");
 
             if (!node.hasClass("selected-row")) {
                 //var guid = $(this).data("guid") || $(this).data("guid", UtilMisc.guid()).data("guid");
@@ -103,7 +104,7 @@ define([
                     title: node.find(".layer-name span").text(), // + " " + guid,
                     content: null,
                     target: node.find(".layer-details"),
-                    origin: "filterManager",
+                    origin: "metadataHandler",
                     guid: id,
                     doOnOpen: function () {
                         node.addClass("selected-row");
@@ -134,14 +135,14 @@ define([
 
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                             content: $(wmsmeta),
-                            origin: "filterManager",
+                            origin: "metadataHandler",
                             update: true,
                             guid: id
                         });
                     } else {
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                             content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><b>Service End Point URL</b><br><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a>",
-                            origin: "filterManager",
+                            origin: "metadataHandler",
                             update: true,
                             guid: id
                         });
@@ -152,7 +153,7 @@ define([
                     var metadataError = function () {
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                             content: "<p>" + i18n.t('filterManager.metadataNotFound') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
-                            origin: "filterManager",
+                            origin: "metadataHandler",
                             update: true,
                             guid: id
                         });
@@ -177,7 +178,7 @@ define([
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
-                                        origin: "filterManager",
+                                        origin: "metadataHandler",
                                         update: true,
                                         guid: id
                                     });
@@ -186,7 +187,7 @@ define([
                     }
                 }
             } else {
-                topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "filterManager" });
+                topic.publish(EventManager.GUI.SUBPANEL_CLOSE, { origin: "metadataHandler" });
             }
         }
         
