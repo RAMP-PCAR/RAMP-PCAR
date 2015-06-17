@@ -56,6 +56,7 @@ define([
         var ui = (function () {
             var mapExportToggle,
                 mapExportStretcher,
+                mapExportImgLocal,
                 mapExportImg,
                 mapExportSpinner,
 
@@ -117,7 +118,11 @@ define([
                     .set(mapExportNotice, { display: "none" }) // hide error notice
                     .set(mapExportSpinner, { display: "block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
-                    .call(function () { mapExportImg.attr("src", ""); })
+                    .set(mapExportImgLocal, { display: "none" }) // hide image
+                    .call(function () {
+                        mapExportImg.attr("src", "");
+                        mapExportImgLocal.attr("src", "");
+                    })
                     .set(mapExportStretcher, { clearProps: "all" })
                 ;
 
@@ -131,40 +136,47 @@ define([
 
                         console.log('--->', event);
 
-                        // no canvas smashing for IE...
-                        if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
-                            // wait for the image to fully load
-                            mapExportImg.on("load", function () {
-                                mapExportImg.attr({ class: '' });
+                        // wait for the image to fully load
+                        mapExportImg.on("load", function (event) {
+
+                            // no canvas smashing for IE...
+                            if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
+
+                                mapExportImg.attr({ class: 'remote' });
                                 mapExportSpinner.css({ display: "none" });
 
                                 downloadDropdown
                                     .find(".btn")
                                     .attr({ disabled: false })
                                 ;
-                                mapExportImg.off("load");
-                            });
-                        } else {
-                            // create a canvas out of feature and file layers
-                            html2canvas($("#mainMap_layers"), {
-                                onrendered: function (c) {
-                                    localCanvas = c;
-                                    d.resolve();
-                                }
-                            });
+                            } else {
 
-                            // wait for the image to fully load
-                            mapExportImg.on("load", function (event) {
+                                // create a canvas out of feature and file layers
+                                html2canvas($("#mainMap_layers"), {
+                                    onrendered: function (c) {
+                                        localCanvas = c;
+
+                                        //show image with local canvas
+                                        mapExportImgLocal
+                                            .attr({ src: c.toDataURL(), class: 'local' })
+                                            .css({ display: 'block' })
+                                        ;
+
+                                        d.resolve();
+                                    }
+                                });
+
                                 // convert image to canvas for saving
-                                canvas = MiscUtil.convertImageToCanvas(event.target);//,
+                                canvas = MiscUtil.convertImageToCanvas(event.target);
                                 d.promise.then(function () {
                                     // smash local and print service canvases
                                     var tc = canvas.getContext('2d');
                                     tc.drawImage(localCanvas, 0, 0);
                                     canvas = tc.canvas;
 
-                                    // update preview image
-                                    mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
+                                    //// update preview image
+                                    //mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
+                                    mapExportImg.attr({ class: 'remote' });
                                     // hide loading animation
                                     mapExportSpinner.css({ display: "none" });
 
@@ -175,9 +187,9 @@ define([
                                     ;
                                 });
 
-                                mapExportImg.off("load");
-                            });
-                        }
+                            }
+                            mapExportImg.off("load");
+                        });
 
                         tl
                             .call(function () { downloadDefault.attr({ href: event.result.url }); }) // set default button url to image url - for IE9 sake
@@ -214,7 +226,8 @@ define([
 
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
-                    mapExportImg = $(".map-export-image > img");
+                    mapExportImgLocal = $(".map-export-image > img.local");
+                    mapExportImg = $(".map-export-image > img.remote");
                     mapExportSpinner = mapExportStretcher.find(".loading-simple");
 
                     mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
@@ -289,7 +302,8 @@ define([
                             .attr({ disabled: true, href: "" })
                         ;
 
-                        mapExportImg.attr({ src: '', class: 'blurred-5' });
+                        mapExportImg.attr({ src: '', class: 'blurred-5 remote' });
+                        mapExportImgLocal.attr({ src: '', class: 'blurred-5 local' });
                     });
                 }
             };
