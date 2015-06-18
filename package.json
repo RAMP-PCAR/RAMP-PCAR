@@ -24,7 +24,7 @@
     "author": "Web Mapping Team - Corporate Services Branch - Environment Canada",
     "license": "none",
     "devDependencies": {
-        "assemble": "~0.4.12",
+        "grunt-assemble": "~0.3.1",
         "assemble-contrib-i18n": "~0.1.2",
         "fs-utils": "~0.5.0",
         "grunt": "~0.4.2",
