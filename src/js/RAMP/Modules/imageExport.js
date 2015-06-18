@@ -361,12 +361,17 @@ define([
 
                 // turn off bounding boxes if you don't have IE as they can be converted svg -> canvas faster
                 Object.keys(RampMap.getBoundingBoxMapping()).forEach(function (key) {
-                    var bb = RampMap.getBoundingBoxMapping()[key];
+                    var bb = RampMap.getBoundingBoxMapping()[key],
+                        flObj = RAMP.layerRegistry[key];
 
-                    if (bb.visible && !youHaveIE) {
-                        //turn off visibility.  remember the layer
-                        bb.setVisibility(false);
-                        visState.layers.push(bb);
+                    if (bb.visible) {
+                        // if the bounding box is visible and it's parent layer is file-based, turn it off in IE9-10;
+                        // turn it off if you have a normal browser as well
+                        if (youHaveIE && bb.ramp.user && !(flObj.url) || !youHaveIE) {
+                            //turn off visibility.  remember the layer
+                            bb.setVisibility(false);
+                            visState.layers.push(bb);
+                        }
                     }
                 });
             }
