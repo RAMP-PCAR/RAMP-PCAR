@@ -401,10 +401,10 @@
         },
         "s13": {
             "h1": "Usage",
-            "h2": "Limitations",           
+            "h2": "Limitations",
             "header": "Map Export",
             "img1": "The Toolbar Button",
-            "img2": "Download Image Button",            
+            "img2": "Download Image Button",
             "p1": "Map Export is used to convert the contents of the map into an image that can be downloaded by the user.",
             "p2": "Click the Map Export button in the toolbar to initiate the image generation.  The Map Export window will open. A \"Loading\" message will display, and the image preview will appear once it is generated.  Click the Download Image button to save the image.  Click the X to close the Map Export window.",
             "p3": "Currently Map Export will only capture layers that are hosted on a public internet service. Layers hosted privately (e.g. on an intranet) or added from file-based sources will not appear in the resultant image file. Images are currently only available in PNG format."
@@ -547,6 +547,7 @@
         "title": "Help"
     },
     "map": {
+        "generatingTitle": "Generating",
         "loadingTitle": "Loading",
         "scale": "Scale"
     },

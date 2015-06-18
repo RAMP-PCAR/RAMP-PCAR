@@ -547,6 +547,7 @@
         "title": "Aide"
     },
     "map": {
+        "generatingTitle": "[fr] Generating",
         "loadingTitle": "Chargement",
         "scale": "Échelle"
     },
