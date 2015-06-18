@@ -1,5 +1,11 @@
 ﻿<div class="loading-simple">
-    <span>{{t "map.loadingTitle"}}</span>
+    <span>
+        {{#if text}}
+            {{t text }}
+        {{else}}
+            {{t "map.loadingTitle"}}
+        {{/if}}
+    </span>
     <ul role="presentation">
         <li></li>
         <li></li>
