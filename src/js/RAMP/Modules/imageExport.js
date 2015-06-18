@@ -350,10 +350,11 @@ define([
             if (visState.empty) {
                 visState.empty = false;
 
+                var youHaveIE = RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client;
+
                 //go through feature layer config
                 RAMP.config.layers.feature.forEach(function (fl) {
-                    var flObj = RAMP.layerRegistry[fl.id],
-                        youHaveIE = RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client;
+                    var flObj = RAMP.layerRegistry[fl.id];
 
                     //find if feature layer, user added, visible, and has no URL
                     if (flObj.visible) { // turn off all visible feature layers, unless you have IE - then turn off only visible user layers
@@ -363,6 +364,17 @@ define([
                             flObj.setVisibility(false);
                             visState.layers.push(flObj);
                         }
+                    }
+                });
+
+                // turn off bounding boxes if you don't have IE as they can be converted svg -> canvas faster
+                Object.keys(RampMap.getBoundingBoxMapping()).forEach(function (key) {
+                    var bb = RampMap.getBoundingBoxMapping()[key];
+
+                    if (bb.visible && !youHaveIE) {
+                        //turn off visibility.  remember the layer
+                        bb.setVisibility(false);
+                        visState.layers.push(bb);
                     }
                 });
             }
