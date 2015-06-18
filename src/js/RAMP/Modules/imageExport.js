@@ -79,11 +79,6 @@ define([
 
                 downloadPopup,
 
-                dLocal,
-
-                promise,
-                promiseLocal,
-
                 canvas,
                 localCanvas,
 
@@ -92,22 +87,56 @@ define([
                 transitionDuration = 0.4;
 
             /**
+             * Creates a canvas from feature layers if possible. Can't do that in IE9-10, just resolve the promise in this case.
+             *
+             * @private
+             * @method ui.generateLocalCanvas
+             * @return promise
+             */
+            function generateLocalCanvas() {
+                var d = new Deferred();
+
+                // no canvas smashing for IE...
+                if (!RAMP.flags.brokenWebBrowser && !RAMP.flags.ie10client) {
+                    // create a canvas out of feature and file layers not waiting for the print service image to load.
+
+                    var serializer = new XMLSerializer(),
+                        svgtext;
+
+                    // convert svg to text
+                    svgtext = serializer.serializeToString($("#mainMap_gc")[0]);
+                    // convert svg text to canvas and stuff it into mapExportImgLocal canvas dom node
+                    canvg(mapExportImgLocal[0], svgtext, {
+                        renderCallback: function () {
+                            //show image with local canvas
+                            mapExportImgLocal.css({ display: 'block' });
+                            localCanvas = mapExportImgLocal[0];
+
+                            d.resolve();
+                        }
+                    });
+
+                } else {
+                    d.resolve();
+                }
+
+                return d.promise;
+            }
+
+            /**
              * Handles click event on the export image toggle.
              *
              * @private
              * @method ui.generateExportIamge
              */
             function generateExportImage() {
-                // get the export image url
                 var tl = new TimelineLite(),
-                    result = submitServiceImageRequest(),
-                    imageSize = result.exportOptions,
-                    stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
-                    stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
-
-                promise = result.promise;
+                    imageSize,
+                    stretcherWidth,
+                    stretcherHeight;
 
                 tl
+                    // disable download buttons
                     .call(function () {
                         downloadDropdown
                             .find(".btn")
@@ -131,54 +160,18 @@ define([
                 // resize the notice container as it might be too large from the previous map export
                 mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 2 });
 
-                promise.then(
-                    function (event) {
+                // do proper promise chaining
+                generateLocalCanvas()
+                    .then(function () {
+                        return submitServiceImageRequest(); // get the export image url
+                    })
+                    .then(function (result) {
+                        var event = result.event;
+                        imageSize = result.exportOptions;
+                        stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width);
+                        stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
 
                         console.log('Print service has succeeded', event);
-
-                        // no canvas smashing for IE...
-                        if (!RAMP.flags.brokenWebBrowser && !RAMP.flags.ie10client) {
-                            // create a canvas out of feature and file layers not waiting for the print service image to load.
-                            if (dLocal) {
-                                dLocal.cancel('cancel');
-                            }
-                            dLocal = new Deferred();
-                            promiseLocal = dLocal.promise;
-
-                            var //canvasNode = document.createElement('canvas'),
-                                serializer = new XMLSerializer(),
-                                svgtext;
-
-                            svgtext = serializer.serializeToString($("#mainMap_gc")[0]);
-                            canvg(mapExportImgLocal[0], svgtext, {
-                                renderCallback: function () {
-                                    //show image with local canvas
-                                    mapExportImgLocal
-                                        //.attr({ src: c.toDataURL(), class: 'local' })
-                                        .attr({ class: 'local' })
-                                        .css({ display: 'block' })
-                                    ;
-
-                                    localCanvas = mapExportImgLocal[0];
-
-                                    dLocal.resolve();
-                                }
-                            });
-
-                            /*html2canvas($("#mainMap_layers"), {
-                                onrendered: function (c) {
-                                    localCanvas = c;
-
-                                    //show image with local canvas
-                                    mapExportImgLocal
-                                        .attr({ src: c.toDataURL(), class: 'local' })
-                                        .css({ display: 'block' })
-                                    ;
-
-                                    dLocal.resolve();
-                                }
-                            });*/
-                        }
 
                         // wait for the image to fully load
                         mapExportImg.on("load", function (event) {
@@ -197,24 +190,23 @@ define([
 
                                 // convert image to canvas for saving
                                 canvas = MiscUtil.convertImageToCanvas(event.target);
-                                promiseLocal.then(function () {
-                                    // smash local and print service canvases
-                                    var tc = canvas.getContext('2d');
-                                    tc.drawImage(localCanvas, 0, 0);
-                                    canvas = tc.canvas;
 
-                                    //// update preview image
-                                    //mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
-                                    mapExportImg.attr({ class: 'remote' });
-                                    // hide loading animation
-                                    mapExportSpinner.css({ display: "none" });
+                                // smash local and print service canvases
+                                var tc = canvas.getContext('2d');
+                                tc.drawImage(localCanvas, 0, 0);
+                                canvas = tc.canvas;
 
-                                    // enable download buttons
-                                    downloadDropdown
-                                        .find(".btn")
-                                        .attr({ disabled: false })
-                                    ;
-                                });
+                                //mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
+                                mapExportImg.attr({ class: 'remote' });
+                                mapExportImgLocal.attr({ class: 'local' });
+                                // hide loading animation
+                                mapExportSpinner.css({ display: "none" });
+
+                                // enable download buttons
+                                downloadDropdown
+                                    .find(".btn")
+                                    .attr({ disabled: false })
+                                ;
 
                             }
                             mapExportImg.off("load");
@@ -237,8 +229,8 @@ define([
                         mapExportNotice.css({ display: "block" });
 
                         console.log(error);
-                    }
-                );
+                    })
+                ;
             }
 
             return {
@@ -417,7 +409,10 @@ define([
 
                 printTask.on('complete', function (event) {
                     //console.log('PRINT RESULT: ' + event.result.url);
-                    def.resolve(event);
+                    def.resolve({
+                        event: event,
+                        exportOptions: template.exportOptions
+                    });
                 });
 
                 printTask.on('error', function (event) {
@@ -448,10 +443,7 @@ define([
 
             restoreFileLayers();
 
-            return {
-                promise: def.promise,
-                exportOptions: template.exportOptions
-            };
+            return def.promise;
         }
 
         return {
