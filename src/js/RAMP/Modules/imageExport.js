@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs */
+﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs, canvg, XMLSerializer */
 
 /**
 *
@@ -56,13 +56,18 @@ define([
         var ui = (function () {
             var mapExportToggle,
                 mapExportStretcher,
+                mapExportImgLocal,
                 mapExportImg,
                 mapExportSpinner,
+
+                mapExportNoticeContainer,
                 mapExportNotice,
+                mapExportNoticeIE,
+                mapExportNoticeTimeout,
                 downloadButton,
 
                 mapExportCloseButton,
-                
+
                 downloadDropdownToggle,
                 downloadDropdown,
 
@@ -74,13 +79,49 @@ define([
 
                 downloadPopup,
 
-                promise,
-
                 canvas,
+                localCanvas,
 
                 jWindow,
                 cssButtonPressedClass = "button-pressed",
                 transitionDuration = 0.4;
+
+            /**
+             * Creates a canvas from feature layers if possible. Can't do that in IE9-10, just resolve the promise in this case.
+             *
+             * @private
+             * @method ui.generateLocalCanvas
+             * @return promise
+             */
+            function generateLocalCanvas() {
+                var d = new Deferred();
+
+                // no canvas smashing for IE...
+                if (!RAMP.flags.brokenWebBrowser && !RAMP.flags.ie10client) {
+                    // create a canvas out of feature and file layers not waiting for the print service image to load.
+
+                    var serializer = new XMLSerializer(),
+                        svgtext;
+
+                    // convert svg to text
+                    svgtext = serializer.serializeToString($("#mainMap_gc")[0]);
+                    // convert svg text to canvas and stuff it into mapExportImgLocal canvas dom node
+                    canvg(mapExportImgLocal[0], svgtext, {
+                        renderCallback: function () {
+                            //show image with local canvas
+                            mapExportImgLocal.css({ display: 'block' });
+                            localCanvas = mapExportImgLocal[0];
+
+                            d.resolve();
+                        }
+                    });
+
+                } else {
+                    d.resolve();
+                }
+
+                return d.promise;
+            }
 
             /**
              * Handles click event on the export image toggle.
@@ -89,19 +130,13 @@ define([
              * @method ui.generateExportIamge
              */
             function generateExportImage() {
-                // get the export image url
                 var tl = new TimelineLite(),
-                    result = submitServiceImageRequest(),
-                    imageSize = result.exportOptions,
-                    stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width),
-                    stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
-
-                if (promise) {
-                    promise.cancel();
-                }
-                promise = result.promise;
+                    imageSize,
+                    stretcherWidth,
+                    stretcherHeight;
 
                 tl
+                    // disable download buttons
                     .call(function () {
                         downloadDropdown
                             .find(".btn")
@@ -110,76 +145,92 @@ define([
                             .find(".btn")
                             .attr({ href: "" })
                         ;
-
-                        //downloadButtonPNG.attr({ disabled: true, href: "" });
-                        //downloadButtonJPG.attr({ disabled: true, href: "" });
                     })
                     .set(mapExportNotice, { display: "none" }) // hide error notice
-                    .set(mapExportSpinner, { display: "inline-block" }) // show loading animation
+                    .set(mapExportSpinner, { display: "block" }) // show loading animation
                     .set(mapExportImg, { display: "none" }) // hide image
-                    .call(function () { mapExportImg.attr("src", ""); })
+                    .set(mapExportImgLocal, { display: "none" }) // hide image
+                    .call(function () {
+                        mapExportImg.attr("src", "");
+                        mapExportImgLocal.attr("src", "");
+                    })
                     .set(mapExportStretcher, { clearProps: "all" })
                 ;
 
-                promise.then(
-                    function (event) {
-                        console.log('--->', event);
+                // resize the notice container as it might be too large from the previous map export
+                mapExportNoticeContainer.css({ width: mapExportStretcher.width() - 2 });
 
-                        /*var p = (new EsriRequest({ url: event.result.url, handleAs: 'text' })).promise;
+                // do proper promise chaining
+                generateLocalCanvas()
+                    .then(function () {
+                        return submitServiceImageRequest(); // get the export image url
+                    })
+                    .then(function (result) {
+                        var event = result.event;
+                        imageSize = result.exportOptions;
+                        stretcherWidth = Math.min(jWindow.width() - 350, imageSize.width);
+                        stretcherHeight = Math.ceil(imageSize.height / imageSize.width * stretcherWidth);
 
-                        p.then(function (data) {
-                            console.log(data);
-
-                        });*/
+                        console.log('Print service has succeeded', event);
 
                         // wait for the image to fully load
                         mapExportImg.on("load", function (event) {
-                            // convert image to canvas for saving
-                            canvas = MiscUtil.convertImageToCanvas(event.target);//,
-                            //dataPNG = "",
-                            //dataJPG = "";
 
-                            //console.log(canvas);
+                            // no canvas smashing for IE...
+                            if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
 
-                            // convert image to png and jpeg dataurls
-                            //dataJPG = MiscUtil.convertCanvasToDataURL(canvas, "image/jpeg");
-                            //dataPNG = MiscUtil.convertCanvasToDataURL(canvas, "image/png");
+                                mapExportImg.attr({ class: 'remote' });
+                                mapExportSpinner.css({ display: "none" });
 
-                            // enable download buttons
-                            downloadDropdown
-                                .find(".btn")
-                                .attr({ disabled: false })
-                            ;
+                                downloadDropdown
+                                    .find(".btn")
+                                    .attr({ disabled: false })
+                                ;
+                            } else {
 
-                            /*
-                            downloadButtonJPG.attr({ disabled: false, href: dataJPG });
-                            downloadButtonPNG.attr({ disabled: false, href: dataPNG });
-                            downloadDefault.attr({ disabled: false, href: dataPNG });*/
+                                // convert image to canvas for saving
+                                canvas = MiscUtil.convertImageToCanvas(event.target);
 
+                                // smash local and print service canvases
+                                var tc = canvas.getContext('2d');
+                                tc.drawImage(localCanvas, 0, 0);
+                                canvas = tc.canvas;
+
+                                //mapExportImg.attr({ src: canvas.toDataURL(), class: '' });
+                                mapExportImg.attr({ class: 'remote' });
+                                mapExportImgLocal.attr({ class: 'local' });
+                                // hide loading animation
+                                mapExportSpinner.css({ display: "none" });
+
+                                // enable download buttons
+                                downloadDropdown
+                                    .find(".btn")
+                                    .attr({ disabled: false })
+                                ;
+
+                            }
                             mapExportImg.off("load");
                         });
 
                         tl
                             .call(function () { downloadDefault.attr({ href: event.result.url }); }) // set default button url to image url - for IE9 sake
-                            .set(mapExportSpinner, { display: "none" }) // hide loading animation
                             .set(mapExportImg, { display: "block" }) // show image
                             .call(function () { mapExportImg.attr("src", event.result.url); })
                             // animate popup; 2 needed to account for the border
-                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" })
+                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }, 0)
+                            .to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth }, 0)
                         ;
 
                         console.log(event);
                     },
                     function (error) {
                         // show error notice
-                        tl
-                            .set(mapExportSpinner, { display: "none" })
-                            .set(mapExportNotice, { display: "inline-block", width: mapExportStretcher.width() })
-                        ;
+                        mapExportSpinner.css({ display: "none" });
+                        mapExportNotice.css({ display: "block" });
 
                         console.log(error);
-                    }
-                );
+                    })
+                ;
             }
 
             return {
@@ -194,9 +245,14 @@ define([
 
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
-                    mapExportImg = $(".map-export-image > img");
-                    mapExportSpinner = mapExportStretcher.find(".loading-simple");
-                    mapExportNotice = mapExportStretcher.find(".map-export-notice");
+                    mapExportImgLocal = $(".map-export-image > canvas.local");
+                    mapExportImg = $(".map-export-image > img.remote");
+                    mapExportSpinner = $(".map-export-preview .loading-simple");
+
+                    mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
+                    mapExportNotice = mapExportStretcher.find(".map-export-notice.notice-error");
+                    mapExportNoticeIE = mapExportStretcher.find(".map-export-notice.notice-ie");
+                    mapExportNoticeTimeout = mapExportStretcher.find(".map-export-notice.notice-timeout");
                     downloadButton = $(".map-export-controls .download-buttons > .btn");
 
                     downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
@@ -206,7 +262,7 @@ define([
                     downloadButtonPNG = downloadDropdown.find(".btn.download-png");
                     downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
                     downloadDefault = downloadDropdown.find(".btn.download-default");
-                    
+
                     mapExportCloseButton = $("#map-export-modal .button-close");
 
                     mapExportToggle
@@ -222,6 +278,8 @@ define([
                         downloadDefault.css('width', '100%'); // make the default download button wider
 
                         downloadDropdownToggle.css('display', 'none');
+
+                        mapExportNoticeIE.css({ display: 'block' });
                     } else {
                         // 
                         downloadDropdown
@@ -264,7 +322,8 @@ define([
                             .attr({ disabled: true, href: "" })
                         ;
 
-                        mapExportImg.attr("src", "");
+                        mapExportImg.attr({ src: '', class: 'blurred-5 remote' });
+                        mapExportImgLocal.attr({ src: '', class: 'blurred-5 local' });
                     });
                 }
             };
@@ -283,15 +342,36 @@ define([
             if (visState.empty) {
                 visState.empty = false;
 
+                var youHaveIE = RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client;
+
                 //go through feature layer config
                 RAMP.config.layers.feature.forEach(function (fl) {
                     var flObj = RAMP.layerRegistry[fl.id];
 
                     //find if feature layer, user added, visible, and has no URL
-                    if (flObj.ramp.user && flObj.visible && !(flObj.url)) {
-                        //turn off visibility.  remember the layer
-                        flObj.setVisibility(false);
-                        visState.layers.push(flObj);
+                    if (flObj.visible) { // turn off all visible feature layers, unless you have IE - then turn off only visible user layers
+
+                        if (youHaveIE && flObj.ramp.user && !(flObj.url) || !youHaveIE) {
+                            //turn off visibility.  remember the layer
+                            flObj.setVisibility(false);
+                            visState.layers.push(flObj);
+                        }
+                    }
+                });
+
+                // turn off bounding boxes if you don't have IE as they can be converted svg -> canvas faster
+                Object.keys(RampMap.getBoundingBoxMapping()).forEach(function (key) {
+                    var bb = RampMap.getBoundingBoxMapping()[key],
+                        flObj = RAMP.layerRegistry[key];
+
+                    if (bb.visible) {
+                        // if the bounding box is visible and it's parent layer is file-based, turn it off in IE9-10;
+                        // turn it off if you have a normal browser as well
+                        if (youHaveIE && bb.ramp.user && !(flObj.url) || !youHaveIE) {
+                            //turn off visibility.  remember the layer
+                            bb.setVisibility(false);
+                            visState.layers.push(bb);
+                        }
                     }
                 });
             }
@@ -334,15 +414,14 @@ define([
 
                 printTask.on('complete', function (event) {
                     //console.log('PRINT RESULT: ' + event.result.url);
-                    //turn hidden layers back on
-                    restoreFileLayers();
-                    def.resolve(event);
+                    def.resolve({
+                        event: event,
+                        exportOptions: template.exportOptions
+                    });
                 });
 
                 printTask.on('error', function (event) {
                     //console.log('PRINT FAILED: ' + event.error.message);
-                    //turn hidden layers back on
-                    restoreFileLayers();
                     def.reject(event);
                 });
 
@@ -367,10 +446,9 @@ define([
                 def.reject(event);
             }
 
-            return {
-                promise: def.promise,
-                exportOptions: template.exportOptions
-            };
+            restoreFileLayers();
+
+            return def.promise;
         }
 
         return {

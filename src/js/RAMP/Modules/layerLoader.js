@@ -353,7 +353,8 @@ define([
                             });
                    
                         boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
-                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox };
+                        // add ramp.user property to the bounding box as well
+                        boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox, user: layer.ramp.user };
 
                         //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
 
