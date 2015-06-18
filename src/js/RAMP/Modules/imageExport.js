@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs, html2canvas */
+﻿/* global define, console, RAMP, $, TimelineLite, window, saveAs, canvg, XMLSerializer */
 
 /**
 *
@@ -145,7 +145,27 @@ define([
                             dLocal = new Deferred();
                             promiseLocal = dLocal.promise;
 
-                            html2canvas($("#mainMap_layers"), {
+                            var //canvasNode = document.createElement('canvas'),
+                                serializer = new XMLSerializer(),
+                                svgtext;
+
+                            svgtext = serializer.serializeToString($("#mainMap_gc")[0]);
+                            canvg(mapExportImgLocal[0], svgtext, {
+                                renderCallback: function () {
+                                    //show image with local canvas
+                                    mapExportImgLocal
+                                        //.attr({ src: c.toDataURL(), class: 'local' })
+                                        .attr({ class: 'local' })
+                                        .css({ display: 'block' })
+                                    ;
+
+                                    localCanvas = mapExportImgLocal[0];
+
+                                    dLocal.resolve();
+                                }
+                            });
+
+                            /*html2canvas($("#mainMap_layers"), {
                                 onrendered: function (c) {
                                     localCanvas = c;
 
@@ -157,7 +177,7 @@ define([
 
                                     dLocal.resolve();
                                 }
-                            });
+                            });*/
                         }
 
                         // wait for the image to fully load
@@ -233,7 +253,7 @@ define([
 
                     mapExportToggle = $("#map-export-toggle");
                     mapExportStretcher = $(".map-export-stretcher");
-                    mapExportImgLocal = $(".map-export-image > img.local");
+                    mapExportImgLocal = $(".map-export-image > canvas.local");
                     mapExportImg = $(".map-export-image > img.remote");
                     mapExportSpinner = $(".map-export-preview .loading-simple");
 
