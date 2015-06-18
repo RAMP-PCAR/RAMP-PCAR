@@ -110,7 +110,7 @@
                 "blob/Blob.js",
                 "canvasToBlob/canvas-toBlob.js",
                 "fileSaver/FileSaver.js",
-                "html2canvas/dist/html2canvas.js"
+                "canvg/dist/canvg.bundle.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
