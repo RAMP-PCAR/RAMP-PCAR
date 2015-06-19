@@ -170,7 +170,6 @@ require([
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
                 NavWidget.init(currentLevel);
-                UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
                 FeatureHighlighter.init();
 
@@ -189,6 +188,7 @@ require([
 
             RampMap.init();
             NavWidget.construct();
+            UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
             // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
             UtilMisc.tooltipster();
