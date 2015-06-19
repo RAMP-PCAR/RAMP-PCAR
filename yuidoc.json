@@ -1,7 +1,7 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "5.5.0-5",
+    "version": "5.5.0-6",
     "description": "RAMP GIS viewer - Groundhog; Sample of an implementation of RAMP",
     "linkNatives": "true",
     "options": {
