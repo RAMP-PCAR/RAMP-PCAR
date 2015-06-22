@@ -116,7 +116,7 @@ define([
                 target.offset().left > getSubPanelLeftOffset()) {
                 //console.log("offsets", target.offset().left, getSubPanelLeftOffset());
                 var point = graphic._extent.getCenter(),
-                    width = RAMP.map._params.extent.xmax - RAMP.map._params.extent.xmin;
+                    width = RAMP.map.extent.xmax - RAMP.map.extent.xmin;
                 point.setX(point.x + width / 6);
                 topic.publish(EventManager.Map.CENTER_AT, {
                     point: point
