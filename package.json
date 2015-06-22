@@ -110,7 +110,8 @@
                 "blob/Blob.js",
                 "canvasToBlob/canvas-toBlob.js",
                 "fileSaver/FileSaver.js",
-                "canvg/dist/canvg.bundle.js"
+                "canvg/dist/canvg.bundle.js",
+                "rql-nodojo/js/rql.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",
