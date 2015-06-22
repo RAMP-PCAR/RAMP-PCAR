@@ -768,6 +768,7 @@
     "divNames": {
         "map": "mainMap",
         "navigation": "map-navigation",
+		"geoLocator": "geoLocator",
         "filter": "searchMapSectionBody",
         "datagrid": "gridpane"
     },

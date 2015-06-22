@@ -1,4 +1,4 @@
-﻿/* global define, $, RAMP */
+﻿/* global define, navigator, proj4, $, RAMP */
 
 /**
 * Navigation submodule
@@ -31,16 +31,19 @@ define([
     "dojo/_base/declare", "dojo/topic", "dojo/_base/lang",
 
 //RAMP
-    "ramp/globalStorage", "ramp/eventManager"
+    "ramp/globalStorage", "ramp/eventManager",
+    "esri/geometry/Point"
 ],
 
 function (
 // Dojo
     declare, topic, lang,
 // RAMP
-    GlobalStorage, EventManager) {
+    GlobalStorage, EventManager, Point) {
     "use strict";
-    var nav;
+    var nav,
+        geolocate,
+        map;
 
     /**
     * Listen to internal events and republish for other modules' benefit
@@ -49,6 +52,25 @@ function (
     * @private
     */
     function initTopics() {
+        // Convert point into current projection
+        function _convertPoint(x) {
+            var pt = [x.coords.longitude, x.coords.latitude],
+            mapProj = 'EPSG:' + map.extent.spatialReference.wkid,
+            // EPSG:4326 is wkid for lat/long
+            projConvert = proj4('EPSG:4326', mapProj),
+            convertedPoint = projConvert.forward(pt),
+            esriPoint = new Point(convertedPoint[0], convertedPoint[1], map.extent.spatialReference);
+
+            map.centerAndZoom(esriPoint, 12);
+        }
+
+        // Pan and zoom to a given point
+        function _goToPoint() {
+            if (geolocate) {
+                geolocate.getCurrentPosition(_convertPoint);
+            }
+        }
+
         nav
             .on("navigation:panClick", function (e, direction) {
                 topic.publish(EventManager.Navigation.PAN, {
@@ -68,7 +90,11 @@ function (
             })
             .on("navigation:fullExtentClick", function () {
                 topic.publish(EventManager.Navigation.FULL_EXTENT);
+            })
+            .on("navigation:geoLocateClick", function () {
+                _goToPoint();
             });
+        
     }
 
     /**
@@ -111,6 +137,8 @@ function (
             // NOTE: JKW Document the change. Refactor,
             // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is no hook to attach a tooltip to.
             // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the disabled state.
+            map = RAMP.map;
+            geolocate = navigator.geolocation;
 
             nav.navigation("setSliderVal", currentLevel);
             initTopics();

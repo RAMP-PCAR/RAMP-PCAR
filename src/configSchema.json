@@ -462,6 +462,7 @@
             "properties": {
                 "map": { "type": "string", "default": "mainMap" },
                 "navigation": { "type": "string", "default": "map-navigation" },
+				"geoLocator": { "type": "string", "default": "geoLocator"},
                 "filter": { "type": "string", "default": "searchMapSectionBody" },
                 "datagrid": { "type": "string", "default": "gridpane" }
             },
