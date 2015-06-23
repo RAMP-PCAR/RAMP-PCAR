@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, escape */
+﻿/* global define, console, RAMP, escape, angular, document */
 
 /**
 *
@@ -70,7 +70,7 @@ define([
         }
 
         /**
-        * Convert a provice name to province code
+        * Convert a province name to province code
         *
         * @method getProvCode
         * @private
@@ -109,7 +109,7 @@ define([
         * @return {Array} a list of province names and codes
         */
         function getProvList() {
-            //The return value structure can be modified to best suit the UI when it is implemmented
+            //The return value structure can be modified to best suit the UI when it is implemented
 
             return provList.map(function (elem) {
                 return {
@@ -127,7 +127,7 @@ define([
         * @return {Array} a list of concise names and codes
         */
         function getConciseList() {
-            //The return value structure can be modified to best suit the UI when it is implemmented
+            //The return value structure can be modified to best suit the UI when it is implemented
 
             return conciseList.map(function (elem) {
                 return {
@@ -539,7 +539,7 @@ define([
         }
 
         /**
-        * Will initialize the module. Download provice keys & info. Download concise types keys & info.
+        * Will initialize the module. Download province keys & info. Download concise types keys & info.
         *
         * @method isLatLong
         * @private
@@ -557,50 +557,51 @@ define([
                 });
 
             defEnProv.then(
-            function (result) {
-                //service returned.  turn result into a formatted array
-                provList = result[0].definitions.map(function (provEn) {
-                    return {
-                        code: provEn.code,
-                        abbr: provEn.term,
-                        name: {
-                            en: provEn.description,
-                            fr: ''
-                        }
-                    };
-                });
+                function (result) {
+                    //service returned.  turn result into a formatted array
+                    provList = result[0].definitions.map(function (provEn) {
+                        return {
+                            code: provEn.code,
+                            abbr: provEn.term,
+                            name: {
+                                en: provEn.description,
+                                fr: ''
+                            }
+                        };
+                    });
 
-                //now load the french provinces
-                var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
-                    jsonp: 'callback'
-                });
+                    //now load the french provinces
+                    var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
+                        jsonp: 'callback'
+                    });
 
-                defFrProv.then(
-                    function (result) {
-                        //match up province IDs of the french data to the global province list.
-                        //update the french names when a match is made
-                        result[0].definitions.forEach(function (provFr) {
-                            provList.every(function (elem) {
-                                if (elem.code === provFr.code) {
-                                    elem.name.fr = provFr.description;
-                                    return false; //will cause the 'every' loop to break
-                                }
-                                return true; //keep looping
+                    defFrProv.then(
+                        function (result) {
+                            //match up province IDs of the french data to the global province list.
+                            //update the french names when a match is made
+                            result[0].definitions.forEach(function (provFr) {
+                                provList.every(function (elem) {
+                                    if (elem.code === provFr.code) {
+                                        elem.name.fr = provFr.description;
+                                        return false; //will cause the 'every' loop to break
+                                    }
+                                    return true; //keep looping
+                                });
                             });
-                        });
 
-                        //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
-                        provList.forEach(function (elem) {
-                            provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
-                        });
-                    },
-                     function (error) {
-                         console.log('Fail to load french province codes : ' + error);
-                     });
-            },
-            function (error) {
-                console.log('Fail to load english province codes : ' + error);
-            });
+                            //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
+                            provList.forEach(function (elem) {
+                                provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
+                            });
+                        },
+                         function (error) {
+                             console.log('Fail to load french province codes : ' + error);
+                         });
+                },
+                function (error) {
+                    console.log('Fail to load english province codes : ' + error);
+                }
+            );
 
             //get geonames concise codes list english
             var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
@@ -608,44 +609,120 @@ define([
             });
 
             defEnCon.then(
-             function (result) {
-                 //service returned.  turn result into a formatted array
-                 conciseList = result[0].definitions.map(function (conEn) {
-                     return {
-                         code: conEn.code,
-                         name: {
-                             en: conEn.term,
-                             fr: ''
-                         }
-                     };
-                 });
+                function (result) {
+                    //service returned.  turn result into a formatted array
+                    conciseList = result[0].definitions.map(function (conEn) {
+                        return {
+                            code: conEn.code,
+                            name: {
+                                en: conEn.term,
+                                fr: ''
+                            }
+                        };
+                    });
 
-                 //now load the french concise codes
-                 var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
-                     jsonp: 'callback'
-                 });
+                    //now load the french concise codes
+                    var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
+                        jsonp: 'callback'
+                    });
 
-                 defFrCon.then(
-                     function (result) {
-                         //match up concise IDs of the french data to the global concise list.
-                         //update the french names when a match is made
-                         result[0].definitions.forEach(function (conFr) {
-                             conciseList.every(function (elem) {
-                                 if (elem.code === conFr.code) {
-                                     elem.name.fr = conFr.term;
-                                     return false; //will cause the "every" loop to break
-                                 }
-                                 return true; //keep looping
-                             });
-                         });
-                     },
-                      function (error) {
-                          console.log('Fail to load french concise codes : ' + error);
-                      });
-             },
-             function (error) {
-                 console.log('Fail to load english concise codes : ' + error);
-             });
+                    defFrCon.then(
+                        function (result) {
+                            //match up concise IDs of the french data to the global concise list.
+                            //update the french names when a match is made
+                            result[0].definitions.forEach(function (conFr) {
+                                conciseList.every(function (elem) {
+                                    if (elem.code === conFr.code) {
+                                        elem.name.fr = conFr.term;
+                                        return false; //will cause the "every" loop to break
+                                    }
+                                    return true; //keep looping
+                                });
+                            });
+                        },
+                        function (error) {
+                            console.log('Fail to load french concise codes : ' + error);
+                        });
+                },
+                function (error) {
+                    console.log('Fail to load english concise codes : ' + error);
+                }
+            );
+
+            angular
+                .module('gs.service', [])
+                .factory('geoService', ['$q',
+                    function ($q) {
+
+                        // just a wrapper around geoSearch function for now
+                        function search(searchTerm) {
+                            var deferred = $q.defer();
+
+                            geoSearch(searchTerm, {})
+                                .then(
+                                    function (data) {
+                                        deferred.resolve(data);
+                                    },
+                                    function (error) {
+                                        deferred.reject(error);
+                                    }
+                                );
+
+                            return deferred.promise;
+                        }
+
+                        return {
+                            search: search
+                        };
+                    }
+                ])
+                .constant('provinceList', {
+
+                })
+                .factory('lookupService',
+                    function () {
+                        return {
+                            getProvinceName: function (provinceCode) {
+                                return provList
+                                    .filter(function (p) {
+                                        return p.code === provinceCode;
+                                    })
+                                    [0]
+                                    .name[RAMP.locale];
+                            }
+                        };
+                    }
+                );
+
+            angular
+                .module('gs', ['gs.service'])
+                .controller('geosearchController', ['$scope', 'geoService', 'lookupService',
+                    function ($scope, geoService, lookupService) {
+                        $scope.searchTerm = '';
+                        $scope.results = [];
+
+                        $scope.search = function () {
+
+                            if ($scope.geosearchForm.$valid) {
+
+                                geoService
+                                    .search($scope.searchTerm)
+                                    .then(function (data) {
+                                        $scope.results = data.list;
+                                    });
+                            }
+                        };
+                        //console.log(lookupService);
+
+                        $scope.provinceName = lookupService.getProvinceName;
+                    }
+                ]);
+
+            angular.element(document).ready(function () {
+                angular.bootstrap(document, ['gs'], {
+                    strictDi: true
+                });
+            });
         }
 
         return {
