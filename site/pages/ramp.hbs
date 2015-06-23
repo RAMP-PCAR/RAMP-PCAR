@@ -126,16 +126,18 @@
                 <div id="mapControl">
                     <div id="map-navigation">
                     </div>
-                    <div ng-controller="geosearchController as geosearch">
-                        <form name="geosearchForm" novalidate>
-                            <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
-                        </form>
-                        <div>
-                            <ul>
-                                <li ng-repeat="result in results">
-                                    <span>\{{result.name}}</span> <span>\{{result.province}}</span>
-                                </li>
-                            </ul>
+                    <div id="geo-search-container">
+                        <div ng-controller="geosearchController as geosearch">
+                            <form name="geosearchForm" novalidate>
+                                <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
+                            </form>
+                            <div>
+                                <ul>
+                                    <li ng-repeat="result in results">
+                                        <span>\{{ result.name }}</span> <span>\{{ provinceName(result.province) }}</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
