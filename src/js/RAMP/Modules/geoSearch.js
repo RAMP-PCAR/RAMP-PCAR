@@ -54,7 +54,7 @@ define([
             conciseList = [];
 
         /**
-        * Will determine if a value is a valid province identifier (en/fr name or 2-letter abbr)
+        * Will determine if a value is a valid province identifier (en/fr name or 2-letter br)
         *
         * @method isProvince
         * @private
@@ -545,110 +545,6 @@ define([
         * @private
         */
         function init() {
-            //TODO do we need to worry about ensuring these calls return before the caller continues?
-            //     they should be really fast, and if service is down geosearch is broken anyways.
-            //     Init is called after the config loads, so should be plenty of time before a user starts geosearching
-
-            //get provinces english
-            var provUrl = '/codes/province.json',
-                conciseUrl = '/codes/concise.json',
-                defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
-                    jsonp: 'callback'
-                });
-
-            defEnProv.then(
-                function (result) {
-                    //service returned.  turn result into a formatted array
-                    provList = result[0].definitions.map(function (provEn) {
-                        return {
-                            code: provEn.code,
-                            abbr: provEn.term,
-                            name: {
-                                en: provEn.description,
-                                fr: ''
-                            }
-                        };
-                    });
-
-                    //now load the french provinces
-                    var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
-                        jsonp: 'callback'
-                    });
-
-                    defFrProv.then(
-                        function (result) {
-                            //match up province IDs of the french data to the global province list.
-                            //update the french names when a match is made
-                            result[0].definitions.forEach(function (provFr) {
-                                provList.every(function (elem) {
-                                    if (elem.code === provFr.code) {
-                                        elem.name.fr = provFr.description;
-                                        return false; //will cause the 'every' loop to break
-                                    }
-                                    return true; //keep looping
-                                });
-                            });
-
-                            //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
-                            provList.forEach(function (elem) {
-                                provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
-                            });
-                        },
-                         function (error) {
-                             console.log('Fail to load french province codes : ' + error);
-                         });
-                },
-                function (error) {
-                    console.log('Fail to load english province codes : ' + error);
-                }
-            );
-
-            //get geonames concise codes list english
-            var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
-                jsonp: 'callback'
-            });
-
-            defEnCon.then(
-                function (result) {
-                    //service returned.  turn result into a formatted array
-                    conciseList = result[0].definitions.map(function (conEn) {
-                        return {
-                            code: conEn.code,
-                            name: {
-                                en: conEn.term,
-                                fr: ''
-                            }
-                        };
-                    });
-
-                    //now load the french concise codes
-                    var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
-                        jsonp: 'callback'
-                    });
-
-                    defFrCon.then(
-                        function (result) {
-                            //match up concise IDs of the french data to the global concise list.
-                            //update the french names when a match is made
-                            result[0].definitions.forEach(function (conFr) {
-                                conciseList.every(function (elem) {
-                                    if (elem.code === conFr.code) {
-                                        elem.name.fr = conFr.term;
-                                        return false; //will cause the "every" loop to break
-                                    }
-                                    return true; //keep looping
-                                });
-                            });
-                        },
-                        function (error) {
-                            console.log('Fail to load french concise codes : ' + error);
-                        });
-                },
-                function (error) {
-                    console.log('Fail to load english concise codes : ' + error);
-                }
-            );
-
             angular
                 .module('gs.service', [])
                 .factory('geoService', ['$q',
@@ -676,12 +572,74 @@ define([
                         };
                     }
                 ])
-                .constant('provinceList', {
+                .factory('lookupService', ['$q', '$http',
+                    function ($q, $http) {
+                        var provUrl = '/codes/province.json',
+                            conciseUrl = '/codes/concise.json';
 
-                })
-                .factory('lookupService',
-                    function () {
+                        function codeSort(a, b) {
+                            if (a.code < b.code) {
+                                return -1;
+                            }
+                            if (a.code > b.code) {
+                                return 1;
+                            }
+                            return 0;
+                        }
+
+                        // wait for all gets since if one fails
+                        $q
+                            .all([
+                                //get provinces English
+                                $http.get(RAMP.config.geonameUrl + 'en' + provUrl),
+                                $http.get(RAMP.config.geonameUrl + 'fr' + provUrl),
+                                //get geonames concise codes list English
+                                $http.get(RAMP.config.geonameUrl + 'en' + conciseUrl),
+                                $http.get(RAMP.config.geonameUrl + 'fr' + conciseUrl)
+                            ])
+                            .then(function (data) {
+                                var provincesEn = data[0].data.definitions.sort(codeSort),
+                                    provincesFr = data[1].data.definitions.sort(codeSort),
+                                    conciseEn = data[2].data.definitions.sort(codeSort),
+                                    conciseFr = data[3].data.definitions.sort(codeSort);
+
+                                // "zip" up province en and fr lists so we have an array with both en and fr province names
+                                provList = provincesEn.map(function (p, i) {
+                                    return {
+                                        code: p.code,
+                                        abbr: p.term,
+                                        name: {
+                                            en: p.description,
+                                            fr: provincesFr[i].description
+                                        }
+                                    };
+                                });
+
+                                // "zip" up concise en and fr lists so we have an array with both en and fr concise names
+                                conciseList = conciseEn.map(function (p, i) {
+                                    return {
+                                        code: p.code,
+                                        name: {
+                                            en: p.term,
+                                            fr: conciseFr[i].term
+                                        }
+                                    };
+                                });
+
+                                // James magic
+                                //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
+                                provList.forEach(function (elem) {
+                                    provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
+                                });
+                            },
+                            function (data, status) {
+                                console.error('Fail to load province or concise codes', data, status);
+                            });
+
                         return {
+                            provinceList: provList,
+                            conciseList: conciseList,
+
                             getProvinceName: function (provinceCode) {
                                 return provList
                                     .filter(function (p) {
@@ -691,7 +649,7 @@ define([
                                     .name[RAMP.locale];
                             }
                         };
-                    }
+                    }]
                 );
 
             angular
@@ -702,19 +660,24 @@ define([
                         $scope.results = [];
 
                         $scope.search = function () {
-
                             if ($scope.geosearchForm.$valid) {
-
                                 geoService
                                     .search($scope.searchTerm)
                                     .then(function (data) {
                                         $scope.results = data.list;
                                     });
+                            } else {
+                                $scope.results = [];
                             }
                         };
                         //console.log(lookupService);
 
                         $scope.provinceName = lookupService.getProvinceName;
+
+                        $scope.provinces = [
+                            { code: 1, name: 'Ontario' },
+                            { code: 12, name: 'New Brr...' }
+                        ];
                     }
                 ]);
 
