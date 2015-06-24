@@ -111,7 +111,8 @@
                 "canvasToBlob/canvas-toBlob.js",
                 "fileSaver/FileSaver.js",
                 "canvg/dist/canvg.bundle.js",
-                "angular/angular.js"
+                "angular/angular.js",
+                "angular-ui-router/release/angular-ui-router.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",

@@ -10,6 +10,10 @@ module.exports = (grunt) ->
                 'Attribute “ng-change” not allowed on element “input” at this point.'
                 'Attribute “ng-minlength” not allowed on element “input” at this point.'
                 'Attribute “ng-repeat” not allowed on element “li” at this point.'
+                'Attribute “ng-model” not allowed on element “select” at this point.'
+                'Attribute “ng-options” not allowed on element “select” at this point.'
+                'Attribute “ui-sref” not allowed on element “a” at this point.'
+                'Attribute “ui-view” not allowed on element “div” at this point.'
             ]
         src: [
                 'build/*.html'
