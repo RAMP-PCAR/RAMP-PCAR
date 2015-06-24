@@ -157,6 +157,15 @@ define([
                             update: true,
                             guid: id
                         });
+                    },
+                    // if URL is available but not published yet
+                    metadataAvailableError = function () {
+                        topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
+                            content: "<p>" + i18n.t('filterManager.metadataNotPublished') + "</p><h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>",
+                            origin: "metadataHandler",
+                            update: true,
+                            guid: id
+                        });
                     };
 
                     metadataUrl = layerConfig.metadataUrl;
@@ -174,7 +183,7 @@ define([
                         UtilMisc.transformXML(metadataUrl, "assets/metadata/xstyle_default_" + RAMP.locale + ".xsl",
                             function (error, data) {
                                 if (error) {
-                                    metadataError();
+                                    metadataAvailableError();
                                 } else {
                                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                                         content: $(data).append("<h5>" + i18n.t('filterManager.serviceEndPointLabel') + "</h5><p><a href='" + layerConfig.url + "' tagget='_blank'>" + layerConfig.url + "</a></p>"),
