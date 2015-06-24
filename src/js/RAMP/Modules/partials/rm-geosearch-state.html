@@ -1,0 +1,14 @@
+﻿<div>
+    <form name="geosearchForm" novalidate>
+        <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
+    </form>
+    <div>
+        {{filterProvince}}
+        <select ng-options="province.name.en for province in provinceList" ng-model="filterProvince"></select>
+        <ul>
+            <li ng-repeat="result in results">
+                <span>{{ result.name }}</span> <span class="small">{{ provinceName(result.province) }}</span>
+            </li>
+        </ul>
+    </div>
+</div>

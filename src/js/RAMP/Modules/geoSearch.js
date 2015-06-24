@@ -587,8 +587,24 @@ define([
                             return 0;
                         }
 
+                        var deferred = $q.defer();
+
+                        deferred.promise
+                            .then(function (data) {
+                                console.log("ONE!!!", data);
+                                return true;
+                            })
+                            .then(function () {
+                                console.log("1ONE!!!!");
+                                return $q.reject("haha");
+                            })
+                            .then(function () { console.log("ONE!!!!!"); })
+                            .then(function () { console.log("ONE!!!!!!"); });
+
+                        deferred.resolve('Yes');
+
                         // wait for all gets since if one fails
-                        $q
+                        return $q
                             .all([
                                 //get provinces English
                                 $http.get(RAMP.config.geonameUrl + 'en' + provUrl),
@@ -631,29 +647,30 @@ define([
                                 provList.forEach(function (elem) {
                                     provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
                                 });
+
+                                return {
+                                    provinceList: provList,
+                                    conciseList: conciseList,
+
+                                    getProvinceName: function (provinceCode) {
+                                        return provList
+                                            .filter(function (p) {
+                                                return p.code === provinceCode;
+                                            })
+                                            [0]
+                                            .name[RAMP.locale];
+                                    }
+                                };
                             },
                             function (data, status) {
+                                $q.reject('Fail to load province or concise codes', data, status);
                                 console.error('Fail to load province or concise codes', data, status);
                             });
-
-                        return {
-                            provinceList: provList,
-                            conciseList: conciseList,
-
-                            getProvinceName: function (provinceCode) {
-                                return provList
-                                    .filter(function (p) {
-                                        return p.code === provinceCode;
-                                    })
-                                    [0]
-                                    .name[RAMP.locale];
-                            }
-                        };
                     }]
                 );
 
             angular
-                .module('gs', ['gs.service'])
+                .module('gs', ['gs.service', 'ui.router'])
                 .controller('geosearchController', ['$scope', 'geoService', 'lookupService',
                     function ($scope, geoService, lookupService) {
                         $scope.searchTerm = '';
@@ -673,11 +690,26 @@ define([
                         //console.log(lookupService);
 
                         $scope.provinceName = lookupService.getProvinceName;
+                        $scope.provinceList = lookupService.provinceList;
+
+                        console.log($scope.provinceList);
 
                         $scope.provinces = [
                             { code: 1, name: 'Ontario' },
                             { code: 12, name: 'New Brr...' }
                         ];
+                    }
+                ])
+                .config(['$stateProvider',
+                    function ($stateProvider) {
+                        $stateProvider.state('default', {
+                            url: '*path', //dfds
+                            templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
+                            controller: 'geosearchController',
+                            resolve: {
+                                lookupService: 'lookupService'
+                            }
+                        });
                     }
                 ]);
 
