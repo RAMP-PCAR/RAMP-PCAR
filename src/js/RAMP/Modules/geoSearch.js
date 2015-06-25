@@ -113,7 +113,7 @@ define([
 
             return provList.map(function (elem) {
                 return {
-                    name: elem.name[RAMP.locale],
+                    name: elem.name,
                     code: elem.code
                 };
             }).sort(nameSorter);
@@ -131,7 +131,7 @@ define([
 
             return conciseList.map(function (elem) {
                 return {
-                    name: elem.name[RAMP.locale],
+                    name: elem.name,
                     code: elem.code
                 };
             }).sort(nameSorter);
@@ -572,38 +572,22 @@ define([
                         };
                     }
                 ])
-                .factory('lookupService', ['$q', '$http',
+                .factory('filterService', ['$q', '$http',
                     function ($q, $http) {
                         var provUrl = '/codes/province.json',
                             conciseUrl = '/codes/concise.json';
 
                         function codeSort(a, b) {
-                            if (a.code < b.code) {
+                            if (a.term < b.term) {
                                 return -1;
                             }
-                            if (a.code > b.code) {
+                            if (a.term > b.term) {
                                 return 1;
                             }
                             return 0;
                         }
 
-                        var deferred = $q.defer();
-
-                        deferred.promise
-                            .then(function (data) {
-                                console.log("ONE!!!", data);
-                                return true;
-                            })
-                            .then(function () {
-                                console.log("1ONE!!!!");
-                                return $q.reject("haha");
-                            })
-                            .then(function () { console.log("ONE!!!!!"); })
-                            .then(function () { console.log("ONE!!!!!!"); });
-
-                        deferred.resolve('Yes');
-
-                        // wait for all gets since if one fails
+                        // wait for all gets since if one fails and return the derived promise to be resolved by the stateProvider before injection
                         return $q
                             .all([
                                 //get provinces English
@@ -616,41 +600,81 @@ define([
                             .then(function (data) {
                                 var provincesEn = data[0].data.definitions.sort(codeSort),
                                     provincesFr = data[1].data.definitions.sort(codeSort),
-                                    conciseEn = data[2].data.definitions.sort(codeSort),
-                                    conciseFr = data[3].data.definitions.sort(codeSort);
+                                    concise = data[2].data.definitions.sort(codeSort);
 
                                 // "zip" up province en and fr lists so we have an array with both en and fr province names
                                 provList = provincesEn.map(function (p, i) {
+                                    // James magic
+                                    //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
+                                    provSearch.push(p.term.toLowerCase(), p.description.toLowerCase(), provincesFr[i].description.toLowerCase());
+
                                     return {
                                         code: p.code,
                                         abbr: p.term,
-                                        name: {
-                                            en: p.description,
-                                            fr: provincesFr[i].description
-                                        }
+                                        name: p.description
                                     };
                                 });
 
+                                // add default province option
+                                provList.unshift({
+                                    code: '-1',
+                                    abbr: '',
+                                    name: 'Province'
+                                });
+                                
                                 // "zip" up concise en and fr lists so we have an array with both en and fr concise names
-                                conciseList = conciseEn.map(function (p, i) {
+                                conciseList = concise.map(function (c) {
                                     return {
-                                        code: p.code,
-                                        name: {
-                                            en: p.term,
-                                            fr: conciseFr[i].term
-                                        }
+                                        code: c.code,
+                                        name: c.term
                                     };
                                 });
 
-                                // James magic
-                                //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
-                                provList.forEach(function (elem) {
-                                    provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
+                                // add default type option
+                                conciseList.unshift({
+                                    code: '-1',
+                                    name: 'Type'
                                 });
 
                                 return {
                                     provinceList: provList,
                                     conciseList: conciseList,
+                                    extentList: [
+                                        {
+                                            code: -1,
+                                            name: 'Extent'
+                                        },
+                                        {
+                                            code: 0,
+                                            name: 'All'
+                                        },
+                                        {
+                                            code: 1,
+                                            name: 'Visible'
+                                        }
+                                    ],
+                                    distanceList: [
+                                        {
+                                            code: -1,
+                                            name: 'Distance'
+                                        },
+                                        {
+                                            code: 0,
+                                            name: '5km'
+                                        },
+                                        {
+                                            code: 1,
+                                            name: '10km'
+                                        },
+                                        {
+                                            code: 2,
+                                            name: '15km'
+                                        },
+                                        {
+                                            code: 3,
+                                            name: '30km'
+                                        }
+                                    ],
 
                                     getProvinceName: function (provinceCode) {
                                         return provList
@@ -658,21 +682,21 @@ define([
                                                 return p.code === provinceCode;
                                             })
                                             [0]
-                                            .name[RAMP.locale];
+                                            .name;
                                     }
                                 };
                             },
                             function (data, status) {
-                                $q.reject('Fail to load province or concise codes', data, status);
                                 console.error('Fail to load province or concise codes', data, status);
+                                return $q.reject('Fail to load province or concise codes', data, status);
                             });
                     }]
                 );
 
             angular
                 .module('gs', ['gs.service', 'ui.router'])
-                .controller('geosearchController', ['$scope', 'geoService', 'lookupService',
-                    function ($scope, geoService, lookupService) {
+                .controller('geosearchController', ['$scope', 'geoService', 'filterService',
+                    function ($scope, geoService, filterService) {
                         $scope.searchTerm = '';
                         $scope.results = [];
 
@@ -687,27 +711,33 @@ define([
                                 $scope.results = [];
                             }
                         };
-                        //console.log(lookupService);
+                        
+                        // set filters to their defaults
+                        $scope.clearFilters = function () {
+                            $scope.filterByProvince = $scope.provinceList[0];
+                            $scope.filterByType = $scope.typeList[0];
+                            $scope.filterByExtent = $scope.extentList[0];
+                            $scope.filterByDistance = $scope.distanceList[0];
+                        };
 
-                        $scope.provinceName = lookupService.getProvinceName;
-                        $scope.provinceList = lookupService.provinceList;
+                        $scope.provinceName = filterService.getProvinceName;
 
-                        console.log($scope.provinceList);
+                        $scope.provinceList = filterService.provinceList;
+                        $scope.typeList = filterService.conciseList;
+                        $scope.extentList = filterService.extentList;
+                        $scope.distanceList = filterService.distanceList;
 
-                        $scope.provinces = [
-                            { code: 1, name: 'Ontario' },
-                            { code: 12, name: 'New Brr...' }
-                        ];
+                        $scope.clearFilters();
                     }
                 ])
                 .config(['$stateProvider',
                     function ($stateProvider) {
                         $stateProvider.state('default', {
-                            url: '*path', //dfds
+                            url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing
                             templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
                             controller: 'geosearchController',
                             resolve: {
-                                lookupService: 'lookupService'
+                                filterService: 'filterService'
                             }
                         });
                     }

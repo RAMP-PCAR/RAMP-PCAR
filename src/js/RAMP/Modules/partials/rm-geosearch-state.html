@@ -3,8 +3,13 @@
         <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
     </form>
     <div>
-        {{filterProvince}}
-        <select ng-options="province.name.en for province in provinceList" ng-model="filterProvince"></select>
+        <select ng-options="province.name for province in provinceList" ng-model="filterByProvince"></select>
+        {{filterByProvince.name}}
+        <select ng-options="type.name for type in typeList" ng-model="filterByType"></select>
+        {{filterByType.name}}
+        <select ng-options="extent.name for extent in extentList" ng-model="filterByExtent"></select>
+        {{filterByExtent.name}}
+        <button ng-click="clearFilters()">Clear filters</button>
         <ul>
             <li ng-repeat="result in results">
                 <span>{{ result.name }}</span> <span class="small">{{ provinceName(result.province) }}</span>
