@@ -365,16 +365,6 @@ if (!String.prototype.format) {
             /* Pan section begins (added below, in this spot.) */
                         .append(pan)
             /* Pan section ends */
-                        .append($("<ul>", { "class": this._getClassName("geoButton") })
-                            .append($("<li>", {
-                                title: this._getString(this._getLinkTitle(ctrl)),
-                                class: this._getClassName("geoLocate") + " _tooltip"
-                            })
-                            .append($("<a>", { "role": "button", "href": "" })
-                            .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
-                            
-                        )
-
             /* Zoom slider begins */
                         .append($("<ul>", { "class": this._getClassName("zoom") })
                             .append($("<li>", {
@@ -403,8 +393,26 @@ if (!String.prototype.format) {
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomOut"))))))
                             )
-                            )
             /* Zoom slider ends */
+            /* geoLocate begins */
+                            .append($("<ul>", { "class": this._getClassName("geoButton") })
+                            .append($("<li>", {
+                                title: this._getString(this._getLinkTitle(ctrl)),
+                                class: this._getClassName("geoLocate") + " _tooltip"
+                            })
+                                .append($("<a>", { "role": "button", "href": "" })
+                                .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
+                        ))
+            /* geoLocate ends */
+
+            navigator.geolocation.getCurrentPosition(
+                // browser supports geolocation
+                function () { },
+                // no support
+                function () {
+                    $('.' + this._getClassName('geoLocate')).attr('class', this._getClassName('geoLocate') + '-disabled')
+            });
+
 
             /* Create pan, geolocate and full extent controls */
             var ctrls = ["panUp", "panRight", "panDown", "panLeft", "fullExtent"],
