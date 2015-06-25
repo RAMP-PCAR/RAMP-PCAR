@@ -1,0 +1,9 @@
+﻿<div>
+    <select ng-options="province.name for province in filterData.provinceList" ng-model="filterData.currentProvince"></select>
+    {{filterData.currentProvince.name}}
+    <select ng-options="type.name for type in filterData.typeList" ng-model="filterData.currentType"></select>
+    {{filterData.currentType.name}}
+    <select ng-options="extent.name for extent in filterData.extentList" ng-model="filterData.currentExtent"></select>
+    {{filterData.currentExtent.name}}
+    <button ng-click="clearFilters()">Clear filters</button>
+</div>
