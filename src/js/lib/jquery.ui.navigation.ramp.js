@@ -365,16 +365,17 @@ if (!String.prototype.format) {
             /* Pan section begins (added below, in this spot.) */
                         .append(pan)
             /* Pan section ends */
+            /* Geolocate section begins */
                         .append($("<ul>", { "class": this._getClassName("geoButton") })
                             .append($("<li>", {
-                                title: this._getString(this._getLinkTitle(ctrl)),
+                                title: this._getString(this._getLinkTitle("geoLocate")),
                                 class: this._getClassName("geoLocate") + " _tooltip"
                             })
+                            .data("direction", "geoLocate")
                             .append($("<a>", { "role": "button", "href": "" })
                             .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
-                            
                         )
-
+            /* Geolocate section ends */
             /* Zoom slider begins */
                         .append($("<ul>", { "class": this._getClassName("zoom") })
                             .append($("<li>", {
@@ -406,7 +407,7 @@ if (!String.prototype.format) {
                             )
             /* Zoom slider ends */
 
-            /* Create pan, geolocate and full extent controls */
+            /* Create pan and full extent controls */
             var ctrls = ["panUp", "panRight", "panDown", "panLeft", "fullExtent"],
                      len = ctrls.length;
 
