@@ -375,7 +375,7 @@ define([
         }
 
         /**
-        * Will trigger an basic name search, apply filters, and package the results
+        * Will trigger a basic name search, apply filters, and package the results
         *
         *
         * @method generalSearch
@@ -443,6 +443,39 @@ define([
                     defResult.reject(error);
                 });
         }
+
+        /**
+        * Will give suggestions on what to search based on the given input.
+        *
+        * @method geoSuggestions
+        * @private
+        * @param {String} input search item user has entered
+        * @return {Object} array of suggested searches
+        */
+        /*function getSuggestions(input) {
+            var defRequest,
+                queryUrl = RAMP.config.geolocationUrl + RAMP.locale + "/suggest?q=",
+                province;
+
+            if (input.lastIndexOf(',') > -1) {
+                province = input.substring(input.lastIndexOf(',') + 1).trim();
+            }
+
+            // take part of string after the last comma;
+            // remove from string iff it is a province
+            if (isProvince(province)) {
+                input = input.substring(0, input.lastIndexOf(',') - 1);
+            }
+
+            defRequest = script.get(queryUrl + input, {
+                jsonp: 'callback'
+            });
+
+            defRequest.then(
+                function (searchResult) {
+                    return searchResult.suggestions;
+                });
+        }*/
 
         /**
         * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls.
