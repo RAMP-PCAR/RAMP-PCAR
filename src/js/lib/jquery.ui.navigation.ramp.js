@@ -41,6 +41,7 @@ if (!String.prototype.format) {
                     panDown_link_title: "Pan South",
                     panLeft_link_title: "Pan West",
                     fullExtent_link_title: "Canada View",
+                    geoLocate_link_title: "Find my location",
                     zoomIn_link_title: "Zoom In",
                     zoomSlider_link_title: "Zoom Slider",
                     zoomOut_link_title: "Zoom Out",
@@ -53,6 +54,7 @@ if (!String.prototype.format) {
                     panDown_link_title: "Vers le sud",
                     panLeft_link_title: "Vers l'ouest",
                     fullExtent_link_title: "Voir Canada",
+                    geoLocate_link_title: "Trouver ma position",
                     zoomIn_link_title: "Zoom avant",
                     zoomSlider_link_title: "Curseur de zoom",
                     zoomOut_link_title: "Zoom arrière",
@@ -201,6 +203,12 @@ if (!String.prototype.format) {
                 .click(o, this._onFullExtentClick)
                 .click(o, this._updateARIAtags);
 
+            $("." + this._getClassName("geoLocate"))
+                .keypress(this._onKeyPress)
+                .click(o, this._onGeoLocateClick)
+                .click(o, this._updateARIAtags);
+
+
             /* Zoom in/out events */
             $("[class^=" + this._getClassName("zoom") + "]")
                 .keypress(this._onKeyPress)
@@ -243,6 +251,11 @@ if (!String.prototype.format) {
             if (!o._inTransition)
                 $(this).trigger("navigation:fullExtentClick");
 
+            return false;
+        },
+
+        _onGeoLocateClick: function (e) {
+            $(this).trigger("navigation:geoLocateClick");
             return false;
         },
 
@@ -352,7 +365,6 @@ if (!String.prototype.format) {
             /* Pan section begins (added below, in this spot.) */
                         .append(pan)
             /* Pan section ends */
-
             /* Zoom slider begins */
                         .append($("<ul>", { "class": this._getClassName("zoom") })
                             .append($("<li>", {
@@ -381,8 +393,27 @@ if (!String.prototype.format) {
                                 .append($("<a>", { "role": "button", "href": "" })
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomOut"))))))
                             )
-                            )
             /* Zoom slider ends */
+            /* Geolocate section begins */
+                        .append($("<ul>", { "class": this._getClassName("geoButton") })
+                            .append($("<li>", {
+                                title: this._getString(this._getLinkTitle("geoLocate")),
+                                class: this._getClassName("geoLocate") + " _tooltip"
+                            })
+                            .data("direction", "geoLocate")
+                            .append($("<a>", { "role": "button", "href": "" })
+                            .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
+                        ))
+            /* Geolocate section ends */
+
+            navigator.geolocation.getCurrentPosition(
+                // browser supports geolocation
+                function () { },
+                // no support
+                function () {
+                    $('.' + this._getClassName('geoLocate')).attr('class', this._getClassName('geoLocate') + '-disabled')
+            });
+
 
             /* Create pan and full extent controls */
             var ctrls = ["panUp", "panRight", "panDown", "panLeft", "fullExtent"],

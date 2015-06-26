@@ -1,5 +1,5 @@
 @urlPath: "../assets/images/navigation/";
-@filename: "wmat_white_sprite.png";
+@filename: "wmat_white_sprite1.png";
 
 .jq-navigation {
     display: block;
@@ -14,7 +14,7 @@
     position: absolute;
 }
 
-.jq-navigation-pan, .jq-navigation-zoom {
+.jq-navigation-pan, .jq-navigation-zoom, .jq-navigation-geoButton {
     padding: 0;
     margin: 0;
     position: relative;
@@ -46,7 +46,12 @@
         height: 29px;
         width: 29px;
     }
-    
+
+    .jq-navigation-geoLocate-disabled a {
+        height: 35px;
+        width: 35px;
+    }
+
     .jq-navigation-pan {
         background: url("@{urlPath}@{filename}") no-repeat scroll -2px -2px transparent;
         width: 74px;
@@ -55,19 +60,18 @@
         margin: 0;
         position: relative;
     }
-    
+
     .NavControlSizePosition (@width, @height, @top, @left) {
         width: @width;
         height: @height;
         top: @top;
         left: @left;
     }
-    
+
     .jq-navigation-panUp {
-
         .NavControlSizePosition(50px, 30px, 0px, 12px);
-        a {
 
+        a {
             height: 28px;
 
             &:hover, &:focus {
@@ -79,12 +83,11 @@
             }
         }
     }
-    
+
     .jq-navigation-panDown {
-
         .NavControlSizePosition(50px, 28px, 46px, 12px);
-        a {
 
+        a {
             height: 28px;
 
             &:hover, &:focus {
@@ -96,13 +99,12 @@
             }
         }
     }
-    
-    .jq-navigation-panRight {
 
+    .jq-navigation-panRight {
         .NavControlSizePosition(28px, 50px, 12px, auto);
         right: 0;
-        a {
 
+        a {
             height: 50px;
 
             &:hover, &:focus {
@@ -114,9 +116,8 @@
             }
         }
     }
-    
-    .jq-navigation-panLeft {
 
+    .jq-navigation-panLeft {
         .NavControlSizePosition(28px, 50px, 12px, 0px);
 
         a {
@@ -131,60 +132,92 @@
             }
         }
     }
-    
+
     .jq-navigation-fullExtent {
-        
         .NavControlSizePosition(34px, 34px, 20px, 20px);
-        
+
         a {
             height: 34px;
-            
+
             &:hover, &:focus {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -250px -22px transparent;
             }
-            
+
             &:active {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -250px -98px transparent;
             }
         }
     }
-    
+
     .jq-navigation-zoom {
         padding: 0;
         position: relative;
         margin: 10px 23px 0;
         background: url("@{urlPath}@{filename}") no-repeat scroll -2px -154px transparent;
     }
-    
+
     .jq-navigation-zoomIn {
 
         a {
             background: url("@{urlPath}@{filename}") no-repeat scroll -39px -154px transparent;
             height: 29px;
             width: 29px;
-        
+
             &:hover, &:focus {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -78px -154px transparent;
             }
-        
+
             &:active {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -115px -154px transparent;
             }
         }
     }
-    
+
     .jq-navigation-zoomOut {
         a {
             height: 29px;
             width: 29px;
             background: url("@{urlPath}@{filename}") no-repeat scroll -39px -185px transparent;
-        
+
             &:hover, &:focus {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -78px -185px transparent;
             }
-        
+
             &:active {
                 background: url("@{urlPath}@{filename}") no-repeat scroll -115px -185px transparent;
+            }
+        }
+    }
+
+    .jq-navigation-geoButton {
+        padding: 0;
+        position: relative;
+        margin: 10px 21px 0;
+    }
+
+    .jq-navigation-geoLocate {
+        background: url("@{urlPath}@{filename}") no-repeat scroll -208px -168px transparent;
+        padding: 0;
+        margin: 0;
+        position: relative;
+
+        &:hover, &:focus {
+            background: url("@{urlPath}@{filename}") no-repeat scroll -250px -168px transparent;
+        }
+
+        &:active {
+            background: url("@{urlPath}@{filename}") no-repeat scroll -291px -168px transparent;
+        }
+
+        a {
+            display: block;
+            width: 35px;
+            height: 35px;
+
+            span {
+                display: block;
+                width: 0;
+                overflow: hidden;
             }
         }
     }
@@ -199,6 +232,12 @@
 .jq-navigation-zoomOut-disabled {
     a, a:hover, a:active, a:focus {
         background: url("@{urlPath}@{filename}") no-repeat scroll -154px -185px transparent;
+    }
+}
+
+.jq-navigation-geoLocate-disabled {
+    a, a:hover, a:active, a:focus {
+        background: url("@{urlPath}@{filename}") no-repeat scroll -333px -168px transparent;
     }
 }
 
