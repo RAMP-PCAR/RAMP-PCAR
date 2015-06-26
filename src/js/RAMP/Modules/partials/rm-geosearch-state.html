@@ -3,11 +3,28 @@
         <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
     </form>
     <div>
-        <rp-geosearch-filter filter-change="updateResults()"></rp-geosearch-filter>
-        <ul>
+        <rp-geosearch-filter filter-change="search()"></rp-geosearch-filter>
+        <ul class="result-list">
             <li ng-repeat="result in results">
-                <span>{{ result.name }}</span> <span class="small">{{ lookupService.provinceName(result.province) }}</span> <span class="small">{{ lookupService.typeName(result.type) }}</span> <span class="small">{{ result.location }}</span>
+                <button class="result-container" ng-click="select(result)">
+                    <span>
+                        <div class="main">
+                            <span class="name on-left">{{ result.name }}</span>
+                            <span class="place">
+                                <span class="province">{{ lookupService.provinceName(result.province) }}</span>, <span class="location">{{ result.location }}</span>
+                            </span>
+                        </div>
+                        <span class="secondary">
+                            <span class="small">{{ lookupService.typeName(result.type) }}</span>
+                        </span>
+                    </span>
+                </button>
             </li>
         </ul>
+        <!--<ul>
+            <li ng-repeat="suggestion in suggestions">
+                <span>{{ suggestion }}</span>
+            </li>
+        </ul>-->
     </div>
 </div>

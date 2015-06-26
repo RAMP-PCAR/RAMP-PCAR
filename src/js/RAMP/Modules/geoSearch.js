@@ -452,7 +452,7 @@ define([
         * @param {String} input search item user has entered
         * @return {Object} array of suggested searches
         */
-        /*function getSuggestions(input) {
+        function getSuggestions(input) {
             var defRequest,
                 queryUrl = RAMP.config.geolocationUrl + RAMP.locale + "/suggest?q=",
                 province;
@@ -463,19 +463,21 @@ define([
 
             // take part of string after the last comma;
             // remove from string iff it is a province
-            if (isProvince(province)) {
+            /*if (isProvince(province)) {
                 input = input.substring(0, input.lastIndexOf(',') - 1);
-            }
+            }*/
 
             defRequest = script.get(queryUrl + input, {
                 jsonp: 'callback'
             });
 
-            defRequest.then(
-                function (searchResult) {
-                    return searchResult.suggestions;
-                });
-        }*/
+            return defRequest;
+
+            //defRequest.then(
+            //    function (searchResult) {
+            //        return searchResult.suggestions;
+            //    });
+        }
 
         /**
         * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls.
@@ -588,20 +590,34 @@ define([
                             var deferred = $q.defer();
 
                             geoSearch(searchTerm, filters)
-                                .then(
-                                    function (data) {
+                                .then(function (data) {
+                                    if (data.status === 'list') {
                                         deferred.resolve(data);
-                                    },
+                                    } else {
+                                        deferred.reject('no results');
+                                    }
+                                },
                                     function (error) {
                                         deferred.reject(error);
-                                    }
-                                );
+                                    });
 
                             return deferred.promise;
                         }
 
+                        function suggest(searchTerm) {
+                            return getSuggestions(searchTerm)
+                                .then(function (data) {
+                                    if (data.suggestions.length > 0) {
+                                        return data.suggestions;
+                                    } else {
+                                        return $q.reject('no suggestions');
+                                    }
+                                });
+                        }
+
                         return {
-                            search: search
+                            search: search,
+                            suggest: suggest
                         };
                     }
                 ])
@@ -766,22 +782,21 @@ define([
                     function (filterService) {
                         var data = filterService.data;
 
+                        function findName(list, code) {
+                            return list
+                                .filter(function (p) {
+                                    return p.code === code;
+                                })[0]
+                                .name;
+                        }
+
                         return {
                             provinceName: function (provinceCode) {
-                                return data.provinceList
-                                    .filter(function (p) {
-                                        return p.code === provinceCode;
-                                    })[0]
-                                    .name;
+                                return findName(data.provinceList, provinceCode);
                             },
 
                             typeName: function (typeCode) {
-                                return data.typeList
-                                    .filter(function (p) {
-                                        return p.code === typeCode;
-                                    })
-                                    [0]
-                                    .name;
+                                return findName(data.typeList, typeCode);
                             }
                         };
                     }]
@@ -798,10 +813,14 @@ define([
                         templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-filter.html',
                         controller: ['$scope', 'filterService',
                             function ($scope, filterService) {
-                                $scope.onChange = $scope.filterChange;
 
                                 $scope.filterData = filterService.data;
-                                $scope.clearFilters = filterService.clearFilters();
+
+                                $scope.onChange = $scope.filterChange;
+                                $scope.clearFilters = function () {
+                                    filterService.clearFilters();
+                                    $scope.onChange();
+                                };
                             }
                         ]
                     };
@@ -813,24 +832,39 @@ define([
                     function ($scope, geoService, filterService, lookupService) {
                         $scope.searchTerm = '';
                         $scope.results = [];
+                        //$scope.suggestions = [];
 
                         $scope.search = function () {
                             if ($scope.geosearchForm.$valid) {
+                                //$scope.suggestions = [];
+
                                 geoService
                                     .search($scope.searchTerm, filterService.getFilters())
                                     .then(function (data) {
                                         $scope.results = data.list;
+                                    })
+                                    .catch(function (data) {
+                                        console.log(data);
+
+                                        $scope.results = [];
+                                        //return geoService.suggest($scope.searchTerm);
                                     });
+                                /*.then(function (data) {
+                                    console.log('hm', data);
+                                })
+                                .catch(function (data) {
+                                    console.log(data, "second?");
+                                });*/
                             } else {
-                                $scope.results = [];
+                                $scope.results = []; //$scope.suggestions = [];
                             }
                         };
 
-                        $scope.updateResults = function () {
-                            console.log("What>>");
-                            $scope.search();
+                        $scope.select = function (result) {
+                            console.log(result);
                         };
 
+                        // bind lookupservice to resolve province and type names
                         $scope.lookupService = lookupService;
                     }
                 ])
@@ -838,7 +872,7 @@ define([
                     function ($stateProvider) {
                         $stateProvider
                             .state('default', {
-                                url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing
+                                url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing,
                                 templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
                                 controller: 'geosearchController'
                             });

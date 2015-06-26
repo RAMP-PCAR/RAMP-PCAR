@@ -1,0 +1,13 @@
+﻿<button class="result-container" ng-click="onClick()">
+    <span>
+        <div class="main">
+            <span class="name on-left">{{ result.name }}</span>
+            <span class="place">
+                <span class="province">{{ lookupService.provinceName(result.province) }}</span>, <span class="location">{{ result.location }}</span>
+            </span>
+        </div>
+        <span class="secondary">
+            <span class="small">{{ lookupService.typeName(result.type) }}</span>
+        </span>
+    </span>
+</button>

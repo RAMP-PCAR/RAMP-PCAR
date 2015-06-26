@@ -4,6 +4,59 @@
     top: 20px;
     z-index: 100;
     position: absolute;
-
     background-color: white;
+
+    .result-list {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+
+        .result-container {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            padding: 3px 0;
+            border: none;
+            background-color: transparent;
+
+            &:before {
+                content: 'q';
+                visibility: hidden;
+                line-height: 1.5;
+                vertical-align: middle;
+                display: inline-block;
+            }
+
+            .main {
+                display: inline-block;
+                vertical-align: middle;
+
+                .name {
+                    //display: block;
+                    font-weight: bold;
+                }
+
+                .place {
+                    //display: block;
+
+                    .province {
+                        font-size: 80%;
+                        color: #333;
+                    }
+
+                    .location {
+                        font-size: 80%;
+                        color: #333;
+                    }
+                }
+            }
+
+            .secondary {
+                line-height: 1.5;
+                display: inline-block;
+                position: absolute;
+                right: 10px;
+            }
+        }
+    }
 }
