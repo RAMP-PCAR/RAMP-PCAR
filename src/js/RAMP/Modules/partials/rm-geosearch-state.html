@@ -3,10 +3,10 @@
         <input ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required /> <button>Search</button>
     </form>
     <div>
-        <rp-geosearch-filter></rp-geosearch-filter>
+        <rp-geosearch-filter filter-change="updateResults()"></rp-geosearch-filter>
         <ul>
             <li ng-repeat="result in results">
-                <span>{{ result.name }}</span> <span class="small">{{ provinceName(result.province) }}</span>
+                <span>{{ result.name }}</span> <span class="small">{{ lookupService.provinceName(result.province) }}</span> <span class="small">{{ lookupService.typeName(result.type) }}</span> <span class="small">{{ result.location }}</span>
             </li>
         </ul>
     </div>

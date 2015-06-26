@@ -584,10 +584,10 @@ define([
                     function ($q) {
 
                         // just a wrapper around geoSearch function for now
-                        function search(searchTerm) {
+                        function search(searchTerm, filters) {
                             var deferred = $q.defer();
 
-                            geoSearch(searchTerm, {})
+                            geoSearch(searchTerm, filters)
                                 .then(
                                     function (data) {
                                         deferred.resolve(data);
@@ -616,37 +616,37 @@ define([
                             typeList: [],
                             extentList: [
                                 {
-                                    code: -1,
+                                    code: '-1',
                                     name: 'Extent'
                                 },
                                 {
-                                    code: 0,
+                                    code: '0',
                                     name: 'All'
                                 },
                                 {
-                                    code: 1,
+                                    code: '1',
                                     name: 'Visible'
                                 }
                             ],
                             distanceList: [
                                 {
-                                    code: -1,
+                                    code: '-1',
                                     name: 'Distance'
                                 },
                                 {
-                                    code: 0,
+                                    code: '0',
                                     name: '5km'
                                 },
                                 {
-                                    code: 1,
+                                    code: '1',
                                     name: '10km'
                                 },
                                 {
-                                    code: 2,
+                                    code: '2',
                                     name: '15km'
                                 },
                                 {
-                                    code: 3,
+                                    code: '3',
                                     name: '30km'
                                 }
                             ],
@@ -679,9 +679,7 @@ define([
                             .then(function (result) {
                                 var provincesEn = result[0].data.definitions.sort(codeSort),
                                     provincesFr = result[1].data.definitions.sort(codeSort),
-                                    concise = result[2].data.definitions.sort(codeSort);//,
-                                //provinceRaw,
-                                //conciseRaw;
+                                    concise = result[2].data.definitions.sort(codeSort);
 
                                 // "zip" up province en and fr lists so we have an array with both en and fr province names
                                 data.provinceList = provincesEn.map(function (p, i) {
@@ -736,10 +734,51 @@ define([
                         return {
                             data: data,
 
+                            // set filters to their defaults
+                            clearFilters: function () {
+                                data.currentProvince = data.provinceList[0];
+                                data.currentType = data.typeList[0];
+                                data.currentExtent = data.extentList[0];
+                                data.currentDistance = data.distanceList[0];
+                            },
+
+                            getFilters: function () {
+                                return {
+                                    prov: data.currentProvince.code !== '-1' ? data.currentProvince.code : undefined,
+                                    concise: data.currentType.code !== '-1' ? data.currentType.code : undefined,
+                                    extent: data.currentExtent.code !== '-1' ? undefined : undefined,
+                                    radius: data.currentDistance.code !== '-1' ? data.currentDistance.code : undefined
+                                };
+                            },
+
                             provinceName: function (provinceCode) {
                                 return provList
                                     .filter(function (p) {
                                         return p.code === provinceCode;
+                                    })
+                                    [0]
+                                    .name;
+                            }
+                        };
+                    }]
+                )
+                .factory('lookupService', ['filterService',
+                    function (filterService) {
+                        var data = filterService.data;
+
+                        return {
+                            provinceName: function (provinceCode) {
+                                return data.provinceList
+                                    .filter(function (p) {
+                                        return p.code === provinceCode;
+                                    })[0]
+                                    .name;
+                            },
+
+                            typeName: function (typeCode) {
+                                return data.typeList
+                                    .filter(function (p) {
+                                        return p.code === typeCode;
                                     })
                                     [0]
                                     .name;
@@ -753,20 +792,16 @@ define([
                 .directive('rpGeosearchFilter', function () {
                     return {
                         restrict: 'E',
-                        scope: {},
+                        scope: {
+                            filterChange: '&'
+                        },
                         templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-filter.html',
                         controller: ['$scope', 'filterService',
                             function ($scope, filterService) {
-                                // set filters to their defaults
-                                $scope.clearFilters = function () {
-                                    $scope.filterData.currentProvince = $scope.filterData.provinceList[0];
-                                    $scope.filterData.currentType = $scope.filterData.typeList[0];
-                                    $scope.filterData.currentExtent = $scope.filterData.extentList[0];
-                                    $scope.filterData.currentDistance = $scope.filterData.distanceList[0];
-                                };
+                                $scope.onChange = $scope.filterChange;
 
                                 $scope.filterData = filterService.data;
-                                $scope.clearFilters();
+                                $scope.clearFilters = filterService.clearFilters();
                             }
                         ]
                     };
@@ -774,15 +809,15 @@ define([
 
             angular
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
-                .controller('geosearchController', ['$scope', 'geoService', 'filterService',
-                    function ($scope, geoService, filterService) {
+                .controller('geosearchController', ['$scope', 'geoService', 'filterService', 'lookupService',
+                    function ($scope, geoService, filterService, lookupService) {
                         $scope.searchTerm = '';
                         $scope.results = [];
 
                         $scope.search = function () {
                             if ($scope.geosearchForm.$valid) {
                                 geoService
-                                    .search($scope.searchTerm)
+                                    .search($scope.searchTerm, filterService.getFilters())
                                     .then(function (data) {
                                         $scope.results = data.list;
                                     });
@@ -791,7 +826,12 @@ define([
                             }
                         };
 
-                        $scope.provinceName = filterService.provinceName;
+                        $scope.updateResults = function () {
+                            console.log("What>>");
+                            $scope.search();
+                        };
+
+                        $scope.lookupService = lookupService;
                     }
                 ])
                 .config(['$stateProvider',
