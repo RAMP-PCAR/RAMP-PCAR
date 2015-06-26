@@ -696,10 +696,10 @@ define([],
                 * Applies a spatial filter to the datagrid (i.e. only visible points in the current
                 * extent will be displayed in the datagrid)
                 *
-                * @event Datagrid.APPLY_EXTENT_FILTER [subscribed]
+                * @event Datagrid.LOAD_DATA_GRID [subscribed]
                 * @for Datagrid
                 */
-                APPLY_EXTENT_FILTER: 'datagrid/applyExtentFilter',
+                LOAD_DATA_GRID: 'datagrid/load-data-grid',
 
                 /**
                 * Fires when the table has finished drawing
@@ -711,9 +711,9 @@ define([],
                 /**
                 * Fires when the extent-filter has finished updating
                 *
-                * @event Datagrid.EXTENT_FILTER_END
+                * @event Datagrid.LOAD_DATA_GRID_END
                 */
-                EXTENT_FILTER_END: 'datagrid/extent-filter-end',
+                LOAD_DATA_GRID_END: 'datagrid/load-data-grid-end',
 
                 /**
                 * Highlights the row corresponding to the given `graphic` object of the selected feature.

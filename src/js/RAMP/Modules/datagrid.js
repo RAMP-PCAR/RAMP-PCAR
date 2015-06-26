@@ -580,7 +580,7 @@ define([
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
                                 // repopulated after an extent change
-                                UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                                UtilMisc.subscribe(EventManager.Datagrid.LOAD_DATA_GRID_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getFDataOid(fData),
@@ -592,7 +592,7 @@ define([
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack();
                             // Reset focus back to "Zoom To" link after map extent change
-                            UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                            UtilMisc.subscribe(EventManager.Datagrid.LOAD_DATA_GRID_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                         featureOidField, GraphicExtension.getFDataOid(fData),
                                         layerIdField, fData.parent.layerId));
@@ -1481,7 +1481,7 @@ define([
             updateRecordsCount(data.length);
 
             oTable.one("draw.dt", function () {
-                topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
+                topic.publish(EventManager.Datagrid.LOAD_DATA_GRID_END);
             });
 
             //add the data to the grid
@@ -1530,7 +1530,7 @@ define([
         /**
         * Binding event handling for events:
         * filterManager/layer-visibility-toggled
-        * datagrid/applyExtentFilter
+        * datagrid/load-data-grid
         *
         * @method initListeners
         * @private
@@ -1575,7 +1575,7 @@ define([
                 }
             });
 
-            topic.subscribe(EventManager.Datagrid.APPLY_EXTENT_FILTER, function () {
+            topic.subscribe(EventManager.Datagrid.LOAD_DATA_GRID, function () {
                 if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                     updateDataGrid();
                 }
