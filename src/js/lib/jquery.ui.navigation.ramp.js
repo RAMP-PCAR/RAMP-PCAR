@@ -394,16 +394,17 @@ if (!String.prototype.format) {
                                 .append($("<span>").text(this._getString(this._getLinkTitle("zoomOut"))))))
                             )
             /* Zoom slider ends */
-            /* geoLocate begins */
-                            .append($("<ul>", { "class": this._getClassName("geoButton") })
+            /* Geolocate section begins */
+                        .append($("<ul>", { "class": this._getClassName("geoButton") })
                             .append($("<li>", {
-                                title: this._getString(this._getLinkTitle(ctrl)),
+                                title: this._getString(this._getLinkTitle("geoLocate")),
                                 class: this._getClassName("geoLocate") + " _tooltip"
                             })
-                                .append($("<a>", { "role": "button", "href": "" })
-                                .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
+                            .data("direction", "geoLocate")
+                            .append($("<a>", { "role": "button", "href": "" })
+                            .append($("<span>").text(this._getString(this._getLinkTitle("geoLocate"))))))
                         ))
-            /* geoLocate ends */
+            /* Geolocate section ends */
 
             navigator.geolocation.getCurrentPosition(
                 // browser supports geolocation
@@ -414,7 +415,7 @@ if (!String.prototype.format) {
             });
 
 
-            /* Create pan, geolocate and full extent controls */
+            /* Create pan and full extent controls */
             var ctrls = ["panUp", "panRight", "panDown", "panLeft", "fullExtent"],
                      len = ctrls.length;
 
