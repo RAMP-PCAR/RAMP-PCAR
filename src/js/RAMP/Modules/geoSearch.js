@@ -24,15 +24,21 @@
 
 define([
 /* Dojo */
- 'dojo/request/script', 'dojo/Deferred'
+ 'dojo/request/script', 'dojo/Deferred',
 
+ /* RAMP */
+ 'utils/util'
+ 
 /* ESRI */
 //'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
 ],
 
     function (
     /* Dojo */
-    script, Deferred
+    script, Deferred,
+
+    /*RAMP*/
+    UtilMisc
 
         /* ESRI */
         //GeometryService, ProjectParameters, EsriExtent,
@@ -51,7 +57,9 @@ define([
             hide: 'hide'
         }, provSearch = [],
             provList = [],
-            conciseList = [];
+            conciseList = [],
+                
+            map;
 
         /**
         * Will determine if a value is a valid province identifier (en/fr name or 2-letter br)
@@ -580,6 +588,8 @@ define([
         * @private
         */
         function init() {
+            map = RAMP.map;
+
             angular
                 .module('gs.service', [])
                 .factory('geoService', ['$q',
@@ -862,6 +872,9 @@ define([
 
                         $scope.select = function (result) {
                             console.log(result);
+
+                            var esriPoint = UtilMisc.latLongToMapPoint(result.lonlat[1], result.lonlat[0], map.extent.spatialReference);
+                            map.centerAndZoom(esriPoint, 12);
                         };
 
                         // bind lookupservice to resolve province and type names

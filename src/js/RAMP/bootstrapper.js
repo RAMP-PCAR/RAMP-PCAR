@@ -187,6 +187,7 @@ require([
             });
 
             RampMap.init();
+            GeoSearch.init();
             NavWidget.construct();
             UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
@@ -303,7 +304,7 @@ require([
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
-            GeoSearch.init();
+            
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
