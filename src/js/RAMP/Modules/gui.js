@@ -858,8 +858,8 @@ define([
 
                         toolbarController.setTooltips();
 
-                        //console.log("finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
-                        //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("finished", EventManager.Datagrid.LOAD_DATA_GRID);
+                        //topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
 
                         // kill key events to stop tab switching when the other tab is hidden
                         panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
@@ -874,8 +874,8 @@ define([
                             .update()
                             .removeTooltips();
 
-                        //console.log("reverse finished", EventManager.Datagrid.APPLY_EXTENT_FILTER);
-                        //topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                        //console.log("reverse finished", EventManager.Datagrid.LOAD_DATA_GRID);
+                        //topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                         // restore key events
                         panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
                     }

@@ -1,4 +1,4 @@
-﻿/* global define, navigator, proj4, $, RAMP */
+﻿/* global define, navigator, $, RAMP */
 
 /**
 * Navigation submodule
@@ -17,9 +17,9 @@
 * NOTE: jquery.ui.navigation.js is required to create the object
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* 
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+*
 * @class Navigation
 * @static
 * @uses dojo/_base/declare
@@ -32,14 +32,20 @@ define([
 
 //RAMP
     "ramp/globalStorage", "ramp/eventManager",
-    "esri/geometry/Point"
+    "esri/geometry/Point",
+
+/* Util */
+    'utils/util'
 ],
 
 function (
 // Dojo
     declare, topic, lang,
 // RAMP
-    GlobalStorage, EventManager, Point) {
+    GlobalStorage, EventManager, Point,
+
+// Util
+    UtilMisc) {
     "use strict";
     var nav,
         geolocate,
@@ -54,12 +60,7 @@ function (
     function initTopics() {
         // Convert point into current projection
         function _convertPoint(x) {
-            var pt = [x.coords.longitude, x.coords.latitude],
-            mapProj = 'EPSG:' + map.extent.spatialReference.wkid,
-            // EPSG:4326 is wkid for lat/long
-            projConvert = proj4('EPSG:4326', mapProj),
-            convertedPoint = projConvert.forward(pt),
-            esriPoint = new Point(convertedPoint[0], convertedPoint[1], map.extent.spatialReference);
+            var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude, map.extent.spatialReference);
 
             map.centerAndZoom(esriPoint, 12);
         }
@@ -94,7 +95,6 @@ function (
             .on("navigation:geoLocateClick", function () {
                 _goToPoint();
             });
-        
     }
 
     /**
@@ -133,7 +133,6 @@ function (
         * @param {Number} currentLevel
         */
         init: function (currentLevel) {
-
             // NOTE: JKW Document the change. Refactor,
             // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is no hook to attach a tooltip to.
             // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the disabled state.
@@ -149,9 +148,9 @@ function (
             // Note: JKW added currentlevel
             //RAMP.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            var options = lang.mixin({}, 
+            var options = lang.mixin({},
                 RAMP.config.navWidget,
-                {locale: RAMP.locale}
+                { locale: RAMP.locale }
             );
 
             nav = $("#" + RAMP.config.divNames.navigation).navigation(options);

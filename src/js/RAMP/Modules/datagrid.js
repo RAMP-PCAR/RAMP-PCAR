@@ -26,6 +26,7 @@
 * {{#crossLink "Dictionary"}}{{/crossLink}}
 * {{#crossLink "PopupManager"}}{{/crossLink}}
 * {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "FilterEngine"}}{{/crossLink}}
 *
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/datagrid_template.json"}}{{/crossLink}}
@@ -55,7 +56,7 @@ define([
 
 // Ramp
         "ramp/graphicExtension", "ramp/globalStorage", "ramp/datagridClickHandler", "ramp/map",
-        "ramp/eventManager", "ramp/theme", "ramp/layerLoader",
+        "ramp/eventManager", "ramp/theme", "ramp/layerLoader", "ramp/filterEngine",
 
 // Util
          "utils/util", "utils/array", "utils/dictionary", "utils/popupManager", "utils/tmplHelper"],
@@ -72,7 +73,7 @@ define([
         EsriQuery,
 
     // Ramp
-        GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader,
+        GraphicExtension, GlobalStorage, DatagridClickHandler, RampMap, EventManager, Theme, LayerLoader, FilterEngine,
 
     // Util
         UtilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
@@ -579,7 +580,7 @@ define([
                                 // Update "zoom back" text after the extent change, if we update it
                                 // before the extent change, it won't work since the datagrid gets
                                 // repopulated after an extent change
-                                UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                                UtilMisc.subscribe(EventManager.Datagrid.LOAD_DATA_GRID_END, function () {
                                     // Find the first node with the same oid, layerId
                                     var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                                     featureOidField, GraphicExtension.getFDataOid(fData),
@@ -591,7 +592,7 @@ define([
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack();
                             // Reset focus back to "Zoom To" link after map extent change
-                            UtilMisc.subscribe(EventManager.Datagrid.EXTENT_FILTER_END, function () {
+                            UtilMisc.subscribe(EventManager.Datagrid.LOAD_DATA_GRID_END, function () {
                                 var newNode = $(String.format("button.zoomto[data-{0}='{1}'][data-{2}='{3}']:eq(0)",
                                         featureOidField, GraphicExtension.getFDataOid(fData),
                                         layerIdField, fData.parent.layerId));
@@ -802,7 +803,6 @@ define([
 
                     if (event.scroll) {
                         ui.activateRows();
-                        //applyExtentFilter();
                     }
                 }
 
@@ -927,8 +927,6 @@ define([
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
-                            //console.timeEnd('applyExtentFilter');
-
                             console.log("I'm resuming");
 
                             stl.set(jqgridWrapper, { className: "-=fadedOut" });
@@ -942,9 +940,7 @@ define([
                             //tl.resume();
                         });
 
-                        //console.time('applyExtentFilter');
-
-                        applyExtentFilter(deffered);
+                        updateDataGrid(deffered);
                     }, null, this, duration + 0.05);
 
                     /*tl.set(jqgridWrapper, { className: "-=fadeOut" });
@@ -1051,7 +1047,7 @@ define([
                             stl.play();
                         });
 
-                        applyExtentFilter(deffered);
+                        updateDataGrid(deffered);
                     }, null, this, duration + 0.1);
 
                     tl.set(sectionNode, { className: "-=fadeOut" });
@@ -1326,49 +1322,49 @@ define([
         }
 
         /**
-        * Rounds up all visible features in the current map extent, then triggers the process to add those
+        * Rounds up all features that belong in the grid, then triggers the process to add those
         * features to the datagrid
         *
-        * @method applyExtentFilter
+        * @method updateDataGrid
         * @param {Deferred} d a deferred to resolve after the grid has been populated
         *
         */
-        function applyExtentFilter(d) {
-            var visibleFeatures = {},
-                visibleGridLayers = RampMap.getVisibleFeatureLayers(),
+        function updateDataGrid(d) {
+            var visibleGridLayers = RampMap.getVisibleFeatureLayers(),
                 dataGridMode = ui.getDatagridMode(),
-                q = new EsriQuery(),
-                bigGridNoFilter = false;
+                filterOps = {},
+                pFilter;
 
-            //console.time('applyExtentFilter:part 1');
-            //console.time('applyExtentFilter:part 1 - 1');
+            //derive a list of layer objects that should be in the grid, and other filter options.
 
             // filter out static layers
             visibleGridLayers = visibleGridLayers.filter(function (layer) {
                 return layer.ramp.type !== GlobalStorage.layerType.Static;
             });
 
-            //figure out what extent to use
             if (dataGridMode === GRID_MODE_FULL) {
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
-                    q.geometry = RampMap.getMap().extent;
-                    //in this case, we only consider the layer if it is visible
+                    //we are still filtering on extent, but are only targeting the active layer in the big data grid
+                    filterOps.extent = RampMap.getMap().extent;
+                    //only consider the layer if it is visible
                     visibleGridLayers = visibleGridLayers.filter(function (layer) {
                         return layer.id === ui.getSelectedDatasetId();
                     });
                 } else {
-                    // Grab everything!  even if it's not visible on the map
-                    bigGridNoFilter = true;
+                    //Grab everything!  even if it's not visible on the map.
+                    //By not setting the .extent property of the filter options, we trigger this.
+                    //only use the selected layer
                     visibleGridLayers = [RAMP.layerRegistry[ui.getSelectedDatasetId()]];
                 }
             } else { // Summary Mode
-                q.geometry = RampMap.getMap().extent;
+                filterOps.extent = RampMap.getMap().extent;
             }
 
-            //this will result in just objectid fields, as that is all we have in feature layers
-            q.outFields = ["*"];
+            filterOps.gridMode = dataGridMode;
 
-            //console.timeEnd('applyExtentFilter:part 1 - 1');
+            //TESTING!!
+            //filterOps.textSearch = "green";
+            //filterOps.visibleAttribsOnly = true;
 
             // Update total records
             totalRecords = 0;
@@ -1378,52 +1374,22 @@ define([
                 }
             });
 
-            //console.time('applyExtentFilter:part 1 - 2');
+            //execute the filter, get a promise of data
+            pFilter = FilterEngine.getFilteredData(visibleGridLayers, filterOps);
 
-            var deferredList;
+            pFilter.then(function (dataSet) {
+                addDataToGrid(dataSet);
 
-            if (bigGridNoFilter) {
-                deferredList = []; //nothing to wait for.  empty array will satisfy afterAll()
-                //we only have one layer, and will want all the data. flag as raw, and pass in the layer id
-                visibleFeatures[visibleGridLayers[0].id] = {
-                    type: 'raw',
-                    layerId: visibleGridLayers[0].id
-                };
-            } else {
-                //apply spatial query to the layers, collect deferred results in the array.
-                deferredList = visibleGridLayers.map(function (gridLayer) {
-                    return gridLayer.queryFeatures(q).then(function (features) {
-                        //console.timeEnd('applyExtentFilter:part 1 - 2');
-
-                        if (features.features.length > 0) {
-                            var layer = features.features[0].getLayer();
-                            visibleFeatures[layer.id] = {
-                                type: 'features',
-                                features: features.features
-                            };
-                        }
-                    });
-                });
-            }
-
-            // Execute this only after all the deferred objects has resolved
-            UtilMisc.afterAll(deferredList, function () {
-                //console.timeEnd('applyExtentFilter:part 1');
-
-                //console.time('applyExtentFilter:part 2 - fetchRecords');
-
-                fetchRecords(visibleFeatures);
-
-                //console.timeEnd('applyExtentFilter:part 2 - fetchRecords');
                 // initialize invisible layer toggle count
                 ui.initInvisibleLayerToggleCount();
 
                 ui.updateNotice();
 
                 if (d) {
-                    // console.log("I'm calling reserve!!!");
                     d.resolve();
                 }
+
+                //TODO return a resolved promise?
             });
         }
 
@@ -1475,77 +1441,51 @@ define([
         /**
         * Populate the datagrid with data belonging to features contained in visibleFeatures
         *
-        * @method fetchRecords
-        * @param {Array} visibleFeatures a dictionary mapping layer id to an array of on-map feature objects
+        * @method addDataToGrid
+        * @param {Object} gridDataSet a dictionary mapping layer id to an array of feature data objects
         * @private
         */
-        function fetchRecords(visibleFeatures) {
+        function addDataToGrid(gridDataSet) {
             if (jqgrid === undefined) {
-                // fetchRecords call made prior ty jqgrid creation
-                console.warn('fetchRecords called prior to grid initialization');
+                // addDataToGrid call made prior ty jqgrid creation
+                console.warn('addDataToGrid called prior to grid initialization');
                 return;
             }
             jqgrid.DataTable().clear(); // Do NOT redraw the datatable at this point
 
-            if (Object.keys(visibleFeatures).isEmpty()) {
+            if (Object.keys(gridDataSet).isEmpty()) {
+                //no data for the grid. make it so, exit out
                 updateRecordsCount(0);
                 jqgrid.DataTable().draw();
                 return;
             }
 
-            var data = [], newData, dgMode = ui.getDatagridMode();
+            var data = [],
+                newData,
+                dgMode = ui.getDatagridMode();
 
-            //for each feature layer
-            utilDict.forEachEntry(visibleFeatures, function (key, layerBundle) {
-                //ensure attribute data has been downloaded
-                if (RAMP.data[key]) {
-                    switch (layerBundle.type) {
-                        case 'features':
+            //process the data set
+            //for each feature layer (key is layerid)
+            utilDict.forEachEntry(gridDataSet, function (key, featureData) {
+                //for each fData in a specific layer, process into grid-ready data
+                newData = featureData.map(function (fData) {
+                    //return the appropriate data object for the feature (.map puts them in array form)
+                    // "cache" the data object so we don't have to generate it again
+                    return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
+                });
 
-                            //for each feature in a specific layer
-                            newData = layerBundle.features.map(function (feature) {
-                                //get the feature data for this feature
-                                var fData = GraphicExtension.getFDataForGraphic(feature);
-
-                                //return the appropriate data object for the feature (.map puts them in array form)
-                                // "cache" the data object so we don't have to generate it again
-                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
-                            });
-
-                            data = data.concat(newData);
-
-                            break;
-
-                        case 'raw':
-                            //just iterate over all the feature data in the data store.  this will grab data that is not visible on the map
-                            newData = RAMP.data[layerBundle.layerId].features.map(function (fData) {
-                                //return the appropriate data object for the feature (.map puts them in array form)
-                                // "cache" the data object so we don't have to generate it again
-                                return fData[dgMode] ? fData[dgMode] : fData[dgMode] = getDataObject(fData);
-                            });
-
-                            data = data.concat(newData);
-
-                            break;
-                    }
-                }
+                //add to main data set
+                data = data.concat(newData);
             });
 
             updateRecordsCount(data.length);
 
             oTable.one("draw.dt", function () {
-                topic.publish(EventManager.Datagrid.EXTENT_FILTER_END);
+                topic.publish(EventManager.Datagrid.LOAD_DATA_GRID_END);
             });
 
             //add the data to the grid
-
-            //console.time('fetchRecords: fnAddData');
-
             jqgrid.dataTable().fnAddData(data);
-
-            //console.timeEnd('fetchRecords: fnAddData');
-
-            //console.log("jqgrid.dataTable().fnAddData(data);");
 
             // NOTE: fnAddData should be the last thing that happens in this function
             // if you want to add something after this point, use the fnDrawCallback
@@ -1590,7 +1530,7 @@ define([
         /**
         * Binding event handling for events:
         * filterManager/layer-visibility-toggled
-        * datagrid/applyExtentFilter
+        * datagrid/load-data-grid
         *
         * @method initListeners
         * @private
@@ -1617,7 +1557,7 @@ define([
                 if (arg.tabName === "datagrid") {
                     if (extentFilterExpired) {
                         extentFilterExpired = false;
-                        applyExtentFilter();
+                        updateDataGrid();
                     } else {
                         ui.capturePanel(true);
                     }
@@ -1635,9 +1575,9 @@ define([
                 }
             });
 
-            topic.subscribe(EventManager.Datagrid.APPLY_EXTENT_FILTER, function () {
+            topic.subscribe(EventManager.Datagrid.LOAD_DATA_GRID, function () {
                 if (ui.getDatagridMode() !== GRID_MODE_FULL) {
-                    applyExtentFilter();
+                    updateDataGrid();
                 }
             });
 
@@ -1646,7 +1586,7 @@ define([
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
                         //console.log('HOGG - layer loaded event');
-                        applyExtentFilter();
+                        updateDataGrid();
                     }
                     //this is causing more trouble than it is worth.  if a user opens big grid before a layer is loaded, they wont be
                     //expecting to look at it anyways.   If it finishes loading when the big grid is open, user will be unaware because

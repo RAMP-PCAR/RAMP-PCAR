@@ -1,7 +1,7 @@
 {
     "name": "ramp-pcar",
     "subname": "Reusable Accessible Mapping Platform",
-    "version": "5.5.0-6",
+    "version": "5.5.0-7",
     "description": "RAMP GIS viewer - Groundhog; Sample of an implementation of RAMP",
     "main": "",
     "repository": {
@@ -112,7 +112,8 @@
                 "fileSaver/FileSaver.js",
                 "canvg/dist/canvg.bundle.js",
                 "angular/angular.js",
-                "angular-ui-router/release/angular-ui-router.js"
+                "angular-ui-router/release/angular-ui-router.js",
+                "rql-nodojo/js/rql.js"
             ],
             "cssLib": [
                 "animate.css/animate.css",

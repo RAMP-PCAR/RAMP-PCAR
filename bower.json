@@ -1,6 +1,6 @@
 {
     "name": "ramp-pcar",
-    "version": "5.5.0-6",
+    "version": "5.5.0-7",
     "homepage": "http://ramp-pcar.github.io",
     "authors": [
         "BeSD - SA Team"
@@ -56,7 +56,8 @@
         "canvasToBlob": "https://github.com/eligrey/canvas-toBlob.js.git#master",
         "canvg": "~1.3.0",
         "angular": "^1.4.1",
-        "angular-ui-router": "^0.2.15"
+        "angular-ui-router": "^0.2.15",
+        "rql-nodojo":  "https://github.com/RAMP-PCAR/rql-nodojo.git#v1.0.0"
     },
     "moduleType": [
         "globals"

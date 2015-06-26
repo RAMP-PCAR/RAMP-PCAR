@@ -208,7 +208,7 @@ define([
                                 //  Used as both a flag and a data store)
                                 RAMP.data[layerId] = layerData;
                                 //new data. tell grid to reload
-                                topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                                topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
 
                                 RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
                                 console.log('END ATTRIB LOAD: ' + layerId);
@@ -264,7 +264,7 @@ define([
                     //store attribData
                     RAMP.data[layer.id] = layerData;
                     //new data. tell grid to reload
-                    topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                    topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                     console.log('END ATTRIB LOAD: ' + layer.id);
 
                     break;

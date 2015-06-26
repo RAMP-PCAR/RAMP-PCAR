@@ -1,4 +1,4 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader, Btoa */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader, Btoa, proj4 */
 /* jshint bitwise:false  */
 
 /**
@@ -24,10 +24,11 @@
 * @uses dojo/topic
 * @uses dojo/Deferred
 * @uses esri/geometry/Extent
+* @uses esri/geometry/Point
 * @uses esri/graphic
 */
-define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent", "esri/graphic"],
-    function (dojoLang, topic, Deferred, Extent, Graphic) {
+define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent", "esri/geometry/Point", "esri/graphic"],
+    function (dojoLang, topic, Deferred, Extent, Point, Graphic) {
         "use strict";
 
         /**
@@ -814,7 +815,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                         xmld.resolve();
                     }
                 }
-                    
+
                 function loadXMLFileIE9(filename) {
                     var xdr = new window.XDomainRequest();
                     xdr.open("GET", filename);
@@ -921,7 +922,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
 
             /**
             * Augments lists of items to be sortable using keyboard.
-            * 
+            *
             * @method keyboardSortable
             * @param {Array} ulNodes An array of <ul> tags containing a number of <li> tags to be made keyboard sortable.
             * @param {Object} [settings] Additional settings
@@ -1075,15 +1076,15 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             /**
              * Takes an array of timelines and their generator functions, clear and recreates timelines optionally preserving the play position.
              * ####Example of tls parameter
-             * 
+             *
              *      [
              *          {
              *              timeline: {timeline},
              *              generator: {function}
              *          }
              *      ]
-             *      
-             * 
+             *
+             *
              * @method resetTimelines
              * @static
              * @param {Array} tls An array of objects containing timeline objects and their respective generator functions
@@ -1124,6 +1125,29 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                     //not enough info provided or mismatch between wkid and wkt.
                     return false;
                 }
+            },
+
+            /**
+            * Converts a lat long pair into a point on the basemap
+            *
+            * @method isSpatialRefEqual
+            * @static
+            * @param {decimal} latitude the latitude of the point
+            * @param {decimal} longitude the longitude of the point
+            * @param {Esri/SpatialReference} targetSR spatial reference {{#crossLink "Esri/SpatialReference"}}{{/crossLink}}
+            *                                to convert the lat long to.  Must have a WKID (i.e. basemap SR)
+            * @return {Esri/Point} ESRI point object in new projection
+            */
+            latLongToMapPoint: function (latitude, longitude, targetSR) {
+                //TODO can we enhance this to handle non-wkid projections?
+
+                var pt = [longitude, latitude],
+                    mapProj = 'EPSG:' + targetSR.wkid,
+                    // EPSG:4326 is wkid for lat/long
+                    projConvert = proj4('EPSG:4326', mapProj),
+                    convertedPoint = projConvert.forward(pt);
+
+                return new Point(convertedPoint[0], convertedPoint[1], targetSR);
             },
 
             /**
@@ -1254,11 +1278,11 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             * http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb/5624139#5624139
             *
             * @method rgbToHex
-            * @static 
+            * @static
             * @param {Number} r r component
             * @param {Number} g g component
             * @param {Number} b b component
-            * @return {Object} hex colour code 
+            * @return {Object} hex colour code
             */
             rgbToHex: function (r, g, b) {
                 return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -1288,7 +1312,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             // https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#The_.22Unicode_Problem.22
             /**
              * Base64 encoding for unicode text.
-             * 
+             *
              * @method b64EncodeUnicode
              * @param {String} str a string to encode
              * @return {String} encoded string
@@ -1373,7 +1397,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
                     default:
                         target
                             .find('.tooltip, ._tooltip')
-                            // preserve title value for future use 
+                            // preserve title value for future use
                             .each(function (i, obj) {
                                 var node = $(obj),
                                     title = node.attr('title');

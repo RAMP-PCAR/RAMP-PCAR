@@ -394,8 +394,8 @@ define([
 
                 console.log("map - >> extent-change", event);
                 dojoOn.once(map, "update-end", function () {
-                    console.log("map - >> update-end - >> Apply extent Filter");
-                    topic.publish(EventManager.Datagrid.APPLY_EXTENT_FILTER);
+                    console.log("map - >> update-end - >> Load grid");
+                    topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                 });
             });
 
