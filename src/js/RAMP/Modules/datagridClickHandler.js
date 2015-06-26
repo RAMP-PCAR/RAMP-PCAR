@@ -180,7 +180,7 @@ define([
                 var scaleLimit = zoomToGraphic._layer.maxScale,
                     lods = RAMP.map._params.lods,
                     found = false,
-                    currentLod = RAMP.map._params.lods.length / 2,
+                    currentLod = Math.ceil(RAMP.map._params.lods.length / 2),
                     lowLod = 0,
                     highLod = RAMP.map._params.lods.length - 1;
 
