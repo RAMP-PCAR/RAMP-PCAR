@@ -400,14 +400,14 @@
             "p2": "Lorsque la mention « Chargement » apparaît dans le coin inférieur droit de la carte ou lorsque la grille de données affiche un message de chargement en cours, attendez que l’indicateur de chargement disparaisse avant d’activer d’autres fonctions sur la carte."
         },
         "s13": {
-            "h1": "[fr] Usage",
-            "h2": "[fr] Limitations",
-            "header": "[fr] Map Export",
-            "img1": "[fr] The Toolbar Button",
-            "img2": "[fr] Download Image Button",
-            "p1": "[fr] Map Export is used to convert the contents of the map into an image that can be downloaded by the user.",
-            "p2": "[fr] Click the Map Export button in the toolbar to initiate the image generation.  The Map Export window will open. A \"Loading\" message will display, and the image preview will appear once it is generated.  Click the Download Image button to save the image.  Click the X to close the Map Export window.",
-            "p3": "[fr] Currently Map Export will only capture layers that are hosted on a public internet service. Layers hosted privately (e.g. on an intranet) or added from file-based sources will not appear in the resultant image file. Images are currently only available in PNG format."
+            "h1": "Utilisation",
+            "h2": "Restrictions",
+            "header": "Exporter la carte",
+            "img1": "Le bouton de la barre d’outils",
+            "img2": "Bouton « Download Image » (Télécharger l’image)",
+            "p1": "« Map Export » est utilisé pour convertir le contenu de la carte en une image qui peut être téléchargée par l’utilisateur.",
+            "p2": "Cliquez sur le bouton « Map Export » (Exporter la carte) dans la barre d’outils pour amorcer la génération de l’image. La fenêtre « Map Export » s’ouvrira. Un message de chargement s’affichera et l’aperçu de l’image s’affichera une fois qu’il sera généré. Cliquez sur le bouton « Download Image » (Télécharger l’image) pour enregistrer l’image. Cliquez sur le X pour fermer la fenêtre « Map Export ».",
+            "p3": "Pour l’instant, « Map Export » ne capturera que les couches hébergées sur un service Internet public. Les couches hébergées sur un service privé (p. ex. sur un intranet) ou ajoutées depuis des sources en fichiers n’apparaîtront pas dans le fichier d’image subséquent. Les images ne sont disponibles qu’en format PNG pour l’instant."
         },
         "s2": {
             "h1": "Utilisation",
@@ -455,7 +455,7 @@
             "h10": "Couches dépendantes de l’échelle de zoom",
             "h2": "Types de couche",
             "h3": "Visibilité de la couche",
-            "h4": "[fr] WMS Queries Toggle",
+            "h4": "Activer ou désactiver les requêtes du Service de cartes Web (SCW) ",
             "h5": "Légende des couches",
             "h6": "Traitement des erreurs de couche",
             "h7": "Changement de l’ordre des couches",
@@ -464,32 +464,32 @@
             "header": "Ensembles de données",
             "img10": "Couches dépendantes de l’échelle de zoom",
             "img2": "Ensembles de données",
-            "img4": "[fr] WMS Queries Toggle",
+            "img4": "Activer ou désactiver les requêtes du SCW",
             "img5": "Légendes",
             "img6": "Erreurs de couche",
             "img7": "Changement de l’ordre des couches",
             "img7a": "Limites du groupe de couche",
-            "img9": "[fr] Layer Settings",
+            "img9": "Paramètres des couches",
             "p1": "Les ensembles de données présentent la liste des couches disponibles pour l’affichage sur la carte. La grille de données présente aussi les couches d’éléments interactifs. Les ensembles de données agissent également à titre de légende de la carte.",
             "p10": "Certaines couches peuvent être visibles uniquement à certains niveaux de zoom. Si une couche n’est pas visible à un niveau de zoom donné, le sélecteur de couche (Layer Selector) affichera un avis et offrira une action afin d’établir un zoom au niveau de zoom le plus prêt auquel la couche sera visible (cela peut consister à faire un zoom in) ",
             "p2": "Trois types de couche peuvent être présentés sous l’onglet « Ensemble de données ».",
             "p3": "Sélectionnez l’icône en forme d’œil près du nom de l’ensemble de données pour masquer ou afficher la couche.",
-            "p4": "[fr] When a user clicks on the map (and not on a feature), the results for any queryable WMS layer will be displayed for the location clicked. This behaviour may not be desired for certain layers. Clicking the WMS Query Enable/Disable icons on the right side of the layer selector will toggle this functionality for an individual layer. The global toggle at the top of the layer selector will enable or disable the function for all WMS layers.  WMS layers that are not queryable will not have a toggle icon.",
+            "p4": "Lorsqu’un utilisateur clique sur la carte (et pas un composant), les résultats pour toute couche SCW pouvant être interrogée s’afficheront pour le lieu cliqué. Ce comportement n’est peut-être pas voulu pour certaines couches. Cliquer sur les icônes d’activation et de désactivation des requêtes du SCW à la droite du sélecteur de couches activera ou désactivera cette fonctionnalité pour toute couche individuelle. L’option globale d’activation et de désactivation en haut du sélecteur de couches activera ou désactivera la fonction pour toutes les couches SCW. Les couches SCW ne pouvant pas être interrogées n’auront aucune icône d’activation et de désactivation.",
             "p5": "Une certaine symbologie est associée à chaque couche. Pour des couches de fonctionnalité (feature layer) simples, une seule icône sera présente à côté du nom de la couche. Pour les couches de fonctionnalité complexes (c.-à-d. celles où de multiples symboles sont utilisés par couche), l’icône apparaîtra comme une pile qui peut être activée ou désactivée. Quand ",
             "p6": "Si la couche ne se charge pas correctement, elle sera identifiée par un avis d’erreur. Au lieu des mesures standards liées à la couche, on peut choisir de recharger la couche (ce qui est particulièrement utile en cas de problème temporaire de connexion au réseau) ou de retirer la couche. Si une couche est […] ",
             "p7": "Cliquez et faites glisser les six points à gauche de l’ensemble de données vers le haut ou vers le bas pour changer l’ordre d’affichage des couches sur la carte.",
             "p7a": "Alors que toutes les couches peuvent être réordonnées, les couches WMS et les couches Fonctionnalité / Statique (Feature/Static) ne peuvent être mélangées. En réordonnant les couches, les couches qui ne peuvent être mélangées apparaîtront en gris. Même si les couches peuvent être réordonnées à l’intérieur de leurs groupes, le groupement est statique pour ce qui est des couches Feature et Static. ",
             "p8": "Sélectionnez le lien « Métadonnées » pour afficher les métadonnées associées à cette source dans un panneau d’information repliable.",
-            "p9": "[fr] Select the \"Settings\" link to access additional options for the layer.",
+            "p9": "Cliquez sur le lien « Settings » (Paramètres) pour avoir accès aux options supplémentaires pour la couche.",
             "ul2": {
                 "li1": "Les couches d’éléments interactifs affichent des données avec lesquelles on peut interagir sur la carte, et qui peuvent être affichées dans la grille de données.",
                 "li2": "Les couches statiques ajoutent un contexte géographique au fond de carte. Elles ne sont pas interactives et ne sont pas affichées dans la grille de données.",
                 "li3": "Les couches SCW sont des couches superposées de données fournies par un service de cartes Web. Ces données sont interactives sur la carte, mais ne sont pas affichées dans la grille de données."
             },
             "ul9": {
-                "li1": "[fr] The layer's opacity can be adjusted using the slider control.",
-                "li2": "[fr] If the layer has a bounding box, its visibility can be toggled using the checkbox.",
-                "li3": "[fr] If the layer is a feature layer, and is in on-demand mode, the option to Load All Features is available. On-demand mode means the layer will be downloaded in parts as needed. Clicking Load All Features will cause all layer data to be loaded in the browser at once, providing snappier response times once the download completes.  This is called snapshot mode.  Attempting this with very large datasets may cause the site to stall or the layer to crash.  A layer in snapshot mode will have the Load All Features link disabled and a checkmark beside the link."
+                "li1": "La transparence de la couche peut être ajustée au moyen de la commande de réglage",
+                "li2": "Si la couche a un cadre englobant, sa visibilité peut être activée et désactivée au moyen de la case à cocher.",
+                "li3": "Si la couche est une couche de composants et qu’elle est en mode sur demande, l’option « Load All Features » (Charger tous les composants) est disponible. Le mode sur demande signifie que la couche sera téléchargée en partie en fonction des besoins. Cliquer sur « Load All Features » fera charger toutes les données de couches dans le navigateur en même temps, offrant de meilleurs temps de réponse une fois le téléchargement terminé. Cela s’appelle le mode instantané. Tenter cela avec de très grands ensembles de données peut geler le site ou faire planter la couche. Une couche en mode instantané aura le lien « Load All Features » désactivé et un crochet à côté du lien."
             }
         },
         "s7": {
