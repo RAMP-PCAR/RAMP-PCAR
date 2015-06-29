@@ -28,7 +28,7 @@ define([
 
  /* RAMP */
  'utils/util'
- 
+
 /* ESRI */
 //'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
 ],
@@ -58,7 +58,7 @@ define([
         }, provSearch = [],
             provList = [],
             conciseList = [],
-                
+
             map;
 
         /**
@@ -614,6 +614,7 @@ define([
                             return deferred.promise;
                         }
 
+                        // suggestions don't work right now.
                         function suggest(searchTerm) {
                             return getSuggestions(searchTerm)
                                 .then(function (data) {
@@ -637,6 +638,7 @@ define([
                             conciseUrl = '/codes/concise.json',
                             data;
 
+                        // default and init data for filters
                         data = {
                             provinceList: [],
                             typeList: [],
@@ -683,7 +685,8 @@ define([
                             currentDistance: {}
                         };
 
-                        function codeSort(a, b) {
+                        // sort items by term
+                        function termSort(a, b) {
                             if (a.term < b.term) {
                                 return -1;
                             }
@@ -700,18 +703,20 @@ define([
                                 $http.get(RAMP.config.geonameUrl + 'en' + provUrl),
                                 $http.get(RAMP.config.geonameUrl + 'fr' + provUrl),
                                 //get geonames concise codes list English
-                                $http.get(RAMP.config.geonameUrl + 'en' + conciseUrl)
+                                $http.get(RAMP.config.geonameUrl + RAMP.locale + conciseUrl)
                             ])
                             .then(function (result) {
-                                var provincesEn = result[0].data.definitions.sort(codeSort),
-                                    provincesFr = result[1].data.definitions.sort(codeSort),
-                                    concise = result[2].data.definitions.sort(codeSort);
+                                var iEn = RAMP.locale === 'en' ? 0 : 1,
+                                    iFr = RAMP.locale === 'fr' ? 0 : 1,
+                                    provincesMainLocale = result[iEn].data.definitions.sort(termSort),
+                                    provincesOtherLocale = result[iFr].data.definitions.sort(termSort),
+                                    concise = result[2].data.definitions.sort(termSort);
 
                                 // "zip" up province en and fr lists so we have an array with both en and fr province names
-                                data.provinceList = provincesEn.map(function (p, i) {
+                                data.provinceList = provincesMainLocale.map(function (p, i) {
                                     // James magic
                                     //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
-                                    provSearch.push(p.term.toLowerCase(), p.description.toLowerCase(), provincesFr[i].description.toLowerCase());
+                                    provSearch.push(p.term.toLowerCase(), p.description.toLowerCase(), provincesOtherLocale[i].description.toLowerCase());
 
                                     return {
                                         code: p.code,
@@ -750,6 +755,9 @@ define([
                                 });
 
                                 data.currentType = data.typeList[0];
+
+                                data.currentExtent = data.extentList[0];
+                                data.currentDistance = data.distanceList[0];
 
                             },
                             function (result, status) {
@@ -838,11 +846,8 @@ define([
 
             angular
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
-                .controller('geosearchController', ['$scope', 'geoService', 'filterService', 'lookupService',
+                .controller('GeosearchController', ['$scope', 'geoService', 'filterService', 'lookupService',
                     function ($scope, geoService, filterService, lookupService) {
-                        $scope.searchTerm = '';
-                        $scope.results = [];
-                        //$scope.suggestions = [];
 
                         $scope.search = function () {
                             if ($scope.geosearchForm.$valid) {
@@ -870,6 +875,18 @@ define([
                             }
                         };
 
+                        $scope.clear = function () {
+                            // remove touched and dirty classes from the form
+                            if ($scope.geosearchForm) {
+                                $scope.geosearchForm.$setPristine();
+                                $scope.geosearchForm.$setUntouched();
+                            }
+
+                            $scope.searchTerm = '';
+                            $scope.results = [];
+                            //$scope.suggestions = [];
+                        };
+
                         $scope.select = function (result) {
                             console.log(result);
 
@@ -887,7 +904,7 @@ define([
                             .state('default', {
                                 url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing,
                                 templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
-                                controller: 'geosearchController'
+                                controller: 'GeosearchController'
                             });
                     }
                 ]);

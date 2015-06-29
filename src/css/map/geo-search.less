@@ -4,12 +4,46 @@
     top: 20px;
     z-index: 100;
     position: absolute;
-    background-color: white;
+
+    form[name=geosearchForm] {
+        display: inline-block;
+        box-shadow: 0 0 2px #333;
+    }
+    
+    .geosearchInput {
+        position: relative;
+
+        .geosearchField {
+            width: 400px;
+            height: 30px;
+            padding: 0 10px;
+            border: none;
+        }
+
+        .geosearchClear {
+            position: absolute;
+            right: 5px;
+            height: 30px;
+        }
+    }
+
+    .geosearchButton {
+        height: 30px;
+        width: 65px;
+        border: none;
+    }
+
+    .geosearch-filter-container {
+        width: 400px;
+    }
 
     .result-list {
+        background-color: white;
         list-style: none;
         padding-left: 0;
         margin-bottom: 0;
+        width: 400px;
+        position: relative;
 
         .result-container {
             width: 100%;
@@ -38,15 +72,14 @@
 
                 .place {
                     //display: block;
-
                     .province {
                         font-size: 80%;
-                        color: #333;
+                        color: @light-grey-color;
                     }
 
                     .location {
                         font-size: 80%;
-                        color: #333;
+                        color: @light-grey-color;
                     }
                 }
             }

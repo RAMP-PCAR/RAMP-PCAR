@@ -1,4 +1,4 @@
-﻿<div>
+﻿<div class="geosearch-filter-container">
     <select ng-change="onChange()" ng-options="province.name for province in filterData.provinceList" ng-model="filterData.currentProvince"></select>
     {{filterData.currentProvince.name}}
     <select ng-change="onChange()" ng-options="type.name for type in filterData.typeList" ng-model="filterData.currentType"></select>
