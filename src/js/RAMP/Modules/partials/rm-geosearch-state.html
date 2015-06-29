@@ -1,9 +1,9 @@
 ﻿<div>
     <form name="geosearchForm" novalidate>
-        <span class="geosearch-input">
+        <div class="geosearch-input">
             <input class="geosearch-field" ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required />
-            <button ng-click="clear()" class="geosearch-clear button-none"><i class="fa fa-close"></i><span class="on-right wb-inv">Clear</span></button>
-        </span>
+            <button ng-show="searchTerm" ng-click="clear()" class="geosearch-clear button-none"><i class="fa fa-close"></i><span class="on-right wb-inv">Clear</span></button>
+        </div>
         <button class="geosearch-button btn-primary"><i class="fa fa-search"></i><span class="on-right wb-inv">Search</span></button>
     </form>
     <div>

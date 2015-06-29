@@ -5,7 +5,7 @@
     z-index: 100;
     position: absolute;
 
-    @result-line-height: 1.7;
+    @result-line-height: 2;
 
     form[name=geosearchForm] {
         display: inline-block;
@@ -14,6 +14,7 @@
 
     .geosearch-input {
         position: relative;
+        display: inline-block;
 
         .geosearch-field {
             width: 400px;
@@ -30,6 +31,7 @@
             position: absolute;
             right: 5px;
             height: 30px;
+            top: 0;
         }
     }
 
@@ -49,6 +51,10 @@
         .province-filter, .type-filter, .extent-filter, .distance-filter {
             border: none;
             padding: 0 4px;
+
+            &.selected {
+                font-weight: bold;
+            }
         }
 
         .province-filter {
@@ -60,7 +66,7 @@
         }
 
         .extent-filter {
-            width: 20%;
+            width: 25%;
         }
 
         .distance-filter {
@@ -68,7 +74,7 @@
         }
 
         .filter-clear {
-            width: 20%;
+            width: 15%;
             text-align: right;
         }
     }
@@ -106,6 +112,10 @@
                 background-color: transparent;
                 border-bottom: @light-lighter-grey-color 1px solid;
 
+                &:hover {
+                    background-color: #ebebeb;
+                }
+
                 &:before {
                     content: 'q';
                     visibility: hidden;
@@ -123,7 +133,7 @@
                     white-space: nowrap;
 
                     .name {
-                        font-weight: bold;
+                        //font-weight: bold;
                     }
 
                     .place {

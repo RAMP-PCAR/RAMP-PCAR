@@ -24,10 +24,10 @@
 
 define([
 /* Dojo */
- 'dojo/request/script', 'dojo/Deferred',
+ 'dojo/request/script', 'dojo/Deferred', "dojo/topic",
 
  /* RAMP */
- 'utils/util'
+ 'ramp/eventManager', 'utils/util'
 
 /* ESRI */
 //'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
@@ -35,10 +35,10 @@ define([
 
     function (
     /* Dojo */
-    script, Deferred,
+    script, Deferred, topic,
 
     /*RAMP*/
-    UtilMisc
+    EventManager, UtilMisc
 
         /* ESRI */
         //GeometryService, ProjectParameters, EsriExtent,
@@ -640,30 +640,28 @@ define([
                         };
                     }
                 ])
-                .factory('filterService', ['$q', '$http',
-                    function ($q, $http) {
+                .factory('filterService', ['$q', '$http', 'extents',
+                    function ($q, $http, extents) {
                         var provUrl = '/codes/province.json',
                             conciseUrl = '/codes/concise.json',
                             data;
+
+                        // sort items by term
+                        function termSort(a, b) {
+                            if (a.term < b.term) {
+                                return -1;
+                            }
+                            if (a.term > b.term) {
+                                return 1;
+                            }
+                            return 0;
+                        }
 
                         // default and init data for filters
                         data = {
                             provinceList: [],
                             typeList: [],
-                            extentList: [
-                                {
-                                    code: '-1',
-                                    name: 'Extent'
-                                },
-                                {
-                                    code: '0',
-                                    name: 'All'
-                                },
-                                {
-                                    code: '1',
-                                    name: 'Visible'
-                                }
-                            ],
+                            extentList: extents.data,
                             distanceList: [
                                 {
                                     code: '-1',
@@ -693,17 +691,6 @@ define([
                             currentDistance: {}
                         };
 
-                        // sort items by term
-                        function termSort(a, b) {
-                            if (a.term < b.term) {
-                                return -1;
-                            }
-                            if (a.term > b.term) {
-                                return 1;
-                            }
-                            return 0;
-                        }
-
                         // wait for all gets since if one fails and return the derived promise to be resolved by the stateProvider before injection
                         $q
                             .all([
@@ -722,7 +709,6 @@ define([
 
                                 // "zip" up province en and fr lists so we have an array with both en and fr province names
                                 data.provinceList = provincesMainLocale.map(function (p, i) {
-                                    // James magic
                                     //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
                                     provSearch.push(p.term.toLowerCase(), p.description.toLowerCase(), provincesOtherLocale[i].description.toLowerCase());
 
@@ -785,21 +771,15 @@ define([
                             },
 
                             getFilters: function () {
+                                // need to assign current extent explicitly
+                                //data.extentList[2].extent = extents.data.currentExtent;
+
                                 return {
                                     prov: data.currentProvince.code !== '-1' ? data.currentProvince.code : undefined,
                                     concise: data.currentType.code !== '-1' ? data.currentType.code : undefined,
-                                    extent: data.currentExtent.code !== '-1' ? undefined : undefined,
+                                    extent: data.currentExtent.extent,
                                     radius: data.currentDistance.code !== '-1' ? data.currentDistance.code : undefined
                                 };
-                            },
-
-                            provinceName: function (provinceCode) {
-                                return provList
-                                    .filter(function (p) {
-                                        return p.code === provinceCode;
-                                    })
-                                    [0]
-                                    .name;
                             }
                         };
                     }]
@@ -826,7 +806,47 @@ define([
                             }
                         };
                     }]
-                );
+                )
+                .factory('extents', function () {
+                    var data;
+
+                    function extentToArray(ext) {
+                        return [
+                            ext.xmin,
+                            ext.ymin,
+                            ext.xmax,
+                            ext.ymax
+                        ];
+                    }
+
+                    topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
+                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or soemthing like that
+                        data[2].extent = extentToArray(event.extent);
+                        console.log('factory:extents - extent changed', data[2].extent);
+                    });
+
+                    data = [
+                        {
+                            code: '-1',
+                            name: 'Extent',
+                            extent: undefined
+                        },
+                        {
+                            code: '0',
+                            name: 'All',
+                            extent: extentToArray(RAMP.config.extents.fullExtent)
+                        },
+                        {
+                            code: '1',
+                            name: 'Visible',
+                            extent: undefined
+                        }
+                    ];
+
+                    return {
+                        data: data
+                    };
+                });
 
             angular
                 .module('gs.directive', ['gs.service'])
@@ -843,7 +863,7 @@ define([
                                 $scope.filterData = filterService.data;
 
                                 // call onChange when one of the filters changes
-                                // this calls a serach function on the main controller
+                                // this calls a search function on the main controller
                                 $scope.onChange = $scope.filterChange;
                                 $scope.clearFilters = function () {
                                     filterService.clearFilters();
@@ -871,12 +891,14 @@ define([
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
                 .controller('GeosearchController', ['$scope', 'geoService', 'filterService', '$timeout',
                     function ($scope, geoService, filterService, $timeout) {
+                        var timeoutPromise = $timeout(function () { }, 0);
                         $scope.isLoading = false;
 
                         $scope.search = function () {
                             if ($scope.geosearchForm.$valid) {
-                                // create a timeout to show the loading label after
-                                var timeoutPromise = $timeout(function () { $scope.isLoading = true; }, 250);
+                                // create a timeout to show the loading label after 250ms
+                                $timeout.cancel(timeoutPromise);
+                                timeoutPromise = $timeout(function () { $scope.isLoading = true; }, 250);
 
                                 geoService
                                     .search($scope.searchTerm, filterService.getFilters())
@@ -887,11 +909,12 @@ define([
                                         console.log('udpate results', data);
                                     })
                                     .catch(function (data) {
-                                        $timeout.cancel(timeoutPromise);
                                         console.error(data);
+
                                         // old means that a previous request was returned out of line; discarding
                                         if (data.reason !== 'old') {
                                             console.error(data);
+                                            $timeout.cancel(timeoutPromise);
                                             $scope.results = [];
                                             $scope.isLoading = false;
                                         }

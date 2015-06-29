@@ -1,8 +1,8 @@
 ﻿<div class="geosearch-filter-container">
 
-    <select ng-change="onChange()" ng-options="province.name for province in filterData.provinceList" ng-model="filterData.currentProvince" class="province-filter"></select>
-    <select ng-change="onChange()" ng-options="type.name for type in filterData.typeList" ng-model="filterData.currentType" class="type-filter"></select>
-    <select ng-change="onChange()" ng-options="extent.name for extent in filterData.extentList" ng-model="filterData.currentExtent" class="extent-filter"></select>
-
+    <select ng-change="onChange()" ng-options="province.name for province in filterData.provinceList" ng-model="filterData.currentProvince" ng-class="{selected: filterData.currentProvince.code !== '-1'}" class="province-filter"></select>
+    <select ng-change="onChange()" ng-options="type.name for type in filterData.typeList" ng-model="filterData.currentType" ng-class="{selected: filterData.currentType.code !== '-1'}" class="type-filter"></select>
+    <select ng-change="onChange()" ng-options="extent.name for extent in filterData.extentList" ng-model="filterData.currentExtent" ng-class="{selected: filterData.currentExtent.code !== '-1'}" class="extent-filter"></select>
+    
     <button class="button-none filter-clear" ng-click="clearFilters()">Clear</button>
 </div>
