@@ -1130,7 +1130,7 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             /**
             * Converts a lat long pair into a point on the basemap
             *
-            * @method isSpatialRefEqual
+            * @method latLongToMapPoint
             * @static
             * @param {decimal} latitude the latitude of the point
             * @param {decimal} longitude the longitude of the point
