@@ -1151,6 +1151,26 @@ define(["dojo/_base/lang", "dojo/topic", "dojo/Deferred", "esri/geometry/Extent"
             },
 
             /**
+            * Converts a map point to a long lat pair
+            *
+            * @method mapPointToLatLong
+            * @static
+            * @param {Esri/Point} mapPoint ESRI point object in new projection
+            * @return {Array} array containing longitude, latitude decimal values
+            */
+            mapPointToLatLong: function (mapPoint) {
+                //TODO can we enhance this to handle non-wkid projections?
+
+                var pt = [mapPoint.x, mapPoint.y],
+                    mapProj = 'EPSG:' + mapPoint.spatialReference.wkid,
+                    // EPSG:4326 is wkid for lat/long
+                    projConvert = proj4(mapProj, 'EPSG:4326'),
+                    convertedPoint = projConvert.forward(pt);
+
+                return convertedPoint;
+            },
+
+            /**
             * Checks if the given dom node is present in the dom.
             *
             * @method containsInDom
