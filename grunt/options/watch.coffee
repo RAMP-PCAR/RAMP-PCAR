@@ -21,6 +21,7 @@ module.exports =
         ]
         tasks: [
             'copy:templatesBuild'
+            'htmlmin:angularPartialsBuild'
             'notify:templates'
         ]
 
