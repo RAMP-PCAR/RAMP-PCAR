@@ -1,0 +1,29 @@
+﻿<div class="results-container">
+    <span ng-hide="results.length > 0 || isLoading" class="no-results">No results found. Update filters or change your query.</span>
+    <div class="loading-simple" ng-show="isLoading">
+        <span>Loading</span>
+        <ul role="presentation">
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <ul class="result-list" ng-hide="isLoading">
+        <li ng-repeat="result in results">
+            <button class="result-container" ng-click="select(result)">
+                <span>
+                    <span class="main">
+                        <span class="name">{{ result.name }}</span>
+                        <span class="place">
+                            <span class="province">{{ lookupService.provinceName(result.province) }}</span><span class="location" ng-show="result.location">,&nbsp;{{ result.location }}</span>
+                        </span>
+                    </span>
+                    <span class="secondary">
+                        <span class="small">{{ lookupService.typeName(result.type) }}</span>
+                    </span>
+                </span>
+            </button>
+        </li>
+    </ul>
+</div>

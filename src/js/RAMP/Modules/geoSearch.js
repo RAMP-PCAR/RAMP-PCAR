@@ -616,10 +616,10 @@ define([
                                     }
                                 },
                                     function (error) {
-                                        searchDeferred.reject(error);
+                                        deferred.reject(error);
                                     });
 
-                            return searchDeferred.promise;
+                            return deferred.promise;
                         }
 
                         // suggestions don't work right now.
@@ -839,9 +839,11 @@ define([
                         templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-filter.html',
                         controller: ['$scope', 'filterService',
                             function ($scope, filterService) {
-
+                                // bind filterdata
                                 $scope.filterData = filterService.data;
 
+                                // call onChange when one of the filters changes
+                                // this calls a serach function on the main controller
                                 $scope.onChange = $scope.filterChange;
                                 $scope.clearFilters = function () {
                                     filterService.clearFilters();
@@ -850,16 +852,31 @@ define([
                             }
                         ]
                     };
+                })
+                .directive('rpGeosearchResults', function () {
+                    return {
+                        restrict: 'E',
+                        scope: true, // sharing scope as we need access to isLoading; 
+                        templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-results.html',
+                        controller: ['$scope', 'lookupService',
+                            function ($scope, lookupService) {
+                                // bind lookupservice to resolve province and type names
+                                $scope.lookupService = lookupService;
+                            }
+                        ]
+                    };
                 });
 
             angular
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
-                .controller('GeosearchController', ['$scope', 'geoService', 'filterService', 'lookupService',
-                    function ($scope, geoService, filterService, lookupService) {
+                .controller('GeosearchController', ['$scope', 'geoService', 'filterService', '$timeout',
+                    function ($scope, geoService, filterService, $timeout) {
+                        $scope.isLoading = false;
 
                         $scope.search = function () {
                             if ($scope.geosearchForm.$valid) {
-                                //$scope.suggestions = [];
+                                // create a timeout to show the loading label after
+                                var timeoutPromise = $timeout(function () { $scope.isLoading = true; }, 250);
 
                                 geoService
                                     .search($scope.searchTerm, filterService.getFilters())
@@ -893,7 +910,6 @@ define([
 
                             $scope.searchTerm = '';
                             $scope.results = [];
-                            //$scope.suggestions = [];
                         };
 
                         $scope.select = function (result) {
@@ -902,9 +918,6 @@ define([
                             var esriPoint = UtilMisc.latLongToMapPoint(result.lonlat[1], result.lonlat[0], map.extent.spatialReference);
                             map.centerAndZoom(esriPoint, 12);
                         };
-
-                        // bind lookupservice to resolve province and type names
-                        $scope.lookupService = lookupService;
                     }
                 ])
                 .config(['$stateProvider',

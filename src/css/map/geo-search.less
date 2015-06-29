@@ -5,29 +5,35 @@
     z-index: 100;
     position: absolute;
 
+    @result-line-height: 1.7;
+
     form[name=geosearchForm] {
         display: inline-block;
         box-shadow: 0 0 2px #333;
     }
-    
-    .geosearchInput {
+
+    .geosearch-input {
         position: relative;
 
-        .geosearchField {
+        .geosearch-field {
             width: 400px;
             height: 30px;
             padding: 0 10px;
             border: none;
+
+            &.expnded {
+                width: 400px;
+            }
         }
 
-        .geosearchClear {
+        .geosearch-clear {
             position: absolute;
             right: 5px;
             height: 30px;
         }
     }
 
-    .geosearchButton {
+    .geosearch-button {
         height: 30px;
         width: 65px;
         border: none;
@@ -35,60 +41,114 @@
 
     .geosearch-filter-container {
         width: 400px;
+        margin: 5px 0;
+        background-color: white;
+        box-shadow: 0 0 2px #333;
+        padding: 0 6px;
+
+        .province-filter, .type-filter, .extent-filter, .distance-filter {
+            border: none;
+            padding: 0 4px;
+        }
+
+        .province-filter {
+            width: 30%;
+        }
+
+        .type-filter {
+            width: 30%;
+        }
+
+        .extent-filter {
+            width: 20%;
+        }
+
+        .distance-filter {
+            width: 30%;
+        }
+
+        .filter-clear {
+            width: 20%;
+            text-align: right;
+        }
     }
 
-    .result-list {
+    .results-container {
         background-color: white;
-        list-style: none;
-        padding-left: 0;
-        margin-bottom: 0;
         width: 400px;
-        position: relative;
+        box-shadow: 0 0 2px #333;
 
-        .result-container {
-            width: 100%;
-            text-align: left;
-            padding: 0;
-            padding: 3px 0;
-            border: none;
-            background-color: transparent;
+        .loading-simple {
+            text-align: center;
+            padding: 5px 0;
+            display: block;
+        }
 
-            &:before {
-                content: 'q';
-                visibility: hidden;
-                line-height: 1.5;
-                vertical-align: middle;
-                display: inline-block;
-            }
+        .no-results {
+            text-align: center;
+            padding: 5px 0;
+            color: @attention-color;
+            display: block;
+        }
 
-            .main {
-                display: inline-block;
-                vertical-align: middle;
+        .result-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+            position: relative;
 
-                .name {
-                    //display: block;
-                    font-weight: bold;
+            .result-container {
+                width: 100%;
+                text-align: left;
+                padding: 0;
+                padding: 3px 0;
+                border: none;
+                background-color: transparent;
+                border-bottom: @light-lighter-grey-color 1px solid;
+
+                &:before {
+                    content: 'q';
+                    visibility: hidden;
+                    line-height: @result-line-height;
+                    vertical-align: middle;
+                    display: inline-block;
                 }
 
-                .place {
-                    //display: block;
-                    .province {
-                        font-size: 80%;
-                        color: @light-grey-color;
+                .main {
+                    display: inline-block;
+                    vertical-align: middle;
+                    max-width: 292px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+                    .name {
+                        font-weight: bold;
                     }
 
-                    .location {
-                        font-size: 80%;
-                        color: @light-grey-color;
+                    .place {
+                        .province {
+                            font-size: 80%;
+                            color: @light-grey-color;
+                        }
+
+                        .location {
+                            font-size: 80%;
+                            color: @light-grey-color;
+                        }
                     }
                 }
-            }
 
-            .secondary {
-                line-height: 1.5;
-                display: inline-block;
-                position: absolute;
-                right: 10px;
+                .secondary {
+                    line-height: @result-line-height;
+                    display: inline-block;
+                    position: absolute;
+                    right: 10px;
+                    max-width: 85px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
             }
         }
     }
