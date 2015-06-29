@@ -594,24 +594,28 @@ define([
                 .module('gs.service', [])
                 .factory('geoService', ['$q',
                     function ($q) {
+                        var searchDeferred;
 
                         // just a wrapper around geoSearch function for now
                         function search(searchTerm, filters) {
-                            var deferred = $q.defer();
+                            if (searchDeferred) {
+                                searchDeferred.reject('old');
+                            }
+                            searchDeferred = $q.defer();
 
                             geoSearch(searchTerm, filters)
                                 .then(function (data) {
                                     if (data.status === 'list') {
-                                        deferred.resolve(data);
+                                        searchDeferred.resolve(data);
                                     } else {
-                                        deferred.reject('no results');
+                                        searchDeferred.reject('no results');
                                     }
                                 },
                                     function (error) {
-                                        deferred.reject(error);
+                                        searchDeferred.reject(error);
                                     });
 
-                            return deferred.promise;
+                            return searchDeferred.promise;
                         }
 
                         // suggestions don't work right now.
@@ -857,21 +861,18 @@ define([
                                     .search($scope.searchTerm, filterService.getFilters())
                                     .then(function (data) {
                                         $scope.results = data.list;
+                                        $scope.isLoading = false;
                                     })
                                     .catch(function (data) {
-                                        console.log(data);
-
-                                        $scope.results = [];
-                                        //return geoService.suggest($scope.searchTerm);
+                                        // old means that a previous request was returned out of line; discarding
+                                        if (data !== 'old') {
+                                            console.error(data);
+                                            $scope.results = [];
+                                            $scope.isLoading = false;
+                                        }
                                     });
-                                /*.then(function (data) {
-                                    console.log('hm', data);
-                                })
-                                .catch(function (data) {
-                                    console.log(data, "second?");
-                                });*/
                             } else {
-                                $scope.results = []; //$scope.suggestions = [];
+                                $scope.results = [];
                             }
                         };
 
