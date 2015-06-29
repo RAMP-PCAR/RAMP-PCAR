@@ -594,21 +594,25 @@ define([
                 .module('gs.service', [])
                 .factory('geoService', ['$q',
                     function ($q) {
-                        var searchDeferred;
+                        var currentSearchTerm;
 
                         // just a wrapper around geoSearch function for now
                         function search(searchTerm, filters) {
-                            if (searchDeferred) {
-                                searchDeferred.reject('old');
-                            }
-                            searchDeferred = $q.defer();
+                            var deferred = $q.defer();
+                            currentSearchTerm = searchTerm;
 
                             geoSearch(searchTerm, filters)
                                 .then(function (data) {
-                                    if (data.status === 'list') {
-                                        searchDeferred.resolve(data);
+                                    data.searchTerm = searchTerm;
+                                    console.log('data received', data, searchTerm, currentSearchTerm);
+
+                                    // old request returned
+                                    if (searchTerm !== currentSearchTerm) {
+                                        deferred.reject({ reason: 'old' });
+                                    } else if (data.status === 'list') {
+                                        deferred.resolve(data);
                                     } else {
-                                        searchDeferred.reject('no results');
+                                        deferred.reject({ reason: 'no results' });
                                     }
                                 },
                                     function (error) {
@@ -860,12 +864,16 @@ define([
                                 geoService
                                     .search($scope.searchTerm, filterService.getFilters())
                                     .then(function (data) {
+                                        $timeout.cancel(timeoutPromise);
                                         $scope.results = data.list;
                                         $scope.isLoading = false;
+                                        console.log('udpate results', data);
                                     })
                                     .catch(function (data) {
+                                        $timeout.cancel(timeoutPromise);
+                                        console.error(data);
                                         // old means that a previous request was returned out of line; discarding
-                                        if (data !== 'old') {
+                                        if (data.reason !== 'old') {
                                             console.error(data);
                                             $scope.results = [];
                                             $scope.isLoading = false;
