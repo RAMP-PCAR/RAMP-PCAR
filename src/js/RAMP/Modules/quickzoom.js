@@ -1,6 +1,6 @@
 ﻿/*global define, console, $, RAMP */
 
-//the "use strict" forces the ECMA Script 5 interpretation of the code
+//the 'use strict' forces the ECMA Script 5 interpretation of the code
 
 /**
 * QuickZoom submodule
@@ -12,12 +12,13 @@
 
 /**
 * The QuickZoom class handles zooming in the map based on province, city, or postal code.
-* These zoom in services rely on web services which return extent values based the user-entered province, city, or postal code
+* These zoom in services rely on web services which return extent values based the user-entered province,
+* city, or postal code
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
+*
 * @class QuickZoom
 * @uses dojo/_base/declare
 * @uses dojo/_base/lang
@@ -34,17 +35,17 @@
 define([
 
     /* Dojo */
-    "dojo/_base/declare", "dojo/_base/lang", "dojo/dom", "dojo/dom-construct", "dijit/form/Form",
-    "dijit/form/TextBox", "dijit/form/Select", "dijit/form/Button",
+    'dojo/_base/declare', 'dojo/_base/lang', 'dojo/dom', 'dojo/dom-construct', 'dijit/form/Form',
+    'dijit/form/TextBox', 'dijit/form/Select', 'dijit/form/Button',
 
     /* Esri */
-    "esri/tasks/QueryTask", "esri/tasks/query",
+    'esri/tasks/QueryTask', 'esri/tasks/query',
 
     /* Ramp */
-    "ramp/map",
+    'ramp/map',
 
     /* Util */
-    "utils/util"
+    'utils/util'
 ],
 
     function (
@@ -59,7 +60,7 @@ define([
         /* Util */
         UtilMisc
     ) {
-        "use strict";
+        'use strict';
         return declare(null, {
             /*
              * Defines the UI controls for the province, city, and postal code selections
@@ -71,42 +72,42 @@ define([
                 this.config = RAMP.config;
 
                 this.form = new Form({
-                    style: "overflow:hidden; clear:none;"
+                    style: 'overflow:hidden; clear:none;'
                 });
 
-                var className = "quickZoom"; // used for CSS styling
+                var className = 'quickZoom'; // used for CSS styling
 
                 this.provinceSelect = new Select({
-                    id: "quickZoomProvince",
+                    id: 'quickZoomProvince',
                     class: className,
                     options: []
                 });
 
                 this.citySelect = new Select({
-                    id: "quickZoomCity",
+                    id: 'quickZoomCity',
                     class: className,
                     options: []
                 });
 
                 this.postalCodeTextbox = new TextBox({
-                    id: "quickZoomPostalCode",
+                    id: 'quickZoomPostalCode',
                     class: className,
-                    style: "width : 30%"
+                    style: 'width : 30%'
                 });
 
                 this.button = new Button({
-                    label: "Find",
-                    id: "quickZoomButton",
+                    label: 'Find',
+                    id: 'quickZoomButton',
                     class: className
                 });
 
-                var that = this; // for local access to "this"
+                var that = this; // for local access to 'this'
                 function _addNode(domNode) {
                     that.form.domNode.appendChild(domNode);
                 }
 
                 function _addLabel(text) {
-                    var node = domConstruct.create("label", {
+                    var node = domConstruct.create('label', {
                         class: className,
                         innerHTML: text
                     });
@@ -114,17 +115,17 @@ define([
                     return node;
                 }
 
-                _addLabel("Choose province:");
+                _addLabel('Choose province:');
                 _addNode(this.provinceSelect.domNode);
 
-                _addLabel("City:");
+                _addLabel('City:');
                 _addNode(this.citySelect.domNode);
 
-                _addLabel("or enter postal code (e.g. A1A):");
+                _addLabel('or enter postal code (e.g. A1A):');
                 _addNode(this.postalCodeTextbox.domNode);
 
                 _addNode(this.button.domNode);
-                this.errorText = _addLabel("");
+                this.errorText = _addLabel('');
             },
 
             _setError: function (errorMsg) {
@@ -132,7 +133,8 @@ define([
                 $(this.errorText).text(errorMsg);
             },
             /*
-             * This adds the search tools to the UI and populates the UI controls: Province dropdown, city drop down, postal code text box
+             * This adds the search tools to the UI and populates the UI controls: Province dropdown, city drop down,
+             * postal code text box
              *
              * @method init
              * @param {Object} where A DOM object where the dropdowns will be placed
@@ -142,7 +144,7 @@ define([
                 var provinceSelect = this.provinceSelect,
                     citySelect = this.citySelect,
                     config = this.config,
-                    that = this; // for local access to "this"
+                    that = this; // for local access to 'this'
 
                 /**
                 * Change the extent of the map based on the extent data
@@ -160,19 +162,19 @@ define([
                     queryTask.execute(query,
                         function (featureSet) {
                             if (featureSet.features.isEmpty()) {
-                                that._setError("invalid query");
+                                that._setError('invalid query');
                                 return;
                             }
                             var extent = featureSet.features[0].geometry.getExtent();
                             if (RampMap.getMaxExtent().contains(extent)) {
                                 RampMap.getMap().setExtent(extent);
-                                that._setError("");
+                                that._setError('');
                             } else {
-                                that._setError("beyond max extent");
+                                that._setError('beyond max extent');
                             }
                         },
                         function (error) {
-                            console.log("Could not load extent from service");
+                            console.log('Could not load extent from service');
                             console.log(error);
                         });
                 }
@@ -184,7 +186,8 @@ define([
                 * @param {String} url the url to the service containing the data to populate the dropdown
                 * @param {DObject} select the dojo Select object to populate
                 * @param {Object} query to execute
-                * @param {Function} mapFunc the function to convert each element in the retrieved data to a label that can be added to the dropdown menu
+                * @param {Function} mapFunc the function to convert each element in the retrieved data to a label that
+                * can be added to the dropdown menu
                 */
                 function populateDropDown(url, select, query, mapFunc) {
                     // Clear the dropdown
@@ -198,7 +201,7 @@ define([
                             select.addOption(featureSet.features.map(mapFunc));
                         },
                         function (error) {
-                            console.log("Could not populate dropdown");
+                            console.log('Could not populate dropdown');
                             console.log(error);
                         });
                 }
@@ -209,7 +212,7 @@ define([
                     var provinceConfig = config.quickzoom.province,
                         query = new Query();
 
-                    query.where = "OBJECTID>0";
+                    query.where = 'OBJECTID>0';
                     query.outFields = [provinceConfig.shortName, provinceConfig.name];
 
                     populateDropDown(provinceConfig.url, provinceSelect, query,
@@ -252,10 +255,10 @@ define([
                     populateCityDropDown(config.quickzoom.province.selectedProv);
                 });
 
-                provinceSelect.on("change", function () {
+                provinceSelect.on('change', function () {
                     // Change the extent, then populate the city with the cities in the province
                     var provConfig = config.quickzoom.province,
-                        prov = provinceSelect.get("value"),
+                        prov = provinceSelect.get('value'),
                         query = new Query();
                     query.where = UtilMisc.getWhereClause(provConfig.shortName, prov);
 
@@ -263,9 +266,9 @@ define([
                     populateCityDropDown(prov);
                 });
 
-                citySelect.on("change", function () {
+                citySelect.on('change', function () {
                     var cityConfig = config.quickzoom.city,
-                        city = citySelect.get("value"),
+                        city = citySelect.get('value'),
                         query = new Query();
                     query.where = UtilMisc.getWhereClause(cityConfig.id, city);
 
@@ -294,21 +297,21 @@ define([
                     return false;
                 }
 
-                this.button.on("click", function () {
-                    var postalCode = this.postalCodeTextbox.get("value");
+                this.button.on('click', function () {
+                    var postalCode = this.postalCodeTextbox.get('value');
                     if (validatePostalCode(postalCode)) {
                         var postalConfig = config.quickzoom.postalCode,
                             query = new Query();
                         query.where = UtilMisc.getWhereClause(postalConfig.id, postalCode);
                         changeExtent(postalConfig.url, query);
                     } else {
-                        console.log("invalid postal code!");
-                        that._setError("invalid postal code");
+                        console.log('invalid postal code!');
+                        that._setError('invalid postal code');
                     }
                 });
 
                 var whereNode = dom.byId(where);
-                domConstruct.place(this.form.domNode, whereNode, "replace");
+                domConstruct.place(this.form.domNode, whereNode, 'replace');
             }
         });
     });

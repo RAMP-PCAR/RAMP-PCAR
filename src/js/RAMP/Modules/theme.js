@@ -1,7 +1,8 @@
 ﻿/*global define, TimelineLite, TweenLite, $ */
 
 /**
-* This submodule contains theme-specific classes with animation sequences such as Full Screen transition or tooltip setter helper method.
+* This submodule contains theme-specific classes with animation sequences such as Full Screen transition or tooltip
+* setter helper method.
 *
 * @module RAMP
 * @submodule Theme
@@ -12,8 +13,8 @@
 * Base theme for RAMP.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink 'Util'}}{{/crossLink}}
+*
 * @class Theme
 * @static
 * @uses dojo/_base/lang
@@ -30,7 +31,7 @@ define([],
             megaMenuDiv = $('#wb-sm'),
             navigation = $('#wb-bar'),
 
-            header = $("body>header"),
+            header = $('body>header'),
 
             transitionDuration = 0.5,
 
@@ -47,7 +48,8 @@ define([],
             },
 
             // height gain from the fullscreening the template
-            heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight - layout.footerHeightCollapsed,
+            heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight -
+                layout.footerHeightCollapsed,
 
             isFullScreen = false,
 
@@ -56,15 +58,29 @@ define([],
 
         // tweening wet template parts
         fullScreenTimeLine
-            .to(header, transitionDuration, { top: navigation.outerHeight() * -1, position: 'relative', ease: 'easeOutCirc' }, 0)
+            .to(header, transitionDuration, {
+                top: navigation.outerHeight() * -1,
+                position: 'relative',
+                ease: 'easeOutCirc'
+            }, 0)
             .set([navigation, megaMenuDiv], { display: 'none !important' })
 
-            .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
-            .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
+            .to(wbCore, transitionDuration, {
+                top: layout.headerHeightCollapsed,
+                bottom: layout.footerHeightCollapsed,
+                ease: 'easeOutCirc'
+            }, 0)
+            .to(wbFoot, transitionDuration, {
+                height: layout.footerHeightCollapsed,
+                ease: 'easeOutCirc'
+            }, 0)
 
-            .call(function () { body.addClass('full-screen'); }) // set full-screen class here, not in the callback since callbacks can be overwritten by fullScreenCallback function
+        // set full-screen class here, not in the callback since callbacks can be overwritten by
+        // fullScreenCallback function
+            .call(function () { body.addClass('full-screen'); })
 
-            .add(subpanelTimeline, 0); // special timeline to tween subpanels
+            // special timeline to tween subpanels
+            .add(subpanelTimeline, 0);
 
         /**
          * Toggles full screen mode
@@ -76,26 +92,47 @@ define([],
             subpanelTimeline
                 .clear() // need to recreate this timeline every time to capture newly created subpanels
                 .fromTo('.sub-panel-container.summary-data-details', transitionDuration,
-                    { top: layout.headerHeight + layout.toolbarHeight, bottom: layout.footerHeight },
-                    { top: layout.headerHeightCollapsed + layout.toolbarHeight, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0)
+                    {
+                        top: layout.headerHeight + layout.toolbarHeight,
+                        bottom: layout.footerHeight
+                    },
+                    {
+                        top: layout.headerHeightCollapsed + layout.toolbarHeight,
+                        bottom: layout.footerHeightCollapsed,
+                        ease: 'easeOutCirc'
+                    }, 0)
                 .fromTo('.sub-panel-container.full-data-details', transitionDuration,
-                    { top: layout.headerHeight, bottom: layout.footerHeight },
-                    { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc' }, 0);
+                    {
+                        top: layout.headerHeight,
+                        bottom: layout.footerHeight
+                    },
+                    {
+                        top: layout.headerHeightCollapsed,
+                        bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc'
+                    }, 0);
 
-            isFullScreen = typeof fullscreen === 'boolean' ? fullscreen : !isFullScreen ;
+            isFullScreen = typeof fullscreen === 'boolean' ? fullscreen : !isFullScreen;
 
             if (isFullScreen) {
-                // need to tween datatables separately since it's very cumbersome to calculate their exact height - easier just to adjust height up/down by height gained when fullscreening the template
+                // need to tween datatables separately since it's very cumbersome to calculate their exact height -
+                // easier just to adjust height up/down by height gained when fullscreening the template
                 TweenLite
                     .to('.full-data-mode .dataTables_scrollBody', transitionDuration,
-                        { height: '+=' + heightGain, ease: 'easeOutCirc', delay: 0.02 }); // animate height of the datatable scrollBody since it's explicitly set ,
+                        {
+                            height: '+=' + heightGain,
+                            ease: 'easeOutCirc',
+                            delay: 0.02
+                        }); // animate height of the datatable scrollBody since it's explicitly set ,
 
                 fullScreenTimeLine.play();
-
             } else {
                 TweenLite
                     .to('.full-data-mode .dataTables_scrollBody', transitionDuration - 0.02,
-                        { height: '-=' + heightGain, ease: 'easeInCirc' }); // animate height of the datatable scrollBody since it's explicitly set ,
+                        {
+                            height: '-=' + heightGain,
+                            ease: 'easeInCirc'
+                        }); // animate height of the datatable
+                // scrollBody since it's explicitly set ,
 
                 body.removeClass('full-screen');
                 fullScreenTimeLine.reverse();

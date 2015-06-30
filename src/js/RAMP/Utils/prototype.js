@@ -14,12 +14,12 @@
 */
 define([
     /* ESRI */
-    "esri/geometry/Extent"
+    'esri/geometry/Extent'
 ],
     function (
     /* ESRI */
         EsriExtent) {
-        "use strict";
+        'use strict';
 
         /**
         * Attempt to add the given fcn as a prototype to the given obj under
@@ -36,7 +36,8 @@ define([
             if (typeof obj.prototype[name] !== 'function') {
                 obj.prototype[name] = fcn;
             } else {
-                console.log(String.format("WARNING: unable to add prototype {0} to {1}. One already exists!", name, obj.toString()));
+                console.log(String.format(
+                    'WARNING: unable to add prototype {0} to {1}. One already exists!', name, obj.toString()));
             }
         }
 
@@ -55,7 +56,8 @@ define([
             if (typeof obj[name] !== 'function') {
                 obj[name] = fcn;
             } else {
-                console.log(String.format("WARNING: unable to add static function {0} to {1}. One already exists!", name, obj.toString()));
+                console.log(String.format(
+                    'WARNING: unable to add static function {0} to {1}. One already exists!', name, obj.toString()));
             }
         }
 
@@ -66,7 +68,8 @@ define([
         * - `Array.isEmpty()` - Returns true if the length of the array is 0.
         * - `Array.last()` - Returns true if the length of the array is 0.
         * - `Array.contains(obj)` - Returns true if this Array contains the given object
-        * - `Array.flatter(arr)` - Array Flatten object extension: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
+        * - `Array.flatter(arr)` - Array Flatten object extension:
+        * http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
         * - `Array.max()` - Returns the max value in the array
         * - `Array.min()` - Returns the min value in the array
         *
@@ -77,7 +80,7 @@ define([
         */
         function _initArrayPrototype() {
             // prototype for removing items from array
-            addPrototype(Array, "remove", function () {
+            addPrototype(Array, 'remove', function () {
                 var what, a = arguments,
                     L = a.length,
                     ax;
@@ -91,12 +94,12 @@ define([
             });
 
             // Add all the elements of the given array to this array.
-            addPrototype(Array, "append", function (arr) {
+            addPrototype(Array, 'append', function (arr) {
                 this.push.apply(this, arr);
             });
 
             // Sum all the elements in the array, no checking for non-numeric types
-            addPrototype(Array, "sum", function () {
+            addPrototype(Array, 'sum', function () {
                 var i, res;
                 for (i = 0, res = 0; i < this.length; ++i) {
                     res += this[i];
@@ -105,48 +108,50 @@ define([
             });
 
             // Returns true if the length of the array is 0.
-            addPrototype(Array, "isEmpty", function () {
+            addPrototype(Array, 'isEmpty', function () {
                 return this.length === 0;
             });
 
             // Returns the last element of the array
-            addPrototype(Array, "last", function () {
+            addPrototype(Array, 'last', function () {
                 return this[this.length - 1];
             });
 
             // Returns true if this Array contains the given object
-            addPrototype(Array, "contains", function (obj) {
+            addPrototype(Array, 'contains', function (obj) {
                 return this.indexOf(obj) > -1;
             });
 
             // Array Flatten object extension: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
-            addStaticFcn(Array, "flatten", function flatten(arr) {
+            addStaticFcn(Array, 'flatten', function flatten(arr) {
                 var flat = [],
                     i, l, type;
 
                 for (i = 0, l = arr.length; i < l; i++) {
                     type = Object.prototype.toString.call(arr[i]).split(' ').pop().split(']').shift().toLowerCase();
                     if (type) {
-                        flat = flat.concat(/^(array|collection|arguments|object)$/.test(type) ? flatten.call(arr[i]) : arr[i]);
+                        flat = flat.concat(/^(array|collection|arguments|object)$/.test(type) ?
+                            flatten.call(arr[i]) : arr[i]);
                     }
                 }
                 return flat;
             });
 
             // Returns the max value in the array
-            addStaticFcn(Array, "max", function (arr) {
+            addStaticFcn(Array, 'max', function (arr) {
                 return Math.max.apply(Math, arr);
             });
 
             // Returns the min value in the array
-            addStaticFcn(Array, "min", function (arr) {
+            addStaticFcn(Array, 'min', function (arr) {
                 return Math.min.apply(Math, arr);
             });
         }
 
         /**
         * Add extra functions to the Object object. Adds the following:
-        * - `Object.create(o)` - Takes an old object as a parameter and returns an empty new object that inherits from the old one
+        * - `Object.create(o)` - Takes an old object as a parameter and returns an empty new object that inherits
+        * from the old one
         *
         * @method _initObjectPrototype
         * @return {Array} The array
@@ -154,7 +159,7 @@ define([
         */
         function _initObjectPrototype() {
             // Takes an old object as a parameter and returns an empty new object that inherits from the old one
-            addStaticFcn(Object, "create", function (o) {
+            addStaticFcn(Object, 'create', function (o) {
                 function F() { }
                 F.prototype = o;
                 return new F();
@@ -171,20 +176,20 @@ define([
         * @private
         */
         function _initStringPrototype() {
-            addStaticFcn(String, "format", function () {
+            addStaticFcn(String, 'format', function () {
                 var s = arguments[0],
                     i,
                     reg;
 
                 for (i = 0; i < arguments.length - 1; i++) {
-                    reg = new RegExp("\\{" + i + "\\}", "gm");
+                    reg = new RegExp('\\{' + i + '\\}', 'gm');
                     s = s.replace(reg, arguments[i + 1]);
                 }
 
                 return s;
             });
 
-            addPrototype(String, "replaceAll", function (search, replace) {
+            addPrototype(String, 'replaceAll', function (search, replace) {
                 return this.toString().split(search).join(replace);
             });
 
@@ -221,42 +226,43 @@ define([
         * @private
         */
         function _initEsriPrototype() {
-            addPrototype(EsriExtent, "clone", function () {
+            addPrototype(EsriExtent, 'clone', function () {
                 return new EsriExtent(this.xmin, this.ymin, this.xmax, this.ymax, this.spatialReference);
             });
 
-            addPrototype(EsriExtent, "width", function () {
+            addPrototype(EsriExtent, 'width', function () {
                 return Math.abs(this.xmin - this.xmax);
             });
 
-            addPrototype(EsriExtent, "height", function () {
+            addPrototype(EsriExtent, 'height', function () {
                 return Math.abs(this.ymin - this.ymax);
             });
 
             // Returns the ratio of this Extent's width to this Extent's height
-            addPrototype(EsriExtent, "xyAspectFactor", function () {
+            addPrototype(EsriExtent, 'xyAspectFactor', function () {
                 return this.width() / this.height();
             });
 
-            addPrototype(EsriExtent, "centerX", function () {
+            addPrototype(EsriExtent, 'centerX', function () {
                 return (this.xmin + this.xmax) / 2;
             });
 
-            addPrototype(EsriExtent, "centerY", function () {
+            addPrototype(EsriExtent, 'centerY', function () {
                 return (this.ymin + this.ymax) / 2;
             });
 
-            addPrototype(EsriExtent, "center", function () {
+            addPrototype(EsriExtent, 'center', function () {
                 return {
                     X: this.centerX,
                     Y: this.centerY
                 };
             });
 
-            addPrototype(EsriExtent, "pan", function (x, y) {
+            addPrototype(EsriExtent, 'pan', function (x, y) {
                 var dx = this.centerX() - x,
                     dy = this.centerY() - y;
-                return new EsriExtent(this.xmin - dx, this.ymin - dy, this.xmax - dx, this.ymax - dy, this.spatialReference);
+                return new EsriExtent(this.xmin - dx, this.ymin - dy, this.xmax - dx, this.ymax - dy,
+                    this.spatialReference);
             });
         }
 
@@ -273,7 +279,7 @@ define([
             // Returns labels corresponding to the set of input controls.
             $.fn.findInputLabel = function () {
                 return this.map(function () {
-                    return $(this).parent().find("label[for='" + this.id + "']")[0];
+                    return $(this).parent().find('label[for="' + this.id + '"]')[0];
                 });
             };
 
@@ -287,7 +293,7 @@ define([
                             display: 'inline',
                             width: 'auto',
                             visibility: 'hidden',
-                            "font-size": span.css("font-size")
+                            'font-size': span.css('font-size')
                         })
                         .appendTo('body');
 

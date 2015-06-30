@@ -14,16 +14,16 @@
 * This includes dealing with errors, and raising appropriate events when the layer loads
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "AttributeLoader"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
-* {{#crossLink "FilterManager"}}{{/crossLink}}
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
-* {{#crossLink "GraphicExtension"}}{{/crossLink}}
-* {{#crossLink "LayerItem"}}{{/crossLink}}
-* {{#crossLink "Map"}}{{/crossLink}}
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink 'AttributeLoader'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'FeatureClickHandler'}}{{/crossLink}}
+* {{#crossLink 'FilterManager'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'GraphicExtension'}}{{/crossLink}}
+* {{#crossLink 'LayerItem'}}{{/crossLink}}
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'MapClickHandler'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * @class LayerLoader
 * @static
@@ -36,17 +36,17 @@
 
 define([
 /* Dojo */
-"dojo/topic",
+'dojo/topic',
 
 /* ESRI */
-"esri/layers/GraphicsLayer", "esri/tasks/GeometryService", "esri/tasks/ProjectParameters", "esri/geometry/Extent",
+'esri/layers/GraphicsLayer', 'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
 
 /* RAMP */
-"ramp/eventManager", "ramp/map", "ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler",
-"ramp/filterManager", "ramp/layerItem", "ramp/attributeLoader", "ramp/graphicExtension",
+'ramp/eventManager', 'ramp/map', 'ramp/globalStorage', 'ramp/featureClickHandler', 'ramp/mapClickHandler',
+'ramp/filterManager', 'ramp/layerItem', 'ramp/attributeLoader', 'ramp/graphicExtension',
 
 /* Util */
-"utils/util"],
+'utils/util'],
 
     function (
     /* Dojo */
@@ -61,7 +61,7 @@ define([
 
      /* Util */
     UtilMisc) {
-        "use strict";
+        'use strict';
 
         var idCounter = 0;
 
@@ -194,14 +194,16 @@ define([
         /**
         * This function initiates the loading of an ESRI layer object to the map.
         * Will add it to the map in the appropriate spot, wire up event handlers, and generate any bounding box layers
-        * Note: a point of confusion.  The layer objects "load" event may have already finished by the time this function is called.
+        * Note: a point of confusion.  The layer objects 'load' event may have already finished by the time this
+        * function is called.
         *       This means the object's constructor has initialized itself with the layers data source.
         * This functions is not event triggered to guarantee the order in which things are added.
         *
         * @method _loadLayer
         * @private
         * @param  {Object} layer an instantiated, unloaded ESRI layer object
-        * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not set for new layers
+        * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not
+        * set for new layers
         */
         function _loadLayer(layer, reloadIndex) {
             var insertIdx,
@@ -226,13 +228,10 @@ define([
                         // generate wms legend image url and store in the layer config
                         if (layerConfig.legendMimeType) {
                             layer.ramp.config.legend = {
-                                type: "wms",
-                                imageUrl: String.format("{0}?SERVICE=WMS&REQUEST=GetLegendGraphic&TRANSPARENT=true&VERSION=1.1.1&FORMAT={2}&LAYER={3}",
-                                    layerConfig.url,
-                                    layer.version,
-                                    layerConfig.legendMimeType,
-                                    layerConfig.layerName
-                                )
+                                type: 'wms',
+                                imageUrl: layerConfig.url + '?SERVICE=WMS&REQUEST=GetLegendGraphic&' +
+                                    'TRANSPARENT=true&VERSION=1.1.1&FORMAT=' + layerConfig.legendMimeType +
+                                    '&LAYER=' + layerConfig.layerName
                             };
                         }
                     } else {
@@ -248,7 +247,8 @@ define([
                 case GlobalStorage.layerType.Static:
                     layerSection = GlobalStorage.layerType.feature;
                     if (isNotReload) {
-                        //NOTE: these static layers behave like features, in that they can be in any position and be re-ordered.
+                        // NOTE: these static layers behave like features, in that they can be in any position
+                        // and be re-ordered.
                         insertIdx = RAMP.layerCounts.feature;
                     } else {
                         insertIdx = reloadIndex;
@@ -271,10 +271,10 @@ define([
 
             //derive initial state
             switch (layer.ramp.load.state) {
-                case "loaded":
+                case 'loaded':
                     lsState = LayerItem.state.LOADED;
                     break;
-                case "loading":
+                case 'loading':
                     //IE10 hack. since IE10 will not fire the loaded event, check the loaded flag of the layer object
                     if (layer.loaded) {
                         lsState = LayerItem.state.LOADED;
@@ -282,10 +282,10 @@ define([
                         lsState = LayerItem.state.LOADING;
                     }
                     break;
-                case "error":
+                case 'error':
                     options.notices = {
                         error: {
-                            message: i18n.t("filterManager.notices.error.connect")
+                            message: i18n.t('filterManager.notices.error.connect')
                         }
                     };
 
@@ -328,58 +328,61 @@ define([
                         AttributeLoader.extractAttributeData(layer);
                     }
 
-                    //TODO consider the case where a layer was loaded by the user, and we want to disable things like maptips?
-                    //wire up click handler
-                    layer.on("click", function (evt) {
+                    // TODO consider the case where a layer was loaded by the user, and we want to disable
+                    // things like maptips?
+                    // wire up click handler
+                    layer.on('click', function (evt) {
                         evt.stopImmediatePropagation();
                         FeatureClickHandler.onFeatureSelect(evt);
                     });
 
                     //wire up mouse over / mouse out handler
-                    layer.on("mouse-over", function (evt) {
+                    layer.on('mouse-over', function (evt) {
                         FeatureClickHandler.onFeatureMouseOver(evt);
                     });
 
-                    layer.on("mouse-out", function (evt) {
+                    layer.on('mouse-out', function (evt) {
                         FeatureClickHandler.onFeatureMouseOut(evt);
                     });
 
-                    //generate bounding box                        
+                    //generate bounding box
                     if (layerConfig.layerExtent) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
-                                id: String.format("boundingBoxLayer_{0}", layer.id),
+                                id: String.format('boundingBoxLayer_{0}', layer.id),
                                 visible: layerConfig.settings.boundingBoxVisible
                             });
-                   
+
                         boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
                         // add ramp.user property to the bounding box as well
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox, user: layer.ramp.user };
 
-                        //TODO test putting this IF before the layer creation, see what breaks.  ideally if there is no box, we should not make a layer
+                        // TODO test putting this IF before the layer creation, see what breaks.  ideally if there is
+                        // no box, we should not make a layer
 
-                            if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
-                                //layer is in same projection as basemap.  can directly use the extent
-                                boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
-                            } else {
-                                //layer is in different projection.  reproject to basemap
+                        if (UtilMisc.isSpatialRefEqual(boundingBoxExtent.spatialReference, map.spatialReference)) {
+                            //layer is in same projection as basemap.  can directly use the extent
+                            boundingBox.add(UtilMisc.createGraphic(boundingBoxExtent));
+                        } else {
+                            //layer is in different projection.  reproject to basemap
 
-                                var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
-                                boundingBox.add(UtilMisc.createGraphic(box));
+                            var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
+                            boundingBox.add(UtilMisc.createGraphic(box));
 
-                                //Geometry Service Version.  Makes a more accurate bounding box, but requires an arcserver
-                                /*
-                                var params = new ProjectParameters(),
-                                    gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
-                                params.geometries = [boundingBoxExtent];
-                                params.outSR = map.spatialReference;
+                            //Geometry Service Version.  Makes a more accurate bounding box, but
+                            //requires an arcserver
+                            /*
+                            var params = new ProjectParameters(),
+                                gsvc = new GeometryService(RAMP.config.geometryServiceUrl);
+                            params.geometries = [boundingBoxExtent];
+                            params.outSR = map.spatialReference;
 
-                                gsvc.project(params, function (projectedExtents) {
-                                    console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
-                                    console.log('proj4 says: ' + JSON.stringify(box));
-                                });
-                                */
-                            }
+                            gsvc.project(params, function (projectedExtents) {
+                                console.log('esri says: ' + JSON.stringify(projectedExtents[0]));
+                                console.log('proj4 says: ' + JSON.stringify(box));
+                            });
+                            */
+                        }
 
                         //add mapping to bounding box
                         RampMap.getBoundingBoxMapping()[layer.id] = boundingBox;
@@ -390,7 +393,7 @@ define([
 
                         map.addLayer(boundingBox, insertIdx);
 
-                    break;
+                        break;
                     }
             }
 
@@ -422,13 +425,13 @@ define([
             * @param  {Object} evt.error the error object
             */
             onLayerError: function (evt) {
-                console.error("failed to load layer " + evt.layer.url, evt.error);
+                console.error('failed to load layer ' + evt.layer.url, evt.error);
 
-                evt.layer.ramp.load.state = "error";
+                evt.layer.ramp.load.state = 'error';
 
                 var layerId = evt.layer.id,
                     // generic error notice
-                    errorMessage = i18n.t("filterManager.notices.error.load"),
+                    errorMessage = i18n.t('filterManager.notices.error.load'),
                     options;
 
                 //get that failed layer outta here
@@ -436,7 +439,7 @@ define([
 
                 // customize error notices based on the error type as much as possible
                 if (evt.error.code === 400) {
-                    errorMessage = i18n.t("filterManager.notices.error.draw");
+                    errorMessage = i18n.t('filterManager.notices.error.draw');
                 }
 
                 options = {
@@ -455,7 +458,8 @@ define([
 
             /**
             * Reacts when a layer begins to update.  This happens when a feature layer starts to download its data.
-            * Data download doesn't start until points are made visible.  It also happens when a WMS requests a new picture.
+            * Data download doesn't start until points are made visible.  It also happens when a WMS requests a
+            * new picture.
             *
             * @method onLayerUpdateStart
             * @param  {Object} evt
@@ -464,7 +468,7 @@ define([
             onLayerUpdateStart: function (evt) {
                 RampMap.updateDatagridUpdatingState(evt.layer, true);
 
-                //console.log("LAYER UPDATE START: " + evt.layer.url);
+                //console.log('LAYER UPDATE START: ' + evt.layer.url);
                 updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.UPDATING, true);
             },
 
@@ -501,8 +505,8 @@ define([
 
                 //IE10 hack.  since IE10 doesn't fire a loaded event, we need to also set the loaded flag on layer here.
                 //            don't do it if it's in error state.  once an error, always an error
-                if (evt.layer.ramp.load.state !== "error") {
-                    evt.layer.ramp.load.state = "loaded";
+                if (evt.layer.ramp.load.state !== 'error') {
+                    evt.layer.ramp.load.state = 'loaded';
                 }
 
                 RampMap.updateDatagridUpdatingState(evt.layer);
@@ -511,7 +515,8 @@ define([
             },
 
             /**
-            * Reacts when a layer has loaded successfully.  This means the site has shaken hands with the layer and it seems ok.
+            * Reacts when a layer has loaded successfully.  This means the site has shaken hands with the layer
+            * and it seems ok.
             * This does not mean data has been downloaded
             *
             * @method onLayerLoaded
@@ -523,14 +528,14 @@ define([
                 //if we have a row in layer selector, update it to loaded (unless already in error)
 
                 //set flags that we have loaded ok
-                evt.layer.ramp.load.state = "loaded";
+                evt.layer.ramp.load.state = 'loaded';
 
                 //if a row already exists in selector, set it to LOADED state. (unless already in error state)
                 if (evt.layer.ramp.load.inLS) {
                     updateLayerSelectorState(evt.layer.ramp.config.id, LayerItem.state.LOADED, true);
                 }
 
-                console.log("layer loaded: " + evt.layer.url);
+                console.log('layer loaded: ' + evt.layer.url);
             },
 
             /**
@@ -546,7 +551,7 @@ define([
                     layerSection,
                     configCollection;
 
-                    layer = RAMP.layerRegistry[evt.layerId];
+                layer = RAMP.layerRegistry[evt.layerId];
 
                 //derive section layer is in and the config collection it is in
                 switch (layer.ramp.type) {
@@ -578,7 +583,8 @@ define([
             },
 
             /**
-            * Reacts to a request for a layer to be reloaded.  Usually the case when a layer errors and user wants to try again
+            * Reacts to a request for a layer to be reloaded.  Usually the case when a layer errors and user
+            * wants to try again
             *
             * @method onLayerReload
             * @param  {Object} evt
@@ -596,7 +602,7 @@ define([
 
                 removeFromMap(evt.layerId);
 
-                    curlayer = RAMP.layerRegistry[evt.layerId];
+                curlayer = RAMP.layerRegistry[evt.layerId];
 
                 layerConfig = curlayer.ramp.config;
                 user = curlayer.ramp.user;
@@ -605,15 +611,17 @@ define([
                 //since the layer may not be in the map, we have to use some trickery to derive where it is sitting
 
                 //get our list of layers
-                layerList = $("#" + RAMP.config.divNames.filter).find("#layerList").find("> li > ul");
+                layerList = $('#' + RAMP.config.divNames.filter).find('#layerList').find('> li > ul');
 
                 //make an array of the ids in order of the list on the page
                 idArray = layerList
-                            .map(function (i, elm) { return $(elm).find("> li").toArray().reverse(); }) // for each layer list, find its items and reverse their order
+                    // for each layer list, find its items and reverse their order
+                            .map(function (i, elm) { return $(elm).find('> li').toArray().reverse(); })
                             .map(function (i, elm) { return elm.id; });
 
                 cleanIdArray = idArray.toArray().filter(function (i, elm) {
-                    //check if layer is in error state.  error layers should not be part of the count.  exception being the layer we are reloading
+                    // check if layer is in error state.  error layers should not be part of the count.
+                    // exception being the layer we are reloading
                     return ((FilterManager.getLayerState(elm) !== LayerItem.state.ERROR) || (elm === evt.layerId));
                 });
 
@@ -645,7 +653,7 @@ define([
                 }
 
                 //load the layer at the previous index
-                console.log("Reloading Layer at index " + layerIndex.toString());
+                console.log('Reloading Layer at index ' + layerIndex.toString());
                 _loadLayer(newLayer, layerIndex);
             },
 
@@ -654,7 +662,8 @@ define([
             *
             * @method loadLayer
             * @param  {Object} layer an instantiated, unloaded ESRI layer object
-            * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.  Do not set for new layers
+            * @param  {Integer} reloadIndex Optional.  If reloading a layer, supply the index it should reside at.
+            * Do not set for new layers
             */
             loadLayer: function (layer, reloadIndex) {
                 _loadLayer(layer, reloadIndex);

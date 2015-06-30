@@ -11,10 +11,10 @@
 * be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @class PopulationTool
 * @uses dojo/dom
 * @uses dojo/string
@@ -31,12 +31,12 @@
 
 define([
 // Dojo
-        "dojo/dom", "dojo/string", "dojo/_base/lang",
+        'dojo/dom', 'dojo/string', 'dojo/_base/lang',
 // Esri
-        "esri/config", "esri/graphic", "esri/tasks/Geoprocessor", "esri/tasks/FeatureSet",
-        "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
+        'esri/config', 'esri/graphic', 'esri/tasks/Geoprocessor', 'esri/tasks/FeatureSet',
+        'esri/toolbars/draw', 'esri/symbols/SimpleLineSymbol', 'esri/symbols/SimpleFillSymbol',
 // Ramp
-        "ramp/map", "ramp/globalStorage", "tools/baseTool"
+        'ramp/map', 'ramp/globalStorage', 'tools/baseTool'
 ],
     function (
 // Dojo
@@ -45,7 +45,7 @@ define([
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
         RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
         var ui,
             geoprocessor,
@@ -101,7 +101,7 @@ define([
 
             that.working(false);
 
-            totalPopulation = string.substitute("${number:dojo.number.format}", { number: totalPopulation });
+            totalPopulation = string.substitute('${number:dojo.number.format}', { number: totalPopulation });
             displayOutput(totalPopulation);
         }
 
@@ -117,12 +117,14 @@ define([
                     toolbar = new Draw(map);
 
                 //TODO store this URL in config
-                geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
+                geoprocessor = new Geoprocessor(
+                    'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary' //jshint ignore:line
+                    );
 
                 geoprocessor.setOutputSpatialReference(map.spatialReference);
-                geoprocessor.on("execute-complete", outputTotalPopulation);
+                geoprocessor.on('execute-complete', outputTotalPopulation);
 
-                toolbar.on("draw-end", computeZonalStats);
+                toolbar.on('draw-end', computeZonalStats);
 
                 populationApp = {
                     map: map,
@@ -140,7 +142,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -164,7 +166,7 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -176,7 +178,7 @@ define([
         function displayOutput(value) {
             that.displayTemplateOutput(
                 {
-                    totalPopulationLabel: i18n.t(that.ns + ":population"),
+                    totalPopulationLabel: i18n.t(that.ns + ':population'),
                     populationOutput: value
                 }
             );
@@ -206,6 +208,6 @@ define([
                 return this;
             },
 
-            name: "populationTool"
+            name: 'populationTool'
         });
     });

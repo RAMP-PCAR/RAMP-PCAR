@@ -2,7 +2,7 @@
 
 console.log('loading jsonRawParse');
 RAMP.plugins.featureInfoParser.jsonRawParse = function (data) {
-    "use strict";
+    'use strict';
 
-    return "<p>{0}</p>".format(data);
+    return '<p>{0}</p>'.format(data);
 };

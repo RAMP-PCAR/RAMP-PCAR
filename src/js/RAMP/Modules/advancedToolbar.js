@@ -50,7 +50,7 @@ define([
     // Util
         UtilMisc, UtilDict, PopupManager, TmplHelper,
     // Text
-        advanced_toolbar_template_json
+        advancedToolbarTemplateJson
     ) {
         'use strict';
 
@@ -81,7 +81,8 @@ define([
                     subpanelTimeLine = new TimelineLite();
 
                 /**
-                 * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the height of the details panel to accommodate the expanded toolbar.
+                 * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the
+                 * height of the details panel to accommodate the expanded toolbar.
                  * 
                  * @method toggleToolbar
                  * @param {Deferred} d a deferred to be resolved upon completion of the animation
@@ -127,15 +128,17 @@ define([
 
                         // create html code for advancedToolbar
                         tmpl.cache = {};
-                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
+                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advancedToolbarTemplateJson));
                         advancedSectionContainer.append(tmpl('at_main'));
                         advancedToolbarList = advancedSectionContainer.find('#advanced-toolbar-list');
 
                         // create a timeline to animate toggling of the advanced toolbar
                         advancedToolbarTimeline
                             .set(advancedSectionContainer, { display: 'block' })
-                            .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta }, { top: 0, ease: 'easeOutCirc' }, 0)
-                            .to(panelToggle, transitionDuration, { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
+                            .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta },
+                                { top: 0, ease: 'easeOutCirc' }, 0)
+                            .to(panelToggle, transitionDuration,
+                                { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
 
                             .add(subpanelTimeLine, 0);
 

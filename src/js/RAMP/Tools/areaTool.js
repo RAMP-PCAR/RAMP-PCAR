@@ -9,10 +9,10 @@
 * and length will be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @extends BaseTool
 * @class AreaTool
 * @uses dojo/dom
@@ -27,12 +27,12 @@
 
 define([
 // Dojo
-      "dojo/dom", "dojo/string", "dojo/_base/lang",
+      'dojo/dom', 'dojo/string', 'dojo/_base/lang',
 // Esri
-      "esri/config", "esri/graphic", "esri/tasks/GeometryService",
-      "esri/tasks/AreasAndLengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
+      'esri/config', 'esri/graphic', 'esri/tasks/GeometryService',
+      'esri/tasks/AreasAndLengthsParameters', 'esri/toolbars/draw', 'esri/symbols/SimpleFillSymbol',
 // Ramp
-      "ramp/map", "ramp/globalStorage", "tools/baseTool"
+      'ramp/map', 'ramp/globalStorage', 'tools/baseTool'
 ],
     function (
 // Dojo
@@ -41,7 +41,7 @@ define([
       esriConfig, Graphic, GeometryService, AreasAndLengthsParameters, Draw, SimpleFillSymbol,
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
         var ui,
             geometryService,
@@ -60,7 +60,7 @@ define([
             that.working(true);
 
             geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
-            geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
+            geometryService.on('areas-and-lengths-complete', outputAreaAndLength);
 
             var geometry = evtObj.geometry;
             measureApp.map.graphics.clear();
@@ -71,7 +71,7 @@ define([
             var areasAndLengthParams = new AreasAndLengthsParameters();
             areasAndLengthParams.lengthUnit = GeometryService.UNIT_KILOMETER;
             areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
-            areasAndLengthParams.calculationType = "geodesic";
+            areasAndLengthParams.calculationType = 'geodesic';
             geometryService.simplify([geometry], function (simplifiedGeometries) {
                 areasAndLengthParams.polygons = simplifiedGeometries;
                 geometryService.areasAndLengths(areasAndLengthParams);
@@ -95,9 +95,9 @@ define([
 
             that.working(false);
 
-            length = string.substitute("${number:dojo.number.format}", { number: length });
-            area = string.substitute("${number:dojo.number.format}", { number: area });
-            displayOutput(length, area, "km", "km");
+            length = string.substitute('${number:dojo.number.format}', { number: length });
+            area = string.substitute('${number:dojo.number.format}', { number: area });
+            displayOutput(length, area, 'km', 'km');
         }
 
         ui = {
@@ -105,7 +105,7 @@ define([
                 var map = RampMap.getMap(),
                     toolbar = new Draw(map);
 
-                toolbar.on("draw-end", computeAreaAndLength);
+                toolbar.on('draw-end', computeAreaAndLength);
 
                 measureApp = {
                     map: map,
@@ -123,7 +123,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'), i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -147,7 +147,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'), i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -159,8 +159,8 @@ define([
         function displayOutput(length, area, lengthUnits, areaUnits) {
             that.displayTemplateOutput(
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"),
-                    areaLabel: i18n.t(that.ns + ":area"),
+                    lengthLabel: i18n.t(that.ns + ':length'),
+                    areaLabel: i18n.t(that.ns + ':area'),
                     lengthOutput: length,
                     areaOutput: area,
                     lengthUnits: lengthUnits,
@@ -192,6 +192,6 @@ define([
                 return this;
             },
 
-            name: "areaTool"
+            name: 'areaTool'
         });
     });

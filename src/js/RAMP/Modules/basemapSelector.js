@@ -114,7 +114,8 @@ function (
 
             return {
                 /**
-                * Initiates additional UI components of the widget, setting listeners and registering the popup functionality
+                * Initiates additional UI components of the widget, setting listeners and registering the popup
+                * functionality
                 *
                 * @method init
                 * @private
@@ -207,8 +208,10 @@ function (
                                 // animate resizing of the selector when switching between projection groups
                                 heightTimeline
                                     .set(this.target, { display: 'block' }, 0)
-                                    .fromTo(this.target, transitionDuration, { height: fromHeight }, { height: toHeight }, 0)
-                                    .to(selectorSection, transitionDuration, { height: toHeight, ease: 'easeOutCirc' }, 0);
+                                    .fromTo(this.target, transitionDuration,
+                                        { height: fromHeight }, { height: toHeight }, 0)
+                                    .to(selectorSection, transitionDuration,
+                                        { height: toHeight, ease: 'easeOutCirc' }, 0);
                             }
 
                             d.resolve();
@@ -246,8 +249,11 @@ function (
                         }
                     );
 
-                    basemapControl = selectorSectionContainer.find('button[data-basemap-id="' + basemapId + '"]');
-                    projectionControl = selectorSectionContainer.find('button[data-projection-id="' + tileSchema + '"]');
+                    basemapControl = selectorSectionContainer.find(
+                        'button[data-basemap-id="' + basemapId + '"]');
+
+                    projectionControl = selectorSectionContainer.find(
+                        'button[data-projection-id="' + tileSchema + '"]');
 
                     basemapPopup.open(basemapControl);
                     projectionPopup.open(projectionControl);
@@ -309,7 +315,8 @@ function (
     }
 
     /**
-    * Selects a basemap in the basemapgallery based on the supplied basemap id. If the tileShema is different from the current one, reload the page.
+    * Selects a basemap in the basemapgallery based on the supplied basemap id. If the tileShema is different 
+    * from the current one, reload the page.
     *
     * @method selectBasemap
     * @param {String} basemapId a basemap id used to select a basemap in the basemapgallery
@@ -341,7 +348,9 @@ function (
 
     return {
         /*
-         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then calls function to initializes event handling
+         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then
+         * calls function to initializes event handling
+         * 
          * @method init
          * @constructor
          *
@@ -360,7 +369,8 @@ function (
                     basemapLayers = [];
 
                 // iterate over basemap layers and create layer objects for each;
-                // these objects can have any of the properties of the Basemap param constructor object here: https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
+                // these objects can have any of the properties of the Basemap param constructor object here: 
+                // https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
                 basemap.layers.forEach(function (layer) {
                     //console.log(layer);
                     basemapLayers.push(
@@ -397,7 +407,8 @@ function (
             basemapGallery.startup();
 
             initialBasemap = basemaps[RAMP.config.initialBasemapIndex];
-            // currentBasemapId is not specified from the start because the basemap hasn't been selected yet through the basemapgallery
+            // currentBasemapId is not specified from the start because the basemap hasn't been selected yet 
+            // through the basemapgallery
             basemapId = initialBasemap.id;
             currentTileSchema = initialBasemap.tileSchema;
 

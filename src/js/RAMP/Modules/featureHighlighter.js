@@ -122,8 +122,8 @@ define([
         }
 
         /**
-        * Clones the Graphic object from the event, adds it to the Highlight layer, and lowers the opacity of other map layers to make the cloned
-        * Graphic stand out.
+        * Clones the Graphic object from the event, adds it to the Highlight layer, and lowers the opacity of
+        * other map layers to make the cloned Graphic stand out.
         *
         * @method highlightGraphic
         * @private
@@ -200,8 +200,8 @@ define([
         }
 
         /**
-        * Clones the Graphic object from the event, adds it to the Zoomlight layer, and lowers the opacity of other map layers to make the cloned
-        * Graphic stand out.
+        * Clones the Graphic object from the event, adds it to the Zoomlight layer, and lowers the opacity of other
+        * map layers to make the cloned Graphic stand out.
         *
         * @method zoomLight
         * @private
@@ -246,8 +246,8 @@ define([
         }
 
         /**
-        * If there a Graphic in the Highlihgh layer, resets it's bounding box and repositions an interactive maptip to match the top center of the
-        * boudning box of the highlighted graphic.
+        * If there a Graphic in the Highlihgh layer, resets it's bounding box and repositions an interactive maptip
+        * to match the top center of the boudning box of the highlighted graphic.
         *
         * @method repositionInteractive
         * @private

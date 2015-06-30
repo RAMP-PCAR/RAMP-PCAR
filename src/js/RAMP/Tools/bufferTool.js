@@ -11,10 +11,10 @@
 * in the bottom right corner, then draw a polygon on the map.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * @class BufferTool
 * @uses dojo/_base/array
@@ -31,20 +31,20 @@
 
 define([
 // Dojo
-    "dojo/dom",
-    "dojo/_base/array",
-    "dojo/_base/Color",
-    "dojo/_base/lang",
+    'dojo/dom',
+    'dojo/_base/array',
+    'dojo/_base/Color',
+    'dojo/_base/lang',
 // Esri
-    "esri/config",
-    "esri/graphic",
-    "esri/tasks/GeometryService",
-    "esri/tasks/BufferParameters",
-    "esri/toolbars/draw",
-    "esri/symbols/SimpleLineSymbol",
-    "esri/symbols/SimpleFillSymbol",
+    'esri/config',
+    'esri/graphic',
+    'esri/tasks/GeometryService',
+    'esri/tasks/BufferParameters',
+    'esri/toolbars/draw',
+    'esri/symbols/SimpleLineSymbol',
+    'esri/symbols/SimpleFillSymbol',
 // Ramp
-    "ramp/map", "ramp/globalStorage", "tools/baseTool"
+    'ramp/map', 'ramp/globalStorage', 'tools/baseTool'
 ],
 
   function (
@@ -54,7 +54,7 @@ define([
       esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol,
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
-      "use strict";
+      'use strict';
       var ui,
           bufferApp,
           that;
@@ -86,14 +86,16 @@ define([
 
           var params = new BufferParameters(),
                // Get rid of all non-numerical/non-period characters.
-               distanceInput = that.outputFloat.find(".distance-input").val().replace(/[^0-9\.]+/g, ''),
+               distanceInput = that.outputFloat.find('.distance-input').val().replace(/[^0-9\.]+/g, ''),
                firstIndex = distanceInput.indexOf('.');
           // Get rid of all extra decimal points
-          distanceInput = distanceInput.substring(0, firstIndex + 1).concat(distanceInput.substring(firstIndex + 1).replace(/[.]+/g, ''));
+          distanceInput = distanceInput.substring(0, firstIndex + 1)
+                            .concat(distanceInput.substring(firstIndex + 1)
+                            .replace(/[.]+/g, ''));
           // Show what value is actually being used
-          $("#buffer-input").val(distanceInput);
+          $('#buffer-input').val(distanceInput);
 
-          if (distanceInput === "") {
+          if (distanceInput === '') {
               that.working(false);
           } else {
               params.distances = [distanceInput];
@@ -131,7 +133,8 @@ define([
               var graphic = new Graphic(geometry, symbol);
               bufferApp.map.graphics.add(graphic);
           });
-          //TODO if we change to an "always on" we will want to make this a public function like the activate function below
+          //TODO if we change to an 'always on' we will want to make this a public function like the activate
+          //function below
 
           bufferApp.map.showZoomSlider();
 
@@ -149,7 +152,7 @@ define([
               var map = RampMap.getMap(),
                    toolbar = new Draw(map);
 
-              toolbar.on("draw-end", computeBuffer);
+              toolbar.on('draw-end', computeBuffer);
 
               bufferApp = {
                   map: map,
@@ -201,7 +204,7 @@ define([
       function displayOutput() {
           that.displayTemplateOutput(
               {
-                  distanceLabel: i18n.t(that.ns + ":distance")
+                  distanceLabel: i18n.t(that.ns + ':distance')
               }
           );
       }
@@ -229,15 +232,17 @@ define([
               d.then(function () {
                   that.outputFloat.on('keydown', '#buffer-input', function (event) {
                       return (event.keyCode === 17 || event.keyCode === 18 ||
-                      (event.keyCode > 47 && event.keyCode < 58 && event.shiftKey === false) || (event.keyCode === 110) ||
-                      (event.keyCode > 95 && event.keyCode < 106) || (event.keyCode === 8) || (event.keyCode === 9) ||
-                      (event.keyCode === 190 && event.shiftKey === false) || (event.keyCode > 34 && event.keyCode < 40) || (event.keyCode === 46));
+                        (event.keyCode > 47 && event.keyCode < 58 && event.shiftKey === false) ||
+                        (event.keyCode === 110) || (event.keyCode > 95 && event.keyCode < 106) ||
+                        (event.keyCode === 8) || (event.keyCode === 9) ||
+                        (event.keyCode === 190 && event.shiftKey === false) ||
+                        (event.keyCode > 34 && event.keyCode < 40) || (event.keyCode === 46));
                   });
               });
 
               return this;
           },
 
-          name: "bufferTool"
+          name: 'bufferTool'
       });
   });

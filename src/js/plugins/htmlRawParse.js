@@ -2,7 +2,7 @@
 
 console.log('loading htmlRawParse');
 RAMP.plugins.featureInfoParser.htmlRawParse = function (data) {
-    "use strict";
+    'use strict';
 
-    return "{0}".format(data);
+    return '{0}'.format(data);
 };

@@ -1,5 +1,5 @@
 ﻿/* global define, console, window, $, i18n, RAMP, t, TimelineLite */
-
+// jshint maxlen:false
 /**
 * @module RAMP
 * @submodule FilterManager
@@ -8,25 +8,25 @@
 
 /**
 * Creates a choice tree for adding datasets.
-* 
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "DataLoader"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "LayerLoader"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "StepItem"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "TmplUtil"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "Bricks"}}{{/crossLink}}    
-* 
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "DataLoader"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "LayerLoader"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "StepItem"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "TmplUtil"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "Bricks"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
-* 
+*
 * @class DataLoaderGui
 * @static
 * @uses dojo/lang
@@ -41,14 +41,15 @@ define([
 
     /* Ramp */
 
-    'utils/popupManager', 'ramp/dataLoader', 'ramp/theme', 'ramp/map', 'ramp/layerLoader', 'ramp/globalStorage', 'ramp/stepItem',
+    'utils/popupManager', 'ramp/dataLoader', 'ramp/theme', 'ramp/map', 'ramp/layerLoader', 'ramp/globalStorage',
+    'ramp/stepItem',
 
     /* Util */
     'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks'
 ],
     function (
         lang,
-        filter_manager_template,
+        filterManagerTemplate,
         PopupManager, DataLoader, Theme, RampMap, LayerLoader, GlobalStorage, StepItem,
         UtilMisc, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
@@ -74,11 +75,11 @@ define([
 
             transitionDuration = 0.5,
 
-            templates = JSON.parse(TmplHelper.stringifyTemplate(filter_manager_template));
+            templates = JSON.parse(TmplHelper.stringifyTemplate(filterManagerTemplate));
 
         /**
          * A collection of callbacks used by the choice tree.
-         * 
+         *
          * @property choiceTreeCallbacks
          * @private
          * @type {Object}
@@ -86,7 +87,7 @@ define([
         choiceTreeCallbacks = {
             /**
              * A callback that advances the choice tree to the specified child step of the supplied step item.
-             * 
+             *
              * @method choiceTreeCallbacks.simpleAdvance
              * @private
              * @param  {StepItem} step            step item to advance from
@@ -99,7 +100,7 @@ define([
 
             /**
              * A callback that retreats part of the choice tree to the step item specified.
-             * 
+             *
              * @method choiceTreeCallbacks.simpleCancel
              * @private
              * @param  {StepItem} step step item to retreat to
@@ -117,7 +118,7 @@ define([
 
             /**
              * A callback to guess the service type from the service url provided in step data.
-             * 
+             *
              * @method choiceTreeCallbacks.serviceTypeStepGuess
              * @private
              * @param  {StepItem} step step item to guess service type on
@@ -142,7 +143,7 @@ define([
 
             /**
              * A callback to guess the file type from the file url or file object provided in step data.
-             * 
+             *
              * @method choiceTreeCallbacks.fileTypeStepGuess
              * @private
              * @param  {StepItem} step step item to guess file type on
@@ -168,15 +169,16 @@ define([
         };
 
         /**
-         * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
-         * 
+         * Create choice tree structure. This function is executed as part of the module initialization so that
+         * i18n strings can be properly loaded
+         *
          * @method prepareChoiceTreeStructure
          * @private
          */
         function prepareChoiceTreeStructure() {
             /**
              * A collection of precanned error messages that are used by the choice tree.
-             * 
+             *
              * @property choiceTreeErrors
              * @private
              * @type {Object}
@@ -216,8 +218,9 @@ define([
             /**
              * A choice tree config object
              *
-             * Config has a simple tree structure, with content being an array of Brick object to be placed inside a StepItem.
-             * 
+             * Config has a simple tree structure, with content being an array of Brick object to be
+             * placed inside a StepItem.
+             *
              * @property choiceTree
              * @private
              * @type {Object}
@@ -334,7 +337,8 @@ define([
                                                 handle = delayLoadingState(step, 100),
                                                 bricksData = step.getData().bricksData,
                                                 serviceTypeValue = bricksData.serviceType.selectedChoice,
-                                                serviceUrlValue = bricksData.serviceURL.inputValue.trim(); // trimming spaces from service url string
+                                                // trimming spaces from service url string
+                                                serviceUrlValue = bricksData.serviceURL.inputValue.trim();
 
                                             switch (serviceTypeValue) {
                                                 case 'featureServiceAttrStep':
@@ -344,13 +348,15 @@ define([
                                                     promise.then(function (data) {
                                                         // get data from feature layer's legend endpoint
 
-                                                        var layerInRampLODRange = RampMap.layerInLODRange(data.maxScale, data.minScale);
+                                                        var layerInRampLODRange =
+                                                            RampMap.layerInLODRange(data.maxScale, data.minScale);
 
                                                         if (!layerInRampLODRange) {
                                                             handleFailure(step, handle, {
                                                                 serviceType:
                                                                     lang.mixin(choiceTreeErrors.featureError, {
-                                                                        message: i18n.t('addDataset.error.messageFeatureOutsideZoomRange')
+                                                                        message:
+                                                                            i18n.t('addDataset.error.messageFeatureOutsideZoomRange')
                                                                     })
                                                             });
                                                         } else {
@@ -391,7 +397,6 @@ define([
                                                                 });
                                                             });
                                                         }
-
                                                     }, function (event) {
                                                         // error connection to service
                                                         console.error(event);
@@ -920,7 +925,7 @@ define([
                                                         bricksData = data.bricksData,
                                                         featureLayer = data.stepData,
 
-                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RampRendererType, bricksData.color.hex);
 
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                         //renderer: obj.style,
@@ -1109,7 +1114,7 @@ define([
                                                         bricksData = data.bricksData,
                                                         featureLayer = data.stepData,
 
-                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RAMP_rendererType, bricksData.color.hex);
+                                                        iconTemplate = makeIconTemplate('a_d_icon_' + featureLayer.renderer._RampRendererType, bricksData.color.hex);
 
                                                     DataLoader.enhanceFileFeatureLayer(featureLayer, {
                                                         //renderer: obj.style,
@@ -1141,7 +1146,7 @@ define([
 
         /**
          * Creates a new choice tree html representation and appends it to the page.
-         * 
+         *
          * @method createChoiceTree
          * @private
          */
@@ -1203,7 +1208,7 @@ define([
 
         /**
          * From provided CSV data, guesses which columns are long and lat.
-         * 
+         *
          * @method guessLatLong
          * @private
          * @param  {Array} rows csv data
@@ -1276,9 +1281,9 @@ define([
 
         /**
          * Creates a icon base64 template to be displayed in the layer selector.
-         * 
+         *
          * @method makeIconTemplate
-         * @private 
+         * @private
          * @param {String} templateName a name of the template to use for an icon
          * @param {String} hex color value in hex
          * @return {String} a base64 encoded icon template
@@ -1294,8 +1299,9 @@ define([
         }
 
         /**
-         * Delay setting loading state to the step for a specified time in case it happens really fast and it will flicker.
-         * 
+         * Delay setting loading state to the step for a specified time in case it happens really fast 
+         * and it will flicker.
+         *
          * @method delayLoadingState
          * @param {StepItem} step step to delay setting loading state on
          * @param {Number} time a delay in ms
@@ -1309,13 +1315,14 @@ define([
         }
 
         /**
-         * Handles any failure happening in the choice tree by setting the responsible step to error and displaying appropriate notices.
-         * 
+         * Handles any failure happening in the choice tree by setting the responsible step to error and 
+         * displaying appropriate notices.
+         *
          * @method handleFailure
          * @private
          * @param  {StepItem} step         a step item that should handle failure
          * @param  {Number} handle       a timeout handle to be canceled
-         * @param  {Object} brickNotices brick notices to be displayed 
+         * @param  {Object} brickNotices brick notices to be displayed
          */
         function handleFailure(step, handle, brickNotices) {
             if (handle) {
@@ -1330,7 +1337,7 @@ define([
 
         /**
          * Notifies all step items in the tree which step is current at the moment.
-         * 
+         *
          * @method setCurrentStep
          * @private
          * @param {String} event a StepItem.CURRENT_STEP_CHANGE event
@@ -1343,7 +1350,7 @@ define([
 
         /**
          * Notifies all step items in the tree that a certain step has changed its state.
-         * 
+         *
          * @method setStepState
          * @private
          * @param {Object} event a StepItem.STATE_CHANGE event
@@ -1366,7 +1373,7 @@ define([
 
         /**
          * Closes the add dataset choice tree.
-         * 
+         *
          * @method closeChoiceTree
          * @private
          */
@@ -1377,7 +1384,7 @@ define([
         return {
             /**
              * Initialize add-dataset functionality and creates a add-dataset choice tree.
-             * 
+             *
              * @method init
              * @static
              */

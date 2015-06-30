@@ -148,7 +148,8 @@ define([
                         });
 
                         var res = {
-                            layerId: data.id,  //TODO verifiy this.  i think this is the index.  we would want to use autoID?
+                            //TODO verifiy this.  i think this is the index.  we would want to use autoID?
+                            layerId: data.id,
                             layerName: data.name,
                             layerUrl: featureLayerEndpoint,
                             geometryType: data.geometryType,
@@ -209,7 +210,8 @@ define([
                     data.layers.forEach(function (layer) {
                         if (layer.layerId === layerIdx) {
                             layer.legend.forEach(function (legendItem) {
-                                res[legendItem.label] = 'data:' + legendItem.contentType + ';base64,' + legendItem.imageData;
+                                res[legendItem.label] = 'data:' + legendItem.contentType + ';base64,' +
+                                    legendItem.imageData;
                             });
                         }
                     });
@@ -241,7 +243,10 @@ define([
             var def = new Deferred(), promise;
 
             try {
-                promise = (new EsriRequest({ url: wmsEndpoint + '?service=WMS&version=1.3&request=GetCapabilities', handleAs: 'xml' })).promise;
+                promise = (new EsriRequest({
+                    url: wmsEndpoint + '?service=WMS&version=1.3&request=GetCapabilities',
+                    handleAs: 'xml'
+                })).promise;
             } catch (e) {
                 def.reject(e);
             }
@@ -275,7 +280,10 @@ define([
                                 queryable: x.getAttribute('queryable') === '1'
                             };
                         });
-                        res.queryTypes = query('GetFeatureInfo > Format', data).map(function (node) { return node.textContent || node.text; });
+                        res.queryTypes = query('GetFeatureInfo > Format', data).map(
+                            function (node) {
+                                return node.textContent || node.text;
+                        });
                     } catch (e) {
                         def.reject(e);
                     }
@@ -434,8 +442,8 @@ define([
         * Peek at the CSV output (useful for checking headers).
         *
         * @param {string} data a string containing the CSV (or any DSV) data
-        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess a delimiter and
-        * this parameter is required
+        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess 
+        * a delimiter and this parameter is required
         * @returns {Array} an array of arrays containing the parsed CSV
         */
         function csvPeek(data, delimiter) {
@@ -450,7 +458,9 @@ define([
             if (!geoJson.crs || geoJson.crs.type !== 'name') { return; }
 
             var name = geoJson.crs.properties.name,
-                promises = Object.keys(RAMP.plugins.projectionLookup).map(function (plugin) { return RAMP.plugins.projectionLookup[plugin](name); });
+                promises = Object.keys(RAMP.plugins.projectionLookup).map(function (plugin) {
+                    return RAMP.plugins.projectionLookup[plugin](name);
+                });
             first(promises).then(function (projString) {
                 console.log(projString);
                 proj4.defs(name, projString);
@@ -515,13 +525,16 @@ define([
             console.log('geojson -> esrijson converted');
             fs = { features: esriJson, geometryType: layerDefinition.drawingInfo.geometryType };
 
-            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, { mode: FeatureLayer.MODE_SNAPSHOT, id: layerID });
+            layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, {
+                mode: FeatureLayer.MODE_SNAPSHOT,
+                id: layerID
+            });
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
 
             // TODO : refactor the hack
             // SZ_HACK
-            layer.renderer._RAMP_rendererType = featureTypeToRenderer[geoJson.features[0].geometry.type];
+            layer.renderer._RampRendererType = featureTypeToRenderer[geoJson.features[0].geometry.type];
 
             //SZ TESTING -- this will be removed when the UI separates the layer creation an layer enhancement
             //enhanceFileFeatureLayer(layer, opts);
@@ -562,7 +575,8 @@ define([
             //add custom properties and event handlers to layer object
             RampMap.enhanceLayer(featureLayer, newConfig, true);
             featureLayer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
-            featureLayer.ramp.load.state = 'loaded'; //because we made the feature layer by hand, it already has it's layer definition, so it begins in loaded state.  the load event never fires
+            featureLayer.ramp.load.state = 'loaded'; //because we made the feature layer by hand, it already has 
+            //it's layer definition, so it begins in loaded state.  the load event never fires
             featureLayer.type = 'Feature Layer'; //required to visible layer function
 
             //plop config in global config object so everyone can access it.
@@ -640,7 +654,8 @@ define([
             var def = new Deferred();
 
             try {
-                // window.crypto.subtle.digest({ name: 'SHA-256' }, shpData).then(function (h) { var u8 = new Uint16Array(h); console.log(u8); });
+                // window.crypto.subtle.digest({ name: 'SHA-256' }, shpData).then(function (h) { 
+                // var u8 = new Uint16Array(h); console.log(u8); });
                 shp.getShapefile(shpData).then(function (geojson) {
                     var jsonLayer;
                     try {

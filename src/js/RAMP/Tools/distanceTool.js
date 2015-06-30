@@ -9,10 +9,10 @@
 * and length will be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @class DistanceTool
 * @uses dojo/dom
 * @uses dojo/string
@@ -28,12 +28,12 @@
 
 define([
 // Dojo
-      "dojo/dom", "dojo/string", "dojo/_base/lang",
+      'dojo/dom', 'dojo/string', 'dojo/_base/lang',
 // Esri
-      "esri/config", "esri/graphic", "esri/tasks/GeometryService",
-      "esri/tasks/LengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
+      'esri/config', 'esri/graphic', 'esri/tasks/GeometryService',
+      'esri/tasks/LengthsParameters', 'esri/toolbars/draw', 'esri/symbols/SimpleFillSymbol',
 // Ramp
-      "ramp/map", "ramp/globalStorage", "tools/baseTool"
+      'ramp/map', 'ramp/globalStorage', 'tools/baseTool'
 ],
     function (
 // Dojo
@@ -42,7 +42,7 @@ define([
       esriConfig, Graphic, GeometryService, LengthsParameters, Draw, SimpleFillSymbol,
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
         var ui,
             geometryService,
@@ -61,7 +61,7 @@ define([
             that.working(true);
 
             geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
-            geometryService.on("lengths-complete", outputAreaAndLength);
+            geometryService.on('lengths-complete', outputAreaAndLength);
 
             var geometry = evtObj.geometry;
             measureApp.map.graphics.clear();
@@ -71,7 +71,7 @@ define([
             //setup the parameters for the areas and lengths operation
             var lengthsParams = new LengthsParameters();
             lengthsParams.lengthUnit = GeometryService.UNIT_KILOMETER;
-            lengthsParams.calculationType = "geodesic";
+            lengthsParams.calculationType = 'geodesic';
 
             geometryService.simplify([geometry], function (simplifiedGeometries) {
                 lengthsParams.polylines = simplifiedGeometries;
@@ -94,8 +94,8 @@ define([
 
             that.working(false);
 
-            length = string.substitute("${number:dojo.number.format}", { number: length });
-            displayOutput(length, "km");
+            length = string.substitute('${number:dojo.number.format}', { number: length });
+            displayOutput(length, 'km');
         }
 
         ui = {
@@ -103,7 +103,7 @@ define([
                 var map = RampMap.getMap(),
                     toolbar = new Draw(map);
 
-                toolbar.on("draw-end", computeAreaAndLength);
+                toolbar.on('draw-end', computeAreaAndLength);
 
                 measureApp = {
                     map: map,
@@ -121,7 +121,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.LINE);
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -145,7 +145,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(that.ns + ':na'));
         }
 
         /**
@@ -157,7 +157,7 @@ define([
         function displayOutput(length, lengthUnits) {
             that.displayTemplateOutput(
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"),
+                    lengthLabel: i18n.t(that.ns + ':length'),
                     lengthOutput: length,
                     lengthUnits: lengthUnits
                 }
@@ -188,6 +188,6 @@ define([
                 return this;
             },
 
-            name: "distanceTool"
+            name: 'distanceTool'
         });
     });

@@ -10,7 +10,7 @@
 * Also adds highlight/unhighlight on focus/unfocus, update label when checked/unchecked
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * @class Checkbox
 * @constructor
@@ -20,9 +20,11 @@
 *
 * @param {jObject} node a jQuery object representing the input checkbox node to be wrapped
 * @param {Object} [options] Additional options
-* @param {String} [options.nodeIdAttr] Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id. If no appropriate "data-*" attribute found,
-* `nodeIdAttr` is used directly, failing that, regular `id` is used.
-* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
+* @param {String} [options.nodeIdAttr] Name of the 'data-*' attribute set on the checkbox node to be treated as
+* the checkbox id. If no appropriate 'data-*' attribute found, `nodeIdAttr` is used directly, failing that, regular
+* `id` is used.
+* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox
+* correspondingly.
 * @param {Object} [options.cssClass.active] CSS class to be set when the Checkbox is `active`.
 * @param {Object} [options.cssClass.focus] CSS class to be set when the Checkbox is `focused`.
 * @param {Object} [options.cssClass.check] CSS class to be set when the Checkbox is `checked`.
@@ -34,15 +36,16 @@
 * @return {Checkbox} A control objects allowing to toggle checkbox.
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
+define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
     function (Evented, declare, lang, Util) {
-        "use strict";
+        'use strict';
 
         var Checkbox;
 
         Checkbox = declare([Evented], {
             constructor: function (node, options) {
-                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                // declare individual properties inside the constructor:
+                // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
                         /**
@@ -65,13 +68,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                         labelNode: null,
 
                         /**
-                         * Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id.
+                         * Name of the 'data-*' attribute set on the checkbox node to be treated as the checkbox id.
                          *
                          * @property nodeIdAttr
                          * @type String
-                         * @default "id"
+                         * @default 'id'
                          */
-                        nodeIdAttr: "id",
+                        nodeIdAttr: 'id',
 
                         /**
                          * `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
@@ -81,15 +84,15 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                          * @default
                          * @example
                          *      cssClass: {
-                         *          active: "active",
-                         *          focus: "focused",
-                         *          check: "checked"
+                         *          active: 'active',
+                         *          focus: 'focused',
+                         *          check: 'checked'
                          *      }
                          */
                         cssClass: {
-                            active: "active",
-                            focus: "focused",
-                            check: "checked"
+                            active: 'active',
+                            focus: 'focused',
+                            check: 'checked'
                         },
 
                         /**
@@ -100,13 +103,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                          * @default
                          * @example
                          *      label: {
-                         *          check: "check",
-                         *          uncheck: "unchecked"
+                         *          check: 'check',
+                         *          uncheck: 'unchecked'
                          *      }
                          */
                         label: {
-                            check: "checked",
-                            uncheck: "unchecked"
+                            check: 'checked',
+                            uncheck: 'unchecked'
                         },
 
                         /**
@@ -146,8 +149,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 this._initListeners();
 
                 this.id = this.node.data(this.nodeIdAttr) || this.node.attr(this.nodeIdAttr) || this.node.id;
-                
-                // TODO: refactor/fix; fintInputLabel doesn't work for checkbox bricks                
+
+                // TODO: refactor/fix; fintInputLabel doesn't work for checkbox bricks
                 this.labelNode = this.node.findInputLabel();
 
                 this._toggleLabel();
@@ -157,21 +160,22 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 var that = this;
 
                 this.node
-                    .on("change", function () {
+                    .on('change', function () {
                         that._toggleLabel();
 
                         that._emit(Checkbox.agency.USER);
                     })
-                    .on("focus", function () {
+                    .on('focus', function () {
                         that.node.findInputLabel().addClass(that.cssClass.focus);
                     })
-                    .on("focusout", function () {
+                    .on('focusout', function () {
                         that.node.findInputLabel().removeClass(that.cssClass.focus);
                     });
             },
 
             /*
-            * Adds the "checked", "focused" or "active" CSS class to the label so it displays visually matches the changed state.
+            * Adds the 'checked', 'focused' or 'active' CSS class to the label so it displays visually
+            * matches the changed state.
             * Updates the title attribute and text inside an invisible span housed inside the label.
             *
             * @method _toggleLabel
@@ -184,20 +188,20 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
 
                 if (this.state) {
                     newText = String.format(this.label.check,
-                        this.labelNode.data("label-name"));
+                        this.labelNode.data('label-name'));
 
                     this.labelNode
                         .addClass(this.cssClass.check)
                         .prop('title', newText)
-                        .find("> span").text(newText);
+                        .find('> span').text(newText);
                 } else {
                     newText = String.format(this.label.uncheck,
-                        this.labelNode.data("label-name"));
+                        this.labelNode.data('label-name'));
 
                     this.labelNode
                         .removeClass(this.cssClass.check)
                         .prop('title', newText)
-                        .find("> span").text(newText);
+                        .find('> span').text(newText);
                 }
 
                 this.onChange.call(this);
@@ -212,7 +216,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
              *
              */
             _emit: function (agency) {
-                //console.log("Checkbox ->", this.id, "set by", agency, "to", this.state);
+                //console.log('Checkbox ->', this.id, 'set by', agency, 'to', this.state);
 
                 this.emit(Checkbox.event.TOGGLE, {
                     agency: agency,
@@ -232,7 +236,6 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 this.validate();
 
                 if (this.state !== Checkbox.state.INVALID) {
-
                     // change state only if it's different from the current one
                     if (this.state !== state) {
                         this.node.prop('checked', state);
@@ -246,7 +249,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
             },
 
             /**
-            * Validates that the checkbox node is in fact in dom. If not, set checkbox's state to "checkbox-invalid" to prevent any interactions.
+            * Validates that the checkbox node is in fact in dom. If not, set checkbox's state to 'checkbox-invalid'
+            * to prevent any interactions.
             *
             * @method validate
             * @return {Checkbox} Control object for chaining
@@ -258,12 +262,12 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 } else if (this.state === Checkbox.state.INVALID) {
                     this.reset();
                 }
-                
+
                 return this;
             },
 
             reset: function () {
-                this.node.removeClass("tooltipstered")
+                this.node.removeClass('tooltipstered')
                 ;
                 this._toggleLabel();
             }
@@ -272,7 +276,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
         lang.mixin(Checkbox,
             {
                 state: {
-                    INVALID: "checkbox-invalid"
+                    INVALID: 'checkbox-invalid'
                 },
 
                 /**
@@ -284,13 +288,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                 * @default
                 * @example
                 *      agency: {
-                *           USER: "USER",
-                *           CODE: "CODE"
+                *           USER: 'USER',
+                *           CODE: 'CODE'
                 *       }
                 */
                 agency: {
-                    USER: "USER",
-                    CODE: "CODE"
+                    USER: 'USER',
+                    CODE: 'CODE'
                 },
 
                 /**
@@ -302,7 +306,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                  * @default null
                  * @example
                  *      {
-                 *          TOGGLE: "checkbox/toggle"
+                 *          TOGGLE: 'checkbox/toggle'
                  *      }
                  */
                 event: {
@@ -314,7 +318,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang", "utils/util"],
                     * @param event.checkbox {Checkbox} Checkbox object that has been toggled
                     * @param event.agency {String} Agency that toggled the Checkbox
                     */
-                    TOGGLE: "checkbox/toggle"
+                    TOGGLE: 'checkbox/toggle'
                 }
             }
         );

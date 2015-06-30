@@ -99,10 +99,11 @@ define([
                         }
                     });
                 } 
-                //if there is no fData, the attribute data has not downloaded yet.  given that we have a warning on a hover, the user will see that message
-                //before they can initiate a click. by not supporting a separate message on no-attrib click, we avoid having to worry about missing datagrid rows
-                //(there will be no rows until the attribs have downloaded), nor worry about detail panels (that have no data).
-                //so, we do nothing. hurrah!
+                // if there is no fData, the attribute data has not downloaded yet.  given that we have a warning on
+                // a hover, the user will see that message before they can initiate a click. by not supporting a 
+                // separate message on no-attrib click, we avoid having to worry about missing datagrid rows (there
+                // will be no rows until the attribs have downloaded), nor worry about detail panels (that have no 
+                // data). so, we do nothing. hurrah!
             },
 
             /**
@@ -119,7 +120,8 @@ define([
             },
 
             /**
-            * This function is called whenever the user hovers over a feature on the map when another feature already has been selected.
+            * This function is called whenever the user hovers over a feature on the map when another feature already 
+            * has been selected.
             *
             * @method onFeatureMouseOver
             * @param {Object} evt [description]

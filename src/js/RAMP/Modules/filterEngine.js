@@ -80,7 +80,7 @@ define([
                 q = new EsriQuery();
 
             //this will result in just objectid fields, as that is all we have in feature layers
-            q.outFields = ["*"];
+            q.outFields = ['*'];
             q.geometry = extent;
 
             //apply spatial query to the layers, collect deferred results in the array.
@@ -138,8 +138,10 @@ define([
                             break;
 
                         case 'raw':
-                            //just take all the feature data in the data store.  this will grab data that is not visible on the map (and possibly not in an onDemand layer)
-                            //use slice to make a shallow copy of the array. we don't want to point to the same array, as we don't want to manipulate the RAMP.data set
+                            //just take all the feature data in the data store.  this will grab data that is not
+                            //visible on the map (and possibly not in an onDemand layer)
+                            //use slice to make a shallow copy of the array. we don't want to point to the same array,
+                            //as we don't want to manipulate the RAMP.data set
                             dataSet[key] = RAMP.data[key].features.slice();
 
                             break;
@@ -279,7 +281,8 @@ define([
 
                 // text search if any
                 if (options.textSearch) {
-                    queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false : true, options.gridMode));
+                    queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false :
+                        true, options.gridMode));
                 }
 
                 //execute queries, if any

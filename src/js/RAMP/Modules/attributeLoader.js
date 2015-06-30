@@ -104,7 +104,8 @@ define([
         * @param  {dojo/Deferred} callerDef deferred object that resolves when current data has been downloaded
         */
         function loadDataBatch(maxId, maxBatch, layerUrl, idField, layerId, callerDef) {
-            //fetch attributes from feature layer. where specifies records with id's higher than stuff already downloaded. outFields * (all attributes). no geometry.
+            // fetch attributes from feature layer. where specifies records with id's higher than stuff already
+            // downloaded. outFields * (all attributes). no geometry.
             var defData = esriRequest({
                 url: layerUrl + '/query',
                 content: {
@@ -132,7 +133,8 @@ define([
                             //stash the result and call the service again for the next batch of data.
                             //max id becomes last object id in the current batch
                             var thisDef = new Deferred();
-                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, layerUrl, idField, layerId, thisDef);
+                            loadDataBatch(dataResult.features[len - 1].attributes[idField], maxBatch, layerUrl,
+                                idField, layerId, thisDef);
 
                             thisDef.then(function (dataArray) {
                                 callerDef.resolve(dataResult.features.concat(dataArray));
@@ -182,7 +184,8 @@ define([
                             RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], true);
 
                             //set up layer data object based on layer data
-                            var maxBatchSize = serviceResult.maxRecordCount || -1, //10.0 server will not supply a max record value
+                            //10.0 server will not supply a max record value
+                            var maxBatchSize = serviceResult.maxRecordCount || -1,
                                 defFinished = new Deferred(),
                                 layerData = newLayerData();
                             layerData.layerId = layerId;
@@ -217,7 +220,10 @@ define([
                                 console.log('error getting attribute data for id ' + layerId);
                                 //set layer to error state
                                 RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
-                                topic.publish(EventManager.LayerLoader.LAYER_ERROR, { layer: RAMP.layerRegistry[layerId], error: error });
+                                topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
+                                    layer: RAMP.layerRegistry[layerId],
+                                    error: error
+                                });
                             });
                         } else {
                             console.log('Service metadata load error');

@@ -17,9 +17,9 @@
 * NOTE: jquery.ui.navigation.js is required to create the object
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* 
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+*
 * @class Navigation
 * @static
 * @uses dojo/_base/declare
@@ -28,11 +28,11 @@
 
 define([
 //Dojo
-    "dojo/_base/declare", "dojo/topic", "dojo/_base/lang",
+    'dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 
 //RAMP
-    "ramp/globalStorage", "ramp/eventManager",
-    "esri/geometry/Point"
+    'ramp/globalStorage', 'ramp/eventManager',
+    'esri/geometry/Point'
 ],
 
 function (
@@ -40,7 +40,7 @@ function (
     declare, topic, lang,
 // RAMP
     GlobalStorage, EventManager, Point) {
-    "use strict";
+    'use strict';
     var nav,
         geolocate,
         map;
@@ -72,29 +72,28 @@ function (
         }
 
         nav
-            .on("navigation:panClick", function (e, direction) {
+            .on('navigation:panClick', function (e, direction) {
                 topic.publish(EventManager.Navigation.PAN, {
                     direction: direction
                 });
             })
-            .on("navigation:zoomClick", function (e, in_out) {
-                var newLvl = (in_out === "zoomIn") ? 1 : -1;
+            .on('navigation:zoomClick', function (e, inOut) {
+                var newLvl = (inOut === 'zoomIn') ? 1 : -1;
                 topic.publish(EventManager.Navigation.ZOOM_STEP, {
                     level: newLvl
                 });
             })
-            .on("navigation:zoomSliderChange", function (e, newVal) {
+            .on('navigation:zoomSliderChange', function (e, newVal) {
                 topic.publish(EventManager.Navigation.ZOOM, {
                     level: newVal
                 });
             })
-            .on("navigation:fullExtentClick", function () {
+            .on('navigation:fullExtentClick', function () {
                 topic.publish(EventManager.Navigation.FULL_EXTENT);
             })
-            .on("navigation:geoLocateClick", function () {
+            .on('navigation:geoLocateClick', function () {
                 _goToPoint();
             });
-        
     }
 
     /**
@@ -105,11 +104,11 @@ function (
     */
     function initListeners() {
         function toggleTransition(inTransition) {
-            nav.navigation("toggleTransition", inTransition);
+            nav.navigation('toggleTransition', inTransition);
         }
 
         topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
-            nav.navigation("setSliderVal", event.lod.level);
+            nav.navigation('setSliderVal', event.lod.level);
         });
 
         /* Keep track of when the map is in transition, the slider will throw
@@ -133,14 +132,16 @@ function (
         * @param {Number} currentLevel
         */
         init: function (currentLevel) {
-
             // NOTE: JKW Document the change. Refactor,
-            // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is no hook to attach a tooltip to.
-            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the disabled state.
+            // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue
+            // is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is 
+            // no hook to attach a tooltip to.
+            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the 
+            // disabled state.
             map = RAMP.map;
             geolocate = navigator.geolocation;
 
-            nav.navigation("setSliderVal", currentLevel);
+            nav.navigation('setSliderVal', currentLevel);
             initTopics();
             initListeners();
         },
@@ -149,12 +150,12 @@ function (
             // Note: JKW added currentlevel
             //RAMP.config.navWidget.sliderVal = currentLevel; // reference to line 134 of jquery.ui.navigations.js
 
-            var options = lang.mixin({}, 
+            var options = lang.mixin({},
                 RAMP.config.navWidget,
-                {locale: RAMP.locale}
+                { locale: RAMP.locale }
             );
 
-            nav = $("#" + RAMP.config.divNames.navigation).navigation(options);
+            nav = $('#' + RAMP.config.divNames.navigation).navigation(options);
         }
     };
 });

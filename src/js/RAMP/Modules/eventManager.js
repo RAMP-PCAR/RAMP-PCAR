@@ -210,7 +210,8 @@ define([],
                 *
                 * @event GUI.SUBPANEL_CLOSE [subscribed]
                 * @for GUI
-                * @param origin {String} the name of the module that requested to close the subPanel (e.g. 'filterManager')
+                * @param origin {String} the name of the module that requested to close the
+                * subPanel (e.g. 'filterManager')
                 */
                 SUBPANEL_CLOSE: 'gui/subpanel-close',
 
@@ -219,7 +220,8 @@ define([],
                 *
                 * @event GUI.SUBPANEL_DOCK [subscribed]
                 * @for GUI
-                * @param origin {String} the name of the module that requested to dock the subPanel (e.g. 'filterManager')
+                * @param origin {String} the name of the module that requested to dock the
+                * subPanel (e.g. 'filterManager')
                 * @param target {jNode} where to move the subPanel; if not supplied; sidePanel is used
                 */
                 SUBPANEL_DOCK: 'gui/subpanel-dock',
@@ -251,12 +253,14 @@ define([],
                 * @event GUI.ADD_LAYER_PANEL_CHANGE
                 * @for GUI
                 * @param evt {Object} the event Object
-                * @param evt.visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel is closed
+                * @param evt.visible {boolean} true if the AddLayer panel is opened, false if the AddLayer panel
+                * is closed
                 */
                 ADD_LAYER_PANEL_CHANGE: 'gui/add-layer-panel-change',
 
                 /**
-                 * Published each time a toolbar section / widget is opened. Used to close other toolbar sections / widgets.
+                 * Published each time a toolbar section / widget is opened. Used to close other toolbar
+                 * sections / widgets.
                  *
                  * @event GUI.TOOLBAR_SECTION_OPEN
                  * @for GUI
@@ -287,7 +291,8 @@ define([],
 
             FeatureHighlighter: {
                 /**
-                * Permanently highlights a given feature on the map; display an interactive tooltip for this feature; reduces opacity of the `graphicGroup` layers.
+                * Permanently highlights a given feature on the map; display an interactive tooltip for
+                * this feature; reduces opacity of the `graphicGroup` layers.
                 * Even when the user moves the cursor away, the feature stays highlighted; tooltip stays put.
                 * Only one feature can be highlighted like this at a time.
                 *
@@ -300,8 +305,8 @@ define([],
                 HIGHLIGHT_SHOW: 'highlighter/highlight-show',
 
                 /**
-                * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the layers;
-                * hides the interactive tooltip.
+                * Dehighlights a currently highlighted feature on the map and restores opacity of the rest of the
+                * layers; hides the interactive tooltip.
                 *
                 * @event FeatureHighlighter.HIGHLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
@@ -309,7 +314,8 @@ define([],
                 HIGHLIGHT_HIDE: 'highlighter/highlight-hide',
 
                 /**
-                * Temporarilly highlights (hoverlights) a given feature on the map. Intended to be dehighlighted when the user moves the cursor away; to do that, publish HOVERLIGHT_HIDE event.
+                * Temporarilly highlights (hoverlights) a given feature on the map. Intended to be dehighlighted
+                * when the user moves the cursor away; to do that, publish HOVERLIGHT_HIDE event.
                 * Effect is only visible when another feature is already permanently highlighted.
                 * Only one feature can be highlighted like this at a time.
                 *
@@ -320,7 +326,8 @@ define([],
                 HOVERLIGHT_SHOW: 'highlighter/hoverlight-show',
 
                 /**
-                * Dehighlights a currently highlighted (hoverlighted) feature on the map without restoring opacity of the rest of the layers;
+                * Dehighlights a currently highlighted (hoverlighted) feature on the map without restoring opacity
+                * of the rest of the layers;
                 *
                 * @event FeatureHighlighter.HOVERLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
@@ -329,7 +336,8 @@ define([],
 
                 /**
                 * Temporarilly highlights (zoomlightes) a given feature on the map.
-                * Intended to be dehighlighted when the user makes an action like panning or zooming the map, publish ZOOMLIGHT_HIDE event.
+                * Intended to be dehighlighted when the user makes an action like panning or zooming the map,
+                * publish ZOOMLIGHT_HIDE event.
                 * Displays a temporary tooltip for this feature;
                 * Only one feature can be highlighted (zoomlighted) like this at a time.
                 *
@@ -353,7 +361,8 @@ define([],
 
             Maptips: {
                 /**
-                * Displays a simple, temporary maptip, positioning it over the `target` jObject; the content of the maptip is build from the
+                * Displays a simple, temporary maptip, positioning it over the `target` jObject; the content
+                * of the maptip is build from the
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 *
                 * @event Maptips.SHOW [subscribed]
@@ -364,7 +373,8 @@ define([],
                 SHOW: 'maptips/show',
 
                 /**
-                * Displays an permanent, interactive maptip with a close button, positioning it over the `target` jObject; the content of the maptip is build from the
+                * Displays an permanent, interactive maptip with a close button, positioning it over the `target`
+                * jObject; the content of the maptip is build from the
                 * contents of the `graphic` object and the mapTip template specified in the config object.
                 * The maptip will not be shown if it's covered by the open {{#crossLink "SubPanel"}}{{/crossLink}}.
                 *
@@ -375,23 +385,27 @@ define([],
                 SHOW_INTERACTIVE: 'maptips/showInteractive',
 
                 /**
-                * Is fired when an interactive maptip is shown and {{#crossLink "Maptip"}}{{/crossLink}} detects if the maptip is hidden behind the
-                * {{#crossLink "SubPanel"}}{{/crossLink}} and extent change is needed. Sets the `scroll` payload attribute to true if the extent change is not needed
+                * Is fired when an interactive maptip is shown and {{#crossLink "Maptip"}}{{/crossLink}} detects
+                * if the maptip is hidden behind the
+                * {{#crossLink "SubPanel"}}{{/crossLink}} and extent change is needed. Sets the `scroll` payload
+                * attribute to true if the extent change is not needed
                 * and the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row.
                 *
                 * @event Maptips.EXTENT_CHANGE [subscribed]
-                * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll to the currently highlighted row
+                * @param {Boolean} scroll indicates if the {{#crossLink "Datagrid"}}{{/crossLink}} should scroll
+                * to the currently highlighted row
                 */
                 EXTENT_CHANGE: 'maptip/extent-change',
 
                 /**
-                * Repositions the interactive tooltip that is already displayed when the user pans or zooms the map, or the map is otherwise
-                * adjusted. If the tooltip is hidden from the view by the {{#crossLink "SubPanel"}}{{/crossLink}} or the edge of the map container,
-                * it is hidden from the page.
+                * Repositions the interactive tooltip that is already displayed when the user pans or zooms the
+                * map, or the map is otherwise adjusted. If the tooltip is hidden from the view by the
+                * {{#crossLink "SubPanel"}}{{/crossLink}} or the edge of the map container, it is hidden from the page.
                 *
                 * @event Maptips.REPOSITION_INTERACTIVE [subscribed]
                 * @for Maptips
-                * @param {Number} offset New tooltip offset relative to the shape it's attached too; when zooming, the shape changes its size and the
+                * @param {Number} offset New tooltip offset relative to the shape it's attached too; when zooming,
+                * the shape changes its size and the
                 * offset needs to be recalculated to keep the tooltip in relative center
                 */
                 REPOSITION_INTERACTIVE: 'maptips/repositionInteractive'
@@ -399,7 +413,8 @@ define([],
 
             LayerLoader: {
                 /**
-                * Indicates that a map layer has loaded.  This means the constructor initialized and shook hands with it's data source
+                * Indicates that a map layer has loaded.  This means the constructor initialized and shook hands with
+                * it's data source
                 *
                 * @event LayerLoader.LAYER_LOADED
                 * @for LayerLoader
@@ -410,7 +425,8 @@ define([],
                 LAYER_LOADED: 'layerLoader/layer-loaded',
 
                 /**
-                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has added a layer to the map.
+                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has 
+                * added a layer to the map.
                 *
                 * @event LayerLoader.LAYER_ADDED
                 * @for LayerLoader
@@ -422,8 +438,10 @@ define([],
                 LAYER_ADDED: 'layerLoader/layer-added',
 
                 /**
-                * Indicates that a map layer has been removed to the layer selector. This means the LayerLoader has removed a layer from the map. 
-                * When a layer errors, it's removed from the map, but it might still be in the layer selector in the error state.
+                * Indicates that a map layer has been removed to the layer selector. This means the LayerLoader
+                * has removed a layer from the map.
+                * When a layer errors, it's removed from the map, but it might still be in the layer selector in 
+                * the error state.
                 *
                 * @event LayerLoader.LAYER_REMOVED
                 * @for LayerLoader
@@ -493,8 +511,10 @@ define([],
             },
 
             Map: {
-                // NOTE: Map events fall into two categories.  There are native RAMP events and others which republish events from the ESRI API.
-                // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events should be prefixed with map/
+                // NOTE: Map events fall into two categories.  There are native RAMP events and others which 
+                // republish events from the ESRI API.
+                // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events 
+                // should be prefixed with map/
 
                 /**
                 * Indicates that all the map layers are loaded.
@@ -751,8 +771,8 @@ define([],
                 * Is fired by the state manager when datagrid is being updated.
                 *
                 * @event Datagrid.UPDATING
-                * @param event {Boolean} true if updating; false if not 
-                * 
+                * @param event {Boolean} true if updating; false if not
+                *
                 * @for Datagrid
                 */
                 UPDATING: 'datagrid/updating'

@@ -9,15 +9,15 @@
 * Set of functions that deal with arrays.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * @class Array
 * @static
 * @uses dojo/_base/lang
 */
-define(["dojo/_base/lang", "utils/util"],
+define(['dojo/_base/lang', 'utils/util'],
     function (dojoLang, Util) {
-        "use strict";
+        'use strict';
         return {
             /**
             * Returns an array that has only unique values (only the first element is kept).
@@ -47,8 +47,8 @@ define(["dojo/_base/lang", "utils/util"],
             * @method find
             * @static
             * @param {Array} arr Array to be searched
-            * @param {Function} predicate a function that takes two arguments (element and its index) and returns true if the
-            * argument satisfies some condition, and false otherwise.
+            * @param {Function} predicate a function that takes two arguments (element and its index) and returns
+            * true if the argument satisfies some condition, and false otherwise.
             * @param {Object} scope value to use as 'this'
             * @return {Object} first element that satisfies the given predicate; `null` if no such element is found
             */
@@ -69,10 +69,11 @@ define(["dojo/_base/lang", "utils/util"],
             * @method indexOf
             * @static
             * @param {Array} arr Array to be searched
-            * @param {Function} predicate a function that takes two arguments (element and its index) and returns true if the
-            * argument satisfies some condition, and false otherwise.
+            * @param {Function} predicate a function that takes two arguments (element and its index) and returns true
+            * if the argument satisfies some condition, and false otherwise.
             * @param {Object} scope value to use as 'this'
-            * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element is found
+            * @return {Number} index of the first element that satisfied the predicate; `-1` if no such element
+            * is found
             */
             indexOf: function (arr, predicate, scope) {
                 /* if (typeof scope !== 'undefined') {
@@ -95,7 +96,8 @@ define(["dojo/_base/lang", "utils/util"],
             * @static
             * @param {Array} arr Array to be searched
             * @param {Function} compareFcn ???
-            * @return {Number} the index of the element that causes the given function to return 0, returns -1 if no such element exists
+            * @return {Number} the index of the element that causes the given function to return 0, returns -1 if no
+            * such element exists
             */
             binaryIndexOf: function (arr, compareFcn) {
                 var minIndex = 0,
@@ -127,7 +129,8 @@ define(["dojo/_base/lang", "utils/util"],
             * @static
             * @param {Array} arr Array to be searched
             * @param {Function} compareFcn ???
-            * @return {Number} the index of the element that causes the given function to return 0, returns -1 if no such element exists</returns>
+            * @return {Number} the index of the element that causes the given function to return 0, returns -1 if no
+            * such element exists</returns>
             */
             binaryFind: function (arr, compareFcn) {
                 var index = this.binaryIndexOf(arr, compareFcn);
@@ -140,8 +143,11 @@ define(["dojo/_base/lang", "utils/util"],
             * @method remove
             * @static
             * @param {Array} array Array to have the item removed from
-            * @param {Number|String|Object} obj can be either an index of the item to be removed, a String to be removed from the array of strings, or an actual Object to be removed; if obj is an Object, you need to provide a predicate function
-            * @param {Function} [predicate] a function that takes one argument and returns true if the argument satisfies some condition, and false otherwise.
+            * @param {Number|String|Object} obj can be either an index of the item to be removed, a String to be
+            * removed from the array of strings, or an actual Object to be removed; if obj is an Object, you need
+            * to provide a predicate function
+            * @param {Function} [predicate] a function that takes one argument and returns true if the argument
+            * satisfies some condition, and false otherwise.
             */
             remove: function (array, obj, predicate) {
                 var index;

@@ -11,17 +11,17 @@
 * A set of functions used to support and standardize the use of templating.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "RAMP"}}{{/crossLink}}  
-* {{#crossLink "TmplUtil"}}{{/crossLink}}  
+* {{#crossLink 'RAMP'}}{{/crossLink}}
+* {{#crossLink 'TmplUtil'}}{{/crossLink}}
 *
 * @class TmplHelper
 * @static
 * @uses dojo/_base/lang
 */
 
-define(["dojo/_base/lang", "utils/tmplUtil"],
+define(['dojo/_base/lang', 'utils/tmplUtil'],
     function (lang, TmplUtil) {
-        "use strict";
+        'use strict';
 
         return {
             /*
@@ -94,7 +94,7 @@ define(["dojo/_base/lang", "utils/tmplUtil"],
             stringifyTemplate: function (template) {
                 return template
                     // strip comments from the template
-                    .replace(/`(?:\\.|[^`])*`|'(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\/\*[^]*?\*\/|\/\/.*\n?/g,
+                    .replace(/`(?:\\.|[^`])*`|'(?:\\.|[^'])*'|'(?:\\.|[^'])*'|\/\*[^]*?\*\/|\/\/.*\n?/g,
                                          function (s) {
                                              if (s.charAt(0) === '/') {
                                                  return '';
@@ -103,15 +103,15 @@ define(["dojo/_base/lang", "utils/tmplUtil"],
                                              }
                                          })
                     // remove hard breaks and tabs
-                    .replace(/[\n\r\t]/g, "")
-                    .replace(/>\s*?</g, "><")
+                    .replace(/[\n\r\t]/g, '')
+                    .replace(/>\s*?</g, '><')
 
                     // strip spaces between html and other tags
-                    .replace(/%}\s*?</g, "%}<")
-                    .replace(/>\s*?{%/g, ">{%")
+                    .replace(/%}\s*?</g, '%}<')
+                    .replace(/>\s*?{%/g, '>{%')
 
-                    .replace(/"\s*?</g, '"<')
-                    .replace(/>\s*?"/g, '>"');
+                    .replace(/'\s*?</g, '"<')
+                    .replace(/>\s*?'/g, '>"');
             },
 
             /**

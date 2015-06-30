@@ -11,8 +11,8 @@
 * Handles the generation of an image file from the map (and possibly other extra elements)
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'Map'}}{{/crossLink}}
 *
 * @class ImageExport
 * @static
@@ -25,17 +25,17 @@
 
 define([
 /* Dojo */
-"dojo/topic", "dojo/Deferred",
+'dojo/topic', 'dojo/Deferred',
 
 /* ESRI */
-"esri/tasks/PrintTemplate", "esri/tasks/PrintParameters", "esri/tasks/PrintTask",// 'esri/request',
+'esri/tasks/PrintTemplate', 'esri/tasks/PrintParameters', 'esri/tasks/PrintTask',// 'esri/request',
 
 /* RAMP */
-    "ramp/eventManager", "ramp/map",
+    'ramp/eventManager', 'ramp/map',
 
     /* UTIL */
 
-    "utils/util", "utils/popupManager"
+    'utils/util', 'utils/popupManager'
 ],
 
     function (
@@ -51,7 +51,7 @@ define([
         /* UTIL */
         MiscUtil, PopupManager
         ) {
-        "use strict";
+        'use strict';
 
         var ui = (function () {
             var mapExportToggle,
@@ -83,11 +83,12 @@ define([
                 localCanvas,
 
                 jWindow,
-                cssButtonPressedClass = "button-pressed",
+                cssButtonPressedClass = 'button-pressed',
                 transitionDuration = 0.4;
 
             /**
-             * Creates a canvas from feature layers if possible. Can't do that in IE9-10, just resolve the promise in this case.
+             * Creates a canvas from feature layers if possible. Can't do that in IE9-10, just resolve the promise
+             * in this case.
              *
              * @private
              * @method ui.generateLocalCanvas
@@ -104,7 +105,7 @@ define([
                         svgtext;
 
                     // convert svg to text
-                    svgtext = serializer.serializeToString($("#mainMap_gc")[0]);
+                    svgtext = serializer.serializeToString($('#mainMap_gc')[0]);
                     // convert svg text to canvas and stuff it into mapExportImgLocal canvas dom node
                     canvg(mapExportImgLocal[0], svgtext, {
                         renderCallback: function () {
@@ -139,22 +140,22 @@ define([
                     // disable download buttons
                     .call(function () {
                         downloadDropdown
-                            .find(".btn")
+                            .find('.btn')
                             .attr({ disabled: true })
-                            .end("a.btn-download")
-                            .find(".btn")
-                            .attr({ href: "" })
+                            .end('a.btn-download')
+                            .find('.btn')
+                            .attr({ href: '' })
                         ;
                     })
-                    .set(mapExportNotice, { display: "none" }) // hide error notice
-                    .set(mapExportSpinner, { display: "block" }) // show loading animation
-                    .set(mapExportImg, { display: "none" }) // hide image
-                    .set(mapExportImgLocal, { display: "none" }) // hide image
+                    .set(mapExportNotice, { display: 'none' }) // hide error notice
+                    .set(mapExportSpinner, { display: 'block' }) // show loading animation
+                    .set(mapExportImg, { display: 'none' }) // hide image
+                    .set(mapExportImgLocal, { display: 'none' }) // hide image
                     .call(function () {
-                        mapExportImg.attr("src", "");
-                        mapExportImgLocal.attr("src", "");
+                        mapExportImg.attr('src', '');
+                        mapExportImgLocal.attr('src', '');
                     })
-                    .set(mapExportStretcher, { clearProps: "all" })
+                    .set(mapExportStretcher, { clearProps: 'all' })
                 ;
 
                 // resize the notice container as it might be too large from the previous map export
@@ -174,16 +175,16 @@ define([
                         console.log('Print service has succeeded', event);
 
                         // wait for the image to fully load
-                        mapExportImg.on("load", function (event) {
+                        mapExportImg.on('load', function (event) {
 
                             // no canvas smashing for IE...
                             if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
 
                                 mapExportImg.attr({ class: 'remote' });
-                                mapExportSpinner.css({ display: "none" });
+                                mapExportSpinner.css({ display: 'none' });
 
                                 downloadDropdown
-                                    .find(".btn")
+                                    .find('.btn')
                                     .attr({ disabled: false })
                                 ;
                             } else {
@@ -200,33 +201,39 @@ define([
                                 mapExportImg.attr({ class: 'remote' });
                                 mapExportImgLocal.attr({ class: 'local' });
                                 // hide loading animation
-                                mapExportSpinner.css({ display: "none" });
+                                mapExportSpinner.css({ display: 'none' });
 
                                 // enable download buttons
                                 downloadDropdown
-                                    .find(".btn")
+                                    .find('.btn')
                                     .attr({ disabled: false })
                                 ;
 
                             }
-                            mapExportImg.off("load");
+                            mapExportImg.off('load');
                         });
 
                         tl
-                            .call(function () { downloadDefault.attr({ href: event.result.url }); }) // set default button url to image url - for IE9 sake
-                            .set(mapExportImg, { display: "block" }) // show image
-                            .call(function () { mapExportImg.attr("src", event.result.url); })
+                            // set default button url to image url - for IE9 sake
+                            .call(function () { downloadDefault.attr({ href: event.result.url }); }) 
+                            .set(mapExportImg, { display: 'block' }) // show image
+                            .call(function () { mapExportImg.attr('src', event.result.url); })
                             // animate popup; 2 needed to account for the border
-                            .to(mapExportStretcher, transitionDuration, { height: stretcherHeight + 2, width: stretcherWidth + 2, ease: "easeOutCirc" }, 0)
-                            .to(mapExportNoticeContainer, transitionDuration, { width: stretcherWidth }, 0)
+                            .to(mapExportStretcher, transitionDuration, {
+                                height: stretcherHeight + 2,
+                                width: stretcherWidth + 2, ease: 'easeOutCirc'
+                            }, 0)
+                            .to(mapExportNoticeContainer, transitionDuration, {
+                                width: stretcherWidth
+                            }, 0)
                         ;
 
                         console.log(event);
                     },
                     function (error) {
                         // show error notice
-                        mapExportSpinner.css({ display: "none" });
-                        mapExportNotice.css({ display: "block" });
+                        mapExportSpinner.css({ display: 'none' });
+                        mapExportNotice.css({ display: 'block' });
 
                         console.log(error);
                     })
@@ -243,27 +250,27 @@ define([
                 init: function () {
                     jWindow = $(window);
 
-                    mapExportToggle = $("#map-export-toggle");
-                    mapExportStretcher = $(".map-export-stretcher");
-                    mapExportImgLocal = $(".map-export-image > canvas.local");
-                    mapExportImg = $(".map-export-image > img.remote");
-                    mapExportSpinner = $(".map-export-preview .loading-simple");
+                    mapExportToggle = $('#map-export-toggle');
+                    mapExportStretcher = $('.map-export-stretcher');
+                    mapExportImgLocal = $('.map-export-image > canvas.local');
+                    mapExportImg = $('.map-export-image > img.remote');
+                    mapExportSpinner = $('.map-export-preview .loading-simple');
 
-                    mapExportNoticeContainer = mapExportStretcher.find(".map-export-notice-container");
-                    mapExportNotice = mapExportStretcher.find(".map-export-notice.notice-error");
-                    mapExportNoticeIE = mapExportStretcher.find(".map-export-notice.notice-ie");
-                    mapExportNoticeTimeout = mapExportStretcher.find(".map-export-notice.notice-timeout");
-                    downloadButton = $(".map-export-controls .download-buttons > .btn");
+                    mapExportNoticeContainer = mapExportStretcher.find('.map-export-notice-container');
+                    mapExportNotice = mapExportStretcher.find('.map-export-notice.notice-error');
+                    mapExportNoticeIE = mapExportStretcher.find('.map-export-notice.notice-ie');
+                    mapExportNoticeTimeout = mapExportStretcher.find('.map-export-notice.notice-timeout');
+                    downloadButton = $('.map-export-controls .download-buttons > .btn');
 
-                    downloadDropdown = $(".map-export-controls .download-buttons .download-dropdown");
-                    downloadDropdownMenu = $(".map-export-controls .download-buttons .dropdown-menu");
+                    downloadDropdown = $('.map-export-controls .download-buttons .download-dropdown');
+                    downloadDropdownMenu = $('.map-export-controls .download-buttons .dropdown-menu');
 
-                    downloadDropdownToggle = downloadDropdown.find(".toggle");
-                    downloadButtonPNG = downloadDropdown.find(".btn.download-png");
-                    downloadButtonJPG = downloadDropdown.find(".btn.download-jpg");
-                    downloadDefault = downloadDropdown.find(".btn.download-default");
+                    downloadDropdownToggle = downloadDropdown.find('.toggle');
+                    downloadButtonPNG = downloadDropdown.find('.btn.download-png');
+                    downloadButtonJPG = downloadDropdown.find('.btn.download-jpg');
+                    downloadDefault = downloadDropdown.find('.btn.download-default');
 
-                    mapExportCloseButton = $("#map-export-modal .button-close");
+                    mapExportCloseButton = $('#map-export-modal .button-close');
 
                     mapExportToggle
                         .removeClass('disabled')
@@ -271,7 +278,9 @@ define([
                         .on('click', generateExportImage);
 
                     // disable for IE9 and IE10
-                    // IE10 does not support CORS for canvases: http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10; http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
+                    // IE10 does not support CORS for canvases: 
+                    // http://stackoverflow.com/questions/18112047/canvas-todataurl-working-in-all-browsers-except-ie10
+                    // http://stackoverflow.com/questions/16956295/ie10-and-cross-origin-resource-sharing-cors-issues-with-image-canvas
                     if (RAMP.flags.brokenWebBrowser || RAMP.flags.ie10client) {
                         console.warn('You have IE9');
                         downloadDropdown.css('width', '100%');
@@ -289,7 +298,7 @@ define([
                                     type = target.hasClass('download-jpg') ? 'jpeg' : 'png';
 
                                 event.preventDefault();
-                                console.log("----Download button clicked");
+                                console.log('----Download button clicked');
 
                                 // save using FileSave
                                 canvas.toBlob(function (blob) {
@@ -300,7 +309,7 @@ define([
                         ;
                     }
 
-                    downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, "click",
+                    downloadPopup = PopupManager.registerPopup(downloadDropdownToggle, 'click',
                         function (d) {
                             downloadDropdownMenu.show();
                             d.resolve();
@@ -316,10 +325,10 @@ define([
                         }
                     );
 
-                    mapExportCloseButton.on("click", function () {
+                    mapExportCloseButton.on('click', function () {
                         downloadDropdown
-                            .find(".btn")
-                            .attr({ disabled: true, href: "" })
+                            .find('.btn')
+                            .attr({ disabled: true, href: '' })
                         ;
 
                         mapExportImg.attr({ src: '', class: 'blurred-5 remote' });
@@ -338,7 +347,8 @@ define([
         * @private
         */
         function hideFileLayers() {
-            //safety check.  if state is not empty, we may still have a previous call running, so dont mess with layers a second time
+            // safety check.  if state is not empty, we may still have a previous call running, so dont
+            // mess with layers a second time
             if (visState.empty) {
                 visState.empty = false;
 
@@ -349,7 +359,9 @@ define([
                     var flObj = RAMP.layerRegistry[fl.id];
 
                     //find if feature layer, user added, visible, and has no URL
-                    if (flObj.visible) { // turn off all visible feature layers, unless you have IE - then turn off only visible user layers
+                    if (flObj.visible) {
+                        // turn off all visible feature layers, unless you have IE - 
+                        // then turn off only visible user layers
 
                         if (youHaveIE && flObj.ramp.user && !(flObj.url) || !youHaveIE) {
                             //turn off visibility.  remember the layer
@@ -433,14 +445,14 @@ define([
                     height: mapDom.clientHeight,
                     dpi: 96
                 };
-                template.format = "PNG32";
-                template.layout = "MAP_ONLY";
+                template.format = 'PNG32';
+                template.layout = 'MAP_ONLY';
                 template.showAttribution = false;
 
                 params = new PrintParameters();
                 params.map = mappy;
                 params.template = template;
-                console.log("submitting print job.  please wait");
+                console.log('submitting print job.  please wait');
                 printTask.execute(params);
             } catch (event) {
                 def.reject(event);

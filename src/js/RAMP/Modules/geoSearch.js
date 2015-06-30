@@ -82,7 +82,8 @@ define([
                 code;
             provList.every(function (elem) {
                 //TODO is there a prettier way to do this IF?
-                if (elem.abbr.toLowerCase() === lProv || elem.name.en.toLowerCase() === lProv || elem.name.fr.toLowerCase() === lProv) {
+                if (elem.abbr.toLowerCase() === lProv || elem.name.en.toLowerCase() === lProv ||
+                    elem.name.fr.toLowerCase() === lProv) {
                     code = elem.code;
                     return false;
                 }
@@ -164,7 +165,8 @@ define([
         * @return {Boolean} tells if the point is inside the extent
         */
         function isInExtent(point, extent) {
-            return (point[0] >= extent[0]) && (point[0] <= extent[2]) && (point[1] >= extent[1]) && (point[1] <= extent[3]);
+            return (point[0] >= extent[0]) && (point[0] <= extent[2]) &&
+                   (point[1] >= extent[1]) && (point[1] <= extent[3]);
         }
 
         /**
@@ -201,7 +203,8 @@ define([
                 if (vals.length === 2) {
                     if (isLatLong(vals[0]) && isLatLong(vals[1])) {
                         ret.type = parseType.lonlat;
-                        ret.data = [Number(vals[1]), Number(vals[0])]; //Reverse order to match internal structure of lonlat
+                        //Reverse order to match internal structure of lonlat
+                        ret.data = [Number(vals[1]), Number(vals[0])];
                         return ret;
                     }
                 }
@@ -343,7 +346,8 @@ define([
 
                 //turn complex results into simplified results (can add values as needed).
                 //pass simplified result back to promise
-                //NOTE: when using JSONP, the search results come back in a parent array.  If not JSONP, there is no array >:'(
+                //NOTE: when using JSONP, the search results come back in a parent array. 
+                //If not JSONP, there is no array >:'(
 
                 var returnList = searchResult[0].items.map(function (elem) {
                     return {
@@ -432,7 +436,8 @@ define([
                 function (searchResult) {
                     //service returned.  package results
 
-                    //TODO debate if no results should be hide or none.  None would visually indicate nothing in FSA radius found, but might confuse user to think FSA was invalid
+                    //TODO debate if no results should be hide or none.  None would visually indicate 
+                    //nothing in FSA radius found, but might confuse user to think FSA was invalid
                     result.status = (searchResult.length > 0) ? statusType.list : statusType.hide;
                     result.list = searchResult;
 
@@ -478,17 +483,21 @@ define([
         }*/
 
         /**
-        * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls.
+        * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate
+        * search calls.
         * Accepts the following filter properties
         *   - radius: size of search radius search in km.  default 10. only used with lat/long or FSA searches
         *   - prov: province code (numeric, e.g. 35, not 'ON')
         *   - concise: concise type code
         *   - showAll: show all results or clip to first 10.  default false
-        *   - extent: extent of search area in lat/long [xmin, ymin, xmax, ymax].  caller will project from basemap to latlong.  reasoning: caller can project once then cache until extent changes
+        *   - extent: extent of search area in lat/long [xmin, ymin, xmax, ymax].  caller will project from basemap to
+        *             latlong.  reasoning: caller can project once then cache until extent changes
         *
         * Result object can have the following properties
-        *   - status: status of the search. values are list, none, hide. list means results are present. none means no results. hide means nothing should be shown (e.g. 1 char search string, bad postal code)
-        *   - defItem: a lonlat array of the default result to zoom to if a person hits enter. for FSA, it is FSA centroid; for lat/long, it is the lat/long point; otherwise it is the first result
+        *   - status: status of the search. values are list, none, hide. list means results are present. none means no
+        *             results. hide means nothing should be shown (e.g. 1 char search string, bad postal code)
+        *   - defItem: a lonlat array of the default result to zoom to if a person hits enter. for FSA, it
+        *              is FSA centroid; for lat/long, it is the lat/long point; otherwise it is the first result
         *   - list: array of search results
         *       - name: name of the result
         *       - location: general area where the result is situated
@@ -622,9 +631,11 @@ define([
                             });
                         });
 
-                        //now that we have a full dataset of province info, make a quick-find array for determining if strings are provinces
+                        // now that we have a full dataset of province info, make a quick-find array for determining
+                        // if strings are provinces
                         provList.forEach(function (elem) {
-                            provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(), elem.name.fr.toLowerCase());
+                            provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(),
+                                elem.name.fr.toLowerCase());
                         });
                     },
                      function (error) {

@@ -11,16 +11,16 @@
 * response to some user or system action. This class takes care of assigning aria-* attributes and keeping them updated.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}  
-* 
+* {{#crossLink 'Util'}}{{/crossLink}}
+*
 * @class PopupManager
 * @static
 * @uses dojo/Deferred
 * @uses dojo/_base/lang
 */
-define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
+define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
     function (Deferred, lang, UtilMisc) {
-        "use strict";
+        'use strict';
 
         /**
         * A class holding properties of the popup.
@@ -40,7 +40,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             reverseEvent: null,
 
             /**
-             * Indicates whether the popup should react on the closing event as well. The closing event is considered an event on the handle of the popup which is open.
+             * Indicates whether the popup should react on the closing event as well. The closing event is considered
+             * an event on the handle of the popup which is open.
              *
              * @property openOnly
              * @type {Boolean}
@@ -49,7 +50,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             openOnly: false,
 
             /**
-            * The initially supplied handle to the PopupManager; a {{#crossLink "jQuery"}}{{/crossLink}} to listen to events on.
+            * The initially supplied handle to the PopupManager; a {{#crossLink 'jQuery'}}{{/crossLink}} to listen
+            * to events on.
             *
             * @property handle
             * @type {JQuery}
@@ -59,7 +61,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             handle: null,
 
             /**
-            * The initially supplied handle selector to be used in conjunction with handle when listening to events. Useful if the real handle doesn't exist yet.
+            * The initially supplied handle selector to be used in conjunction with handle when listening to events.
+            * Useful if the real handle doesn't exist yet.
             *
             * @property handleSelector
             * @type {String}
@@ -77,7 +80,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             target: null,
 
             /**
-            * The initially supplied target selector to be used in conjunction with target. Useful when the target of the popup doesn't exist yet.
+            * The initially supplied target selector to be used in conjunction with target. Useful when the target of
+            * the popup doesn't exist yet.
             *
             * @property targetSelector
             * @type {String}
@@ -86,7 +90,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             targetSelector: null,
 
             /**
-            * Selector for the container housing both actual handle and actual target for one popup instance. Used to select the actual target that is relative to currently active handle. 
+            * Selector for the container housing both actual handle and actual target for one popup instance.
+            * Used to select the actual target that is relative to currently active handle.
             *
             * @property containerSelector
             * @type {String}
@@ -104,7 +109,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             openHandler: null,
 
             /**
-            * The function to execute when the popup closes. If the function is not supplied, `openHandler` is used instead.
+            * The function to execute when the popup closes. If the function is not supplied, `openHandler`
+            * is used instead.
             *
             * @property closeHandler
             * @type {Function}
@@ -113,7 +119,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             closeHandler: null,
 
             /**
-            * The delay before closing the popup; used with "hoverIntent" event type.
+            * The delay before closing the popup; used with 'hoverIntent' event type.
             *
             * @property timeout
             * @type {Number}
@@ -149,7 +155,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
             useAria: true,
 
             /**
-            * Indicates whether focus should be reset to the handle of the popup when the popup is closed by the internal close button if present.
+            * Indicates whether focus should be reset to the handle of the popup when the popup is closed by the
+            * internal close button if present.
             *
             * @property resetFocusOnClose
             * @type {Boolean}
@@ -159,7 +166,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
         },
 
         /**
-        * An abstract representation of the popup definition that potentially references many Popup instances. Handle and target properties might use selectors.
+        * An abstract representation of the popup definition that potentially references many Popup instances.
+        * Handle and target properties might use selectors.
         *
         * @class PopupBase
         * @for PopupManager
@@ -180,7 +188,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 *
                 * @method _getActualHandle
                 * @private
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
                 * @return result An array of one or more jQuery objects that works as popup handles
                 */
                 _getActualHandle: function (selector) {
@@ -189,19 +197,21 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                     if (selector) {
                         result = $(selector);
                     } else if (this._attr.handle) {
-                        result = this._attr.handleSelector ? this._attr.handle.find(this._attr.handleSelector) : this._attr.handle;
+                        result = this._attr.handleSelector ?
+                            this._attr.handle.find(this._attr.handleSelector) : this._attr.handle;
                     }
 
                     return result;
                 },
 
                 /**
-                * Finds and returns an array of {{#crossLink "Popup"}}{{/crossLink}} objects, one or more, identified in the PopupBase.
+                * Finds and returns an array of {{#crossLink 'Popup'}}{{/crossLink}} objects, one or more, identified
+                * in the PopupBase.
                 *
                 * @method _spawnPopups
                 * @private
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
-                * @return popups An array of one or more {{#crossLink "Popup"}}{{/crossLink}} objects
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+                * @return popups An array of one or more {{#crossLink 'Popup'}}{{/crossLink}} objects
                 */
                 _spawnPopups: function (selector) {
                     var popups = [],
@@ -214,7 +224,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                             ah = $(ah);
 
                             if (that._attr.target) {
-                                actualTarget = that._attr.targetSelector ? that._attr.target.find(that._attr.targetSelector) : that._attr.target;
+                                actualTarget = that._attr.targetSelector ?
+                                    that._attr.target.find(that._attr.targetSelector) : that._attr.target;
                             } else if (that._attr.containerSelector && that._attr.targetSelector) {
                                 actualTarget = ah.parents(that._attr.containerSelector).find(that._attr.targetSelector);
                             } else {
@@ -248,26 +259,27 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Checks if any of the popups described by this PopupBase is closed.
                 *
                 * @method isOpen
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
-                * @param {String} [condition] can be `all` or `any`; if all, returns true if `all` the described popups are open; if `any`; if at least one is open.
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+                * @param {String} [condition] can be `all` or `any`; if all, returns true if `all` the described
+                * popups are open; if `any`; if at least one is open.
                 * @return result True if any of the described popups are open; false otherwise
                 */
                 isOpen: function (selector, condition) {
                     var result,
                         popups;
 
-                    condition = condition || "all";
+                    condition = condition || 'all';
                     popups = this._spawnPopups(selector);
 
                     switch (condition) {
-                        case "all":
+                        case 'all':
                             result = popups.every(function (p) {
                                 return p.isOpen();
                             });
 
                             break;
 
-                        case "any":
+                        case 'any':
                             result = popups.some(function (p) {
                                 return p.isOpen();
                             });
@@ -282,7 +294,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Opens all the popups described by this PopupBase instance.
                 *
                 * @method open
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
                 */
                 open: function (selector) {
                     this._spawnPopups(selector).forEach(function (p) {
@@ -294,7 +306,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Closes all the popups described by this PopupBase instance.
                 *
                 * @method close
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle.
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
                 */
                 close: function (selector) {
                     this._spawnPopups(selector).forEach(function (p) {
@@ -306,8 +318,10 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Toggles all the popups described by this PopupBase instance.
                 *
                 * @method toggle
-                * @param {JQuery} [selector] A {{#crossLink "jQuery"}}{{/crossLink}} of the actual handle. Generally, selector is not needed if popup manages only one handle/target pair.
-                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open; false - close;
+                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+                * Generally, selector is not needed if popup manages only one handle/target pair.
+                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open;
+                * false - close;
                 */
                 toggle: function (selector, state) {
                     this._spawnPopups(selector).forEach(function (p) {
@@ -316,7 +330,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 },
 
                 /**
-                * Sets the appropriate aria-* attributes to the popup nodes according to the supplied `visible` parameter or with the internal state of the popup.
+                * Sets the appropriate aria-* attributes to the popup nodes according to the supplied `visible`
+                * parameter or with the internal state of the popup.
                 *
                 * @method setTargetAttr
                 * @param {Boolean} [visible] Indicating the internal state of the popup
@@ -391,7 +406,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 useAria: null,
 
                 /**
-                * An actual {{#crossLink "jQuery"}}{{/crossLink}} of the handle's DOM node.
+                * An actual {{#crossLink 'jQuery'}}{{/crossLink}} of the handle's DOM node.
                 *
                 * @property handle
                 * @type {JQuery}
@@ -400,7 +415,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 handle: null,
 
                 /**
-                * An actual {{#crossLink "jQuery"}}{{/crossLink}} of the targets's DOM node.
+                * An actual {{#crossLink 'jQuery'}}{{/crossLink}} of the targets's DOM node.
                 *
                 * @property target
                 * @type {JQuery}
@@ -460,7 +475,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 * Toggles this Popup.
                 *
                 * @method toggle
-                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open; false - close;
+                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open;
+                * false - close;
                 */
                 toggle: function (state) {
                     state = typeof state === 'boolean' ? !state : this.isOpen();
@@ -513,7 +529,8 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 },
 
                 /**
-                * Sets the appropriate aria-* attributes to this popup nodes according to the supplied `visible` parameter or with the internal state of the popup.
+                * Sets the appropriate aria-* attributes to this popup nodes according to the supplied `visible`
+                * parameter or with the internal state of the popup.
                 *
                 * @method setTargetAttr
                 * @param {Boolean} [visible] Indicating the internal state of the popup
@@ -524,13 +541,13 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                     }
 
                     if (this.useAria) {
-                        this.handle.attr("aria-pressed", visible);
+                        this.handle.attr('aria-pressed', visible);
 
                         // if handle and target are the same object, do not set aria attributes on target
                         if (this.handle[0] !== this.target[0]) {
                             this.target.attr({
-                                "aria-expanded": visible,
-                                "aria-hidden": !visible
+                                'aria-expanded': visible,
+                                'aria-hidden': !visible
                             });
                         }
                     }
@@ -555,17 +572,17 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
             popup._spawnPopups().forEach(function (p) {
                 if (p.useAria) {
-                    p.handle.attr("aria-pressed", false);
+                    p.handle.attr('aria-pressed', false);
 
                     // if handle and target are the same object, do not set aria attributes on target
                     if (p.handle[0] !== p.target[0]) {
-                        p.handle.attr("aria-haspopup", true);
+                        p.handle.attr('aria-haspopup', true);
                     }
 
                     p.setTargetAttr();
                 }
 
-                p.target.find(".button-close").on("click",
+                p.target.find('.button-close').on('click',
                     function () {
                         p.close();
 
@@ -581,47 +598,56 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
 
         return {
             /**
-            * Register a PopupBase definition. By a popup here we mean a section of the page that reacts to the user's action on this or different section of the page.
-            * Can be used to register popups with already existing page nodes, or, using handle and target selectors with the nodes that will be created later.
+            * Register a PopupBase definition. By a popup here we mean a section of the page that reacts to the
+            * user's action on this or different section of the page.
+            * Can be used to register popups with already existing page nodes, or, using handle and target selectors
+            * with the nodes that will be created later.
             *
             * ####Example
-            *     popupManager.registerPopup(panelToggle, "click",
+            *     popupManager.registerPopup(panelToggle, 'click',
             *         openPanel,
             *             {
             *                 activeClass: cssExpandedClass,
             *                 closeHandler: closePanel
             *             }
             *         );
-            * Here we register a popup on the `panelToggle` node which will trigger `openPanel` function when the user clicks to open the popup and `closePanel` to close it;
+            * Here we register a popup on the `panelToggle` node which will trigger `openPanel` function when the user
+            * clicks to open the popup and `closePanel` to close it;
             * `cssExpandedClass` will be set on the `panelToggle` node when the popup is opened.
             *
-            *      popupManager.registerPopup(sectionNode, "hover, focus",
+            *      popupManager.registerPopup(sectionNode, 'hover, focus',
             *           openFunction,
             *           {
-            *               handleSelector: "tr",
+            *               handleSelector: 'tr',
             *
-            *               targetSelector: ".record-controls",
+            *               targetSelector: '.record-controls',
             *
             *               closeHandler: closeFunction,
             *
-            *               activeClass: "bg-very-light",
+            *               activeClass: 'bg-very-light',
             *               useAria: false
             *           }
             *       );
-            * Here we define a set of virtual popups on the `sectionNode` node that would be triggered when the user hovers over or sets focus to any `tr` child node of `sectionNode`.
-            * Then the `openFunction` will be executed with `this.handle` pointing to the actual handle node which trigged the popup and  `this.target` pointing to the actual target node
-            * corresponding to a node or nodes found with the `targetSelector` inside the actual handle node.
+            * Here we define a set of virtual popups on the `sectionNode` node that would be triggered when the user
+            * hovers over or sets focus to any `tr` child node of `sectionNode`. Then the `openFunction` will be
+            * executed with `this.handle` pointing to the actual handle node which trigged the popup and  `this.target`
+            * pointing to the actual target node corresponding to a node or nodes found with the `targetSelector`
+            * inside the actual handle node.
             *
             * @method registerPopup
             * @static
-            * @param {jQuery} handle A {{#crossLink "jQuery"}}{{/crossLink}} handle to listen to events on
-            * @param {String} event The name of the event or events separated by a comma to trigger the popup. There are several predefined event names to register hover popups:
-            * - `hoverIntent` uses the hoverIntent jQuery plugin to determine when the user intends to hover over something
-            * - `hover` is a combination of two events - `mouseleave` and `mouseenter` and unlike `hoverIntent` it is triggered immediatelly
+            * @param {jQuery} handle A {{#crossLink 'jQuery'}}{{/crossLink}} handle to listen to events on
+            * @param {String} event The name of the event or events separated by a comma to trigger the popup. There
+            * are several predefined event names to register hover popups:
+            * - `hoverIntent` uses the hoverIntent jQuery plugin to determine when the user intends to hover over
+            * something
+            * - `hover` is a combination of two events - `mouseleave` and `mouseenter` and unlike `hoverIntent` it
+            * is triggered immediatelly
             * - `focus` is a combination of two events - `focusin` and `focusout`
             * You can subscribe to a combination of event shortcuts like `focus,hover`
             *
-            * Additionally, almost any other {{#crossLink "jQuery"}}{{/crossLink}} event can be specified like `click` or `keypress`.
+            * Additionally, almost any other {{#crossLink 'jQuery'}}{{/crossLink}} event can be specified like `click`
+            * or `keypress`.
             * @param {Function} openHandler The function to run when the popup opens
             * @param {PopupBaseSettings} [settings] additional setting to define the popup
             * @return {PopupBase} Returns a PopupBase with the specified conditions
@@ -631,7 +657,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                     popupAttr;
 
                 // splitting event names
-                event = event.split(",").map(function (a) {
+                event = event.split(',').map(function (a) {
                     return a.trim();
                 });
 
@@ -653,8 +679,9 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                 event.forEach(function (e) {
                     switch (e) {
                         // hover intent uses a jQuery plugin: http://cherne.net/brian/resources/jquery.hoverIntent.html
-                        // this plugin is loaded by WET, and sometimes it might not be loaded fast enough, so we use executeOnLoad to wait for the plugin to load
-                        case "hoverIntent":
+                        // this plugin is loaded by WET, and sometimes it might not be loaded fast enough, so we
+                        // use executeOnLoad to wait for the plugin to load
+                        case 'hoverIntent':
                             var timeoutHandle,
                                 open = function (event) {
                                     window.clearTimeout(timeoutHandle);
@@ -665,7 +692,7 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                     popup.close(t);
                                 };
 
-                            UtilMisc.executeOnLoad($(document), "hoverIntent", function () {
+                            UtilMisc.executeOnLoad($(document), 'hoverIntent', function () {
                                 popup._attr.handle
                                     .hoverIntent({
                                         over: open,
@@ -673,33 +700,33 @@ define(["dojo/Deferred", "dojo/_base/lang", "utils/util"],
                                         selector: popup._attr.handleSelector,
                                         timeout: popup._attr.timeout
                                     })
-                                    .on("click focusin", popup._attr.handleSelector, open)
-                                    .on("focusout", popup._attr.handleSelector, function () {
+                                    .on('click focusin', popup._attr.handleSelector, open)
+                                    .on('focusout', popup._attr.handleSelector, function () {
                                         timeoutHandle = window.setTimeout(close, popup._attr.timeout);
                                     });
                             });
 
                             break;
 
-                        case "hover":
+                        case 'hover':
                             popup._attr.handle
-                                .on("mouseenter", popup._attr.handleSelector,
+                                .on('mouseenter', popup._attr.handleSelector,
                                     function (event) {
                                         popup.open(event.currentTarget);
                                     })
-                                .on("mouseleave", popup._attr.handleSelector,
+                                .on('mouseleave', popup._attr.handleSelector,
                                     function (event) {
                                         popup.close(event.currentTarget);
                                     });
                             break;
 
-                        case "focus":
+                        case 'focus':
                             popup._attr.handle
-                                .on("focusin", popup._attr.handleSelector,
+                                .on('focusin', popup._attr.handleSelector,
                                     function (event) {
                                         popup.open(event.currentTarget);
                                     })
-                                .on("focusout", popup._attr.handleSelector,
+                                .on('focusout', popup._attr.handleSelector,
                                     function (event) {
                                         popup.close(event.currentTarget);
                                     });

@@ -13,17 +13,17 @@
 * A class for handling most of the GUI on the page.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* 
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'Theme'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
+* {{#crossLink 'Dictionary'}}{{/crossLink}}
+* {{#crossLink 'PopupManager'}}{{/crossLink}}
+* {{#crossLink 'TmplHelper'}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
-* {{#crossLink "templates/sub_panel_template.json"}}{{/crossLink}}
-* 
+* {{#crossLink 'templates/sub_panel_template.json'}}{{/crossLink}}
+*
 * @class GUI
 * @static
 * @uses dojo/_base/array
@@ -35,22 +35,22 @@
 */
 define([
 // Dojo
-        "dojo/topic", "dojo/_base/lang", "dojo/Deferred",
+        'dojo/topic', 'dojo/_base/lang', 'dojo/Deferred',
 
 // Ramp
-        "ramp/globalStorage", "ramp/eventManager",
+        'ramp/globalStorage', 'ramp/eventManager',
 
-        "ramp/theme", "ramp/imageExport",
+        'ramp/theme', 'ramp/imageExport',
 
 // Text
-        "dojo/text!./templates/sub_panel_template.json",
-        "dojo/text!./templates/datagrid_template.json",
+        'dojo/text!./templates/sub_panel_template.json',
+        'dojo/text!./templates/datagrid_template.json',
 
 // Util
-        "utils/util", "utils/dictionary", "utils/popupManager", "utils/tmplHelper",
+        'utils/util', 'utils/dictionary', 'utils/popupManager', 'utils/tmplHelper',
 
 // Dom Ready
-        "dojo/domReady!"
+        'dojo/domReady!'
 ],
 
     function (
@@ -68,16 +68,16 @@ define([
 
     // Util
         UtilMisc, utilDict, popupManager, TmplHelper) {
-        "use strict";
+        'use strict';
 
         var jWindow = $(window),
 
-            sidePanelWbTabs = $("#panel-div > .wb-tabs"),
-            sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]"),
-            sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels"),
+            sidePanelWbTabs = $('#panel-div > .wb-tabs'),
+            sidePanelTabList = sidePanelWbTabs.find(' > ul[role=tablist]'),
+            sidePanelTabPanels = sidePanelWbTabs.find(' > .tabpanels'),
 
-            mapContent = $("#mapContent"),
-            loadIndicator = mapContent.find("#map-load-indicator"),
+            mapContent = $('#mapContent'),
+            loadIndicator = mapContent.find('#map-load-indicator'),
 
             subPanels = {},
             subPanelLoadingAnimation,
@@ -92,27 +92,28 @@ define([
         */
             subPanelAttr = {
                 /**
-                * A name used to identify the subpanel being opened (e.g. "Details", "Metadata")
+                * A name used to identify the subpanel being opened (e.g. 'Details', 'Metadata')
                 *
                 * @property panelName
                 * @for SubPanelSettings
                 * @type {String}
-                * @default ""
+                * @default ''
                 */
 
-                panelName: "",
+                panelName: '',
                 /**
-                * Title of the content to be displayed on the SubPanel (e.g. "CESI Water Quality Indicators")
+                * Title of the content to be displayed on the SubPanel (e.g. 'CESI Water Quality Indicators')
                 *
                 * @property title
                 * @type {String}
-                * @default ""
+                * @default ''
                 */
 
-                title: "",
+                title: '',
                 /**
                 * The text inside the subpanel. Can be String or a jQuery object. All nodes sporting CSS class
-                * ".shorten-candidate" are treated to the shortening procedure - long strings are curtailed, and [more/less] links are placed at their ends.
+                * '.shorten-candidate' are treated to the shortening procedure - long strings are curtailed, and
+                * [more/less] links are placed at their ends.
                 *
                 * @property content
                 * @type {String | jObject}
@@ -121,9 +122,9 @@ define([
 
                 content: null,
 
-                templateKey: "summary_sub_panel_container",
+                templateKey: 'summary_sub_panel_container',
                 /**
-                * The node after which the panel will be inserted (e.g. node.find(".layer-details")).
+                * The node after which the panel will be inserted (e.g. node.find('.layer-details')).
                 *
                 * @property target
                 * @type {jObject}
@@ -132,32 +133,35 @@ define([
 
                 target: null,
                 /**
-                * The name of the module that requested to open the SubPanel (e.g. "filterManager"). Used for identification of the panel's loyalty.
+                * The name of the module that requested to open the SubPanel (e.g. 'filterManager'). Used for
+                * identification of the panel's loyalty.
                 *
                 * @property origin
                 * @type {String}
-                * @default ""
+                * @default ''
                 */
 
-                origin: "",
+                origin: '',
                 /**
-                * A unique id of the SubPanel. If none provided, a random one is generated. It is used to determine the animation and update function
-                * to run on content update.
+                * A unique id of the SubPanel. If none provided, a random one is generated. It is used to determine
+                * the animation and update function to run on content update.
                 *
                 * @property guid
                 * @type {String}
-                * @default ""
+                * @default ''
                 */
 
-                guid: "",
+                guid: '',
                 /**
                 * Indicates that the open SubPanel request is a content update to the already opened SubPanel.
                 * Does not trigger any of the `doOn-` or `doAfter-` functions.
                 *
                 * __Use case:__ the uses clicks on the metadata button.
-                * 1. A request to open a SubPanel is sent with only the title since the metadata content is not yet available
+                * 1. A request to open a SubPanel is sent with only the title since the metadata content is
+                * not yet available
                 * 2. Metadata is fetched from the server
-                * 3. A second request to open a SubPanel is sent having `update` set to `true` and featuring the __same__ `guid` as the first request
+                * 3. A second request to open a SubPanel is sent having `update` set to `true` and featuring
+                * the __same__ `guid` as the first request
                 * 4. Only the content of the SubPanel is updated; no extra animations are triggered
                 *
                 * @property update
@@ -167,7 +171,8 @@ define([
 
                 update: false,
                 /**
-                * The callback function when the panel starts the opening animation; also triggered by updating panel content; can be triggered many times.
+                * The callback function when the panel starts the opening animation; also triggered by updating
+                * panel content; can be triggered many times.
                 *
                 * @property doOnOpen
                 * @type {Function}
@@ -176,7 +181,8 @@ define([
 
                 doOnOpen: null,
                 /**
-                * The callback function when the panel finishes the opening animation; also triggered by updating panel content; can be triggered many times.
+                * The callback function when the panel finishes the opening animation; also triggered by updating
+                * panel content; can be triggered many times.
                 *
                 * @property doAfterOpen
                 * @type {Function}
@@ -185,7 +191,8 @@ define([
 
                 doAfterOpen: null,
                 /**
-                * The callback function when the panel starts the closing animation; also triggered by updating panel content; can be triggered many times.
+                * The callback function when the panel starts the closing animation; also triggered by updating panel
+                * content; can be triggered many times.
                 *
                 * @property doOnHide
                 * @type {Function}
@@ -194,7 +201,8 @@ define([
 
                 doOnHide: null,
                 /**
-                * The callback function when the panel becomes hidden; also triggered by updating panel content; can be triggered many times.
+                * The callback function when the panel becomes hidden; also triggered by updating panel content;
+                * can be triggered many times.
                 *
                 * @property doAfterHide
                 * @type {Function}
@@ -203,7 +211,8 @@ define([
 
                 doAfterHide: null,
                 /**
-                * The callback function when the panel is completely closed, its nodes destroyed; can be triggered only once in a lifespan of the panel.
+                * The callback function when the panel is completely closed, its nodes destroyed; can be triggered
+                * only once in a lifespan of the panel.
                 *
                 * @property doOnDestroy
                 * @type {Function}
@@ -254,7 +263,8 @@ define([
 
                 _closing: false,
                 /**
-                * Holds a deferred that would destroy the panel after the closing animation completes. May be interrupted.
+                * Holds a deferred that would destroy the panel after the closing animation completes.
+                * May be interrupted.
                 *
                 * @property _destroyDeferred
                 * @type {Deferred}
@@ -274,8 +284,8 @@ define([
 
                 _attr: null,
                 /**
-                * Indicates if the SubPanel is visible at the moment. Doesn't make the panel visible or invisible, just prevents animations on the content
-                * to run when it is set to `true`.
+                * Indicates if the SubPanel is visible at the moment. Doesn't make the panel visible
+                * or invisible, just prevents animations on the content to run when it is set to `true`.
                 *
                 * @property _visible
                 * @private
@@ -354,11 +364,11 @@ define([
                 */
                 parseContent: function (data) {
                     //console.log(this._attr.showChars, jQuery.type(data), data);
-                    return (jQuery.type(data) === "object" ? data : $(data))
-                        .find(".shorten-candidate").shorten({
+                    return (jQuery.type(data) === 'object' ? data : $(data))
+                        .find('.shorten-candidate').shorten({
                             showChars: this._attr.showChars
                         })
-                        .removeClass("shorten-candidate").end();
+                        .removeClass('shorten-candidate').end();
                 },
                 /**
                 * Returns this SubPanel's settings object.
@@ -421,7 +431,7 @@ define([
                     this._destroyDeferred = deferred;
 
                     // remove CSS animation class to prevent flickering
-                    this._subPanelContentDiv.find(".fadeInDown").removeClass("fadeInDown");
+                    this._subPanelContentDiv.find('.fadeInDown').removeClass('fadeInDown');
 
                     //sidePanel.getContainer().after(this.container);
                     layoutController.getPanelContainer().before(this.container);
@@ -430,7 +440,7 @@ define([
                     layoutController.subPanelChange(false, this._attr.origin, this.container, false);
 
                     // do after closing animation completes
-                    this.timeLine.eventCallback("onReverseComplete",
+                    this.timeLine.eventCallback('onReverseComplete',
                         function () {
                             if (this._attr.doAfterHide) {
                                 this._attr.doAfterHide();
@@ -502,7 +512,7 @@ define([
                 shiftTarget: function (newTarget) {
                     if (this._attr.target !== newTarget) {
                         // remove animation class to prevent flickering of data
-                        this._subPanelContentDiv.find(".fadeInDown").removeClass("fadeInDown");
+                        this._subPanelContentDiv.find('.fadeInDown').removeClass('fadeInDown');
                         newTarget.after(this.container);
                         this._attr.target = newTarget;
                     }
@@ -519,7 +529,7 @@ define([
                         subPanelString,
                         parsedContent;
 
-                    console.log("create panel, ", a.origin);
+                    console.log('create panel, ', a.origin);
 
                     a.guid = a.guid || UtilMisc.guid();
 
@@ -535,11 +545,11 @@ define([
                         subPanelTemplate);
 
                     this.container = $(subPanelString).insertAfter(this._attr.target);
-                    this.panel = this.container.find(".sub-panel");
+                    this.panel = this.container.find('.sub-panel');
 
-                    this._subPanelContentDiv = this.panel.find(".sub-panel-content");
-                    this._panelTitle = this.panel.find(".panel-title");
-                    this._panelContentDiv = this.panel.find(".panel-content-div");
+                    this._subPanelContentDiv = this.panel.find('.sub-panel-content');
+                    this._panelTitle = this.panel.find('.panel-title');
+                    this._panelContentDiv = this.panel.find('.panel-content-div');
 
                     // set panel content
                     parsedContent = this.parseContent(this._attr.content);
@@ -557,8 +567,13 @@ define([
                             },
                             onCompleteScope: this
                         })
-                        .to(this.panel, this._animatePanelDuration, { left: 0, ease: "easeOutCirc" })
-                        .to(loadIndicator, this._animatePanelDuration, { right: this.panel.width() + 6, ease: "easeOutCirc" }, 0); // 6 is double border width
+                        .to(this.panel, this._animatePanelDuration, {
+                            left: 0, ease: 'easeOutCirc'
+                        })
+                        .to(loadIndicator, this._animatePanelDuration, {
+                            // 6 is double border width
+                            right: this.panel.width() + 6, ease: 'easeOutCirc'
+                        }, 0);
 
                     UtilMisc.tooltipster(this.container);
 
@@ -566,7 +581,8 @@ define([
                 },
 
                 /**
-                * Performs an update of the content and title of the SubPanel, running appropriate animation and `doOn-` / `doAfter-` functions.
+                * Performs an update of the content and title of the SubPanel, running appropriate animation and `doOn-`
+                * / `doAfter-` functions.
                 *
                 * @method update
                 * @param  {SubPanelSettings} a New settings for the SubPanel
@@ -586,8 +602,9 @@ define([
                                             node
                                             //.html(newData)
                                             .empty().append(newData)
-                                                .removeClass("fadeOutDown")
-                                                .addClass('animated fadeInDown'); //.find(".shorten-candidate").shorten();
+                                                .removeClass('fadeOutDown')
+                                                .addClass('animated fadeInDown');
+                                            //.find('.shorten-candidate').shorten();
 
                                             d.resolve();
                                         },
@@ -615,15 +632,17 @@ define([
                         },
 
                         updateContent = function (a) {
-                                // if the content in the subpanel is scrolled down, scroll back to the top
-                                TweenLite.to(that._subPanelContentDiv, animateContentDuration / 1000,
-                                    { scrollTop: 0, ease: "easeOutCirc" });
+                            // if the content in the subpanel is scrolled down, scroll back to the top
+                            TweenLite.to(that._subPanelContentDiv, animateContentDuration / 1000,
+                                { scrollTop: 0, ease: 'easeOutCirc' });
 
-                                setContent(that._panelTitle, that._attr.title, a.title, a.title, that._visible, updateDefered[0]);
-                                setContent(that._panelContentDiv, that._attr.content, a.content, that.parseContent(a.content), that._visible, updateDefered[1]);
+                            setContent(that._panelTitle, that._attr.title, a.title, a.title,
+                                that._visible, updateDefered[0]);
+                            setContent(that._panelContentDiv, that._attr.content, a.content,
+                                that.parseContent(a.content), that._visible, updateDefered[1]);
 
-                                dojoLang.mixin(that._attr, a);
-                            };
+                            dojoLang.mixin(that._attr, a);
+                        };
 
                     // doAfterUpdate should be called AFTER update (animation) completes...
                     UtilMisc.afterAll(updateDefered, function () {
@@ -682,15 +701,15 @@ define([
                 }
             },
 
-            helpToggle = $("#helpToggle"),
-            helpSectionContainer = $("#help-section-container"),
-            helpSection = $("#help-section"),
+            helpToggle = $('#helpToggle'),
+            helpSectionContainer = $('#help-section-container'),
+            helpSection = $('#help-section'),
 
-            cssButtonPressedClass = "button-pressed",
-            cssExpandedClass = "state-expanded",
+            cssButtonPressedClass = 'button-pressed',
+            cssExpandedClass = 'state-expanded',
 
             helpPanelPopup,
-            
+
             transitionDuration = 0.5,
 
             toolbarController,
@@ -736,17 +755,17 @@ define([
 
                 if (!isTooltipsSet) {
                     // set tooltips on the collapsed toolbar
-                    mapToolbar.addClass("compact");
+                    mapToolbar.addClass('compact');
 
                     mapTools
-                        .filter(":not(.tooltipstered)")
+                        .filter(':not(.tooltipstered)')
                         .map(function (i, node) {
                             node = $(node);
                             node
-                                .addClass("_tooltip tooltip-temp")
+                                .addClass('_tooltip tooltip-temp')
                                 .attr(
-                                    "title",
-                                    node.find("span").text()
+                                    'title',
+                                    node.find('span').text()
                                 );
                         });
 
@@ -754,7 +773,6 @@ define([
 
                     isTooltipsSet = true;
                 }
-
             }
 
             function removeToolbarTooltips() {
@@ -762,16 +780,16 @@ define([
                     // remove tooltips from the restored toolbar and only from the buttons with a temporary tooltip
                     UtilMisc.tooltipster(
                         mapTools
-                            .filter(".tooltip-temp")
+                            .filter('.tooltip-temp')
                             .parent(),
-                        null, "destroy");
+                        null, 'destroy');
 
                     mapToolbar
-                        .removeClass("compact");
+                        .removeClass('compact');
                     mapTools
-                        .filter(".tooltip-temp")
-                        .removeClass("_tooltip")
-                        .removeAttr("title");
+                        .filter('.tooltip-temp')
+                        .removeClass('_tooltip')
+                        .removeAttr('title');
 
                     isTooltipsSet = false;
                 }
@@ -779,12 +797,12 @@ define([
 
             return {
                 init: function () {
-                    mapToolbar = $("#map-toolbar");
-                    mapTools = mapToolbar.find("> .map-toolbar-item > .map-toolbar-item-button");
+                    mapToolbar = $('#map-toolbar');
+                    mapTools = mapToolbar.find('> .map-toolbar-item > .map-toolbar-item-button');
 
                     updateToolbarStats();
 
-                    jWindow.on("resize", updateToolbarStats);
+                    jWindow.on('resize', updateToolbarStats);
 
                     return this;
                 },
@@ -814,30 +832,29 @@ define([
 
                     return this;
                 }
-
             };
-
         }());
 
         /**
-        * Controls layout transition such as full-data and full-screen modes, opening and closing of the side panel, adjusts layout when resizing the browser window.
+        * Controls layout transition such as full-data and full-screen modes, opening and closing of the side panel,
+        * adjusts layout when resizing the browser window.
         *
         * @class LayoutController
         * @static
         * @for GUI
         */
         layoutController = (function () {
-            var viewport = $(".viewport"),
-                mapDiv = $("#map-div"),
-                mapContent = $("#mapContent"),
-                fullScreenToggle = $("#fullScreenToggle"),
+            var viewport = $('.viewport'),
+                mapDiv = $('#map-div'),
+                mapContent = $('#mapContent'),
+                fullScreenToggle = $('#fullScreenToggle'),
                 fullScreenPopup,
 
-                mapToolbar = $("#map-toolbar"),
-                basemapControls = $("#basemapControls"),
+                mapToolbar = $('#map-toolbar'),
+                basemapControls = $('#basemapControls'),
 
-                panelDiv = $("#panel-div"),
-                panelToggle = $("#panel-toggle"),
+                panelDiv = $('#panel-div'),
+                panelToggle = $('#panel-toggle'),
                 panelPopup,
                 panelWidthDefault, // default width of the SidePanel.
                 layoutWidthThreshold = 1200, // minimum width of the wide layout
@@ -858,14 +875,14 @@ define([
 
                         toolbarController.setTooltips();
 
-                        //console.log("finished", EventManager.Datagrid.LOAD_DATA_GRID);
+                        //console.log('finished', EventManager.Datagrid.LOAD_DATA_GRID);
                         //topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
 
                         // kill key events to stop tab switching when the other tab is hidden
-                        panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                        panelDiv.on('keydown', '.wb-tabs > ul > li > a', stopEventPropagation);
                     },
                     onReverseComplete: function () {
-                        viewport.removeClass("full-data-mode");
+                        viewport.removeClass('full-data-mode');
 
                         adjustHeight();
                         layoutChange();
@@ -874,10 +891,10 @@ define([
                             .update()
                             .removeTooltips();
 
-                        //console.log("reverse finished", EventManager.Datagrid.LOAD_DATA_GRID);
+                        //console.log('reverse finished', EventManager.Datagrid.LOAD_DATA_GRID);
                         //topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                         // restore key events
-                        panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                        panelDiv.off('keydown', '.wb-tabs > ul > li > a', stopEventPropagation);
                     }
                 }),
                 panelToggleTimeLine = new TimelineLite({ paused: true }),
@@ -886,11 +903,11 @@ define([
                     paused: true,
                     onComplete: function () {
                         // kill key events to stop tab switching when the other tab is hidden
-                        panelDiv.on("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                        panelDiv.on('keydown', '.wb-tabs > ul > li > a', stopEventPropagation);
                     },
                     onReverseComplete: function () {
                         // restore key events
-                        panelDiv.off("keydown", ".wb-tabs > ul > li > a", stopEventPropagation);
+                        panelDiv.off('keydown', '.wb-tabs > ul > li > a', stopEventPropagation);
                     }
                 }),
 
@@ -902,51 +919,61 @@ define([
                 timeLines;
 
             createFullDataTL = function () {
-                if (panelDiv.find(".wb-tabs > ul li").length === 0) {
+                if (panelDiv.find('.wb-tabs > ul li').length === 0) {
                     return;
                 }
 
                 fullDataTimeLine
-                    .fromTo(mapDiv, transitionDuration, { width: "auto" }, { width: 35, ease: "easeOutCirc" }, 0)
+                    .fromTo(mapDiv, transitionDuration, { width: 'auto' }, { width: 35, ease: 'easeOutCirc' }, 0)
 
-                    .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: "easeOutCirc" }, 0)
-                    .set(mapContent, { top: "500px" })
+                    .fromTo(mapContent, transitionDuration, { opacity: 1 }, { opacity: 0, ease: 'easeOutCirc' }, 0)
+                    .set(mapContent, { top: '500px' })
 
-                    .to(panelToggle, transitionDuration, { right: -13, ease: "easeOutCirc" }, 0)
-                    .set(panelToggle, { display: "none" })
+                    .to(panelToggle, transitionDuration, { right: -13, ease: 'easeOutCirc' }, 0)
+                    .set(panelToggle, { display: 'none' })
 
-                    .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: "easeOutCirc" }, 0)
-                    .to(basemapControls, 0, { display: "none" }, transitionDuration / 2)
+                    .to(basemapControls, transitionDuration / 2, { opacity: 0, ease: 'easeOutCirc' }, 0)
+                    .to(basemapControls, 0, { display: 'none' }, transitionDuration / 2)
                     .fromTo(mapToolbar, transitionDuration / 2,
-                        { width: "100%", height: "32px" },
-                        { width: "32px", height: $("#map-div").height(), ease: "easeOutCirc" }, transitionDuration / 2)
+                        { width: '100%', height: '32px' },
+                        { width: '32px', height: $('#map-div').height(), ease: 'easeOutCirc' }, transitionDuration / 2)
 
                     .add(toolbarController.toolsTimeline(), 0)
 
-                    //.fromTo(toolbarController.mapTools().find("> span"), transitionDuration / 2, { width: "auto" }, { width: 0, ease: "easeOutCirc" }, 0)
-                    //.fromTo(toolbarController.mapTools().find("> span"), 0, { display: "inline-block" }, { display: "none" }, transitionDuration / 2)
+                //.fromTo(toolbarController.mapTools().find('> span'), transitionDuration / 2, { width: 'auto' },
+                //  { width: 0, ease: 'easeOutCirc' }, 0)
+                //.fromTo(toolbarController.mapTools().find('> span'), 0, { display: 'inline-block' },
+                //  { display: 'none' }, transitionDuration / 2)
 
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find('.wb-tabs > ul li:first'), transitionDuration, { width: '50%' },
+                        { width: '0%', display: 'none', ease: 'easeOutCirc' }, 0)
+                    .fromTo(panelDiv.find('.wb-tabs > ul li:last'), transitionDuration, { width: '50%' },
+                        { width: '100%', className: '+=h5', ease: 'easeOutCirc' }, 0)
 
                     .fromTo(panelDiv, transitionDuration,
-                        { width: panelWidthDefault, left: "auto" },
-                        { left: 35, width: "auto", ease: "easeOutCirc" }, 0);
+                        { width: panelWidthDefault, left: 'auto' },
+                        { left: 35, width: 'auto', ease: 'easeOutCirc' }, 0);
             };
 
             createPanelToggleTL = function () {
                 panelToggleTimeLine
-                    .fromTo(panelDiv, transitionDuration, { right: 0 }, { right: -panelWidthDefault, ease: "easeOutCirc" }, 0)
-                    .set(panelDiv, { display: "none" }, transitionDuration)
+                    .fromTo(panelDiv, transitionDuration, { right: 0 }, {
+                        right: -panelWidthDefault,
+                        ease: 'easeOutCirc'
+                    }, 0)
+                    .set(panelDiv, { display: 'none' }, transitionDuration)
 
-                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, { right: 0, ease: "easeOutCirc" }, 0);
+                    .fromTo(mapDiv, transitionDuration, { right: panelWidthDefault }, {
+                        right: 0,
+                        ease: 'easeOutCirc'
+                    }, 0);
             };
 
             createFullDataSubpanelChangeTL = function () {
                 fullDataSubpanelChangeTimeLine
                     .fromTo(panelDiv, transitionDuration,
                         { right: 0 },
-                        { right: panelWidthDefault, ease: "easeOutCirc" });
+                        { right: panelWidthDefault, ease: 'easeOutCirc' });
             };
 
             timeLines = [
@@ -973,7 +1000,7 @@ define([
             */
             layoutChange = function () {
                 if (!_isFullData) {
-                    console.log("GUI --> EventManager.GUI.LAYOUT_CHANGE");
+                    console.log('GUI --> EventManager.GUI.LAYOUT_CHANGE');
                     topic.publish(EventManager.GUI.LAYOUT_CHANGE);
                 }
             };
@@ -986,7 +1013,9 @@ define([
             */
             function adjustHeight() {
                 helpSection.css({
-                    "max-height": jWindow.height() - (_isFullData ? jWindow.height() * 0.2 : mapToolbar.offset().top) - 90 // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
+                    'max-height': jWindow.height() - (_isFullData ? jWindow.height() * 0.2 :
+                        mapToolbar.offset().top) - 90
+                    // 90 is an arbitrary-wide gap between the help panel and the upper toolbar
                 });
             }
 
@@ -1027,7 +1056,7 @@ define([
             */
             function openPanel(d) {
                 /*jshint validthis: true */
-                panelToggleTimeLine.eventCallback("onReverseComplete",
+                panelToggleTimeLine.eventCallback('onReverseComplete',
                         function () {
                             layoutChange();
                             panelChange(true);
@@ -1036,13 +1065,13 @@ define([
 
                             // update close button tooltips
                             panelToggle
-                                .tooltipster("content", i18n.t("gui.actions.close"))
-                                .find("span.wb-invisible").text(i18n.t("gui.actions.close"));
+                                .tooltipster('content', i18n.t('gui.actions.close'))
+                                .find('span.wb-invisible').text(i18n.t('gui.actions.close'));
 
                             d.resolve();
                         }, [], this);
 
-                viewport.removeClass("no-sidepanel-mode");
+                viewport.removeClass('no-sidepanel-mode');
                 panelToggleTimeLine.reverse();
             }
 
@@ -1055,9 +1084,9 @@ define([
             */
             function closePanel(d) {
                 /*jshint validthis: true */
-                panelToggleTimeLine.eventCallback("onComplete",
+                panelToggleTimeLine.eventCallback('onComplete',
                         function () {
-                            console.log("GUI <-- map/update-end from gui");
+                            console.log('GUI <-- map/update-end from gui');
                             layoutChange();
                             panelChange(false);
 
@@ -1065,10 +1094,10 @@ define([
 
                             // update open button tooltips
                             panelToggle
-                                .tooltipster("content", i18n.t("gui.actions.open"))
-                                .find("span.wb-invisible").text(i18n.t("gui.actions.open"));
+                                .tooltipster('content', i18n.t('gui.actions.open'))
+                                .find('span.wb-invisible').text(i18n.t('gui.actions.open'));
 
-                            viewport.addClass("no-sidepanel-mode");
+                            viewport.addClass('no-sidepanel-mode');
 
                             d.resolve();
                         }, [], this);
@@ -1080,23 +1109,28 @@ define([
             * Toggles the full-data mode on and off.
             *
             * @method _toggleFullDataMode
-            * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+            * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode;
+            * if undefined, toggle mode based on the current state
             * @private
             */
             function _toggleFullDataMode(fullData) {
                 _isFullData = typeof fullData === 'boolean' ? fullData : !_isFullData;
 
                 // if the timeline duration is 0, reset it
-                // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when creating timelines
+                // it's to work-around IE bug where it's so slow, it can't pick up nodes created by WET scripts when
+                // creating timelines
                 if (fullDataTimeLine.totalDuration() === 0) {
                     UtilMisc.resetTimelines([timeLines[0]]);
                 }
 
                 if (_isFullData) {
-                    viewport.addClass("full-data-mode"); // set full-data-mode css class BEFORE animation; remove it after it finishes - on onReverseComplete callback
+                    viewport.addClass('full-data-mode'); // set full-data-mode css class BEFORE animation; remove it
+                    // after it finishes - on onReverseComplete callback
                     fullDataTimeLine.play();
                 } else {
-                    fullDataSubpanelChangeTimeLine.reverse(); // play this animation to readjust the sidepanel if the details panel was opened and not closed in full data mode
+                    // play this animation to readjust the sidepanel if the
+                    // details panel was opened and not closed in full data mode
+                    fullDataSubpanelChangeTimeLine.reverse();
                     fullDataTimeLine.reverse();
                 }
 
@@ -1125,7 +1159,6 @@ define([
             * @private
             */
             function optimizeLayout() {
-
                 if ((windowWidth < layoutWidthThreshold && jWindow.width() > layoutWidthThreshold) ||
                     (windowWidth > layoutWidthThreshold && jWindow.width() < layoutWidthThreshold)) {
                     windowWidth = jWindow.width();
@@ -1137,17 +1170,18 @@ define([
 
             /**
              * Setup noDataTimeLine for data tab animation
-             * 
+             *
              * @method setupNoDataTimeLine
              * @private
              */
             function setupNoDataTimeLine() {
-
                 // timeline that hides Data tab
                 noDataTimeLine
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { width: "50%" }, { width: "100%", className: "+=h5", ease: "easeOutCirc" }, 0)
-                    .to(panelDiv.find(".wb-tabs > ul li:first"), transitionDuration, { lineHeight: '20px' }, 0)
-                    .fromTo(panelDiv.find(".wb-tabs > ul li:last"), transitionDuration, { width: "50%" }, { width: "0%", display: "none", ease: "easeOutCirc" }, 0)
+                    .fromTo(panelDiv.find('.wb-tabs > ul li:first'), transitionDuration, { width: '50%' },
+                        { width: '100%', className: '+=h5', ease: 'easeOutCirc' }, 0)
+                    .to(panelDiv.find('.wb-tabs > ul li:first'), transitionDuration, { lineHeight: '20px' }, 0)
+                    .fromTo(panelDiv.find('.wb-tabs > ul li:last'), transitionDuration, { width: '50%' },
+                        { width: '0%', display: 'none', ease: 'easeOutCirc' }, 0)
                 ;
             }
 
@@ -1159,7 +1193,7 @@ define([
                 */
                 init: function () {
                     windowWidth = jWindow.width();
-                    jWindow.on("resize", optimizeLayout);
+                    jWindow.on('resize', optimizeLayout);
                     updatePanelWidth();
 
                     toolbarController.init();
@@ -1167,11 +1201,11 @@ define([
                     UtilMisc.resetTimelines(timeLines);
 
                     Theme
-                        .fullScreenCallback("onComplete", onFullScreenComplete)
-                        .fullScreenCallback("onReverseComplete", onFullScreenComplete);
+                        .fullScreenCallback('onComplete', onFullScreenComplete)
+                        .fullScreenCallback('onReverseComplete', onFullScreenComplete);
 
                     // initialize the panel popup
-                    panelPopup = popupManager.registerPopup(panelToggle, "click",
+                    panelPopup = popupManager.registerPopup(panelToggle, 'click',
                         openPanel, {
                             activeClass: cssExpandedClass,
                             closeHandler: closePanel
@@ -1184,12 +1218,12 @@ define([
                     });
 
                     // set listener to the full-screen toggle
-                    fullScreenPopup = popupManager.registerPopup(fullScreenToggle, "click",
+                    fullScreenPopup = popupManager.registerPopup(fullScreenToggle, 'click',
                         function (d) {
                             Theme.toggleFullScreenMode();
                             d.resolve();
                         }, {
-                            activeClass: "button-pressed",
+                            activeClass: 'button-pressed',
                             setClassBefore: true
                         }
                     );
@@ -1201,7 +1235,7 @@ define([
 
                     // find a Data tab append an update notice to it
                     dataTabUpdateNotice = $(TmplHelper.template('datagrid_notice_update', {}, datagridTemplate));
-                    dataTabNode = panelDiv.find(".wb-tabs > ul li:last");
+                    dataTabNode = panelDiv.find('.wb-tabs > ul li:last');
                     dataTabNode.append(dataTabUpdateNotice);
 
                     topic.subscribe(EventManager.Datagrid.UPDATING, function (event) {
@@ -1210,7 +1244,7 @@ define([
 
                     adjustHeight();
 
-                    // setup noDataTimeLine here to allow IE9 to have enough time to 
+                    // setup noDataTimeLine here to allow IE9 to have enough time to
                     // create the tab
                     setupNoDataTimeLine();
                 },
@@ -1227,7 +1261,7 @@ define([
 
                 /**
                  * Toggles the visibility of Data tab in the side panel
-                 * 
+                 *
                  * @method toggleDataTab
                  * @param  {Boolean} open true - show; false - hide;
                  */
@@ -1253,7 +1287,8 @@ define([
                 * Toggles the full-data mode on and off.
                 *
                 * @method toggleFullDataMode
-                * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches to summary mode; if undefined, toggle mode based on the current state
+                * @param {Boolean} [fullData] if true, switches to full-data mode; if false, switches 
+                * to summary mode; if undefined, toggle mode based on the current state
                 */
                 toggleFullDataMode: function (fullData) {
                     _toggleFullDataMode(fullData);
@@ -1263,7 +1298,8 @@ define([
                 * Fires an event when the subpanel closes or opens.
                 *
                 * @method subPanelChange
-                * @param {Boolean} visible indicates whether the subpanel is visible or not (the panel is considered invisible when it's being destroyed, starts closing)
+                * @param {Boolean} visible indicates whether the subpanel is visible or not (the panel is considered
+                * invisible when it's being destroyed, starts closing)
                 * @param {String} origin origin of the subpanel
                 * @param {JObject} container subpanel container
                 * @param {Boolean} isComplete indicates if subPanel transition has completed or just started
@@ -1271,7 +1307,8 @@ define([
                 subPanelChange: function (visible, origin, container, isComplete) {
                     // check if the fullData transition is already underway
                     if (!fullDataTimeLine.isActive() && _isFullData && !isComplete) {
-                        // adjust the sidePanel position shifting the right edge to the left, making space for the subpanel to open at
+                        // adjust the sidePanel position shifting the right edge to the left, making space for the 
+                        // subpanel to open at
                         if (visible) {
                             fullDataSubpanelChangeTimeLine.play();
                         } else if (!visible) {
@@ -1279,7 +1316,8 @@ define([
                         }
                     }
 
-                    // hide the sidepanel toggle when a subpanel is opened to prevent the user from closing sidepanel with subpanel still opened
+                    // hide the sidepanel toggle when a subpanel is opened to prevent the user from closing sidepanel
+                    // with subpanel still opened
                     if (!isComplete) {
                         if (visible) {
                             panelToggle.hide();
@@ -1292,7 +1330,8 @@ define([
                         visible: visible,
                         origin: origin,
                         container: container,
-                        offsetLeft: (container) ? container.width() + 25 + layoutController.getPanelWidth() : layoutController.getPanelWidth(),
+                        offsetLeft: (container) ? container.width() + 25 + layoutController.getPanelWidth() :
+                            layoutController.getPanelWidth(),
                         isComplete: isComplete
                     });
                 },
@@ -1315,7 +1354,7 @@ define([
                 * @for LayoutController
                 */
                 getPanelWidth: function () {
-                    return panelDiv.filter(":visible").width();
+                    return panelDiv.filter(':visible').width();
                 }
             };
         }());
@@ -1355,13 +1394,13 @@ define([
                 subPanel = subPanels[attr.origin];
 
                 subPanel.open();
-                subPanel.getPanel().find(".sub-panel-toggle")
-                    .on("click", function () {
+                subPanel.getPanel().find('.sub-panel-toggle')
+                    .on('click', function () {
                         hideSubPanel(attr);
 
                         // reset focus back to link where the subpanel was created from
-                        if (attr.target.selector !== "#map-div") {
-                            $(attr.target).find(":tabbable").first().focus();
+                        if (attr.target.selector !== '#map-div') {
+                            $(attr.target).find(':tabbable').first().focus();
                         }
                     });
             });
@@ -1429,7 +1468,8 @@ define([
         }
 
         /**
-        * Moves the SubPanel with the specified `origin` in the DOM hierarchy to the new specified `target`; if `target` is not specified, the SubPanel is attached to the SidePanel.
+        * Moves the SubPanel with the specified `origin` in the DOM hierarchy to the new specified `target`; 
+        * if `target` is not specified, the SubPanel is attached to the SidePanel.
         *
         * @method dockSubPanel
         * @private
@@ -1440,7 +1480,7 @@ define([
                 subPanel = subPanels[attr.origin];
 
             if (subPanel) {
-                //console.log("docking subpanel");
+                //console.log('docking subpanel');
                 subPanel.shiftTarget(target);
             }
         }
@@ -1452,7 +1492,8 @@ define([
         *
         * @method captureSubPanel
         * @private
-        * @param  {SubPanelSettings} attr Settings for the SubPanel; only `origin`, `consumeOrigin` and `target` are required here
+        * @param  {SubPanelSettings} attr Settings for the SubPanel; only `origin`, `consumeOrigin` and 
+        * `target` are required here
         */
         function captureSubPanel(attr) {
             var subPanel;
@@ -1469,12 +1510,12 @@ define([
                 subPanels[attr.origin] = subPanel;
             }
         }
-        
+
         // TODO: notify bookmark module that layer query toggle has changed its state
-        
+
         /**
          * Stops event propagation.
-         * 
+         *
          * @method stopEventPropagation
          * @private
          */
@@ -1484,7 +1525,7 @@ define([
 
         /**
          * A helper function that shows/hides Data tab if there some/none feature layers in the layer selector.
-         * 
+         *
          * @method autoHideDataTab
          * @private
          */
@@ -1493,7 +1534,7 @@ define([
             if (RAMP.layerCounts && RAMP.layerCounts.feature === 0) {
                 layoutController.toggleDataTab();
             }
-            
+
             // subscribe to Layer added event which is fired every time a layer is added to the map through layer loader
             topic.subscribe(EventManager.LayerLoader.LAYER_ADDED, function (args) {
                 layoutController.toggleDataTab(args.layerCounts.feature > 0);
@@ -1524,11 +1565,11 @@ define([
                 layoutController.init();
 
                 // registering help popup
-                helpPanelPopup = popupManager.registerPopup(helpToggle, "click",
+                helpPanelPopup = popupManager.registerPopup(helpToggle, 'click',
                     function (d) {
                         topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, { visible: true });
-                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "help-section" });
-                        console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", true);
+                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'help-section' });
+                        console.log(EventManager.GUI.HELP_PANEL_CHANGE + '; visible:', true);
 
                         var that = this;
                         // close this panel if any other panel is opened
@@ -1539,7 +1580,7 @@ define([
                                 }
                             });
 
-                        helpSectionContainer.slideToggle("fast", function () {
+                        helpSectionContainer.slideToggle('fast', function () {
                             d.resolve();
                         });
                     }, {
@@ -1547,10 +1588,10 @@ define([
                         target: helpSectionContainer,
                         closeHandler: function (d) {
                             topic.publish(EventManager.GUI.HELP_PANEL_CHANGE, { visible: false });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "help-section" });
-                            console.log(EventManager.GUI.HELP_PANEL_CHANGE + "; visible:", false);
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'help-section' });
+                            console.log(EventManager.GUI.HELP_PANEL_CHANGE + '; visible:', false);
 
-                            helpSectionContainer.slideToggle("fast", function () {
+                            helpSectionContainer.slideToggle('fast', function () {
                                 d.resolve();
                             });
                         },
@@ -1577,7 +1618,7 @@ define([
                 });
 
                 topic.subscribe(EventManager.GUI.SUBPANEL_CLOSE, function (attr) {
-                    if (attr.origin === "all") {
+                    if (attr.origin === 'all') {
                         utilDict.forEachEntry(subPanels, function (key) {
                             //attr.origin = key;
                             hideSubPanel({
@@ -1585,7 +1626,7 @@ define([
                             });
                         });
                     } else {
-                        attr.origin.split(",").forEach(function (element) {
+                        attr.origin.split(',').forEach(function (element) {
                             //attr.origin = element;
                             hideSubPanel({
                                 origin: element
@@ -1596,14 +1637,14 @@ define([
 
                 topic.subscribe(EventManager.GUI.SUBPANEL_DOCK, function (attr) {
                     var na;
-                    if (attr.origin === "all") {
+                    if (attr.origin === 'all') {
                         utilDict.forEachEntry(subPanels, function (key) {
                             na = Object.create(attr);
                             na.origin = key;
                             dockSubPanel(na);
                         });
                     } else {
-                        attr.origin.split(",").forEach(function (element) {
+                        attr.origin.split(',').forEach(function (element) {
                             na = Object.create(attr);
                             na.origin = element;
                             dockSubPanel(na);
@@ -1614,14 +1655,14 @@ define([
 
                 topic.subscribe(EventManager.GUI.SUBPANEL_CAPTURE, function (attr) {
                     var na;
-                    if (attr.consumeOrigin === "all") {
+                    if (attr.consumeOrigin === 'all') {
                         utilDict.forEachEntry(subPanels, function (key) {
                             na = Object.create(attr);
                             na.consumeOrigin = key;
                             captureSubPanel(na);
                         });
                     } else {
-                        attr.consumeOrigin.split(",").forEach(function (element) {
+                        attr.consumeOrigin.split(',').forEach(function (element) {
                             na = Object.create(attr);
                             na.consumeOrigin = element;
                             captureSubPanel(na);
@@ -1637,25 +1678,24 @@ define([
                     toolbarController.update();
                 });
 
-                sidePanelTabList.find("li a").click(function () {
+                sidePanelTabList.find('li a').click(function () {
+                    console.log('inside side panel tab list on click');
+                    var selectedPanelId = $(this).attr('href').substr(1);
 
-                    console.log("inside side panel tab list on click");
-                    var selectedPanelId = $(this).attr("href").substr(1);
-
-                    sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
+                    sidePanelTabPanels.find('details[id=' + selectedPanelId + ']').each(
                         function () {
                             topic.publish(EventManager.GUI.TAB_SELECTED, {
                                 id: this.id,
-                                tabName: $(this).data("panel-name")
+                                tabName: $(this).data('panel-name')
                             });
                         });
 
                     // the panel currently open is being deselected
-                    sidePanelTabPanels.find("details[aria-expanded=true]").each(
+                    sidePanelTabPanels.find('details[aria-expanded=true]').each(
                         function () {
                             topic.publish(EventManager.GUI.TAB_DESELECTED, {
                                 id: this.id,
-                                tabName: $(this).data("panel-name")
+                                tabName: $(this).data('panel-name')
                             });
                         });
                 });
@@ -1672,7 +1712,7 @@ define([
                     waitList.push({
                         publishName: EventManager.GUI.PANEL_TOGGLE,
                         eventArg: {
-                            origin: "bootstrapper",
+                            origin: 'bootstrapper',
                             visible: RAMP.state.ui.sidePanelOpened
                         },
                         subscribeName: EventManager.GUI.PANEL_CHANGE

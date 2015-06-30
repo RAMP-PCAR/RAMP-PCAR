@@ -11,16 +11,17 @@
 /**
 * Maptips class.
 *
-* The map tip module provides functions to create a small popup window as the mouse hovers over a feature on the map (point, polygon, line, etc.).
+* The map tip module provides functions to create a small popup window as the mouse hovers over a feature on the map
+* (point, polygon, line, etc.).
 * NOTE: This module uses global config object. featureLayers->mapTipSettings
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'TmplHelper'}}{{/crossLink}}
 *
 * ####Uses RAMP Templates:
-* {{#crossLink "templates/feature_hovertip_template.json"}}{{/crossLink}}
-* {{#crossLink "templates/feature_anchortip_template.json"}}{{/crossLink}}
+* {{#crossLink 'templates/feature_hovertip_template.json'}}{{/crossLink}}
+* {{#crossLink 'templates/feature_anchortip_template.json'}}{{/crossLink}}
 *
 * @class Maptips
 * @static
@@ -53,12 +54,12 @@ define([
         EventManager, LayerLoader,
 
     /*tmplHelper */
-        TmplHelper, hovertips_template, anchortips_template
+        TmplHelper, hovertipsTemplate, anchortipsTemplate
     ) {
         'use strict';
 
-        var hovertips_template_json = JSON.parse(TmplHelper.stringifyTemplate(hovertips_template)),
-            anchortips_template_json = JSON.parse(TmplHelper.stringifyTemplate(anchortips_template)),
+        var hovertipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(hovertipsTemplate)),
+            anchortipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(anchortipsTemplate)),
             maptipPrototype = {
                 node: null,
                 handle: null,
@@ -101,7 +102,8 @@ define([
         }
 
         /**
-        * Checks if the maptip is hidden by the sub-panel and publishes a center-at event to pan the map, moving maptip into view.
+        * Checks if the maptip is hidden by the sub-panel and publishes a center-at event to pan the map, moving
+        * maptip into view.
         *
         * @method checkMaptipPosition
         * @private
@@ -114,7 +116,7 @@ define([
 
             if (target && graphic &&
                 target.offset().left > getSubPanelLeftOffset()) {
-                //console.log("offsets", target.offset().left, getSubPanelLeftOffset());
+                //console.log('offsets', target.offset().left, getSubPanelLeftOffset());
                 var point = graphic._extent.getCenter(),
                     width = RAMP.map.extent.xmax - RAMP.map.extent.xmin;
                 point.setX(point.x + width / 6);
@@ -150,7 +152,7 @@ define([
             }
 
             var layerConfig = LayerLoader.getLayerConfig(layerId),
-               templateKey = "",
+               templateKey = '',
                datawrapper,
                maptipContent;
 
@@ -158,13 +160,14 @@ define([
 
             if (interactive === true) {
                 templateKey = layerConfig.templates.anchor;
-                tmpl.templates = anchortips_template_json;
+                tmpl.templates = anchortipsTemplateJson;
             } else {
                 templateKey = layerConfig.templates.hover;
-                tmpl.templates = hovertips_template_json;
+                tmpl.templates = hovertipsTemplateJson;
             }
 
-            //because of highlight layer tricks, don't use the standard GraphicExtension methods here to get the feature data
+            //because of highlight layer tricks, don't use the standard GraphicExtension methods here
+            //to get the feature data
             lData = RAMP.data[layerId];
             if (lData) {
                 fData = lData.features[lData.index[graphic.attributes[lData.idField].toString()]];
@@ -174,7 +177,7 @@ define([
             } else {
                 //feature data is still downloading
                 //TODO should this be it's own template?
-                maptipContent = '<div class="map-tip-content">' + i18n.t("maptips.attribsDownloading") + '</div>';
+                maptipContent = '<div class="map-tip-content">' + i18n.t('maptips.attribsDownloading') + '</div>';
             }
             return maptipContent;
         }
@@ -199,7 +202,8 @@ define([
                 //content: $(maptipContent),
                 interactive: true,
                 arrow: true,
-                updateAnimation: Modernizr.csstransitions, // known bug in tooltipster when browsers not supporting CSS animation don't display tooltips at all
+                // known bug in tooltipster when browsers not supporting CSS animation don't display tooltips at all
+                updateAnimation: Modernizr.csstransitions,
                 autoClose: interactive !== true,
                 onlyOne: true,
                 interactiveTolerance: tolerance,
@@ -207,7 +211,8 @@ define([
                 theme: (interactive === true) ? '.tooltipster-noir' : '.tooltipster-shadow'
             });
 
-            //tooltipster fails to refresh content using the above settings object.  a direct call to 'content' seems to fix the issue.
+            //tooltipster fails to refresh content using the above settings object.  a direct call to 'content' seems
+            //to fix the issue.
             target.tooltipster('content', $(maptipContent));
 
             if (!interactive) {
@@ -217,8 +222,11 @@ define([
             } else {
                 // add a close button
                 target
-                        .tooltipster('show')
-                        .tooltipster('content', $(maptipContent).append('<button class="button-none button-close"><span class="wb-invisible">Close</span></button>'));
+                    .tooltipster('show')
+                    .tooltipster('content',
+                        $(maptipContent).append(
+                            '<button class="button-none button-close"><span class="wb-invisible">Close</span></button>'
+                        ));
 
                 // set a listener to that close button
                 $(target.tooltipster('elementTooltip'))
@@ -260,10 +268,10 @@ define([
                     var localOffset = obj.offset || 0;
 
                     highTooltip.handle
-                            .tooltipster("offsetX", localOffset)
-                            .tooltipster("reposition");
+                            .tooltipster('offsetX', localOffset)
+                            .tooltipster('reposition');
 
-                    // check if the tooltip is "hidden" under the sub-panel; if so, hide it for real;
+                    // check if the tooltip is 'hidden' under the sub-panel; if so, hide it for real;
                     window.setTimeout(function () {
                         if (getToolTipOffset() > getSubPanelLeftOffset()) {
                             highTooltip.node.hide();
@@ -275,7 +283,7 @@ define([
             });
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (obj) {
-                //console.log("subPanelChange", obj);
+                //console.log('subPanelChange', obj);
                 if (obj.isComplete) {
                     if (obj.visible) {
                         subPanelOffset = obj.offsetLeft;

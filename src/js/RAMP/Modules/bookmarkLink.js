@@ -3,13 +3,14 @@
 /**
 * BookmarkLink submodule
 *
-* Keeps track of the current state of the map and updates the GetLinkPanel's textbook accordingly. On page load, if any
-* parameters are detected in the URL, this module will attempt to recreate the map according to the parameters. Internally,
-* this module subscribes to all events that change the state of the map (e.g. extent-change, layers toggled on/off). It contains
-* a dictionary that map event names to an object that contains the minimum information needed to reconstruct the map for that particular
-* event. For example, if an extent change occurred, this module will add a key "map/extent-change" (or update if the entry already exists)
-* and put an object that contains the minimum information needed to reconstruct the map to that extent (in this case it would be
-* xmin, ymin, xmax, ymax. Spatial reference is not needed since the map always has the same spatial reference).
+* Keeps track of the current state of the map and updates the GetLinkPanel's textbook accordingly. On page load,
+* if any parameters are detected in the URL, this module will attempt to recreate the map according to the
+* parameters. Internally, this module subscribes to all events that change the state of the map (e.g. extent-change,
+* layers toggled on/off). It contains a dictionary that map event names to an object that contains the minimum 
+* information needed to reconstruct the map for that particular event. For example, if an extent change occurred,
+* this module will add a key 'map/extent-change' (or update if the entry already exists) and put an object that 
+* contains the minimum information needed to reconstruct the map to that extent (in this case it would be xmin,
+* ymin, xmax, ymax. Spatial reference is not needed since the map always has the same spatial reference).
 *
 * @module RAMP
 * @submodule BookmarkLink
@@ -33,22 +34,22 @@
 *   non-primitives, e.g. array, object, one must manually serialize the field first.
 *   Also only use anonymous objects with custom fields, do not use class objects
 *   (e.g. use an anonymous { } object to store map extent instead of ESRI's map
-*   {{#crossLink "Esri/geometry/Extent"}}{{/crossLink}} object, since it will contain other fields and methods that will also
-*   be serialized).
+*   {{#crossLink 'Esri/geometry/Extent'}}{{/crossLink}} object, since it will contain other fields and methods 
+*   that will also be serialized).
 *
-* 3. Call updateURL, passing it a name (e.g. "newExtent") and the object
+* 3. Call updateURL, passing it a name (e.g. 'newExtent') and the object
 *    (a name is required for efficiency, this way the URL will only need to
 *    serialize and update the given object instead of all objects).
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
-* {{#crossLink "Map"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "RAMP"}}{{/crossLink}}
-* {{#crossLink "Url"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
-* {{#crossLink "Dictionary"}}{{/crossLink}}
-* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'RAMP'}}{{/crossLink}}
+* {{#crossLink 'Url'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
+* {{#crossLink 'Dictionary'}}{{/crossLink}}
+* {{#crossLink 'PopupManager'}}{{/crossLink}}
 *
 * @class BookmarkLink
 * @static
@@ -60,11 +61,11 @@
 
 define([
 // Dojo
-        "require", "dojo/io-query", "dojo/_base/lang", "dojo/topic",
+        'require', 'dojo/io-query', 'dojo/_base/lang', 'dojo/topic',
 // Ramp
-        "ramp/globalStorage", "ramp/map", "ramp/eventManager", "ramp/layerLoader",
+        'ramp/globalStorage', 'ramp/map', 'ramp/eventManager', 'ramp/layerLoader',
 // Util
-        "utils/url", "utils/util", "utils/dictionary", "utils/array", "utils/popupManager"
+        'utils/url', 'utils/util', 'utils/dictionary', 'utils/array', 'utils/popupManager'
 ],
 
     function (
@@ -74,44 +75,44 @@ define([
         GlobalStorage, RampMap, EventManager, LayerLoader,
     // Util
         Url, UtilMisc, UtilDict, UtilArray, PopupManager) {
-        "use strict";
+        'use strict';
 
         // Using constants so we can have intellisense and not make silly typos
-        var EVENT_EXTENT_CHANGE = "extentChange",
-            EVENT_FULLSCREEN = "fullscreen",
-            EVENT_WMS_QUERY = "wmsQuery",
-            EVENT_PANEL_CHANGE = "panelChange",
-            EVENT_TAB_CHANGE = "selectedTab",
-            EVENT_BASEMAP_CHANGED = "basemapChange",
+        var EVENT_EXTENT_CHANGE = 'extentChange',
+            EVENT_FULLSCREEN = 'fullscreen',
+            EVENT_WMS_QUERY = 'wmsQuery',
+            EVENT_PANEL_CHANGE = 'panelChange',
+            EVENT_TAB_CHANGE = 'selectedTab',
+            EVENT_BASEMAP_CHANGED = 'basemapChange',
             PARAM = {
                 FILTER: {
-                    VISIBLE_LAYERS: "visibleLayers",
-                    HIDDEN_LAYERS: "hiddenLayers",
-                    VISIBLE_BOXES: "visibleBoxes",
-                    HIDDEN_BOXES: "hiddenBoxes"
+                    VISIBLE_LAYERS: 'visibleLayers',
+                    HIDDEN_LAYERS: 'hiddenLayers',
+                    VISIBLE_BOXES: 'visibleBoxes',
+                    HIDDEN_BOXES: 'hiddenBoxes'
                 }
             },
 
             // defines any standard url param keys we are expecting
             URL_KEYS = {
-                PANEL_VISIBLE: "pv",
-                FULL_SCREEN: "fs",
-                WMS_QUERY: "wq",
-                XMIN: "xmin",
-                YMIN: "ymin",
-                XMAX: "xmax",
-                YMAX: "ymax",
-                SPATIAL_REF: "sr",
-                BASEMAP: "bm",
-                LAYER_TRANSPARENCY: "lt",
-                SELECT_TAB: "st",
-                VISIBLE_LAYERS: "vl",
-                HIDDEN_LAYERS: "hl",
-                VISIBLE_BOXES: "vb",
-                HIDDEN_BOXES: "hb"
+                PANEL_VISIBLE: 'pv',
+                FULL_SCREEN: 'fs',
+                WMS_QUERY: 'wq',
+                XMIN: 'xmin',
+                YMIN: 'ymin',
+                XMAX: 'xmax',
+                YMAX: 'ymax',
+                SPATIAL_REF: 'sr',
+                BASEMAP: 'bm',
+                LAYER_TRANSPARENCY: 'lt',
+                SELECT_TAB: 'st',
+                VISIBLE_LAYERS: 'vl',
+                HIDDEN_LAYERS: 'hl',
+                VISIBLE_BOXES: 'vb',
+                HIDDEN_BOXES: 'hb'
             },
 
-            HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}",
+            HREF_MAILTO_TEMPLATE = 'mailto:?subject={0}&body={1}',
 
             config,
 
@@ -131,7 +132,7 @@ define([
 
             getlinkloadinganimation,
 
-            cssButtonPressedClass = "button-pressed",
+            cssButtonPressedClass = 'button-pressed',
 
             isShortLinkMode = false,
 
@@ -197,17 +198,17 @@ define([
                 * @constructor
                 */
                 init: function () {
-                    getlinkloadinganimation = $("#getlink-section .loadingAnimation");
+                    getlinkloadinganimation = $('#getlink-section .loadingAnimation');
 
-                    getlinkEmailButton = $(".getlink-email-button");
+                    getlinkEmailButton = $('.getlink-email-button');
 
-                    getlinkToggle = $("#getlink-toggle");
-                    getlinkSectionContainer = $("#getlink-section-container");
-                    getlinkSection = $("#getlink-section");
+                    getlinkToggle = $('#getlink-toggle');
+                    getlinkSectionContainer = $('#getlink-section-container');
+                    getlinkSection = $('#getlink-section');
 
                     // select link when user focuses on the textbox http://stackoverflow.com/a/22102081
                     linkPaneTextbox =
-                        $("#getlink-input")
+                        $('#getlink-input')
                         .on('focus', function () {
                             var $this = $(this)
                                 .one('mouseup.mouseupSelect', function () {
@@ -223,41 +224,41 @@ define([
 
                     // toggle short/long link mode on click
                     getlinkShortenButton =
-                        $(".getlink-shorten-button")
-                        .on("click", toggleShortLinkMode);
+                        $('.getlink-shorten-button')
+                        .on('click', toggleShortLinkMode);
 
-                    getlinkShortenButtonLabel = getlinkShortenButton.find("span.on-right");
+                    getlinkShortenButtonLabel = getlinkShortenButton.find('span.on-right');
 
-                    getlinkPopup = PopupManager.registerPopup(getlinkToggle, "click",
+                    getlinkPopup = PopupManager.registerPopup(getlinkToggle, 'click',
                         function (d) {
                             topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: "get-link-section" });
-                            console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", true);
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'get-link-section' });
+                            console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', true);
 
                             //when called in gui.js, elements for sidePanelTabList is not available yet
                             //re-publish on selected tab
-                            sidePanelWbTabs = $("#panel-div > .wb-tabs");
-                            sidePanelTabList = sidePanelWbTabs.find(" > ul[role=tablist]");
-                            sidePanelTabPanels = sidePanelWbTabs.find(" > .tabpanels");
+                            sidePanelWbTabs = $('#panel-div > .wb-tabs');
+                            sidePanelTabList = sidePanelWbTabs.find(' > ul[role=tablist]');
+                            sidePanelTabPanels = sidePanelWbTabs.find(' > .tabpanels');
 
-                            sidePanelTabList.find("li a").click(function () {
-                                console.log("inside side panel tab list on click");
-                                var selectedPanelId = $(this).attr("href").substr(1);
+                            sidePanelTabList.find('li a').click(function () {
+                                console.log('inside side panel tab list on click');
+                                var selectedPanelId = $(this).attr('href').substr(1);
 
-                                sidePanelTabPanels.find("details[id=" + selectedPanelId + "]").each(
+                                sidePanelTabPanels.find('details[id=' + selectedPanelId + ']').each(
                                     function () {
                                         topic.publish(EventManager.GUI.TAB_SELECTED, {
                                             id: this.id,
-                                            tabName: $(this).data("panel-name")
+                                            tabName: $(this).data('panel-name')
                                         });
                                     });
 
                                 // the panel currently open is being deselected
-                                sidePanelTabPanels.find("details[aria-expanded=true]").each(
+                                sidePanelTabPanels.find('details[aria-expanded=true]').each(
                                     function () {
                                         topic.publish(EventManager.GUI.TAB_DESELECTED, {
                                             id: this.id,
-                                            tabName: $(this).data("panel-name")
+                                            tabName: $(this).data('panel-name')
                                         });
                                     });
                             });
@@ -272,7 +273,7 @@ define([
                                 }
                             );
 
-                            getlinkSectionContainer.slideDown("fast", function () {
+                            getlinkSectionContainer.slideDown('fast', function () {
                                 d.resolve();
                             });
                         },
@@ -281,10 +282,10 @@ define([
                             target: getlinkSectionContainer,
                             closeHandler: function (d) {
                                 topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: false });
-                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: "get-link-section" });
-                                console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + " visible:", false);
+                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'get-link-section' });
+                                console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', false);
 
-                                getlinkSectionContainer.slideUp("fast", function () {
+                                getlinkSectionContainer.slideUp('fast', function () {
                                     toggleShortLinkMode(false);
                                     d.resolve();
                                 });
@@ -337,11 +338,11 @@ define([
         */
         function setNewUrl(url) {
             var mailToHref = String.format(HREF_MAILTO_TEMPLATE,
-                i18n.t("bookmarkLink.emailUrlSubject"),
+                i18n.t('bookmarkLink.emailUrlSubject'),
                 encodeURIComponent(url));
 
             linkPaneTextbox.val(url);
-            getlinkEmailButton.attr("href", mailToHref);
+            getlinkEmailButton.attr('href', mailToHref);
         }
 
         /**
@@ -353,33 +354,33 @@ define([
         */
         function updateURL() {
             var link = baseUrl,
-                delim = "?";
+                delim = '?';
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
             UtilDict.forEachEntry(parameters, function (key, value) {
                 if (value) { // Value cannot be null or the empty String
                     link += delim + value;
-                    if (delim === "?") {
+                    if (delim === '?') {
                         //first param has a question mark in front of it.  all others have an &
-                        delim = "&";
+                        delim = '&';
                     }
                 }
             });
 
-            // Need to add an extra "&" to the query if we have an anchor, otherwise
+            // Need to add an extra '&' to the query if we have an anchor, otherwise
             // the last query will contain the anchors
             if (!UtilDict.isEmpty(anchors)) {
-                link += "&";
+                link += '&';
             }
 
             // Anchors have to be at the end
             UtilDict.forEachEntry(anchors, function (key, value) {
-                link += "#" + value;
+                link += '#' + value;
             });
 
             if (isShortLinkMode) {
-                if (linkPaneTextbox.is(":visible")) {
+                if (linkPaneTextbox.is(':visible')) {
                     getlinkloadinganimation.show();
 
                     jQuery.urlShortener({
@@ -445,10 +446,10 @@ define([
        */
         function slimCoord(value) {
             var sVal = value.toString(),
-                decIndex = sVal.indexOf("."),
+                decIndex = sVal.indexOf('.'),
                 cutSize;
 
-            if (sVal.substring(0, 1) === "-") {
+            if (sVal.substring(0, 1) === '-') {
                 cutSize = 7;
             } else {
                 cutSize = 6;
@@ -474,13 +475,14 @@ define([
             var label;
 
             isShortLinkMode = value === true ? true : (value === false ? false : !isShortLinkMode);
-            label = isShortLinkMode ? i18n.t("bookmarkLink.longLink") : i18n.t("bookmarkLink.shortLink");
+            label = isShortLinkMode ? i18n.t('bookmarkLink.longLink') : i18n.t('bookmarkLink.shortLink');
             getlinkShortenButtonLabel.text(label);
             updateURL();
         }
 
         /**
-        * Process the URL.  If there are any parameters that came from a short-link, apply them to the config or the RAMP application
+        * Process the URL.  If there are any parameters that came from a short-link, apply them to the config or
+        * the RAMP application
         *
         * @method updateConfig
         * @param {String} homePage the page name of the ramp site (e.g. index.html, map.html)
@@ -493,8 +495,8 @@ define([
             config = RAMP.config;
             baseUrl = urlObj.uri;
 
-            //replace "#" with "st=", otherwise RAMP treats as regular parameters, not archors
-            urlObj.query = urlObj.query.replace("#", URL_KEYS.SELECT_TAB + "=");
+            //replace '#' with 'st=', otherwise RAMP treats as regular parameters, not archors
+            urlObj.query = urlObj.query.replace('#', URL_KEYS.SELECT_TAB + '=');
 
             queryObject = dojoQuery.queryToObject(urlObj.query);
 
@@ -539,17 +541,18 @@ define([
 
             if (queryObject[URL_KEYS.XMIN]) {
                 event = {
-                    xmin: parseFloat(queryObject[URL_KEYS.XMIN].replace(/,/g, "")),
-                    ymin: parseFloat(queryObject[URL_KEYS.YMIN].replace(/,/g, "")),
-                    xmax: parseFloat(queryObject[URL_KEYS.XMAX].replace(/,/g, "")),
-                    ymax: parseFloat(queryObject[URL_KEYS.YMAX].replace(/,/g, "")),
+                    xmin: parseFloat(queryObject[URL_KEYS.XMIN].replace(/,/g, '')),
+                    ymin: parseFloat(queryObject[URL_KEYS.YMIN].replace(/,/g, '')),
+                    xmax: parseFloat(queryObject[URL_KEYS.XMAX].replace(/,/g, '')),
+                    ymax: parseFloat(queryObject[URL_KEYS.YMAX].replace(/,/g, '')),
                     sr: queryObject[URL_KEYS.SPATIAL_REF]
                 };
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                //we call the spatial refernce "sr" in the url to save on characters.  However, the internal config object uses the ESRI standard
-                //name of "spatialReference" (so we can serialize to a valid esri SR object)
+                // we call the spatial refernce 'sr' in the url to save on characters.  However, the internal 
+                // config object uses the ESRI standard name of 'spatialReference' (so we can serialize to a
+                // valid esri SR object)
                 var configExtent = {
                     xmin: event.xmin,
                     ymin: event.ymin,
@@ -602,7 +605,7 @@ define([
             var layerIds;
 
             if (queryObject[URL_KEYS.VISIBLE_LAYERS]) {
-                layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split("+");
+                layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split('+');
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
@@ -620,7 +623,7 @@ define([
             }
 
             if (queryObject[URL_KEYS.HIDDEN_LAYERS]) {
-                layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split("+");
+                layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split('+');
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
@@ -638,7 +641,7 @@ define([
             }
 
             if (queryObject[URL_KEYS.VISIBLE_BOXES]) {
-                layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split("+");
+                layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split('+');
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
@@ -654,7 +657,7 @@ define([
             }
 
             if (queryObject[URL_KEYS.HIDDEN_BOXES]) {
-                layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split("+");
+                layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split('+');
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
@@ -711,7 +714,7 @@ define([
             * change).
             *
             * @method init
-            * {String} homePage a string denoting the name of the homePage (e.g. usually "Default.aspx" or "index.html")
+            * {String} homePage a string denoting the name of the homePage (e.g. usually 'Default.aspx' or 'index.html')
             */
             createUI: function () {
                 ui.init();
@@ -722,7 +725,7 @@ define([
             /**
             * Subscribe to map state changes so the URL displayed can be changed accordingly.
             *  SUBSCRIBES TO:
-            * map "extent-change"
+            * map 'extent-change'
             *   Updates URL when map extent changes
             *
             * EventManager.GUI.FULLSCREEN_CHANGE
@@ -774,10 +777,10 @@ define([
                 });
 
                 topic.subscribe(EventManager.GUI.TAB_SELECTED, function (event) {
-                    // Need to remove the "-lnk" part for the id to work
+                    // Need to remove the '-lnk' part for the id to work
                     // since when the page first loads, if the tab is deselected,
-                    // it's id will be missing the "-lnk" at the end.
-                    addAnchor(EVENT_TAB_CHANGE, event.id.replace("-lnk", ""));
+                    // it's id will be missing the '-lnk' at the end.
+                    addAnchor(EVENT_TAB_CHANGE, event.id.replace('-lnk', ''));
                     updateURL();
                 });
 
@@ -816,13 +819,13 @@ define([
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
-                        // Convert an array of string into a "+" delimited string
-                        hl: Object.keys(hiddenLayers).join("+")
+                        // Convert an array of string into a '+' delimited string
+                        hl: Object.keys(hiddenLayers).join('+')
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
-                        // Convert an array of string into a "+" delimited string
-                        vl: Object.keys(visibleLayers).join("+")
+                        // Convert an array of string into a '+' delimited string
+                        vl: Object.keys(visibleLayers).join('+')
                     });
 
                     updateURL();
@@ -847,13 +850,13 @@ define([
                         });
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
-                        // Convert an array of string into a "+" delimited string
-                        hb: Object.keys(hiddenBoxes).join("+")
+                        // Convert an array of string into a '+' delimited string
+                        hb: Object.keys(hiddenBoxes).join('+')
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
-                        // Convert an array of string into a "+" delimited string
-                        vb: Object.keys(visibleBoxes).join("+")
+                        // Convert an array of string into a '+' delimited string
+                        vb: Object.keys(visibleBoxes).join('+')
                     });
 
                     updateURL();
