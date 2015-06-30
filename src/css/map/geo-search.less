@@ -5,6 +5,12 @@
     z-index: 100;
     position: absolute;
 
+    .container() {
+        background-color: white;
+        width: 400px;
+        box-shadow: 0 0 2px #333;
+    }
+
     @result-line-height: 2;
 
     form[name=geosearchForm] {
@@ -51,6 +57,7 @@
         .province-filter, .type-filter, .extent-filter, .distance-filter {
             border: none;
             padding: 0 4px;
+            font-size: 90%;
 
             &.selected {
                 font-weight: bold;
@@ -58,50 +65,62 @@
         }
 
         .province-filter {
-            width: 30%;
+            width: 27%;
         }
 
         .type-filter {
-            width: 30%;
+            width: 27%;
         }
 
         .extent-filter {
-            width: 25%;
+            width: 22%;
         }
 
         .distance-filter {
-            width: 30%;
+            width: 27%;
         }
 
         .filter-clear {
-            width: 15%;
+            width: 24%;
             text-align: right;
         }
     }
 
+    .loading-simple {
+        .container;
+        text-align: center;
+        padding: 5px 0;
+        display: block;
+    }
+
+    .no-results {
+        .container;
+        text-align: center;
+        padding: 5px 0;
+        color: @attention-color;
+        display: block;
+    }
+
     .results-container {
-        background-color: white;
-        width: 400px;
-        box-shadow: 0 0 2px #333;
-
-        .loading-simple {
-            text-align: center;
-            padding: 5px 0;
-            display: block;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 5px 0;
-            color: @attention-color;
-            display: block;
-        }
-
+        .container;
+        
         .result-list {
             list-style: none;
             padding-left: 0;
             margin-bottom: 0;
             position: relative;
+
+            li.selected {
+                background-color: @accent-color !important;
+
+                span {
+                    color: white !important;
+                }
+
+                .result-container:hover {
+                    background-color: @accent-color !important;
+                }
+            }
 
             .result-container {
                 width: 100%;

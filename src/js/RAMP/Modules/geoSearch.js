@@ -460,7 +460,7 @@ define([
         * @param {String} input search item user has entered
         * @return {Object} array of suggested searches
         */
-        function getSuggestions(input) {
+        /*function getSuggestions(input) {
             var defRequest,
                 queryUrl = RAMP.config.geolocationUrl + RAMP.locale + "/suggest?q=",
                 province;
@@ -471,9 +471,9 @@ define([
 
             // take part of string after the last comma;
             // remove from string iff it is a province
-            /*if (isProvince(province)) {
-                input = input.substring(0, input.lastIndexOf(',') - 1);
-            }*/
+            ///if (isProvince(province)) {
+            ///    input = input.substring(0, input.lastIndexOf(',') - 1);
+            ///}
 
             defRequest = script.get(queryUrl + input, {
                 jsonp: 'callback'
@@ -485,7 +485,7 @@ define([
             //    function (searchResult) {
             //        return searchResult.suggestions;
             //    });
-        }
+        }*/
 
         /**
         * Will search on user input string.  Public endpoint for searches, will orchestrate the appropriate search calls.
@@ -623,7 +623,7 @@ define([
                         }
 
                         // suggestions don't work right now.
-                        function suggest(searchTerm) {
+                        /*function suggest(searchTerm) {
                             return getSuggestions(searchTerm)
                                 .then(function (data) {
                                     if (data.suggestions.length > 0) {
@@ -632,11 +632,11 @@ define([
                                         return $q.reject('no suggestions');
                                     }
                                 });
-                        }
+                        }*/
 
                         return {
-                            search: search,
-                            suggest: suggest
+                            search: search//,
+                            //suggest: suggest
                         };
                     }
                 ])
@@ -811,19 +811,38 @@ define([
                     var data;
 
                     function extentToArray(ext) {
-                        return [
+                        var xyminPoint,
+                            xymaxPoint;
+
+                        xyminPoint = UtilMisc.mapPointToLatLong({
+                            x: ext.xmin,
+                            y: ext.ymin,
+                            spatialReference: {
+                                wkid: ext.spatialReference.wkid
+                            }
+                        });
+                        xymaxPoint = UtilMisc.mapPointToLatLong({
+                            x: ext.xmax,
+                            y: ext.ymax,
+                            spatialReference: {
+                                wkid: ext.spatialReference.wkid
+                            }
+                        });
+
+                        /*return [
                             ext.xmin,
                             ext.ymin,
                             ext.xmax,
                             ext.ymax
+                        ];*/
+
+                        return [
+                            xyminPoint[0],
+                            xyminPoint[1],
+                            xymaxPoint[0],
+                            xymaxPoint[1]
                         ];
                     }
-
-                    topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
-                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or soemthing like that
-                        data[2].extent = extentToArray(event.extent);
-                        console.log('factory:extents - extent changed', data[2].extent);
-                    });
 
                     data = [
                         {
@@ -842,6 +861,12 @@ define([
                             extent: undefined
                         }
                     ];
+
+                    topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
+                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or soemthing like that
+                        data[2].extent = extentToArray(event.extent);
+                        console.log('factory:extents - extent changed', data[2].extent);
+                    });
 
                     return {
                         data: data
@@ -876,14 +901,32 @@ define([
                 .directive('rpGeosearchResults', function () {
                     return {
                         restrict: 'E',
-                        scope: true, // sharing scope as we need access to isLoading; 
+                        scope: {
+                            results: '=',
+                            state: '=',
+                            parentSelect: '&select'
+                        },
                         templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-results.html',
                         controller: ['$scope', 'lookupService',
                             function ($scope, lookupService) {
-                                // bind lookupservice to resolve province and type names
-                                $scope.lookupService = lookupService;
+                                /* jshint validthis: true */
+                                var vm = this;
+
+                                vm.lookup = lookupService; // bind lookupservice to resolve province and type names
+                                vm.select = function (result) {
+                                    vm.results.forEach(function (r) {
+                                        r.selected = false;
+                                    });
+
+                                    result.selected = true;
+                                    vm.parentSelect({
+                                        result: result
+                                    });
+                                };
                             }
-                        ]
+                        ],
+                        controllerAs: 'geosearchResults',
+                        bindToController: true
                     };
                 });
 
@@ -891,21 +934,64 @@ define([
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
                 .controller('GeosearchController', ['$scope', 'geoService', 'filterService', '$timeout',
                     function ($scope, geoService, filterService, $timeout) {
-                        var timeoutPromise = $timeout(function () { }, 0);
-                        $scope.isLoading = false;
+                        /* jshint validthis: true */
+                        var vm = this,
+                            placeholderResult = {
+                                name: '',
+                                placeholder: true
+                            };
 
-                        $scope.search = function () {
+                        vm.selectedResult = {};
+                        vm.results = [];
+                        vm.state = 'hide'; // 'show', 'loading', 'hide', 'no-results'
+                        
+                        vm.clear = clear;
+                        vm.search = search;
+                        vm.select = select;
+                        vm.onBlur = onBlur;
+                        vm.onFocus = onFocus;
+
+                        var timeoutPromise = $timeout(function () { }, 0);
+                        
+                        function clear() {
+                            // remove touched and dirty classes from the form
+                            if ($scope.geosearchForm) {
+                                $scope.geosearchForm.$setPristine();
+                                $scope.geosearchForm.$setUntouched();
+                            }
+
+                            placeholderResult.name = '';
+                            vm.selectedResult = placeholderResult;
+                            vm.results = [];
+
+                            setState('hide');
+                        }
+                        
+                        function search() {
+                            console.log($scope.active);
+
+                            $timeout.cancel(timeoutPromise);
+
                             if ($scope.geosearchForm.$valid) {
+
+                                // if a result was selected before, reset it with a placeholder
+                                if (!vm.selectedResult.placeholder) {
+                                    vm.selectedResult.selected = false;
+                                    placeholderResult.name = vm.selectedResult.name;
+                                    vm.selectedResult = placeholderResult;
+                                }
+
                                 // create a timeout to show the loading label after 250ms
-                                $timeout.cancel(timeoutPromise);
-                                timeoutPromise = $timeout(function () { $scope.isLoading = true; }, 250);
+                                timeoutPromise = $timeout(function () {
+                                    setState('loading');
+                                }, 250);
 
                                 geoService
-                                    .search($scope.searchTerm, filterService.getFilters())
+                                    .search(vm.selectedResult.name, filterService.getFilters())
                                     .then(function (data) {
                                         $timeout.cancel(timeoutPromise);
-                                        $scope.results = data.list;
-                                        $scope.isLoading = false;
+                                        vm.results = data.list;
+                                        setState('show');
                                         console.log('udpate results', data);
                                     })
                                     .catch(function (data) {
@@ -915,32 +1001,40 @@ define([
                                         if (data.reason !== 'old') {
                                             console.error(data);
                                             $timeout.cancel(timeoutPromise);
-                                            $scope.results = [];
-                                            $scope.isLoading = false;
+                                            vm.results = [];
+                                            setState('no-results');
                                         }
                                     });
                             } else {
-                                $scope.results = [];
+                                vm.results = [];
                             }
-                        };
+                        }
 
-                        $scope.clear = function () {
-                            // remove touched and dirty classes from the form
-                            if ($scope.geosearchForm) {
-                                $scope.geosearchForm.$setPristine();
-                                $scope.geosearchForm.$setUntouched();
-                            }
+                        function select(result) {
+                            console.log('selected result', result);
 
-                            $scope.searchTerm = '';
-                            $scope.results = [];
-                        };
-
-                        $scope.select = function (result) {
-                            console.log(result);
+                            vm.selectedResult = result;
+                            setState('hide');
 
                             var esriPoint = UtilMisc.latLongToMapPoint(result.lonlat[1], result.lonlat[0], map.extent.spatialReference);
                             map.centerAndZoom(esriPoint, 12);
-                        };
+                        }
+
+                        function setState(value) {
+                            vm.state = value;
+                        }
+
+                        function onBlur() {
+                            if (vm.selectedResult.name === '') {
+                                setState('hide');
+                            }
+                        }
+
+                        function onFocus() {
+                            setState('show');
+                        }
+
+                        vm.clear();
                     }
                 ])
                 .config(['$stateProvider',
@@ -949,7 +1043,8 @@ define([
                             .state('default', {
                                 url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing,
                                 templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
-                                controller: 'GeosearchController'
+                                controller: 'GeosearchController',
+                                controllerAs: 'geosearch'
                             });
                     }
                 ]);

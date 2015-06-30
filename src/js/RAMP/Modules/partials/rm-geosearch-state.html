@@ -1,18 +1,39 @@
 ﻿<div>
     <form name="geosearchForm" novalidate>
         <div class="geosearch-input">
-            <input class="geosearch-field" ng-model="searchTerm" ng-change="search()" ng-minlength="3" type="text" required />
-            <button ng-show="searchTerm" ng-click="clear()" class="geosearch-clear button-none"><i class="fa fa-close"></i><span class="on-right wb-inv">Clear</span></button>
+            <input class="geosearch-field"
+                   ng-model="geosearch.selectedResult.name"
+                   ng-change="geosearch.search()"
+                   ng-minlength="3"
+                   ng-focus="geosearch.onFocus()"
+                   type="text" required />
+            <button ng-show="geosearch.selectedResult.name" ng-click="geosearch.clear()" class="geosearch-clear button-none">
+                <i class="fa fa-close"></i><span class="on-right wb-inv">Clear</span>
+            </button>
         </div>
-        <button class="geosearch-button btn-primary"><i class="fa fa-search"></i><span class="on-right wb-inv">Search</span></button>
+        <button class="geosearch-button btn-primary">
+            <i class="fa fa-search"></i><span class="on-right wb-inv">Search</span>
+        </button>
     </form>
-    <div>
-        <rp-geosearch-filter ng-show="geosearchForm.$valid" filter-change="search()"></rp-geosearch-filter>
-        <rp-geosearch-results ng-show="geosearchForm.$valid" results="results" isloading="isLoading"></rp-geosearch-results>
-        <!--<ul>
-            <li ng-repeat="suggestion in suggestions">
-                <span>{{ suggestion }}</span>
-            </li>
-        </ul>-->
+    <div ng-switch on="geosearch.state">
+
+        <rp-geosearch-filter ng-hide="geosearch.state === 'hide'" 
+                             filter-change="geosearch.search()"></rp-geosearch-filter>
+
+        <rp-geosearch-results ng-switch-when="show" 
+                              results="geosearch.results" 
+                              select="geosearch.select(result)"></rp-geosearch-results>
+        
+        <div class="loading-simple" ng-switch-when="loading">
+            <span>Loading</span>
+            <ul role="presentation">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+
+        <div class="no-results" ng-switch-when="no-results">
+            <span>No results found. Update filters or change your query.</span>
+        </div>
     </div>
-</div>
