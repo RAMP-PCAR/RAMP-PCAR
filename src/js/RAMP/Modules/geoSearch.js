@@ -914,11 +914,6 @@ define([
 
                                 vm.lookup = lookupService; // bind lookupservice to resolve province and type names
                                 vm.select = function (result) {
-                                    vm.results.forEach(function (r) {
-                                        r.selected = false;
-                                    });
-
-                                    result.selected = true;
                                     vm.parentSelect({
                                         result: result
                                     });
@@ -944,7 +939,7 @@ define([
                         vm.selectedResult = {};
                         vm.results = [];
                         vm.state = 'hide'; // 'show', 'loading', 'hide', 'no-results'
-                        
+
                         vm.clear = clear;
                         vm.search = search;
                         vm.select = select;
@@ -952,8 +947,9 @@ define([
                         vm.onFocus = onFocus;
 
                         var timeoutPromise = $timeout(function () { }, 0);
-                        
+
                         function clear() {
+
                             // remove touched and dirty classes from the form
                             if ($scope.geosearchForm) {
                                 $scope.geosearchForm.$setPristine();
@@ -966,10 +962,9 @@ define([
 
                             setState('hide');
                         }
-                        
-                        function search() {
-                            console.log($scope.active);
 
+                        function search() {
+                            
                             $timeout.cancel(timeoutPromise);
 
                             if ($scope.geosearchForm.$valid) {
@@ -1011,13 +1006,28 @@ define([
                         }
 
                         function select(result) {
-                            console.log('selected result', result);
+                            var esriPoint;
 
-                            vm.selectedResult = result;
-                            setState('hide');
+                            if (result) {
+                                vm.selectedResult = result;
+                            } else if (vm.selectedResult.placeholder && vm.results.length > 0) {
+                                // if no result is passed and placeholder selected; take the first result from the list
+                                vm.selectedResult = vm.results[0];
+                            }
 
-                            var esriPoint = UtilMisc.latLongToMapPoint(result.lonlat[1], result.lonlat[0], map.extent.spatialReference);
-                            map.centerAndZoom(esriPoint, 12);
+                            if (vm.selectedResult.lonlat) {
+
+                                // reset styles on other results
+                                vm.results.forEach(function (r) {
+                                    r.selected = false;
+                                });
+                                vm.selectedResult.selected = true;
+
+                                setState('hide');
+
+                                esriPoint = UtilMisc.latLongToMapPoint(vm.selectedResult.lonlat[1], vm.selectedResult.lonlat[0], map.extent.spatialReference);
+                                map.centerAndZoom(esriPoint, 12);
+                            }
                         }
 
                         function setState(value) {
