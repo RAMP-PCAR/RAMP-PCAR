@@ -102,7 +102,7 @@ module.exports =
             disallowMixedSpacesAndTabs: true # spaces???
             disallowKeywordsOnNewLine: ["else"]
             requireCapitalizedConstructors: true
-            safeContextKeyword: ["that"]
+            safeContextKeyword: ["that", 'vm']
             requireDotNotation: true
             disallowYodaConditions: true
             validateJSDoc:
