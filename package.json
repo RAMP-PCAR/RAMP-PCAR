@@ -48,7 +48,7 @@
         "grunt-gh-pages": "~0.9.1",
         "grunt-github-releaser": "~0.1.17",
         "grunt-html": "~4.0.2",
-        "grunt-jscs": "~0.7.1",
+        "grunt-jscs": "~1.8.0",
         "grunt-json-minify": "~0.4.0",
         "grunt-jsonlint": "~1.0.4",
         "grunt-newer": "~0.7.0",
