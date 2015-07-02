@@ -190,7 +190,7 @@ define([
                 var highLod = RAMP.map._params.lods.length - 1;
 
                 // Binary Search
-                while (!(highLod === lowLod + 1)) {
+                while (highLod !== lowLod + 1) {
                     if (lods[currentLod].scale >= scaleLimit) {
                         lowLod = currentLod;
                     } else {

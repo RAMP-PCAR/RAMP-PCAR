@@ -1,5 +1,6 @@
-﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery,
-FileReader, Btoa */
+﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader,
+Btoa, proj4 */
+
 /* jshint bitwise:false  */
 
 /**
@@ -25,10 +26,13 @@ FileReader, Btoa */
 * @uses dojo/topic
 * @uses dojo/Deferred
 * @uses esri/geometry/Extent
+* @uses esri/geometry/Point
 * @uses esri/graphic
 */
-define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent', 'esri/graphic'],
-    function (dojoLang, topic, Deferred, Extent, Graphic) {
+define([
+    'dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent', 'esri/geometry/Point', 'esri/graphic',
+],
+    function (dojoLang, topic, Deferred, Extent, Point, Graphic) {
         'use strict';
 
         /**
@@ -226,9 +230,9 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             subscribeOnce: function (name, callback) {
                 var handle = null;
                 var wrapper = function (evt) {
-                        handle.remove();
-                        callback(evt);
-                    };
+                    handle.remove();
+                    callback(evt);
+                };
 
                 return (handle = topic.subscribe(name, wrapper));
             },
@@ -1192,6 +1196,52 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             },
 
             /**
+            * Converts a lat long pair into a point on the basemap
+            *
+            * @method latLongToMapPoint
+            * @static
+            * @param {decimal} latitude the latitude of the point
+            * @param {decimal} longitude the longitude of the point
+            * @param {Esri/SpatialReference} targetSR spatial reference
+            *                                {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to convert the
+            *                                lat long to.  Must have a WKID (i.e. basemap SR)
+            * @return {Esri/Point} ESRI point object in new projection
+            */
+            latLongToMapPoint: function (latitude, longitude, targetSR) {
+                //TODO can we enhance this to handle non-wkid projections?
+
+                var pt = [longitude, latitude];
+                var mapProj = 'EPSG:' + targetSR.wkid;
+
+                // EPSG:4326 is wkid for lat/long
+                var projConvert = proj4('EPSG:4326', mapProj);
+                var convertedPoint = projConvert.forward(pt);
+
+                return new Point(convertedPoint[0], convertedPoint[1], targetSR);
+            },
+
+            /**
+            * Converts a map point to a long lat pair
+            *
+            * @method mapPointToLatLong
+            * @static
+            * @param {Esri/Point} mapPoint ESRI point object in new projection
+            * @return {Array} array containing longitude, latitude decimal values
+            */
+            mapPointToLatLong: function (mapPoint) {
+                //TODO can we enhance this to handle non-wkid projections?
+
+                var pt = [mapPoint.x, mapPoint.y];
+                var mapProj = 'EPSG:' + mapPoint.spatialReference.wkid;
+
+                // EPSG:4326 is wkid for lat/long
+                var projConvert = proj4(mapProj, 'EPSG:4326');
+                var convertedPoint = projConvert.forward(pt);
+
+                return convertedPoint;
+            },
+
+            /**
             * Checks if the given dom node is present in the dom.
             *
             * @method containsInDom
@@ -1264,9 +1314,9 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 var detected;
                 var escapeDelimiters = ['|', '^'];
                 var delimiters = {
-                        cell: [',', ';', '\t', '|', '^'],
-                        line: ['\r\n', '\r', '\n'],
-                    };
+                    cell: [',', ';', '\t', '|', '^'],
+                    line: ['\r\n', '\r', '\n'],
+                };
 
                 type = type !== 'cell' && type !== 'line' ? 'cell' : type;
 

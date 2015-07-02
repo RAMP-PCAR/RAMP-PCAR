@@ -388,8 +388,7 @@ define([
                         return (getLayerItem(elm).state !== LayerItem.state.ERROR);
                     });
 
-                    index;
-                    index = cleanIdArray.toArray().indexOf(layerId);
+                    var index = cleanIdArray.toArray().indexOf(layerId);
 
                     if (index < 0) {
                         return;

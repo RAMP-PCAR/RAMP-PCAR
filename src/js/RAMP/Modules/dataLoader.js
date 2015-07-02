@@ -545,7 +545,7 @@ define([
             var targetWkid;
             var srcProj;
             var defaultRenderers = GlobalStorage.DefaultRenderers;
-            layerID = LayerLoader.nextId();
+            var layerID = LayerLoader.nextId();
 
             layerDefinition = {
                 objectIdField: 'OBJECTID',

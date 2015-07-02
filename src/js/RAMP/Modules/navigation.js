@@ -1,4 +1,4 @@
-﻿/* global define, navigator, proj4, $, RAMP */
+﻿/* global define, navigator, $, RAMP */
 
 /**
 * Navigation submodule
@@ -17,8 +17,13 @@
 * NOTE: jquery.ui.navigation.js is required to create the object
 *
 * ####Imports RAMP Modules:
+<<<<<<< HEAD
 * {{#crossLink 'GlobalStorage'}}{{/crossLink}}
 * {{#crossLink 'EventManager'}}{{/crossLink}}
+=======
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "EventManager"}}{{/crossLink}}
+>>>>>>> develop
 *
 * @class Navigation
 * @static
@@ -34,6 +39,9 @@ define([
 //RAMP
     'ramp/globalStorage', 'ramp/eventManager',
     'esri/geometry/Point',
+
+/* Util */
+    'utils/util',
 ],
 
 function (
@@ -42,8 +50,10 @@ function (
     declare, topic, lang,
 
 // RAMP
-    GlobalStorage, EventManager, Point
-) {
+    GlobalStorage, EventManager, Point,
+
+// Util
+    UtilMisc) {
     'use strict';
     var nav;
     var geolocate;
@@ -58,13 +68,8 @@ function (
     function initTopics() {
         // Convert point into current projection
         function _convertPoint(x) {
-            var pt = [x.coords.longitude, x.coords.latitude];
-            var mapProj = 'EPSG:' + map.extent.spatialReference.wkid;
-
-            // EPSG:4326 is wkid for lat/long
-            var projConvert = proj4('EPSG:4326', mapProj);
-            var convertedPoint = projConvert.forward(pt);
-            var esriPoint = new Point(convertedPoint[0], convertedPoint[1], map.extent.spatialReference);
+            var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude,
+                map.extent.spatialReference);
 
             map.centerAndZoom(esriPoint, 12);
         }

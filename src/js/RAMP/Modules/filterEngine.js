@@ -1,4 +1,4 @@
-﻿/* global define, RAMP, RqlArray */
+﻿/* global define, RAMP, RqlArray, console */
 
 /**
 *
@@ -42,8 +42,7 @@ define([
     'esri/tasks/query',
 
 /* Util */
-    'utils/util', 'utils/dictionary',
-
+    'utils/util', 'utils/dictionary', 'utils/array',
 ],
 
     function (
@@ -57,8 +56,8 @@ define([
     // Esri
         EsriQuery,
 
-        /* Util */
-        UtilMisc, UtilDict) {
+    /* Util */
+        UtilMisc, UtilDict, UtilArray) {
         'use strict';
 
         /**
@@ -236,6 +235,69 @@ define([
         }
 
         /**
+        * Changes visibility of individual features on map based on the filter.
+        *
+        * @method updateFeatureVisibility
+        * @private
+        * @param {Object} featureSet mapping of feature objects that satisfy the spatial filter
+        * @param {Object} dataSet mapping of feature data objects that satisfy spatial + RQL filters
+        */
+        function updateFeatureVisibility(featureSet, dataSet) {
+            var idx;
+
+            //for each feature layer (key is layerId)
+            UtilDict.forEachEntry(featureSet, function (key, layerBundle) {
+                switch (layerBundle.type) {
+                    case 'features':
+
+                        //go through all potential features (features in current extent)
+                        layerBundle.features.forEach(function (feature) {
+                            //find if the feature has an item in the feature data list.
+                            //if so, it means it passed the RQL filters and is visible;
+                            //otherwise it is not visible
+                            if (dataSet[key] && dataSet[key].length > 0) {
+                                //dataSets are ordered by object id, so we can use binary search.
+                                //if we every start using the sort() in RQL during this process,
+                                //we may need to switch to a worse search.
+                                idx = UtilArray.binaryIndexOf(dataSet[key], function (fData) {
+                                    var fDataID = GraphicExtension.getFDataOid(fData);
+                                    var graphicID = GraphicExtension.getGraphicOid(feature);
+
+                                    if (graphicID === fDataID) {
+                                        return 0;
+                                    } else if (graphicID > fDataID) {
+                                        //searching too low in the list
+                                        return -1;
+                                    } else {
+                                        //searching too high in the list
+                                        return 1;
+                                    }
+                                });
+                            } else {
+                                idx = -1;
+                            }
+
+                            if (idx > -1) {
+                                feature.show();
+                            } else {
+                                feature.hide();
+                            }
+
+                            // NOTE using .visible seems to fail hard, its like the value gets overwritten again
+                            // by the api
+                            // feature.visible = (idx > -1);
+                        });
+
+                        break;
+
+                    case 'raw':
+                        console.warn('Raw bundle passed to map feature visibility updater.  layer id ' + key);
+                        break;
+                }
+            });
+        }
+
+        /**
         * Execute a filter on the given layers
         * Returns a mapping of feature data objects grouped by layer
         * e.g.  {<layerId1>: [fData1, fData2, ...], <layerId2>: [fDataA, fDataB, ...]}
@@ -254,7 +316,7 @@ define([
         function getFilteredData(layers, options) {
             var dFilter = new Deferred();
             var pSpatial;
-            var extentFilter = options.extent ? true : false; //TODO is there a better way to do this logic?
+            var extentFilter = options.extent ? true : false; //TODO is there a prettier way to do this logic?
 
             if (extentFilter) {
                 pSpatial = applyExtentFilter(layers, options.extent);
@@ -285,7 +347,7 @@ define([
                 //TODO generate custom filter implementation here when we are ready to support it
 
                 // text search if any
-                if (options.textSearch) {
+                if (options.textSearch && options.textSearch.length > 0) {
                     queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false :
                         true, options.gridMode));
                 }
@@ -299,7 +361,11 @@ define([
                     });
                 });
 
-                // turn on off layer sprites??  do this here?
+                // set visibility of individual feature sprites
+                if (options.gridMode === 'summary') {
+                    //we dont mess with the map when the big grid is open
+                    updateFeatureVisibility(featureSet, dataSet);
+                }
 
                 //give the promise the dataSet  e.g. {"layerId1":[fData,fData], "layerId2":[fData,...]}
                 dFilter.resolve(dataSet);
