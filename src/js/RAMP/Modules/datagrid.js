@@ -1363,8 +1363,8 @@ define([
             filterOps.gridMode = dataGridMode;
 
             //TESTING!!
-            //filterOps.textSearch = "green";
-            //filterOps.visibleAttribsOnly = true;
+            //filterOps.textSearch = "calgary";
+            //filterOps.visibleAttribsOnly = false;
 
             // Update total records
             totalRecords = 0;
@@ -1582,10 +1582,10 @@ define([
             });
 
             topic.subscribe(EventManager.LayerLoader.LAYER_UPDATED, function (evt) {
-                //layer has updated its data.  if it has grid-worthy data, refresh the grid
+                //layer has updated. previous filters may have missed the features coming down for this layer
+                //during the extent filter part. re-do filter to be certain it was included
                 if (evt.layer.ramp.type === GlobalStorage.layerType.feature) {
                     if (ui.getDatagridMode() !== GRID_MODE_FULL) {
-                        //console.log('HOGG - layer loaded event');
                         updateDataGrid();
                     }
                     //this is causing more trouble than it is worth.  if a user opens big grid before a layer is loaded, they wont be
