@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, escape, angular, document */
+﻿/* global define, console, RAMP, escape, angular, document, i18n */
 
 /**
 *
@@ -738,35 +738,35 @@ define([
                             distanceList: [
                                 {
                                     code: '-1',
-                                    name: 'Distance'
+                                    name: i18n.t('geosearch.filters.distance.default')
                                 },
                                 {
                                     code: '5',
-                                    name: '5km'
+                                    name: i18n.t('geosearch.filters.distance.5km')
                                 },
                                 {
                                     code: '10',
-                                    name: '10km'
+                                    name: i18n.t('geosearch.filters.distance.10km')
                                 },
                                 {
                                     code: '15',
-                                    name: '15km'
+                                    name: i18n.t('geosearch.filters.distance.15km')
                                 },
                                 {
                                     code: '30',
-                                    name: '30km'
+                                    name: i18n.t('geosearch.filters.distance.30km')
                                 },
                                 {
                                     code: '50',
-                                    name: '50km'
+                                    name: i18n.t('geosearch.filters.distance.50km')
                                 },
                                 {
                                     code: '75',
-                                    name: '75km'
+                                    name: i18n.t('geosearch.filters.distance.75km')
                                 },
                                 {
                                     code: '100',
-                                    name: '100km'
+                                    name: i18n.t('geosearch.filters.distance.100km')
                                 }
                             ],
 
@@ -811,7 +811,7 @@ define([
                                 data.provinceList.unshift({
                                     code: '-1',
                                     abbr: '',
-                                    name: 'Province'
+                                    name: i18n.t('geosearch.filters.province.default')
                                 });
 
                                 data.currentProvince = data.provinceList[0];
@@ -830,7 +830,7 @@ define([
                                 // add default type option
                                 data.typeList.unshift({
                                     code: '-1',
-                                    name: 'Type'
+                                    name: i18n.t('geosearch.filters.type.default')
                                 });
 
                                 data.currentType = data.typeList[0];
@@ -911,13 +911,6 @@ define([
                             }
                         });
 
-                        /*return [
-                            ext.xmin,
-                            ext.ymin,
-                            ext.xmax,
-                            ext.ymax
-                        ];*/
-
                         return [
                             xyminPoint[0],
                             xyminPoint[1],
@@ -929,23 +922,23 @@ define([
                     data = [
                         {
                             code: '-1',
-                            name: 'Extent',
+                            name: i18n.t('geosearch.filters.extent.default'),
                             extent: undefined
                         },
                         {
                             code: '0',
-                            name: 'All',
+                            name: i18n.t('geosearch.filters.extent.canada'),
                             extent: extentToArray(RAMP.config.extents.fullExtent)
                         },
                         {
                             code: '1',
-                            name: 'Visible',
+                            name: i18n.t('geosearch.filters.extent.visible'),
                             extent: undefined
                         }
                     ];
 
                     topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
-                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or soemthing like that
+                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or something like that
                         data[2].extent = extentToArray(event.extent);
                         console.log('factory:extents - extent changed', data[2].extent);
                     });
@@ -975,6 +968,7 @@ define([
                                 vm.getFilterType = getFilterType;
                                 vm.onChange = vm.filterChange;
                                 vm.clearFilters = clearFilters;
+                                vm.clearText = i18n.t('geosearch.filters.clear');
                                 vm.filterTypes = {
                                     name: 'name',
                                     coordinates: 'coordinates'
