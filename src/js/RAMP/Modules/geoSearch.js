@@ -27,7 +27,7 @@ define([
  'dojo/request/script', 'dojo/Deferred', "dojo/topic",
 
  /* RAMP */
- 'ramp/eventManager', 'utils/util'
+ 'ramp/map', 'ramp/eventManager', 'utils/util'
 
 /* ESRI */
 //'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
@@ -38,7 +38,7 @@ define([
     script, Deferred, topic,
 
     /*RAMP*/
-    EventManager, UtilMisc
+    RampMap, EventManager, UtilMisc
 
         /* ESRI */
         //GeometryService, ProjectParameters, EsriExtent,
@@ -889,64 +889,71 @@ define([
                         };
                     }]
                 )
-                .factory('extents', function () {
-                    var data;
+                .factory('extents', ['$rootScope',
+                    function ($rootScope) {
+                        var data;
 
-                    function extentToArray(ext) {
-                        var xyminPoint,
-                            xymaxPoint;
+                        function extentToArray(ext) {
+                            var xyminPoint,
+                                xymaxPoint;
 
-                        xyminPoint = UtilMisc.mapPointToLatLong({
-                            x: ext.xmin,
-                            y: ext.ymin,
-                            spatialReference: {
-                                wkid: ext.spatialReference.wkid
-                            }
-                        });
-                        xymaxPoint = UtilMisc.mapPointToLatLong({
-                            x: ext.xmax,
-                            y: ext.ymax,
-                            spatialReference: {
-                                wkid: ext.spatialReference.wkid
-                            }
-                        });
+                            ext = RampMap.localProjectExtent(ext, { wkid: 4326 });
 
-                        return [
-                            xyminPoint[0],
-                            xyminPoint[1],
-                            xymaxPoint[0],
-                            xymaxPoint[1]
-                        ];
-                    }
+                            xyminPoint = UtilMisc.mapPointToLatLong({
+                                x: ext.xmin,
+                                y: ext.ymin,
+                                spatialReference: {
+                                    wkid: ext.spatialReference.wkid
+                                }
+                            });
+                            xymaxPoint = UtilMisc.mapPointToLatLong({
+                                x: ext.xmax,
+                                y: ext.ymax,
+                                spatialReference: {
+                                    wkid: ext.spatialReference.wkid
+                                }
+                            });
 
-                    data = [
-                        {
-                            code: '-1',
-                            name: i18n.t('geosearch.filters.extent.default'),
-                            extent: undefined
-                        },
-                        {
-                            code: '0',
-                            name: i18n.t('geosearch.filters.extent.canada'),
-                            extent: extentToArray(RAMP.config.extents.fullExtent)
-                        },
-                        {
-                            code: '1',
-                            name: i18n.t('geosearch.filters.extent.visible'),
-                            extent: undefined
+                            return [
+                                xyminPoint[0],
+                                xyminPoint[1],
+                                xymaxPoint[0],
+                                xymaxPoint[1]
+                            ];
                         }
-                    ];
+                        
+                        // list of extent options
+                        data = [
+                            {
+                                code: '-1',
+                                name: i18n.t('geosearch.filters.extent.default'),
+                                extent: undefined
+                            },
+                            {
+                                code: '0',
+                                name: i18n.t('geosearch.filters.extent.canada'),
+                                extent: extentToArray(RAMP.config.extents.fullExtent)
+                            },
+                            {
+                                code: '1',
+                                name: i18n.t('geosearch.filters.extent.visible'),
+                                extent: undefined
+                            }
+                        ];
 
-                    topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
-                        // cache changed extent; this change will not trigger digest cycle - need to call $apply or something like that
-                        data[2].extent = extentToArray(event.extent);
-                        console.log('factory:extents - extent changed', data[2].extent);
-                    });
+                        topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
+                            console.log('factory:extents - current map extent changed', data[2].extent);
+                            // cache changed extent; this change will not trigger digest cycle - need to call $apply on the $rootScope to trigger digest cycle
+                            $rootScope.$apply(function () {
+                                data[2].extent = extentToArray(event.extent);
+                            });
+                        });
 
-                    return {
-                        data: data
-                    };
-                });
+                        return {
+                            data: data
+                        };
+                    }]
+                );
 
             angular
                 .module('gs.directive', ['gs.service'])
@@ -986,6 +993,13 @@ define([
                                         return vm.filterTypes.coordinates;
                                     }
                                 }
+                                
+                                // watch for the extent change on the selected extent filter option;
+                                // it will change only if "Visible" option is selected and map is panned/zoomed
+                                $scope.$watch('gsf.filterData.currentExtent.extent', function (current, original) {
+                                    console.log('rpGeosearchFilter - currentExtent filter extent has changed', current, original);
+                                    vm.onChange();
+                                });
                             }
                         ],
                         controllerAs: 'gsf',
@@ -1023,8 +1037,8 @@ define([
 
             angular
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
-                .controller('GeosearchController', ['$scope', 'geoService', '$timeout',
-                    function ($scope, geoService, $timeout) {
+                .controller('GeosearchController', ['$scope', '$timeout', 'geoService',
+                    function ($scope, $timeout, geoService) {
                         /* jshint validthis: true */
                         var vm = this,
                             placeholderResult = {
