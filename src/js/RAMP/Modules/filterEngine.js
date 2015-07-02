@@ -340,7 +340,7 @@ define([
                 //TODO generate custom filter implementation here when we are ready to support it
 
                 // text search if any
-                if (options.textSearch) {
+                if (options.textSearch && options.textSearch.length > 0) {
                     queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false : true, options.gridMode));
                 }
 
