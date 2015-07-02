@@ -45,7 +45,7 @@ define([
     'ramp/map',
 
     /* Util */
-    'utils/util'
+    'utils/util',
 ],
 
     function (
@@ -72,7 +72,7 @@ define([
                 this.config = RAMP.config;
 
                 this.form = new Form({
-                    style: 'overflow:hidden; clear:none;'
+                    style: 'overflow:hidden; clear:none;',
                 });
 
                 var className = 'quickZoom'; // used for CSS styling
@@ -80,36 +80,36 @@ define([
                 this.provinceSelect = new Select({
                     id: 'quickZoomProvince',
                     class: className,
-                    options: []
+                    options: [],
                 });
 
                 this.citySelect = new Select({
                     id: 'quickZoomCity',
                     class: className,
-                    options: []
+                    options: [],
                 });
 
                 this.postalCodeTextbox = new TextBox({
                     id: 'quickZoomPostalCode',
                     class: className,
-                    style: 'width : 30%'
+                    style: 'width : 30%',
                 });
 
                 this.button = new Button({
                     label: 'Find',
                     id: 'quickZoomButton',
-                    class: className
+                    class: className,
                 });
 
-                var that = this; // for local access to 'this'
+                var _this = this; // for local access to 'this'
                 function _addNode(domNode) {
-                    that.form.domNode.appendChild(domNode);
+                    _this.form.domNode.appendChild(domNode);
                 }
 
                 function _addLabel(text) {
                     var node = domConstruct.create('label', {
                         class: className,
-                        innerHTML: text
+                        innerHTML: text,
                     });
                     _addNode(node);
                     return node;
@@ -141,10 +141,10 @@ define([
              * @constructor
              */
             init: function (where) {
-                var provinceSelect = this.provinceSelect,
-                    citySelect = this.citySelect,
-                    config = this.config,
-                    that = this; // for local access to 'this'
+                var provinceSelect = this.provinceSelect;
+                var citySelect = this.citySelect;
+                var config = this.config;
+                var _this = this; // for local access to 'this'
 
                 /**
                 * Change the extent of the map based on the extent data
@@ -162,17 +162,19 @@ define([
                     queryTask.execute(query,
                         function (featureSet) {
                             if (featureSet.features.isEmpty()) {
-                                that._setError('invalid query');
+                                _this._setError('invalid query');
                                 return;
                             }
+
                             var extent = featureSet.features[0].geometry.getExtent();
                             if (RampMap.getMaxExtent().contains(extent)) {
                                 RampMap.getMap().setExtent(extent);
-                                that._setError('');
+                                _this._setError('');
                             } else {
-                                that._setError('beyond max extent');
+                                _this._setError('beyond max extent');
                             }
                         },
+
                         function (error) {
                             console.log('Could not load extent from service');
                             console.log(error);
@@ -200,6 +202,7 @@ define([
                             // from service
                             select.addOption(featureSet.features.map(mapFunc));
                         },
+
                         function (error) {
                             console.log('Could not populate dropdown');
                             console.log(error);
@@ -209,8 +212,8 @@ define([
                 // Populate the province dropdown from a list retrieved
                 // from service
                 provinceSelect.loadDropDown(function () {
-                    var provinceConfig = config.quickzoom.province,
-                        query = new Query();
+                    var provinceConfig = config.quickzoom.province;
+                    var query = new Query();
 
                     query.where = 'OBJECTID>0';
                     query.outFields = [provinceConfig.shortName, provinceConfig.name];
@@ -221,7 +224,7 @@ define([
                             return {
                                 label: feature.attributes[provinceConfig.name],
                                 value: shortName,
-                                selected: shortName === provinceConfig.selectedProv
+                                selected: shortName === provinceConfig.selectedProv,
                             };
                         });
                 });
@@ -235,8 +238,8 @@ define([
                 * @param {String} prov
                 */
                 function populateCityDropDown(prov) {
-                    var cityConfig = config.quickzoom.city,
-                        query = new Query();
+                    var cityConfig = config.quickzoom.city;
+                    var query = new Query();
 
                     query.where = UtilMisc.getWhereClause(cityConfig.province, prov);
                     query.outFields = [cityConfig.name, cityConfig.id];
@@ -245,7 +248,7 @@ define([
                         return {
                             label: feature.attributes[cityConfig.name],
                             value: feature.attributes[cityConfig.id],
-                            selected: false
+                            selected: false,
                         };
                     });
                 }
@@ -257,9 +260,10 @@ define([
 
                 provinceSelect.on('change', function () {
                     // Change the extent, then populate the city with the cities in the province
-                    var provConfig = config.quickzoom.province,
-                        prov = provinceSelect.get('value'),
-                        query = new Query();
+                    var provConfig = config.quickzoom.province;
+                    var prov = provinceSelect.get('value');
+                    var query = new Query();
+
                     query.where = UtilMisc.getWhereClause(provConfig.shortName, prov);
 
                     changeExtent(provConfig.url, query);
@@ -267,9 +271,10 @@ define([
                 });
 
                 citySelect.on('change', function () {
-                    var cityConfig = config.quickzoom.city,
-                        city = citySelect.get('value'),
-                        query = new Query();
+                    var cityConfig = config.quickzoom.city;
+                    var city = citySelect.get('value');
+                    var query = new Query();
+
                     query.where = UtilMisc.getWhereClause(cityConfig.id, city);
 
                     changeExtent(cityConfig.url, query);
@@ -294,24 +299,26 @@ define([
                         var result = fsa.match(regexp);
                         return (result && result.length === 1);
                     }
+
                     return false;
                 }
 
                 this.button.on('click', function () {
                     var postalCode = this.postalCodeTextbox.get('value');
                     if (validatePostalCode(postalCode)) {
-                        var postalConfig = config.quickzoom.postalCode,
-                            query = new Query();
+                        var postalConfig = config.quickzoom.postalCode;
+                        var query = new Query();
+
                         query.where = UtilMisc.getWhereClause(postalConfig.id, postalCode);
                         changeExtent(postalConfig.url, query);
                     } else {
                         console.log('invalid postal code!');
-                        that._setError('invalid postal code');
+                        _this._setError('invalid postal code');
                     }
                 });
 
                 var whereNode = dom.byId(where);
                 domConstruct.place(this.form.domNode, whereNode, 'replace');
-            }
+            },
         });
     });

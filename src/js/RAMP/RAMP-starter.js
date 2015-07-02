@@ -17,12 +17,12 @@
 */
 
 //required to get draw bar to show in French
-var RAMP,
-    jsFolderPath = 'js/',
-    pathname = location.pathname.replace(/\/[^/]+$/, '') + '/',
-    jsPrefix = pathname + jsFolderPath,
-    htmlNode = $('html'),
-    dojoConfig;
+var RAMP;
+var jsFolderPath = 'js/';
+var pathname = location.pathname.replace(/\/[^/]+$/, '') + '/';
+var jsPrefix = pathname + jsFolderPath;
+var htmlNode = $('html');
+var dojoConfig;
 
 /**
 * RAMP global class.
@@ -39,6 +39,7 @@ RAMP = {
      * @type String
      */
     configServiceURL: 'http://sncr01wbingsdv1.ncr.int.ec.gc.ca:8000/v1/',
+
     // FIXME move the config service URL out of this file since it is now minified and appended to lib.js in the build
 
     /**
@@ -58,7 +59,7 @@ RAMP = {
      */
     plugins: {
         featureInfoParser: {},
-        projectionLookup: {}
+        projectionLookup: {},
     },
 
     /**
@@ -72,18 +73,18 @@ RAMP = {
             sidePanelOpened: true,
             fullscreen: false,
             wmsQuery: true,
-            datagridUpdating: 0
+            datagridUpdating: 0,
         },
         hilite: { //tracks active hilights to allow them to refresh if feature graphics redraw at different resolution
             click: {
                 objId: -1,
-                layerId: ''
+                layerId: '',
             },
             zoom: {
                 objId: -1,
-                layerId: ''
-            }
-        }
+                layerId: '',
+            },
+        },
     },
 
     /**
@@ -100,8 +101,11 @@ RAMP = {
      * @property scripts
      * @type array
      */
-    scripts: ['http://js.arcgis.com/3.13/', jsPrefix + 'lib/wet-boew/js/wet-boew.js', jsPrefix +
-        'RAMP/bootstrapper.js'],
+    scripts: [
+        'http://js.arcgis.com/3.13/',
+        jsPrefix + 'lib/wet-boew/js/wet-boew.js',
+        jsPrefix + 'RAMP/bootstrapper.js',
+    ],
 
     /**
     * Store feature datasets.  Keyed by layer id, value is set of attribute data.
@@ -130,8 +134,8 @@ RAMP = {
         feature: 0,
         bb: 0,
         wms: 0,
-        base: 1
-    }
+        base: 1,
+    },
 };
 
 var importScript = (function (oHead) {
@@ -145,7 +149,10 @@ var importScript = (function (oHead) {
         var oScript = document.createElement('script');
         oScript.type = 'text\/javascript';
         oScript.onerror = loadError;
-        if (fOnload) { oScript.onload = fOnload; }
+        if (fOnload) {
+            oScript.onload = fOnload;
+        }
+
         oHead.appendChild(oScript);
         oScript.src = sSrc;
     };
@@ -158,22 +165,25 @@ dojoConfig = {
     packages: [
         {
             name: 'ramp',
-            location: jsPrefix + 'RAMP/Modules'
+            location: jsPrefix + 'RAMP/Modules',
         },
         {
             name: 'utils',
-            location: jsPrefix + 'RAMP/Utils'
+            location: jsPrefix + 'RAMP/Utils',
         },
         {
             name: 'tools',
-            location: jsPrefix + 'RAMP/Tools/'
-        }
+            location: jsPrefix + 'RAMP/Tools/',
+        },
     ],
-    fullPluginPath: jsPrefix + 'plugins/'
+    fullPluginPath: jsPrefix + 'plugins/',
 };
 
 (function loadRampScripts(scripts) {
     'use strict';
-    if (scripts.length === 0) { return; }
+    if (scripts.length === 0) {
+        return;
+    }
+
     importScript(scripts[0], function () { loadRampScripts(scripts.slice(1)); });
 })(RAMP.scripts);

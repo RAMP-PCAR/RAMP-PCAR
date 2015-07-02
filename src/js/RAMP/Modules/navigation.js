@@ -27,23 +27,27 @@
 */
 
 define([
+
 //Dojo
     'dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 
 //RAMP
     'ramp/globalStorage', 'ramp/eventManager',
-    'esri/geometry/Point'
+    'esri/geometry/Point',
 ],
 
 function (
+
 // Dojo
     declare, topic, lang,
+
 // RAMP
-    GlobalStorage, EventManager, Point) {
+    GlobalStorage, EventManager, Point
+) {
     'use strict';
-    var nav,
-        geolocate,
-        map;
+    var nav;
+    var geolocate;
+    var map;
 
     /**
     * Listen to internal events and republish for other modules' benefit
@@ -54,12 +58,13 @@ function (
     function initTopics() {
         // Convert point into current projection
         function _convertPoint(x) {
-            var pt = [x.coords.longitude, x.coords.latitude],
-            mapProj = 'EPSG:' + map.extent.spatialReference.wkid,
+            var pt = [x.coords.longitude, x.coords.latitude];
+            var mapProj = 'EPSG:' + map.extent.spatialReference.wkid;
+
             // EPSG:4326 is wkid for lat/long
-            projConvert = proj4('EPSG:4326', mapProj),
-            convertedPoint = projConvert.forward(pt),
-            esriPoint = new Point(convertedPoint[0], convertedPoint[1], map.extent.spatialReference);
+            var projConvert = proj4('EPSG:4326', mapProj);
+            var convertedPoint = projConvert.forward(pt);
+            var esriPoint = new Point(convertedPoint[0], convertedPoint[1], map.extent.spatialReference);
 
             map.centerAndZoom(esriPoint, 12);
         }
@@ -74,18 +79,18 @@ function (
         nav
             .on('navigation:panClick', function (e, direction) {
                 topic.publish(EventManager.Navigation.PAN, {
-                    direction: direction
+                    direction: direction,
                 });
             })
             .on('navigation:zoomClick', function (e, inOut) {
                 var newLvl = (inOut === 'zoomIn') ? 1 : -1;
                 topic.publish(EventManager.Navigation.ZOOM_STEP, {
-                    level: newLvl
+                    level: newLvl,
                 });
             })
             .on('navigation:zoomSliderChange', function (e, newVal) {
                 topic.publish(EventManager.Navigation.ZOOM, {
-                    level: newVal
+                    level: newVal,
                 });
             })
             .on('navigation:fullExtentClick', function () {
@@ -111,10 +116,11 @@ function (
             nav.navigation('setSliderVal', event.lod.level);
         });
 
-        /* Keep track of when the map is in transition, the slider will throw
-        errors if the value is changed during a map transition. */
+        // Keep track of when the map is in transition, the slider will throw
+        // errors if the value is changed during a map transition.
         // explicitly set inTransition true on zoom and pan start
         topic.subscribe(EventManager.Map.ZOOM_START, function () { toggleTransition(true); });
+
         topic.subscribe(EventManager.Map.PAN_START, function () { toggleTransition(true); });
 
         //topic.subscribe(EventManager.Map.PAN_END, toggleTransition);
@@ -134,9 +140,9 @@ function (
         init: function (currentLevel) {
             // NOTE: JKW Document the change. Refactor,
             // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue
-            // is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is 
+            // is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is
             // no hook to attach a tooltip to.
-            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the 
+            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the
             // disabled state.
             map = RAMP.map;
             geolocate = navigator.geolocation;
@@ -156,6 +162,6 @@ function (
             );
 
             nav = $('#' + RAMP.config.divNames.navigation).navigation(options);
-        }
+        },
     };
 });

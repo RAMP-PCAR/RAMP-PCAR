@@ -24,18 +24,18 @@ define([],
     function () {
         'use strict';
 
-        var body = $('body'),
-            wbCore = $('main'),
-            wbFoot = $('footer'),
+        var body = $('body');
+        var wbCore = $('main');
+        var wbFoot = $('footer');
 
-            megaMenuDiv = $('#wb-sm'),
-            navigation = $('#wb-bar'),
+        var megaMenuDiv = $('#wb-sm');
+        var navigation = $('#wb-bar');
 
-            header = $('body>header'),
+        var header = $('body>header');
 
-            transitionDuration = 0.5,
+        var transitionDuration = 0.5;
 
-            layout = {
+        var layout = {
                 headerHeight: 155,
                 headerHeightCollapsed: 64,
 
@@ -44,35 +44,36 @@ define([],
 
                 subtitleHeight: 35,
 
-                toolbarHeight: 32
-            },
+                toolbarHeight: 32,
+            };
 
-            // height gain from the fullscreening the template
-            heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight -
-                layout.footerHeightCollapsed,
+        // height gain from the fullscreening the template
+        var heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight -
+                layout.footerHeightCollapsed;
 
-            isFullScreen = false,
+        var isFullScreen = false;
 
-            fullScreenTimeLine = new TimelineLite({ paused: true }),
-            subpanelTimeline = new TimelineLite();
+        var fullScreenTimeLine = new TimelineLite({ paused: true });
+
+        var subpanelTimeline = new TimelineLite();
 
         // tweening wet template parts
         fullScreenTimeLine
             .to(header, transitionDuration, {
                 top: navigation.outerHeight() * -1,
                 position: 'relative',
-                ease: 'easeOutCirc'
+                ease: 'easeOutCirc',
             }, 0)
             .set([navigation, megaMenuDiv], { display: 'none !important' })
 
             .to(wbCore, transitionDuration, {
                 top: layout.headerHeightCollapsed,
                 bottom: layout.footerHeightCollapsed,
-                ease: 'easeOutCirc'
+                ease: 'easeOutCirc',
             }, 0)
             .to(wbFoot, transitionDuration, {
                 height: layout.footerHeightCollapsed,
-                ease: 'easeOutCirc'
+                ease: 'easeOutCirc',
             }, 0)
 
         // set full-screen class here, not in the callback since callbacks can be overwritten by
@@ -94,21 +95,22 @@ define([],
                 .fromTo('.sub-panel-container.summary-data-details', transitionDuration,
                     {
                         top: layout.headerHeight + layout.toolbarHeight,
-                        bottom: layout.footerHeight
+                        bottom: layout.footerHeight,
                     },
                     {
                         top: layout.headerHeightCollapsed + layout.toolbarHeight,
                         bottom: layout.footerHeightCollapsed,
-                        ease: 'easeOutCirc'
+                        ease: 'easeOutCirc',
                     }, 0)
                 .fromTo('.sub-panel-container.full-data-details', transitionDuration,
                     {
                         top: layout.headerHeight,
-                        bottom: layout.footerHeight
+                        bottom: layout.footerHeight,
                     },
                     {
                         top: layout.headerHeightCollapsed,
-                        bottom: layout.footerHeightCollapsed, ease: 'easeOutCirc'
+                        bottom: layout.footerHeightCollapsed,
+                        ease: 'easeOutCirc',
                     }, 0);
 
             isFullScreen = typeof fullscreen === 'boolean' ? fullscreen : !isFullScreen;
@@ -121,7 +123,7 @@ define([],
                         {
                             height: '+=' + heightGain,
                             ease: 'easeOutCirc',
-                            delay: 0.02
+                            delay: 0.02,
                         }); // animate height of the datatable scrollBody since it's explicitly set ,
 
                 fullScreenTimeLine.play();
@@ -130,7 +132,7 @@ define([],
                     .to('.full-data-mode .dataTables_scrollBody', transitionDuration - 0.02,
                         {
                             height: '-=' + heightGain,
-                            ease: 'easeInCirc'
+                            ease: 'easeInCirc',
                         }); // animate height of the datatable
                 // scrollBody since it's explicitly set ,
 
@@ -177,6 +179,6 @@ define([],
                 _toggleFullScreenMode(fullscreen);
 
                 return this;
-            }
+            },
         };
     });

@@ -45,6 +45,7 @@
 */
 
 define([
+
 /* Dojo */
 'dojo/dom', 'dojo/_base/lang', 'dojo/dom-construct', 'dojo/number', 'dojo/query',
 'dojo/topic', 'dojo/on',
@@ -59,9 +60,11 @@ define([
 'ramp/eventManager',
 
 /* Util */
-'utils/util', 'utils/array', 'utils/dictionary'],
+'utils/util', 'utils/array', 'utils/dictionary',
+],
 
     function (
+
     /* Dojo */
     dom, lang, domConstruct, number, query, topic, dojoOn,
 
@@ -82,41 +85,41 @@ define([
         * @private
         * @property featureLayers {Array}
         */
-        var featureLayers,
+        var featureLayers;
 
-            /**
-            * An Array of {{#crossLink 'Esri/layer/WMSLayer'}}{{/crossLink}} objects.
-            *
-            * @private
-            * @property wmsLayers {Array}
-            */
-            wmsLayers = [],
+        /**
+        * An Array of {{#crossLink 'Esri/layer/WMSLayer'}}{{/crossLink}} objects.
+        *
+        * @private
+        * @property wmsLayers {Array}
+        */
+        var wmsLayers = [];
 
-            /**
-            * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
-            * A dictionary of String, {{#crossLink 'Esri/layers/GraphicsLayer'}}{{/crossLink}} pairs.
-            *
-            * @private
-            * @property boundingBoxMapping {Object}
-            */
-            boundingBoxMapping = {},
+        /**
+        * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
+        * A dictionary of String, {{#crossLink 'Esri/layers/GraphicsLayer'}}{{/crossLink}} pairs.
+        *
+        * @private
+        * @property boundingBoxMapping {Object}
+        */
+        var boundingBoxMapping = {};
 
-            /**
-            * The map not only contains feature layers, but also other layers such as the
-            * basemap layer, highlight layer, bounding box layer, etc. This variable is
-            * used to store the starting index of the feature layers in the map.
-            *
-            * @private
-            * @property featureLayerStartIndex {Integer}
-            */
-            featureLayerStartIndex,
+        /**
+        * The map not only contains feature layers, but also other layers such as the
+        * basemap layer, highlight layer, bounding box layer, etc. This variable is
+        * used to store the starting index of the feature layers in the map.
+        *
+        * @private
+        * @property featureLayerStartIndex {Integer}
+        */
+        var featureLayerStartIndex;
 
-            map,
+        var map;
 
-            fullExtent,
-            maxExtent,
-            initExtent,
-            oldCenter;
+        var fullExtent;
+        var maxExtent;
+        var initExtent;
+        var oldCenter;
 
         /**
         * Shows the loading image.
@@ -147,8 +150,8 @@ define([
         */
         function _updateScale(event) {
             if (event.levelChange) {
-                var currentScale = number.format(event.lod.scale),
-                    scaleLabelText = '1 : ' + currentScale;
+                var currentScale = number.format(event.lod.scale);
+                var scaleLabelText = '1 : ' + currentScale;
 
                 domConstruct.empty('scaleLabel');
                 $('#scaleLabel').text(scaleLabelText);
@@ -202,8 +205,8 @@ define([
 
             topic.subscribe(EventManager.Map.CENTER_AND_ZOOM, function (event) {
                 var point = new esri.geometry.Point(
-                        event.graphic.geometry.x, event.graphic.geometry.y, map.spatialReference),
-                    d = map.centerAndZoom(point, event.level); // Last parameter is the level
+                        event.graphic.geometry.x, event.graphic.geometry.y, map.spatialReference);
+                var d = map.centerAndZoom(point, event.level); // Last parameter is the level
 
                 if (event.callback) {
                     d.then(event.callback);
@@ -252,6 +255,7 @@ define([
             });
 
             /* GUI EVENTS */
+
             // GUI Layout_change happens whenever size of the map portion is changed
             // Call recentering function when any kind of layout change happens
             // (including window resize but calls it too many times)
@@ -276,13 +280,15 @@ define([
             /* START BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                var setTo = evt.state,
-                    layerId = evt.id,
-                    // either take url (would need mapping to layer on map),
-                    // map id in config, graphic layer id
-                    layer = map.getLayer(layerId);
+                var setTo = evt.state;
+                var layerId = evt.id;
+
+                // either take url (would need mapping to layer on map),
+                // map id in config, graphic layer id
+                var layer = map.getLayer(layerId);
 
                 layer.setVisibility(setTo);
+
                 //loops through any static layers that are mapped to the feature layer being toggled
                 try {
                     GlobalStorage.LayerMap[layerId].forEach(function (staticLayer) {
@@ -299,6 +305,7 @@ define([
 
                 if (layer !== undefined) {
                     layer.setOpacity(evt.value);
+
                     //loops through any static layers that are mapped to the feature layer being toggled
                     try {
                         GlobalStorage.LayerMap[evt.layerId].forEach(function (staticLayer) {
@@ -321,8 +328,8 @@ define([
                 // graphical and feature layers must be handled separately from
                 // all other layers as ESRI separates the two internally
 
-                var newIndex = evt.index,
-                    featureLayers;
+                var newIndex = evt.index;
+                var featureLayers;
 
                 if (map.layerIds.contains(evt.id)) {
                     featureLayers = map.graphicsLayerIds.map(function (x) {
@@ -339,8 +346,10 @@ define([
                             return layer.type && layer.type === 'Feature Layer';
                         });
                     }
+
                     newIndex += featureLayerStartIndex;
                 }
+
                 map.reorderLayer(map.getLayer(evt.id), newIndex);
                 topic.publish(EventManager.Map.REORDER_END);
             });
@@ -348,9 +357,9 @@ define([
             //TODO this will likely get removed or amended by aly
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {
-                var type = dom.byId('addLayer-select-type').value,
-                    URL = dom.byId('addLayer-URL-input').value,
-                    opacity = dom.byId('addLayer-Opacity').value;
+                var type = dom.byId('addLayer-select-type').value;
+                var URL = dom.byId('addLayer-URL-input').value;
+                var opacity = dom.byId('addLayer-Opacity').value;
 
                 console.log(type + ' | ' + URL + ' | ' + opacity);
                 addStaticLayer(type, URL, opacity);
@@ -368,11 +377,11 @@ define([
             map.resize(true);
             if (oldCenter !== undefined) {
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: oldCenter
+                    point: oldCenter,
                 });
             } else {
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: map.extent.getCenter()
+                    point: map.extent.getCenter(),
                 });
             }
         }
@@ -455,7 +464,9 @@ define([
         function localProjectExtent(extent, sr) {
             // interpolates two points by splitting the line in half recursively
             function interpolate(p0, p1, steps) {
-                var mid, i0, i1;
+                var mid;
+                var i0;
+                var i1;
 
                 if (steps === 0) { return [p0, p1]; }
 
@@ -463,6 +474,7 @@ define([
                 if (steps === 1) {
                     return [p0, mid, p1];
                 }
+
                 if (steps > 1) {
                     i0 = interpolate(p0, mid, steps - 1);
                     i1 = interpolate(mid, p1, steps - 1);
@@ -470,9 +482,21 @@ define([
                 }
             }
 
-            var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax],
-                [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]], projConvert, transformed, projExtent,
-                x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [], srcProj;
+            var points = [
+                [extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax],
+                [extent.xmin, extent.ymax], [extent.xmin, extent.ymin],
+            ];
+            var projConvert;
+            var transformed;
+            var projExtent;
+            var x0;
+            var y0;
+            var x1;
+            var y1;
+            var xvals;
+            var yvals;
+            var interpolatedPoly = [];
+            var srcProj;
 
             // interpolate each edge by splitting it in half 3 times (since lines are not guaranteed to project
             // to lines we need to consider max / min points in the middle of line segments)
@@ -492,10 +516,12 @@ define([
             } else {
                 throw new Error('No WKT or WKID specified on extent.spatialReference');
             }
+
             projConvert = proj4(srcProj, 'EPSG:' + sr.wkid);
             transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
 
             xvals = transformed.map(function (x) { return x[0]; });
+
             yvals = transformed.map(function (x) { return x[1]; });
 
             x0 = Math.min.apply(null, xvals);
@@ -619,20 +645,23 @@ define([
                 case 'feature':
                     tempLayer = new FeatureLayer(layerUrl, {
                         opacity: layerOp,
-                        mode: FeatureLayer.MODE_ONDEMAND
+                        mode: FeatureLayer.MODE_ONDEMAND,
                     });
+
                     break;
 
                 case 'tile':
                     tempLayer = new ArcGISTiledMapServiceLayer(layerUrl, {
-                        opacity: layerOp
+                        opacity: layerOp,
                     });
+
                     break;
 
                 case 'dynamic':
                     tempLayer = new ArcGISDynamicMapServiceLayer(layerUrl, {
-                        opacity: layerOp
+                        opacity: layerOp,
                     });
+
                     break;
 
                 default:
@@ -642,7 +671,7 @@ define([
 
             topic.publish(EventManager.Map.ADD_LAYER_READY, tempLayer);
             topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, {
-                visible: false
+                visible: false,
             });
         }
 
@@ -705,9 +734,10 @@ define([
         function makeFeatureLayerOptions(config) {
             var opts = {
                 id: config.id,
+
                 //outFields: [config.layerAttributes],
                 visible: config.settings.visible,
-                opacity: resolveLayerOpacity(config.settings.opacity)
+                opacity: resolveLayerOpacity(config.settings.opacity),
             };
 
             switch (config.mode) {
@@ -741,10 +771,11 @@ define([
                 load: {
                     state: 'loading',
                     inLS: false,  //layer has entry in layer selector
-                    inCount: false  //layer is included in the layer counts
+                    inCount: false,  //layer is included in the layer counts
                 },
+
                 // hold layer state like wmsQuery being on or off
-                state: lang.clone(config.settings)
+                state: lang.clone(config.settings),
             };
 
             layer.on('load', function (evt) {
@@ -759,7 +790,7 @@ define([
                 console.log(evt);
                 topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
                     layer: evt.target,
-                    error: evt.error
+                    error: evt.error,
                 });
             });
 
@@ -785,13 +816,13 @@ define([
             * @method zoomToLayerScale
             */
             zoomToLayerScale: function (layerId) {
-                var layer = map.getLayer(layerId),
-                    lods = map._params.lods,
-                    currentLevel = map.getLevel(),
-                    topLod,
-                    bottomLod,
-                    lod,
-                    i;
+                var layer = map.getLayer(layerId);
+                var lods = map._params.lods;
+                var currentLevel = map.getLevel();
+                var topLod;
+                var bottomLod;
+                var lod;
+                var i;
 
                 //gis lesson.
                 //min scale means dont show the layer if zoomed out beyond the min scale
@@ -800,6 +831,7 @@ define([
 
                 for (i = 0; i < lods.length; i += 1) {
                     lod = lods[i];
+
                     //console.log('lod', lod, lod.scale > layer.minScale);
                     if (!topLod && lod.scale <= layer.minScale) {
                         topLod = lod;
@@ -843,12 +875,12 @@ define([
             * @type { boolean }
             */
             layerInLODRange: function (maxScale, minScale) {
-                var lods = map._params.lods,
-                    topLod = -1,
-                    bottomLod = -1,
-                    lod,
-                    i,
-                    inRange = false;
+                var lods = map._params.lods;
+                var topLod = -1;
+                var bottomLod = -1;
+                var lod;
+                var i;
+                var inRange = false;
 
                 //gis lesson.
                 //min scale means dont show the layer if zoomed out beyond the min scale
@@ -909,6 +941,7 @@ define([
                 if (!map) {
                     console.log('trying to get map before it is available!');
                 }
+
                 return map;
             },
 
@@ -930,9 +963,9 @@ define([
             },
 
             getInvisibleLayers: function () {
-                var visibleLayers,
-                    allLayers,
-                    invisibleLayers;
+                var visibleLayers;
+                var allLayers;
+                var invisibleLayers;
 
                 visibleLayers = this.getVisibleLayers();
                 allLayers = map._layers;
@@ -1019,12 +1052,13 @@ define([
             * @method checkBoundary
             */
             checkBoundary: function (e, maxExtent) {
-                var extent = e,
-                width = extent.width(),
-                height = extent.height(),
-                centerX = extent.centerX(),
-                centerY = extent.centerY(),
-                flag, adjustedEx;
+                var extent = e;
+                var width = extent.width();
+                var height = extent.height();
+                var centerX = extent.centerX();
+                var centerY = extent.centerY();
+                var flag;
+                var adjustedEx;
 
                 adjustedEx = extent.clone();
 
@@ -1037,6 +1071,7 @@ define([
                     adjustedEx.ymax = maxExtent.ymax;
                     adjustedEx.ymin = maxExtent.ymax - height;
                     flag = true;
+
                     //} else if (extent.ymin < maxExtent.ymin) {
                 } else if (centerY < maxExtent.ymin) {
                     adjustedEx.ymin = maxExtent.ymin;
@@ -1098,7 +1133,8 @@ define([
                     id: layerConfig.id,
                     format: layerConfig.format,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                    visibleLayers: [layerConfig.layerName]
+                    visibleLayers: [layerConfig.layerName],
+
                     //resourceInfo: {
                     //    extent: new EsriExtent(layer.extent),
                     //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
@@ -1125,8 +1161,9 @@ define([
             */
 
             makeStaticLayer: function (layerConfig, userLayer) {
-                var tempLayer,
-                    layerType = layerConfig.layerType || 'feature';
+                var tempLayer;
+                var layerType = layerConfig.layerType || 'feature';
+
                 //determine layer type and process
                 switch (layerType) {
                     case 'feature':
@@ -1223,9 +1260,9 @@ define([
             *
             */
             init: function () {
-                var that = this,
+                var _this = this;
 
-                schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
+                var schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex];
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -1234,7 +1271,7 @@ define([
                 * @private
                 * @type {String}
                 */
-                url = schemaBasemap.layers[0].url,
+                var url = schemaBasemap.layers[0].url;
 
                 /**
                 * The basemap layer
@@ -1243,11 +1280,11 @@ define([
                 * @private
                 * @type {Esri/layers/ArcGISTiledMapServiceLayer}
                 */
-                baseLayer = new ArcGISTiledMapServiceLayer(url, {
-                    id: 'basemapLayer'
-                }),
+                var baseLayer = new ArcGISTiledMapServiceLayer(url, {
+                    id: 'basemapLayer',
+                });
 
-                loadListener = baseLayer.on('update-end', function () {
+                var loadListener = baseLayer.on('update-end', function () {
                     //only load things once, pls!
                     loadListener.remove();
 
@@ -1291,7 +1328,7 @@ define([
 
                 //generate WMS layers array
                 wmsLayers = RAMP.config.layers.wms.map(function (layer) {
-                    return that.makeWmsLayer(layer);
+                    return _this.makeWmsLayer(layer);
                 });
 
                 //generate feature layers array
@@ -1299,9 +1336,9 @@ define([
                     var fl;
 
                     if (layerConfig.isStatic) {
-                        fl = that.makeStaticLayer(layerConfig);
+                        fl = _this.makeStaticLayer(layerConfig);
                     } else {
-                        fl = that.makeFeatureLayer(layerConfig);
+                        fl = _this.makeFeatureLayer(layerConfig);
                     }
 
                     return fl;
@@ -1323,7 +1360,7 @@ define([
                         minZoom: RAMP.config.zoomLevels.min,
                         maxZoom: RAMP.config.zoomLevels.max,
                         slider: false,
-                        lods: levelOfDetails.lod
+                        lods: levelOfDetails.lod,
                     });
                 } else {
                     //the map!
@@ -1333,7 +1370,7 @@ define([
                         autoResize: true,
                         minZoom: RAMP.config.zoomLevels.min,
                         maxZoom: RAMP.config.zoomLevels.max,
-                        slider: false
+                        slider: false,
                     });
                 }
 
@@ -1341,6 +1378,7 @@ define([
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
+
                 // NOTE: this type of thing is not currenlty supported by the config schema.  Need to revisit and
                 // determine if we want to keep this code or not. this only deals with static layers that are bound
                 // to a feature layer.  stand alone static layers are handled like normal feature layers
@@ -1350,22 +1388,25 @@ define([
                 // layers.  Extra tricky because these static layers do not appear in the layer selector
                 // (their state is bound to the feature layer. may want to consider another layerType .BoundStatic
 
-                var staticLayers = [],
-                    perLayerStaticMaps = [],
-                    staticLayerMap = [];
+                var staticLayers = [];
+                var perLayerStaticMaps = [];
+                var staticLayerMap = [];
 
                 RAMP.config.layers.feature.forEach(function (layer) {
                     perLayerStaticMaps = [];
                     if (!layer.staticLayers) {
                         return;
                     }
+
                     layer.staticLayers.forEach(function (staticLayer, i) {
-                        var tempLayer = that.makeStaticLayer(staticLayer);
+                        var tempLayer = _this.makeStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
+
                         //creates an array of all static layers defined for the current, single feature layer
                         perLayerStaticMaps[i] = staticLayer.id;
                     });
+
                     //adds the static layer id array as a value to an array indexed by feature layer id
                     staticLayerMap[layer.id] = perLayerStaticMaps;
                 });
@@ -1377,7 +1418,7 @@ define([
                 // This was intended to be used to distinguish layers from each other when crawling; Looks like we
                 // are not using it. Commenting out for now. SZ
                 baseLayer.ramp = {
-                    type: GlobalStorage.layerType.Basemap
+                    type: GlobalStorage.layerType.Basemap,
                 };
 
                 // save layer objects to load after basemap.
@@ -1391,7 +1432,7 @@ define([
                 var scalebar = new EsriScalebar({
                     map: map,
                     attachTo: 'bottom-left',
-                    scalebarUnit: 'metric'
+                    scalebarUnit: 'metric',
                 });
 
                 scalebar.show();
@@ -1403,6 +1444,6 @@ define([
                 _initEventHandlers(map);
 
                 oldCenter = map.extent.getCenter();
-            }
+            },
         };
     });

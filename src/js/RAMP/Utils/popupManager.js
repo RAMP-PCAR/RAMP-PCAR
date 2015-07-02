@@ -18,7 +18,9 @@
 * @uses dojo/Deferred
 * @uses dojo/_base/lang
 */
-define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
+define([
+    'dojo/Deferred', 'dojo/_base/lang', 'utils/util',
+],
     function (Deferred, lang, UtilMisc) {
         'use strict';
 
@@ -162,8 +164,8 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
             * @type {Boolean}
             * @default false
             */
-            resetFocusOnClose: false
-        },
+            resetFocusOnClose: false,
+        };
 
         /**
         * An abstract representation of the popup definition that potentially references many Popup instances.
@@ -172,176 +174,176 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
         * @class PopupBase
         * @for PopupManager
         */
-            popupBaseTemplate = {
-                /**
-                * Properties object of the PopupBase.
-                *
-                * @property  _attr
-                * @private
-                * @type {PopupBaseSettings}
-                * @for PopupBase
-                */
-                _attr: null,
+        var popupBaseTemplate = {
+            /**
+            * Properties object of the PopupBase.
+            *
+            * @property  _attr
+            * @private
+            * @type {PopupBaseSettings}
+            * @for PopupBase
+            */
+            _attr: null,
 
-                /**
-                * Finds and returns actual DOM nodes of popup handles, one or more. Used selector
-                *
-                * @method _getActualHandle
-                * @private
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                * @return result An array of one or more jQuery objects that works as popup handles
-                */
-                _getActualHandle: function (selector) {
-                    var result;
+            /**
+            * Finds and returns actual DOM nodes of popup handles, one or more. Used selector
+            *
+            * @method _getActualHandle
+            * @private
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            * @return result An array of one or more jQuery objects that works as popup handles
+            */
+            _getActualHandle: function (selector) {
+                var result;
 
-                    if (selector) {
-                        result = $(selector);
-                    } else if (this._attr.handle) {
-                        result = this._attr.handleSelector ?
-                            this._attr.handle.find(this._attr.handleSelector) : this._attr.handle;
-                    }
+                if (selector) {
+                    result = $(selector);
+                } else if (this._attr.handle) {
+                    result = this._attr.handleSelector ?
+                        this._attr.handle.find(this._attr.handleSelector) : this._attr.handle;
+                }
 
-                    return result;
-                },
+                return result;
+            },
 
-                /**
-                * Finds and returns an array of {{#crossLink 'Popup'}}{{/crossLink}} objects, one or more, identified
-                * in the PopupBase.
-                *
-                * @method _spawnPopups
-                * @private
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                * @return popups An array of one or more {{#crossLink 'Popup'}}{{/crossLink}} objects
-                */
-                _spawnPopups: function (selector) {
-                    var popups = [],
-                        actualHandle = this._getActualHandle(selector),
-                        actualTarget,
-                        that = this;
+            /**
+            * Finds and returns an array of {{#crossLink 'Popup'}}{{/crossLink}} objects, one or more, identified
+            * in the PopupBase.
+            *
+            * @method _spawnPopups
+            * @private
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            * @return popups An array of one or more {{#crossLink 'Popup'}}{{/crossLink}} objects
+            */
+            _spawnPopups: function (selector) {
+                var popups = [];
+                var actualHandle = this._getActualHandle(selector);
+                var actualTarget;
+                var _this = this;
 
-                    actualHandle.each(
-                        function (i, ah) {
-                            ah = $(ah);
+                actualHandle.each(
+                    function (i, ah) {
+                        ah = $(ah);
 
-                            if (that._attr.target) {
-                                actualTarget = that._attr.targetSelector ?
-                                    that._attr.target.find(that._attr.targetSelector) : that._attr.target;
-                            } else if (that._attr.containerSelector && that._attr.targetSelector) {
-                                actualTarget = ah.parents(that._attr.containerSelector).find(that._attr.targetSelector);
-                            } else {
-                                // if the target cannot be found, a handle its returned
-                                actualTarget = that._attr.targetSelector ? ah.find(that._attr.targetSelector) : ah;
-                            }
+                        if (_this._attr.target) {
+                            actualTarget = _this._attr.targetSelector ?
+                                _this._attr.target.find(_this._attr.targetSelector) : _this._attr.target;
+                        } else if (_this._attr.containerSelector && _this._attr.targetSelector) {
+                            actualTarget = ah.parents(_this._attr.containerSelector).find(_this._attr.targetSelector);
+                        } else {
+                            // if the target cannot be found, a handle its returned
+                            actualTarget = _this._attr.targetSelector ? ah.find(_this._attr.targetSelector) : ah;
+                        }
 
-                            if (actualTarget.length > 0) {
-                                popups.push(
-                                    lang.mixin(Object.create(popupTempate), {
-                                        openHandler: that._attr.openHandler,
-                                        closeHandler: that._attr.closeHandler || that._attr.openHandler,
+                        if (actualTarget.length > 0) {
+                            popups.push(
+                                lang.mixin(Object.create(popupTempate), {
+                                    openHandler: _this._attr.openHandler,
+                                    closeHandler: _this._attr.closeHandler || _this._attr.openHandler,
 
-                                        activeClass: that._attr.activeClass,
-                                        setClassBefore: that._attr.setClassBefore,
-                                        useAria: that._attr.useAria,
-                                        resetFocusOnClose: that._attr.resetFocusOnClose,
+                                    activeClass: _this._attr.activeClass,
+                                    setClassBefore: _this._attr.setClassBefore,
+                                    useAria: _this._attr.useAria,
+                                    resetFocusOnClose: _this._attr.resetFocusOnClose,
 
-                                        //handle: actualHandle,
-                                        handle: ah, // one actual handle per spawned popup
-                                        target: actualTarget
-                                    })
-                                );
-                            }
+                                    //handle: actualHandle,
+                                    handle: ah, // one actual handle per spawned popup
+                                    target: actualTarget,
+                                })
+                            );
+                        }
+                    });
+
+                return popups;
+            },
+
+            /**
+            * Checks if any of the popups described by this PopupBase is closed.
+            *
+            * @method isOpen
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            * @param {String} [condition] can be `all` or `any`; if all, returns true if `all` the described
+            * popups are open; if `any`; if at least one is open.
+            * @return result True if any of the described popups are open; false otherwise
+            */
+            isOpen: function (selector, condition) {
+                var result;
+                var popups;
+
+                condition = condition || 'all';
+                popups = this._spawnPopups(selector);
+
+                switch (condition) {
+                    case 'all':
+                        result = popups.every(function (p) {
+                            return p.isOpen();
                         });
 
-                    return popups;
-                },
+                        break;
 
-                /**
-                * Checks if any of the popups described by this PopupBase is closed.
-                *
-                * @method isOpen
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                * @param {String} [condition] can be `all` or `any`; if all, returns true if `all` the described
-                * popups are open; if `any`; if at least one is open.
-                * @return result True if any of the described popups are open; false otherwise
-                */
-                isOpen: function (selector, condition) {
-                    var result,
-                        popups;
+                    case 'any':
+                        result = popups.some(function (p) {
+                            return p.isOpen();
+                        });
 
-                    condition = condition || 'all';
-                    popups = this._spawnPopups(selector);
-
-                    switch (condition) {
-                        case 'all':
-                            result = popups.every(function (p) {
-                                return p.isOpen();
-                            });
-
-                            break;
-
-                        case 'any':
-                            result = popups.some(function (p) {
-                                return p.isOpen();
-                            });
-
-                            break;
-                    }
-
-                    return result;
-                },
-
-                /**
-                * Opens all the popups described by this PopupBase instance.
-                *
-                * @method open
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                */
-                open: function (selector) {
-                    this._spawnPopups(selector).forEach(function (p) {
-                        p.open();
-                    });
-                },
-
-                /**
-                * Closes all the popups described by this PopupBase instance.
-                *
-                * @method close
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                */
-                close: function (selector) {
-                    this._spawnPopups(selector).forEach(function (p) {
-                        p.close();
-                    });
-                },
-
-                /**
-                * Toggles all the popups described by this PopupBase instance.
-                *
-                * @method toggle
-                * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
-                * Generally, selector is not needed if popup manages only one handle/target pair.
-                * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open;
-                * false - close;
-                */
-                toggle: function (selector, state) {
-                    this._spawnPopups(selector).forEach(function (p) {
-                        p.toggle(state);
-                    });
-                },
-
-                /**
-                * Sets the appropriate aria-* attributes to the popup nodes according to the supplied `visible`
-                * parameter or with the internal state of the popup.
-                *
-                * @method setTargetAttr
-                * @param {Boolean} [visible] Indicating the internal state of the popup
-                */
-                setTargetAttr: function (visible) {
-                    this._spawnPopups().forEach(function (p) {
-                        p.setTargetAttr(visible);
-                    });
+                        break;
                 }
+
+                return result;
             },
+
+            /**
+            * Opens all the popups described by this PopupBase instance.
+            *
+            * @method open
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            */
+            open: function (selector) {
+                this._spawnPopups(selector).forEach(function (p) {
+                    p.open();
+                });
+            },
+
+            /**
+            * Closes all the popups described by this PopupBase instance.
+            *
+            * @method close
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            */
+            close: function (selector) {
+                this._spawnPopups(selector).forEach(function (p) {
+                    p.close();
+                });
+            },
+
+            /**
+            * Toggles all the popups described by this PopupBase instance.
+            *
+            * @method toggle
+            * @param {JQuery} [selector] A {{#crossLink 'jQuery'}}{{/crossLink}} of the actual handle.
+            * Generally, selector is not needed if popup manages only one handle/target pair.
+            * @param {Boolean} [state] Indicates if the popup should be toggled on or off. true - open;
+            * false - close;
+            */
+            toggle: function (selector, state) {
+                this._spawnPopups(selector).forEach(function (p) {
+                    p.toggle(state);
+                });
+            },
+
+            /**
+            * Sets the appropriate aria-* attributes to the popup nodes according to the supplied `visible`
+            * parameter or with the internal state of the popup.
+            *
+            * @method setTargetAttr
+            * @param {Boolean} [visible] Indicating the internal state of the popup
+            */
+            setTargetAttr: function (visible) {
+                this._spawnPopups().forEach(function (p) {
+                    p.setTargetAttr(visible);
+                });
+            },
+        };
 
         /**
         * A concrete instance of popup referencing actual DOM nodes as its handle and target.
@@ -349,7 +351,7 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
         * @class Popup
         * @for PopupManager
         */
-            popupTempate = {
+        var popupTempate = {
                 /**
                 * Indicates if the Popup target is being animated.
                 *
@@ -449,6 +451,7 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                         function () {
                             this.setTargetAttr(true);
                         }
+
                     );
                 },
 
@@ -468,6 +471,7 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                         function () {
                             this.setTargetAttr(false);
                         }
+
                     );
                 },
 
@@ -497,25 +501,27 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                 * @param {Function} callback The callback to be executed
                 */
                 _performAction: function (action, cssAction, callback) {
-                    var that = this;
+                    var _this = this;
 
                     if ($.isFunction(action) && !this._isAnimating) {
                         var deferred = new Deferred();
 
                         deferred.then(
                             function () {
-                                that._isAnimating = false;
+                                _this._isAnimating = false;
 
-                                if (!that.setClassBefore) {
-                                    cssAction.call(that);
+                                if (!_this.setClassBefore) {
+                                    cssAction.call(_this);
                                 }
 
-                                callback.call(that);
+                                callback.call(_this);
                             },
+
                             function (/*error*/) {
                                 // action is canceled; assume no longer animating
-                                that._isAnimating = false;
+                                _this._isAnimating = false;
                             }
+
                         );
 
                         this._isAnimating = true;
@@ -547,11 +553,11 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                         if (this.handle[0] !== this.target[0]) {
                             this.target.attr({
                                 'aria-expanded': visible,
-                                'aria-hidden': !visible
+                                'aria-hidden': !visible,
                             });
                         }
                     }
-                }
+                },
             };
 
         /**
@@ -566,8 +572,8 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
         function newPopup(popupAttr) {
             var popup = Object.create(popupBaseTemplate, {
                 _attr: {
-                    value: popupAttr
-                }
+                    value: popupAttr,
+                },
             });
 
             popup._spawnPopups().forEach(function (p) {
@@ -653,8 +659,8 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
             * @return {PopupBase} Returns a PopupBase with the specified conditions
             */
             registerPopup: function (handle, event, openHandler, settings) {
-                var popup,
-                    popupAttr;
+                var popup;
+                var popupAttr;
 
                 // splitting event names
                 event = event.split(',').map(function (a) {
@@ -664,12 +670,12 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                 // mixing default and user-provided settings
                 popupAttr = lang.mixin(Object.create(popupBaseAttrTemplate),
                     {
-                        activeClass: UtilMisc.guid()
+                        activeClass: UtilMisc.guid(),
                     },
                     settings,
                     {
                         handle: handle,
-                        openHandler: openHandler
+                        openHandler: openHandler,
                     }
                 );
 
@@ -682,12 +688,13 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                         // this plugin is loaded by WET, and sometimes it might not be loaded fast enough, so we
                         // use executeOnLoad to wait for the plugin to load
                         case 'hoverIntent':
-                            var timeoutHandle,
-                                open = function (event) {
+                            var timeoutHandle;
+                            var open = function (event) {
                                     window.clearTimeout(timeoutHandle);
                                     popup.open(event.currentTarget);
-                                },
-                                close = function (event) {
+                                };
+
+                            var close = function (event) {
                                     var t = event ? event.currentTarget : null;
                                     popup.close(t);
                                 };
@@ -698,7 +705,7 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                                         over: open,
                                         out: close,
                                         selector: popup._attr.handleSelector,
-                                        timeout: popup._attr.timeout
+                                        timeout: popup._attr.timeout,
                                     })
                                     .on('click focusin', popup._attr.handleSelector, open)
                                     .on('focusout', popup._attr.handleSelector, function () {
@@ -718,6 +725,7 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                                     function (event) {
                                         popup.close(event.currentTarget);
                                     });
+
                             break;
 
                         case 'focus':
@@ -757,6 +765,6 @@ define(['dojo/Deferred', 'dojo/_base/lang', 'utils/util'],
                 });
 
                 return popup;
-            }
+            },
         };
     });

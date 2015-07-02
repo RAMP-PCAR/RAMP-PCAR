@@ -50,7 +50,7 @@ define([
     'utils/tmplHelper', 'utils/array',
 
     /* RAMP */
-    'ramp/layerItem'
+    'ramp/layerItem',
 ],
     function (
         Evented, declare, lang,
@@ -61,9 +61,9 @@ define([
 
         return declare([Evented], {
             constructor: function (layers, options) {
-                var that = this;
+                var _this = this;
 
-                // declare individual properties inside the constructor: 
+                // declare individual properties inside the constructor:
                 // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
@@ -133,7 +133,7 @@ define([
                          * @type Array
                          * @default []
                          */
-                        layerItems: []
+                        layerItems: [],
                     },
                     options
                 );
@@ -148,7 +148,7 @@ define([
                 console.debug(LayerItem.state);
 
                 this.layerItems.forEach(function (layer) {
-                    that.addLayerItem(layer);
+                    _this.addLayerItem(layer);
                 });
             },
 
@@ -161,10 +161,10 @@ define([
              * @return {Object} the item that was added
              */
             addLayerItem: function (layer, options) {
-                var layerItem,
-                    layerItemOptions = {
+                var layerItem;
+                var layerItemOptions = {
                         state: this.layerState,
-                        type: this.layerType
+                        type: this.layerType,
                     };
 
                 // augment existing stateMatrix or create a new one
@@ -236,7 +236,7 @@ define([
                         [
                             LayerItem.state.DEFAULT,
                             LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
+                            LayerItem.state.OFF_SCALE,
                         ]);
                 }
 
@@ -274,6 +274,6 @@ define([
                 });
 
                 return layerItem;
-            }
+            },
         });
     });

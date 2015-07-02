@@ -49,7 +49,7 @@ define([
     'dojo/text!./templates/layer_selector_template.json',
 
     /* Util */
-    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks'
+    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks',
 ],
     function (
         Evented, declare, lang,
@@ -58,8 +58,8 @@ define([
     ) {
         'use strict';
 
-        var LayerItem,
-            ALL_STATES_CLASS;
+        var LayerItem;
+        var ALL_STATES_CLASS;
 
         LayerItem = declare([Evented], {
             constructor: function (config, options) {
@@ -221,7 +221,7 @@ define([
                          * @type String
                          * @default null
                          */
-                        type: null
+                        type: null,
                     },
                     options,
                     {
@@ -256,7 +256,7 @@ define([
                         transitionMatrix: lang.mixin(
                             lang.clone(LayerItem.transitionMatrix),
                             options.transitionMatrix
-                        )
+                        ),
                     }
                 );
 
@@ -268,9 +268,10 @@ define([
                             config: {
                                 label: i18n.t('filterManager.boundingBox'),
                                 customContainerClass: 'bbox',
-                                checked: false//,
+                                checked: false,
+
                                 //instructions: i18n.t('addDataset.help.dataSource')
-                            }
+                            },
                         },
 
                         allDataBrick: {
@@ -283,11 +284,12 @@ define([
                                 choices: [
                                     {
                                         key: 'layerDataPrefetch',
-                                        value: i18n.t('filterManager.layerDataPrefetch')
-                                    }
-                                ]
+                                        value: i18n.t('filterManager.layerDataPrefetch'),
+                                    },
+                                ],
+
                                 //instructions: i18n.t('addDataset.help.dataSource')
-                            }
+                            },
                         },
 
                         allDataCheckedBrick: {
@@ -302,12 +304,13 @@ define([
                                 choices: [
                                     {
                                         key: 'layerDataPrefetch',
-                                        value: i18n.t('filterManager.layerDataPrefetch')
-                                    }
-                                ]
+                                        value: i18n.t('filterManager.layerDataPrefetch'),
+                                    },
+                                ],
+
                                 //instructions: i18n.t('addDataset.help.dataSource')
-                            }
-                        }
+                            },
+                        },
                     };
                 }
 
@@ -345,20 +348,20 @@ define([
              * @private
              */
             _generateParts: function (partType, templateKey, partStore) {
-                var that = this,
+                var _this = this;
 
-                    stateKey,
-                    partKeys = [],
-                    part,
+                var stateKey;
+                var partKeys = [];
+                var part;
 
-                    brickTemplate,
-                    brickPart;
+                var brickTemplate;
+                var brickPart;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
                     .forEach(function (s) {
                         stateKey = LayerItem.state[s];
-                        partKeys = partKeys.concat(that.stateMatrix[stateKey][partType]);
+                        partKeys = partKeys.concat(_this.stateMatrix[stateKey][partType]);
                     });
 
                 partKeys = UtilArray.unique(partKeys);
@@ -368,6 +371,7 @@ define([
                         brickTemplate = LayerItem.brickTemplates[pKey];
 
                         brickPart = brickTemplate.type.new(pKey, brickTemplate.config);
+
                         // TODO: fix
                         // hack to get the data-layer-id attribute onto checkboxBrick input node
                         // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem
@@ -375,15 +379,16 @@ define([
                         // and LayerGroup.
 
                         if (Bricks.CheckboxBrick.isPrototypeOf(brickPart)) {
-                            brickPart.inputNode.attr('data-layer-id', that._config.id);
+                            brickPart.inputNode.attr('data-layer-id', _this._config.id);
                         } else {
-                            brickPart.choiceButtons.attr('data-layer-id', that._config.id);
+                            brickPart.choiceButtons.attr('data-layer-id', _this._config.id);
                         }
 
                         part = brickPart.node;
                     } else {
-                        part = that._generatePart(templateKey, pKey);
+                        part = _this._generatePart(templateKey, pKey);
                     }
+
                     partStore[pKey] = (part);
                 });
             },
@@ -403,11 +408,11 @@ define([
                 tmpl.templates = this.templates;
 
                 var info = {
-                    id: this.id,
-                    config: this._config,
-                    nameKey: pKey,
-                    data: data
-                };
+                        id: this.id,
+                        config: this._config,
+                        nameKey: pKey,
+                        data: data,
+                    };
                 info.fn = TmplUtil;
                 var part = $(tmpl(templateKey + pKey, info));
 
@@ -437,14 +442,15 @@ define([
              * @method setState
              */
             setState: function (state, options, force) {
-                var allowedStates = this.transitionMatrix[this.state],
-                    notice,
-                    focusedNode,
+                var allowedStates = this.transitionMatrix[this.state];
+                var notice;
+                var focusedNode;
 
-                    that = this;
+                var _this = this;
 
                 if (allowedStates.indexOf(state) !== -1 || force) {
                     this.state = state;
+
                     //lang.mixin(this, options);
 
                     // set state class on the layerItem root node
@@ -456,9 +462,9 @@ define([
                     if (options) {
                         if (options.notices) {
                             UtilDict.forEachEntry(options.notices, function (pKey, data) {
-                                notice = that._generatePart('layer_notice_', pKey, data);
+                                notice = _this._generatePart('layer_notice_', pKey, data);
 
-                                that._noticeStore[pKey] = (notice);
+                                _this._noticeStore[pKey] = (notice);
                             });
                         }
                     }
@@ -547,7 +553,7 @@ define([
                     .end()
                     .append(controls)
                 ;
-            }
+            },
         });
 
         /**
@@ -612,7 +618,7 @@ define([
                     LOADED: 'layer-state-loaded',
                     UPDATING: 'layer-state-updating',
                     ERROR: 'layer-state-error',
-                    OFF_SCALE: 'layer-state-off-scale'
+                    OFF_SCALE: 'layer-state-off-scale',
                 },
 
                 /**
@@ -633,7 +639,7 @@ define([
                     TOGGLES: 'toggles',
                     CONTROLS: 'controls',
                     NOTICES: 'notices',
-                    SETTINGS: 'settings'
+                    SETTINGS: 'settings',
                 },
 
                 /**
@@ -658,7 +664,7 @@ define([
                     LOADING: 'loading',
                     REMOVE: 'remove',
                     RELOAD: 'reload',
-                    ERROR: 'error'
+                    ERROR: 'error',
                 },
 
                 /**
@@ -684,7 +690,7 @@ define([
                     HIDE: 'hide',
                     ZOOM: 'zoom',
                     PLACEHOLDER: 'placeholder',
-                    QUERY: 'query'
+                    QUERY: 'query',
                 },
 
                 /**
@@ -705,7 +711,7 @@ define([
                     SCALE: 'scale',
                     ERROR: 'error',
                     UPDATE: 'update',
-                    USER: 'user'
+                    USER: 'user',
                 },
 
                 /**
@@ -726,7 +732,7 @@ define([
                     BOUNDING_BOX: 'boundingBoxBrick',
                     SNAPSHOT: 'snapshot',
                     ALL_DATA: 'allDataBrick',
-                    ALL_DATA_CHECKED: 'allDataCheckedBrick' // a Choice brick which is alreayd preselected
+                    ALL_DATA_CHECKED: 'allDataCheckedBrick', // a Choice brick which is alreayd preselected
                 },
 
                 /**
@@ -847,7 +853,7 @@ define([
                  * @type Object
                  * @default null
                  */
-                brickTemplates: null
+                brickTemplates: null,
             }
         );
 
@@ -856,109 +862,109 @@ define([
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
             controls: [
-                LayerItem.controls.LOADING
+                LayerItem.controls.LOADING,
             ],
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADED] = {
             controls: [],
             toggles: [],
             notices: [],
-            settings: []
+            settings: [],
         };
 
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [
-                LayerItem.notices.UPDATE
+                LayerItem.notices.UPDATE,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
                 LayerItem.controls.RELOAD,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [
-                LayerItem.notices.ERROR
+                LayerItem.notices.ERROR,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [
-                LayerItem.toggles.ZOOM
+                LayerItem.toggles.ZOOM,
             ],
             notices: [
-                LayerItem.notices.SCALE
+                LayerItem.notices.SCALE,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         // setting defaults for transition matrix
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
             LayerItem.state.ERROR,
             LayerItem.state.OFF_SCALE,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
             LayerItem.state.LOADED,
             LayerItem.state.ERROR,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
-            LayerItem.state.DEFAULT
+            LayerItem.state.DEFAULT,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.UPDATING] = [
             LayerItem.state.LOADED,
-            LayerItem.state.ERROR
+            LayerItem.state.ERROR,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.ERROR] = [
-            LayerItem.state.LOADING
+            LayerItem.state.LOADING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.OFF_SCALE] = [
             LayerItem.state.ERROR,
             LayerItem.state.DEFAULT,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         /**
@@ -1010,7 +1016,7 @@ define([
         * @static
         */
         LayerItem.addStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend, clear) {
-            var that = this;
+            var _this = this;
             partKeys = getPartKeys(partType, partKeys);
             states = getStateNames(states);
 
@@ -1023,7 +1029,7 @@ define([
 
             // add new ones
             partKeys.forEach(function (partKey) {
-                that.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
+                _this.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
             });
         };
 
@@ -1056,13 +1062,13 @@ define([
          * @static
          */
         LayerItem.removeStateMatrixParts = function (stateMatrix, partType, partKeys, states) {
-            var that = this;
+            var _this = this;
             partKeys = getPartKeys(partType, partKeys);
             states = getStateNames(states);
 
             // remove partkey from states
             partKeys.forEach(function (partKey) {
-                that.removeStateMatrixPart(stateMatrix, partType, partKey, states);
+                _this.removeStateMatrixPart(stateMatrix, partType, partKey, states);
             });
         };
 

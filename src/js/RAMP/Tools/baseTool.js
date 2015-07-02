@@ -29,22 +29,30 @@
 */
 
 define([
+
 // Dojo
         'dojo/Evented', 'dojo/_base/lang', 'dojo/Deferred',
+
 // Text
         'dojo/text!./templates/tools_template.json',
+
 // Ramp
         'ramp/globalStorage',
+
 // Utils
-        'utils/tmplHelper', 'utils/popupManager', 'utils/util'
+        'utils/tmplHelper', 'utils/popupManager', 'utils/util',
 ],
     function (
+
 // Dojo
         Evented, dojoLang, Deferred,
+
 // Text
         toolsTemplateJson,
+
 // Ramp
         GlobalStorage,
+
 // Utils
         TmplHelper, PopupManager, Util
     ) {
@@ -160,7 +168,7 @@ define([
                     * @param event {Object}
                     * @param event.tool {BaseTool} Tool that was deactivated
                     */
-                    DEACTIVATE: 'basetool-deactivate'
+                    DEACTIVATE: 'basetool-deactivate',
                 },
 
                 ns: 'tools/',
@@ -198,24 +206,26 @@ define([
                  * @return this tool
                  */
                 initToggle: function (selector, d, options) {
-                    var that = this,
-                        toolTemplate,
-                        deferrList = [
+                    var _this = this;
+                    var toolTemplate;
+                    var deferrList = [
                             new Deferred(),
-                            new Deferred()
+                            new Deferred(),
                         ];
 
                     // wait for translation and template to load
                     Util.afterAll(deferrList,
                         function () {
                             tmpl.cache = {};
+
                             // mixin base tools template with individual tool's template
-                            tmpl.templates = that.templates = dojoLang.mixin(
+                            tmpl.templates = _this.templates = dojoLang.mixin(
                                 JSON.parse(TmplHelper.stringifyTemplate(toolsTemplateJson)),
                                 JSON.parse(TmplHelper.stringifyTemplate(toolTemplate)));
 
                             // create tool button, outputfloat, and working label
                             this.node = $(tmpl(this.options.toolButtonTemplate, this.options.toolButtonData));
+
                             // creating the float to display output on
                             this.outputFloat = $(tmpl(this.options.outputFloatTemplate, this.options.outputFloatData));
                             this.workingLabel = tmpl(this.options.workingLabelTemplate, this.options.workingLabelData);
@@ -223,58 +233,61 @@ define([
                             // initializing tools' toggle button
                             this.handle = PopupManager.registerPopup(this.node.find(selector), 'click',
                                 function (d) {
-                                    that.emit(that.event.ACTIVATE, {
-                                        tool: that
+                                    _this.emit(_this.event.ACTIVATE, {
+                                        tool: _this,
                                     });
 
-                                    console.log(that.name, ': tool opens');
+                                    console.log(_this.name, ': tool opens');
 
-                                    that.options.activate.call(that);
-                                    that.options.target.append(that.outputFloat);
+                                    _this.options.activate.call(_this);
+                                    _this.options.target.append(_this.outputFloat);
 
-                                    that.outputFloat.on('click', '.float-default-button', that.options.defaultAction);
+                                    _this.outputFloat.on('click', '.float-default-button', _this.options.defaultAction);
 
-                                    that.tooltip = $('#mainMap.map > .tooltip')
+                                    _this.tooltip = $('#mainMap.map > .tooltip')
                                         .wrapInner('<span class="esri-tooltip"></span')
-                                        .append(that.workingLabel);
+                                        .append(_this.workingLabel);
 
                                     d.resolve();
-                                }, {
+                                },
+
+                                {
                                     closeHandler: function (d) {
-                                        that.emit(that.event.DEACTIVATE, {
-                                            tool: that
+                                        _this.emit(_this.event.DEACTIVATE, {
+                                            tool: _this,
                                         });
 
-                                        console.log(that.name, ': tool closes');
+                                        console.log(_this.name, ': tool closes');
 
-                                        that.options.deactivate.call(that);
-                                        that.outputFloat.detach();
+                                        _this.options.deactivate.call(_this);
+                                        _this.outputFloat.detach();
 
-                                        that.outputFloat.off('click', '.float-default-button',
-                                            that.options.defaultAction);
+                                        _this.outputFloat.off('click', '.float-default-button',
+                                            _this.options.defaultAction);
 
                                         d.resolve();
                                     },
 
                                     activeClass: 'button-pressed',
-                                    useAria: false
+                                    useAria: false,
                                 }
                             );
 
                             d.resolve(this);
                         },
+
                         this);
 
                     // load tool's i18n namespace
-                    that.ns += that.name;
-                    i18n.loadNamespace(that.ns, function () {
-                        console.log(that.name, ': translation is loaded');
+                    _this.ns += _this.name;
+                    i18n.loadNamespace(_this.ns, function () {
+                        console.log(_this.name, ': translation is loaded');
                         deferrList[0].resolve();
                     });
 
                     // load toll's template
-                    require(['dojo/text!tools/templates/' + that.name + '.json'], function (tt) {
-                        console.log(that.name, ': template is loaded');
+                    require(['dojo/text!tools/templates/' + _this.name + '.json'], function (tt) {
+                        console.log(_this.name, ': template is loaded');
                         toolTemplate = tt;
 
                         deferrList[1].resolve();
@@ -287,24 +300,26 @@ define([
 
                             outputFloatTemplate: 'base_tool_float',
                             outputFloatData: {
-                                clearMapButton: i18n.t('tools.basetool.clearmap')
+                                clearMapButton: i18n.t('tools.basetool.clearmap'),
                             },
 
                             workingLabelTemplate: 'working_label',
                             workingLabelData: {
-                                workingLabel: i18n.t('tools.basetool.working')
+                                workingLabel: i18n.t('tools.basetool.working'),
                             },
 
                             toolButtonTemplate: 'base_tool_button',
                             toolButtonData: {
-                                ns: that.ns
+                                ns: _this.ns,
                             },
 
                             toolOutputTemplate: 'base_tool_output',
 
                             activate: function () { console.log('activate action'); },
+
                             deactivate: function () { console.log('deactivate action'); },
-                            defaultAction: function () { console.log('default action'); }
+
+                            defaultAction: function () { console.log('default action'); },
                         },
                         options);
 
@@ -404,8 +419,9 @@ define([
                     }
 
                     return this;
-                }
+                },
             }
         );
     }
+
 );

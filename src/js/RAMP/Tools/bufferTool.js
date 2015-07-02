@@ -30,11 +30,13 @@
 */
 
 define([
+
 // Dojo
     'dojo/dom',
     'dojo/_base/array',
     'dojo/_base/Color',
     'dojo/_base/lang',
+
 // Esri
     'esri/config',
     'esri/graphic',
@@ -43,21 +45,25 @@ define([
     'esri/toolbars/draw',
     'esri/symbols/SimpleLineSymbol',
     'esri/symbols/SimpleFillSymbol',
+
 // Ramp
-    'ramp/map', 'ramp/globalStorage', 'tools/baseTool'
+    'ramp/map', 'ramp/globalStorage', 'tools/baseTool',
 ],
 
   function (
+
 // Dojo
       dom, array, Color, dojoLang,
+
 // Esri
       esriConfig, Graphic, GeometryService, BufferParameters, Draw, SimpleLineSymbol, SimpleFillSymbol,
+
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
       'use strict';
-      var ui,
-          bufferApp,
-          that;
+      var ui;
+      var bufferApp;
+      var _this;
 
       /**
       * Compute the buffer of a specified polygon.
@@ -68,35 +74,38 @@ define([
       *
       */
       function computeBuffer(evtObj) {
-          var geometry = evtObj.geometry,
-              map = bufferApp.map,
-              geometryService = new GeometryService(RAMP.config.geometryServiceUrl),
+          var geometry = evtObj.geometry;
+          var map = bufferApp.map;
+          var geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
 
-              symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
+          var symbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_NONE,
                  new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT,
-                 new Color([255, 0, 0, 1]), new Color([0, 255, 0, 0.25]))),
+                 new Color([255, 0, 0, 1]), new Color([0, 255, 0, 0.25])));
 
-              graphic = new Graphic(geometry, symbol);
+          var graphic = new Graphic(geometry, symbol);
 
-          that.working(true);
+          _this.working(true);
 
           map.graphics.add(graphic);
 
           //setup the buffer parameters
 
-          var params = new BufferParameters(),
-               // Get rid of all non-numerical/non-period characters.
-               distanceInput = that.outputFloat.find('.distance-input').val().replace(/[^0-9\.]+/g, ''),
-               firstIndex = distanceInput.indexOf('.');
+          var params = new BufferParameters();
+
+          // Get rid of all non-numerical/non-period characters.
+          var  distanceInput = _this.outputFloat.find('.distance-input').val().replace(/[^0-9\.]+/g, '');
+          var  firstIndex = distanceInput.indexOf('.');
+
           // Get rid of all extra decimal points
           distanceInput = distanceInput.substring(0, firstIndex + 1)
                             .concat(distanceInput.substring(firstIndex + 1)
                             .replace(/[.]+/g, ''));
+
           // Show what value is actually being used
           $('#buffer-input').val(distanceInput);
 
           if (distanceInput === '') {
-              that.working(false);
+              _this.working(false);
           } else {
               params.distances = [distanceInput];
               params.bufferSpatialReference = bufferApp.map.spatialReference;
@@ -133,12 +142,13 @@ define([
               var graphic = new Graphic(geometry, symbol);
               bufferApp.map.graphics.add(graphic);
           });
+
           //TODO if we change to an 'always on' we will want to make this a public function like the activate
           //function below
 
           bufferApp.map.showZoomSlider();
 
-          that.working(false);
+          _this.working(false);
       }
 
       ui = {
@@ -149,16 +159,16 @@ define([
             * @private
             */
           init: function () {
-              var map = RampMap.getMap(),
-                   toolbar = new Draw(map);
+              var map = RampMap.getMap();
+              var toolbar = new Draw(map);
 
               toolbar.on('draw-end', computeBuffer);
 
               bufferApp = {
                   map: map,
-                  toolbar: toolbar
+                  toolbar: toolbar,
               };
-          }
+          },
       };
 
       /**
@@ -202,9 +212,9 @@ define([
        * @private
        */
       function displayOutput() {
-          that.displayTemplateOutput(
+          _this.displayTemplateOutput(
               {
-                  distanceLabel: i18n.t(that.ns + ':distance')
+                  distanceLabel: i18n.t(_this.ns + ':distance'),
               }
           );
       }
@@ -219,18 +229,18 @@ define([
           *
           */
           init: function (selector, d) {
-              that = this;
+              _this = this;
               this.initToggle(selector, d,
                   {
                       activate: activate,
                       deactivate: deactivate,
-                      defaultAction: clearMap
+                      defaultAction: clearMap,
                   }
               );
               ui.init();
 
               d.then(function () {
-                  that.outputFloat.on('keydown', '#buffer-input', function (event) {
+                  _this.outputFloat.on('keydown', '#buffer-input', function (event) {
                       return (event.keyCode === 17 || event.keyCode === 18 ||
                         (event.keyCode > 47 && event.keyCode < 58 && event.shiftKey === false) ||
                         (event.keyCode === 110) || (event.keyCode > 95 && event.keyCode < 106) ||
@@ -243,6 +253,6 @@ define([
               return this;
           },
 
-          name: 'bufferTool'
+          name: 'bufferTool',
       });
   });

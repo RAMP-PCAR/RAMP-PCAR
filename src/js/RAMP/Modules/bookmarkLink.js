@@ -6,9 +6,9 @@
 * Keeps track of the current state of the map and updates the GetLinkPanel's textbook accordingly. On page load,
 * if any parameters are detected in the URL, this module will attempt to recreate the map according to the
 * parameters. Internally, this module subscribes to all events that change the state of the map (e.g. extent-change,
-* layers toggled on/off). It contains a dictionary that map event names to an object that contains the minimum 
+* layers toggled on/off). It contains a dictionary that map event names to an object that contains the minimum
 * information needed to reconstruct the map for that particular event. For example, if an extent change occurred,
-* this module will add a key 'map/extent-change' (or update if the entry already exists) and put an object that 
+* this module will add a key 'map/extent-change' (or update if the entry already exists) and put an object that
 * contains the minimum information needed to reconstruct the map to that extent (in this case it would be xmin,
 * ymin, xmax, ymax. Spatial reference is not needed since the map always has the same spatial reference).
 *
@@ -34,7 +34,7 @@
 *   non-primitives, e.g. array, object, one must manually serialize the field first.
 *   Also only use anonymous objects with custom fields, do not use class objects
 *   (e.g. use an anonymous { } object to store map extent instead of ESRI's map
-*   {{#crossLink 'Esri/geometry/Extent'}}{{/crossLink}} object, since it will contain other fields and methods 
+*   {{#crossLink 'Esri/geometry/Extent'}}{{/crossLink}} object, since it will contain other fields and methods
 *   that will also be serialized).
 *
 * 3. Call updateURL, passing it a name (e.g. 'newExtent') and the object
@@ -60,87 +60,93 @@
 */
 
 define([
+
 // Dojo
         'require', 'dojo/io-query', 'dojo/_base/lang', 'dojo/topic',
+
 // Ramp
         'ramp/globalStorage', 'ramp/map', 'ramp/eventManager', 'ramp/layerLoader',
+
 // Util
-        'utils/url', 'utils/util', 'utils/dictionary', 'utils/array', 'utils/popupManager'
+        'utils/url', 'utils/util', 'utils/dictionary', 'utils/array', 'utils/popupManager',
 ],
 
     function (
+
     // Dojo
         dojoRequire, dojoQuery, dojoLang, topic,
+
     // Ramp
         GlobalStorage, RampMap, EventManager, LayerLoader,
+
     // Util
         Url, UtilMisc, UtilDict, UtilArray, PopupManager) {
         'use strict';
 
         // Using constants so we can have intellisense and not make silly typos
-        var EVENT_EXTENT_CHANGE = 'extentChange',
-            EVENT_FULLSCREEN = 'fullscreen',
-            EVENT_WMS_QUERY = 'wmsQuery',
-            EVENT_PANEL_CHANGE = 'panelChange',
-            EVENT_TAB_CHANGE = 'selectedTab',
-            EVENT_BASEMAP_CHANGED = 'basemapChange',
-            PARAM = {
-                FILTER: {
-                    VISIBLE_LAYERS: 'visibleLayers',
-                    HIDDEN_LAYERS: 'hiddenLayers',
-                    VISIBLE_BOXES: 'visibleBoxes',
-                    HIDDEN_BOXES: 'hiddenBoxes'
-                }
+        var EVENT_EXTENT_CHANGE = 'extentChange';
+        var EVENT_FULLSCREEN = 'fullscreen';
+        var EVENT_WMS_QUERY = 'wmsQuery';
+        var EVENT_PANEL_CHANGE = 'panelChange';
+        var EVENT_TAB_CHANGE = 'selectedTab';
+        var EVENT_BASEMAP_CHANGED = 'basemapChange';
+        var PARAM = {
+            FILTER: {
+                VISIBLE_LAYERS: 'visibleLayers',
+                HIDDEN_LAYERS: 'hiddenLayers',
+                VISIBLE_BOXES: 'visibleBoxes',
+                HIDDEN_BOXES: 'hiddenBoxes',
             },
+        };
 
-            // defines any standard url param keys we are expecting
-            URL_KEYS = {
-                PANEL_VISIBLE: 'pv',
-                FULL_SCREEN: 'fs',
-                WMS_QUERY: 'wq',
-                XMIN: 'xmin',
-                YMIN: 'ymin',
-                XMAX: 'xmax',
-                YMAX: 'ymax',
-                SPATIAL_REF: 'sr',
-                BASEMAP: 'bm',
-                LAYER_TRANSPARENCY: 'lt',
-                SELECT_TAB: 'st',
-                VISIBLE_LAYERS: 'vl',
-                HIDDEN_LAYERS: 'hl',
-                VISIBLE_BOXES: 'vb',
-                HIDDEN_BOXES: 'hb'
-            },
+        // defines any standard url param keys we are expecting
+        var URL_KEYS = {
+            PANEL_VISIBLE: 'pv',
+            FULL_SCREEN: 'fs',
+            WMS_QUERY: 'wq',
+            XMIN: 'xmin',
+            YMIN: 'ymin',
+            XMAX: 'xmax',
+            YMAX: 'ymax',
+            SPATIAL_REF: 'sr',
+            BASEMAP: 'bm',
+            LAYER_TRANSPARENCY: 'lt',
+            SELECT_TAB: 'st',
+            VISIBLE_LAYERS: 'vl',
+            HIDDEN_LAYERS: 'hl',
+            VISIBLE_BOXES: 'vb',
+            HIDDEN_BOXES: 'hb',
+        };
 
-            HREF_MAILTO_TEMPLATE = 'mailto:?subject={0}&body={1}',
+        var HREF_MAILTO_TEMPLATE = 'mailto:?subject={0}&body={1}';
 
-            config,
+        var config;
 
-            queryObject,
+        var queryObject;
 
-            linkPaneTextbox,
+        var linkPaneTextbox;
 
-            getlinkPopup,
+        var getlinkPopup;
 
-            getlinkToggle,
-            getlinkSectionContainer,
-            getlinkSection,
+        var getlinkToggle;
+        var getlinkSectionContainer;
+        var getlinkSection;
 
-            getlinkShortenButton,
-            getlinkShortenButtonLabel,
-            getlinkEmailButton,
+        var getlinkShortenButton;
+        var getlinkShortenButtonLabel;
+        var getlinkEmailButton;
 
-            getlinkloadinganimation,
+        var getlinkloadinganimation;
 
-            cssButtonPressedClass = 'button-pressed',
+        var cssButtonPressedClass = 'button-pressed';
 
-            isShortLinkMode = false,
+        var isShortLinkMode = false;
 
-            baseUrl,
+        var baseUrl;
 
-            sidePanelWbTabs,
-            sidePanelTabList,
-            sidePanelTabPanels,
+        var sidePanelWbTabs;
+        var sidePanelTabList;
+        var sidePanelTabPanels;
 
         /**
         * A dictionary mapping names (String) to query parameter (String) of the URL. The query parameter is
@@ -151,7 +157,7 @@ define([
         * @property parameters
         * @type {Object}
         */
-            parameters = {},
+        var parameters = {};
 
         /**
         * A dictionary mapping names (String) to anchors (String) used at the end of the URL.
@@ -160,147 +166,151 @@ define([
         * @property anchors
         * @type {Object}
         */
-            anchors = {},
+        var anchors = {};
 
+        /**
+        * A dictionary containing layer id (String) as key and layer visibility (boolean) as value
+        *
+        * @private
+        * @property layerVisibility
+        * @type {Object}
+        */
+        var layerVisibility = {};
+
+        /**
+        * A dictionary containing layer id (String) as key and bounding box visibility (boolean) as value
+        *
+        * @private
+        * @property boundingBoxVisibility
+        * @type {Object}
+        */
+        var boundingBoxVisibility = {};
+
+        /**
+         * A dictionary with the layer id as key, and the transparency as value.
+         *
+         * @private
+         * @property layerTransparency
+         * @type {Object}
+         */
+        var layerTransparency = {};
+
+        var ui = {
             /**
-             * A dictionary containing layer id (String) as key and layer visibility (boolean) as value
-             *
-             * @private
-             * @property layerVisibility
-             * @type {Object}
-             */
-            layerVisibility = {},
+            * Initiates additional UI components of the widget, setting listeners and other stuff.
+            *
+            * @method init
+            * @private
+            * @constructor
+            */
+            init: function () {
+                getlinkloadinganimation = $('#getlink-section .loadingAnimation');
 
-            /**
-             * A dictionary containing layer id (String) as key and bounding box visibility (boolean) as value
-             *
-             * @private
-             * @property boundingBoxVisibility
-             * @type {Object}
-             */
-            boundingBoxVisibility = {},
+                getlinkEmailButton = $('.getlink-email-button');
 
-            /**
-             * A dictionary with the layer id as key, and the transparency as value.
-             *
-             * @private
-             * @property layerTransparency
-             * @type {Object}
-             */
-            layerTransparency = {},
+                getlinkToggle = $('#getlink-toggle');
+                getlinkSectionContainer = $('#getlink-section-container');
+                getlinkSection = $('#getlink-section');
 
-            ui = {
-                /**
-                * Initiates additional UI components of the widget, setting listeners and other stuff.
-                *
-                * @method init
-                * @private
-                * @constructor
-                */
-                init: function () {
-                    getlinkloadinganimation = $('#getlink-section .loadingAnimation');
+                // select link when user focuses on the textbox http://stackoverflow.com/a/22102081
+                linkPaneTextbox =
+                    $('#getlink-input')
+                    .on('focus', function () {
+                        var $this = $(this)
+                            .one('mouseup.mouseupSelect', function () {
+                                $this.select();
+                                return false;
+                            })
+                            .one('mousedown', function () {
+                                // compensate for untriggered 'mouseup' caused by focus via tab
+                                $this.off('mouseup.mouseupSelect');
+                            })
+                            .select();
+                    });
 
-                    getlinkEmailButton = $('.getlink-email-button');
+                // toggle short/long link mode on click
+                getlinkShortenButton =
+                    $('.getlink-shorten-button')
+                    .on('click', toggleShortLinkMode);
 
-                    getlinkToggle = $('#getlink-toggle');
-                    getlinkSectionContainer = $('#getlink-section-container');
-                    getlinkSection = $('#getlink-section');
+                getlinkShortenButtonLabel = getlinkShortenButton.find('span.on-right');
 
-                    // select link when user focuses on the textbox http://stackoverflow.com/a/22102081
-                    linkPaneTextbox =
-                        $('#getlink-input')
-                        .on('focus', function () {
-                            var $this = $(this)
-                                .one('mouseup.mouseupSelect', function () {
-                                    $this.select();
-                                    return false;
-                                })
-                                .one('mousedown', function () {
-                                    // compensate for untriggered 'mouseup' caused by focus via tab
-                                    $this.off('mouseup.mouseupSelect');
-                                })
-                                .select();
+                getlinkPopup = PopupManager.registerPopup(getlinkToggle, 'click',
+                    function (d) {
+                        topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
+                        topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'get-link-section' });
+                        console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', true);
+
+                        //when called in gui.js, elements for sidePanelTabList is not available yet
+                        //re-publish on selected tab
+                        sidePanelWbTabs = $('#panel-div > .wb-tabs');
+                        sidePanelTabList = sidePanelWbTabs.find(' > ul[role=tablist]');
+                        sidePanelTabPanels = sidePanelWbTabs.find(' > .tabpanels');
+
+                        sidePanelTabList.find('li a').click(function () {
+                            console.log('inside side panel tab list on click');
+                            var selectedPanelId = $(this).attr('href').substr(1);
+
+                            sidePanelTabPanels.find('details[id=' + selectedPanelId + ']').each(
+                                function () {
+                                    topic.publish(EventManager.GUI.TAB_SELECTED, {
+                                        id: this.id,
+                                        tabName: $(this).data('panel-name'),
+                                    });
+                                });
+
+                            // the panel currently open is being deselected
+                            sidePanelTabPanels.find('details[aria-expanded=true]').each(
+                                function () {
+                                    topic.publish(EventManager.GUI.TAB_DESELECTED, {
+                                        id: this.id,
+                                        tabName: $(this).data('panel-name'),
+                                    });
+                                });
                         });
 
-                    // toggle short/long link mode on click
-                    getlinkShortenButton =
-                        $('.getlink-shorten-button')
-                        .on('click', toggleShortLinkMode);
+                        var _this = this;
 
-                    getlinkShortenButtonLabel = getlinkShortenButton.find('span.on-right');
-
-                    getlinkPopup = PopupManager.registerPopup(getlinkToggle, 'click',
-                        function (d) {
-                            topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: true });
-                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'get-link-section' });
-                            console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', true);
-
-                            //when called in gui.js, elements for sidePanelTabList is not available yet
-                            //re-publish on selected tab
-                            sidePanelWbTabs = $('#panel-div > .wb-tabs');
-                            sidePanelTabList = sidePanelWbTabs.find(' > ul[role=tablist]');
-                            sidePanelTabPanels = sidePanelWbTabs.find(' > .tabpanels');
-
-                            sidePanelTabList.find('li a').click(function () {
-                                console.log('inside side panel tab list on click');
-                                var selectedPanelId = $(this).attr('href').substr(1);
-
-                                sidePanelTabPanels.find('details[id=' + selectedPanelId + ']').each(
-                                    function () {
-                                        topic.publish(EventManager.GUI.TAB_SELECTED, {
-                                            id: this.id,
-                                            tabName: $(this).data('panel-name')
-                                        });
-                                    });
-
-                                // the panel currently open is being deselected
-                                sidePanelTabPanels.find('details[aria-expanded=true]').each(
-                                    function () {
-                                        topic.publish(EventManager.GUI.TAB_DESELECTED, {
-                                            id: this.id,
-                                            tabName: $(this).data('panel-name')
-                                        });
-                                    });
-                            });
-
-                            var that = this;
-                            // close this panel if any other panel is opened
-                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, 
-                                function () {
-                                    if (that.isOpen()) {
-                                        that.close();
-                                    }
+                        // close this panel if any other panel is opened
+                        UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN,
+                            function () {
+                                if (_this.isOpen()) {
+                                    _this.close();
                                 }
-                            );
+                            }
 
-                            getlinkSectionContainer.slideDown('fast', function () {
+                        );
+
+                        getlinkSectionContainer.slideDown('fast', function () {
+                            d.resolve();
+                        });
+                    },
+
+                    {
+                        activeClass: cssButtonPressedClass,
+                        target: getlinkSectionContainer,
+                        closeHandler: function (d) {
+                            topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: false });
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'get-link-section' });
+                            console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', false);
+
+                            getlinkSectionContainer.slideUp('fast', function () {
+                                toggleShortLinkMode(false);
                                 d.resolve();
                             });
                         },
-                        {
-                            activeClass: cssButtonPressedClass,
-                            target: getlinkSectionContainer,
-                            closeHandler: function (d) {
-                                topic.publish(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED, { visible: false });
-                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'get-link-section' });
-                                console.log(EventManager.BookmarkLink.GETLINK_PANEL_CHANGED + ' visible:', false);
 
-                                getlinkSectionContainer.slideUp('fast', function () {
-                                    toggleShortLinkMode(false);
-                                    d.resolve();
-                                });
-                            },
-                            resetFocusOnClose: true
-                        }
-                    );
+                        resetFocusOnClose: true,
+                    }
+                );
 
-                    /*topic.subscribe(EventManager.GUI.HELP_PANEL_CHANGE, function (attr) {
-                        if (getlinkPopup.isOpen() && attr.visible) {
-                            getlinkPopup.close();
-                        }
-                    });*/
-                }
-            };
+                /*topic.subscribe(EventManager.GUI.HELP_PANEL_CHANGE, function (attr) {
+                    if (getlinkPopup.isOpen() && attr.visible) {
+                        getlinkPopup.close();
+                    }
+                });*/
+            },
+        };
 
         /**
         * Update the parameter dictionary with the new values for the parameter. If paramObj is set to null,
@@ -353,8 +363,8 @@ define([
         * @private
         */
         function updateURL() {
-            var link = baseUrl,
-                delim = '?';
+            var link = baseUrl;
+            var delim = '?';
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
@@ -389,10 +399,11 @@ define([
                             setNewUrl(shortUrl);
                             getlinkloadinganimation.hide();
                         },
+
                         error: function (err) {
                             console.error(JSON.stringify(err));
                             getlinkloadinganimation.hide();
-                        }
+                        },
                     });
                 }
             } else {
@@ -404,7 +415,7 @@ define([
 
             //trigger event indicating bookmark is complete.  pass bookmark as arg
             topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
-                link: link
+                link: link,
             });
         }
 
@@ -421,12 +432,12 @@ define([
                 return;
             }
 
-            var paras = link.split('?')[1],
-                element = $('#wb-lng').find('li a'),
-                url = element.attr('href'),
-                dstLang = element.attr('lang'),
-                srcLang = RAMP.locale,
-                re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang), 'g');
+            var paras = link.split('?')[1];
+            var element = $('#wb-lng').find('li a');
+            var url = element.attr('href');
+            var dstLang = element.attr('lang');
+            var srcLang = RAMP.locale;
+            var re = new RegExp('rcs\\.([\\w-+=]+)\\.({0})'.format(srcLang), 'g');
 
             console.log(paras);
             paras = paras.replace(re, 'rcs.$1.{0}'.format(dstLang));
@@ -445,9 +456,9 @@ define([
        * @private
        */
         function slimCoord(value) {
-            var sVal = value.toString(),
-                decIndex = sVal.indexOf('.'),
-                cutSize;
+            var sVal = value.toString();
+            var decIndex = sVal.indexOf('.');
+            var cutSize;
 
             if (sVal.substring(0, 1) === '-') {
                 cutSize = 7;
@@ -489,8 +500,8 @@ define([
         * @private
         */
         function updateConfig(homePage) {
-            var event,
-                urlObj = new Url(dojoRequire.toUrl(document.location));
+            var event;
+            var urlObj = new Url(dojoRequire.toUrl(document.location));
 
             config = RAMP.config;
             baseUrl = urlObj.uri;
@@ -512,7 +523,7 @@ define([
             // Toggle the main panel
             if (queryObject[URL_KEYS.PANEL_VISIBLE]) {
                 event = {
-                    pv: UtilMisc.parseBool(queryObject[URL_KEYS.PANEL_VISIBLE])
+                    pv: UtilMisc.parseBool(queryObject[URL_KEYS.PANEL_VISIBLE]),
                 };
 
                 addParameter(EVENT_PANEL_CHANGE, event);
@@ -522,7 +533,7 @@ define([
             // Toggle fullscreen mode
             if (queryObject[URL_KEYS.FULL_SCREEN]) {
                 event = {
-                    fs: UtilMisc.parseBool(queryObject[URL_KEYS.FULL_SCREEN])
+                    fs: UtilMisc.parseBool(queryObject[URL_KEYS.FULL_SCREEN]),
                 };
                 addParameter(EVENT_FULLSCREEN, event);
                 RAMP.state.ui.fullscreen = event.fs;
@@ -531,7 +542,7 @@ define([
             // Toggle wms query mode
             if (queryObject[URL_KEYS.WMS_QUERY]) {
                 event = {
-                    wq: UtilMisc.parseBool(queryObject[URL_KEYS.WMS_QUERY])
+                    wq: UtilMisc.parseBool(queryObject[URL_KEYS.WMS_QUERY]),
                 };
                 addParameter(EVENT_WMS_QUERY, event);
                 RAMP.state.ui.wmsQuery = event.wq;
@@ -545,12 +556,12 @@ define([
                     ymin: parseFloat(queryObject[URL_KEYS.YMIN].replace(/,/g, '')),
                     xmax: parseFloat(queryObject[URL_KEYS.XMAX].replace(/,/g, '')),
                     ymax: parseFloat(queryObject[URL_KEYS.YMAX].replace(/,/g, '')),
-                    sr: queryObject[URL_KEYS.SPATIAL_REF]
+                    sr: queryObject[URL_KEYS.SPATIAL_REF],
                 };
 
                 addParameter(EVENT_EXTENT_CHANGE, event);
 
-                // we call the spatial refernce 'sr' in the url to save on characters.  However, the internal 
+                // we call the spatial refernce 'sr' in the url to save on characters.  However, the internal
                 // config object uses the ESRI standard name of 'spatialReference' (so we can serialize to a
                 // valid esri SR object)
                 var configExtent = {
@@ -558,7 +569,7 @@ define([
                     ymin: event.ymin,
                     xmax: event.xmax,
                     ymax: event.ymax,
-                    spatialReference: JSON.parse(event.sr)
+                    spatialReference: JSON.parse(event.sr),
                 };
 
                 config.extents.defaultExtent = configExtent;
@@ -570,7 +581,7 @@ define([
             // Select the correct basemap
             if (queryObject[URL_KEYS.BASEMAP]) {
                 event = {
-                    bm: queryObject[URL_KEYS.BASEMAP]
+                    bm: queryObject[URL_KEYS.BASEMAP],
                 };
                 addParameter(EVENT_BASEMAP_CHANGED, event);
 
@@ -580,13 +591,14 @@ define([
             // Modify the layer transparency
             if (queryObject[URL_KEYS.LAYER_TRANSPARENCY]) {
                 addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                    lt: queryObject[URL_KEYS.LAYER_TRANSPARENCY]
+                    lt: queryObject[URL_KEYS.LAYER_TRANSPARENCY],
                 });
 
                 UtilDict.forEachEntry(JSON.parse(queryObject[URL_KEYS.LAYER_TRANSPARENCY]), function (key, value) {
                     var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
+
                     layerConfig.settings.opacity.default = value;
                 });
             }
@@ -609,6 +621,7 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
+
                     // make sure not null
                     if (layerConfig !== null) {
                         layerConfig.settings.visible = true;
@@ -618,7 +631,7 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_LAYERS, {
-                    vl: queryObject[URL_KEYS.VISIBLE_LAYERS]
+                    vl: queryObject[URL_KEYS.VISIBLE_LAYERS],
                 });
             }
 
@@ -636,7 +649,7 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_LAYERS, {
-                    hl: queryObject[URL_KEYS.HIDDEN_LAYERS]
+                    hl: queryObject[URL_KEYS.HIDDEN_LAYERS],
                 });
             }
 
@@ -645,6 +658,7 @@ define([
 
                 layerIds.forEach(function (layerId) {
                     var layerConfig = LayerLoader.getLayerConfig(layerId);
+
                     if (layerConfig !== null) {
                         layerConfig.settings.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
@@ -652,7 +666,7 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.VISIBLE_BOXES, {
-                    vb: queryObject[URL_KEYS.VISIBLE_BOXES]
+                    vb: queryObject[URL_KEYS.VISIBLE_BOXES],
                 });
             }
 
@@ -669,18 +683,22 @@ define([
                 });
 
                 addParameter(PARAM.FILTER.HIDDEN_BOXES, {
-                    hb: queryObject[URL_KEYS.HIDDEN_BOXES]
+                    hb: queryObject[URL_KEYS.HIDDEN_BOXES],
                 });
             }
 
             //check for any additional unknown parameters that were on the url.  add them to our URL
-            var paramName, paramObj, knownNames = [];
+            var paramName;
+            var paramObj;
+            var knownNames = [];
+
             //get list of known keys in a searchable list
             for (paramName in URL_KEYS) {
                 if (URL_KEYS.hasOwnProperty(paramName)) {
                     knownNames.push(URL_KEYS[paramName]);
                 }
             }
+
             for (paramName in queryObject) {
                 if (queryObject.hasOwnProperty(paramName)) {
                     if (knownNames.indexOf(paramName) === -1) {
@@ -703,6 +721,7 @@ define([
         */
         function isBookmarkLayer(layerId) {
             var layer = RampMap.getMap().getLayer(layerId);
+
             // false if layer is undefined; if layer is defined then only if it is not a user-added layer
             return layer ? !layer.ramp.user : false;
         }
@@ -757,21 +776,21 @@ define([
                         ymin: slimCoord(event.extent.ymin),
                         xmax: slimCoord(event.extent.xmax),
                         ymax: slimCoord(event.extent.ymax),
-                        sr: JSON.stringify(event.extent.spatialReference)
+                        sr: JSON.stringify(event.extent.spatialReference),
                     });
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.GUI.FULLSCREEN_CHANGE, function (event) {
                     addParameter(EVENT_FULLSCREEN, {
-                        fs: event.visible
+                        fs: event.visible,
                     });
                     updateURL();
                 });
 
                 topic.subscribe(EventManager.FilterManager.WMS_QUERY_CHANGE, function (event) {
                     addParameter(EVENT_WMS_QUERY, {
-                        wq: event.allowed
+                        wq: event.allowed,
                     });
                     updateURL();
                 });
@@ -786,7 +805,7 @@ define([
 
                 topic.subscribe(EventManager.GUI.PANEL_CHANGE, function (event) {
                     addParameter(EVENT_PANEL_CHANGE, {
-                        pv: event.visible
+                        pv: event.visible,
                     });
                     updateURL();
                 });
@@ -795,7 +814,7 @@ define([
                     //lookup index from config. don't store id
 
                     addParameter(EVENT_BASEMAP_CHANGED, {
-                        bm: RAMP.basemapIndex[event.id]
+                        bm: RAMP.basemapIndex[event.id],
                     });
                     updateURL();
                 });
@@ -813,19 +832,20 @@ define([
                     // Only keep attributes that are different from the default config
                     var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
                         return layerVisible && !LayerLoader.getLayerConfig(key).settings.visible;
-                    }),
-                        hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
-                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.visible;
-                        });
+                    });
+
+                    var hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
+                        return !boxVisible && LayerLoader.getLayerConfig(key).settings.visible;
+                    });
 
                     addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
                         // Convert an array of string into a '+' delimited string
-                        hl: Object.keys(hiddenLayers).join('+')
+                        hl: Object.keys(hiddenLayers).join('+'),
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
                         // Convert an array of string into a '+' delimited string
-                        vl: Object.keys(visibleLayers).join('+')
+                        vl: Object.keys(visibleLayers).join('+'),
                     });
 
                     updateURL();
@@ -844,19 +864,20 @@ define([
                     // Only keep attributes that are different from the default config
                     var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
                         return boxVisible && !LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
-                    }),
-                        hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
-                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
-                        });
+                    });
+
+                    var hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
+                        return !boxVisible && LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
+                    });
 
                     addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
                         // Convert an array of string into a '+' delimited string
-                        hb: Object.keys(hiddenBoxes).join('+')
+                        hb: Object.keys(hiddenBoxes).join('+'),
                     });
 
                     addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
                         // Convert an array of string into a '+' delimited string
-                        vb: Object.keys(visibleBoxes).join('+')
+                        vb: Object.keys(visibleBoxes).join('+'),
                     });
 
                     updateURL();
@@ -872,7 +893,7 @@ define([
                     layerTransparency[event.layerId] = Math.round(event.value * 100) / 100;
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                        lt: JSON.stringify(layerTransparency)
+                        lt: JSON.stringify(layerTransparency),
                     });
 
                     updateURL();
@@ -880,6 +901,7 @@ define([
 
                 topic.subscribe(EventManager.LayerLoader.LAYER_REMOVED, function (event) {
                     var id;
+
                     // if event.layerId is undefined then the layer is WMS
                     if (typeof event.layerId === 'undefined') {
                         id = event.layer.id;
@@ -896,6 +918,6 @@ define([
                 // if this call is removed, there will be no URL in the bookmark link
                 // until one of the above events fires
                 updateURL();
-            }
+            },
         };
     });

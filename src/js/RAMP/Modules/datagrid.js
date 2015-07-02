@@ -10,7 +10,7 @@
 */
 
 /**
-* The Datagrid class represents the side bar table shown next to the map. The data grid displays all map 
+* The Datagrid class represents the side bar table shown next to the map. The data grid displays all map
 * objects in a text format and allows the user to see more details (same as clicking the map object) and
 * navigate to the object. This class create the UI panel, events, and event-handles for the data grid container.
 *
@@ -45,6 +45,7 @@
 */
 
 define([
+
 /* Dojo */
     'dojo/_base/lang', 'dojo/topic', 'dojo/Deferred',
 
@@ -60,9 +61,11 @@ define([
         'ramp/eventManager', 'ramp/theme', 'ramp/layerLoader', 'ramp/filterEngine',
 
 // Util
-         'utils/util', 'utils/array', 'utils/dictionary', 'utils/popupManager', 'utils/tmplHelper'],
+         'utils/util', 'utils/array', 'utils/dictionary', 'utils/popupManager', 'utils/tmplHelper',
+],
 
     function (
+
     // Dojo
         lang, topic, Deferred,
 
@@ -80,65 +83,65 @@ define([
         UtilMisc, UtilArray, utilDict, popupManager, tmplHelper) {
         'use strict';
 
-        var GRID_MODE_SUMMARY = 'summary',
-            GRID_MODE_FULL = 'full',
+        var GRID_MODE_SUMMARY = 'summary';
+        var GRID_MODE_FULL = 'full';
 
-            /**
-            * Name of the attribute used to store the oid
-            * in the details and zoomTo buttons
-            *
-            * @private
-            * @property featureOidField
-            */
-            featureOidField = 'feature-oid',
+        /**
+        * Name of the attribute used to store the oid
+        * in the details and zoomTo buttons
+        *
+        * @private
+        * @property featureOidField
+        */
+        var featureOidField = 'feature-oid';
 
-            /**
-            * Name of the attribute used to store the layer id
-            * in the details and zoomTo buttons
-            *
-            * @private
-            * @property layerIdField
-            */
-            layerIdField = 'layer-id',
+        /**
+        * Name of the attribute used to store the layer id
+        * in the details and zoomTo buttons
+        *
+        * @private
+        * @property layerIdField
+        */
+        var layerIdField = 'layer-id';
 
-            dataGridTemplateJson = JSON.parse(tmplHelper.stringifyTemplate(dataGridTemplate)),
-            extendedDatagridTemplateJson = JSON.parse(tmplHelper.stringifyTemplate(extendedDatagridTemplate)),
-            currentRowsPerPage = 1, //keeps track of the rows-per-page of the active grid
+        var dataGridTemplateJson = JSON.parse(tmplHelper.stringifyTemplate(dataGridTemplate));
+        var extendedDatagridTemplateJson = JSON.parse(tmplHelper.stringifyTemplate(extendedDatagridTemplate));
+        var currentRowsPerPage = 1; //keeps track of the rows-per-page of the active grid
 
-            /**
-            * The jquery table
-            *
-            * @private
-            * @property oTable
-            */
-            oTable,
+        /**
+        * The jquery table
+        *
+        * @private
+        * @property oTable
+        */
+        var oTable;
 
         // The JQuery Object representing the grid
-            jqgrid,
-            featureToIndex = {},
+        var jqgrid;
+        var featureToIndex = {};
 
-            currentSortingMode = 'asc',
+        var currentSortingMode = 'asc';
 
         // A boolean used to keep track of whether or not the grid should apply an
         // extent filter when the datagrid gets selected
-            extentFilterExpired = true,
+        var extentFilterExpired = true;
 
-            zoomToGraphic,
+        var zoomToGraphic;
 
-            lastExtent,
+        var lastExtent;
 
-            // invisibleLayer toggle counter
-            invisibleLayerToggleOn = [],
+        // invisibleLayer toggle counter
+        var invisibleLayerToggleOn = [];
 
-            /**
-            * Total number of features in all the visible layers on the map
-            *
-            * @private
-            * @property totalRecords
-            */
-            totalRecords = 0,
+        /**
+        * Total number of features in all the visible layers on the map
+        *
+        * @private
+        * @property totalRecords
+        */
+        var totalRecords = 0;
 
-            ui = (function () {
+        var ui = (function () {
                 /**
                 * creates a datagrid row that has the following features:
                 * highlight for a given feature
@@ -151,8 +154,8 @@ define([
                 * @return {Object} an object containing features of a datagrid row
                 */
                 function createRowPrototype(cssClass) {
-                    var index = -1,
-                        fData = null;
+                    var index = -1;
+                    var fData = null;
 
                     return {
                         focusedButton: null,
@@ -162,8 +165,8 @@ define([
                         },
 
                         isEqual: function (layerId, oid) {
-                            var thisId = fData.parent.layerId,
-                                thisOid = GraphicExtension.getFDataOid(fData);
+                            var thisId = fData.parent.layerId;
+                            var thisOid = GraphicExtension.getFDataOid(fData);
 
                             return (thisId === layerId) && (thisOid === oid);
                         },
@@ -189,12 +192,13 @@ define([
                                     axis: 'y',
                                     offset: {
                                         left: 0,
-                                        top: -this.getNode().height() * 1.5
-                                    }
+                                        top: -this.getNode().height() * 1.5,
+                                    },
                                 });
 
                                 return true;
                             }
+
                             return false;
                         },
 
@@ -209,13 +213,13 @@ define([
                         *
                         * @method refresh
                         * @private
-                        * @return {{node: jObject, page: number}} A row node that displays graphic information. 
+                        * @return {{node: jObject, page: number}} A row node that displays graphic information.
                         * If none found, returns an object with empty jNode.
                         */
                         refresh: function () {
                             if (fData) {
-                                var layerId = fData.parent.layerId,
-                                    id = GraphicExtension.getFDataOid(fData);
+                                var layerId = fData.parent.layerId;
+                                var id = GraphicExtension.getFDataOid(fData);
                                 if ((layerId in featureToIndex) && (id in featureToIndex[layerId])) {
                                     index = featureToIndex[layerId][id];
                                 } else {
@@ -231,7 +235,7 @@ define([
                         *
                         * @method getNode
                         * @private
-                        * @return {{node: jObject, page: number}} A row node that displays graphic information. 
+                        * @return {{node: jObject, page: number}} A row node that displays graphic information.
                         * If none found, returns an object with empty jNode.
                         */
                         getNode: function () {
@@ -266,37 +270,37 @@ define([
                                 this.getNode().removeClass(cssClass);
                                 fData = null;
                             }
-                        }
+                        },
                     };
                 }
 
-                var highlightRow = createRowPrototype('selected-row'),
-                    zoomlightRow = createRowPrototype('highlighted-row'),
+                var highlightRow = createRowPrototype('selected-row');
+                var zoomlightRow = createRowPrototype('highlighted-row');
 
-                    extendedTabTitle,
+                var extendedTabTitle;
 
-                    sectionNode,
-                    tabNode = $('details[data-panel-name=datagrid]'),
+                var sectionNode;
+                var tabNode = $('details[data-panel-name=datagrid]');
 
-                    selectedDatasetId,
+                var selectedDatasetId;
 
-                    datagridStatusLine,
-                    datagridGlobalToggles,
-                    datagridNotice,
-                    jqgridWrapper,
-                    jqgridTableWrapper,
-                    dataTablesScroll,
-                    dataTablesScrollBody,
-                    dataTablesScrollHead,
-                    datasetSelector,
-                    datasetSelectorSubmitButton,
+                var datagridStatusLine;
+                var datagridGlobalToggles;
+                var datagridNotice;
+                var jqgridWrapper;
+                var jqgridTableWrapper;
+                var dataTablesScroll;
+                var dataTablesScrollBody;
+                var dataTablesScrollHead;
+                var datasetSelector;
+                var datasetSelectorSubmitButton;
 
-                    datagridMode = GRID_MODE_SUMMARY, // GRID_MODE_FULL
+                var datagridMode = GRID_MODE_SUMMARY; // GRID_MODE_FULL
 
-                    _isReady = false; // indicates if the ui has fully rendered
+                var _isReady = false; // indicates if the ui has fully rendered
 
                 /**
-                * Generates the content for a grid cell.  Will use template engine the first time, 
+                * Generates the content for a grid cell.  Will use template engine the first time,
                 * cached value after that.
                 * Function must conform to datatables renderer api
                 * https://datatables.net/reference/option/columns.render
@@ -311,10 +315,10 @@ define([
                 */
                 function rowRenderer(data, type, row, meta) {
                     //Remember, case sensitivity MATTERS in the attribute name.
-                    var rowMetadata = row.last(), //secret stash of info in invisible last column
-                        datagridMode = ui.getDatagridMode(),
-                        tmplData,
-                        layerConfig;
+                    var rowMetadata = row.last(); //secret stash of info in invisible last column
+                    var datagridMode = ui.getDatagridMode();
+                    var tmplData;
+                    var layerConfig;
 
                     if (!rowMetadata || !rowMetadata.fData) {
                         //weird case where grid tries to render on non-existant row
@@ -362,11 +366,13 @@ define([
                                 // add columnIdx property, and set initial value
                                 tmplData.columnIdx = i;
                                 var result = tmpl(col.columnTemplate, tmplData);
+
                                 // Need to check if it's a number, since the template converts
                                 // everything into strings
                                 if (col.sortType === 'numeric') {
                                     result = Number(result);
                                 }
+
                                 rowMetadata[datagridMode].push(result);
                             });
                         }
@@ -376,46 +382,48 @@ define([
                 }
 
                 /**
-                * Creates a Data table based on the grid configuration specified in the application config 
+                * Creates a Data table based on the grid configuration specified in the application config
                 * object. See http://datatables.net/reference/option/ for addition information on config parameters.
                 *
                 * @method createDatatable
                 * @private
                 */
                 function createDatatable() {
-                    var forcedWidth,
-                        focusConfig,
-                        tableOptions = {
-                            info: false,
-                            columnDefs: [],
-                            autoWidth: false,
-                            deferRender: true,
-                            order: [], //required to remove the 'default sort' icon from the first column
-                            paging: true,
-                            pagingType: 'ramp', //'full_numbers',
-                            scrollX: true,
-                            destroy: true,
-                            language: i18n.t('datagrid.gridstrings', { returnObjectTrees: true }),
-                            getTotalRecords: function () {
-                                return totalRecords;
-                            }
-                        };
+                    var forcedWidth;
+                    var focusConfig;
+                    var tableOptions = {
+                        info: false,
+                        columnDefs: [],
+                        autoWidth: false,
+                        deferRender: true,
+                        order: [], //required to remove the 'default sort' icon from the first column
+                        paging: true,
+                        pagingType: 'ramp', //'full_numbers',
+                        scrollX: true,
+                        destroy: true,
+                        language: i18n.t('datagrid.gridstrings', { returnObjectTrees: true }),
+                        getTotalRecords: function () {
+                            return totalRecords;
+                        },
+                    };
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         currentRowsPerPage = RAMP.config.rowsPerPage;
                         tableOptions = lang.mixin(tableOptions,
                             {
-                                columns: [{
-                                    title: 'Name',
-                                    width: '300px',
-                                    type: 'string',
-                                    className: '',
-                                    render: rowRenderer,
-                                    orderable: true
-                                }],
+                                columns: [
+                                    {
+                                        title: 'Name',
+                                        width: '300px',
+                                        type: 'string',
+                                        className: '',
+                                        render: rowRenderer,
+                                        orderable: true,
+                                    },
+                                ],
                                 dom: '<"jqgrid_table_wrapper summary-table"t><"status-line"p>',
                                 searching: true,
-                                pageLength: currentRowsPerPage
+                                pageLength: currentRowsPerPage,
                             }
                         );
                     } else {
@@ -424,27 +432,30 @@ define([
                         if (ui.getSelectedDatasetId() in RAMP.layerRegistry) {
                             focusConfig = RAMP.layerRegistry[ui.getSelectedDatasetId()].ramp.config;
                         }
+
                         if (focusConfig && focusConfig.datagrid) {
                             currentRowsPerPage = focusConfig.datagrid.rowsPerPage;
                         }
+
                         tableOptions = lang.mixin(tableOptions,
                             {
                                 columns: ui.getSelectedDatasetId() === null ? [{ title: '' }] :
                                     focusConfig.datagrid.gridColumns.map(function (column) {
-                                    return {
-                                        title: column.title,
-                                        width: column.width ? column.width : '100px',
-                                        type: column.sortType,
-                                        className: column.alignment ? '' : 'center',
-                                        render: rowRenderer,
-                                        orderable: column.orderable
-                                    };
-                                }),
-                                dom: 
+                                        return {
+                                            title: column.title,
+                                            width: column.width ? column.width : '100px',
+                                            type: column.sortType,
+                                            className: column.alignment ? '' : 'center',
+                                            render: rowRenderer,
+                                            orderable: column.orderable,
+                                        };
+                                    }),
+
+                                dom:
                                   '<"jqgrid_table_wrapper full-table"t><"datagrid-info-notice simple"><"status-line"p>',
                                 scrollY: '500px', // just a placeholder; it will be dynamically updated later
                                 searching: RAMP.config.extendedDatagridExtentFilterEnabled,
-                                pageLength: currentRowsPerPage
+                                pageLength: currentRowsPerPage,
                             }
                         );
                     }
@@ -501,7 +512,7 @@ define([
                         dataTablesScrollBody.height(jqgridTableWrapper.height() - dataTablesScrollHead.height());
 
                         // explicitly force-set width of the jqgrid so it wouldn't compress when a sub-panel is opened
-                        // also check if the width is no greater than that of the container, 
+                        // also check if the width is no greater than that of the container,
                         // hide the horizontal scrollbar
                         forcedWidth = jqgrid.outerWidth();
 
@@ -536,10 +547,11 @@ define([
                                 }
                             }
                         },
+
                         {
                             handleSelector: '.point-name, .category-name, .title-span',
                             useAria: false,
-                            timeout: 500
+                            timeout: 500,
                         }
                     );
                 }
@@ -552,17 +564,17 @@ define([
                 */
                 function setButtonEvents() {
                     sectionNode.on('click', 'button.details', function () {
-                        var buttonNode = $(this),
-                            layerId = buttonNode.data(layerIdField),
-                            oid = buttonNode.data(featureOidField);
+                        var buttonNode = $(this);
+                        var layerId = buttonNode.data(layerIdField);
+                        var oid = buttonNode.data(featureOidField);
 
                         highlightRow.focusedButton = 'button.details';
 
                         if (highlightRow.isActive() && highlightRow.isEqual(layerId, oid)) {
                             DatagridClickHandler.onDetailDeselect(datagridMode);
                         } else {
-                            var fData = getFDataFromButton(buttonNode),
-                                graphic = getGraphicFromFData(fData);
+                            var fData = getFDataFromButton(buttonNode);
+                            var graphic = getGraphicFromFData(fData);
 
                             DatagridClickHandler.onDetailSelect(buttonNode, fData, graphic, datagridMode);
                         }
@@ -570,8 +582,8 @@ define([
 
                     // Event handling for 'Zoom To' button
                     sectionNode.on('click', 'button.zoomto', function (evt) {
-                        var zoomNode = $(this),
-                            fData = getFDataFromButton(zoomNode);
+                        var zoomNode = $(this);
+                        var fData = getFDataFromButton(zoomNode);
 
                         zoomlightRow.focusedButton = 'button.zoomto';
 
@@ -593,21 +605,25 @@ define([
                                     var newNode = $(String.format('button.zoomto[data-{0}="{1}"][data-{2}="{3}"]:eq(0)',
                                                     featureOidField, GraphicExtension.getFDataOid(fData),
                                                     layerIdField, fData.parent.layerId));
+
                                     // Change node's text to Zoom Back
                                     newNode.text(i18n.t('datagrid.zoomBack'));
                                 });
                             });
                         } else { // Zoom back
                             DatagridClickHandler.onZoomBack();
+
                             // Reset focus back to 'Zoom To' link after map extent change
                             UtilMisc.subscribe(EventManager.Datagrid.LOAD_DATA_GRID_END, function () {
                                 var newNode = $(String.format('button.zoomto[data-{0}="{1}"][data-{2}="{3}"]:eq(0)',
                                         featureOidField, GraphicExtension.getFDataOid(fData),
                                         layerIdField, fData.parent.layerId));
+
                                 // Change node's text back to Zoom To
                                 newNode.text(i18n.t('datagrid.zoomTo'));
                                 newNode.focus();
                             });
+
                             zoomNode.text(i18n.t('datagrid.zoomTo'));
                         }
                     });
@@ -643,9 +659,9 @@ define([
                     });
 
                     sectionNode.on('change', '#datasetSelector', function () {
-                        var controlNode = $(this),
-                            optionSelected = controlNode.find('option:selected'),
-                            state = (optionSelected[0].value === selectedDatasetId);
+                        var controlNode = $(this);
+                        var optionSelected = controlNode.find('option:selected');
+                        var state = (optionSelected[0].value === selectedDatasetId);
 
                         updateDatasetSelectorState(state, true);
                     });
@@ -667,6 +683,7 @@ define([
                             this.target.removeClass('wb-invisible');
                             d.resolve();
                         },
+
                         {
                             handleSelector: 'tr',
 
@@ -679,7 +696,7 @@ define([
                             },
 
                             activeClass: 'bg-very-light',
-                            useAria: false
+                            useAria: false,
                         }
                     );
 
@@ -687,19 +704,21 @@ define([
                         function (d) {
                             d.resolve();
                         },
+
                         {
                             handleSelector: '.full-table #jqgrid tbody tr',
                             activeClass: 'bg-very-light',
-                            useAria: false
+                            useAria: false,
                         }
                     );
 
                     popupManager.registerPopup(sectionNode, 'dblclick',
                         function (d) {
-                            var //oldHandles = jqgrid.find('.expand-cell'),
-                                extraPadding = (this.handle.outerHeight() - this.target.height()) / 2;
+                            //var oldHandles = jqgrid.find('.expand-cell');
+                            var extraPadding = (this.handle.outerHeight() - this.target.height()) / 2;
 
                             TweenLite.set('.expand-cell', { clearProps: 'padding', className: '-=expand-cell' });
+
                             //TweenLite.set('.expand-cell', { className: '-=expand-cell' });
                             TweenLite.set(this.handle, { padding: extraPadding });
 
@@ -707,6 +726,7 @@ define([
 
                             d.resolve();
                         },
+
                         {
                             handleSelector: 'td',
 
@@ -720,7 +740,7 @@ define([
                             },
 
                             activeClass: 'expand-cell',
-                            useAria: false
+                            useAria: false,
                         }
                     );
 
@@ -736,6 +756,7 @@ define([
 
                             d.resolve();
                         },
+
                         {
                             closeHandler: function (d) {
                                 this.target.toggle();
@@ -750,7 +771,7 @@ define([
 
                             handleSelector: '.info-notice-button',
                             containerSelector: '.datagrid-info-notice',
-                            targetSelector: '.notice-details'
+                            targetSelector: '.notice-details',
                         }
                     );
                 }
@@ -762,13 +783,13 @@ define([
                 * @private
                 */
                 function initScrollListeners() {
-                    var currentTopScroll,
-                        currentBottomScroll;
+                    var currentTopScroll;
+                    var currentBottomScroll;
 
                     if (datagridMode === GRID_MODE_SUMMARY) {
                         jqgridTableWrapper.scroll(function () {
                             currentTopScroll = jqgridTableWrapper.scrollTop();
-                            currentBottomScroll = dataTablesScroll.height() - jqgridTableWrapper.scrollTop() - 
+                            currentBottomScroll = dataTablesScroll.height() - jqgridTableWrapper.scrollTop() -
                                 jqgridTableWrapper.height();
 
                             if (currentTopScroll === 0) {
@@ -799,7 +820,7 @@ define([
                 }
 
                 /**
-                * Highlights the row according to the graphic stored in the event. Sets the hightlightRow variable to 
+                * Highlights the row according to the graphic stored in the event. Sets the hightlightRow variable to
                 * the graphic object inside the sent event
                 *
                 * @method highlightrowShow
@@ -870,12 +891,12 @@ define([
                     topic.subscribe(EventManager.Datagrid.DRAW_COMPLETE, updateDatasetSelectorToLoaded);
                 }
                 /**
-                 * Updates the state of the dataset selector based on whether the dataset has been loaded and 
+                 * Updates the state of the dataset selector based on whether the dataset has been loaded and
                  * what dataset is currently selected.
                  *
                  * @method updateDatasetSelectorState
                  * @param {Boolean} state indicates if button is disabled or not; true - disabled;
-                 * @param {Boolean} [loaded] indicates if the selected dataset is already loaded; it's assumed 
+                 * @param {Boolean} [loaded] indicates if the selected dataset is already loaded; it's assumed
                  * to be loading otherwise
                  */
                 function updateDatasetSelectorState(state, loaded) {
@@ -905,11 +926,11 @@ define([
                 }
 
                 function refreshTable() {
-                    var duration = 0.2,
-                        tl = new TimelineLite({ paused: true }),
-                        stl = new TimelineLite({ paused: true }),
-                        newWrapper,
-                        deffered = new Deferred();
+                    var duration = 0.2;
+                    var tl = new TimelineLite({ paused: true });
+                    var stl = new TimelineLite({ paused: true });
+                    var newWrapper;
+                    var deffered = new Deferred();
 
                     tmpl.cache = {};
                     tmpl.templates = dataGridTemplateJson;
@@ -917,7 +938,7 @@ define([
                         'datagrid_manager_table_Template',
                         {
                             tableId: 'jqgrid',
-                            tableCss: 'display table-condensed table-simplify'// animated fadeIn'
+                            tableCss: 'display table-condensed table-simplify', // animated fadeIn'
                         }
                     );
 
@@ -944,6 +965,7 @@ define([
                             stl.set(jqgridWrapper, { className: '-=fadedOut' });
                             stl.set(jqgridWrapper, { className: '+=animated fadeIn' });
                             stl.set(jqgridWrapper, { className: '-=animated fadeIn' }, '+=1');
+
                             //stl.set(jqgridTableWrapper, { className: '-=animated fadeIn' }, '+=' + duration);
 
                             stl.play();
@@ -967,19 +989,19 @@ define([
                     // using template to generate global checkboxes
                     var globalCheckBoxesData = {
                         buttonLabel: i18n.t('datagrid.sort'),
-                        classAddition: 'font-medium global-button'
-                    },
-                        templateData = {
-                            buttons: globalCheckBoxesData,
-                            tableId: 'jqgrid',
-                            tableCss: 'display table-condensed table-simplify'
-                        },
-                        section,
-                        templateKey,
-                        duration = 0.5,
-                        tl = new TimelineLite({ paused: true }),
-                        stl = new TimelineLite({ paused: true }),
-                        deffered = new Deferred();
+                        classAddition: 'font-medium global-button',
+                    };
+                    var templateData = {
+                        buttons: globalCheckBoxesData,
+                        tableId: 'jqgrid',
+                        tableCss: 'display table-condensed table-simplify',
+                    };
+                    var section;
+                    var templateKey;
+                    var duration = 0.5;
+                    var tl = new TimelineLite({ paused: true });
+                    var stl = new TimelineLite({ paused: true });
+                    var deffered = new Deferred();
 
                     tmpl.cache = {};
                     tmpl.templates = dataGridTemplateJson;
@@ -993,12 +1015,14 @@ define([
                         }
                     } else {
                         templateKey = 'datagrid_full_manager_Template';
+
                         // bugfix: 7047 need this to fix extended grid issue.
                         selectedDatasetId = '';
 
                         // filter out static layers
                         var nonStaticFeatureLayers = RAMP.config.layers.feature.filter(function (layerConfig) {
                             var layer = RAMP.map.getLayer(layerConfig.id);
+
                             if (layer) {
                                 if (layer.loaded) {
                                     return layer.ramp.type !== GlobalStorage.layerType.Static && layer.visible;
@@ -1010,7 +1034,7 @@ define([
                             {
                                 datasets: nonStaticFeatureLayers,
                                 toggleTitle: i18n.t('datagrid.ex.dataSummary'),
-                                txtDataset: i18n.t('datagrid.ex.dataset')
+                                txtDataset: i18n.t('datagrid.ex.dataset'),
                             }
                         );
 
@@ -1048,7 +1072,7 @@ define([
 
                         // continue with transition when apply filter finished
                         deffered.then(function () {
-                            // tl.call(function () { oTable.columns.adjust().draw(); console.log('!!!'); }, 
+                            // tl.call(function () { oTable.columns.adjust().draw(); console.log('!!!'); },
                             // null, this, '+=2');
 
                             //tl.resume();
@@ -1107,13 +1131,13 @@ define([
                 * Captures a subpanel that was opened and docked by the datagrid module previously.
                 *
                 * @method capturePanel
-                * @param {Boolean} force if truthy - capture the panel even if the datagrid is not visible; use 
+                * @param {Boolean} force if truthy - capture the panel even if the datagrid is not visible; use
                 * when switching to datagrid tab and the datagrid is not fully rendered yet by the browser
                 * @private
                 */
                 function capturePanel(force) {
-                    var origin = 'datagrid',
-                        target = highlightRow.getNode().find('.record-controls');
+                    var origin = 'datagrid';
+                    var target = highlightRow.getNode().find('.record-controls');
 
                     if (datagridMode === GRID_MODE_FULL) {
                         origin = 'ex-datagrid';
@@ -1127,15 +1151,19 @@ define([
                         topic.publish(EventManager.GUI.SUBPANEL_CAPTURE, {
                             target: target,
                             consumeOrigin: origin,
-                            origin: origin
+                            origin: origin,
                         });
                     }
                 }
 
                 function adjustPanelWidth() {
                     if (datagridMode === GRID_MODE_SUMMARY) {
-                        UtilMisc.adjustWidthForSrollbar(jqgridTableWrapper, [datagridGlobalToggles,
-                            datagridStatusLine, datagridNotice]);
+                        UtilMisc.adjustWidthForSrollbar(jqgridTableWrapper,
+                            [
+                                datagridGlobalToggles,
+                                datagridStatusLine,
+                                datagridNotice,
+                            ]);
                     } else {
                         if (jqgrid.outerWidth() === jqgridWrapper.outerWidth()) {
                             dataTablesScrollBody.addClass('overflow-x-hidden');
@@ -1157,6 +1185,7 @@ define([
                     init: UtilMisc.once(
                         function () {
                             var d = new Deferred();
+
                             d.then(
                                 function () {
                                     _isReady = true;
@@ -1166,11 +1195,13 @@ define([
                                     initScrollListeners();
                                     initUIListeners();
                                 }
+
                             );
 
                             sectionNode = $('#' + RAMP.config.divNames.datagrid);
                             refreshPanel(d);
                         }
+
                     ),
 
                     getDatagridMode: function () {
@@ -1185,6 +1216,7 @@ define([
                                 var firstVisibleLayer = UtilArray.find(RAMP.config.layers.feature,
                                     function (layerConfig) {
                                         var layer = RAMP.map.getLayer(layerConfig.id);
+
                                         if (layer) {
                                             return layer.visible &&
                                                 (layer.ramp.type !== GlobalStorage.layerType.Static) &&
@@ -1193,7 +1225,8 @@ define([
                                             //layer failed to load.  it will not be visible
                                             return false;
                                         }
-                                });
+                                    });
+
                                 selectedDatasetId = firstVisibleLayer === null ? null : firstVisibleLayer.id;
                             }
                         } else {
@@ -1229,16 +1262,16 @@ define([
 
                     /**
                     * Update the datagrid notice to show feedback to the user if any.
-                    * Right now is used to display notifications about scale dependent layers that are off 
+                    * Right now is used to display notifications about scale dependent layers that are off
                     * scale at the moment.
                     *
                     * @private
                     * @method updateNotice
                     */
                     updateNotice: function () {
-                        var notice,
-                            data = { layers: null },
-                            invisibleLayers =
+                        var notice;
+                        var data = { layers: null };
+                        var invisibleLayers =
                                 RampMap.getInvisibleLayers()
                                 .filter(function (l) {
                                     return l.ramp && l.ramp.type === GlobalStorage.layerType.feature;
@@ -1291,7 +1324,7 @@ define([
                         function () {
                             invisibleLayerToggleOn = RampMap.getInvisibleLayers()
                             .filter(function (l) {
-                                // make sure l.ramp is not undefined, and it's a feature layer, and 
+                                // make sure l.ramp is not undefined, and it's a feature layer, and
                                 // config.settings.visible is true
                                 return l.ramp && l.ramp.type === GlobalStorage.layerType.feature &&
                                     l.ramp.config.settings.visible;
@@ -1300,7 +1333,8 @@ define([
                                 return lyr.ramp.config.id;
                             });
                         }
-                    )
+
+                    ),
                 };
             }());
 
@@ -1316,12 +1350,13 @@ define([
             featureToIndex = {};
             $.each(elements, function (idx, val) {
                 if (val.last()) {
-                    var layer = val.last().layerId,
-                        fid = GraphicExtension.getFDataOid(val.last().fData);
+                    var layer = val.last().layerId;
+                    var fid = GraphicExtension.getFDataOid(val.last().fData);
 
                     if (!(layer in featureToIndex)) {
                         featureToIndex[layer] = {};
                     }
+
                     featureToIndex[layer][fid] = idx;
                 }
             });
@@ -1340,6 +1375,7 @@ define([
         function handleGridEvent(e, callback) {
             if ((e.type === 'keypress' && e.keyCode === 13) || e.type === 'click') {
                 callback();
+
                 //Ramp.setHTML(oid); // just update info hit
             }
         }
@@ -1353,10 +1389,10 @@ define([
         *
         */
         function updateDataGrid(d) {
-            var visibleGridLayers = RampMap.getVisibleFeatureLayers(),
-                dataGridMode = ui.getDatagridMode(),
-                filterOps = {},
-                pFilter;
+            var visibleGridLayers = RampMap.getVisibleFeatureLayers();
+            var dataGridMode = ui.getDatagridMode();
+            var filterOps = {};
+            var pFilter;
 
             //derive a list of layer objects that should be in the grid, and other filter options.
 
@@ -1369,6 +1405,7 @@ define([
                 if (RAMP.config.extendedDatagridExtentFilterEnabled) {
                     //we are still filtering on extent, but are only targeting the active layer in the big data grid
                     filterOps.extent = RampMap.getMap().extent;
+
                     //only consider the layer if it is visible
                     visibleGridLayers = visibleGridLayers.filter(function (layer) {
                         return layer.id === ui.getSelectedDatasetId();
@@ -1426,8 +1463,8 @@ define([
         * return {Array} an array representing the data the given feature contains.
         */
         function getDataObject(fData) {
-            var layerConfig = GraphicExtension.getConfigForFData(fData),
-                innerArray;
+            var layerConfig = GraphicExtension.getConfigForFData(fData);
+            var innerArray;
 
             //Remember, case sensitivity MATTERS in the attribute name.
 
@@ -1451,7 +1488,7 @@ define([
             innerArray.push({
                 layerId: layerConfig.id,
                 layerName: layerConfig.displayName,
-                fData: fData
+                fData: fData,
             });
 
             return innerArray;
@@ -1474,6 +1511,7 @@ define([
                 console.warn('addDataToGrid called prior to grid initialization');
                 return;
             }
+
             jqgrid.DataTable().clear(); // Do NOT redraw the datatable at this point
 
             if (Object.keys(gridDataSet).isEmpty()) {
@@ -1483,9 +1521,9 @@ define([
                 return;
             }
 
-            var data = [],
-                newData,
-                dgMode = ui.getDatagridMode();
+            var data = [];
+            var newData;
+            var dgMode = ui.getDatagridMode();
 
             //process the data set
             //for each feature layer (key is layerid)
@@ -1526,8 +1564,8 @@ define([
         function getGraphicFromFData(fData) {
             //TODO move this into graphicExtension?  check for RampMap import circular reference.
 
-            var oid = GraphicExtension.getFDataOid(fData),
-                graphic;
+            var oid = GraphicExtension.getFDataOid(fData);
+            var graphic;
 
             graphic = GraphicExtension.findGraphic(oid, fData.parent.layerId);
             return graphic;
@@ -1542,9 +1580,9 @@ define([
         * @return {Object}   the feature data object
         */
         function getFDataFromButton(buttonNode) {
-            var layerId = buttonNode.data(layerIdField),
-                oid = buttonNode.data(featureOidField),
-                layerData = RAMP.data[layerId];
+            var layerId = buttonNode.data(layerIdField);
+            var oid = buttonNode.data(featureOidField);
+            var layerData = RAMP.data[layerId];
 
             //since button.data returns in string format, we don't need to convert the oid to a string for the index
             return layerData.features[layerData.index[oid]];
@@ -1592,8 +1630,9 @@ define([
             topic.subscribe(EventManager.GUI.TAB_DESELECTED, function (arg) {
                 if (arg.tabName === 'datagrid') {
                     topic.publish(EventManager.GUI.SUBPANEL_DOCK, {
-                        origin: 'datagrid'
+                        origin: 'datagrid',
                     });
+
                     console.log('subPanleDock');
                 }
             });
@@ -1611,16 +1650,17 @@ define([
                         //console.log('HOGG - layer loaded event');
                         updateDataGrid();
                     }
-                    // this is causing more trouble than it is worth.  if a user opens big grid before a layer is 
-                    // loaded, they wont be expecting to look at it anyways.   If it finishes loading when the 
+
+                    // this is causing more trouble than it is worth.  if a user opens big grid before a layer is
+                    // loaded, they wont be expecting to look at it anyways.   If it finishes loading when the
                     // big grid is open, user will be unaware because everything else is hidden.  A loaded layer
                     // will appear the next time the grid opens.
                     /*else {
-                        // in this case, a slow loading layer updated after the user has switched to the extended 
-                        // grid view. add layer to selection combo box (as it would not have been added when the 
+                        // in this case, a slow loading layer updated after the user has switched to the extended
+                        // grid view. add layer to selection combo box (as it would not have been added when the
                         // pane was generated)
                         var layerConfig = Ramp.getLayerConfigWithId(evt.layer.id),
-                            optElem = document.createElement('option'),  // '<option value='' + layerConfig.id + 
+                            optElem = document.createElement('option'),  // '<option value='' + layerConfig.id +
                                 ''>' + layerConfig.displayName + '</option>',
                             datasetSelector = $('#datasetSelector');
 
@@ -1642,8 +1682,7 @@ define([
             });
 
             topic.subscribe(EventManager.GUI.SUBPANEL_CHANGE, function (evt) {
-                if (evt.origin === 'ex-datagrid' &&
-                    evt.isComplete) {
+                if (evt.origin === 'ex-datagrid' && evt.isComplete) {
                     ui.adjustPanelWidth();
                 }
             });
@@ -1659,6 +1698,6 @@ define([
                 initListeners();
 
                 ui.init();
-            } //InitDataGrid
+            }, //InitDataGrid
         };
     });

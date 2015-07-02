@@ -35,7 +35,7 @@ define([
 
         'ramp/layerLoader', 'ramp/globalStorage', 'ramp/map',
 
-        'utils/util'
+        'utils/util',
 ],
     function (
             Deferred, query, first,
@@ -53,7 +53,7 @@ define([
         var featureTypeToRenderer = {
             Point: 'circlePoint', MultiPoint: 'circlePoint',
             LineString: 'solidLine', MultiLineString: 'solidLine',
-            Polygon: 'outlinedPoly', MultiPolygon: 'outlinedPoly'
+            Polygon: 'outlinedPoly', MultiPolygon: 'outlinedPoly',
         };
 
         /**
@@ -66,7 +66,8 @@ define([
         * @returns {Promise} a Promise object resolving with either a {string} or {ArrayBuffer}
         */
         function loadDataSet(args) {
-            var def = new Deferred(), promise;
+            var def = new Deferred();
+            var promise;
 
             if (args.file) {
                 if (args.url) {
@@ -91,9 +92,12 @@ define([
                     function (data) {
                         // http://updates.html5rocks.com/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
                         function str2ab(str) {
-                            var buf = new ArrayBuffer(str.length * 2), // 2 bytes for each char
-                                bufView = new Uint16Array(buf),
-                                i = 0, j = 0, strLen = str.length, code;
+                            var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+                            var bufView = new Uint16Array(buf);
+                            var i = 0;
+                            var j = 0;
+                            var strLen = str.length;
+                            var code;
 
                             while (i < strLen) {
                                 // jshint bitwise:false
@@ -101,7 +105,9 @@ define([
                                 if (code & 0xff00) {
                                     bufView[j++] = (0xff00 & code) >> 8;
                                 }
+
                                 bufView[j++] = 0xff & code;
+
                                 // jshint bitwise:true
                             }
 
@@ -112,9 +118,14 @@ define([
                             def.resolve(str2ab(data));
                             return;
                         }
+
                         def.resolve(data);
                     },
-                    function (error) { def.reject(error); }
+
+                    function (error) {
+                        def.reject(error);
+                    }
+
                 );
             } else {
                 throw new Error('One of url or file should be specified');
@@ -131,7 +142,8 @@ define([
         * @returns {Promise} a promise resolving with an object containing basic properties for the layer
         */
         function getFeatureLayer(featureLayerEndpoint) {
-            var def = new Deferred(), promise;
+            var def = new Deferred();
+            var promise;
 
             try {
                 promise = (new EsriRequest({ url: featureLayerEndpoint + '?f=json' })).promise;
@@ -153,11 +165,16 @@ define([
                             layerName: data.name,
                             layerUrl: featureLayerEndpoint,
                             geometryType: data.geometryType,
-                            fields: data.fields.map(function (x) { return x.name; }),
+                            fields: data.fields.map(
+                                function (x) {
+                                    return x.name;
+                                }
+
+                            ),
                             renderer: data.drawingInfo.renderer,
                             aliasMap: alias,
                             maxScale: data.maxScale,
-                            minScale: data.minScale
+                            minScale: data.minScale,
                         };
 
                         def.resolve(res);
@@ -165,10 +182,12 @@ define([
                         def.reject(e);
                     }
                 },
+
                 function (error) {
                     console.log(error);
                     def.reject(error);
                 }
+
             );
 
             return def.promise;
@@ -182,7 +201,11 @@ define([
         * @returns {Promise} a promise resolving with an object mapping legend labels to data URLs for those labels
         */
         function getFeatureLayerLegend(featureLayerEndpoint) {
-            var def = new Deferred(), promise, legendUrl, idx, layerIdx;
+            var def = new Deferred();
+            var promise;
+            var legendUrl;
+            var idx;
+            var layerIdx;
 
             //snip off last slash if there
             idx = featureLayerEndpoint.indexOf('/', featureLayerEndpoint.length - 1);
@@ -218,10 +241,12 @@ define([
 
                     def.resolve(res);
                 },
+
                 function (error) {
                     console.log(error);
                     def.reject(error);
                 }
+
             );
 
             return def.promise;
@@ -240,12 +265,13 @@ define([
         * @returns {Promise} a promise resolving with a metadata object (as specified above)
         */
         function getWmsLayerList(wmsEndpoint) {
-            var def = new Deferred(), promise;
+            var def = new Deferred();
+            var promise;
 
             try {
                 promise = (new EsriRequest({
                     url: wmsEndpoint + '?service=WMS&version=1.3&request=GetCapabilities',
-                    handleAs: 'xml'
+                    handleAs: 'xml',
                 })).promise;
             } catch (e) {
                 def.reject(e);
@@ -260,40 +286,51 @@ define([
                         return node.childNodes[i];
                     }
                 }
+
                 return undefined;
             }
 
             promise.then(
                 function (data) {
-                    var layers, res = {};
+                    var layers;
+                    var res = {};
 
                     try {
-                        layers = query('Layer > Name', data).map(function (nameNode) { return nameNode.parentNode; });
-                        res.layers = layers.map(function (x) {
-                            var nameNode = getImmediateChild(x, 'Name'),
-                                name = nameNode.textContent || nameNode.text,
-                                // .text is for IE9's benefit, even though it claims to support .textContent
-                                titleNode = getImmediateChild(x, 'Title');
-                            return {
-                                name: name,
-                                desc: titleNode ? (titleNode.textContent || titleNode.text) : name,
-                                queryable: x.getAttribute('queryable') === '1'
-                            };
+                        layers = query('Layer > Name', data).map(function (nameNode) {
+                            return nameNode.parentNode;
                         });
+
+                        res.layers = layers.map(
+                            function (x) {
+                                var nameNode = getImmediateChild(x, 'Name');
+                                var name = nameNode.textContent || nameNode.text;
+
+                                // .text is for IE9's benefit, even though it claims to support .textContent
+                                var titleNode = getImmediateChild(x, 'Title');
+                                return {
+                                    name: name,
+                                    desc: titleNode ? (titleNode.textContent || titleNode.text) : name,
+                                    queryable: x.getAttribute('queryable') === '1',
+                                };
+                            }
+
+                        );
                         res.queryTypes = query('GetFeatureInfo > Format', data).map(
                             function (node) {
                                 return node.textContent || node.text;
-                        });
+                            });
                     } catch (e) {
                         def.reject(e);
                     }
 
                     def.resolve(res);
                 },
+
                 function (error) {
                     console.log(error);
                     def.reject(error);
                 }
+
             );
 
             return def.promise;
@@ -306,6 +343,7 @@ define([
             if (geoJson.type !== 'FeatureCollection') {
                 throw new Error('Assignment can only be performed on FeatureCollections');
             }
+
             geoJson.features.forEach(function (val, idx) {
                 if (typeof val.id === 'undefined') {
                     val.id = idx;
@@ -341,9 +379,9 @@ define([
                     fieldName: fn,
                     width: wd,
                     title: ttl,
-                    columnTemplate: tp
-                },
-                optFields = ['type', 'orderable', 'alignment'];
+                    columnTemplate: tp,
+                };
+                var optFields = ['type', 'orderable', 'alignment'];
 
                 optFields.forEach(function (opt) {
                     if (opts && opt in opts) {
@@ -356,7 +394,7 @@ define([
 
             var dg = {
                 rowsPerPage: 50,
-                gridColumns: []
+                gridColumns: [],
             };
 
             dg.gridColumns.push(makeField('iconCol', '', '50px', 'Icon', 'graphic_icon', { orderable: false }));
@@ -365,12 +403,16 @@ define([
             if (fields && fields.length) {
                 fields.forEach(function (field, idx) {
                     var fieldTitle = field;
-                    if (field.toLowerCase() === 'shape') { return; }
+                    if (field.toLowerCase() === 'shape') {
+                        return;
+                    }
+
                     if (aliases) {
                         if (aliases[field]) {
                             fieldTitle = aliases[field];
                         }
                     }
+
                     dg.gridColumns.push(makeField('col' + idx.toString(), field, '100px', fieldTitle, 'title_span'));
                 });
             }
@@ -388,7 +430,7 @@ define([
         */
         function createSymbologyConfig(renderer, legendLookup) {
             var symb = {
-                type: renderer.type
+                type: renderer.type,
             };
 
             switch (symb.type) {
@@ -402,6 +444,7 @@ define([
                     if (renderer.defaultLabel) {
                         symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
                     }
+
                     symb.field1 = renderer.field1;
                     symb.field2 = renderer.field2;
                     symb.field3 = renderer.field3;
@@ -409,7 +452,7 @@ define([
                         return {
                             label: uvi.label,
                             value: uvi.value,
-                            imageUrl: legendLookup[uvi.label]
+                            imageUrl: legendLookup[uvi.label],
                         };
                     });
 
@@ -418,21 +461,24 @@ define([
                     if (renderer.defaultLabel) {
                         symb.defaultImageUrl = legendLookup[renderer.defaultLabel];
                     }
+
                     symb.field = renderer.field;
                     symb.minValue = renderer.minValue;
                     symb.rangeMaps = renderer.classBreakInfos.map(function (cbi) {
                         return {
                             label: cbi.label,
                             maxValue: cbi.classMaxValue,
-                            imageUrl: legendLookup[cbi.label]
+                            imageUrl: legendLookup[cbi.label],
                         };
                     });
 
                     break;
                 default:
+
+                    //TODO make a stupid basic renderer to prevent things from breaking?
+
                     //Renderer we dont support
                     console.log('encountered unsupported renderer type: ' + symb.type);
-                    //TODO make a stupid basic renderer to prevent things from breaking?
             }
 
             return symb;
@@ -442,7 +488,7 @@ define([
         * Peek at the CSV output (useful for checking headers).
         *
         * @param {string} data a string containing the CSV (or any DSV) data
-        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess 
+        * @param {string} delimiter the delimiter used by the data, unlike other functions this will not guess
         * a delimiter and this parameter is required
         * @returns {Array} an array of arrays containing the parsed CSV
         */
@@ -457,14 +503,20 @@ define([
         function scanCrs(geoJson) {
             if (!geoJson.crs || geoJson.crs.type !== 'name') { return; }
 
-            var name = geoJson.crs.properties.name,
-                promises = Object.keys(RAMP.plugins.projectionLookup).map(function (plugin) {
+            var name = geoJson.crs.properties.name;
+            var promises = Object.keys(RAMP.plugins.projectionLookup).map(
+                function (plugin) {
                     return RAMP.plugins.projectionLookup[plugin](name);
-                });
+                }
+
+            );
+
             first(promises).then(function (projString) {
                 console.log(projString);
                 proj4.defs(name, projString);
-            }, function (fail) {
+            },
+
+            function (fail) {
                 console.log(fail);
             });
         }
@@ -486,16 +538,23 @@ define([
         * @returns {FeatureLayer} An ESRI FeatureLayer
         */
         function makeGeoJsonLayer(geoJson, opts) {
-            var esriJson, layerDefinition, layer, fs, targetWkid, srcProj,
-                defaultRenderers = GlobalStorage.DefaultRenderers,
-                layerID = LayerLoader.nextId();
+            var esriJson;
+            var layerDefinition;
+            var layer;
+            var fs;
+            var targetWkid;
+            var srcProj;
+            var defaultRenderers = GlobalStorage.DefaultRenderers;
+            layerID = LayerLoader.nextId();
 
             layerDefinition = {
                 objectIdField: 'OBJECTID',
-                fields: [{
-                    name: 'OBJECTID',
-                    type: 'esriFieldTypeOID'
-                }]
+                fields: [
+                    {
+                        name: 'OBJECTID',
+                        type: 'esriFieldTypeOID',
+                    },
+                ],
             };
 
             targetWkid = RAMP.map.spatialReference.wkid;
@@ -507,9 +566,11 @@ define([
                 if (opts.sourceProjection) {
                     srcProj = opts.sourceProjection;
                 }
+
                 if (opts.targetWkid) {
                     targetWkid = opts.targetWkid;
                 }
+
                 if (opts.fields) {
                     layerDefinition.fields = layerDefinition.fields.concat(opts.fields);
                 }
@@ -527,8 +588,9 @@ define([
 
             layer = new FeatureLayer({ layerDefinition: layerDefinition, featureSet: fs }, {
                 mode: FeatureLayer.MODE_SNAPSHOT,
-                id: layerID
+                id: layerID,
             });
+
             // ＼(｀O´)／ manually setting SR because it will come out as 4326
             layer.spatialReference = new SpatialReference({ wkid: targetWkid });
 
@@ -563,11 +625,11 @@ define([
                 nameField: opts.nameField,
                 symbology: {
                     type: 'simple',
-                    imageUrl: opts.icon
+                    imageUrl: opts.icon,
                 },
-                datagrid: createDatagridConfig(opts.fields)
-            },
-                defaultRenderers = GlobalStorage.DefaultRenderers;
+                datagrid: createDatagridConfig(opts.fields),
+            };
+            var defaultRenderers = GlobalStorage.DefaultRenderers;
 
             //backfill the rest of the config object with default values
             newConfig = GlobalStorage.applyFeatureDefaults(newConfig);
@@ -575,8 +637,11 @@ define([
             //add custom properties and event handlers to layer object
             RampMap.enhanceLayer(featureLayer, newConfig, true);
             featureLayer.ramp.type = GlobalStorage.layerType.feature; //TODO revisit
-            featureLayer.ramp.load.state = 'loaded'; //because we made the feature layer by hand, it already has 
-            //it's layer definition, so it begins in loaded state.  the load event never fires
+
+            //because we made the feature layer by hand, it already has
+            //it's layer definition, so it begins in loaded state.
+            //the load event never fires
+            featureLayer.ramp.load.state = 'loaded';
             featureLayer.type = 'Feature Layer'; //required to visible layer function
 
             //plop config in global config object so everyone can access it.
@@ -603,15 +668,18 @@ define([
         * @returns {Promise} a promise resolving with a {FeatureLayer}
         */
         function buildCsv(csvData, opts) {
-            var def = new Deferred(), csvOpts = { latfield: 'Lat', lonfield: 'Long', delimiter: ',' };
+            var def = new Deferred();
+            var csvOpts = { latfield: 'Lat', lonfield: 'Long', delimiter: ',' };
 
             if (opts) {
                 if (opts.latfield) {
                     csvOpts.latfield = opts.latfield;
                 }
+
                 if (opts.lonfield) {
                     csvOpts.lonfield = opts.lonfield;
                 }
+
                 if (opts.delimiter) {
                     csvOpts.delimiter = opts.delimiter;
                 }
@@ -627,14 +695,17 @@ define([
                         console.log(err);
                         return;
                     }
+
                     console.log('csv parsed');
                     console.log(data);
+
                     // csv2geojson will not include the lat and long in the feature
                     data.features.map(function (feature) {
                         // add new property Long and Lat before layer is generated
                         feature.properties[csvOpts.lonfield] = feature.geometry.coordinates[0];
                         feature.properties[csvOpts.latfield] = feature.geometry.coordinates[1];
                     });
+
                     jsonLayer = makeGeoJsonLayer(data, opts);
                     def.resolve(jsonLayer);
                 });
@@ -654,7 +725,7 @@ define([
             var def = new Deferred();
 
             try {
-                // window.crypto.subtle.digest({ name: 'SHA-256' }, shpData).then(function (h) { 
+                // window.crypto.subtle.digest({ name: 'SHA-256' }, shpData).then(function (h) {
                 // var u8 = new Uint16Array(h); console.log(u8); });
                 shp.getShapefile(shpData).then(function (geojson) {
                     var jsonLayer;
@@ -664,7 +735,9 @@ define([
                     } catch (e) {
                         def.reject(e);
                     }
-                }, function (error) {
+                },
+
+                function (error) {
                     def.reject(error);
                 });
             } catch (e) {
@@ -681,7 +754,8 @@ define([
         * @returns {Promise} a promise resolving with a {FeatureLayer}
         */
         function buildGeoJson(jsonData) {
-            var def = new Deferred(), jsonLayer = null;
+            var def = new Deferred();
+            var jsonLayer = null;
 
             try {
                 jsonLayer = makeGeoJsonLayer(JSON.parse(jsonData));
@@ -705,6 +779,6 @@ define([
             buildGeoJson: buildGeoJson,
             enhanceFileFeatureLayer: enhanceFileFeatureLayer,
             createDatagridConfig: createDatagridConfig,
-            createSymbologyConfig: createSymbologyConfig
+            createSymbologyConfig: createSymbologyConfig,
         };
     });

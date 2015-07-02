@@ -103,7 +103,7 @@ define([],
                 * @param evt {Object} the event Object
                 * @param evt.allowed {boolean} true if wms query is allowed, false if wms query is turned off.
                 */
-                WMS_QUERY_CHANGE: 'filterManager/wms-query-change'
+                WMS_QUERY_CHANGE: 'filterManager/wms-query-change',
             },
 
             GUI: {
@@ -286,7 +286,7 @@ define([],
                 * @event GUI.UPDATE_COMPLETE
                 * @for GUI
                 */
-                UPDATE_COMPLETE: 'gui/update-complete'
+                UPDATE_COMPLETE: 'gui/update-complete',
             },
 
             FeatureHighlighter: {
@@ -356,7 +356,7 @@ define([],
                 * @event FeatureHighlighter.ZOOMLIGHT_HIDE [subscribed]
                 * @for FeatureHighlighter
                 */
-                ZOOMLIGHT_HIDE: 'highlighter/zoomlight-hide'
+                ZOOMLIGHT_HIDE: 'highlighter/zoomlight-hide',
             },
 
             Maptips: {
@@ -408,7 +408,7 @@ define([],
                 * the shape changes its size and the
                 * offset needs to be recalculated to keep the tooltip in relative center
                 */
-                REPOSITION_INTERACTIVE: 'maptips/repositionInteractive'
+                REPOSITION_INTERACTIVE: 'maptips/repositionInteractive',
             },
 
             LayerLoader: {
@@ -425,7 +425,7 @@ define([],
                 LAYER_LOADED: 'layerLoader/layer-loaded',
 
                 /**
-                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has 
+                * Indicates that a map layer has been added to the layer selector. This means the LayerLoader has
                 * added a layer to the map.
                 *
                 * @event LayerLoader.LAYER_ADDED
@@ -440,7 +440,7 @@ define([],
                 /**
                 * Indicates that a map layer has been removed to the layer selector. This means the LayerLoader
                 * has removed a layer from the map.
-                * When a layer errors, it's removed from the map, but it might still be in the layer selector in 
+                * When a layer errors, it's removed from the map, but it might still be in the layer selector in
                 * the error state.
                 *
                 * @event LayerLoader.LAYER_REMOVED
@@ -507,13 +507,13 @@ define([],
                 * @param event.error {Object} the error object
                 *
                 */
-                LAYER_ERROR: 'layerLoader/layer-error'
+                LAYER_ERROR: 'layerLoader/layer-error',
             },
 
             Map: {
-                // NOTE: Map events fall into two categories.  There are native RAMP events and others which 
+                // NOTE: Map events fall into two categories.  There are native RAMP events and others which
                 // republish events from the ESRI API.
-                // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events 
+                // Events which are native to RAMP are prefixed with rampMap/ while ESRI republished events
                 // should be prefixed with map/
 
                 /**
@@ -674,7 +674,7 @@ define([],
                 * @event RampMap.RESIZE
                 * @for RampMap
                 */
-                RESIZE: 'map/resize'
+                RESIZE: 'map/resize',
             },
 
             BasemapSelector: {
@@ -708,7 +708,7 @@ define([],
                 * @param {Object} evt the event object
                 * @param {String} evt.id the id of the basemap that is to be selected
                 */
-                TOGGLE: 'basemapSelector/toggle'
+                TOGGLE: 'basemapSelector/toggle',
             },
 
             Datagrid: {
@@ -775,7 +775,7 @@ define([],
                 *
                 * @for Datagrid
                 */
-                UPDATING: 'datagrid/updating'
+                UPDATING: 'datagrid/updating',
             },
 
             Navigation: {
@@ -808,7 +808,7 @@ define([],
                 * @for Navigation
                 * @event Navigation.FULL_EXTENT
                 */
-                FULL_EXTENT: 'navigation/full-extent'
+                FULL_EXTENT: 'navigation/full-extent',
             },
 
             BookmarkLink: {
@@ -828,7 +828,7 @@ define([],
                 * @param event {Object}
                 * @param event.link {String} The bookmark URL that was generated
                 */
-                BOOKMARK_GENERATED: 'bookmark/bookmark-generated'
+                BOOKMARK_GENERATED: 'bookmark/bookmark-generated',
             },
 
             AdvancedToolbar: {
@@ -838,7 +838,7 @@ define([],
                 * @for AdvancedToolbar
                 * @event advancedToolbar.ADVANCED_PANEL_CHANGED
                 */
-                ADVANCED_PANEL_CHANGED: 'advanced/advancedpanel-changed'
-            }
+                ADVANCED_PANEL_CHANGED: 'advanced/advancedpanel-changed',
+            },
         };
     });

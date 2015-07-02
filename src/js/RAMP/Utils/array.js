@@ -85,6 +85,7 @@ define(['dojo/_base/lang', 'utils/util'],
                         return i;
                     }
                 }
+
                 return -1;
             },
 
@@ -100,10 +101,10 @@ define(['dojo/_base/lang', 'utils/util'],
             * such element exists
             */
             binaryIndexOf: function (arr, compareFcn) {
-                var minIndex = 0,
-                    maxIndex = arr.length - 1,
-                    currentIndex,
-                    currentElement;
+                var minIndex = 0;
+                var maxIndex = arr.length - 1;
+                var currentIndex;
+                var currentElement;
 
                 while (minIndex <= maxIndex) {
                     currentIndex = (minIndex + maxIndex) / 2 | 0;
@@ -165,6 +166,6 @@ define(['dojo/_base/lang', 'utils/util'],
                 if (index !== -1) {
                     array.splice(index, 1);
                 }
-            }
+            },
         };
     });

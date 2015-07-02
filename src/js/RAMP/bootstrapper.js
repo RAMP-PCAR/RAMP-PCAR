@@ -60,7 +60,8 @@ require([
     'utils/util',
 
 /* Plugins */
-    'utils/prototype!', 'utils/functionMangler!', 'dojo/domReady!'],
+    'utils/prototype!', 'utils/functionMangler!', 'dojo/domReady!',
+],
 
     function (
     /* Dojo */
@@ -87,8 +88,8 @@ require([
         * @param {String} pluginName, the file name of the plugin to be loaded (should be in the plugins folder)
         */
         function loadPlugin(pluginName) {
-            var head = document.getElementsByTagName('head')[0],
-                script = document.createElement('script');
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = dojoConfig.fullPluginPath + pluginName;
             console.log('loading plugin: ' + script.src);
@@ -99,13 +100,13 @@ require([
             /* Start - RAMP Events, after map is loaded */
 
             function initScale() {
-                var map = RAMP.map,
-                    scaleDiv = domConstruct.create('div', {
+                var map = RAMP.map;
+                var scaleDiv = domConstruct.create('div', {
                         id: 'scaleDiv',
-                        class: 'esriScalebarLabel'
-                    }),
-                    currentScale,
-                    scaleLabelText;
+                        class: 'esriScalebarLabel',
+                    });
+                var currentScale;
+                var scaleLabelText;
 
                 $(scaleDiv).html('<span>' + i18n.t('map.scale') + '</span><br><span id="scaleLabel"><span/>');
                 currentScale = number.format(map.getScale());
@@ -158,7 +159,7 @@ require([
                 UtilMisc.subscribeAll(
                     [
                         EventManager.BasemapSelector.UI_COMPLETE,
-                        EventManager.FilterManager.UI_COMPLETE
+                        EventManager.FilterManager.UI_COMPLETE,
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
 
@@ -167,6 +168,7 @@ require([
 
                         DataLoaderGui.init();
                     });
+
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
@@ -210,9 +212,9 @@ require([
 
         //To hold values from RAMP service
 
-        var lang = $('html').attr('lang'),
-            configFile,
-            defJson;
+        var lang = $('html').attr('lang');
+        var configFile;
+        var defJson;
 
         if (lang !== 'en' && lang !== 'fr') {
             lang = 'en';
@@ -224,7 +226,7 @@ require([
         {
             lng: lang + '-CA',
             load: 'current',
-            fallbackLng: false
+            fallbackLng: false,
         });
 
         //loading config object from JSON file
@@ -232,7 +234,7 @@ require([
 
         // Request the JSON config file
         defJson = xhr(configFile, {
-            handleAs: 'json'
+            handleAs: 'json',
         });
 
         defJson.then(
@@ -245,16 +247,16 @@ require([
                     //get additional config stuff from the config service.  mash it into our primary object
 
                     // pull smallkeys from URL
-                    var siteURL = new Url(require.toUrl(document.location)),
-                        smallkeys = siteURL.queryObject.keys;
+                    var siteURL = new Url(require.toUrl(document.location));
+                    var smallkeys = siteURL.queryObject.keys;
 
                     if (!smallkeys || smallkeys === '') {
                         //no keys.  no point hitting the service.  jump to next step
                         configReady(fileConfig);
                     } else {
                         //TODO verify endpoint is correct
-                        var serviceUrl = RAMP.configServiceURL + 'docs/' + $('html').attr('lang') + '/' + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
+                        var serviceUrl = RAMP.configServiceURL + 'docs/' + $('html').attr('lang') + '/' + smallkeys;
+                        var defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 
@@ -277,16 +279,20 @@ require([
                                 //fragments are now in fileConfig.  carry on.
                                 configReady(fileConfig);
                             },
+
                             function (error) {
                                 console.log('An error occurred: ' + error);
                             }
+
                         );
                     }
                 }
             },
+
             function (error) {
                 console.log('An error occurred when retrieving the JSON Config: ' + error);
             }
+
         );
 
         /**
@@ -297,10 +303,10 @@ require([
         * @param {Object} configObject the configuration object
         */
         function configReady(configObject) {
-            var pluginConfig,
-                advancedToolbarToggle = $('li.map-toolbar-item #advanced-toggle').parent(),
-                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1,
-                annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
+            var pluginConfig;
+            var advancedToolbarToggle = $('li.map-toolbar-item #advanced-toggle').parent();
+            var brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
+            var annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
 
             console.log('Bootstrapper: config loaded');
 
@@ -309,16 +315,19 @@ require([
             GeoSearch.init();
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
+
             // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the
             // target server
             esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
+
             // really IE9???  (╯°□°）╯︵ ┻━┻
             if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
                 esriUrlUtils.addProxyRule({
                     proxyUrl: RAMP.config.exportProxyUrl,
-                    urlPrefix: RAMP.config.exportMapUrl
+                    urlPrefix: RAMP.config.exportMapUrl,
                 });
             }
+
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
             RAMP.flags.ie10client = annoyingWebBrowser;
 

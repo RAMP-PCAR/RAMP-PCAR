@@ -23,14 +23,16 @@
 */
 
 define([
+
 /* RAMP */
     'ramp/eventManager',
 
 /* Dojo */
-    'esri/request', 'dojo/promise/all', 'dojo/topic'
+    'esri/request', 'dojo/promise/all', 'dojo/topic',
 ],
 
     function (
+
     /* RAMP */
     EventManager,
 
@@ -38,8 +40,8 @@ define([
     EsriRequest, all, topic
     ) {
         'use strict';
-        var wmsClickQueue = [], // the queue of WMS layers registered to trigger on click
-            esriMap; // a local reference to the map object (for pull extent and dimensions)
+        var wmsClickQueue = []; // the queue of WMS layers registered to trigger on click
+        var esriMap; // a local reference to the map object (for pull extent and dimensions)
 
         return {
             /**
@@ -55,8 +57,8 @@ define([
 
                 esriMap = map;
                 topic.subscribe(EventManager.Map.CLICK, function (evt) {
-                    var visibleLayers = [],
-                        rqPromises = [];
+                    var visibleLayers = [];
+                    var rqPromises = [];
 
                     // construct modal header on the first call to prevent potential race condition when locale
                     // resources didn't have time to load just yet
@@ -70,14 +72,17 @@ define([
                     }
 
                     console.log(RAMP.layerRegistry);
+
                     // filter only currently visible layers
                     visibleLayers = wmsClickQueue.filter(function (wmsLayer) {
                         console.log(wmsLayer);
                         return wmsLayer.visible &&
                             wmsLayer.id in RAMP.layerRegistry &&
                             RAMP.layerRegistry[wmsLayer.id] &&
+
                             // can't use loadOk directly because nothing sets it to true
                             wmsLayer.ramp.loadOk !== false &&
+
                             // check if wmsQuery toggle is set to true
                             wmsLayer.ramp.state.queryEnabled === true;
                     });
@@ -93,13 +98,17 @@ define([
                         content: null,
                         origin: 'wmsFeatureInfo',
                         target: $('#map-div'),
-                        guid: 'wms-guid'
+                        guid: 'wms-guid',
                     });
 
                     // create an EsriRequest for each WMS layer (these follow the promise API)
                     rqPromises = visibleLayers.map(function (wmsLayer) {
                         try {
-                            var req = {}, wkid, mapSR, srList;
+                            var req = {};
+                            var wkid;
+                            var mapSR;
+                            var srList;
+
                             mapSR = wmsLayer.getMap().spatialReference;
                             srList = wmsLayer.spatialReferences;
 
@@ -108,11 +117,13 @@ define([
                             } else if (mapSR.wkid) {
                                 wkid = mapSR.wkid;
                             }
+
                             if (wmsLayer.version === '1.3' || wmsLayer.version === '1.3.0') {
                                 req = { CRS: 'EPSG:' + wkid, I: evt.screenPoint.x, J: evt.screenPoint.y };
                             } else {
                                 req = { SRS: 'EPSG:' + wkid, X: evt.screenPoint.x, Y: evt.screenPoint.y };
                             }
+
                             $.extend(req, {
                                 SERVICE: 'WMS',
                                 REQUEST: 'GetFeatureInfo',
@@ -123,8 +134,9 @@ define([
                                 HEIGHT: esriMap.height,
                                 QUERY_LAYERS: wmsLayer.ramp.config.layerName,
                                 LAYERS: wmsLayer.ramp.config.layerName,
-                                INFO_FORMAT: wmsLayer.ramp.config.featureInfo.mimeType
+                                INFO_FORMAT: wmsLayer.ramp.config.featureInfo.mimeType,
                             });
+
                             //console.log('BBOX: ' + esriMap.extent.xmin + ',' + esriMap.extent.ymin + ',' +
                             //esriMap.extent.xmax + ',' + esriMap.extent.ymax);
                             //console.log('Clicked at (map units): ' + evt.mapPoint.x + ',' + evt.mapPoint.y);
@@ -133,7 +145,7 @@ define([
                             return new EsriRequest({
                                 url: wmsLayer.url.split('?')[0],
                                 content: req,
-                                handleAs: 'text'
+                                handleAs: 'text',
                             });
                         } catch (exception) {
                             console.log('WMS Error: ' + exception);
@@ -144,7 +156,7 @@ define([
                         content: '',
                         origin: 'wmsFeatureInfo',
                         update: true,
-                        guid: 'wms-guid'
+                        guid: 'wms-guid',
                     });
 
                     // wait for all success or any failure in the requests
@@ -157,15 +169,17 @@ define([
                                 '</h5>' + RAMP.plugins.featureInfoParser[visibleLayers[index].ramp.config.
                                           featureInfo.parser](response, visibleLayers[index].id);
                             return res;
-                        }).join(''), modalBox =
-                        '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">' +
-                        modalHeader + '<div class="modal-body">' + strings + '</div></section>';
+                        }).join('');
+
+                        var modalBox =
+                            '<section id="wms-results-large" class="mfp-hide modal-dialog modal-content overlay-def">' +
+                            modalHeader + '<div class="modal-body">' + strings + '</div></section>';
 
                         $('.sub-panel').on('click', '#wms-expand', function () {
                             $(document).trigger('open.wb-lbx', [{ src: '#wms-results-large', type: 'inline' }]);
                             $('#wms-results-large').css({
                                 width: Math.round(window.innerWidth * 0.9) + 'px',
-                                'max-height': Math.round(window.innerHeight * 0.75) + 'px'
+                                'max-height': Math.round(window.innerHeight * 0.75) + 'px',
                             });
                         });
 
@@ -175,9 +189,11 @@ define([
                                         '</a>' + strings,
                             origin: 'wmsFeatureInfo',
                             update: true,
-                            guid: 'wms-guid'
+                            guid: 'wms-guid',
                         });
-                    }, function (errors) {
+                    },
+
+                    function (errors) {
                         console.log('wms errors');
                         console.log(errors);
 
@@ -185,7 +201,7 @@ define([
                             content: String.format('<em>{0}</em>', i18n.t('mapClickHandler.getFiFailed')),
                             origin: 'wmsFeatureInfo',
                             update: true,
-                            guid: 'wms-guid'
+                            guid: 'wms-guid',
                         });
 
                         console.log('subpanel open done');
@@ -203,6 +219,6 @@ define([
             */
             registerWMSClick: function (wmsData) {
                 wmsClickQueue.push(wmsData);
-            }
+            },
         };
     });

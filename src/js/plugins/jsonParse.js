@@ -3,7 +3,8 @@
 console.log('loading jsonParse');
 RAMP.plugins.featureInfoParser.jsonParse = function (data) {
     'use strict';
-    var summary, txArea;
+    var summary;
+    var txArea;
 
     if (typeof data === 'string') {
         data = JSON.parse(data);

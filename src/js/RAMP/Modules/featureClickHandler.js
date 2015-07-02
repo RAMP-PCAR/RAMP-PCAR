@@ -26,6 +26,7 @@
 */
 
 define([
+
 /* RAMP */
     'ramp/graphicExtension', 'ramp/eventManager',
 
@@ -33,9 +34,11 @@ define([
     'dojo/topic', 'dojo/dom-construct',
 
 /* Utils */
-    'utils/util'],
+    'utils/util',
+],
 
     function (
+
     /* RAMP */
     GraphicExtension, EventManager,
 
@@ -56,9 +59,9 @@ define([
             * @param  {Object} evt.graphic ESRI graphic object
             */
             onFeatureSelect: function (evt) {
-                var selectedGraphic = evt.graphic,
-                    fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
-               
+                var selectedGraphic = evt.graphic;
+                var fData = GraphicExtension.getFDataForGraphic(selectedGraphic);
+
                 if (fData) {
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                         panelName: i18n.t('datagrid.details'),
@@ -78,7 +81,7 @@ define([
                                 var scroll = evt.scroll;
                                 topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
                                     fData: fData,
-                                    scroll: scroll
+                                    scroll: scroll,
                                 });
                             });
 
@@ -86,23 +89,26 @@ define([
                             RAMP.state.hilite.click.objId = GraphicExtension.getFDataOid(fData);
                             RAMP.state.hilite.click.layerId = fData.parent.layerId;
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                                graphic: selectedGraphic
+                                graphic: selectedGraphic,
                             });
                         },
+
                         doOnHide: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
                         },
+
                         doOnDestroy: function () {
                             selectedGraphic = null;
 
                             //topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
-                        }
+                        },
                     });
-                } 
+                }
+
                 // if there is no fData, the attribute data has not downloaded yet.  given that we have a warning on
-                // a hover, the user will see that message before they can initiate a click. by not supporting a 
+                // a hover, the user will see that message before they can initiate a click. by not supporting a
                 // separate message on no-attrib click, we avoid having to worry about missing datagrid rows (there
-                // will be no rows until the attribs have downloaded), nor worry about detail panels (that have no 
+                // will be no rows until the attribs have downloaded), nor worry about detail panels (that have no
                 // data). so, we do nothing. hurrah!
             },
 
@@ -115,12 +121,12 @@ define([
             */
             onFeatureDeselect: function () {
                 topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                    origin: 'rampPopup,datagrid'
+                    origin: 'rampPopup,datagrid',
                 });
             },
 
             /**
-            * This function is called whenever the user hovers over a feature on the map when another feature already 
+            * This function is called whenever the user hovers over a feature on the map when another feature already
             * has been selected.
             *
             * @method onFeatureMouseOver
@@ -142,6 +148,6 @@ define([
             onFeatureMouseOut: function (evt) {
                 //topic.publish(EventManager.Maptips.HIDE, {});
                 topic.publish(EventManager.FeatureHighlighter.HOVERLIGHT_HIDE, evt);
-            }
+            },
         };
     });

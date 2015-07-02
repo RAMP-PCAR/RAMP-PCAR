@@ -37,7 +37,7 @@ define([
     'dojo/text!./templates/bricks_template.json',
 
     /* Util */
-    'utils/util', 'utils/tmplHelper', 'utils/array', 'utils/dictionary'
+    'utils/util', 'utils/tmplHelper', 'utils/array', 'utils/dictionary',
 ],
     function (lang,
 
@@ -46,24 +46,24 @@ define([
         UtilMisc, TmplHelper, UtilArray, UtilDict) {
         'use strict';
 
-        var Brick,
+        var Brick;
 
-            ButtonBrick,
-            CheckboxBrick,
-            CheckboxfsBrick,
-            ToggleBrick,
-            OkCancelButtonBrick,
+        var ButtonBrick;
+        var CheckboxBrick;
+        var CheckboxfsBrick;
+        var ToggleBrick;
+        var OkCancelButtonBrick;
 
-            MultiBrick,
+        var MultiBrick;
 
-            ChoiceBrick,
+        var ChoiceBrick;
 
-            DropDownBrick,
-            ColorPickerBrick,
-            SimpleInputBrick,
-            FileInputBrick,
+        var DropDownBrick;
+        var ColorPickerBrick;
+        var SimpleInputBrick;
+        var FileInputBrick;
 
-            templates = JSON.parse(TmplHelper.stringifyTemplate(bricksTemplate));
+        var templates = JSON.parse(TmplHelper.stringifyTemplate(bricksTemplate));
 
         /**
          * Generates a template node based on the name of the template and the data to be passed to the template
@@ -244,7 +244,7 @@ define([
                 * @event Bricks.Brick.event.CHANGE
                 * @param data {Object} anything, usually result of calling getData() on the Brick
                 */
-                CHANGE: 'brick/change'
+                CHANGE: 'brick/change',
             },
 
             /**
@@ -262,7 +262,7 @@ define([
             state: {
                 SUCCESS: 'brick/success',
                 ERROR: 'brick/error',
-                DEFAULT: 'brick/default'
+                DEFAULT: 'brick/default',
             },
 
             /**
@@ -295,13 +295,13 @@ define([
                         freezeStates: [],
                         baseTemplate: 'default_base_template',
                         noticeTemplate: 'default_brick_notice',
-                        guid: UtilMisc.guid()
+                        guid: UtilMisc.guid(),
                     },
                     config,
                     {
                         id: id,
                         _isFrozen: false,
-                        _listeners: {}
+                        _listeners: {},
                     }
                 );
 
@@ -309,7 +309,7 @@ define([
 
                 lang.mixin(this,
                     {
-                        noticeNode: this.node.find('.brick-notice-placeholder')
+                        noticeNode: this.node.find('.brick-notice-placeholder'),
                     }
                 );
 
@@ -340,13 +340,14 @@ define([
              * @chainable
              */
             notify: function (eventName, data) {
-                var that = this;
+                var _this = this;
 
                 if (!this._listeners[eventName]) {
                     this._listeners[eventName] = [];
                 }
+
                 this._listeners[eventName].forEach(function (listener) {
-                    listener.call(that, data);
+                    listener.call(_this, data);
                 });
 
                 return this;
@@ -365,6 +366,7 @@ define([
                 if (!this._listeners[eventName]) {
                     this._listeners[eventName] = [];
                 }
+
                 this._listeners[eventName].push(listener);
 
                 return this;
@@ -489,10 +491,10 @@ define([
             disable: function (disable, force) {
                 if (!this._isFrozen || force) {
                     if (disable) {
-                        this.node
                         // make the buttons appear and act as if they are disabled but still able to receive focus
                         // it's needed so keyboard focus wouldn't fly away to the beginning of the page if the
                         // button is suddenly disabled
+                        this.node
                             .find('button')
                             .addClass('disabled')
                             .attr('aria-disabled', true)
@@ -511,7 +513,7 @@ define([
                 }
 
                 return this;
-            }
+            },
         });
 
         /**
@@ -605,13 +607,13 @@ define([
              * @chainable
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
                         template: 'default_multi_brick_template',
                         containerClass: 'multi-brick-container',
-                        content: []
+                        content: [],
                     }
                 );
 
@@ -620,7 +622,7 @@ define([
                 lang.mixin(this,
                     {
                         multiContainer: this.node.find('.multi-container'),
-                        contentBricks: {}
+                        contentBricks: {},
                     }
                 );
 
@@ -628,9 +630,9 @@ define([
                 this.content.forEach(function (contentItem) {
                     var contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
-                    that.contentBricks[contentBrick.id] = contentBrick;
+                    _this.contentBricks[contentBrick.id] = contentBrick;
 
-                    if (that.header) {
+                    if (_this.header) {
                         contentBrick.node = $(
                             contentBrick.node
                                 .prop('outerHTML').replace('<h3', '<h4').replace('</h3>', '</h4>')
@@ -638,7 +640,7 @@ define([
                         ;
                     }
 
-                    that.multiContainer.append(contentBrick.node);
+                    _this.multiContainer.append(contentBrick.node);
                 });
             },
 
@@ -726,7 +728,7 @@ define([
                 });
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -774,7 +776,7 @@ define([
                     * @event Bricks.ButtonBrick.event.CLICK
                     * @param data {Object} anything, usually result of calling getData() on the Brick
                     */
-                    CLICK: 'buttonBrick/click'
+                    CLICK: 'buttonBrick/click',
                 }
             ),
 
@@ -840,21 +842,21 @@ define([
              * @return {ButtonBrick}
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
                         template: 'default_button_brick_template',
                         containerClass: 'button-brick-container',
                         buttonClass: 'btn-primary',
-                        label: 'Ok'
+                        label: 'Ok',
                     }
                 );
 
                 Brick.initialize.call(this, id, config);
 
                 this.node.on('click', 'button:not(.disabled)', function () {
-                    that.notify(that.event.CLICK, null);
+                    _this.notify(_this.event.CLICK, null);
                 });
             },
 
@@ -882,7 +884,7 @@ define([
                 var payload = {};
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         // TODO: create another checkboxBrick that uses Formstone Checkbox but regular one, not toggle.
@@ -999,7 +1001,7 @@ define([
              * @return {CheckboxBrick}
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
@@ -1009,7 +1011,7 @@ define([
                         checked: false,
                         onLabel: 'on',
                         offLabel: 'off',
-                        value: 'on'
+                        value: 'on',
                     }
                 );
 
@@ -1018,13 +1020,13 @@ define([
                 lang.mixin(this,
                     {
                         userChecked: false,
-                        inputNode: this.node.find('input[type="checkbox"]#' + this.guid)
+                        inputNode: this.node.find('input[type="checkbox"]#' + this.guid),
                     }
                 );
 
                 this.inputNode.on('change', function () {
-                    var value = that.inputNode.is(':checked');
-                    that.setChecked(value, true);
+                    var value = _this.inputNode.is(':checked');
+                    _this.setChecked(value, true);
                 });
             },
 
@@ -1117,11 +1119,11 @@ define([
              */
             getData: function (wrap) {
                 var payload = {
-                    checked: this.checked
+                    checked: this.checked,
                 };
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -1186,12 +1188,12 @@ define([
              * @return {CheckboxfsBrick}
              */
             initialize: function (id, config) {
-                //var that = this;
+                //var _this = this;
                 var newConfig = {};
 
                 lang.mixin(newConfig,
                     {
-                        containerClass: 'checkbox-brick-container formstone-brick'
+                        containerClass: 'checkbox-brick-container formstone-brick',
                     },
                     config
                 );
@@ -1210,7 +1212,7 @@ define([
                         )
                     ;
                 }*/
-            }
+            },
         });
 
         /**
@@ -1301,13 +1303,13 @@ define([
              * @return {ToggleBrick}
              */
             initialize: function (id, config) {
-                //var that = this;
+                //var _this = this;
                 var newConfig = {};
 
                 lang.mixin(newConfig,
                     {
                         template: 'default_toggle_brick_template',
-                        containerClass: 'toggle-brick-container'
+                        containerClass: 'toggle-brick-container',
                     },
                     config
                 );
@@ -1319,8 +1321,8 @@ define([
                     toggle: true,
                     labels: {
                         on: this.onLabel,
-                        off: this.offLabel
-                    }
+                        off: this.offLabel,
+                    },
                 });
 
                 // move the on/off labels out of the toggle if there is a brick header
@@ -1332,7 +1334,7 @@ define([
                         )
                     ;
                 }
-            }
+            },
         });
 
         /**
@@ -1392,7 +1394,7 @@ define([
                     * @event Bricks.OkCancelButtonBrick.event.CANCEL_CLICK
                     * @param data {Object} anything, usually result of calling getData() on the Brick
                     */
-                    CANCEL_CLICK: 'okCancelButtonBrick/cancelClick'
+                    CANCEL_CLICK: 'okCancelButtonBrick/cancelClick',
                 }
             ),
 
@@ -1480,8 +1482,8 @@ define([
              * @return {OkCancelButtonBrick}
              */
             initialize: function (id, config) {
-                var that = this,
-                    newConfig;
+                var _this = this;
+                var newConfig;
 
                 // generating a MultiBrick config with two buttons
                 newConfig =
@@ -1497,8 +1499,8 @@ define([
                                     label: config.okLabel,
                                     containerClass: 'ok-button-brick-container',
                                     buttonClass: 'ok-btn ' + (config.okButtonClass || 'btn-sm btn-primary'),
-                                    freezeStates: config.okFreezeStates || []
-                                }
+                                    freezeStates: config.okFreezeStates || [],
+                                },
                             },
                             {
                                 id: this.cancelButtonId,
@@ -1507,11 +1509,11 @@ define([
                                     label: config.cancelLabel,
                                     containerClass: 'cancel-button-brick-container',
                                     buttonClass: 'cancel-btn ' + (config.cancelButtonClass || 'btn-sm button-none'),
-                                    freezeStates: config.cancelFreezeStates || []
-                                }
-                            }
+                                    freezeStates: config.cancelFreezeStates || [],
+                                },
+                            },
                         ],
-                        required: config.required
+                        required: config.required,
                     };
 
                 if (config.reverseOrder) {
@@ -1523,21 +1525,21 @@ define([
                 lang.mixin(this,
                     {
                         okButtonBrick: this.contentBricks[this.okButtonId],
-                        cancelButtonBrick: this.contentBricks[this.cancelButtonId]
+                        cancelButtonBrick: this.contentBricks[this.cancelButtonId],
                     }
                 );
 
                 // setting event listeners on individual ButtonBricks, not button nodes directly
                 this.okButtonBrick.on(this.event.CLICK, function () {
-                    that.notify(that.event.OK_CLICK, null);
-                    that.notify(that.event.CLICK, null);
+                    _this.notify(_this.event.OK_CLICK, null);
+                    _this.notify(_this.event.CLICK, null);
                 });
 
                 this.cancelButtonBrick.on(this.event.CLICK, function () {
-                    that.notify(that.event.CANCEL_CLICK, null);
-                    that.notify(that.event.CLICK, null);
+                    _this.notify(_this.event.CANCEL_CLICK, null);
+                    _this.notify(_this.event.CLICK, null);
                 });
-            }
+            },
         });
 
         /**
@@ -1654,12 +1656,12 @@ define([
              * @return {ChoiceBrick}
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
                         template: 'default_choice_brick_template',
-                        containerClass: 'choice-brick-container'
+                        containerClass: 'choice-brick-container',
                     }
                 );
 
@@ -1668,7 +1670,7 @@ define([
                 lang.mixin(this,
                     {
                         selectedChoice: '',
-                        userSelected: false
+                        userSelected: false,
                     }
                 );
 
@@ -1676,7 +1678,7 @@ define([
 
                 this.node.on('click', '.btn-choice:not(.button-pressed)', function (event) {
                     var choiceKey = $(event.currentTarget).data('key');
-                    that.setChoice(choiceKey, true);
+                    _this.setChoice(choiceKey, true);
                 });
 
                 if (this.preselect) {
@@ -1779,11 +1781,11 @@ define([
             getData: function (wrap) {
                 var payload = {
                     selectedChoice: this.selectedChoice,
-                    userSelected: this.userSelected
+                    userSelected: this.userSelected,
                 };
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -1891,14 +1893,14 @@ define([
              *
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
                         template: 'default_simpleinput_brick_template',
                         containerClass: 'simpleinput-brick-container',
                         guid: UtilMisc.guid(),
-                        label: config.header
+                        label: config.header,
                     }
                 );
 
@@ -1909,14 +1911,14 @@ define([
                         inputValue: '',
                         userEntered: false,
                         formGroup: this.node.find('.form-group'),
-                        inputNode: this.node.find('input[type="text"]#' + this.guid)
+                        inputNode: this.node.find('input[type="text"]#' + this.guid),
                     }
                 );
 
                 // setting a listener on the input field
                 this.inputNode.on('input', function (event) {
                     var value = $(event.target).val();
-                    that.setInputValue(value, true);
+                    _this.setInputValue(value, true);
                 });
             },
 
@@ -2040,11 +2042,11 @@ define([
             getData: function (wrap) {
                 var payload = {
                     inputValue: this.inputValue,
-                    userEntered: this.userEntered
+                    userEntered: this.userEntered,
                 };
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -2148,14 +2150,14 @@ define([
              *
              */
             initialize: function (id, config) {
-                var that = this;
+                var _this = this;
 
                 lang.mixin(this,
                     {
                         template: 'default_dropdown_brick_template',
                         containerClass: 'dropdown-brick-container',
                         guid: UtilMisc.guid(),
-                        label: config.header
+                        label: config.header,
                     }
                 );
 
@@ -2166,16 +2168,16 @@ define([
                         dropDownValue: '',
                         dropDownText: '',
                         userSelected: false,
-                        selectNode: this.node.find('select#' + this.guid)
+                        selectNode: this.node.find('select#' + this.guid),
                     }
                 );
 
                 // setting event listener on <select> node; 'change' is the most appropriate
                 // https://developer.mozilla.org/en-US/docs/Web/Events/change
                 this.selectNode.on('change', function () {
-                    var option = that.selectNode.find('option:selected');
+                    var option = _this.selectNode.find('option:selected');
 
-                    that.setDropDownValue(option, true);
+                    _this.setDropDownValue(option, true);
                 });
 
                 if (this.options) {
@@ -2213,8 +2215,8 @@ define([
              * @chainable
              */
             setDropDownValue: function (option, userSelected) {
-                var value = option.val(),
-                    text = option.find('option:selected').text();
+                var value = option.val();
+                var text = option.find('option:selected').text();
 
                 this.userSelected = userSelected ? true : false;
                 this.dropDownValue = value;
@@ -2323,11 +2325,11 @@ define([
                 var payload = {
                     dropDownValue: this.dropDownValue,
                     dropDownText: this.dropDownText,
-                    userSelected: this.userSelected
+                    userSelected: this.userSelected,
                 };
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -2427,8 +2429,8 @@ define([
              *
              */
             initialize: function (id, config) {
-                var that = this,
-                    newConfig = {};
+                var _this = this;
+                var newConfig = {};
 
                 // mixin defaults with the given config
                 lang.mixin(newConfig,
@@ -2438,7 +2440,7 @@ define([
                         guid: UtilMisc.guid(),
                         label: config.header,
 
-                        pickerPosition: 'top'
+                        pickerPosition: 'top',
                     },
                     config
                 );
@@ -2448,7 +2450,7 @@ define([
                 lang.mixin(this,
                     {
                         picker: null,
-                        pickerSwatch: this.node.find('#' + this.guid + 'pickerSwatch')
+                        pickerSwatch: this.node.find('#' + this.guid + 'pickerSwatch'),
                     }
                 );
 
@@ -2457,15 +2459,15 @@ define([
                     pickerPosition: 'top',
                     styleElement: this.pickerSwatch[0], //this.guid + 'pickerSwatch',
                     onImmediateChange: function () {
-                        that.notify(that.event.CHANGE, that.getData());
-                    }
+                        _this.notify(_this.event.CHANGE, _this.getData());
+                    },
                 });
 
                 // generate random colour
                 this.picker.fromString((new RColor()).get(true).slice(1));
 
                 this.pickerSwatch.on('click', function () {
-                    that.picker.showPicker();
+                    _this.picker.showPicker();
                 });
             },
 
@@ -2503,12 +2505,15 @@ define([
                 var payload = {
                     hex: this.picker.toString(),
                     rgb: this.picker.rgb,
-                    rgb_: this.picker.rgb.map(function (c) { return Math.round(c * 255); }), // also return a proper rgb
-                    hsv: this.picker.hsv
+                    rgb_: this.picker.rgb.map(function (c) {
+                        return Math.round(c * 255);
+                    }), // also return a proper rgb
+
+                    hsv: this.picker.hsv,
                 };
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         /**
@@ -2622,8 +2627,8 @@ define([
              *
              */
             initialize: function (id, config) {
-                var that = this,
-                    newConfig = {};
+                var _this = this;
+                var newConfig = {};
 
                 // mixin defaults with the given config
                 lang.mixin(newConfig,
@@ -2631,7 +2636,7 @@ define([
                         template: 'default_fileinput_brick_template',
                         containerClass: 'fileinput-brick-container',
                         guid: UtilMisc.guid(),
-                        label: config.header
+                        label: config.header,
                     },
                     config
                 );
@@ -2644,7 +2649,7 @@ define([
                         userSelected: false,
                         browseFilesContainer: this.node.find('.browse-files'),
                         fileNode: this.node.find('input[type="file"]#' + this.guid + 'realBrowse'),
-                        filePseudoNode: this.node.find('#' + this.guid + 'pseudoBrowse')
+                        filePseudoNode: this.node.find('#' + this.guid + 'pseudoBrowse'),
                     }
                 );
 
@@ -2654,7 +2659,7 @@ define([
                 this.fileNode.on('change', function (event) {
                     var file = event.target.files[0];
 
-                    that.setFileValue(file, true);
+                    _this.setFileValue(file, true);
                 });
             },
 
@@ -2789,14 +2794,15 @@ define([
                 lang.mixin(payload,
                     {
                         fileValue: this.fileValue,
+
                         // derive the file name
                         fileName: this.fileValue ? this.fileValue.name : this.inputValue.split('/').pop(),
-                        userSelected: this.userSelected
+                        userSelected: this.userSelected,
                     }
                 );
 
                 return Brick.getData.call(this, payload, wrap);
-            }
+            },
         });
 
         return {
@@ -2911,6 +2917,6 @@ define([
              * @static
              * @type FileInputBrick
              */
-            FileInputBrick: FileInputBrick
+            FileInputBrick: FileInputBrick,
         };
     });

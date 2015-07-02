@@ -29,6 +29,7 @@
 */
 
 define([
+
 /* RAMP */
         'ramp/eventManager',
 
@@ -39,9 +40,11 @@ define([
         'dojo/text!./templates/filter_wms_meta_Template.json',
 
 /* Util */
-        'utils/popupManager', 'utils/tmplHelper', 'utils/util'],
+        'utils/popupManager', 'utils/tmplHelper', 'utils/util',
+],
 
     function (
+
     /* RAMP */
     EventManager,
 
@@ -75,28 +78,30 @@ define([
                                 d.resolve();
                             }
                         },
+
                         {
                             closeHandler: function (d) {
                                 d.resolve();
                             },
+
                             handleSelector: '.metadata-button',
                             openOnly: true,
-                            activeClass: 'button-pressed'
+                            activeClass: 'button-pressed',
                         }
                     );
         }
 
         // Called by the metadataPopup
         function metadataClickHandler(target) {
-            var button = $(target),
-                node = button.parents('.filter-row-container');
+            var button = $(target);
+            var node = button.parents('.filter-row-container');
 
             if (!node.hasClass('selected-row')) {
                 //var guid = $(this).data('guid') || $(this).data('guid', UtilMisc.guid()).data('guid');
-                var id = button.data('layer-id'),
-                    layer = RAMP.layerRegistry[id],
-                    layerConfig = layer ? layer.ramp.config : null,
-                    metadataUrl;
+                var id = button.data('layer-id');
+                var layer = RAMP.layerRegistry[id];
+                var layerConfig = layer ? layer.ramp.config : null;
+                var metadataUrl;
 
                 topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                     panelName: i18n.t('filterManager.metadata'),
@@ -108,12 +113,14 @@ define([
                     doOnOpen: function () {
                         node.addClass('selected-row');
                     },
+
                     doOnHide: function () {
                         if (metadataPopup.isOpen(null, 'any')) {
                             metadataPopup.close();
                         }
+
                         node.removeClass('selected-row');
-                    }
+                    },
                 });
 
                 //only wms layers have this value
@@ -128,7 +135,7 @@ define([
                             {
                                 legendUrl: layerConfig.legend.imageUrl,
                                 getCapabilitiesUrl: layerConfig.url + '&request=GetCapabilities',
-                                serviceEndPointUrl: layerConfig.url
+                                serviceEndPointUrl: layerConfig.url,
                             }
                         );
 
@@ -136,7 +143,7 @@ define([
                             content: $(wmsmeta),
                             origin: 'metadataHandler',
                             update: true,
-                            guid: id
+                            guid: id,
                         });
                     } else {
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -145,14 +152,14 @@ define([
                                 '" tagget="_blank">' + layerConfig.url + '</a>',
                             origin: 'metadataHandler',
                             update: true,
-                            guid: id
+                            guid: id,
                         });
                     }
                 } else {
                     //for feature layer
                     // metadataUrl =
                     //String.format(
-                    //'http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&' + 
+                    //'http://intranet.ecdmp-dev.cmc.ec.gc.ca/geonetwork/srv/eng/csw?service=CSW&' +
                     //'version=2.0.2&request=GetRecordById&outputSchema=csw:IsoRecord&id={0}', guid);
                     var metadataError = function () {
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -162,11 +169,12 @@ define([
                                 layerConfig.url + '</a></p>',
                             origin: 'metadataHandler',
                             update: true,
-                            guid: id
+                            guid: id,
                         });
-                    },
+                    };
+
                     // if URL is available but not published yet
-                    metadataAvailableError = function () {
+                    var metadataAvailableError = function () {
                         topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
                             content: '<p>' + i18n.t('filterManager.metadataNotPublished') +
                                 '</p><h5>' + i18n.t('filterManager.serviceEndPointLabel') +
@@ -174,7 +182,7 @@ define([
                                 layerConfig.url + '</a></p>',
                             origin: 'metadataHandler',
                             update: true,
-                            guid: id
+                            guid: id,
                         });
                     };
 
@@ -201,7 +209,7 @@ define([
                                             layerConfig.url + '</a></p>'),
                                         origin: 'metadataHandler',
                                         update: true,
-                                        guid: id
+                                        guid: id,
                                     });
                                 }
                             }, null, params);
@@ -215,6 +223,6 @@ define([
         return {
             init: function () {
                 setupPopup();
-            }
+            },
         };
     });

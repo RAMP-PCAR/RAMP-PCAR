@@ -38,6 +38,6 @@ define([],
                 }
 
                 return findFcn;
-            }
+            },
         };
     });

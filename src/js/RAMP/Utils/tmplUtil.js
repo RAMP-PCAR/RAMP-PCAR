@@ -30,13 +30,16 @@ define(['ramp/globalStorage'],
             * @return {String} imageUrl Url to the features symbology image
             */
             getGraphicIcon: function (fData, layerConfig) {
-                var i, symbolConfig = layerConfig.symbology, img = '';
+                var i;
+                var symbolConfig = layerConfig.symbology;
+                var img = '';
 
                 switch (symbolConfig.type) {
                     case 'simple':
                         return symbolConfig.imageUrl;
 
                     case 'uniqueValue':
+
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
                         var graphicKey = fData.attributes[symbolConfig.field1];
 
@@ -69,7 +72,9 @@ define(['ramp/globalStorage'],
 
                     case 'classBreaks':
 
-                        var gVal, lower, upper;
+                        var gVal;
+                        var lower;
+                        var upper;
                         gVal = fData.attributes[symbolConfig.field];
 
                         //find where the value exists in the range
@@ -102,7 +107,7 @@ define(['ramp/globalStorage'],
                         return img;
 
                     default:
-                        return symbolConfig.icons['default'].imageUrl;
+                        return symbolConfig.icons.default.imageUrl;
                 }
             },
 
@@ -151,14 +156,15 @@ define(['ramp/globalStorage'],
             * @param {Object} layerConfig config object for the layer the field belongs to
             */
             getAttributeLabel: function (fieldName, layerConfig) {
-                var alias,
-                    result = fieldName;
+                var alias;
+                var result = fieldName;
                 if (layerConfig.aliasMap) {
                     alias = layerConfig.aliasMap[fieldName];
                     if (alias) {
                         result = alias;
                     }
                 }
+
                 return result;
             },
 
@@ -168,15 +174,15 @@ define(['ramp/globalStorage'],
             * @param o
             */
             generateVisibilityLegend: function (o) {
-                var attr = '',
-                    visibilityLegendLabel = {
+                var attr = '';
+                var visibilityLegendLabel = {
                         for: 'filterGroup_' + o.data[o.idx].id,
                         attr: attr,
                         value: o.data[o.idx].id,
                         checked: 'checked',
                         label: o.data[o.idx].layerConfig.displayName,
                         class: 'eye checked',
-                        layerId: o.data[o.idx].id
+                        layerId: o.data[o.idx].id,
                     };
                 return visibilityLegendLabel;
             },
@@ -208,6 +214,7 @@ define(['ramp/globalStorage'],
                         return $1 ? $0 : '<a href="mailto:' + $0 + '">' + $0 + '</a>';
                     });
                 }
+
                 return content;
             },
 
@@ -218,9 +225,9 @@ define(['ramp/globalStorage'],
             generateBoundingBoxLegend: function (o) {
                 // adding flag for the generated o object
                 // o.disabled will indicate the bounding checkbox is to be disabled.
-                var checkboxDisabled = false,
-                    attr = '',
-                    boundingLegendLabel;
+                var checkboxDisabled = false;
+                var attr = '';
+                var boundingLegendLabel;
 
                 // determine if given layer is static or WMS
                 checkboxDisabled = Boolean(o.data[o.idx].ramp.type === GlobalStorage.layerType.Static ||
@@ -234,7 +241,7 @@ define(['ramp/globalStorage'],
                     label: o.data[o.idx].layerConfig.displayName,
                     class: 'box checked',
                     disabled: checkboxDisabled,
-                    layerId: o.data[o.idx].id
+                    layerId: o.data[o.idx].id,
                 };
 
                 return boundingLegendLabel;
@@ -251,7 +258,7 @@ define(['ramp/globalStorage'],
                     boundingLegendLabel = {
                         str: o.str,
                         layerId: o.data[o.idx].id,
-                        settings: o.data[o.idx].layerConfig.settings
+                        settings: o.data[o.idx].layerConfig.settings,
                     };
 
                 return boundingLegendLabel;
@@ -267,7 +274,8 @@ define(['ramp/globalStorage'],
                 // will take a symbol list that has 1 or more entries.  will return first 3.  if fewer than 3, will
                 // duplicate values
                 function pick3(symbolList) {
-                    var num = symbolList.length, indexes;
+                    var num = symbolList.length;
+                    var indexes;
 
                     if (num > 2) {
                         //pick first 3
@@ -286,7 +294,8 @@ define(['ramp/globalStorage'],
                     //return images in an array
                     return [symbolList[indexes[0]].imageUrl,
                             symbolList[indexes[1]].imageUrl,
-                            symbolList[indexes[2]].imageUrl];
+                            symbolList[indexes[2]].imageUrl,
+                    ];
                 }
 
                 if (layerConfig.symbology) {
@@ -301,6 +310,7 @@ define(['ramp/globalStorage'],
                         case 'classBreaks':
                             return pick3(symbNode.rangeMaps);
                         default:
+
                             //we have an unknown renderer type.  at this point, something else would have failed
                             //most likely.  write out a screech to the console just incase
                             console.log('unknown renderer encountered: ' + symbNode.type);
@@ -317,6 +327,6 @@ define(['ramp/globalStorage'],
                         return [''];
                     }
                 }
-            }
+            },
         };
     });

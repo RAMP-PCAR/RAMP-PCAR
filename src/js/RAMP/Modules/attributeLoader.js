@@ -26,6 +26,7 @@
 */
 
 define([
+
 /* Dojo */
 'dojo/topic', 'dojo/request/script', 'dojo/Deferred',
 
@@ -33,9 +34,11 @@ define([
 'esri/request',
 
 /* RAMP */
-'ramp/eventManager', 'ramp/globalStorage', 'ramp/map'],
+'ramp/eventManager', 'ramp/globalStorage', 'ramp/map',
+],
 
     function (
+
     /* Dojo */
     topic, script, Deferred,
 
@@ -84,9 +87,10 @@ define([
                 layerId: '',
                 idField: '',
                 features: [],
-                index: {}
+                index: {},
+
                 //maxRecord: 0,
-                //loadRangeSet: []
+                //loadRangeSet: [],
             };
         }
 
@@ -112,10 +116,10 @@ define([
                     where: idField + '>' + maxId,
                     outFields: RAMP.layerRegistry[layerId].ramp.config.layerAttributes,
                     returnGeometry: 'false',
-                    f: 'json'
+                    f: 'json',
                 },
                 callbackParamName: 'callback',
-                handleAs: 'json'
+                handleAs: 'json',
             });
 
             defData.then(function (dataResult) {
@@ -126,6 +130,7 @@ define([
                             //this is our first batch and our server is 10.0.  set the max batch size to this batch size
                             maxBatch = len;
                         }
+
                         if (len < maxBatch) {
                             //this batch is less than the max.  this is last batch.  no need to query again.
                             callerDef.resolve(dataResult.features);
@@ -138,7 +143,9 @@ define([
 
                             thisDef.then(function (dataArray) {
                                 callerDef.resolve(dataResult.features.concat(dataArray));
-                            }, function (error) {
+                            },
+
+                            function (error) {
                                 callerDef.reject(error);
                             });
                         }
@@ -151,6 +158,7 @@ define([
                     callerDef.reject(dataResult.error);
                 }
             },
+
             function (error) {
                 callerDef.reject(error);
             });
@@ -176,7 +184,7 @@ define([
                         url: layerUrl,
                         content: { f: 'json' },
                         callbackParamName: 'callback',
-                        handleAs: 'json'
+                        handleAs: 'json',
                     });
 
                     defService.then(function (serviceResult) {
@@ -185,9 +193,9 @@ define([
 
                             //set up layer data object based on layer data
                             //10.0 server will not supply a max record value
-                            var maxBatchSize = serviceResult.maxRecordCount || -1,
-                                defFinished = new Deferred(),
-                                layerData = newLayerData();
+                            var maxBatchSize = serviceResult.maxRecordCount || -1;
+                            var defFinished = new Deferred();
+                            var layerData = newLayerData();
                             layerData.layerId = layerId;
 
                             //find object id field
@@ -196,6 +204,7 @@ define([
                                     layerData.idField = elem.name;
                                     return false; //break the loop
                                 }
+
                                 return true; //keep looping
                             });
 
@@ -210,19 +219,22 @@ define([
                                 // (Set layer data in global object only once all data has been downloaded
                                 //  Used as both a flag and a data store)
                                 RAMP.data[layerId] = layerData;
+
                                 //new data. tell grid to reload
                                 topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
 
                                 RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
                                 console.log('END ATTRIB LOAD: ' + layerId);
                             },
+
                             function (error) {
                                 console.log('error getting attribute data for id ' + layerId);
+
                                 //set layer to error state
                                 RampMap.updateDatagridUpdatingState(RAMP.layerRegistry[layerId], false);
                                 topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
                                     layer: RAMP.layerRegistry[layerId],
-                                    error: error
+                                    error: error,
                                 });
                             });
                         } else {
@@ -232,6 +244,7 @@ define([
                             }
                         }
                     },
+
                      function (error) {
                          console.log('Service metadata load error : ' + error);
                      });
@@ -269,6 +282,7 @@ define([
 
                     //store attribData
                     RAMP.data[layer.id] = layerData;
+
                     //new data. tell grid to reload
                     topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                     console.log('END ATTRIB LOAD: ' + layer.id);
@@ -284,6 +298,6 @@ define([
 
         return {
             loadAttributeData: loadAttributeData,
-            extractAttributeData: extractAttributeData
+            extractAttributeData: extractAttributeData,
         };
     });

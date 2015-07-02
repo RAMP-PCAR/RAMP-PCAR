@@ -23,18 +23,22 @@
 */
 
 define([
+
 /* Dojo */
- 'dojo/request/script', 'dojo/Deferred'
+ 'dojo/request/script', 'dojo/Deferred',
 
 /* ESRI */
+
 //'esri/tasks/GeometryService', 'esri/tasks/ProjectParameters', 'esri/geometry/Extent',
 ],
 
     function (
+
     /* Dojo */
     script, Deferred
 
         /* ESRI */
+
         //GeometryService, ProjectParameters, EsriExtent,
 ) {
         'use strict';
@@ -44,14 +48,16 @@ define([
             none: 'none',
             fsa: 'fsa',
             lonlat: 'lonlat',
-            prov: 'prov'
-        }, statusType = {
+            prov: 'prov',
+        };
+        var statusType = {
             list: 'list',
             none: 'none',
-            hide: 'hide'
-        }, provSearch = [],
-            provList = [],
-            conciseList = [];
+            hide: 'hide',
+        };
+        var provSearch = [];
+        var provList = [];
+        var conciseList = [];
 
         /**
         * Will determine if a value is a valid province identifier (en/fr name or 2-letter abbr)
@@ -78,8 +84,9 @@ define([
         * @return {String} province code. undefined if no match
         */
         function getProvCode(prov) {
-            var lProv = prov.toLowerCase(),
-                code;
+            var lProv = prov.toLowerCase();
+            var code;
+
             provList.every(function (elem) {
                 //TODO is there a prettier way to do this IF?
                 if (elem.abbr.toLowerCase() === lProv || elem.name.en.toLowerCase() === lProv ||
@@ -87,6 +94,7 @@ define([
                     code = elem.code;
                     return false;
                 }
+
                 return true;
             });
 
@@ -115,7 +123,7 @@ define([
             return provList.map(function (elem) {
                 return {
                     name: elem.name[RAMP.locale],
-                    code: elem.code
+                    code: elem.code,
                 };
             }).sort(nameSorter);
         }
@@ -133,7 +141,7 @@ define([
             return conciseList.map(function (elem) {
                 return {
                     name: elem.name[RAMP.locale],
-                    code: elem.code
+                    code: elem.code,
                 };
             }).sort(nameSorter);
         }
@@ -181,9 +189,9 @@ define([
         function parseInput(input) {
             var ret = {
                 type: parseType.none,
-                data: input
-            },
-                fsaReg = /[A-Za-z]\d[A-Za-z]/;
+                data: input,
+            };
+            var fsaReg = /[A-Za-z]\d[A-Za-z]/;
 
             //check for FSA
             if ((input.length > 2) && (fsaReg.test(input.substring(0, 3)))) {
@@ -203,6 +211,7 @@ define([
                 if (vals.length === 2) {
                     if (isLatLong(vals[0]) && isLatLong(vals[1])) {
                         ret.type = parseType.lonlat;
+
                         //Reverse order to match internal structure of lonlat
                         ret.data = [Number(vals[1]), Number(vals[0])];
                         return ret;
@@ -218,7 +227,7 @@ define([
                     ret.type = parseType.prov;
                     ret.data = {
                         prov: getProvCode(provTest),
-                        searchVal: input.substring(0, input.lastIndexOf(','))
+                        searchVal: input.substring(0, input.lastIndexOf(',')),
                     };
                 }
             }
@@ -239,12 +248,13 @@ define([
             //results thing
             //lat long of the FSA centroid. nothing if invalid FSA
 
-            var defResult = new Deferred(),
-                //launch the search for the fsa
-                defService = script.get(RAMP.config.geolocationUrl + RAMP.locale + '/locate', {
-                    query: 'q=' + fsa,
-                    jsonp: 'callback'
-                });
+            var defResult = new Deferred();
+
+            //launch the search for the fsa
+            var defService = script.get(RAMP.config.geolocationUrl + RAMP.locale + '/locate', {
+                query: 'q=' + fsa,
+                jsonp: 'callback',
+            });
 
             defService.then(
             function (serviceContent) {
@@ -259,6 +269,7 @@ define([
                             res.lonlat = elem.geometry.coordinates;
                             return false; //will cause the "every" loop to break
                         }
+
                         return true; //keep looping
                     });
                 }
@@ -266,6 +277,7 @@ define([
                 //resolve the promise
                 defResult.resolve(res);
             },
+
             function (error) {
                 console.log('Geolocation search error : ' + error);
                 defResult.reject(error);
@@ -299,10 +311,10 @@ define([
             //build up our query string
             //http://www.nrcan.gc.ca/earth-sciences/geography/place-names/tools-applications/9249
 
-            var query = '',
-                defResult = new Deferred(),
-                listLimit = 10, //TODO should this be defined in the config?
-                defService;
+            var query = '';
+            var defResult = new Deferred();
+            var listLimit = 10; //TODO should this be defined in the config?
+            var defService;
 
             //search around a point
             if (params.lonlat) {
@@ -330,6 +342,7 @@ define([
             if (params.showAll) {
                 listLimit = 1000; //boost to max allowed by service
             }
+
             query += 'num=' + listLimit + '&';
 
             console.log('Executing Query: ' + query);
@@ -337,7 +350,7 @@ define([
             //launch the search
             defService = script.get(RAMP.config.geonameUrl + RAMP.locale + '/geonames.json', {
                 query: query,
-                jsonp: 'callback'
+                jsonp: 'callback',
             });
 
             defService.then(
@@ -346,7 +359,7 @@ define([
 
                 //turn complex results into simplified results (can add values as needed).
                 //pass simplified result back to promise
-                //NOTE: when using JSONP, the search results come back in a parent array. 
+                //NOTE: when using JSONP, the search results come back in a parent array.
                 //If not JSONP, there is no array >:'(
 
                 var returnList = searchResult[0].items.map(function (elem) {
@@ -355,7 +368,7 @@ define([
                         location: elem.location,
                         province: elem.province.code, //convert to text here (en/fr)?
                         lonlat: [elem.longitude, elem.latitude],
-                        type: elem.concise.code  //convert to text here (en/fr)?
+                        type: elem.concise.code, //convert to text here (en/fr)?
                     };
                 });
 
@@ -370,6 +383,7 @@ define([
                     defResult.resolve(returnList);
                 }
             },
+
             function (error) {
                 console.log('Geoname search error : ' + error);
                 defResult.reject(error);
@@ -391,9 +405,10 @@ define([
         function generalSearch(name, filters, defResult) {
             filters.q = name;
 
-            var result = {},
+            var result = {};
+
             //do an search on the name
-            defSearch = executeSearch(filters);
+            var defSearch = executeSearch(filters);
 
             defSearch.then(
                 function (searchResult) {
@@ -410,6 +425,7 @@ define([
                     //resolve the promise
                     defResult.resolve(result);
                 },
+
                 function (error) {
                     defResult.reject(error);
                 });
@@ -427,16 +443,17 @@ define([
         function areaSearch(filters, defResult) {
             //set the lonlat as default result
             var result = {
-                defItem: filters.lonlat
-            },
+                defItem: filters.lonlat,
+            };
+
             //do an area search on FSA centroid
-            defArea = executeSearch(filters);
+            var defArea = executeSearch(filters);
 
             defArea.then(
                 function (searchResult) {
                     //service returned.  package results
 
-                    //TODO debate if no results should be hide or none.  None would visually indicate 
+                    //TODO debate if no results should be hide or none.  None would visually indicate
                     //nothing in FSA radius found, but might confuse user to think FSA was invalid
                     result.status = (searchResult.length > 0) ? statusType.list : statusType.hide;
                     result.list = searchResult;
@@ -444,6 +461,7 @@ define([
                     //resolve the promise
                     defResult.resolve(result);
                 },
+
                 function (error) {
                     defResult.reject(error);
                 });
@@ -517,7 +535,7 @@ define([
             //is search too short?
             if (input.length < 3) {
                 defResult.resolve({
-                    status: statusType.hide
+                    status: statusType.hide,
                 });
             }
 
@@ -525,13 +543,14 @@ define([
 
             switch (parse.type) {
                 case parseType.none:
-                    //add all the valid filter things, plus wildcards
 
+                    //add all the valid filter things, plus wildcards
                     generalSearch(parse.data, filters, defResult);
 
                     break;
 
                 case parseType.fsa:
+
                     //search for the FSA
                     var fsaPromise = fsaSearch(parse.data);
 
@@ -542,32 +561,36 @@ define([
                                 //get results around the FSA
                                 areaSearch({
                                     lonlat: fsaResult.lonlat,
-                                    radius: filters.radius
+                                    radius: filters.radius,
                                 }, defResult);
                             } else {
                                 //fsa not found.  return none result
                                 defResult.resolve({
-                                    status: statusType.none
+                                    status: statusType.none,
                                 });
                             }
                         },
+
                         function (error) {
                             defResult.reject(error);
                         }
+
                     );
 
                     break;
 
                 case parseType.lonlat:
+
                     //package parsed lat/long for search
                     areaSearch({
                         lonlat: parse.data,
-                        radius: filters.radius
+                        radius: filters.radius,
                     }, defResult);
 
                     break;
 
                 case parseType.prov:
+
                     //add the province filter
                     filters.prov = parse.data.prov;
                     generalSearch(parse.data.searchVal, filters, defResult);
@@ -592,11 +615,11 @@ define([
             //     Init is called after the config loads, so should be plenty of time before a user starts geosearching
 
             //get provinces english
-            var provUrl = '/codes/province.json',
-                conciseUrl = '/codes/concise.json',
-                defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
-                    jsonp: 'callback'
-                });
+            var provUrl = '/codes/province.json';
+            var conciseUrl = '/codes/concise.json';
+            var defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
+                jsonp: 'callback',
+            });
 
             defEnProv.then(
             function (result) {
@@ -607,14 +630,14 @@ define([
                         abbr: provEn.term,
                         name: {
                             en: provEn.description,
-                            fr: ''
-                        }
+                            fr: '',
+                        },
                     };
                 });
 
                 //now load the french provinces
                 var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
-                    jsonp: 'callback'
+                    jsonp: 'callback',
                 });
 
                 defFrProv.then(
@@ -627,6 +650,7 @@ define([
                                     elem.name.fr = provFr.description;
                                     return false; //will cause the 'every' loop to break
                                 }
+
                                 return true; //keep looping
                             });
                         });
@@ -638,17 +662,19 @@ define([
                                 elem.name.fr.toLowerCase());
                         });
                     },
+
                      function (error) {
                          console.log('Fail to load french province codes : ' + error);
                      });
             },
+
             function (error) {
                 console.log('Fail to load english province codes : ' + error);
             });
 
             //get geonames concise codes list english
             var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
-                jsonp: 'callback'
+                jsonp: 'callback',
             });
 
             defEnCon.then(
@@ -659,14 +685,14 @@ define([
                          code: conEn.code,
                          name: {
                              en: conEn.term,
-                             fr: ''
-                         }
+                             fr: '',
+                         },
                      };
                  });
 
                  //now load the french concise codes
                  var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
-                     jsonp: 'callback'
+                     jsonp: 'callback',
                  });
 
                  defFrCon.then(
@@ -679,14 +705,17 @@ define([
                                      elem.name.fr = conFr.term;
                                      return false; //will cause the "every" loop to break
                                  }
+
                                  return true; //keep looping
                              });
                          });
                      },
+
                       function (error) {
                           console.log('Fail to load french concise codes : ' + error);
                       });
              },
+
              function (error) {
                  console.log('Fail to load english concise codes : ' + error);
              });
@@ -696,6 +725,6 @@ define([
             geoSearch: geoSearch,
             init: init,
             getProvList: getProvList,
-            getConciseList: getConciseList
+            getConciseList: getConciseList,
         };
     });

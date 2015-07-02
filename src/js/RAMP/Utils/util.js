@@ -42,11 +42,13 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
         */
         function _wrapFileCallInPromise(readMethod) {
             return function (file) {
-                var reader = new FileReader(),
-                    def = new Deferred();
+                var reader = new FileReader();
+                var def = new Deferred();
 
                 reader.onloadend = function (e) { def.resolve(e.target.result); };
+
                 reader.onerror = function (e) { def.reject(e.target.error); };
+
                 try {
                     reader[readMethod](file);
                 } catch (e) {
@@ -67,16 +69,17 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @static
             */
             checkConsole: function () {
-                var noop = function () { },
-                    methods = [
+                var noop = function () { };
+
+                var methods = [
                         'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
                         'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
                         'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-                        'timeStamp', 'trace', 'warn'
-                    ],
-                    length = methods.length,
-                    console = (window.console = window.console || {}),
-                    method;
+                        'timeStamp', 'trace', 'warn',
+                ];
+                var length = methods.length;
+                var console = (window.console = window.console || {});
+                var method;
 
                 while (length--) {
                     method = methods[length];
@@ -221,8 +224,8 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @param {function} callback The callback to be executed
             */
             subscribeOnce: function (name, callback) {
-                var handle = null,
-                    wrapper = function (evt) {
+                var handle = null;
+                var wrapper = function (evt) {
                         handle.remove();
                         callback(evt);
                     };
@@ -239,8 +242,8 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @param  {Function} callback The callback to be executed
             */
             subscribeOnceAny: function (names, callback) {
-                var handles = [],
-                    that = this;
+                var handles = [];
+                var _this = this;
 
                 function wrapper(evt) {
                     handles.forEach(function (handle) {
@@ -252,7 +255,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
 
                 names.forEach(
                     function (name) {
-                        handles.push(that.subscribeOnce(name, wrapper));
+                        handles.push(_this.subscribeOnce(name, wrapper));
                     });
             },
 
@@ -307,7 +310,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 nameArray.forEach(function (eventName, i) {
                     events.push({
                         fired: false,
-                        args: null
+                        args: null,
                     });
 
                     topic.subscribe(eventName, function () {
@@ -321,6 +324,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             if (events.filter(function (event) { return !event.fired; }).length === 0) {
                                 // If so construct an array with arguments from the events
                                 var eventArgs = events.map(function (event) { return event.args; });
+
                                 callback(eventArgs);
                             }
                         }
@@ -356,8 +360,9 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                         if (value == null) {
                             value = initFunc();
                         }
+
                         return value;
-                    }
+                    },
                 };
             },
 
@@ -408,11 +413,11 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @return {boolean} True if the objects represent the same feature
             */
             compareGraphics: function (one, two) {
-                var oneKey = '0',
-                    twoKey = '1',
-                    objectIdField,
-                    oneLayer,
-                    twoLayer;
+                var oneKey = '0';
+                var twoKey = '1';
+                var objectIdField;
+                var oneLayer;
+                var twoLayer;
 
                 if (one && two &&
                     $.isFunction(one.getLayer) && $.isFunction(two.getLayer)) {
@@ -436,12 +441,13 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @for Util
             */
             scrollbarWidth: function () {
-                var $inner = jQuery('<div style="width: 100%; height:200px;">test</div>'),
-                    $outer = jQuery('<div style="width:200px;height:150px; position: absolute; top: 0; left: 0;' +
-                        ' visibility: hidden; overflow:hidden;"></div>').append($inner),
-                    inner = $inner[0],
-                    outer = $outer[0],
-                    width1, width2;
+                var $inner = jQuery('<div style="width: 100%; height:200px;">test</div>');
+                var $outer = jQuery('<div style="width:200px;height:150px; position: absolute; top: 0; left: 0;' +
+                        ' visibility: hidden; overflow:hidden;"></div>').append($inner);
+                var inner = $inner[0];
+                var outer = $outer[0];
+                var width1;
+                var width2;
 
                 jQuery('body').append(outer);
                 width1 = inner.offsetWidth;
@@ -467,7 +473,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
 
                 targets.forEach(function (target) {
                     target.css({
-                        right: offset
+                        right: offset,
                     });
                 });
             },
@@ -482,11 +488,12 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @param {function} callback The callback function to be executed after func is available
             */
             executeOnLoad: function (target, func, callback) {
-                var deferred = new Deferred(),
-                    handle;
+                var deferred = new Deferred();
+                var handle;
 
                 deferred.then(function () {
                     window.clearInterval(handle);
+
                     //console.log('deferred resolved');
 
                     callback();
@@ -511,9 +518,9 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @param {object} d A deferred to be resolved when all properties have been processed.
             */
             executeOnDone: function (o, func, d) {
-                var counter = 0,
-                    arr = [],
-                    deferred;
+                var counter = 0;
+                var arr = [];
+                var deferred;
 
                 function fnOnDeferredCancel() {
                     d.cancel();
@@ -549,6 +556,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 }
             },
 
+            // TODO: check if there is new/better code for guid generation
             /**
             * Generates an rfc4122 version 4 compliant guid.
             * Taken from here: http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -557,11 +565,10 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @static
             * @return {String} The generated guid string
             */
-            // TODO: check if there is new/better code for guid generation
             guid: function () {
                 return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                    var r = Math.random() * 16 | 0,
-                        v = c === 'x' ? r : (r & 0x3 | 0x8);
+                    var r = Math.random() * 16 | 0;
+                    var v = c === 'x' ? r : (r & 0x3 | 0x8);
                     return v.toString(16);
                 });
             },
@@ -581,6 +588,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 if (this.isNumber(query)) {
                     return String.format('{0}={1}', varName, query);
                 }
+
                 return String.format('Upper({0})=Upper(\'{1}\')', varName, query);
             },
 
@@ -595,6 +603,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             */
             stripHtml: function (html) {
                 var tmp = document.createElement('DIV');
+
                 // jquery .text function converts html into text by replacing
                 // all html tags with their appropriate special characters
                 $(tmp).text(html);
@@ -615,8 +624,8 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             *
             */
             pointToExtent: function (map, point, toleranceInPixel) {
-                var pixelWidth = map.extent.getWidth() / map.width,
-                    toleraceInMapCoords = toleranceInPixel * pixelWidth;
+                var pixelWidth = map.extent.getWidth() / map.width;
+                var toleraceInMapCoords = toleranceInPixel * pixelWidth;
 
                 return new Extent(point.x - toleraceInMapCoords,
                               point.y - toleraceInMapCoords,
@@ -642,11 +651,11 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             color: [240, 128, 128, 255],
                             width: 1,
                             type: 'esriSLS',
-                            style: 'esriSLSSolid'
+                            style: 'esriSLSSolid',
                         },
                         type: 'esriSFS',
-                        style: 'esriSFSSolid'
-                    }
+                        style: 'esriSFSSolid',
+                    },
                 });
             },
 
@@ -675,21 +684,26 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                     if (v === null) {
                         return false;
                     }
+
                     if (typeof v !== 'object') {
                         return false;
                     }
+
                     if (!('nodeName' in v)) {
                         return false;
                     }
+
                     var nn = v.nodeName;
                     try {
                         v.nodeName = 'is readonly?';
                     } catch (e) {
                         return true;
                     }
+
                     if (v.nodeName === nn) {
                         return true;
                     }
+
                     v.nodeName = nn;
                     return false;
                 }
@@ -710,6 +724,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                                 if (dst[p] === undefined) {
                                     dst[p] = [];
                                 }
+
                                 $.merge(dst[p], src[p]);
                                 continue;
                             }
@@ -717,6 +732,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             if (src[p] === undefined) {
                                 continue;
                             }
+
                             if (typeof src[p] !== 'object' || src[p] === null) {
                                 dst[p] = src[p];
                             } else if (typeof dst[p] !== 'object' || dst[p] === null) {
@@ -726,17 +742,22 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             }
                         }
                     }
+
                     return dst;
-                }, out;
+                };
+
+                var out;
 
                 // Loop through arguments and merge them into the first argument.
                 out = arguments[0];
                 if (typeof out !== 'object' || out === null) {
                     return out;
                 }
+
                 for (var i = 1, il = arguments.length; i < il; i++) {
                     _mergeRecursive(out, arguments[i]);
                 }
+
                 return out;
             },
 
@@ -752,52 +773,60 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @param {Boolean} returnFragment True if you want a document fragment returned (doesn't work in IE)}
             */
             transformXML: function (xmlurl, xslurl, callback, returnFragment, params) {
-                var xmld = new Deferred(),
-                    xsld = new Deferred(),
-                    xml, xsl,
-                    dlist = [xmld, xsld],
-                    result,
-                    error,
-                    that = this;
+                var xmld = new Deferred();
+                var xsld = new Deferred();
+                var xml;
+                var xsl;
+                var dlist = [xmld, xsld];
+                var result;
+                var error;
+                var _this = this;
 
-                that.afterAll(dlist, function () {
+                _this.afterAll(dlist, function () {
                     if (!error) {
                         result = applyXSLT(xml, xsl);
                     }
+
                     callback(error, result);
                 });
 
                 // Transform XML using XSLT
                 function applyXSLT(xmlString, xslString) {
-                    var output, i;
+                    var output;
+                    var i;
+
                     if (window.ActiveXObject || window.hasOwnProperty('ActiveXObject')) { // IE
-                        var xslt = new ActiveXObject('Msxml2.XSLTemplate'),
-                            xmlDoc = new ActiveXObject('Msxml2.DOMDocument'),
-                            xslDoc = new ActiveXObject('Msxml2.FreeThreadedDOMDocument'),
-                            xslProc;
+                        var xslt = new ActiveXObject('Msxml2.XSLTemplate');
+                        var xmlDoc = new ActiveXObject('Msxml2.DOMDocument');
+                        var xslDoc = new ActiveXObject('Msxml2.FreeThreadedDOMDocument');
+                        var xslProc;
 
                         xmlDoc.loadXML(xmlString);
                         xslDoc.loadXML(xslString);
                         xslt.stylesheet = xslDoc;
                         xslProc = xslt.createProcessor();
                         xslProc.input = xmlDoc;
+
                         // [patched from ECDMP] Add parameters to xsl document (addParameter = ie only)
                         if (params) {
                             for (i = 0; i < params.length; i++) {
                                 xslProc.addParameter(params[i].key, params[i].value, '');
                             }
                         }
+
                         xslProc.transform();
                         output = xslProc.output;
                     } else { // Chrome/FF/Others
                         var xsltProcessor = new XSLTProcessor();
                         xsltProcessor.importStylesheet(xslString);
+
                         // [patched from ECDMP] Add parameters to xsl document (setParameter = Chrome/FF/Others)
                         if (params) {
                             for (i = 0; i < params.length; i++) {
                                 xsltProcessor.setParameter(null, params[i].key, params[i].value || '');
                             }
                         }
+
                         output = xsltProcessor.transformToFragment(xmlString, document);
 
                         // turn a document fragment into a proper jQuery object
@@ -808,6 +837,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                                 .detach();
                         }
                     }
+
                     return output;
                 }
 
@@ -829,15 +859,20 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                     var xdr = new window.XDomainRequest();
                     xdr.open('GET', filename);
                     xdr.onload = function () { resolveDeferred(filename, xdr); };
+
                     xdr.ontimeout = function () { console.log('xdr timeout'); };
+
                     xdr.onprogress = function () { console.log('xdr progress'); };
+
                     xdr.onerror = function (e) {
                         console.log(e);
                         error = true;
                         resolveDeferred(filename, xdr);
                     };
+
                     window.setTimeout(function () { xdr.send(); }, 0);
                 }
+
                 // IE10+
                 function loadXMLFileIE(filename) {
                     var xhttp = new XMLHttpRequest();
@@ -845,14 +880,17 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                     try {
                         xhttp.responseType = 'msxml-document';
                     } catch (err) { } // Helping IE11
+
                     xhttp.onreadystatechange = function () {
                         if (xhttp.readyState === 4) {
                             if (xhttp.status !== 200) {
                                 error = true;
                             }
+
                             resolveDeferred(filename, xhttp);
                         }
                     };
+
                     xhttp.send('');
                 }
 
@@ -879,10 +917,11 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             xml = data;
                             xmld.resolve();
                         },
+
                         error: function () {
                             error = true;
                             xmld.resolve();
-                        }
+                        },
                     });
 
                     $.ajax({
@@ -894,10 +933,11 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             xsl = data;
                             xsld.resolve();
                         },
+
                         error: function () {
                             error = true;
                             xsld.resolve();
-                        }
+                        },
                     });
                 }
             },
@@ -954,16 +994,19 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                     linkLists: false,
 
                     onStart: function () { },
+
                     onUpdate: function () { },
-                    onStop: function () { }
+
+                    onStop: function () { },
                 }, settings);
 
                 ulNodes.each(function (index, _ulNode) {
-                    var ulNode = $(_ulNode),
-                        liNodes = ulNode.find('> li'),
-                        //sortHandleNodes = liNodes.find('.sort-handle'),
-                        isReordering = false,
-                        grabbed;
+                    var ulNode = $(_ulNode);
+                    var liNodes = ulNode.find('> li');
+                    var isReordering = false;
+                    var grabbed;
+
+                    //var sortHandleNodes = liNodes.find('.sort-handle');
 
                     // Reset focus, set aria attributes, and styling
                     function reorderReset(handle, liNodes, liNode) {
@@ -995,10 +1038,10 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                             }
                         })
                         .on('keyup', '.sort-handle', function (event) {
-                            var liNode = $(this).closest('li'),
-                                liId = liNode[0].id,
-                                liIdArray = ulNode.sortable('toArray'),
-                                liIndex = liIdArray.indexOf(liId);
+                            var liNode = $(this).closest('li');
+                            var liId = liNode[0].id;
+                            var liIdArray = ulNode.sortable('toArray');
+                            var liIndex = liIdArray.indexOf(liId);
 
                             // Toggle grabbed state and aria attributes (13 = enter, 32 = space bar)
                             if (event.which === 13 || event.which === 32) {
@@ -1024,6 +1067,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
 
                                     grabbed = true;
                                 }
+
                                 // Keyboard up (38) and down (40)
                             } else if (event.which === 38) {
                                 if (grabbed) {
@@ -1160,8 +1204,8 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             },
 
             styleBrowseFilesButton: function (nodes) {
-                var input,
-                    button;
+                var input;
+                var button;
 
                 function focusIn(event) {
                     event.data.button.not('.disabled').addClass('btn-focus btn-hover');
@@ -1216,20 +1260,19 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
             * @return {String} Detected delimiter
             */
             detectDelimiter: function (data, type) {
-                var count = 0,
-                    detected,
-
-                    escapeDelimiters = ['|', '^'],
-                    delimiters = {
+                var count = 0;
+                var detected;
+                var escapeDelimiters = ['|', '^'];
+                var delimiters = {
                         cell: [',', ';', '\t', '|', '^'],
-                        line: ['\r\n', '\r', '\n']
+                        line: ['\r\n', '\r', '\n'],
                     };
 
                 type = type !== 'cell' && type !== 'line' ? 'cell' : type;
 
                 delimiters[type].forEach(function (delimiter) {
-                    var needle = delimiter,
-                        matches;
+                    var needle = delimiter;
+                    var matches;
 
                     if (escapeDelimiters.indexOf(delimiter) !== -1) {
                         needle = '\\' + needle;
@@ -1267,7 +1310,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 return result ? {
                     r: parseInt(result[1], 16),
                     g: parseInt(result[2], 16),
-                    b: parseInt(result[3], 16)
+                    b: parseInt(result[3], 16),
                 } : null;
             },
 
@@ -1296,13 +1339,14 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
 
                 if (!append) {
                     select.empty();
+
                     //select.append(optionsNode);
                 }
 
                 options.forEach(function (option) {
                     select.append($('<option/>', {
                         value: option.value,
-                        text: option.text
+                        text: option.text,
                     }));
                 });
             },
@@ -1364,7 +1408,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                     default:
                         attr = {
                             theme: customTheme || 'tooltipster-shadow',
-                            delay: 500
+                            delay: 500,
                         };
                         break;
                 }
@@ -1381,6 +1425,7 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                                     .tooltipster('content', node.attr('title'))
                                     .removeAttr('title');
                             });
+
                         break;
 
                     case 'destroy':
@@ -1391,15 +1436,17 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                                 node
                                     .tooltipster('destroy');
                             });
+
                         break;
 
                     default:
                         target
                             .find('.tooltip, ._tooltip')
+
                             // preserve title value for future use
                             .each(function (i, obj) {
-                                var node = $(obj),
-                                    title = node.attr('title');
+                                var node = $(obj);
+                                var title = node.attr('title');
 
                                 if (title) {
                                     node.attr('data-tooltip', node.attr('title'));
@@ -1410,9 +1457,10 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                                 node.tooltipster(
                                     dojoLang.mixin({
                                         theme: node.data('tooltip-theme') || attr.theme,
+
                                         //autoClose: false,
                                         maxWidth: node.data('tooltip-maxwidth') || null,
-                                        delay: attr.delay
+                                        delay: attr.delay,
                                     },
                                         options
                                     )
@@ -1423,6 +1471,6 @@ define(['dojo/_base/lang', 'dojo/topic', 'dojo/Deferred', 'esri/geometry/Extent'
                 }
 
                 return this;
-            }
+            },
         };
     });

@@ -99,6 +99,7 @@ define(['dojo/_base/lang'],
                         filteredDict[key] = value;
                     }
                 });
+
                 return filteredDict;
             },
 
@@ -139,6 +140,7 @@ define(['dojo/_base/lang'],
                 this.forEachEntry(dict, function (key, value) {
                     copy[key] = value;
                 });
+
                 return copy;
             },
 
@@ -157,6 +159,7 @@ define(['dojo/_base/lang'],
                 arr.forEach(function (element) {
                     dict[fcn(arr)] = element;
                 });
+
                 return dict;
             },
 
@@ -180,7 +183,8 @@ define(['dojo/_base/lang'],
                 arr1.forEach(function (element, i) {
                     dict[element] = arr2[i];
                 });
+
                 return dict;
-            }
+            },
         };
     });

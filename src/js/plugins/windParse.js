@@ -8,4 +8,5 @@ RAMP.plugins.featureInfoParser.windParse = function (data) {
     val = val ? val[1] : '';
     return '<p>{0}</p>'.format(val);
 };
+
 console.log('loaded windParse');

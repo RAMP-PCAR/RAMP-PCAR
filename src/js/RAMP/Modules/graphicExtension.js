@@ -28,13 +28,16 @@
 */
 
 define([
+
 // Utils
     'utils/array', 'utils/dictionary', 'utils/util', 'utils/tmplHelper',
 
 //details template
-    'dojo/text!./templates/feature_details_template.json'],
+    'dojo/text!./templates/feature_details_template.json',
+],
 
     function (
+
     // Utils
     UtilArray, UtilDict, UtilMisc, TmplHelper,
 
@@ -71,13 +74,15 @@ define([
             *
             * @param {esri/Graphic} graphic
             * @method getFDataForGraphic
-            * @return {Object} feature data object of the given graphic object. undefined if feature data 
+            * @return {Object} feature data object of the given graphic object. undefined if feature data
             * object doesn't exist
             */
             getFDataForGraphic: function (graphic) {
-                var idx, ret,
-                    data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic 
-                // belongs to
+                var idx;
+                var ret;
+
+                //the data parent for the layer the graphic belongs to
+                var data = RAMP.data[graphic.getLayer().id];
 
                 if (data) {
                     //use graphic object id as key in index to get position of data object
@@ -86,6 +91,7 @@ define([
                         ret = data.features[idx];
                     }
                 }
+
                 return ret;
             },
 
@@ -143,8 +149,8 @@ define([
             */
             getFDataTextContent: function (fData) {
                 //TODO investigate ways to merge this logic with getGraphicTextContent
-                var lConfig = this.getConfigForFData(fData),
-                    templateName = lConfig.templates.detail;
+                var lConfig = this.getConfigForFData(fData);
+                var templateName = lConfig.templates.detail;
 
                 tmpl.cache = {};
                 tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(featureDetailsTemplate));
@@ -200,6 +206,6 @@ define([
                 return UtilArray.find(layer.graphics, function (aGraphic) {
                     return this.getGraphicOid(aGraphic) === objectId;
                 }, this);
-            }
+            },
         };
     });

@@ -50,7 +50,7 @@ define([
     'dojo/text!./templates/filter_manager_template.json',
 
     /* Util */
-    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks'
+    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks',
 ],
     function (
         Evented, declare, lang, Deferred,
@@ -63,14 +63,14 @@ define([
     ) {
         'use strict';
 
-        var StepItem,
-            ALL_STATES_CLASS,
+        var StepItem;
+        var ALL_STATES_CLASS;
 
-            templates = JSON.parse(TmplHelper.stringifyTemplate(filterManagerTemplate));
+        var templates = JSON.parse(TmplHelper.stringifyTemplate(filterManagerTemplate));
 
         StepItem = declare([Evented], {
             constructor: function (config) {
-                var that = this;
+                var _this = this;
 
                 // declare individual properties inside the constructor:
                 // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
@@ -258,7 +258,7 @@ define([
                          * @property _transitionDuration
                          * @default 0.4
                          */
-                        _transitionDuration: 0.4
+                        _transitionDuration: 0.4,
                     },
                     config
                 );
@@ -271,7 +271,7 @@ define([
                 this._optionsNode = this._optionsContainerNode.find('> .step-options');
 
                 this.content.forEach(function (contentItem) {
-                    that._addContentBrick(contentItem);
+                    _this._addContentBrick(contentItem);
                 });
 
                 // console.debug('-->', this._state);
@@ -287,17 +287,17 @@ define([
              * @private
              */
             _addContentBrick: function (contentItem) {
-                var that = this,
-                    contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
+                var _this = this;
+                var contentBrick = contentItem.type.new(contentItem.id, contentItem.config);
 
                 // if it's a multiBrick, add individual bricks from its content to the main content and wire them
                 // as separate bricks
                 if (Bricks.MultiBrick === contentItem.type) {
                     contentBrick.content.forEach(function (contentItem) {
-                        that._wireBrickUp(contentItem, contentBrick.contentBricks[contentItem.id]);
+                        _this._wireBrickUp(contentItem, contentBrick.contentBricks[contentItem.id]);
                     });
                 } else {
-                    that._wireBrickUp(contentItem, contentBrick);
+                    _this._wireBrickUp(contentItem, contentBrick);
                 }
 
                 this._contentNode.append(contentBrick.node);
@@ -314,7 +314,7 @@ define([
              * @private
              */
             _wireBrickUp: function (contentItem, contentBrick) {
-                var that = this;
+                var _this = this;
                 this.contentBricks[contentBrick.id] = contentBrick;
 
                 // set brick events if specified
@@ -323,18 +323,18 @@ define([
                         contentBrick.on(o.eventName, function (data) {
                             // if there is a callback specified, call it in the context of the brick
                             if (o.callback) {
-                                o.callback.call(contentBrick, that, data);
+                                o.callback.call(contentBrick, _this, data);
                             }
 
                             // if event is exposed; emit it
                             if (o.expose) {
-                                that._doInternalCheck();
-                                that.emit(contentBrick.id + '/' + o.eventName, data);
+                                _this._doInternalCheck();
+                                _this.emit(contentBrick.id + '/' + o.eventName, data);
 
                                 if (o.expose.as) {
-                                    that.emit(o.expose.as, {
+                                    _this.emit(o.expose.as, {
                                         brick: contentBrick,
-                                        brickData: data
+                                        brickData: data,
                                     });
                                 }
                             }
@@ -344,7 +344,7 @@ define([
 
                 // do a check of all the bricks in case some of them depend on validity of other bricks in this step
                 contentBrick.on(Bricks.Brick.event.CHANGE, function () {
-                    that._doInternalCheck();
+                    _this._doInternalCheck();
                 });
             },
 
@@ -365,12 +365,14 @@ define([
                         flag = required.check.every(function (ch) {
                             return contentBricks[ch].isValid();
                         });
+
                         break;
 
                     case 'any':
                         flag = required.check.some(function (ch) {
                             return contentBricks[ch].isValid();
                         });
+
                         break;
                 }
 
@@ -385,7 +387,7 @@ define([
              * @private
              */
             _doInternalCheck: function () {
-                var that = this;
+                var _this = this;
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
                     if (brick.required) {
@@ -393,13 +395,13 @@ define([
                         if (Bricks.MultiBrick.isPrototypeOf(brick)) {
                             if (Array.isArray(brick.required)) {
                                 brick.required.forEach(function (req) {
-                                    that._internalCheckHelper(req, brick.contentBricks[req.id], that.contentBricks);
+                                    _this._internalCheckHelper(req, brick.contentBricks[req.id], _this.contentBricks);
                                 });
                             } else {
-                                that._internalCheckHelper(brick.required, brick, that.contentBricks);
+                                _this._internalCheckHelper(brick.required, brick, _this.contentBricks);
                             }
                         } else {
-                            that._internalCheckHelper(brick.required, brick, that.contentBricks);
+                            _this._internalCheckHelper(brick.required, brick, _this.contentBricks);
                         }
                     }
                 });
@@ -422,9 +424,9 @@ define([
              * @private
              */
             _makeCloseTimeline: function (skipFirst, resetState) {
-                var closeTimeline = new TimelineLite(),
-                    closeStagger,
-                    closeTimelines = [];
+                var closeTimeline = new TimelineLite();
+                var closeStagger;
+                var closeTimelines = [];
 
                 this._getCloseTimelines(closeTimelines, skipFirst, resetState);
                 closeTimelines = closeTimelines.reverse();
@@ -450,16 +452,15 @@ define([
              * @chainable
              */
             _getCloseTimelines: function (tls, skip, reset) {
-                var tl = new TimelineLite(),
-
-                    that = this;
+                var tl = new TimelineLite();
+                var _this = this;
 
                 if (this._activeChildStep) {
                     if (!skip) {
                         tl
                             .call(function () {
-                                //that.currentLevel()
-                                that._notifyCurrentStepChange();
+                                //_this.currentLevel()
+                                _this._notifyCurrentStepChange();
                             })
                             .to(this._optionsContainerNode, this._transitionDuration,
                                 { top: -this._activeChildStep.getContentOuterHeight(), ease: 'easeOutCirc' },
@@ -491,10 +492,10 @@ define([
              * @private
              */
             _makeShiftTimeline: function (targetChildStepId) {
-                var shiftTimeline = new TimelineLite(),
-                    targetChildStep = this._childSteps[targetChildStepId],
-                    allChildNodes = this._getChildNodes(),
-                    otherChildNodes = this._getChildNodes([targetChildStepId]);
+                var shiftTimeline = new TimelineLite();
+                var targetChildStep = this._childSteps[targetChildStepId];
+                var allChildNodes = this._getChildNodes();
+                var otherChildNodes = this._getChildNodes([targetChildStepId]);
 
                 if (this._activeChildStep) {
                     shiftTimeline
@@ -503,12 +504,13 @@ define([
                         .to(this._optionsBackgroundNode, this._transitionDuration, {
                             height: targetChildStep.getContentOuterHeight(),
                             'line-height': targetChildStep.getContentOuterHeight() + 'px',
-                            ease: 'easeOutCirc'
+                            ease: 'easeOutCirc',
                         }, 0)
 
                         .fromTo(this._optionsNode, this._transitionDuration,
                             { left: -this._activeChildStep.getContentPosition().left },
                             { left: -targetChildStep.getContentPosition().left, ease: 'easeOutCirc' }, 0)
+
                         // when shifting, active-option is changing
                         .set(otherChildNodes, { className: '-=active-option' })
                         .set(targetChildStep.node, { className: '+=active-option' })
@@ -535,9 +537,9 @@ define([
              * @private
              */
             _makeOpenTimeline: function (targetChildStepId, skipFirst) {
-                var openTimeline = new TimelineLite(),
-                    openStagger,
-                    openTimelines = [];
+                var openTimeline = new TimelineLite();
+                var openStagger;
+                var openTimelines = [];
 
                 this._getOpenTimelines(openTimelines, targetChildStepId, skipFirst);
 
@@ -562,13 +564,14 @@ define([
              * @chainable
              */
             _getOpenTimelines: function (tls, targetChildStepId, skip) {
-                var tl = new TimelineLite(),
-                    targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep,
-                    otherChildNodes = this._getChildNodes([targetChildStepId]);
+                var tl = new TimelineLite();
+                var targetChildStep = targetChildStepId ? this._childSteps[targetChildStepId] : this._activeChildStep;
+                var otherChildNodes = this._getChildNodes([targetChildStepId]);
 
                 if (targetChildStep) {
                     if (!skip) {
                         tl
+
                             // set options container node to visible, otherwise you can't get its size
                             .set(this._optionsContainerNode, { display: 'block', top: -9999 }, 0)
 
@@ -587,13 +590,13 @@ define([
                             // animate step's background
                             .to(this._optionsBackgroundNode, 0, {
                                 height: targetChildStep.getContentOuterHeight(),
-                                'line-height': targetChildStep.getContentOuterHeight() + 'px'
+                                'line-height': targetChildStep.getContentOuterHeight() + 'px',
                             }, 0)
 
                             // animate height and position of the options' container node
                             .to(this._optionsContainerNode, 0, {
                                 height: targetChildStep.getContentOuterHeight(),
-                                ease: 'easeOutCirc'
+                                ease: 'easeOutCirc',
                             }, 0)
                             .fromTo(this._optionsContainerNode, this._transitionDuration,
                                 { top: -this._optionsContainerNode.height() },
@@ -606,6 +609,7 @@ define([
                     }
 
                     this._notifyStateChange(StepItem.state.SUCCESS);
+
                     // hide all notices when making a step successful
                     this.displayBrickNotices();
                     targetChildStep._getOpenTimelines(tls);
@@ -631,6 +635,7 @@ define([
                             childNodes.push(childItem.node);
                         }
                     }
+
                 );
 
                 return childNodes;
@@ -707,7 +712,7 @@ define([
             getData: function () {
                 var data = {
                     stepData: this._stepData,
-                    bricksData: {}
+                    bricksData: {},
                 };
 
                 UtilDict.forEachEntry(this.contentBricks, function (key, brick) {
@@ -777,7 +782,7 @@ define([
              * @param {String} state  name of the state to set
              */
             setState: function (level, stepId, state) {
-                var that = this;
+                var _this = this;
 
                 // if this step is the first step in the tree and so is the current step, set state class on its
                 // main node
@@ -791,11 +796,12 @@ define([
                     UtilDict.forEachEntry(this._childSteps,
                         function (childId, childStep) {
                             if (childId === stepId && childStep.level === level) {
-                                that._optionsContainerNode
+                                _this._optionsContainerNode
                                     .removeClass(ALL_STATES_CLASS)
                                     .addClass(state);
                             }
                         }
+
                     );
                 }
             },
@@ -808,7 +814,7 @@ define([
              * @param  {String} stepId step id
              */
             currentStep: function (level, stepId) {
-                var that = this;
+                var _this = this;
 
                 // if this step is the first step in the tree and so is the current step, set class on the main node
                 // of this step
@@ -823,9 +829,10 @@ define([
                     UtilDict.forEachEntry(this._childSteps,
                         function (childId, childStep) {
                             if (childId === stepId && childStep.level === level) {
-                                that._optionsContainerNode.addClass(StepItem.currentStepClass);
+                                _this._optionsContainerNode.addClass(StepItem.currentStepClass);
                             }
                         }
+
                     );
                 }
             },
@@ -868,12 +875,12 @@ define([
              * @chainable
              */
             setData: function (data) {
-                var that = this;
+                var _this = this;
 
                 if (data) {
                     if (data.bricksData) {
                         UtilDict.forEachEntry(data.bricksData, function (brickId, brickData) {
-                            that.contentBricks[brickId].setData(brickData);
+                            _this.contentBricks[brickId].setData(brickData);
                         });
                     }
 
@@ -890,15 +897,15 @@ define([
              * @param  {Object} [data] a dictionary of objects containing Brick notices
              */
             displayBrickNotices: function (data) {
-                var that = this,
-                    bricks = [],
-                    promise;
+                var _this = this;
+                var bricks = [];
+                var promise;
 
                 if (data) {
                     UtilDict.forEachEntry(data, function (brickId, brickData) {
-                        that.contentBricks[brickId].displayNotice(brickData);
+                        _this.contentBricks[brickId].displayNotice(brickData);
 
-                        bricks.push(that.contentBricks[brickId]);
+                        bricks.push(_this.contentBricks[brickId]);
                     });
 
                     // toggle notice
@@ -929,12 +936,12 @@ define([
              * @return {Promise}        a promise that is resolved after animation is completed
              */
             _toggleBrickNotices: function (bricks, show) {
-                var that = this,
-                    notices,
-                    contentHeight = this.getContentOuterHeight(),
-                    heightChange = 0,
-                    tl = new TimelineLite({ paused: true }),
-                    def = new Deferred();
+                var _this = this;
+                var notices;
+                var contentHeight = this.getContentOuterHeight();
+                var heightChange = 0;
+                var tl = new TimelineLite({ paused: true });
+                var def = new Deferred();
 
                 tl.eventCallback('onComplete', function () {
                     def.resolve();
@@ -943,8 +950,7 @@ define([
                 // filter out bricks that don't have any notices
                 notices = bricks
                     .map(function (brick) { return brick.noticeNode; })
-                    .filter(function (notice) { return notice.length > 0; })
-                ;
+                    .filter(function (notice) { return notice.length > 0; });
 
                 if (show) {
                     tl.set(notices, { height: 0, visibility: 'visible', position: 'relative' }, 0);
@@ -955,9 +961,9 @@ define([
                     heightChange += notice.height();
 
                     tl
-                        .to(notice, that._transitionDuration / 2, {
+                        .to(notice, _this._transitionDuration / 2, {
                             height: show ? notice.height() : 0,
-                            ease: 'easeOutCirc'
+                            ease: 'easeOutCirc',
                         }, 0)
                     ;
                 });
@@ -973,7 +979,7 @@ define([
                     tl.to(this._parent._optionsBackgroundNode, this._transitionDuration / 2, {
                         height: contentHeight + heightChange,
                         'line-height': contentHeight + heightChange + 'px',
-                        ease: 'easeOutCirc'
+                        ease: 'easeOutCirc',
                     }, 0);
                 }
 
@@ -991,8 +997,8 @@ define([
              * @chainable
              */
             retreat: function () {
-                var closeTimeline,
-                    that = this;
+                var closeTimeline;
+                var _this = this;
 
                 this._timeline
                     .seek('+=0', false)
@@ -1003,10 +1009,12 @@ define([
 
                 this._timeline
                     .add(closeTimeline)
-                    .call(function () {
-                        that._activeChildStep = null;
-                    })
-                ;
+                    .call(
+                        function () {
+                            _this._activeChildStep = null;
+                        }
+
+                    );
 
                 this._timeline.play(0);
 
@@ -1024,13 +1032,13 @@ define([
              * @return {StepItem}                   itself
              */
             advance: function (targetChildStepId, targetChildData) {
-                var closeTimeline,
-                    shiftTimeline,
-                    openTimeline,
-                    targetChildStep = this._childSteps[targetChildStepId],
-                    skipFirst,
+                var closeTimeline;
+                var shiftTimeline;
+                var openTimeline;
+                var targetChildStep = this._childSteps[targetChildStepId];
+                var skipFirst;
 
-                    that = this;
+                var _this = this;
 
                 // cannot advance if the target is not specified
                 if (!targetChildStep) {
@@ -1056,11 +1064,13 @@ define([
                     .add(closeTimeline)
                     .add(shiftTimeline)
                     .add(openTimeline)
-                    .call(function () {
-                        // only when animation completes, set the active child to the target child
-                        that._activeChildStep = targetChildStep;
-                    })
-                ;
+                    .call(
+                        function () {
+                            // only when animation completes, set the active child to the target child
+                            _this._activeChildStep = targetChildStep;
+                        }
+
+                    );
 
                 this._timeline.play(0);
 
@@ -1085,7 +1095,7 @@ define([
              */
             getContentOuterHeight: function () {
                 return this._contentNode.outerHeight();
-            }
+            },
         });
 
         lang.mixin(StepItem,
@@ -1118,7 +1128,7 @@ define([
                     SUCCESS: 'step-state-success',
                     ERROR: 'step-state-error',
                     DEFAULT: 'step-state-default',
-                    LOADING: 'step-state-loading'
+                    LOADING: 'step-state-loading',
                 },
 
                 /**
@@ -1153,8 +1163,8 @@ define([
                     * @param event.id {String} Id of the StepItem that became a current step
                     * @param event.state {String} name of the state
                     */
-                    STATE_CHANGE: 'stepItem/stateChange'
-                }
+                    STATE_CHANGE: 'stepItem/stateChange',
+                },
             }
         );
 

@@ -32,6 +32,7 @@
 */
 
 define([
+
 /* Dojo */
         'dojo/topic',
 
@@ -43,13 +44,16 @@ define([
 
 /* json hover template file */
         'dojo/text!./templates/feature_hovertip_template.json',
+
 /* json archor template file*/
-        'dojo/text!./templates/feature_anchortip_template.json'
+        'dojo/text!./templates/feature_anchortip_template.json',
 ],
 
     function (
+
     /* Dojo */
         topic,
+
     /* Ramp */
         EventManager, LayerLoader,
 
@@ -58,20 +62,20 @@ define([
     ) {
         'use strict';
 
-        var hovertipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(hovertipsTemplate)),
-            anchortipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(anchortipsTemplate)),
-            maptipPrototype = {
+        var hovertipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(hovertipsTemplate));
+        var anchortipsTemplateJson = JSON.parse(TmplHelper.stringifyTemplate(anchortipsTemplate));
+        var maptipPrototype = {
                 node: null,
                 handle: null,
-                graphic: null
-            },
+                graphic: null,
+            };
 
-            speed = 150,
-            tolerance = 0,
+        var speed = 150;
+        var tolerance = 0;
 
-            highTooltip = Object.create(maptipPrototype),
+        var highTooltip = Object.create(maptipPrototype);
 
-            subPanelOffset;
+        var subPanelOffset;
 
         /**
         * Returns the position of the sub-panel relative to the leftmost edge of the screen.
@@ -117,19 +121,19 @@ define([
             if (target && graphic &&
                 target.offset().left > getSubPanelLeftOffset()) {
                 //console.log('offsets', target.offset().left, getSubPanelLeftOffset());
-                var point = graphic._extent.getCenter(),
-                    width = RAMP.map.extent.xmax - RAMP.map.extent.xmin;
+                var point = graphic._extent.getCenter();
+                var width = RAMP.map.extent.xmax - RAMP.map.extent.xmin;
                 point.setX(point.x + width / 6);
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: point
+                    point: point,
                 });
 
                 topic.publish(EventManager.Maptips.EXTENT_CHANGE, {
-                    scroll: false
+                    scroll: false,
                 });
             } else {
                 topic.publish(EventManager.Maptips.EXTENT_CHANGE, {
-                    scroll: true
+                    scroll: true,
                 });
             }
         }
@@ -144,17 +148,18 @@ define([
         */
         function getMaptipContent(graphic, interactive) {
             //the graphic might be in a highlight layer, if so we need the source layer id
-            var layerId = graphic.getLayer().sourceLayerId,
-                lData, fData;
+            var layerId = graphic.getLayer().sourceLayerId;
+            var lData;
+            var fData;
             if (!layerId) {
                 //graphic was not in a highlight layer
                 layerId = graphic.getLayer().id;
             }
 
-            var layerConfig = LayerLoader.getLayerConfig(layerId),
-               templateKey = '',
-               datawrapper,
-               maptipContent;
+            var layerConfig = LayerLoader.getLayerConfig(layerId);
+            var templateKey = '';
+            var datawrapper;
+            var maptipContent;
 
             tmpl.cache = {};
 
@@ -179,6 +184,7 @@ define([
                 //TODO should this be it's own template?
                 maptipContent = '<div class="map-tip-content">' + i18n.t('maptips.attribsDownloading') + '</div>';
             }
+
             return maptipContent;
         }
 
@@ -197,18 +203,21 @@ define([
             if (maptipContent == null) {
                 return;
             }
+
             target.tooltipster({
                 offsetX: $(target)[0].getBBox().width / 2,
+
                 //content: $(maptipContent),
                 interactive: true,
                 arrow: true,
+
                 // known bug in tooltipster when browsers not supporting CSS animation don't display tooltips at all
                 updateAnimation: Modernizr.csstransitions,
                 autoClose: interactive !== true,
                 onlyOne: true,
                 interactiveTolerance: tolerance,
                 speed: speed,
-                theme: (interactive === true) ? '.tooltipster-noir' : '.tooltipster-shadow'
+                theme: (interactive === true) ? '.tooltipster-noir' : '.tooltipster-shadow',
             });
 
             //tooltipster fails to refresh content using the above settings object.  a direct call to 'content' seems
@@ -304,6 +313,6 @@ define([
             */
             init: function () {
                 initListeners();
-            }
+            },
         };
     });

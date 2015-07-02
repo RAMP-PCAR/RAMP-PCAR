@@ -92,7 +92,7 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                         cssClass: {
                             active: 'active',
                             focus: 'focused',
-                            check: 'checked'
+                            check: 'checked',
                         },
 
                         /**
@@ -109,7 +109,7 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                          */
                         label: {
                             check: 'checked',
-                            uncheck: 'unchecked'
+                            uncheck: 'unchecked',
                         },
 
                         /**
@@ -138,11 +138,11 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                          * @type String
                          * @default null
                          */
-                        id: null
+                        id: null,
                     },
                     options,
                     {
-                        node: node
+                        node: node,
                     }
                 );
 
@@ -157,19 +157,19 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
             },
 
             _initListeners: function () {
-                var that = this;
+                var _this = this;
 
                 this.node
                     .on('change', function () {
-                        that._toggleLabel();
+                        _this._toggleLabel();
 
-                        that._emit(Checkbox.agency.USER);
+                        _this._emit(Checkbox.agency.USER);
                     })
                     .on('focus', function () {
-                        that.node.findInputLabel().addClass(that.cssClass.focus);
+                        _this.node.findInputLabel().addClass(_this.cssClass.focus);
                     })
                     .on('focusout', function () {
-                        that.node.findInputLabel().removeClass(that.cssClass.focus);
+                        _this.node.findInputLabel().removeClass(_this.cssClass.focus);
                     });
             },
 
@@ -220,7 +220,7 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
 
                 this.emit(Checkbox.event.TOGGLE, {
                     agency: agency,
-                    checkbox: this
+                    checkbox: this,
                 });
             },
 
@@ -270,13 +270,13 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                 this.node.removeClass('tooltipstered')
                 ;
                 this._toggleLabel();
-            }
+            },
         });
 
         lang.mixin(Checkbox,
             {
                 state: {
-                    INVALID: 'checkbox-invalid'
+                    INVALID: 'checkbox-invalid',
                 },
 
                 /**
@@ -294,7 +294,7 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                 */
                 agency: {
                     USER: 'USER',
-                    CODE: 'CODE'
+                    CODE: 'CODE',
                 },
 
                 /**
@@ -318,8 +318,8 @@ define(['dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang', 'utils/util'],
                     * @param event.checkbox {Checkbox} Checkbox object that has been toggled
                     * @param event.agency {String} Agency that toggled the Checkbox
                     */
-                    TOGGLE: 'checkbox/toggle'
-                }
+                    TOGGLE: 'checkbox/toggle',
+                },
             }
         );
 

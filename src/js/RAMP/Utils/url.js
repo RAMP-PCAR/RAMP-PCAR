@@ -44,7 +44,8 @@ define(['dojo/_base/declare', 'dojo/io-query'],
                     this.uri = fullUrl.substring(0, index);
                     this.query = fullUrl.substring(index + 1);
                 }
+
                 this.queryObject = dojoQuery.queryToObject(this.query);
-            }
+            },
         });
     });

@@ -22,6 +22,7 @@
 */
 
 define([
+
 /* RAMP */
     'ramp/graphicExtension', 'ramp/eventManager',
 
@@ -29,9 +30,11 @@ define([
     'dojo/topic', 'dojo/dom-construct',
 
 /* Utils */
-    'utils/util'],
+    'utils/util',
+],
 
     function (
+
     /* RAMP */
     GraphicExtension, EventManager,
 
@@ -66,10 +69,10 @@ define([
             * @param {esri/Graphic} selectedGraphic the on-map graphic object associated with the entry in the datagrid
             */
             onDetailSelect: function (buttonNode, fData, selectedGraphic, mode) {
-                var guid = buttonNode.data('guid') || buttonNode.data('guid', UtilMisc.guid()).data('guid'),
-                    content = GraphicExtension.getFDataTextContent(fData),
-                    title = GraphicExtension.getFDataTitle(fData),
-                    node = buttonNode.parents('.record-row').parent();
+                var guid = buttonNode.data('guid') || buttonNode.data('guid', UtilMisc.guid()).data('guid');
+                var content = GraphicExtension.getFDataTextContent(fData);
+                var title = GraphicExtension.getFDataTitle(fData);
+                var node = buttonNode.parents('.record-row').parent();
 
                 if (mode === 'summary') {
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {
@@ -85,24 +88,26 @@ define([
                                 var scroll = evt.scroll;
                                 topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
                                     fData: fData,
-                                    scroll: scroll
+                                    scroll: scroll,
                                 });
                             });
 
                             RAMP.state.hilite.click.objId = GraphicExtension.getFDataOid(fData);
                             RAMP.state.hilite.click.layerId = fData.parent.layerId;
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                                graphic: selectedGraphic
+                                graphic: selectedGraphic,
                             });
                         },
+
                         doOnHide: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_HIDE);
                         },
+
                         doOnDestroy: function () {
                             selectedGraphic = null;
 
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
-                        }
+                        },
                     });
                 } else {
                     node = buttonNode;
@@ -115,11 +120,12 @@ define([
                         origin: 'ex-datagrid',
                         templateKey: 'full_sub_panel_container',
                         guid: guid,
+
                         //doOnOpen: function () {
                         doAfterUpdate: function () {
                             topic.publish(EventManager.Datagrid.HIGHLIGHTROW_SHOW, {
                                 fData: fData,
-                                scroll: true
+                                scroll: true,
                             });
                         },
 
@@ -131,7 +137,7 @@ define([
                             selectedGraphic = null;
 
                             topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE);
-                        }
+                        },
                     });
                 }
             },
@@ -146,11 +152,11 @@ define([
             onDetailDeselect: function (mode) {
                 if (mode === 'summary') {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                        origin: 'rampPopup,datagrid'
+                        origin: 'rampPopup,datagrid',
                     });
                 } else {
                     topic.publish(EventManager.GUI.SUBPANEL_CLOSE, {
-                        origin: 'ex-datagrid'
+                        origin: 'ex-datagrid',
                     });
                 }
             },
@@ -170,31 +176,28 @@ define([
                     RAMP.state.hilite.zoom.objId = GraphicExtension.getFDataOid(fData);
                     RAMP.state.hilite.zoom.layerId = fData.parent.layerId;
                     topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
-                        graphic: zoomToGraphic
+                        graphic: zoomToGraphic,
                     });
 
                     UtilMisc.subscribeOnceAny(['map/pan-start', 'map/zoom-start'], onZoomCancel);
                 }
 
                 // Find level as close to and above scaleLimit
-                var scaleLimit = zoomToGraphic._layer.maxScale,
-                    lods = RAMP.map._params.lods,
-                    found = false,
-                    currentLod = Math.ceil(RAMP.map._params.lods.length / 2),
-                    lowLod = 0,
-                    highLod = RAMP.map._params.lods.length - 1;
+                var scaleLimit = zoomToGraphic._layer.maxScale;
+                var lods = RAMP.map._params.lods;
+                var currentLod = Math.ceil(RAMP.map._params.lods.length / 2);
+                var lowLod = 0;
+                var highLod = RAMP.map._params.lods.length - 1;
 
                 // Binary Search
-                while (!found) {
+                while (!(highLod === lowLod + 1)) {
                     if (lods[currentLod].scale >= scaleLimit) {
                         lowLod = currentLod;
                     } else {
                         highLod = currentLod;
                     }
+
                     currentLod = Math.ceil((highLod + lowLod) / 2);
-                    if (highLod === lowLod + 1) {
-                        found = true;
-                    }
                 }
 
                 switch (zoomToGraphic.geometry.type) {
@@ -202,7 +205,7 @@ define([
                         topic.publish(EventManager.Map.CENTER_AND_ZOOM, {
                             graphic: zoomToGraphic,
                             level: lowLod,
-                            callback: callback
+                            callback: callback,
                         });
                         break;
 
@@ -210,19 +213,19 @@ define([
 
                         topic.publish(EventManager.Map.SET_EXTENT, {
                             extent: zoomToGraphic._extent.expand(1.5),
-                            callback: callback
+                            callback: callback,
                         });
                         break;
 
                     default:
                         topic.publish(EventManager.Map.SET_EXTENT, {
                             extent: zoomToGraphic._extent.expand(1.5),
-                            callback: callback
+                            callback: callback,
                         });
                         break;
                 }
                 topic.publish(EventManager.Datagrid.ZOOMLIGHTROW_SHOW, {
-                    fData: fData
+                    fData: fData,
                 });
             },
 
@@ -233,7 +236,7 @@ define([
             */
             onZoomBack: function () {
                 topic.publish(EventManager.Map.SET_EXTENT, {
-                    extent: zoomBackExtent
+                    extent: zoomBackExtent,
                 });
 
                 topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_HIDE);
@@ -249,6 +252,6 @@ define([
             */
             onZoomCancel: function () {
                 onZoomCancel();
-            }
+            },
         };
     });

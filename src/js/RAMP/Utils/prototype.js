@@ -14,7 +14,7 @@
 */
 define([
     /* ESRI */
-    'esri/geometry/Extent'
+    'esri/geometry/Extent',
 ],
     function (
     /* ESRI */
@@ -81,15 +81,17 @@ define([
         function _initArrayPrototype() {
             // prototype for removing items from array
             addPrototype(Array, 'remove', function () {
-                var what, a = arguments,
-                    L = a.length,
-                    ax;
+                var what;
+                var a = arguments;
+                var L = a.length;
+                var ax;
                 while (L && this.length) {
                     what = a[--L];
                     while ((ax = this.indexOf(what)) !== -1) {
                         this.splice(ax, 1);
                     }
                 }
+
                 return this;
             });
 
@@ -100,10 +102,13 @@ define([
 
             // Sum all the elements in the array, no checking for non-numeric types
             addPrototype(Array, 'sum', function () {
-                var i, res;
+                var i;
+                var res;
+
                 for (i = 0, res = 0; i < this.length; ++i) {
                     res += this[i];
                 }
+
                 return res;
             });
 
@@ -124,8 +129,10 @@ define([
 
             // Array Flatten object extension: http://tech.karbassi.com/2009/12/17/pure-javascript-flatten-array/
             addStaticFcn(Array, 'flatten', function flatten(arr) {
-                var flat = [],
-                    i, l, type;
+                var flat = [];
+                var i;
+                var l;
+                var type;
 
                 for (i = 0, l = arr.length; i < l; i++) {
                     type = Object.prototype.toString.call(arr[i]).split(' ').pop().split(']').shift().toLowerCase();
@@ -134,6 +141,7 @@ define([
                             flatten.call(arr[i]) : arr[i]);
                     }
                 }
+
                 return flat;
             });
 
@@ -161,6 +169,7 @@ define([
             // Takes an old object as a parameter and returns an empty new object that inherits from the old one
             addStaticFcn(Object, 'create', function (o) {
                 function F() { }
+
                 F.prototype = o;
                 return new F();
             });
@@ -177,9 +186,9 @@ define([
         */
         function _initStringPrototype() {
             addStaticFcn(String, 'format', function () {
-                var s = arguments[0],
-                    i,
-                    reg;
+                var s = arguments[0];
+                var i;
+                var reg;
 
                 for (i = 0; i < arguments.length - 1; i++) {
                     reg = new RegExp('\\{' + i + '\\}', 'gm');
@@ -202,10 +211,11 @@ define([
                         if (position === undefined || position > subjectString.length) {
                             position = subjectString.length;
                         }
+
                         position -= searchString.length;
                         var lastIndex = subjectString.indexOf(searchString, position);
                         return lastIndex !== -1 && lastIndex === position;
-                    }
+                    },
                 });
             }
         }
@@ -254,13 +264,13 @@ define([
             addPrototype(EsriExtent, 'center', function () {
                 return {
                     X: this.centerX,
-                    Y: this.centerY
+                    Y: this.centerY,
                 };
             });
 
             addPrototype(EsriExtent, 'pan', function (x, y) {
-                var dx = this.centerX() - x,
-                    dy = this.centerY() - y;
+                var dx = this.centerX() - x;
+                var dy = this.centerY() - y;
                 return new EsriExtent(this.xmin - dx, this.ymin - dy, this.xmax - dx, this.ymax - dy,
                     this.spatialReference);
             });
@@ -285,15 +295,15 @@ define([
 
             // Detects if the given span is overflowing with text
             $.fn.isOverflowed = function () {
-                var result,
-                    span = $(this),
-                    element = span
+                var result;
+                var span = $(this);
+                var element = span
                         .clone()
                         .css({
                             display: 'inline',
                             width: 'auto',
                             visibility: 'hidden',
-                            'font-size': span.css('font-size')
+                            'font-size': span.css('font-size'),
                         })
                         .appendTo('body');
 
@@ -335,7 +345,8 @@ define([
             */
             load: function (id, require, load) {
                 load();
-            }
+            },
         };
     }
+
 );

@@ -24,7 +24,7 @@ define([
         'dojo/topic', 'dojo/_base/lang', 'dojo/on',
 
 /* Utils */
-        'utils/util'
+        'utils/util',
 ],
 
     function (
@@ -35,6 +35,7 @@ define([
         UtilMisc) {
         'use strict';
 
+        // FIXME improve docs: parameters are undefined
         /**
         * [_initDojoPrototype description] Adds following extensions:
         * - `topic.subscrive(name, listener, scope)` - An extension of dojoLang.subscribe that allows the callback
@@ -45,7 +46,6 @@ define([
         * @method _initDojoPrototype
         * @private
         */
-        // FIXME improve docs: parameters are undefined
         function _initDojoPrototype() {
             var originalOn = dojoOn;
             dojoOn = function (target, type, listener, scope) {
@@ -81,6 +81,6 @@ define([
                 _initDojoPrototype();
 
                 load();
-            }
+            },
         };
     });

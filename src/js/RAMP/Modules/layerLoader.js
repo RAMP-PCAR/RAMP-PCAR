@@ -35,6 +35,7 @@
 */
 
 define([
+
 /* Dojo */
 'dojo/topic',
 
@@ -46,9 +47,11 @@ define([
 'ramp/filterManager', 'ramp/layerItem', 'ramp/attributeLoader', 'ramp/graphicExtension',
 
 /* Util */
-'utils/util'],
+'utils/util',
+],
 
     function (
+
     /* Dojo */
     topic,
 
@@ -132,6 +135,7 @@ define([
                     ret = true;
                 }
             }
+
             return ret;
         }
 
@@ -143,9 +147,9 @@ define([
         * @param {String} layerId config id of the layer
         */
         function removeFromMap(layerId) {
-            var map = RampMap.getMap(),
-                bbLayer = RampMap.getBoundingBoxMapping()[layerId],
-                layer = map._layers[layerId];
+            var map = RampMap.getMap();
+            var bbLayer = RampMap.getBoundingBoxMapping()[layerId];
+            var layer = map._layers[layerId];
 
             if (layer) {
                 map.removeLayer(layer);
@@ -160,6 +164,7 @@ define([
                     map.removeLayer(bbLayer);
                     RAMP.layerCounts.bb -= 1;
                 }
+
                 delete RampMap.getBoundingBoxMapping()[layer.id];
             }
 
@@ -177,6 +182,7 @@ define([
                             RAMP.layerCounts.wms -= 1;
                             layer.ramp.load.inCount = false;
                         }
+
                         break;
 
                     case GlobalStorage.layerType.feature:
@@ -186,6 +192,7 @@ define([
                             RAMP.layerCounts.feature -= 1;
                             layer.ramp.load.inCount = false;
                         }
+
                         break;
                 }
             }
@@ -206,13 +213,13 @@ define([
         * set for new layers
         */
         function _loadLayer(layer, reloadIndex) {
-            var insertIdx,
-                layerSection,
-                map = RampMap.getMap(),
-                layerConfig = layer.ramp.config,
-                lsState,
-                options = {},
-                isNotReload = typeof reloadIndex === 'undefined';
+            var insertIdx;
+            var layerSection;
+            var map = RampMap.getMap();
+            var layerConfig = layer.ramp.config;
+            var lsState;
+            var options = {};
+            var isNotReload = typeof reloadIndex === 'undefined';
 
             if (!layer.ramp) {
                 console.log('you failed to supply a ramp.type to the layer!');
@@ -231,7 +238,7 @@ define([
                                 type: 'wms',
                                 imageUrl: layerConfig.url + '?SERVICE=WMS&REQUEST=GetLegendGraphic&' +
                                     'TRANSPARENT=true&VERSION=1.1.1&FORMAT=' + layerConfig.legendMimeType +
-                                    '&LAYER=' + layerConfig.layerName
+                                    '&LAYER=' + layerConfig.layerName,
                             };
                         }
                     } else {
@@ -253,6 +260,7 @@ define([
                     } else {
                         insertIdx = reloadIndex;
                     }
+
                     RAMP.layerCounts.feature += 1;
                     layer.ramp.load.inCount = true;
 
@@ -275,18 +283,20 @@ define([
                     lsState = LayerItem.state.LOADED;
                     break;
                 case 'loading':
+
                     //IE10 hack. since IE10 will not fire the loaded event, check the loaded flag of the layer object
                     if (layer.loaded) {
                         lsState = LayerItem.state.LOADED;
                     } else {
                         lsState = LayerItem.state.LOADING;
                     }
+
                     break;
                 case 'error':
                     options.notices = {
                         error: {
-                            message: i18n.t('filterManager.notices.error.connect')
-                        }
+                            message: i18n.t('filterManager.notices.error.connect'),
+                        },
                     };
 
                     lsState = LayerItem.state.ERROR;
@@ -300,6 +310,7 @@ define([
             } else {
                 updateLayerSelectorState(layerConfig.id, lsState, false, options);
             }
+
             layer.ramp.load.inLS = true;
 
             //this will force a recreation of the highlighting graphic group.
@@ -315,6 +326,7 @@ define([
                     if (layerConfig.featureInfo) {
                         MapClickHandler.registerWMSClick(layer);
                     }
+
                     break;
 
                 case GlobalStorage.layerType.feature:
@@ -347,13 +359,14 @@ define([
 
                     //generate bounding box
                     if (layerConfig.layerExtent) {
-                        var boundingBoxExtent,
-                            boundingBox = new GraphicsLayer({
+                        var boundingBoxExtent;
+                        var boundingBox = new GraphicsLayer({
                                 id: String.format('boundingBoxLayer_{0}', layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible
+                                visible: layerConfig.settings.boundingBoxVisible,
                             });
 
                         boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
+
                         // add ramp.user property to the bounding box as well
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox, user: layer.ramp.user };
 
@@ -429,10 +442,11 @@ define([
 
                 evt.layer.ramp.load.state = 'error';
 
-                var layerId = evt.layer.id,
-                    // generic error notice
-                    errorMessage = i18n.t('filterManager.notices.error.load'),
-                    options;
+                var layerId = evt.layer.id;
+
+                // generic error notice
+                var errorMessage = i18n.t('filterManager.notices.error.load');
+                var options;
 
                 //get that failed layer outta here
                 removeFromMap(layerId);
@@ -445,9 +459,9 @@ define([
                 options = {
                     notices: {
                         error: {
-                            message: errorMessage
-                        }
-                    }
+                            message: errorMessage,
+                        },
+                    },
                 };
 
                 //if layer is in layer selector, update the status
@@ -488,7 +502,7 @@ define([
                     g = GraphicExtension.findGraphic(RAMP.state.hilite.click.objId, evt.layer.id);
                     if (g) {
                         topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_SHOW, {
-                            graphic: g
+                            graphic: g,
                         });
                     } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
@@ -498,7 +512,7 @@ define([
                     g = GraphicExtension.findGraphic(RAMP.state.hilite.zoom.objId, evt.layer.id);
                     if (g) {
                         topic.publish(EventManager.FeatureHighlighter.ZOOMLIGHT_SHOW, {
-                            graphic: g
+                            graphic: g,
                         });
                     } //else graphic is off-view and does not exist in layer. dont' change higlight
                 }
@@ -546,10 +560,10 @@ define([
             * @param  {Object} evt.layerId the layer id to be removed
             */
             onLayerRemove: function (evt) {
-                var layer,
-                    configIdx,
-                    layerSection,
-                    configCollection;
+                var layer;
+                var configIdx;
+                var layerSection;
+                var configCollection;
 
                 layer = RAMP.layerRegistry[evt.layerId];
 
@@ -591,14 +605,14 @@ define([
             * @param  {Object} evt.layerId the layer id to be reloaded
             */
             onLayerReload: function (evt) {
-                var curlayer,
-                    layerConfig,
-                    user,
-                    newLayer,
-                    layerIndex,
-                    layerList,
-                    idArray,
-                    cleanIdArray;
+                var curlayer;
+                var layerConfig;
+                var user;
+                var newLayer;
+                var layerIndex;
+                var layerList;
+                var idArray;
+                var cleanIdArray;
 
                 removeFromMap(evt.layerId);
 
@@ -615,6 +629,7 @@ define([
 
                 //make an array of the ids in order of the list on the page
                 idArray = layerList
+
                     // for each layer list, find its items and reverse their order
                             .map(function (i, elm) { return $(elm).find('> li').toArray().reverse(); })
                             .map(function (i, elm) { return elm.id; });
@@ -671,6 +686,6 @@ define([
 
             getLayerConfig: getLayerConfig,
 
-            nextId: nextId
+            nextId: nextId,
         };
     });
