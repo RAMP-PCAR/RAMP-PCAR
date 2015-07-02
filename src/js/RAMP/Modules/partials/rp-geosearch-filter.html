@@ -1,8 +1,30 @@
 ﻿<div class="geosearch-filter-container">
+    <select ng-change="gsf.onChange()"
+            ng-options="province.name for province in gsf.filterData.provinceList"
+            ng-model="gsf.filterData.currentProvince"
+            ng-class="{selected: gsf.filterData.currentProvince.code !== '-1'}"
+            ng-show="gsf.getFilterType() === gsf.filterTypes.name"
+            class="province-filter"></select>
 
-    <select ng-change="onChange()" ng-options="province.name for province in filterData.provinceList" ng-model="filterData.currentProvince" ng-class="{selected: filterData.currentProvince.code !== '-1'}" class="province-filter"></select>
-    <select ng-change="onChange()" ng-options="type.name for type in filterData.typeList" ng-model="filterData.currentType" ng-class="{selected: filterData.currentType.code !== '-1'}" class="type-filter"></select>
-    <select ng-change="onChange()" ng-options="extent.name for extent in filterData.extentList" ng-model="filterData.currentExtent" ng-class="{selected: filterData.currentExtent.code !== '-1'}" class="extent-filter"></select>
-    
-    <button class="button-none filter-clear" ng-click="clearFilters()">Clear</button>
+    <select ng-change="gsf.onChange()"
+            ng-options="distance.name for distance in gsf.filterData.distanceList"
+            ng-model="gsf.filterData.currentDistance"
+            ng-class="{selected: gsf.filterData.currentDistance.code !== '-1'}"
+            ng-show="gsf.getFilterType() === gsf.filterTypes.coordinates"
+            class="type-filter"></select>
+
+    <select ng-change="gsf.onChange()"
+            ng-options="type.name for type in gsf.filterData.typeList"
+            ng-model="gsf.filterData.currentType"
+            ng-class="{selected: gsf.filterData.currentType.code !== '-1'}"
+            
+            class="type-filter"></select>
+
+    <select ng-change="gsf.onChange()"
+            ng-options="extent.name for extent in gsf.filterData.extentList"
+            ng-model="gsf.filterData.currentExtent"
+            ng-class="{selected: gsf.filterData.currentExtent.code !== '-1'}"
+            class="extent-filter"></select>
+
+    <button class="button-none filter-clear" ng-click="gsf.clearFilters()">Clear</button>
 </div>

@@ -3,30 +3,33 @@
         <div class="geosearch-input">
             <!-- submit button placed before clear button because of the default action -->
             <input class="geosearch-field"
-                   ng-model="geosearch.selectedResult.name"
-                   ng-change="geosearch.search()"
+                   ng-model="gsc.selectedResult.name"
+                   ng-change="gsc.search()"
                    ng-minlength="3"
-                   ng-focus="geosearch.onFocus()"
+                   ng-focus="gsc.onFocus()"
                    type="text" required />
-            <button class="geosearch-button btn-primary" ng-click="geosearch.select()">
+
+            <button class="geosearch-button btn-primary" ng-click="gsc.select()">
                 <i class="fa fa-search"></i><span class="on-right wb-inv">Search</span>
             </button>
-            <button ng-show="geosearch.selectedResult.name" ng-click="geosearch.clear()" class="geosearch-clear button-none">
+            <button ng-show="gsc.selectedResult.name" ng-click="gsc.clear()" class="geosearch-clear button-none">
                 <i class="fa fa-close"></i><span class="on-right wb-inv">Clear</span>
             </button>
         </div>
 
     </form>
-    <div ng-switch on="geosearch.state">
+    <div>
 
-        <rp-geosearch-filter ng-hide="geosearch.state === 'hide'" 
-                             filter-change="geosearch.search()"></rp-geosearch-filter>
+        <rp-geosearch-filter ng-hide="gsc.state === gsc.states.hide"
+                             search-type="gsc.searchType"
+                             filter-change="gsc.search()"></rp-geosearch-filter>
 
-        <rp-geosearch-results ng-switch-when="show" 
-                              results="geosearch.results" 
-                              select="geosearch.select(result)"></rp-geosearch-results>
+        <rp-geosearch-results ng-show="gsc.state === gsc.states.show"
+                              results="gsc.results"
+                              select="gsc.select(result)"></rp-geosearch-results>
         
-        <div class="loading-simple" ng-switch-when="loading">
+        <div ng-show="gsc.state === gsc.states.loading"
+             class="loading-simple">
             <span>Loading</span>
             <ul role="presentation">
                 <li></li>
@@ -35,7 +38,8 @@
             </ul>
         </div>
 
-        <div class="no-results" ng-switch-when="no-results">
+        <div ng-show="gsc.state === gsc.states.noresults" 
+             class="no-results">
             <span>No results found. Update filters or change your query.</span>
         </div>
     </div>

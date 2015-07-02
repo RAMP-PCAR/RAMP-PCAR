@@ -1,16 +1,16 @@
 ﻿<div class="results-container">
     <ul class="result-list">
-        <li ng-repeat="result in geosearchResults.results" ng-class="{selected: result.selected}">
-            <button class="result-container" ng-click="geosearchResults.select(result)">
+        <li ng-repeat="result in gsr.results" ng-class="{selected: result.selected}">
+            <button class="result-container" ng-click="gsr.select(result)">
                 <span>
                     <span class="main">
                         <span class="name">{{ result.name }}</span>
                         <span class="place">
-                            <span class="province">{{ geosearchResults.lookup.provinceName(result.province) }}</span><span class="location" ng-show="result.location">,&nbsp;{{ result.location }}</span>
+                            <span class="province">{{ gsr.lookup.provinceName(result.province) }}</span><span class="location" ng-show="result.location">,&nbsp;{{ result.location }}</span>
                         </span>
                     </span>
                     <span class="secondary">
-                        <span class="small">{{ geosearchResults.lookup.typeName(result.type) }}</span>
+                        <span class="small">{{ gsr.lookup.typeName(result.type) }}</span>
                     </span>
                 </span>
             </button>

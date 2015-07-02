@@ -543,7 +543,8 @@ define([
                                 //get results around the FSA
                                 areaSearch({
                                     lonlat: fsaResult.lonlat,
-                                    radius: filters.radius
+                                    radius: filters.radius,
+                                    concise: filters.concise
                                 }, defResult);
                             } else {
                                 //fsa not found.  return none result
@@ -592,13 +593,81 @@ define([
 
             angular
                 .module('gs.service', [])
-                .factory('geoService', ['$q',
-                    function ($q) {
-                        var currentSearchTerm;
+                .factory('geoService', ['$q', 'filterService',
+                    function ($q, filterService) {
+                        var currentSearchTerm,
+                            data;
+
+                        data = {
+                            parseType: {
+                                none: 'none',
+                                fsa: 'fsa',
+                                lonlat: 'lonlat',
+                                prov: 'prov'
+                            }
+                        };
+
+                        /**
+                        * Will examine the user search string. Returns any special type and related data
+                        * Valid types are: none, fsa, lonlat, prov
+                        *
+                        * @method parseInput
+                        * @private
+                        * @param {String} input user search string
+                        * @return {Object} result of parse.  has .type (string) and .data (object) properties
+                        */
+                        function parseInput(input) {
+                            var fsaReg = /[A-Za-z]\d[A-Za-z]/,
+                                ret = {
+                                    type: data.parseType.none,
+                                    data: input
+                                };
+
+                            //check for FSA
+                            if ((input.length > 2) && (fsaReg.test(input.substring(0, 3)))) {
+                                //ensure there is a break after first 3 characters
+                                if (((input.length > 3) && (input.substring(3, 4) === ' ')) || (input.length === 3)) {
+                                    //tis an FSA
+                                    ret.type = parseType.fsa;
+                                    ret.data = input.substring(0, 3);
+                                    return ret;
+                                }
+                            }
+
+                            if (input.indexOf(',') > 0) {
+                                var vals = input.split(',');
+
+                                //check lat/long
+                                if (vals.length === 2) {
+                                    if (isLatLong(vals[0]) && isLatLong(vals[1])) {
+                                        ret.type = parseType.lonlat;
+                                        ret.data = [Number(vals[1]), Number(vals[0])]; //Reverse order to match internal structure of lonlat
+                                        return ret;
+                                    }
+                                }
+
+                                //check for trailing province
+                                //TODO move this into language configs?
+                                var provTest = vals[vals.length - 1].trim();
+
+                                //see if item after last comma is a province
+                                if (isProvince(provTest)) {
+                                    ret.type = parseType.prov;
+                                    ret.data = {
+                                        prov: getProvCode(provTest),
+                                        searchVal: input.substring(0, input.lastIndexOf(','))
+                                    };
+                                }
+                            }
+
+                            return ret;
+                        }
 
                         // just a wrapper around geoSearch function for now
-                        function search(searchTerm, filters) {
-                            var deferred = $q.defer();
+                        function search(searchTerm) {
+                            var deferred = $q.defer(),
+                                filters = filterService.getFilters();
+
                             currentSearchTerm = searchTerm;
 
                             geoSearch(searchTerm, filters)
@@ -635,7 +704,11 @@ define([
                         }*/
 
                         return {
-                            search: search//,
+                            data: data,
+
+                            search: search,
+                            parseInput: parseInput
+                            //,
                             //suggest: suggest
                         };
                     }
@@ -668,20 +741,32 @@ define([
                                     name: 'Distance'
                                 },
                                 {
-                                    code: '0',
+                                    code: '5',
                                     name: '5km'
                                 },
                                 {
-                                    code: '1',
+                                    code: '10',
                                     name: '10km'
                                 },
                                 {
-                                    code: '2',
+                                    code: '15',
                                     name: '15km'
                                 },
                                 {
-                                    code: '3',
+                                    code: '30',
                                     name: '30km'
+                                },
+                                {
+                                    code: '50',
+                                    name: '50km'
+                                },
+                                {
+                                    code: '75',
+                                    name: '75km'
+                                },
+                                {
+                                    code: '100',
+                                    name: '100km'
                                 }
                             ],
 
@@ -771,9 +856,6 @@ define([
                             },
 
                             getFilters: function () {
-                                // need to assign current extent explicitly
-                                //data.extentList[2].extent = extents.data.currentExtent;
-
                                 return {
                                     prov: data.currentProvince.code !== '-1' ? data.currentProvince.code : undefined,
                                     concise: data.currentType.code !== '-1' ? data.currentType.code : undefined,
@@ -879,23 +961,41 @@ define([
                     return {
                         restrict: 'E',
                         scope: {
-                            filterChange: '&'
+                            filterChange: '&',
+                            searchType: '='
                         },
                         templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-filter.html',
-                        controller: ['$scope', 'filterService',
-                            function ($scope, filterService) {
-                                // bind filterdata
-                                $scope.filterData = filterService.data;
+                        controller: ['$scope', 'filterService', 'geoService',
+                            function ($scope, filterService, geoService) {
+                                /* jshint validthis: true */
+                                var vm = this;
 
-                                // call onChange when one of the filters changes
-                                // this calls a search function on the main controller
-                                $scope.onChange = $scope.filterChange;
-                                $scope.clearFilters = function () {
-                                    filterService.clearFilters();
-                                    $scope.onChange();
+                                // bind filterdata
+                                vm.filterData = filterService.data;
+                                vm.getFilterType = getFilterType;
+                                vm.onChange = vm.filterChange;
+                                vm.clearFilters = clearFilters;
+                                vm.filterTypes = {
+                                    name: 'name',
+                                    coordinates: 'coordinates'
                                 };
+
+                                function clearFilters() {
+                                    filterService.clearFilters();
+                                    vm.onChange();
+                                }
+
+                                function getFilterType() {
+                                    if (vm.searchType.type === geoService.data.parseType.none || vm.searchType.type === geoService.data.parseType.prov) {
+                                        return vm.filterTypes.name;
+                                    } else {
+                                        return vm.filterTypes.coordinates;
+                                    }
+                                }
                             }
-                        ]
+                        ],
+                        controllerAs: 'gsf',
+                        bindToController: true
                     };
                 })
                 .directive('rpGeosearchResults', function () {
@@ -913,40 +1013,49 @@ define([
                                 var vm = this;
 
                                 vm.lookup = lookupService; // bind lookupservice to resolve province and type names
-                                vm.select = function (result) {
+                                vm.select = select;
+
+                                function select(result) {
                                     vm.parentSelect({
                                         result: result
                                     });
-                                };
+                                }
                             }
                         ],
-                        controllerAs: 'geosearchResults',
+                        controllerAs: 'gsr',
                         bindToController: true
                     };
                 });
 
             angular
                 .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
-                .controller('GeosearchController', ['$scope', 'geoService', 'filterService', '$timeout',
-                    function ($scope, geoService, filterService, $timeout) {
+                .controller('GeosearchController', ['$scope', 'geoService', '$timeout',
+                    function ($scope, geoService, $timeout) {
                         /* jshint validthis: true */
                         var vm = this,
                             placeholderResult = {
                                 name: '',
                                 placeholder: true
-                            };
+                            },
 
+                            timeoutPromise = $timeout(angular.noop, 0);
+
+                        vm.states = {
+                            hide: 'hide',
+                            show: 'show',
+                            loading: 'loading',
+                            noresults: 'no-results'
+                        };
                         vm.selectedResult = {};
                         vm.results = [];
-                        vm.state = 'hide'; // 'show', 'loading', 'hide', 'no-results'
+                        vm.state = vm.states.hide;
+                        vm.searchType = {};
 
                         vm.clear = clear;
                         vm.search = search;
                         vm.select = select;
                         vm.onBlur = onBlur;
                         vm.onFocus = onFocus;
-
-                        var timeoutPromise = $timeout(function () { }, 0);
 
                         function clear() {
 
@@ -957,14 +1066,17 @@ define([
                             }
 
                             placeholderResult.name = '';
+
+                            vm.searchType = geoService.parseInput('');
                             vm.selectedResult = placeholderResult;
                             vm.results = [];
 
-                            setState('hide');
+                            // hide everything
+                            setState(vm.states.hide);
                         }
 
                         function search() {
-                            
+
                             $timeout.cancel(timeoutPromise);
 
                             if ($scope.geosearchForm.$valid) {
@@ -978,15 +1090,20 @@ define([
 
                                 // create a timeout to show the loading label after 250ms
                                 timeoutPromise = $timeout(function () {
-                                    setState('loading');
+                                    // show loading animation
+                                    setState(vm.states.loading);
                                 }, 250);
 
+                                // detect search type
+                                vm.searchType = geoService.parseInput(vm.selectedResult.name);
+
                                 geoService
-                                    .search(vm.selectedResult.name, filterService.getFilters())
+                                    .search(vm.selectedResult.name)
                                     .then(function (data) {
                                         $timeout.cancel(timeoutPromise);
                                         vm.results = data.list;
-                                        setState('show');
+                                        // show results
+                                        setState(vm.states.show);
                                         console.log('udpate results', data);
                                     })
                                     .catch(function (data) {
@@ -997,7 +1114,8 @@ define([
                                             console.error(data);
                                             $timeout.cancel(timeoutPromise);
                                             vm.results = [];
-                                            setState('no-results');
+                                            // show no results message
+                                            setState(vm.states.noresults);
                                         }
                                     });
                             } else {
@@ -1015,6 +1133,10 @@ define([
                                 vm.selectedResult = vm.results[0];
                             }
 
+                            // detect search type
+                            vm.searchType = geoService.parseInput(vm.selectedResult.name);
+
+                            // if the selected result is a proper point, zoom to it
                             if (vm.selectedResult.lonlat) {
 
                                 // reset styles on other results
@@ -1023,7 +1145,7 @@ define([
                                 });
                                 vm.selectedResult.selected = true;
 
-                                setState('hide');
+                                setState(vm.states.hide);
 
                                 esriPoint = UtilMisc.latLongToMapPoint(vm.selectedResult.lonlat[1], vm.selectedResult.lonlat[0], map.extent.spatialReference);
                                 map.centerAndZoom(esriPoint, 12);
@@ -1036,12 +1158,13 @@ define([
 
                         function onBlur() {
                             if (vm.selectedResult.name === '') {
-                                setState('hide');
+                                setState(vm.states.hide);
                             }
                         }
 
                         function onFocus() {
-                            setState('show');
+                            // show results
+                            setState(vm.states.show);
                         }
 
                         vm.clear();
@@ -1054,7 +1177,7 @@ define([
                                 url: '*path', //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing,
                                 templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
                                 controller: 'GeosearchController',
-                                controllerAs: 'geosearch'
+                                controllerAs: 'gsc'
                             });
                     }
                 ]);
