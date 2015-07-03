@@ -393,10 +393,16 @@ define([
                 }
 
                 console.log("map - >> extent-change", event);
+
+                //this used to be in a ONCE bound to update-end of the map.  
+                //should call it every time extent changes as an all-snapshot layer map wont keep updating
+                topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
+                /*
                 dojoOn.once(map, "update-end", function () {
                     console.log("map - >> update-end - >> Load grid");
                     topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                 });
+                */
             });
 
             // Deselect all highlighted points if the map is clicked
