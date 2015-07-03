@@ -1,4 +1,4 @@
-﻿/* global define, console, RAMP, escape */
+﻿/* global define, console, RAMP, escape, angular, document, i18n */
 
 /**
 *
@@ -25,7 +25,10 @@
 define([
 
 /* Dojo */
- 'dojo/request/script', 'dojo/Deferred',
+ 'dojo/request/script', 'dojo/Deferred', 'dojo/topic',
+
+ /* RAMP */
+ 'ramp/map', 'ramp/eventManager', 'utils/util',
 
 /* ESRI */
 
@@ -35,7 +38,10 @@ define([
     function (
 
     /* Dojo */
-    script, Deferred
+    script, Deferred, topic,
+
+    /*RAMP*/
+    RampMap, EventManager, UtilMisc
 
         /* ESRI */
 
@@ -59,8 +65,10 @@ define([
         var provList = [];
         var conciseList = [];
 
+        var map;
+
         /**
-        * Will determine if a value is a valid province identifier (en/fr name or 2-letter abbr)
+        * Will determine if a value is a valid province identifier (en/fr name or 2-letter br)
         *
         * @method isProvince
         * @private
@@ -76,7 +84,7 @@ define([
         }
 
         /**
-        * Convert a provice name to province code
+        * Convert a province name to province code
         *
         * @method getProvCode
         * @private
@@ -118,11 +126,11 @@ define([
         * @return {Array} a list of province names and codes
         */
         function getProvList() {
-            //The return value structure can be modified to best suit the UI when it is implemmented
+            //The return value structure can be modified to best suit the UI when it is implemented
 
             return provList.map(function (elem) {
                 return {
-                    name: elem.name[RAMP.locale],
+                    name: elem.name,
                     code: elem.code,
                 };
             }).sort(nameSorter);
@@ -136,11 +144,11 @@ define([
         * @return {Array} a list of concise names and codes
         */
         function getConciseList() {
-            //The return value structure can be modified to best suit the UI when it is implemmented
+            //The return value structure can be modified to best suit the UI when it is implemented
 
             return conciseList.map(function (elem) {
                 return {
-                    name: elem.name[RAMP.locale],
+                    name: elem.name,
                     code: elem.code,
                 };
             }).sort(nameSorter);
@@ -486,18 +494,20 @@ define([
 
             // take part of string after the last comma;
             // remove from string iff it is a province
-            if (isProvince(province)) {
-                input = input.substring(0, input.lastIndexOf(',') - 1);
-            }
+            ///if (isProvince(province)) {
+            ///    input = input.substring(0, input.lastIndexOf(',') - 1);
+            ///}
 
             defRequest = script.get(queryUrl + input, {
                 jsonp: 'callback'
             });
 
-            defRequest.then(
-                function (searchResult) {
-                    return searchResult.suggestions;
-                });
+            return defRequest;
+
+            //defRequest.then(
+            //    function (searchResult) {
+            //        return searchResult.suggestions;
+            //    });
         }*/
 
         /**
@@ -562,6 +572,7 @@ define([
                                 areaSearch({
                                     lonlat: fsaResult.lonlat,
                                     radius: filters.radius,
+                                    concise: filters.concise,
                                 }, defResult);
                             } else {
                                 //fsa not found.  return none result
@@ -604,121 +615,642 @@ define([
         }
 
         /**
-        * Will initialize the module. Download provice keys & info. Download concise types keys & info.
+        * Will initialize the module. Download province keys & info. Download concise types keys & info.
         *
         * @method isLatLong
         * @private
         */
         function init() {
-            //TODO do we need to worry about ensuring these calls return before the caller continues?
-            //     they should be really fast, and if service is down geosearch is broken anyways.
-            //     Init is called after the config loads, so should be plenty of time before a user starts geosearching
+            map = RAMP.map;
 
-            //get provinces english
-            var provUrl = '/codes/province.json';
-            var conciseUrl = '/codes/concise.json';
-            var defEnProv = script.get(RAMP.config.geonameUrl + 'en' + provUrl, {
-                jsonp: 'callback',
-            });
+            angular
+                .module('gs.service', [])
+                .factory('geoService', ['$q', 'filterService',
+                    function ($q, filterService) {
+                        var currentSearchTerm;
+                        var data;
 
-            defEnProv.then(
-            function (result) {
-                //service returned.  turn result into a formatted array
-                provList = result[0].definitions.map(function (provEn) {
-                    return {
-                        code: provEn.code,
-                        abbr: provEn.term,
-                        name: {
-                            en: provEn.description,
-                            fr: '',
-                        },
-                    };
-                });
+                        data = {
+                            parseType: {
+                                none: 'none',
+                                fsa: 'fsa',
+                                lonlat: 'lonlat',
+                                prov: 'prov',
+                            },
+                        };
 
-                //now load the french provinces
-                var defFrProv = script.get(RAMP.config.geonameUrl + 'fr' + provUrl, {
-                    jsonp: 'callback',
-                });
+                        /**
+                        * Will examine the user search string. Returns any special type and related data
+                        * Valid types are: none, fsa, lonlat, prov
+                        *
+                        * @method parseInput
+                        * @private
+                        * @param {String} input user search string
+                        * @return {Object} result of parse.  has .type (string) and .data (object) properties
+                        */
+                        function parseInput(input) {
+                            var fsaReg = /[A-Za-z]\d[A-Za-z]/;
+                            var ret = {
+                                    type: data.parseType.none,
+                                    data: input,
+                                };
 
-                defFrProv.then(
-                    function (result) {
-                        //match up province IDs of the french data to the global province list.
-                        //update the french names when a match is made
-                        result[0].definitions.forEach(function (provFr) {
-                            provList.every(function (elem) {
-                                if (elem.code === provFr.code) {
-                                    elem.name.fr = provFr.description;
-                                    return false; //will cause the 'every' loop to break
+                            //check for FSA
+                            if ((input.length > 2) && (fsaReg.test(input.substring(0, 3)))) {
+                                //ensure there is a break after first 3 characters
+                                if (((input.length > 3) && (input.substring(3, 4) === ' ')) || (input.length === 3)) {
+                                    //tis an FSA
+                                    ret.type = parseType.fsa;
+                                    ret.data = input.substring(0, 3);
+                                    return ret;
+                                }
+                            }
+
+                            if (input.indexOf(',') > 0) {
+                                var vals = input.split(',');
+
+                                //check lat/long
+                                if (vals.length === 2) {
+                                    if (isLatLong(vals[0]) && isLatLong(vals[1])) {
+                                        ret.type = parseType.lonlat;
+
+                                        //Reverse order to match internal structure of lonlat
+                                        ret.data = [Number(vals[1]), Number(vals[0])];
+                                        return ret;
+                                    }
                                 }
 
-                                return true; //keep looping
+                                //check for trailing province
+                                //TODO move this into language configs?
+                                var provTest = vals[vals.length - 1].trim();
+
+                                //see if item after last comma is a province
+                                if (isProvince(provTest)) {
+                                    ret.type = parseType.prov;
+                                    ret.data = {
+                                        prov: getProvCode(provTest),
+                                        searchVal: input.substring(0, input.lastIndexOf(',')),
+                                    };
+                                }
+                            }
+
+                            return ret;
+                        }
+
+                        // just a wrapper around geoSearch function for now
+                        function search(searchTerm) {
+                            var deferred = $q.defer();
+                            var filters = filterService.getFilters();
+
+                            currentSearchTerm = searchTerm;
+
+                            geoSearch(searchTerm, filters)
+                                .then(function (data) {
+                                    data.searchTerm = searchTerm;
+                                    console.log('data received', data, searchTerm, currentSearchTerm);
+
+                                    // old request returned
+                                    if (searchTerm !== currentSearchTerm) {
+                                        deferred.reject({ reason: 'old' });
+                                    } else if (data.status === 'list') {
+                                        deferred.resolve(data);
+                                    } else {
+                                        deferred.reject({ reason: 'no results' });
+                                    }
+                                },
+
+                                    function (error) {
+                                        deferred.reject(error);
+                                    });
+
+                            return deferred.promise;
+                        }
+
+                        // suggestions don't work right now.
+                        /*function suggest(searchTerm) {
+                            return getSuggestions(searchTerm)
+                                .then(function (data) {
+                                    if (data.suggestions.length > 0) {
+                                        return data.suggestions;
+                                    } else {
+                                        return $q.reject('no suggestions');
+                                    }
+                                });
+                        }*/
+
+                        return {
+                            data: data,
+
+                            search: search,
+                            parseInput: parseInput,
+
+                            //suggest: suggest
+                        };
+                    },
+
+                ])
+                .factory('filterService', ['$q', '$http', 'extents',
+                    function ($q, $http, extents) {
+                        var provUrl = '/codes/province.json';
+                        var conciseUrl = '/codes/concise.json';
+                        var data;
+
+                        // sort items by term
+                        function termSort(a, b) {
+                            if (a.term < b.term) {
+                                return -1;
+                            }
+
+                            if (a.term > b.term) {
+                                return 1;
+                            }
+
+                            return 0;
+                        }
+
+                        // default and init data for filters
+                        data = {
+                            provinceList: [],
+                            typeList: [],
+                            extentList: extents.data,
+                            distanceList: [
+                                {
+                                    code: '-1',
+                                    name: i18n.t('geosearch.filters.distance.default'),
+                                },
+                                {
+                                    code: '5',
+                                    name: i18n.t('geosearch.filters.distance.5km'),
+                                },
+                                {
+                                    code: '10',
+                                    name: i18n.t('geosearch.filters.distance.10km'),
+                                },
+                                {
+                                    code: '15',
+                                    name: i18n.t('geosearch.filters.distance.15km'),
+                                },
+                                {
+                                    code: '30',
+                                    name: i18n.t('geosearch.filters.distance.30km'),
+                                },
+                                {
+                                    code: '50',
+                                    name: i18n.t('geosearch.filters.distance.50km'),
+                                },
+                                {
+                                    code: '75',
+                                    name: i18n.t('geosearch.filters.distance.75km'),
+                                },
+                                {
+                                    code: '100',
+                                    name: i18n.t('geosearch.filters.distance.100km'),
+                                },
+                            ],
+
+                            currentProvince: {},
+                            currentType: {},
+                            currentExtent: {},
+                            currentDistance: {},
+                        };
+
+                        // wait for all gets since if one fails and return the derived promise to be resolved by the
+                        // stateProvider before injection
+                        $q
+                            .all([
+
+                                //get provinces English
+                                $http.get(RAMP.config.geonameUrl + 'en' + provUrl),
+                                $http.get(RAMP.config.geonameUrl + 'fr' + provUrl),
+
+                                //get geonames concise codes list English
+                                $http.get(RAMP.config.geonameUrl + RAMP.locale + conciseUrl),
+                            ])
+                            .then(function (result) {
+                                var iEn = RAMP.locale === 'en' ? 0 : 1;
+                                var iFr = RAMP.locale === 'fr' ? 0 : 1;
+                                var provincesMainLocale = result[iEn].data.definitions.sort(termSort);
+                                var provincesOtherLocale = result[iFr].data.definitions.sort(termSort);
+                                var concise = result[2].data.definitions.sort(termSort);
+
+                                // "zip" up province en and fr lists so we have an array with both en and fr
+                                // province names
+                                data.provinceList = provincesMainLocale.map(function (p, i) {
+                                    // now that we have a full dataset of province info, make a quick-find array for
+                                    // determining if strings are provinces
+                                    provSearch.push(p.term.toLowerCase(), p.description.toLowerCase(),
+                                        provincesOtherLocale[i].description.toLowerCase());
+
+                                    return {
+                                        code: p.code,
+                                        abbr: p.term,
+                                        name: p.description,
+                                    };
+                                });
+
+                                // TODO: refactor; temp - needed for non-ng search
+                                angular.copy(data.provinceList, provList);
+
+                                // add default province option
+                                data.provinceList.unshift({
+                                    code: '-1',
+                                    abbr: '',
+                                    name: i18n.t('geosearch.filters.province.default'),
+                                });
+
+                                data.currentProvince = data.provinceList[0];
+
+                                // "zip" up concise en and fr lists so we have an array with both en and fr
+                                // concise names
+                                data.typeList = concise.map(function (c) {
+                                    return {
+                                        code: c.code,
+                                        name: c.term,
+                                    };
+                                });
+
+                                // TODO: refactor; temp - needed for non-ng search
+                                angular.copy(data.typeList, conciseList);
+
+                                // add default type option
+                                data.typeList.unshift({
+                                    code: '-1',
+                                    name: i18n.t('geosearch.filters.type.default'),
+                                });
+
+                                data.currentType = data.typeList[0];
+                                data.currentExtent = data.extentList[0];
+                                data.currentDistance = data.distanceList[0];
+                            },
+
+                            function (result, status) {
+                                console.error('Fail to load province or concise codes', result, status);
+                                return $q.reject('Fail to load province or concise codes', result, status);
+                            });
+
+                        return {
+                            data: data,
+
+                            // set filters to their defaults
+                            clearFilters: function () {
+                                data.currentProvince = data.provinceList[0];
+                                data.currentType = data.typeList[0];
+                                data.currentExtent = data.extentList[0];
+                                data.currentDistance = data.distanceList[0];
+                            },
+
+                            getFilters: function () {
+                                return {
+                                    prov: data.currentProvince.code !== '-1' ? data.currentProvince.code : undefined,
+                                    concise: data.currentType.code !== '-1' ? data.currentType.code : undefined,
+                                    extent: data.currentExtent.extent,
+                                    radius: data.currentDistance.code !== '-1' ? data.currentDistance.code : undefined,
+                                };
+                            },
+                        };
+                    },
+
+                ])
+                .factory('lookupService', ['filterService',
+                    function (filterService) {
+                        var data = filterService.data;
+
+                        function findName(list, code) {
+                            return list
+                                .filter(function (p) {
+                                    return p.code === code;
+                                })[0]
+                                .name;
+                        }
+
+                        return {
+                            provinceName: function (provinceCode) {
+                                return findName(data.provinceList, provinceCode);
+                            },
+
+                            typeName: function (typeCode) {
+                                return findName(data.typeList, typeCode);
+                            },
+                        };
+                    },
+
+                ])
+                .factory('extents', ['$rootScope',
+                    function ($rootScope) {
+                        var data;
+
+                        function extentToArray(ext) {
+                            var xyminPoint;
+                            var xymaxPoint;
+
+                            ext = RampMap.localProjectExtent(ext, { wkid: 4326 });
+
+                            xyminPoint = UtilMisc.mapPointToLatLong({
+                                x: ext.xmin,
+                                y: ext.ymin,
+                                spatialReference: {
+                                    wkid: ext.spatialReference.wkid,
+                                },
+                            });
+                            xymaxPoint = UtilMisc.mapPointToLatLong({
+                                x: ext.xmax,
+                                y: ext.ymax,
+                                spatialReference: {
+                                    wkid: ext.spatialReference.wkid,
+                                },
+                            });
+
+                            return [
+                                xyminPoint[0],
+                                xyminPoint[1],
+                                xymaxPoint[0],
+                                xymaxPoint[1],
+                            ];
+                        }
+
+                        // list of extent options
+                        data = [
+                            {
+                                code: '-1',
+                                name: i18n.t('geosearch.filters.extent.default'),
+                                extent: undefined,
+                            },
+                            {
+                                code: '0',
+                                name: i18n.t('geosearch.filters.extent.canada'),
+                                extent: extentToArray(RAMP.config.extents.fullExtent),
+                            },
+                            {
+                                code: '1',
+                                name: i18n.t('geosearch.filters.extent.visible'),
+                                extent: undefined,
+                            },
+                        ];
+
+                        topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
+                            console.log('factory:extents - current map extent changed', data[2].extent);
+
+                            // cache changed extent; this change will not trigger digest cycle - need to call $apply
+                            // on the $rootScope to trigger digest cycle
+                            $rootScope.$apply(function () {
+                                data[2].extent = extentToArray(event.extent);
                             });
                         });
 
-                        // now that we have a full dataset of province info, make a quick-find array for determining
-                        // if strings are provinces
-                        provList.forEach(function (elem) {
-                            provSearch.splice(0, 0, elem.abbr.toLowerCase(), elem.name.en.toLowerCase(),
-                                elem.name.fr.toLowerCase());
-                        });
+                        return {
+                            data: data,
+                        };
                     },
 
-                     function (error) {
-                         console.log('Fail to load french province codes : ' + error);
-                     });
-            },
+                ]);
 
-            function (error) {
-                console.log('Fail to load english province codes : ' + error);
+            angular
+                .module('gs.directive', ['gs.service'])
+                .directive('rpGeosearchFilter', function () {
+                    return {
+                        restrict: 'E',
+                        scope: {
+                            filterChange: '&',
+                            searchType: '=',
+                        },
+                        templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-filter.html',
+                        controller: ['$scope', 'filterService', 'geoService',
+                            function ($scope, filterService, geoService) {
+                                /* jshint validthis: true */
+                                var vm = this;
+
+                                // bind filterdata
+                                vm.filterData = filterService.data;
+                                vm.getFilterType = getFilterType;
+                                vm.onChange = vm.filterChange;
+                                vm.clearFilters = clearFilters;
+                                vm.clearText = i18n.t('geosearch.filters.clear');
+                                vm.filterTypes = {
+                                    name: 'name',
+                                    coordinates: 'coordinates',
+                                };
+
+                                function clearFilters() {
+                                    filterService.clearFilters();
+                                    vm.onChange();
+                                }
+
+                                function getFilterType() {
+                                    if (vm.searchType.type === geoService.data.parseType.none ||
+                                        vm.searchType.type === geoService.data.parseType.prov) {
+                                        return vm.filterTypes.name;
+                                    } else {
+                                        return vm.filterTypes.coordinates;
+                                    }
+                                }
+
+                                // watch for the extent change on the selected extent filter option;
+                                // it will change only if "Visible" option is selected and map is panned/zoomed
+                                $scope.$watch('gsf.filterData.currentExtent.extent', function (current, original) {
+                                    console.log('rpGeosearchFilter - currentExtent filter extent has changed',
+                                        current, original);
+                                    vm.onChange();
+                                });
+                            },
+
+                        ],
+                        controllerAs: 'gsf',
+                        bindToController: true,
+                    };
+                })
+                .directive('rpGeosearchResults', function () {
+                    return {
+                        restrict: 'E',
+                        scope: {
+                            results: '=',
+                            state: '=',
+                            parentSelect: '&select',
+                        },
+                        templateUrl: 'js/RAMP/Modules/partials/rp-geosearch-results.html',
+                        controller: ['$scope', 'lookupService',
+                            function ($scope, lookupService) {
+                                /* jshint validthis: true */
+                                var vm = this;
+
+                                vm.lookup = lookupService; // bind lookupservice to resolve province and type names
+                                vm.select = select;
+
+                                function select(result) {
+                                    vm.parentSelect({
+                                        result: result,
+                                    });
+                                }
+                            },
+
+                        ],
+                        controllerAs: 'gsr',
+                        bindToController: true,
+                    };
+                });
+
+            angular
+                .module('gs', ['gs.service', 'gs.directive', 'ui.router'])
+                .controller('GeosearchController', ['$scope', '$timeout', 'geoService',
+                    function ($scope, $timeout, geoService) {
+                        /* jshint validthis: true */
+                        var vm = this;
+                        var placeholderResult = {
+                            name: '',
+                            placeholder: true,
+                        };
+
+                        var timeoutPromise = $timeout(angular.noop, 0);
+
+                        vm.states = {
+                            hide: 'hide',
+                            show: 'show',
+                            loading: 'loading',
+                            noresults: 'no-results',
+                        };
+                        vm.selectedResult = {};
+                        vm.results = [];
+                        vm.state = vm.states.hide;
+                        vm.searchType = {};
+
+                        vm.clear = clear;
+                        vm.search = search;
+                        vm.select = select;
+                        vm.onBlur = onBlur;
+                        vm.onFocus = onFocus;
+
+                        function clear() {
+                            // remove touched and dirty classes from the form
+                            if ($scope.geosearchForm) {
+                                $scope.geosearchForm.$setPristine();
+                                $scope.geosearchForm.$setUntouched();
+                            }
+
+                            placeholderResult.name = '';
+
+                            vm.searchType = geoService.parseInput('');
+                            vm.selectedResult = placeholderResult;
+                            vm.results = [];
+
+                            // hide everything
+                            setState(vm.states.hide);
+                        }
+
+                        function search() {
+                            $timeout.cancel(timeoutPromise);
+
+                            if ($scope.geosearchForm.$valid) {
+                                // if a result was selected before, reset it with a placeholder
+                                if (!vm.selectedResult.placeholder) {
+                                    vm.selectedResult.selected = false;
+                                    placeholderResult.name = vm.selectedResult.name;
+                                    vm.selectedResult = placeholderResult;
+                                }
+
+                                // create a timeout to show the loading label after 250ms
+                                timeoutPromise = $timeout(function () {
+                                    // show loading animation
+                                    setState(vm.states.loading);
+                                }, 250);
+
+                                // detect search type
+                                vm.searchType = geoService.parseInput(vm.selectedResult.name);
+
+                                geoService
+                                    .search(vm.selectedResult.name)
+                                    .then(function (data) {
+                                        $timeout.cancel(timeoutPromise);
+                                        vm.results = data.list;
+
+                                        // show results
+                                        setState(vm.states.show);
+                                        console.log('udpate results', data);
+                                    })
+                                    .catch(function (data) {
+                                        console.error(data);
+
+                                        // old means that a previous request was returned out of line; discarding
+                                        if (data.reason !== 'old') {
+                                            console.error(data);
+                                            $timeout.cancel(timeoutPromise);
+                                            vm.results = [];
+
+                                            // show no results message
+                                            setState(vm.states.noresults);
+                                        }
+                                    });
+                            } else {
+                                vm.results = [];
+                            }
+                        }
+
+                        function select(result) {
+                            var esriPoint;
+
+                            if (result) {
+                                vm.selectedResult = result;
+                            } else if (vm.selectedResult.placeholder && vm.results.length > 0) {
+                                // if no result is passed and placeholder selected; take the first result from the list
+                                vm.selectedResult = vm.results[0];
+                            }
+
+                            // detect search type
+                            vm.searchType = geoService.parseInput(vm.selectedResult.name);
+
+                            // if the selected result is a proper point, zoom to it
+                            if (vm.selectedResult.lonlat) {
+                                // reset styles on other results
+                                vm.results.forEach(function (r) {
+                                    r.selected = false;
+                                });
+
+                                vm.selectedResult.selected = true;
+
+                                setState(vm.states.hide);
+
+                                esriPoint = UtilMisc.latLongToMapPoint(vm.selectedResult.lonlat[1],
+                                    vm.selectedResult.lonlat[0], map.extent.spatialReference);
+                                map.centerAndZoom(esriPoint, 12);
+                            }
+                        }
+
+                        function setState(value) {
+                            vm.state = value;
+                        }
+
+                        function onBlur() {
+                            if (vm.selectedResult.name === '') {
+                                setState(vm.states.hide);
+                            }
+                        }
+
+                        function onFocus() {
+                            // show results
+                            setState(vm.states.show);
+                        }
+
+                        vm.clear();
+                    },
+
+                ])
+                .config(['$stateProvider',
+                    function ($stateProvider) {
+                        $stateProvider
+                            .state('default', {
+                                //catch all paths for now https://github.com/angular-ui/ui-router/wiki/URL-Routing,
+                                url: '*path',
+                                templateUrl: 'js/RAMP/Modules/partials/rm-geosearch-state.html',
+                                controller: 'GeosearchController',
+                                controllerAs: 'gsc',
+                            });
+                    },
+
+                ]);
+
+            angular.element(document).ready(function () {
+                angular.bootstrap(document, ['gs'], {
+                    strictDi: true,
+                });
             });
-
-            //get geonames concise codes list english
-            var defEnCon = script.get(RAMP.config.geonameUrl + 'en' + conciseUrl, {
-                jsonp: 'callback',
-            });
-
-            defEnCon.then(
-             function (result) {
-                 //service returned.  turn result into a formatted array
-                 conciseList = result[0].definitions.map(function (conEn) {
-                     return {
-                         code: conEn.code,
-                         name: {
-                             en: conEn.term,
-                             fr: '',
-                         },
-                     };
-                 });
-
-                 //now load the french concise codes
-                 var defFrCon = script.get(RAMP.config.geonameUrl + 'fr' + conciseUrl, {
-                     jsonp: 'callback',
-                 });
-
-                 defFrCon.then(
-                     function (result) {
-                         //match up concise IDs of the french data to the global concise list.
-                         //update the french names when a match is made
-                         result[0].definitions.forEach(function (conFr) {
-                             conciseList.every(function (elem) {
-                                 if (elem.code === conFr.code) {
-                                     elem.name.fr = conFr.term;
-                                     return false; //will cause the "every" loop to break
-                                 }
-
-                                 return true; //keep looping
-                             });
-                         });
-                     },
-
-                      function (error) {
-                          console.log('Fail to load french concise codes : ' + error);
-                      });
-             },
-
-             function (error) {
-                 console.log('Fail to load english concise codes : ' + error);
-             });
         }
 
         return {

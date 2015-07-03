@@ -1,0 +1,191 @@
+﻿
+#geo-search-container {
+    @geosearch-length: 400px;
+    
+    left: 125px;
+    top: 20px;
+    z-index: 1;
+    position: absolute;
+
+    .container() {
+        background-color: white;
+        width: @geosearch-length;
+        box-shadow: 0 0 2px #333;
+    }
+
+    @result-line-height: 2;
+
+    form[name=geosearchForm] {
+        display: inline-block;
+        box-shadow: 0 0 2px #333;
+    }
+
+    .geosearch-input {
+        position: relative;
+        display: inline-block;
+
+        .geosearch-field {
+            width: @geosearch-length;
+            height: 30px;
+            padding: 0 10px;
+            border: none;
+
+            /*&.expanded {
+                width: 400px;
+            }*/
+        }
+
+        .geosearch-clear {
+            position: absolute;
+            right: 70px;
+            height: 30px;
+            top: 0;
+        }
+    }
+
+    .geosearch-button {
+        height: 30px;
+        width: 65px;
+        border: none;
+        float: right;
+    }
+
+    .geosearch-filter-container {
+        width: @geosearch-length;
+        margin: 5px 0;
+        background-color: white;
+        box-shadow: 0 0 2px #333;
+        padding: 0 6px;
+        position: relative;
+
+        .province-filter, .type-filter, .extent-filter, .distance-filter {
+            border: none;
+            padding: 7px 4px;
+            font-size: 90%;
+
+            &.selected {
+                font-weight: bold;
+            }
+        }
+
+        .province-filter {
+            width: 27%;
+        }
+
+        .type-filter {
+            width: 27%;
+        }
+
+        .extent-filter {
+            width: 22%;
+        }
+
+        .distance-filter {
+            width: 27%;
+        }
+
+        .filter-clear {
+            width: 24%;
+            text-align: right;
+            height: 30px;
+            position: absolute;
+            right: 0;
+        }
+    }
+
+    .loading-simple {
+        .container;
+        text-align: center;
+        padding: 5px 0;
+        display: block;
+    }
+
+    .no-results {
+        .container;
+        text-align: center;
+        padding: 5px 0;
+        color: @attention-color;
+        display: block;
+    }
+
+    .results-container {
+        .container;
+        
+        .result-list {
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 0;
+            position: relative;
+
+            li.selected {
+                background-color: @accent-color !important;
+
+                span {
+                    color: white !important;
+                }
+
+                .result-container:hover {
+                    background-color: @accent-color !important;
+                }
+            }
+
+            .result-container {
+                width: 100%;
+                text-align: left;
+                padding: 0;
+                padding: 3px 0;
+                border: none;
+                background-color: transparent;
+                border-bottom: @light-lighter-grey-color 1px solid;
+
+                &:hover {
+                    background-color: #ebebeb;
+                }
+
+                &:before {
+                    content: 'q';
+                    visibility: hidden;
+                    line-height: @result-line-height;
+                    vertical-align: middle;
+                    display: inline-block;
+                }
+
+                .main {
+                    display: inline-block;
+                    vertical-align: middle;
+                    max-width: 292px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+
+                    .name {
+                        //font-weight: bold;
+                    }
+
+                    .place {
+                        .province {
+                            font-size: 80%;
+                            color: @light-grey-color;
+                        }
+
+                        .location {
+                            font-size: 80%;
+                            color: @light-grey-color;
+                        }
+                    }
+                }
+
+                .secondary {
+                    line-height: @result-line-height;
+                    display: inline-block;
+                    position: absolute;
+                    right: 10px;
+                    max-width: 85px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}

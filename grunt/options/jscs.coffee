@@ -75,7 +75,7 @@ module.exports =
                 },
                 "requirePaddingNewLinesAfterBlocks": true,
                 "requireSemicolons": true,
-                "safeContextKeyword": "_this",
+                "safeContextKeyword": ["_this", "vm"],
                 "validateQuoteMarks": "'",
                 "validateIndentation": 4
 

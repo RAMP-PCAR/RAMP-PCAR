@@ -5,7 +5,6 @@ module.exports =
         '!src/js/lib/**/*.js'
     ]
     options:                
-
         "browser": true,
         "jquery": true,
         "node": true,
@@ -13,7 +12,7 @@ module.exports =
         "camelcase": true,
         "eqeqeq": true,
         "indent": 4,
-        "latedef": true,
+        "latedef": "nofunc",
         "maxlen": 120,
         "newcap": true,
         "quotmark": "single",

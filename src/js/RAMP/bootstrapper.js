@@ -102,9 +102,9 @@ require([
             function initScale() {
                 var map = RAMP.map;
                 var scaleDiv = domConstruct.create('div', {
-                        id: 'scaleDiv',
-                        class: 'esriScalebarLabel',
-                    });
+                    id: 'scaleDiv',
+                    class: 'esriScalebarLabel',
+                });
                 var currentScale;
                 var scaleLabelText;
 
@@ -190,6 +190,7 @@ require([
             });
 
             RampMap.init();
+            GeoSearch.init();
             NavWidget.construct();
             UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
@@ -312,7 +313,6 @@ require([
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
-            GeoSearch.init();
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
 
