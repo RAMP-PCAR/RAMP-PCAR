@@ -9,10 +9,10 @@
 * and length will be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @class DistanceTool
 * @uses dojo/dom
 * @uses dojo/string
@@ -27,27 +27,33 @@
 */
 
 define([
+
 // Dojo
-      "dojo/dom", "dojo/string", "dojo/_base/lang",
+      'dojo/dom', 'dojo/string', 'dojo/_base/lang',
+
 // Esri
-      "esri/config", "esri/graphic", "esri/tasks/GeometryService",
-      "esri/tasks/LengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
+      'esri/config', 'esri/graphic', 'esri/tasks/GeometryService',
+      'esri/tasks/LengthsParameters', 'esri/toolbars/draw', 'esri/symbols/SimpleFillSymbol',
+
 // Ramp
-      "ramp/map", "ramp/globalStorage", "tools/baseTool"
+      'ramp/map', 'ramp/globalStorage', 'tools/baseTool',
 ],
     function (
+
 // Dojo
       dom, string, dojoLang,
+
 // Esri
       esriConfig, Graphic, GeometryService, LengthsParameters, Draw, SimpleFillSymbol,
+
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
-        var ui,
-            geometryService,
-            measureApp,
-            that;
+        var ui;
+        var geometryService;
+        var measureApp;
+        var _this;
 
         /**
         * Compute the area and length of a specified polygon.
@@ -58,10 +64,10 @@ define([
         *
         */
         function computeAreaAndLength(evtObj) {
-            that.working(true);
+            _this.working(true);
 
             geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
-            geometryService.on("lengths-complete", outputAreaAndLength);
+            geometryService.on('lengths-complete', outputAreaAndLength);
 
             var geometry = evtObj.geometry;
             measureApp.map.graphics.clear();
@@ -71,7 +77,7 @@ define([
             //setup the parameters for the areas and lengths operation
             var lengthsParams = new LengthsParameters();
             lengthsParams.lengthUnit = GeometryService.UNIT_KILOMETER;
-            lengthsParams.calculationType = "geodesic";
+            lengthsParams.calculationType = 'geodesic';
 
             geometryService.simplify([geometry], function (simplifiedGeometries) {
                 lengthsParams.polylines = simplifiedGeometries;
@@ -88,28 +94,29 @@ define([
         *
         */
         function outputAreaAndLength(evtObj) {
-            var result = evtObj.result,
-                // Convert feet to km.
-                length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
+            var result = evtObj.result;
 
-            that.working(false);
+            // Convert feet to km.
+            var length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
 
-            length = string.substitute("${number:dojo.number.format}", { number: length });
-            displayOutput(length, "km");
+            _this.working(false);
+
+            length = string.substitute('${number:dojo.number.format}', { number: length });
+            displayOutput(length, 'km');
         }
 
         ui = {
             init: function () {
-                var map = RampMap.getMap(),
-                    toolbar = new Draw(map);
+                var map = RampMap.getMap();
+                var toolbar = new Draw(map);
 
-                toolbar.on("draw-end", computeAreaAndLength);
+                toolbar.on('draw-end', computeAreaAndLength);
 
                 measureApp = {
                     map: map,
-                    toolbar: toolbar
+                    toolbar: toolbar,
                 };
-            }
+            },
         };
 
         /**
@@ -121,7 +128,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.LINE);
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -145,7 +152,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -155,11 +162,11 @@ define([
         * @private
         */
         function displayOutput(length, lengthUnits) {
-            that.displayTemplateOutput(
+            _this.displayTemplateOutput(
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"),
+                    lengthLabel: i18n.t(_this.ns + ':length'),
                     lengthOutput: length,
-                    lengthUnits: lengthUnits
+                    lengthUnits: lengthUnits,
                 }
             );
         }
@@ -173,13 +180,13 @@ define([
             *
             */
             init: function (selector, d) {
-                that = this;
+                _this = this;
 
                 this.initToggle(selector, d,
                     {
                         activate: activate,
                         deactivate: deactivate,
-                        defaultAction: clearMap
+                        defaultAction: clearMap,
                     }
                 );
 
@@ -188,6 +195,6 @@ define([
                 return this;
             },
 
-            name: "distanceTool"
+            name: 'distanceTool',
         });
     });

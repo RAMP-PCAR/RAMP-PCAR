@@ -31,6 +31,7 @@
 */
 
 define([
+
 /* Dojo */
     'dojo/request/script', 'dojo/Deferred',
 
@@ -41,11 +42,11 @@ define([
     'esri/tasks/query',
 
 /* Util */
-    'utils/util', 'utils/dictionary', 'utils/array'
-
+    'utils/util', 'utils/dictionary', 'utils/array',
 ],
 
     function (
+
     /* Dojo */
         script, Deferred,
 
@@ -74,13 +75,13 @@ define([
         * @return {Object} promise of search results
         */
         function applyExtentFilter(featureLayers, extent) {
-            var visibleFeatures = {},
-                deferredList,
-                dReady = new Deferred(),
-                q = new EsriQuery();
+            var visibleFeatures = {};
+            var deferredList;
+            var dReady = new Deferred();
+            var q = new EsriQuery();
 
             //this will result in just objectid fields, as that is all we have in feature layers
-            q.outFields = ["*"];
+            q.outFields = ['*'];
             q.geometry = extent;
 
             //apply spatial query to the layers, collect deferred results in the array.
@@ -91,7 +92,7 @@ define([
                         var layer = queryResult.features[0].getLayer();
                         visibleFeatures[layer.id] = {
                             type: 'features',
-                            features: queryResult.features
+                            features: queryResult.features,
                         };
                     }
                 });
@@ -138,8 +139,11 @@ define([
                             break;
 
                         case 'raw':
-                            //just take all the feature data in the data store.  this will grab data that is not visible on the map (and possibly not in an onDemand layer)
-                            //use slice to make a shallow copy of the array. we don't want to point to the same array, as we don't want to manipulate the RAMP.data set
+
+                            //just take all the feature data in the data store.  this will grab data that is not
+                            //visible on the map (and possibly not in an onDemand layer)
+                            //use slice to make a shallow copy of the array. we don't want to point to the same array,
+                            //as we don't want to manipulate the RAMP.data set
                             dataSet[key] = RAMP.data[key].features.slice();
 
                             break;
@@ -156,6 +160,7 @@ define([
         all - boolean, true if searching all attributes, false if searching grid-visible attributes
         grid - string, indicating if extended or summary grid is active
         */
+
         //takes an object of feature sets and creates an object of feature data
 
         /**
@@ -170,9 +175,9 @@ define([
         * @return {String} the RQL query string
         */
         function makeTextSearchQuery(fData, search, all, grid) {
-            var query = '',
-            attribs = [],
-            layerConfig = RAMP.layerRegistry[fData.parent.layerId].ramp.config;
+            var query = '';
+            var attribs = [];
+            var layerConfig = RAMP.layerRegistry[fData.parent.layerId].ramp.config;
 
             //figure out the fields we want to search against
             if (all) {
@@ -187,6 +192,7 @@ define([
                 attribs = layerConfig.datagrid.gridColumns.map(function (col) {
                     return col.fieldName;
                 });
+
                 attribs = attribs.splice(0, 2); //remove icon and detail button fields
             }
 
@@ -254,8 +260,8 @@ define([
                                 //if we every start using the sort() in RQL during this process,
                                 //we may need to switch to a worse search.
                                 idx = UtilArray.binaryIndexOf(dataSet[key], function (fData) {
-                                    var fDataID = GraphicExtension.getFDataOid(fData),
-                                        graphicID = GraphicExtension.getGraphicOid(feature);
+                                    var fDataID = GraphicExtension.getFDataOid(fData);
+                                    var graphicID = GraphicExtension.getGraphicOid(feature);
 
                                     if (graphicID === fDataID) {
                                         return 0;
@@ -277,8 +283,9 @@ define([
                                 feature.hide();
                             }
 
-                            //NOTE using .visible seems to fail hard, its like the value gets overwritten again by the api
-                            //feature.visible = (idx > -1);
+                            // NOTE using .visible seems to fail hard, its like the value gets overwritten again
+                            // by the api
+                            // feature.visible = (idx > -1);
                         });
 
                         break;
@@ -307,21 +314,21 @@ define([
         * @return {Object} a promise of a feature data set
         */
         function getFilteredData(layers, options) {
-            var dFilter = new Deferred(),
-                pSpatial,
-                extentFilter = options.extent ? true : false; //TODO is there a prettier way to do this logic?
+            var dFilter = new Deferred();
+            var pSpatial;
+            var extentFilter = options.extent ? true : false; //TODO is there a prettier way to do this logic?
 
             if (extentFilter) {
                 pSpatial = applyExtentFilter(layers, options.extent);
             } else {
                 //set up a raw list
-                var temp = {},
-                    d = new Deferred();
+                var temp = {};
+                var d = new Deferred();
 
                 layers.forEach(function (layer) {
                     temp[layer.id] = {
                         type: 'raw',
-                        layerId: layer.id
+                        layerId: layer.id,
                     };
                 });
 
@@ -333,15 +340,16 @@ define([
             //wait for feature set to be ready
             pSpatial.then(function (featureSet) {
                 //convert map features to feature data objects
-                var dataSet = featuresToData(featureSet),
-                    queries = [],
-                    rqlArray = new RqlArray();
+                var dataSet = featuresToData(featureSet);
+                var queries = [];
+                var rqlArray = new RqlArray();
 
                 //TODO generate custom filter implementation here when we are ready to support it
 
                 // text search if any
                 if (options.textSearch && options.textSearch.length > 0) {
-                    queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false : true, options.gridMode));
+                    queries.push(makeTextSearch(dataSet, options.textSearch, options.visibleAttribsOnly ? false :
+                        true, options.gridMode));
                 }
 
                 //execute queries, if any
@@ -368,6 +376,6 @@ define([
         }
 
         return {
-            getFilteredData: getFilteredData
+            getFilteredData: getFilteredData,
         };
     });

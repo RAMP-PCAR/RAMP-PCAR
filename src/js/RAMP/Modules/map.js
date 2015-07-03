@@ -15,14 +15,14 @@
 * Map class represents the ESRI map object. The map is generated based on the application configuration and templates.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
-* {{#crossLink "RAMP"}}{{/crossLink}}
-* {{#crossLink "FeatureClickHandler"}}{{/crossLink}}
-* {{#crossLink "MapClickHandler"}}{{/crossLink}}
-* {{#crossLink "Navigation"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
-* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'RAMP'}}{{/crossLink}}
+* {{#crossLink 'FeatureClickHandler'}}{{/crossLink}}
+* {{#crossLink 'MapClickHandler'}}{{/crossLink}}
+* {{#crossLink 'Navigation'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
+* {{#crossLink 'Array'}}{{/crossLink}}
 *
 * @class Map
 * @static
@@ -45,20 +45,26 @@
 */
 
 define([
+
 /* Dojo */
-"dojo/dom", "dojo/_base/lang", "dojo/dom-construct", "dojo/number", "dojo/query", "dojo/topic", "dojo/on",
+'dojo/dom', 'dojo/_base/lang', 'dojo/dom-construct', 'dojo/number', 'dojo/query',
+'dojo/topic', 'dojo/on',
 
 /* Esri */
-"esri/map", "esri/layers/FeatureLayer", "esri/layers/ArcGISTiledMapServiceLayer", "esri/layers/ArcGISDynamicMapServiceLayer",
-"esri/SpatialReference", "esri/dijit/Scalebar", "esri/geometry/Extent", "esri/layers/WMSLayer", "esri/tasks/GeometryService",
+'esri/map', 'esri/layers/FeatureLayer', 'esri/layers/ArcGISTiledMapServiceLayer',
+'esri/layers/ArcGISDynamicMapServiceLayer', 'esri/SpatialReference', 'esri/dijit/Scalebar',
+'esri/geometry/Extent', 'esri/layers/WMSLayer', 'esri/tasks/GeometryService',
 
 /* Ramp */
-"ramp/globalStorage", "ramp/featureClickHandler", "ramp/mapClickHandler", "ramp/navigation", "ramp/eventManager",
+'ramp/globalStorage', 'ramp/featureClickHandler', 'ramp/mapClickHandler', 'ramp/navigation',
+'ramp/eventManager',
 
 /* Util */
-"utils/util", "utils/array", "utils/dictionary"],
+'utils/util', 'utils/array', 'utils/dictionary',
+],
 
     function (
+
     /* Dojo */
     dom, lang, domConstruct, number, query, topic, dojoOn,
 
@@ -71,49 +77,49 @@ define([
 
     /* Util */
     UtilMisc, UtilArray, UtilDict) {
-        "use strict";
+        'use strict';
 
         /**
-        * An Array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects.
+        * An Array of {{#crossLink 'Esri/layers/FeatureLayer'}}{{/crossLink}} objects.
         *
         * @private
         * @property featureLayers {Array}
         */
-        var featureLayers,
+        var featureLayers;
 
-            /**
-            * An Array of {{#crossLink "Esri/layer/WMSLayer"}}{{/crossLink}} objects.
-            *
-            * @private
-            * @property wmsLayers {Array}
-            */
-            wmsLayers = [],
+        /**
+        * An Array of {{#crossLink 'Esri/layer/WMSLayer'}}{{/crossLink}} objects.
+        *
+        * @private
+        * @property wmsLayers {Array}
+        */
+        var wmsLayers = [];
 
-            /**
-            * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
-            * A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
-            *
-            * @private
-            * @property boundingBoxMapping {Object}
-            */
-            boundingBoxMapping = {},
+        /**
+        * Maps the id of a graphic layer to the GraphicsLayer Object that represents its extent bounding box.
+        * A dictionary of String, {{#crossLink 'Esri/layers/GraphicsLayer'}}{{/crossLink}} pairs.
+        *
+        * @private
+        * @property boundingBoxMapping {Object}
+        */
+        var boundingBoxMapping = {};
 
-            /**
-            * The map not only contains feature layers, but also other layers such as the
-            * basemap layer, highlight layer, bounding box layer, etc. This variable is
-            * used to store the starting index of the feature layers in the map.
-            *
-            * @private
-            * @property featureLayerStartIndex {Integer}
-            */
-            featureLayerStartIndex,
+        /**
+        * The map not only contains feature layers, but also other layers such as the
+        * basemap layer, highlight layer, bounding box layer, etc. This variable is
+        * used to store the starting index of the feature layers in the map.
+        *
+        * @private
+        * @property featureLayerStartIndex {Integer}
+        */
+        var featureLayerStartIndex;
 
-            map,
+        var map;
 
-            fullExtent,
-            maxExtent,
-            initExtent,
-            oldCenter;
+        var fullExtent;
+        var maxExtent;
+        var initExtent;
+        var oldCenter;
 
         /**
         * Shows the loading image.
@@ -122,7 +128,7 @@ define([
         * @method _showLoadingImg
         */
         function _showLoadingImg() {
-            $("#map-load-indicator").removeClass("hidden");
+            $('#map-load-indicator').removeClass('hidden');
         }
 
         /**
@@ -132,7 +138,7 @@ define([
         * @method _hideLoadingImg
         */
         function _hideLoadingImg() {
-            $("#map-load-indicator").addClass("hidden");
+            $('#map-load-indicator').addClass('hidden');
         }
 
         /**
@@ -144,11 +150,11 @@ define([
         */
         function _updateScale(event) {
             if (event.levelChange) {
-                var currentScale = number.format(event.lod.scale),
-                    scaleLabelText = "1 : " + currentScale;
+                var currentScale = number.format(event.lod.scale);
+                var scaleLabelText = '1 : ' + currentScale;
 
                 domConstruct.empty('scaleLabel');
-                $("#scaleLabel").text(scaleLabelText);
+                $('#scaleLabel').text(scaleLabelText);
             }
         }
 
@@ -160,7 +166,7 @@ define([
         * @private
         */
         function _initRepublishers(map) {
-            var prefix = "map";
+            var prefix = 'map';
 
             /**
             * Republish map events using topic.publish
@@ -171,16 +177,16 @@ define([
             */
             function republish(name) {
                 map.on(name, function (event) {
-                    topic.publish(prefix + "/" + name, event);
+                    topic.publish(prefix + '/' + name, event);
                 });
             }
 
-            republish("update-end");
-            republish("extent-change");
-            republish("zoom-start");
-            republish("zoom-end");
-            republish("pan-start");
-            republish("pan-end");
+            republish('update-end');
+            republish('extent-change');
+            republish('zoom-start');
+            republish('zoom-end');
+            republish('pan-start');
+            republish('pan-end');
         }
 
         /**
@@ -198,8 +204,9 @@ define([
             });
 
             topic.subscribe(EventManager.Map.CENTER_AND_ZOOM, function (event) {
-                var point = new esri.geometry.Point(event.graphic.geometry.x, event.graphic.geometry.y, map.spatialReference),
-                    d = map.centerAndZoom(point, event.level); // Last parameter is the level
+                var point = new esri.geometry.Point(
+                        event.graphic.geometry.x, event.graphic.geometry.y, map.spatialReference);
+                var d = map.centerAndZoom(point, event.level); // Last parameter is the level
 
                 if (event.callback) {
                     d.then(event.callback);
@@ -248,8 +255,10 @@ define([
             });
 
             /* GUI EVENTS */
+
             // GUI Layout_change happens whenever size of the map portion is changed
-            // Call recentering function when any kind of layout change happens (including window resize but calls it too many times)
+            // Call recentering function when any kind of layout change happens
+            // (including window resize but calls it too many times)
             topic.subscribe(EventManager.GUI.LAYOUT_CHANGE, function () {
                 _mapRecenter();
             });
@@ -263,7 +272,7 @@ define([
                 // unhighlight only if the panel closing is the details panel
                 if (!eventArg.visible &&
                     eventArg.isComplete &&
-                    (eventArg.origin === ("rampPopup" || "datagrid"))) {
+                    (eventArg.origin === ('rampPopup' || 'datagrid'))) {
                     topic.publish(EventManager.FeatureHighlighter.HIGHLIGHT_HIDE, {});
                 }
             });
@@ -271,13 +280,15 @@ define([
             /* START BOUNDING BOX TOGGLE */
 
             topic.subscribe(EventManager.FilterManager.LAYER_VISIBILITY_TOGGLED, function (evt) {
-                var setTo = evt.state,
-                    layerId = evt.id,
-                    // either take url (would need mapping to layer on map),
-                    // map id in config, graphic layer id
-                    layer = map.getLayer(layerId);
+                var setTo = evt.state;
+                var layerId = evt.id;
+
+                // either take url (would need mapping to layer on map),
+                // map id in config, graphic layer id
+                var layer = map.getLayer(layerId);
 
                 layer.setVisibility(setTo);
+
                 //loops through any static layers that are mapped to the feature layer being toggled
                 try {
                     GlobalStorage.LayerMap[layerId].forEach(function (staticLayer) {
@@ -294,6 +305,7 @@ define([
 
                 if (layer !== undefined) {
                     layer.setOpacity(evt.value);
+
                     //loops through any static layers that are mapped to the feature layer being toggled
                     try {
                         GlobalStorage.LayerMap[evt.layerId].forEach(function (staticLayer) {
@@ -316,8 +328,8 @@ define([
                 // graphical and feature layers must be handled separately from
                 // all other layers as ESRI separates the two internally
 
-                var newIndex = evt.index,
-                    featureLayers;
+                var newIndex = evt.index;
+                var featureLayers;
 
                 if (map.layerIds.contains(evt.id)) {
                     featureLayers = map.graphicsLayerIds.map(function (x) {
@@ -331,11 +343,13 @@ define([
                         // Find the index of the first feature layer
                         featureLayerStartIndex = UtilArray.indexOf(map.graphicsLayerIds, function (layerId) {
                             var layer = map.getLayer(layerId);
-                            return layer.type && layer.type === "Feature Layer";
+                            return layer.type && layer.type === 'Feature Layer';
                         });
                     }
+
                     newIndex += featureLayerStartIndex;
                 }
+
                 map.reorderLayer(map.getLayer(evt.id), newIndex);
                 topic.publish(EventManager.Map.REORDER_END);
             });
@@ -343,16 +357,16 @@ define([
             //TODO this will likely get removed or amended by aly
             /* Add Layer subscription*/
             topic.subscribe(EventManager.Map.ADD_LAYER, function () {
-                var type = dom.byId("addLayer-select-type").value,
-                    URL = dom.byId("addLayer-URL-input").value,
-                    opacity = dom.byId("addLayer-Opacity").value;
+                var type = dom.byId('addLayer-select-type').value;
+                var URL = dom.byId('addLayer-URL-input').value;
+                var opacity = dom.byId('addLayer-Opacity').value;
 
-                console.log(type + " | " + URL + " | " + opacity);
+                console.log(type + ' | ' + URL + ' | ' + opacity);
                 addStaticLayer(type, URL, opacity);
             });
 
-            topic.subscribe(EventManager.Map.ADD_LAYER_READY, function (temp_layer) {
-                map.addLayer(temp_layer);
+            topic.subscribe(EventManager.Map.ADD_LAYER_READY, function (tempLayer) {
+                map.addLayer(tempLayer);
             });
         }
 
@@ -363,16 +377,14 @@ define([
             map.resize(true);
             if (oldCenter !== undefined) {
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: oldCenter
+                    point: oldCenter,
                 });
             } else {
                 topic.publish(EventManager.Map.CENTER_AT, {
-                    point: map.extent.getCenter()
+                    point: map.extent.getCenter(),
                 });
             }
         }
-
- 
 
         /**
         * Creates event handlers for the map control: click, mouse-over, load, extent change, and update events.
@@ -382,7 +394,7 @@ define([
         * @param {Object} map A ESRI map object
         */
         function _initEventHandlers(map) {
-            map.on("extent-change", function (event) {
+            map.on('extent-change', function (event) {
                 _updateScale(event);
 
                 // if the first visble layer is not the basemap
@@ -392,38 +404,39 @@ define([
                     $('#mainMap_container').css('background-image', 'none');
                 }
 
-                console.log("map - >> extent-change", event);
+                console.log('map - >> extent-change', event);
 
-                //this used to be in a ONCE bound to update-end of the map.  
+                //this used to be in a ONCE bound to update-end of the map.
                 //should call it every time extent changes as an all-snapshot layer map wont keep updating
                 topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                 /*
-                dojoOn.once(map, "update-end", function () {
-                    console.log("map - >> update-end - >> Load grid");
+                dojoOn.once(map, 'update-end', function () {
+                    console.log('map - >> update-end - >> Load grid');
                     topic.publish(EventManager.Datagrid.LOAD_DATA_GRID);
                 });
                 */
             });
 
             // Deselect all highlighted points if the map is clicked
-            map.on("click", function (evt) {
+            map.on('click', function (evt) {
                 FeatureClickHandler.onFeatureDeselect(evt);
                 topic.publish(EventManager.Map.CLICK, evt);
             });
 
             // Show/Hide spinner for map loading
-            map.on("update-start", _showLoadingImg);
-            map.on("update-end", _hideLoadingImg);
+            map.on('update-start', _showLoadingImg);
+            map.on('update-end', _hideLoadingImg);
 
             window.onresize = _mapRecenter;
 
-            /* map.on("resize", function () {
+            /* map.on('resize', function () {
                 topic.publish(EventManager.Map.RESIZE);
             }); */
 
-            // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep around to steal later
+            // code that would wait until all layers were loaded.  not used anymore, but could be useful to keep
+            // around to steal later
             /*
-            var handle = map.on("update-end", function () {
+            var handle = map.on('update-end', function () {
                 var isAllLoaded = dojoArray.every(
                         map.graphicsLayerIds.concat(map.layerIds),
                         function (layerId) {
@@ -433,11 +446,11 @@ define([
                         }
                     );
 
-                console.log("map -> is all layers loaded: ", isAllLoaded);
+                console.log('map -> is all layers loaded: ', isAllLoaded);
 
                 if (isAllLoaded) {
                     handle.remove();
-                    console.log("map ->", EventManager.Map.ALL_LAYERS_LOADED);
+                    console.log('map ->', EventManager.Map.ALL_LAYERS_LOADED);
                     topic.publish(EventManager.Map.ALL_LAYERS_LOADED);
                 }
             });
@@ -451,13 +464,15 @@ define([
         * @method localProjectExtent
         * @private
         * @param  {Esri/Extent} extent extent to be projected
-        * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+        * @param {Esri/SpatialReference} sr {{#crossLink 'Esri/SpatialReference'}}{{/crossLink}} to project to
         * @return {Esri/Extent} extent in the desired projection
         */
         function localProjectExtent(extent, sr) {
             // interpolates two points by splitting the line in half recursively
             function interpolate(p0, p1, steps) {
-                var mid, i0, i1;
+                var mid;
+                var i0;
+                var i1;
 
                 if (steps === 0) { return [p0, p1]; }
 
@@ -465,6 +480,7 @@ define([
                 if (steps === 1) {
                     return [p0, mid, p1];
                 }
+
                 if (steps > 1) {
                     i0 = interpolate(p0, mid, steps - 1);
                     i1 = interpolate(mid, p1, steps - 1);
@@ -472,12 +488,31 @@ define([
                 }
             }
 
-            var points = [[extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax], [extent.xmin, extent.ymax], [extent.xmin, extent.ymin]],
-                projConvert, transformed, projExtent, x0, y0, x1, y1, xvals, yvals, interpolatedPoly = [], srcProj;
+            var points = [
+                [extent.xmin, extent.ymin], [extent.xmax, extent.ymin], [extent.xmax, extent.ymax],
+                [extent.xmin, extent.ymax], [extent.xmin, extent.ymin],
+            ];
+            var projConvert;
+            var transformed;
+            var projExtent;
+            var x0;
+            var y0;
+            var x1;
+            var y1;
+            var xvals;
+            var yvals;
+            var interpolatedPoly = [];
+            var srcProj;
 
-            // interpolate each edge by splitting it in half 3 times (since lines are not guaranteed to project to lines we need to consider
-            // max / min points in the middle of line segments)
-            [0, 1, 2, 3].map(function (i) { return interpolate(points[i], points[i + 1], 3).slice(1); }).forEach(function (seg) { interpolatedPoly = interpolatedPoly.concat(seg); });
+            // interpolate each edge by splitting it in half 3 times (since lines are not guaranteed to project
+            // to lines we need to consider max / min points in the middle of line segments)
+            [0, 1, 2, 3].map(
+                function (i) {
+                    return interpolate(points[i], points[i + 1], 3).slice(1);
+                }).forEach(
+                function (seg) {
+                    interpolatedPoly = interpolatedPoly.concat(seg);
+                });
 
             //reproject the extent
             if (extent.spatialReference.wkid) {
@@ -487,10 +522,12 @@ define([
             } else {
                 throw new Error('No WKT or WKID specified on extent.spatialReference');
             }
+
             projConvert = proj4(srcProj, 'EPSG:' + sr.wkid);
             transformed = interpolatedPoly.map(function (x) { return projConvert.forward(x); });
 
             xvals = transformed.map(function (x) { return x[0]; });
+
             yvals = transformed.map(function (x) { return x[1]; });
 
             x0 = Math.min.apply(null, xvals);
@@ -512,7 +549,7 @@ define([
         * @method projectExtent
         * @private
         * @param {Object} extent an extent object from the configuration
-        * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+        * @param {Esri/SpatialReference} sr {{#crossLink 'Esri/SpatialReference'}}{{/crossLink}} to project to
         * @param {Function} callWhenDone function to call when extent is projected.  expects geometry parameter
         */
         function projectExtent(extent, sr, callWhenDone) {
@@ -576,7 +613,8 @@ define([
             RAMP.config.extents.fullExtent = projectedFullExtent[0];
 
             //project the max extent.  when finished, tell map to continue loading
-            projectExtent(RAMP.config.extents.maximumExtent, projectedFullExtent[0].spatialReference, finishExtentProjection);
+            projectExtent(RAMP.config.extents.maximumExtent, projectedFullExtent[0].spatialReference,
+                finishExtentProjection);
         }
 
         /**
@@ -601,32 +639,35 @@ define([
         *
         * @private
         * @method AddStaticLayer
-        * @param {String} layer_type A value which controls how the layer is going to be added to the map
-        * @param {String} layer_url A URL pointing to a valid map service endpoint
-        * @param {Number} layer_op A value between 0.0 and 1.0 which determines the transparency of the layer
+        * @param {String} layerType A value which controls how the layer is going to be added to the map
+        * @param {String} layerUrl A URL pointing to a valid map service endpoint
+        * @param {Number} layerOp A value between 0.0 and 1.0 which determines the transparency of the layer
         */
-        function addStaticLayer(layer_type, layer_url, layer_op) {
+        function addStaticLayer(layerType, layerUrl, layerOp) {
             //TODO: consider removing this?
-            layer_op = layer_op / 100; // change percentage to decimal
+            layerOp = layerOp / 100; // change percentage to decimal
             var tempLayer;
-            switch (layer_type) {
-                case "feature":
-                    tempLayer = new FeatureLayer(layer_url, {
-                        opacity: layer_op,
-                        mode: FeatureLayer.MODE_ONDEMAND
+            switch (layerType) {
+                case 'feature':
+                    tempLayer = new FeatureLayer(layerUrl, {
+                        opacity: layerOp,
+                        mode: FeatureLayer.MODE_ONDEMAND,
                     });
+
                     break;
 
-                case "tile":
-                    tempLayer = new ArcGISTiledMapServiceLayer(layer_url, {
-                        opacity: layer_op
+                case 'tile':
+                    tempLayer = new ArcGISTiledMapServiceLayer(layerUrl, {
+                        opacity: layerOp,
                     });
+
                     break;
 
-                case "dynamic":
-                    tempLayer = new ArcGISDynamicMapServiceLayer(layer_url, {
-                        opacity: layer_op
+                case 'dynamic':
+                    tempLayer = new ArcGISDynamicMapServiceLayer(layerUrl, {
+                        opacity: layerOp,
                     });
+
                     break;
 
                 default:
@@ -636,7 +677,7 @@ define([
 
             topic.publish(EventManager.Map.ADD_LAYER_READY, tempLayer);
             topic.publish(EventManager.GUI.ADD_LAYER_PANEL_CHANGE, {
-                visible: false
+                visible: false,
             });
         }
 
@@ -671,11 +712,11 @@ define([
             //            outline: {
             //                color: [240, 128, 128, 255],
             //                width: 1,
-            //                type: "esriSLS",
-            //                style: "esriSLSSolid"
+            //                type: 'esriSLS',
+            //                style: 'esriSLSSolid'
             //            },
-            //            type: "esriSFS",
-            //            style: "esriSFSSolid"
+            //            type: 'esriSFS',
+            //            style: 'esriSFSSolid'
             //        }
             //    });
             //    boxLayer.add(extentGraphic);
@@ -699,9 +740,10 @@ define([
         function makeFeatureLayerOptions(config) {
             var opts = {
                 id: config.id,
+
                 //outFields: [config.layerAttributes],
                 visible: config.settings.visible,
-                opacity: resolveLayerOpacity(config.settings.opacity)
+                opacity: resolveLayerOpacity(config.settings.opacity),
             };
 
             switch (config.mode) {
@@ -733,32 +775,34 @@ define([
                 config: config,
                 user: typeof userLayer === 'boolean' ? userLayer : false,
                 load: {
-                    state: "loading",
+                    state: 'loading',
                     inLS: false,  //layer has entry in layer selector
-                    inCount: false  //layer is included in the layer counts
+                    inCount: false,  //layer is included in the layer counts
                 },
+
                 // hold layer state like wmsQuery being on or off
-                state: lang.clone(config.settings)
+                state: lang.clone(config.settings),
             };
 
             layer.on('load', function (evt) {
-                //console.log("PREP LOAD OK " + evt.layer.url);
+                //console.log('PREP LOAD OK ' + evt.layer.url);
                 topic.publish(EventManager.LayerLoader.LAYER_LOADED, { layer: evt.layer });
             });
 
             layer.on('error', function (evt) {
-                //console.log("PREP LOAD FAIL " + evt.target.url);
+                //console.log('PREP LOAD FAIL ' + evt.target.url);
                 evt.target.ramp.loadOk = false;
                 console.log('layer failed to load');
                 console.log(evt);
                 topic.publish(EventManager.LayerLoader.LAYER_ERROR, {
                     layer: evt.target,
-                    error: evt.error
+                    error: evt.error,
                 });
             });
 
-            //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need to tack the handler
-            //function onto the actual layer object so we can use the "this" keyword to grab the sending layer
+            //since the update-start event doesn't let you know who threw it (supposed to but doesn't), we need
+            //to tack the handler function onto the actual layer object so we can use the 'this' keyword to grab
+            //the sending layer
             layer.ramp.load.onUpdateStart = function () {
                 topic.publish(EventManager.LayerLoader.LAYER_UPDATING, { layer: this });
             };
@@ -778,13 +822,13 @@ define([
             * @method zoomToLayerScale
             */
             zoomToLayerScale: function (layerId) {
-                var layer = map.getLayer(layerId),
-                    lods = map._params.lods,
-                    currentLevel = map.getLevel(),
-                    topLod,
-                    bottomLod,
-                    lod,
-                    i;
+                var layer = map.getLayer(layerId);
+                var lods = map._params.lods;
+                var currentLevel = map.getLevel();
+                var topLod;
+                var bottomLod;
+                var lod;
+                var i;
 
                 //gis lesson.
                 //min scale means dont show the layer if zoomed out beyond the min scale
@@ -793,7 +837,8 @@ define([
 
                 for (i = 0; i < lods.length; i += 1) {
                     lod = lods[i];
-                    //console.log("lod", lod, lod.scale > layer.minScale);
+
+                    //console.log('lod', lod, lod.scale > layer.minScale);
                     if (!topLod && lod.scale <= layer.minScale) {
                         topLod = lod;
                     }
@@ -804,8 +849,8 @@ define([
                 }
 
                 //assign defaults for open-ended ranges
-                //we will never have the case where both values are 0, as in that case the layer is visible everywhere, and this
-                //function will not be called (it's only used when layer is out-of-scale range).
+                //we will never have the case where both values are 0, as in that case the layer is visible everywhere,
+                //and this function will not be called (it's only used when layer is out-of-scale range).
 
                 if (layer.minScale === 0) {
                     //no ceiling.  top = bottom
@@ -817,7 +862,8 @@ define([
                     bottomLod = topLod;
                 }
 
-                //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(), Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
+                //console.log(topLod, bottomLod, map.getLevel(), map.getZoom(),
+                //  Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel));
 
                 if (Math.abs(topLod.level - currentLevel) <= Math.abs(bottomLod.level - currentLevel)) {
                     map.setZoom(topLod.level);
@@ -835,12 +881,12 @@ define([
             * @type { boolean }
             */
             layerInLODRange: function (maxScale, minScale) {
-                var lods = map._params.lods,
-                    topLod = -1,
-                    bottomLod = -1,
-                    lod,
-                    i,
-                    inRange = false;
+                var lods = map._params.lods;
+                var topLod = -1;
+                var bottomLod = -1;
+                var lod;
+                var i;
+                var inRange = false;
 
                 //gis lesson.
                 //min scale means dont show the layer if zoomed out beyond the min scale
@@ -899,21 +945,22 @@ define([
             */
             getMap: function () {
                 if (!map) {
-                    console.log("trying to get map before it is available!");
+                    console.log('trying to get map before it is available!');
                 }
+
                 return map;
             },
 
             /**
             * Returns a list of feature layers that are currently visible on the map.
             * @method getVisibleFeatureLayers
-            * @return {Array} an array of {{#crossLink "Esri/layers/FeatureLayer"}}{{/crossLink}} objects
+            * @return {Array} an array of {{#crossLink 'Esri/layers/FeatureLayer'}}{{/crossLink}} objects
             *
             */
             getVisibleFeatureLayers: function () {
                 // Return only the feature layers
                 return map.getLayersVisibleAtScale().filter(function (layer) {
-                    return layer.type && (layer.type === "Feature Layer") && layer.visible;
+                    return layer.type && (layer.type === 'Feature Layer') && layer.visible;
                 });
             },
 
@@ -922,9 +969,9 @@ define([
             },
 
             getInvisibleLayers: function () {
-                var visibleLayers,
-                    allLayers,
-                    invisibleLayers;
+                var visibleLayers;
+                var allLayers;
+                var invisibleLayers;
 
                 visibleLayers = this.getVisibleLayers();
                 allLayers = map._layers;
@@ -946,7 +993,7 @@ define([
             /**
             * Returns the mapping of feature layer ids to assocciated bounding box layers.
             * @method getBoundingBoxMapping
-            * @return {Object} A dictionary of String, {{#crossLink "Esri/layers/GraphicsLayer"}}{{/crossLink}} pairs.
+            * @return {Object} A dictionary of String, {{#crossLink 'Esri/layers/GraphicsLayer'}}{{/crossLink}} pairs.
             *
             */
             getBoundingBoxMapping: function () {
@@ -974,7 +1021,8 @@ define([
             applyExtentDefaulting: function () {
                 //if full extent is missing, set to default extent.
                 if (!(RAMP.config.extents.fullExtent)) {
-                    //need to deserialize/reserialize to avoid pointing to actual defaultExtent, which may be changed later by the Bookmark Link module
+                    //need to deserialize/reserialize to avoid pointing to actual defaultExtent, which may be changed
+                    //later by the Bookmark Link module
                     RAMP.config.extents.fullExtent = JSON.parse(JSON.stringify(RAMP.config.extents.defaultExtent));
                 }
 
@@ -991,7 +1039,8 @@ define([
             */
             projectConfigExtents: function () {
                 //extract default basemap projection
-                var mapSR = new SpatialReference(RAMP.config.basemaps[RAMP.config.initialBasemapIndex].spatialReference);
+                var mapSR = new SpatialReference(
+                    RAMP.config.basemaps[RAMP.config.initialBasemapIndex].spatialReference);
 
                 //project the default extent.  when finished, process full extent
                 projectExtent(RAMP.config.extents.defaultExtent, mapSR, projectFullExtent);
@@ -1009,12 +1058,13 @@ define([
             * @method checkBoundary
             */
             checkBoundary: function (e, maxExtent) {
-                var extent = e,
-                width = extent.width(),
-                height = extent.height(),
-                centerX = extent.centerX(),
-                centerY = extent.centerY(),
-                flag, adjustedEx;
+                var extent = e;
+                var width = extent.width();
+                var height = extent.height();
+                var centerX = extent.centerX();
+                var centerY = extent.centerY();
+                var flag;
+                var adjustedEx;
 
                 adjustedEx = extent.clone();
 
@@ -1027,6 +1077,7 @@ define([
                     adjustedEx.ymax = maxExtent.ymax;
                     adjustedEx.ymin = maxExtent.ymax - height;
                     flag = true;
+
                     //} else if (extent.ymin < maxExtent.ymin) {
                 } else if (centerY < maxExtent.ymin) {
                     adjustedEx.ymin = maxExtent.ymin;
@@ -1088,7 +1139,8 @@ define([
                     id: layerConfig.id,
                     format: layerConfig.format,
                     opacity: resolveLayerOpacity(layerConfig.settings.opacity),
-                    visibleLayers: [layerConfig.layerName]
+                    visibleLayers: [layerConfig.layerName],
+
                     //resourceInfo: {
                     //    extent: new EsriExtent(layer.extent),
                     //    layerInfos: [new WMSLayerInfo({name:layer.layerName,title:layer.displayName})]
@@ -1115,11 +1167,12 @@ define([
             */
 
             makeStaticLayer: function (layerConfig, userLayer) {
-                var tempLayer,
-                    layerType = layerConfig.layerType || "feature";
+                var tempLayer;
+                var layerType = layerConfig.layerType || 'feature';
+
                 //determine layer type and process
                 switch (layerType) {
-                    case "feature":
+                    case 'feature':
 
                         tempLayer = new FeatureLayer(layerConfig.url, makeFeatureLayerOptions(layerConfig));
 
@@ -1132,25 +1185,25 @@ define([
                         //We are currently not supporting other static layer types at the moment.
                         //Future versions should re-implement these cases
                         /*
-                    case "tile":
+                    case 'tile':
                         tempLayer = new ArcGISTiledMapServiceLayer(staticLayer.url, {
                             opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                             id: staticLayer.id
                         });
-                        console.log("tile layer added. " + staticLayer.id);
+                        console.log('tile layer added. ' + staticLayer.id);
                         break;
 
-                    case "dynamic":
+                    case 'dynamic':
                         tempLayer = new ArcGISDynamicMapServiceLayer(staticLayer.url, {
                             opacity: resolveLayerOpacity(staticLayer.settings.opacity),
                             id: staticLayer.id
                         });
-                        console.log("dynamic layer added. " + staticLayer.id);
+                        console.log('dynamic layer added. ' + staticLayer.id);
                         break;
                         */
 
                     default:
-                        console.log("unknown static layer type encountered: " + layerType);
+                        console.log('unknown static layer type encountered: ' + layerType);
                         break;
                 }
                 return tempLayer;
@@ -1175,7 +1228,7 @@ define([
             *
             * @method localProjectExtent
             * @param  {Esri/Extent} extent extent to be projected
-            * @param {Esri/SpatialReference} sr {{#crossLink "Esri/SpatialReference"}}{{/crossLink}} to project to
+            * @param {Esri/SpatialReference} sr {{#crossLink 'Esri/SpatialReference'}}{{/crossLink}} to project to
             * @return {Esri/Extent} extent in the desired projection
             */
             localProjectExtent: localProjectExtent,
@@ -1213,9 +1266,9 @@ define([
             *
             */
             init: function () {
-                var that = this,
+                var _this = this;
 
-                schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex],
+                var schemaBasemap = RAMP.config.basemaps[RAMP.config.initialBasemapIndex];
 
                 /**
                 * The URL of the first layer of the basemap that is on by default.
@@ -1224,7 +1277,7 @@ define([
                 * @private
                 * @type {String}
                 */
-                url = schemaBasemap.layers[0].url,
+                var url = schemaBasemap.layers[0].url;
 
                 /**
                 * The basemap layer
@@ -1233,11 +1286,11 @@ define([
                 * @private
                 * @type {Esri/layers/ArcGISTiledMapServiceLayer}
                 */
-                baseLayer = new ArcGISTiledMapServiceLayer(url, {
-                    id: "basemapLayer"
-                }),
+                var baseLayer = new ArcGISTiledMapServiceLayer(url, {
+                    id: 'basemapLayer',
+                });
 
-                loadListener = baseLayer.on('update-end', function () {
+                var loadListener = baseLayer.on('update-end', function () {
                     //only load things once, pls!
                     loadListener.remove();
 
@@ -1281,7 +1334,7 @@ define([
 
                 //generate WMS layers array
                 wmsLayers = RAMP.config.layers.wms.map(function (layer) {
-                    return that.makeWmsLayer(layer);
+                    return _this.makeWmsLayer(layer);
                 });
 
                 //generate feature layers array
@@ -1289,9 +1342,9 @@ define([
                     var fl;
 
                     if (layerConfig.isStatic) {
-                        fl = that.makeStaticLayer(layerConfig);
+                        fl = _this.makeStaticLayer(layerConfig);
                     } else {
-                        fl = that.makeFeatureLayer(layerConfig);
+                        fl = _this.makeFeatureLayer(layerConfig);
                     }
 
                     return fl;
@@ -1313,7 +1366,7 @@ define([
                         minZoom: RAMP.config.zoomLevels.min,
                         maxZoom: RAMP.config.zoomLevels.max,
                         slider: false,
-                        lods: levelOfDetails.lod
+                        lods: levelOfDetails.lod,
                     });
                 } else {
                     //the map!
@@ -1323,7 +1376,7 @@ define([
                         autoResize: true,
                         minZoom: RAMP.config.zoomLevels.min,
                         maxZoom: RAMP.config.zoomLevels.max,
-                        slider: false
+                        slider: false,
                     });
                 }
 
@@ -1331,30 +1384,35 @@ define([
                 MapClickHandler.init(map);
 
                 /*  START - Add static layers   */
-                //NOTE: this type of thing is not currenlty supported by the config schema.  Need to revisit and determine if we want to keep this code or not.
-                // this only deals with static layers that are bound to a feature layer.  stand alone static layers are handled like normal feature layers
 
-                //if this does get implemented, this code should be moved to the layerLoader.js onLayerLoaded function.  After a feature layer successfully loads,
-                //we should then load any of it's static layers.  Extra tricky because these static layers do not appear in the layer selector (their state is bound
-                //to the feature layer.
-                //may want to consider another layerType .BoundStatic
+                // NOTE: this type of thing is not currenlty supported by the config schema.  Need to revisit and
+                // determine if we want to keep this code or not. this only deals with static layers that are bound
+                // to a feature layer.  stand alone static layers are handled like normal feature layers
 
-                var staticLayers = [],
-                    perLayerStaticMaps = [],
-                    staticLayerMap = [];
+                // if this does get implemented, this code should be moved to the layerLoader.js onLayerLoaded
+                // function.  After a feature layer successfully loads, we should then load any of it's static
+                // layers.  Extra tricky because these static layers do not appear in the layer selector
+                // (their state is bound to the feature layer. may want to consider another layerType .BoundStatic
+
+                var staticLayers = [];
+                var perLayerStaticMaps = [];
+                var staticLayerMap = [];
 
                 RAMP.config.layers.feature.forEach(function (layer) {
                     perLayerStaticMaps = [];
                     if (!layer.staticLayers) {
                         return;
                     }
+
                     layer.staticLayers.forEach(function (staticLayer, i) {
-                        var tempLayer = that.makeStaticLayer(staticLayer);
+                        var tempLayer = _this.makeStaticLayer(staticLayer);
 
                         staticLayers.push(tempLayer);
+
                         //creates an array of all static layers defined for the current, single feature layer
                         perLayerStaticMaps[i] = staticLayer.id;
                     });
+
                     //adds the static layer id array as a value to an array indexed by feature layer id
                     staticLayerMap[layer.id] = perLayerStaticMaps;
                 });
@@ -1363,23 +1421,24 @@ define([
 
                 /*  End - Add static layers   */
 
-                //This was intended to be used to distinguish layers from each other when crawling; Looks like we are not using it. Commenting out for now. SZ
+                // This was intended to be used to distinguish layers from each other when crawling; Looks like we
+                // are not using it. Commenting out for now. SZ
                 baseLayer.ramp = {
-                    type: GlobalStorage.layerType.Basemap
+                    type: GlobalStorage.layerType.Basemap,
                 };
 
-                //save layer objects to load after basemap.
-                //static layers is currently empty always
+                // save layer objects to load after basemap.
+                // static layers is currently empty always
                 RAMP.startupLayers = wmsLayers.concat(staticLayers, featureLayers);
 
-                //add the basemap
+                // add the basemap
                 map.addLayer(baseLayer);
 
                 /* Start - Show scalebar */
                 var scalebar = new EsriScalebar({
                     map: map,
-                    attachTo: "bottom-left",
-                    scalebarUnit: "metric"
+                    attachTo: 'bottom-left',
+                    scalebarUnit: 'metric',
                 });
 
                 scalebar.show();
@@ -1391,6 +1450,6 @@ define([
                 _initEventHandlers(map);
 
                 oldCenter = map.extent.getCenter();
-            }
+            },
         };
     });

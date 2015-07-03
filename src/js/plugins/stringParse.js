@@ -2,7 +2,7 @@
 
 console.log('loading stringParse');
 RAMP.plugins.featureInfoParser.stringParse = function (data) {
-    "use strict";
+    'use strict';
 
-    return "<p>{0}</p>".format(data);
+    return '<p>{0}</p>'.format(data);
 };

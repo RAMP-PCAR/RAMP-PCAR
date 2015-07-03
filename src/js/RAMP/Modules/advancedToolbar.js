@@ -13,17 +13,17 @@
 * AdvancedToolbar class.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "EventManager"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* 
+* {{#crossLink "EventManager"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/advanced_toolbar_template.json"}}{{/crossLink}}
-* 
+*
 * @class AdvancedToolbar
 * @static
 * @uses dojo/_base/lang
@@ -32,150 +32,164 @@
 */
 
 define([
+
     // Dojo
             'dojo/_base/lang', 'dojo/topic', 'dojo/Deferred',
+
     // Ramp
             'ramp/eventManager', 'ramp/map', 'ramp/globalStorage',
+
     // Util
             'utils/util', 'utils/dictionary', 'utils/popupManager',
             'utils/tmplHelper',
+
     // Text
-            'dojo/text!./templates/advanced_toolbar_template.json'
+            'dojo/text!./templates/advanced_toolbar_template.json',
 ],
     function (
+
     // Dojo
         dojoLang, topic, Deferred,
+
     // Ramp
         EventManager, RampMap, globalStorage,
+
     // Util
         UtilMisc, UtilDict, PopupManager, TmplHelper,
+
     // Text
-        advanced_toolbar_template_json
+        advancedToolbarTemplateJson
     ) {
         'use strict';
 
-        var map,
+        var map;
 
-            tools = [
+        var tools = [
+
                 // name,
                 // selector,
                 // enabled,
                 // module
-            ],
+        ];
 
-            ui = (function () {
+        var ui = (function () {
+            var advancedToggle;
+            var advancedSectionContainer;
+            var advancedToolbarList;
 
-                var advancedToggle,
-                    advancedSectionContainer,
-                    advancedToolbarList,
+            var cssButtonPressedClass = 'button-pressed';
 
-                    cssButtonPressedClass = 'button-pressed',
+            var transitionDuration = 0.4;
+            var subPanelMarginDelta = 32;
 
-                    transitionDuration = 0.4,
-                    subPanelMarginDelta = 32,
+            var viewport = $('.viewport');
+            var panelToggle = viewport.find('#panel-toggle');
 
-                    viewport = $('.viewport'),
-                    panelToggle = viewport.find('#panel-toggle'),
+            var advancedToolbarTimeline = new TimelineLite({ paused: true });
+            var subpanelTimeLine = new TimelineLite();
 
-                    advancedToolbarTimeline = new TimelineLite({ paused: true }),
-                    subpanelTimeLine = new TimelineLite();
+            /**
+             * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the
+             * height of the details panel to accommodate the expanded toolbar.
+             *
+             * @method toggleToolbar
+             * @param {Deferred} d a deferred to be resolved upon completion of the animation
+             * @param {Boolean} doOpen if true - the toolbar show open; if false - the toolbar should close
+             * @private
+             */
+            function toggleToolbar(d, doOpen) {
+                var subPanelContainer = viewport.find('.sub-panel-container');
 
-                /**
-                 * Runs the open/close animation of the toolbar additionally managing the animation of adjusting the height of the details panel to accommodate the expanded toolbar.
-                 * 
-                 * @method toggleToolbar
-                 * @param {Deferred} d a deferred to be resolved upon completion of the animation
-                 * @param {Boolean} doOpen if true - the toolbar show open; if false - the toolbar should close
-                 * @private
-                 */
-                function toggleToolbar(d, doOpen) {
-                    var subPanelContainer = viewport.find('.sub-panel-container');
+                // clear and recreate tween to capture newly created subpanels
+                subpanelTimeLine
+                    .clear()
+                    .fromTo(subPanelContainer, transitionDuration,
+                            { 'margin-top': 0, paused: true },
+                            { 'margin-top': subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
+                    .seek(advancedToolbarTimeline.time());
 
-                    // clear and recreate tween to capture newly created subpanels
-                    subpanelTimeLine
-                        .clear()
-                        .fromTo(subPanelContainer, transitionDuration,
-                                { 'margin-top': 0, paused: true },
-                                { 'margin-top': subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
-                        .seek(advancedToolbarTimeline.time());
+                if (!doOpen) {
+                    advancedToolbarTimeline.eventCallback('onReverseComplete', function () {
+                        d.resolve();
+                        viewport.removeClass('advanced-toolbar-mode');
+                    });
 
-                    if (!doOpen) {
-                        advancedToolbarTimeline.eventCallback('onReverseComplete', function () {
-                            d.resolve();
-                            viewport.removeClass('advanced-toolbar-mode');
-                        });
-                        advancedToolbarTimeline.reverse();
-                    } else {
-                        viewport.addClass('advanced-toolbar-mode');
-                        advancedToolbarTimeline.eventCallback('onComplete', function () {
-                            d.resolve();
-                        });
-                        advancedToolbarTimeline.play();
-                    }
+                    advancedToolbarTimeline.reverse();
+                } else {
+                    viewport.addClass('advanced-toolbar-mode');
+                    advancedToolbarTimeline.eventCallback('onComplete', function () {
+                        d.resolve();
+                    });
+
+                    advancedToolbarTimeline.play();
                 }
+            }
 
-                return {
-                    /**
-                    * Initiates additional UI components of the widget, setting listeners and other stuff.
-                    *
-                    * @method ui.init
-                    * @private
-                    */
-                    init: function () {
-                        advancedToggle = viewport.find('#advanced-toggle');
-                        advancedSectionContainer = viewport.find('#advanced-toolbar');
+            return {
+                /**
+                * Initiates additional UI components of the widget, setting listeners and other stuff.
+                *
+                * @method ui.init
+                * @private
+                */
+                init: function () {
+                    advancedToggle = viewport.find('#advanced-toggle');
+                    advancedSectionContainer = viewport.find('#advanced-toolbar');
 
-                        // create html code for advancedToolbar
-                        tmpl.cache = {};
-                        tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advanced_toolbar_template_json));
-                        advancedSectionContainer.append(tmpl('at_main'));
-                        advancedToolbarList = advancedSectionContainer.find('#advanced-toolbar-list');
+                    // create html code for advancedToolbar
+                    tmpl.cache = {};
+                    tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(advancedToolbarTemplateJson));
+                    advancedSectionContainer.append(tmpl('at_main'));
+                    advancedToolbarList = advancedSectionContainer.find('#advanced-toolbar-list');
 
-                        // create a timeline to animate toggling of the advanced toolbar
-                        advancedToolbarTimeline
-                            .set(advancedSectionContainer, { display: 'block' })
-                            .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta }, { top: 0, ease: 'easeOutCirc' }, 0)
-                            .to(panelToggle, transitionDuration, { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
+                    // create a timeline to animate toggling of the advanced toolbar
+                    advancedToolbarTimeline
+                        .set(advancedSectionContainer, { display: 'block' })
+                        .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta },
+                            { top: 0, ease: 'easeOutCirc' }, 0)
+                        .to(panelToggle, transitionDuration,
+                            { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
 
-                            .add(subpanelTimeLine, 0);
+                        .add(subpanelTimeLine, 0);
 
-                        // register the popup for the advanced toolbar
-                        PopupManager.registerPopup(advancedToggle, 'click',
-                            function (d) {
-                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'advanced-toolbar' });
+                    // register the popup for the advanced toolbar
+                    PopupManager.registerPopup(advancedToggle, 'click',
+                        function (d) {
+                            topic.publish(EventManager.GUI.TOOLBAR_SECTION_OPEN, { id: 'advanced-toolbar' });
 
-                                // close this panel if any other panel is opened
-                                var that = this;
-                                UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, 
-                                    function (evt) {
-                                        if (evt.id !== 'advanced-toolbar' && that.isOpen()) {
-                                            that.close();
-                                        }
-                                    });
+                            // close this panel if any other panel is opened
+                            var _this = this;
+                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN,
+                                function (evt) {
+                                    if (evt.id !== 'advanced-toolbar' && _this.isOpen()) {
+                                        _this.close();
+                                    }
+                                });
 
-                                toggleToolbar(d, true);
+                            toggleToolbar(d, true);
+                        },
+
+                        {
+                            activeClass: cssButtonPressedClass,
+                            setClassBefore: true,
+                            target: advancedSectionContainer,
+                            closeHandler: function (d) {
+                                topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'advanced-toolbar' });
+
+                                deactivateAll(); // deactivate all the tools
+                                toggleToolbar(d, false);
                             },
-                            {
-                                activeClass: cssButtonPressedClass,
-                                setClassBefore: true,
-                                target: advancedSectionContainer,
-                                closeHandler: function (d) {
-                                    topic.publish(EventManager.GUI.TOOLBAR_SECTION_CLOSE, { id: 'advanced-toolbar' });
+                        }
+                    );
 
-                                    deactivateAll(); // deactivate all the tools
-                                    toggleToolbar(d, false);
-                                }
-                            }
-                        );
+                    map = RampMap.getMap();
+                },
 
-                        map = RampMap.getMap();
-                    },
-
-                    addTool: function (tool) {
-                        advancedToolbarList.append(tool.module.node);
-                    }
-                };
-            }());
+                addTool: function (tool) {
+                    advancedToolbarList.append(tool.module.node);
+                },
+            };
+        }());
 
         /**
         * Deactivates all the tools. Used when closing the Advanced toolbar or when another tool is being activated.
@@ -209,9 +223,9 @@ define([
                 // load all the tools in one go
                 console.log('toolbar : loading tools', toolsRequire);
                 require(toolsRequire, function () {
-                    var deferredList = [],
-                        deferred,
-                        args = Array.prototype.slice.call(arguments);
+                    var deferredList = [];
+                    var deferred;
+                    var args = Array.prototype.slice.call(arguments);
 
                     args.forEach(function () {
                         deferredList.push(new Deferred());
@@ -240,6 +254,6 @@ define([
 
                     console.log(args);
                 });
-            }
+            },
         };
     });

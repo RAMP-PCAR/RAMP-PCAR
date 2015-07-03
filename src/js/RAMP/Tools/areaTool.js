@@ -9,10 +9,10 @@
 * and length will be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @extends BaseTool
 * @class AreaTool
 * @uses dojo/dom
@@ -26,27 +26,33 @@
 */
 
 define([
+
 // Dojo
-      "dojo/dom", "dojo/string", "dojo/_base/lang",
+      'dojo/dom', 'dojo/string', 'dojo/_base/lang',
+
 // Esri
-      "esri/config", "esri/graphic", "esri/tasks/GeometryService",
-      "esri/tasks/AreasAndLengthsParameters", "esri/toolbars/draw", "esri/symbols/SimpleFillSymbol",
+      'esri/config', 'esri/graphic', 'esri/tasks/GeometryService',
+      'esri/tasks/AreasAndLengthsParameters', 'esri/toolbars/draw', 'esri/symbols/SimpleFillSymbol',
+
 // Ramp
-      "ramp/map", "ramp/globalStorage", "tools/baseTool"
+      'ramp/map', 'ramp/globalStorage', 'tools/baseTool',
 ],
     function (
+
 // Dojo
       dom, string, dojoLang,
+
 // Esri
       esriConfig, Graphic, GeometryService, AreasAndLengthsParameters, Draw, SimpleFillSymbol,
+
 // Ramp
       RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
-        var ui,
-            geometryService,
-            measureApp,
-            that;
+        var ui;
+        var geometryService;
+        var measureApp;
+        var _this;
 
         /**
         * Compute the area and length of a specified polygon.
@@ -57,10 +63,10 @@ define([
         *
         */
         function computeAreaAndLength(evtObj) {
-            that.working(true);
+            _this.working(true);
 
             geometryService = new GeometryService(RAMP.config.geometryServiceUrl);
-            geometryService.on("areas-and-lengths-complete", outputAreaAndLength);
+            geometryService.on('areas-and-lengths-complete', outputAreaAndLength);
 
             var geometry = evtObj.geometry;
             measureApp.map.graphics.clear();
@@ -71,7 +77,7 @@ define([
             var areasAndLengthParams = new AreasAndLengthsParameters();
             areasAndLengthParams.lengthUnit = GeometryService.UNIT_KILOMETER;
             areasAndLengthParams.areaUnit = GeometryService.UNIT_SQUARE_KILOMETERS;
-            areasAndLengthParams.calculationType = "geodesic";
+            areasAndLengthParams.calculationType = 'geodesic';
             geometryService.simplify([geometry], function (simplifiedGeometries) {
                 areasAndLengthParams.polygons = simplifiedGeometries;
                 geometryService.areasAndLengths(areasAndLengthParams);
@@ -87,31 +93,33 @@ define([
         *
         */
         function outputAreaAndLength(evtObj) {
-            var result = evtObj.result,
-                // Convert acres to km2.
-                area = result.areas[0].toFixed(3),// (result.areas[0] / 247.11).toFixed(3),
-                // Convert feet to km.
-                length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
+            var result = evtObj.result;
 
-            that.working(false);
+            // Convert acres to km2.
+            var area = result.areas[0].toFixed(3);// (result.areas[0] / 247.11).toFixed(3),
 
-            length = string.substitute("${number:dojo.number.format}", { number: length });
-            area = string.substitute("${number:dojo.number.format}", { number: area });
-            displayOutput(length, area, "km", "km");
+            // Convert feet to km.
+            var length = result.lengths[0].toFixed(3);// (result.lengths[0] / 3280.8).toFixed(3);
+
+            _this.working(false);
+
+            length = string.substitute('${number:dojo.number.format}', { number: length });
+            area = string.substitute('${number:dojo.number.format}', { number: area });
+            displayOutput(length, area, 'km', 'km');
         }
 
         ui = {
             init: function () {
-                var map = RampMap.getMap(),
-                    toolbar = new Draw(map);
+                var map = RampMap.getMap();
+                var toolbar = new Draw(map);
 
-                toolbar.on("draw-end", computeAreaAndLength);
+                toolbar.on('draw-end', computeAreaAndLength);
 
                 measureApp = {
                     map: map,
-                    toolbar: toolbar
+                    toolbar: toolbar,
                 };
-            }
+            },
         };
 
         /**
@@ -123,7 +131,7 @@ define([
         function activate() {
             measureApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'), i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -147,7 +155,7 @@ define([
         function clearMap() {
             measureApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"), i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'), i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -157,14 +165,14 @@ define([
         * @private
         */
         function displayOutput(length, area, lengthUnits, areaUnits) {
-            that.displayTemplateOutput(
+            _this.displayTemplateOutput(
                 {
-                    lengthLabel: i18n.t(that.ns + ":length"),
-                    areaLabel: i18n.t(that.ns + ":area"),
+                    lengthLabel: i18n.t(_this.ns + ':length'),
+                    areaLabel: i18n.t(_this.ns + ':area'),
                     lengthOutput: length,
                     areaOutput: area,
                     lengthUnits: lengthUnits,
-                    areaUnits: areaUnits
+                    areaUnits: areaUnits,
                 }
             );
         }
@@ -178,12 +186,12 @@ define([
             *
             */
             init: function (selector, d) {
-                that = this;
+                _this = this;
                 this.initToggle(selector, d,
                     {
                         activate: activate,
                         deactivate: deactivate,
-                        defaultAction: clearMap
+                        defaultAction: clearMap,
                     }
                 );
 
@@ -192,6 +200,6 @@ define([
                 return this;
             },
 
-            name: "areaTool"
+            name: 'areaTool',
         });
     });

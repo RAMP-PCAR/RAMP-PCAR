@@ -7,34 +7,38 @@
 */
 
 /**
-* Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic changing of the layer item state. 
-* 
+* Create a layer item for each map layer to be displayed in the layer selector. Allows for dynamic
+* changing of the layer item state.
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "TmplUtil"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-*  
-* 
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "TmplUtil"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+*
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
-* 
+*
 * @class LayerItem
 * @constructor
 * @uses dojo/Evented
 * @uses dojo/_base/declare
 * @uses dojo/lang
-* 
+*
 * @param {Object} config a config definition of the layer
 * @param {Object} [options] Additional options
-* 
-* @param {String} [options.state] Specifies the initial state of the LyerItem; must be one of the `LayerItem.state` defaults
-* @param {String} [options.type] Specifies type of this LayerItem and the name of the layer item template to use
-* 
+*
+* @param {String} [options.state] Specifies the initial state of the LyerItem; must be one of the
+* `LayerItem.state` defaults
+* @param {String} [options.type] Specifies type of this LayerItem and the name of the layer item
+* template to use
+*
 * @param {Object} [options.stateMatrix] additional state matrix records to be mixed into the default
-* @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed into the default
-* 
+* @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed
+* into the default
+*
 * @return {LayerItem} A control object representing a layer allowing to dynamically change its state.
 */
 
@@ -45,25 +49,26 @@ define([
     'dojo/text!./templates/layer_selector_template.json',
 
     /* Util */
-    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks'
+    'utils/util', 'utils/tmplHelper', 'utils/tmplUtil', 'utils/array', 'utils/dictionary', 'utils/bricks',
 ],
     function (
         Evented, declare, lang,
-        layer_selector_template,
+        layerSelectorTemplate,
         Util, TmplHelper, TmplUtil, UtilArray, UtilDict, Bricks
     ) {
         'use strict';
 
-        var LayerItem,
-            ALL_STATES_CLASS;
+        var LayerItem;
+        var ALL_STATES_CLASS;
 
         LayerItem = declare([Evented], {
             constructor: function (config, options) {
-                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                // declare individual properties inside the constructor:
+                // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
                         /**
-                         * Layer id. Upon initialization, `id` can be overwritten by `config.id` value. 
+                         * Layer id. Upon initialization, `id` can be overwritten by `config.id` value.
                          *
                          * @property id
                          * @type String
@@ -197,7 +202,7 @@ define([
                          * @type Object
                          * @default layer_selector_template.json
                          */
-                        templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+                        templates: JSON.parse(TmplHelper.stringifyTemplate(layerSelectorTemplate)),
 
                         /**
                          * State of this LayerItem; can be overwritten by `options.state`.
@@ -209,13 +214,14 @@ define([
                         state: LayerItem.state.DEFAULT,
 
                         /**
-                         * Specifies type of this LayerItem and the name of the layer item template to use; can be overwritten by `options.type`.
+                         * Specifies type of this LayerItem and the name of the layer item template to use;
+                         * can be overwritten by `options.type`.
                          *
                          * @property type
                          * @type String
                          * @default null
                          */
-                        type: null
+                        type: null,
                     },
                     options,
                     {
@@ -224,9 +230,11 @@ define([
                         _config: config,
 
                         /**
-                         * Specifies a state matrix for this particular LayerItem. The default is mixed with `options.stateMatrix` upon initialization.
-                         * The state matrix prescribes what controls, toggles, and notices are present in specific states. 
-                         * 
+                         * Specifies a state matrix for this particular LayerItem. The default is mixed with
+                         * `options.stateMatrix` upon initialization.
+                         * The state matrix prescribes what controls, toggles, and notices are present in
+                         * specific states.
+                         *
                          * @property stateMatrix
                          * @type Object
                          * @default LayerItem.stateMatrix
@@ -237,7 +245,8 @@ define([
                         ),
 
                         /**
-                         * Specifies a state transition matrix for this particular LayerItem. The default is mixed with `options.transitionMatrix` upon initialization.
+                         * Specifies a state transition matrix for this particular LayerItem. The default is mixed with
+                         * `options.transitionMatrix` upon initialization.
                          * The state transition matrix prescribes the direction of state changes for specific states.
                          *
                          * @property transitionMatrix
@@ -247,24 +256,25 @@ define([
                         transitionMatrix: lang.mixin(
                             lang.clone(LayerItem.transitionMatrix),
                             options.transitionMatrix
-                        )
+                        ),
                     }
                 );
 
-                // can't use i18n before locale files are loaded, so have to set brick templates after 
+                // can't use i18n before locale files are loaded, so have to set brick templates after
                 if (!LayerItem.brickTemplates) {
                     LayerItem.brickTemplates = {
-                        bounding_box_brick: {
+                        boundingBoxBrick: {
                             type: Bricks.CheckboxfsBrick,
                             config: {
                                 label: i18n.t('filterManager.boundingBox'),
                                 customContainerClass: 'bbox',
-                                checked: false//,
+                                checked: false,
+
                                 //instructions: i18n.t('addDataset.help.dataSource')
-                            }
+                            },
                         },
 
-                        all_data_brick: {
+                        allDataBrick: {
                             type: Bricks.ChoiceBrick,
                             config: {
                                 header: i18n.t('filterManager.layerData'),
@@ -274,15 +284,15 @@ define([
                                 choices: [
                                     {
                                         key: 'layerDataPrefetch',
-                                        value: i18n.t('filterManager.layerDataPrefetch')
-                                    }
-                                ]
-                                //instructions: i18n.t('addDataset.help.dataSource')
-                            }
+                                        value: i18n.t('filterManager.layerDataPrefetch'),
+                                    },
+                                ],
 
+                                //instructions: i18n.t('addDataset.help.dataSource')
+                            },
                         },
 
-                        all_data_checked_brick: {
+                        allDataCheckedBrick: {
                             type: Bricks.ChoiceBrick,
                             config: {
                                 header: i18n.t('filterManager.layerData'),
@@ -294,13 +304,13 @@ define([
                                 choices: [
                                     {
                                         key: 'layerDataPrefetch',
-                                        value: i18n.t('filterManager.layerDataPrefetch')
-                                    }
-                                ]
-                                //instructions: i18n.t('addDataset.help.dataSource')
-                            }
+                                        value: i18n.t('filterManager.layerDataPrefetch'),
+                                    },
+                                ],
 
-                        }
+                                //instructions: i18n.t('addDataset.help.dataSource')
+                            },
+                        },
                     };
                 }
 
@@ -338,20 +348,20 @@ define([
              * @private
              */
             _generateParts: function (partType, templateKey, partStore) {
-                var that = this,
+                var _this = this;
 
-                    stateKey,
-                    partKeys = [],
-                    part,
+                var stateKey;
+                var partKeys = [];
+                var part;
 
-                    brickTemplate,
-                    brickPart;
+                var brickTemplate;
+                var brickPart;
 
                 Object
                     .getOwnPropertyNames(LayerItem.state)
                     .forEach(function (s) {
                         stateKey = LayerItem.state[s];
-                        partKeys = partKeys.concat(that.stateMatrix[stateKey][partType]);
+                        partKeys = partKeys.concat(_this.stateMatrix[stateKey][partType]);
                     });
 
                 partKeys = UtilArray.unique(partKeys);
@@ -361,22 +371,24 @@ define([
                         brickTemplate = LayerItem.brickTemplates[pKey];
 
                         brickPart = brickTemplate.type.new(pKey, brickTemplate.config);
+
                         // TODO: fix
                         // hack to get the data-layer-id attribute onto checkboxBrick input node
-                        // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem is switched full to Bricks and 
-                        // LayerCollection controller is added in between filterManager and LayerGroup.
+                        // used in conjunction with ChekcboxGroup in FilterManager; will be removed when layerItem
+                        // is switched full to Bricks and  LayerCollection controller is added in between filterManager
+                        // and LayerGroup.
 
                         if (Bricks.CheckboxBrick.isPrototypeOf(brickPart)) {
-                            brickPart.inputNode.attr('data-layer-id', that._config.id);
+                            brickPart.inputNode.attr('data-layer-id', _this._config.id);
                         } else {
-                            brickPart.choiceButtons.attr('data-layer-id', that._config.id);
+                            brickPart.choiceButtons.attr('data-layer-id', _this._config.id);
                         }
 
                         part = brickPart.node;
-
                     } else {
-                        part = that._generatePart(templateKey, pKey);
+                        part = _this._generatePart(templateKey, pKey);
                     }
+
                     partStore[pKey] = (part);
                 });
             },
@@ -396,11 +408,11 @@ define([
                 tmpl.templates = this.templates;
 
                 var info = {
-                    id: this.id,
-                    config: this._config,
-                    nameKey: pKey,
-                    data: data
-                };
+                        id: this.id,
+                        config: this._config,
+                        nameKey: pKey,
+                        data: data,
+                    };
                 info.fn = TmplUtil;
                 var part = $(tmpl(templateKey + pKey, info));
 
@@ -412,7 +424,8 @@ define([
              *
              * @param {String} state name of the state to be set
              * @param {Object} [options] additional options
-             * @param {Object} [options.notices] custom information to be displayed in a notice for the current state if needed; object structure is not set; look at the appropriate template; 
+             * @param {Object} [options.notices] custom information to be displayed in a notice for the current state
+             * if needed; object structure is not set; look at the appropriate template;
              * @example
              *      {
              *          notices: {
@@ -424,19 +437,20 @@ define([
              *              }
              *          }
              *      }
-             * @param {Boolean} force if `true`, forces the state change even if it's no allowed by the `transitionMatrix`
+             * @param {Boolean} force if `true`, forces the state change even if it's no allowed by the
+             * `transitionMatrix`
              * @method setState
              */
             setState: function (state, options, force) {
-                var allowedStates = this.transitionMatrix[this.state],
-                    notice,
-                    focusedNode,
+                var allowedStates = this.transitionMatrix[this.state];
+                var notice;
+                var focusedNode;
 
-                    that = this;
+                var _this = this;
 
                 if (allowedStates.indexOf(state) !== -1 || force) {
-
                     this.state = state;
+
                     //lang.mixin(this, options);
 
                     // set state class on the layerItem root node
@@ -447,11 +461,10 @@ define([
                     // regenerate notice controls if extra data is provided
                     if (options) {
                         if (options.notices) {
-
                             UtilDict.forEachEntry(options.notices, function (pKey, data) {
-                                notice = that._generatePart('layer_notice_', pKey, data);
+                                notice = _this._generatePart('layer_notice_', pKey, data);
 
-                                that._noticeStore[pKey] = (notice);
+                                _this._noticeStore[pKey] = (notice);
                             });
                         }
                     }
@@ -499,7 +512,8 @@ define([
                         // if the previously focused node still in DOM, set focus to it
                         if (Util.containsInDom(focusedNode[0])) {
                             focusedNode.focus();
-                        } else { // if this node is no longer in DOM, set focus to the first focusable element in layer item
+                        } else {
+                            // if this node is no longer in DOM, set focus to the first focusable element in layer item
                             this.node.find(':focusable:first').focus();
                         }
                     }
@@ -539,12 +553,13 @@ define([
                     .end()
                     .append(controls)
                 ;
-            }
+            },
         });
 
         /**
-         * Helper function to check if `states` parameter is false or []. If empty array is supplied, all available states are returned
-         * 
+         * Helper function to check if `states` parameter is false or []. If empty array is supplied,
+         * all available states are returned
+         *
          * @param {Array} [states] state names
          * @method getStateNames
          * @private
@@ -560,8 +575,9 @@ define([
         }
 
         /**
-         * Helper function to check if `partKeys` parameter is false or []. If empty array is supplied, all available partKeys for the specified partType are returned.
-         * 
+         * Helper function to check if `partKeys` parameter is false or []. If empty array is supplied,
+         * all available partKeys for the specified partType are returned.
+         *
          * @param {String} partType a part type
          * @param {Array} [partKeys] part keys
          * @method getPartKeys
@@ -586,7 +602,7 @@ define([
                 * @property LayerItem.state
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     state: {
                 *       DEFAULT: 'layer-state-default',
                 *       LOADING: 'layer-state-loading',
@@ -602,7 +618,7 @@ define([
                     LOADED: 'layer-state-loaded',
                     UPDATING: 'layer-state-updating',
                     ERROR: 'layer-state-error',
-                    OFF_SCALE: 'layer-state-off-scale'
+                    OFF_SCALE: 'layer-state-off-scale',
                 },
 
                 /**
@@ -611,7 +627,7 @@ define([
                 * @property LayerItem.partTypes
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     partTypes: {
                 *       TOGGLES: 'toggles',
                 *       CONTROLS: 'controls',
@@ -623,7 +639,7 @@ define([
                     TOGGLES: 'toggles',
                     CONTROLS: 'controls',
                     NOTICES: 'notices',
-                    SETTINGS: 'settings'
+                    SETTINGS: 'settings',
                 },
 
                 /**
@@ -632,7 +648,7 @@ define([
                 * @property LayerItem.controls
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     controls: {
                 *            METADATA: 'metadata',
                 *            SETTINGS: 'settings',
@@ -648,7 +664,7 @@ define([
                     LOADING: 'loading',
                     REMOVE: 'remove',
                     RELOAD: 'reload',
-                    ERROR: 'error'
+                    ERROR: 'error',
                 },
 
                 /**
@@ -657,7 +673,7 @@ define([
                 * @property LayerItem.toggles
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     toggles: {
                 *           EYE: 'eye',
                 *           BOX: 'box',
@@ -674,7 +690,7 @@ define([
                     HIDE: 'hide',
                     ZOOM: 'zoom',
                     PLACEHOLDER: 'placeholder',
-                    QUERY: 'query'
+                    QUERY: 'query',
                 },
 
                 /**
@@ -683,7 +699,7 @@ define([
                 * @property LayerItem.notices
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     notices: {
                 *            SCALE: 'scale'
                 *            ERROR: 'error',
@@ -695,7 +711,7 @@ define([
                     SCALE: 'scale',
                     ERROR: 'error',
                     UPDATE: 'update',
-                    USER: 'user'
+                    USER: 'user',
                 },
 
                 /**
@@ -704,7 +720,7 @@ define([
                 * @property LayerItem.settings
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *     settings: {
                 *           OPACITY: 'opacity',
                 *           BOUNDING_BOX: 'bounding_box',
@@ -713,10 +729,10 @@ define([
                 */
                 settings: {
                     OPACITY: 'opacity',
-                    BOUNDING_BOX: 'bounding_box_brick',
+                    BOUNDING_BOX: 'boundingBoxBrick',
                     SNAPSHOT: 'snapshot',
-                    ALL_DATA: 'all_data_brick',
-                    ALL_DATA_CHECKED: 'all_data_checked_brick' // a Choice brick which is alreayd preselected
+                    ALL_DATA: 'allDataBrick',
+                    ALL_DATA_CHECKED: 'allDataCheckedBrick', // a Choice brick which is alreayd preselected
                 },
 
                 /**
@@ -725,7 +741,7 @@ define([
                 * @property LayerItem.stateMatrix
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *        DEFAULT: {
                 *            controls: [
                 *                LayerItem.controls.METADATA,
@@ -745,7 +761,7 @@ define([
                 *            toggles: [],
                 *            notices: []
                 *        },
-                * 
+                *
                 *        LOADED: {
                 *            controls: [],
                 *            toggles: [],
@@ -799,7 +815,7 @@ define([
                 * @property LayerItem.transitionMatrix
                 * @static
                 * @type Object
-                * @example 
+                * @example
                 *        DEFAULT: [
                 *            LayerItem.state.ERROR,
                 *            LayerItem.state.OFF_SCALE,
@@ -824,20 +840,20 @@ define([
                 *            LayerItem.state.DEFAULT,
                 *            LayerItem.state.UPDATING
                 *        ]
-                * 
+                *
                 */
                 transitionMatrix: {},
 
                 /**
                  * A temporary store for brick templates.
                  * TODO: re-think how to best use brick/templates inside the layer item
-                 * 
+                 *
                  * @property LayerItem.brickTemplates
                  * @static
                  * @type Object
                  * @default null
                  */
-                brickTemplates: null
+                brickTemplates: null,
             }
         );
 
@@ -846,109 +862,109 @@ define([
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADING] = {
             controls: [
-                LayerItem.controls.LOADING
+                LayerItem.controls.LOADING,
             ],
             toggles: [],
             notices: [],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.LOADED] = {
             controls: [],
             toggles: [],
             notices: [],
-            settings: []
+            settings: [],
         };
 
         LayerItem.stateMatrix[LayerItem.state.UPDATING] = {
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [
-                LayerItem.notices.UPDATE
+                LayerItem.notices.UPDATE,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.ERROR] = {
             controls: [
                 LayerItem.controls.RELOAD,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [],
             notices: [
-                LayerItem.notices.ERROR
+                LayerItem.notices.ERROR,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         LayerItem.stateMatrix[LayerItem.state.OFF_SCALE] = {
             controls: [
                 LayerItem.controls.METADATA,
                 LayerItem.controls.SETTINGS,
-                LayerItem.controls.REMOVE
+                LayerItem.controls.REMOVE,
             ],
             toggles: [
-                LayerItem.toggles.ZOOM
+                LayerItem.toggles.ZOOM,
             ],
             notices: [
-                LayerItem.notices.SCALE
+                LayerItem.notices.SCALE,
             ],
             settings: [
-                LayerItem.settings.OPACITY
-            ]
+                LayerItem.settings.OPACITY,
+            ],
         };
 
         // setting defaults for transition matrix
         LayerItem.transitionMatrix[LayerItem.state.DEFAULT] = [
             LayerItem.state.ERROR,
             LayerItem.state.OFF_SCALE,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADING] = [
             LayerItem.state.LOADED,
             LayerItem.state.ERROR,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.LOADED] = [
-            LayerItem.state.DEFAULT
+            LayerItem.state.DEFAULT,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.UPDATING] = [
             LayerItem.state.LOADED,
-            LayerItem.state.ERROR
+            LayerItem.state.ERROR,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.ERROR] = [
-            LayerItem.state.LOADING
+            LayerItem.state.LOADING,
         ];
 
         LayerItem.transitionMatrix[LayerItem.state.OFF_SCALE] = [
             LayerItem.state.ERROR,
             LayerItem.state.DEFAULT,
-            LayerItem.state.UPDATING
+            LayerItem.state.UPDATING,
         ];
 
         /**
@@ -991,7 +1007,8 @@ define([
         *
         * @param {Object} stateMatrix matrix to modify
         * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-        * @param {Array} [partKeys] an array of part key names to be inserted into the collection; if false or [], all part keys are assumed
+        * @param {Array} [partKeys] an array of part key names to be inserted into the collection; if false or [],
+        * all part keys are assumed
         * @param {Array} [states] array of state names to insert the part into; if false or [], all states are assumed
         * @param {Boolean} [prepend] indicates if the part key should be prepended or appended
         * @param {Boolean} [clear] a flag to clear existing partKey collections
@@ -999,7 +1016,7 @@ define([
         * @static
         */
         LayerItem.addStateMatrixParts = function (stateMatrix, partType, partKeys, states, prepend, clear) {
-            var that = this;
+            var _this = this;
             partKeys = getPartKeys(partType, partKeys);
             states = getStateNames(states);
 
@@ -1012,7 +1029,7 @@ define([
 
             // add new ones
             partKeys.forEach(function (partKey) {
-                that.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
+                _this.addStateMatrixPart(stateMatrix, partType, partKey, states, prepend);
             });
         };
 
@@ -1038,25 +1055,26 @@ define([
          *
          * @param {Object} stateMatrix matrix to modify
          * @param {String} partType type of the parts to modify: `controls`, `toggles`, `notices`
-         * @param {String} [partKeys] array of part key names to be removed from the collection; if false or [], all part keys are assumed
+         * @param {String} [partKeys] array of part key names to be removed from the collection; if false or [],
+         * all part keys are assumed
          * @param {Array} [states] array of state names to remove the part from; if false or [], all states are assumed
          * @method removeStateMatrixParts
          * @static
          */
         LayerItem.removeStateMatrixParts = function (stateMatrix, partType, partKeys, states) {
-            var that = this;
+            var _this = this;
             partKeys = getPartKeys(partType, partKeys);
             states = getStateNames(states);
 
             // remove partkey from states
             partKeys.forEach(function (partKey) {
-                that.removeStateMatrixPart(stateMatrix, partType, partKey, states);
+                _this.removeStateMatrixPart(stateMatrix, partType, partKey, states);
             });
         };
 
         /**
          * Get a deep copy of the default stateMatrix.
-         * 
+         *
          * @method getStateMatrixTemplate
          * @static
          * @return {Object} a deep copy of the default stateMatrix
@@ -1065,7 +1083,8 @@ define([
             return lang.clone(LayerItem.stateMatrix);
         };
 
-        // a string with all possible layerItem state CSS classes joined by ' '; used to clear any CSS state class from the node
+        // a string with all possible layerItem state CSS classes joined by ' '; used to clear any CSS state class
+        // from the node
         ALL_STATES_CLASS =
             Object
                 .getOwnPropertyNames(LayerItem.state)

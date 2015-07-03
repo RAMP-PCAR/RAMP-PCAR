@@ -13,24 +13,24 @@
 * Phase X?: For mobile support, there can be a different mobileBootstrapper with only the mobile modules loaded
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}
-* {{#crossLink "BaseMapSelector"}}{{/crossLink}}
-* {{#crossLink "Maptips"}}{{/crossLink}}
-* {{#crossLink "Datagrid"}}{{/crossLink}}
-* {{#crossLink "Navigation"}}{{/crossLink}}
-* {{#crossLink "FilterManager"}}{{/crossLink}}
-* {{#crossLink "BookmarkLink"}}{{/crossLink}}
-* {{#crossLink "Url"}}{{/crossLink}}
-* {{#crossLink "FeatureHighlighter"}}{{/crossLink}}
-* {{#crossLink "RAMP"}}{{/crossLink}}
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}
-* {{#crossLink "GUI"}}{{/crossLink}}
-* {{#crossLink "EventManager"}}{{/crossLink}}
-* {{#crossLink "AdvancedToolbar"}}{{/crossLink}}
-* {{#crossLink "Util"}}{{/crossLink}}
-* {{#crossLink "Prototype"}}{{/crossLink}}
-* {{#crossLink "FunctionMangler"}}{{/crossLink}}
-* {{#crossLink "LayerLoader"}}{{/crossLink}}
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'BaseMapSelector'}}{{/crossLink}}
+* {{#crossLink 'Maptips'}}{{/crossLink}}
+* {{#crossLink 'Datagrid'}}{{/crossLink}}
+* {{#crossLink 'Navigation'}}{{/crossLink}}
+* {{#crossLink 'FilterManager'}}{{/crossLink}}
+* {{#crossLink 'BookmarkLink'}}{{/crossLink}}
+* {{#crossLink 'Url'}}{{/crossLink}}
+* {{#crossLink 'FeatureHighlighter'}}{{/crossLink}}
+* {{#crossLink 'RAMP'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'GUI'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+* {{#crossLink 'AdvancedToolbar'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
+* {{#crossLink 'Prototype'}}{{/crossLink}}
+* {{#crossLink 'FunctionMangler'}}{{/crossLink}}
+* {{#crossLink 'LayerLoader'}}{{/crossLink}}
 *
 * @class Bootstrapper
 * @static
@@ -44,22 +44,24 @@
 
 require([
 /* Dojo */
-    "dojo/parser", "dojo/topic", "dojo/request/script", "dojo/request/xhr", "dojo/number", "dojo/dom", "dojo/dom-construct", "dojo/query",
-    "esri/config", "esri/urlUtils",
+    'dojo/parser', 'dojo/topic', 'dojo/request/script', 'dojo/request/xhr', 'dojo/number', 'dojo/dom',
+    'dojo/dom-construct', 'dojo/query',
+    'esri/config', 'esri/urlUtils',
 
 /* RAMP */
-    "ramp/map", "ramp/basemapSelector", "ramp/maptips", "ramp/datagrid",
-    "ramp/navigation", "ramp/filterManager", "ramp/imageExport", "ramp/bookmarkLink",
-    "utils/url", "ramp/featureHighlighter",
-    "ramp/globalStorage", "ramp/gui", "ramp/eventManager",
-    "ramp/advancedToolbar", "ramp/geoSearch",
-    "ramp/theme", "ramp/layerLoader", "ramp/dataLoaderGui", "ramp/metadataHandler",
+    'ramp/map', 'ramp/basemapSelector', 'ramp/maptips', 'ramp/datagrid',
+    'ramp/navigation', 'ramp/filterManager', 'ramp/imageExport', 'ramp/bookmarkLink',
+    'utils/url', 'ramp/featureHighlighter',
+    'ramp/globalStorage', 'ramp/gui', 'ramp/eventManager',
+    'ramp/advancedToolbar', 'ramp/geoSearch',
+    'ramp/theme', 'ramp/layerLoader', 'ramp/dataLoaderGui', 'ramp/metadataHandler',
 
 /* Utils */
-    "utils/util",
+    'utils/util',
 
 /* Plugins */
-    "utils/prototype!", "utils/functionMangler!", "dojo/domReady!"],
+    'utils/prototype!', 'utils/functionMangler!', 'dojo/domReady!',
+],
 
     function (
     /* Dojo */
@@ -75,7 +77,7 @@ require([
     /* Utils */
     UtilMisc
     ) {
-        "use strict";
+        'use strict';
 
         /**
         * loadPlugin takes a plugin file and loads it into the DOM.
@@ -86,8 +88,8 @@ require([
         * @param {String} pluginName, the file name of the plugin to be loaded (should be in the plugins folder)
         */
         function loadPlugin(pluginName) {
-            var head = document.getElementsByTagName('head')[0],
-                script = document.createElement('script');
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = dojoConfig.fullPluginPath + pluginName;
             console.log('loading plugin: ' + script.src);
@@ -98,26 +100,26 @@ require([
             /* Start - RAMP Events, after map is loaded */
 
             function initScale() {
-                var map = RAMP.map,
-                    scaleDiv = domConstruct.create("div", {
-                        id: "scaleDiv",
-                        class: "esriScalebarLabel"
-                    }),
-                    currentScale,
-                    scaleLabelText;
+                var map = RAMP.map;
+                var scaleDiv = domConstruct.create('div', {
+                    id: 'scaleDiv',
+                    class: 'esriScalebarLabel',
+                });
+                var currentScale;
+                var scaleLabelText;
 
-                $(scaleDiv).html("<span>" + i18n.t('map.scale') + "</span><br><span id='scaleLabel'><span/>");
+                $(scaleDiv).html('<span>' + i18n.t('map.scale') + '</span><br><span id="scaleLabel"><span/>');
                 currentScale = number.format(map.getScale());
-                scaleLabelText = "1 : " + currentScale;
+                scaleLabelText = '1 : ' + currentScale;
 
-                domConstruct.place(scaleDiv, query(".esriScalebarRuler")[0], "before");
+                domConstruct.place(scaleDiv, query('.esriScalebarRuler')[0], 'before');
                 domConstruct.empty('scaleLabel');
-                $("#scaleLabel").text(scaleLabelText);
+                $('#scaleLabel').text(scaleLabelText);
 
                 // Change the css class of the scale bar so it shows up against
                 // the map
                 topic.subscribe(EventManager.BasemapSelector.BASEMAP_CHANGED, function (attr) {
-                    $(".esriScalebar > div").removeClass().addClass(attr.cssStyle);
+                    $('.esriScalebar > div').removeClass().addClass(attr.cssStyle);
                 });
             }
 
@@ -144,7 +146,7 @@ require([
             }
 
             topic.subscribe(EventManager.Map.INITIAL_BASEMAP_LOADED, function () {
-                console.log("map - >> first update-end; init the rest");
+                console.log('map - >> first update-end; init the rest');
 
                 initScale();
 
@@ -157,7 +159,7 @@ require([
                 UtilMisc.subscribeAll(
                     [
                         EventManager.BasemapSelector.UI_COMPLETE,
-                        EventManager.FilterManager.UI_COMPLETE
+                        EventManager.FilterManager.UI_COMPLETE,
                     ], function () {
                         BookmarkLink.subscribeAndUpdate();
 
@@ -166,6 +168,7 @@ require([
 
                         DataLoaderGui.init();
                     });
+
                 // Added current level so slider will know how to adjust the position
                 var currentLevel = (RampMap.getMap().__LOD.level) ? RampMap.getMap().__LOD.level : 0;
 
@@ -191,7 +194,8 @@ require([
             NavWidget.construct();
             UtilMisc.tooltipster($('#map-navigation'), null, null, 'tooltipster-above');
 
-            // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own; probably a good idea would to implement this when working on mobile view
+            // a workaround for bug#3460; ideally each module's ui component would call tooltipster on its own;
+            // probably a good idea would to implement this when working on mobile view
             UtilMisc.tooltipster();
 
             /* End - RAMP Events */
@@ -209,29 +213,29 @@ require([
 
         //To hold values from RAMP service
 
-        var lang = $("html").attr("lang"),
-            configFile,
-            defJson;
+        var lang = $('html').attr('lang');
+        var configFile;
+        var defJson;
 
-        if (lang !== "en" && lang !== "fr") {
-            lang = "en";
+        if (lang !== 'en' && lang !== 'fr') {
+            lang = 'en';
         }
 
         RAMP.locale = lang;
 
         i18n.init(
         {
-            lng: lang + "-CA",
-            load: "current",
-            fallbackLng: false
+            lng: lang + '-CA',
+            load: 'current',
+            fallbackLng: false,
         });
 
         //loading config object from JSON file
-        configFile = (lang === "fr") ? "config.fr.json" : "config.en.json";
+        configFile = (lang === 'fr') ? 'config.fr.json' : 'config.en.json';
 
         // Request the JSON config file
         defJson = xhr(configFile, {
-            handleAs: "json"
+            handleAs: 'json',
         });
 
         defJson.then(
@@ -244,20 +248,21 @@ require([
                     //get additional config stuff from the config service.  mash it into our primary object
 
                     // pull smallkeys from URL
-                    var siteURL = new Url(require.toUrl(document.location)),
-                        smallkeys = siteURL.queryObject.keys;
+                    var siteURL = new Url(require.toUrl(document.location));
+                    var smallkeys = siteURL.queryObject.keys;
 
-                    if (!smallkeys || smallkeys === "") {
+                    if (!smallkeys || smallkeys === '') {
                         //no keys.  no point hitting the service.  jump to next step
                         configReady(fileConfig);
                     } else {
                         //TODO verify endpoint is correct
-                        var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
-                            defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
+                        var serviceUrl = RAMP.configServiceURL + 'docs/' + $('html').attr('lang') + '/' + smallkeys;
+                        var defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
                         //Request the JSON snippets from the RAMP Config Service
 
-                        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).
+                        //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru
+                        //visual studio).
                         //      we use request/script instead to get the config as jsonp
                         //      we may consider looking into ways to mitiate the cross domain issue (Aly had some ideas)
 
@@ -275,16 +280,20 @@ require([
                                 //fragments are now in fileConfig.  carry on.
                                 configReady(fileConfig);
                             },
+
                             function (error) {
-                                console.log("An error occurred: " + error);
+                                console.log('An error occurred: ' + error);
                             }
+
                         );
                     }
                 }
             },
+
             function (error) {
-                console.log("An error occurred when retrieving the JSON Config: " + error);
+                console.log('An error occurred when retrieving the JSON Config: ' + error);
             }
+
         );
 
         /**
@@ -295,30 +304,36 @@ require([
         * @param {Object} configObject the configuration object
         */
         function configReady(configObject) {
-            var pluginConfig,
-                advancedToolbarToggle = $("li.map-toolbar-item #advanced-toggle").parent(),
-                brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1,
-                annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
+            var pluginConfig;
+            var advancedToolbarToggle = $('li.map-toolbar-item #advanced-toggle').parent();
+            var brokenWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie9') > -1;
+            var annoyingWebBrowser = document.getElementsByTagName('html')[0].className.indexOf('dj_ie10') > -1;
 
-            console.log("Bootstrapper: config loaded");
+            console.log('Bootstrapper: config loaded');
 
             GlobalStorage.init(configObject);
             GlobalStorage.defineProjections(window.proj4);
-            
 
             esriConfig.defaults.io.proxyUrl = RAMP.config.proxyUrl;
-            // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the target server
+
+            // try to avoid the proxy if possible, but this will cause network errors if CORS is not allowed by the
+            // target server
             esriConfig.defaults.io.corsDetection = !brokenWebBrowser;
+
             // really IE9???  (╯°□°）╯︵ ┻━┻
             if (brokenWebBrowser && RAMP.config.exportProxyUrl !== undefined) {
-                esriUrlUtils.addProxyRule({ proxyUrl: RAMP.config.exportProxyUrl, urlPrefix: RAMP.config.exportMapUrl });
+                esriUrlUtils.addProxyRule({
+                    proxyUrl: RAMP.config.exportProxyUrl,
+                    urlPrefix: RAMP.config.exportMapUrl,
+                });
             }
+
             RAMP.flags.brokenWebBrowser = brokenWebBrowser;
             RAMP.flags.ie10client = annoyingWebBrowser;
 
             // Show or remove advanced toolbar toggle based on the config value
             if (RAMP.config.advancedToolbar.enabled) {
-                advancedToolbarToggle.removeClass("wb-invisible");
+                advancedToolbarToggle.removeClass('wb-invisible');
             } else {
                 advancedToolbarToggle.remove();
             }
@@ -334,7 +349,7 @@ require([
             // Modify the config based on the url
             // needs to do this before the gui loads because the gui module
             // also reads from the config
-            BookmarkLink.updateConfig(window.location.pathname.split("/").last());
+            BookmarkLink.updateConfig(window.location.pathname.split('/').last());
 
             //other initilizations must wait until our extents have been projected to our active basemap
             topic.subscribe(EventManager.Map.EXTENTS_REPROJECTED, function () {

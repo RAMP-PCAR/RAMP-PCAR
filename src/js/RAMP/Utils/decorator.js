@@ -13,7 +13,7 @@
  */
 define([],
     function () {
-        "use strict";
+        'use strict';
         return {
             /**
              * Given a comparator function that takes two objects and returns an integer (positive integer
@@ -29,7 +29,8 @@ define([],
              * @static
              * @param {Function} compareFcn
              * @param {Object} target
-             * @return {Function} that takes one object compares it to the given target using the given compareFcn and returns the result of the compareFcn
+             * @return {Function} that takes one object compares it to the given target using the given compareFcn and
+             * returns the result of the compareFcn
              */
             getFindFcn: function (compareFcn, target) {
                 function findFcn(obj) {
@@ -37,6 +38,6 @@ define([],
                 }
 
                 return findFcn;
-            }
+            },
         };
     });
