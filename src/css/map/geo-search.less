@@ -1,13 +1,15 @@
 ﻿
 #geo-search-container {
+    @geosearch-length: 400px;
+    
     left: 125px;
     top: 20px;
-    z-index: 100;
+    z-index: 1;
     position: absolute;
 
     .container() {
         background-color: white;
-        width: 400px;
+        width: @geosearch-length;
         box-shadow: 0 0 2px #333;
     }
 
@@ -23,14 +25,14 @@
         display: inline-block;
 
         .geosearch-field {
-            width: 400px;
+            width: @geosearch-length;
             height: 30px;
             padding: 0 10px;
             border: none;
 
-            &.expnded {
+            /*&.expanded {
                 width: 400px;
-            }
+            }*/
         }
 
         .geosearch-clear {
@@ -49,7 +51,7 @@
     }
 
     .geosearch-filter-container {
-        width: 400px;
+        width: @geosearch-length;
         margin: 5px 0;
         background-color: white;
         box-shadow: 0 0 2px #333;
