@@ -1423,7 +1423,7 @@ define([
             filterOps.gridMode = dataGridMode;
 
             //TESTING!!
-            //filterOps.textSearch = "calgary";
+            //filterOps.textSearch = 'hunt';
             //filterOps.visibleAttribsOnly = false;
 
             // Update total records

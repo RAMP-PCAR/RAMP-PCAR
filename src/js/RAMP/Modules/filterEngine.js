@@ -244,28 +244,40 @@ define([
         */
         function updateFeatureVisibility(featureSet, dataSet) {
             var idx;
+            var oidField;
+            var sortedIds;
+            var queryString;
+            var rqlArray = new RqlArray();
 
             //for each feature layer (key is layerId)
             UtilDict.forEachEntry(featureSet, function (key, layerBundle) {
                 switch (layerBundle.type) {
                     case 'features':
 
+                        if (dataSet[key] && dataSet[key].length > 0) {
+                            //get list of oids in sorted order (for use in binary search below)
+                            oidField = dataSet[key][0].parent.idField;
+
+                            //query: pull attribute sub-object up to top level of array. sort by oid, then extract oid.
+                            //       for some reason you can't sort right if you extract oid first.
+                            queryString = 'values(attributes),sort(+' + oidField + '),values(' + oidField + ')';
+                            sortedIds = rqlArray.executeQuery(queryString, {}, dataSet[key]);
+                        } else {
+                            sortedIds = [];
+                        }
+
                         //go through all potential features (features in current extent)
                         layerBundle.features.forEach(function (feature) {
                             //find if the feature has an item in the feature data list.
                             //if so, it means it passed the RQL filters and is visible;
                             //otherwise it is not visible
-                            if (dataSet[key] && dataSet[key].length > 0) {
-                                //dataSets are ordered by object id, so we can use binary search.
-                                //if we every start using the sort() in RQL during this process,
-                                //we may need to switch to a worse search.
-                                idx = UtilArray.binaryIndexOf(dataSet[key], function (fData) {
-                                    var fDataID = GraphicExtension.getFDataOid(fData);
+                            if (sortedIds.length > 0) {
+                                idx = UtilArray.binaryIndexOf(sortedIds, function (fDataId) {
                                     var graphicID = GraphicExtension.getGraphicOid(feature);
 
-                                    if (graphicID === fDataID) {
+                                    if (graphicID === fDataId) {
                                         return 0;
-                                    } else if (graphicID > fDataID) {
+                                    } else if (graphicID > fDataId) {
                                         //searching too low in the list
                                         return -1;
                                     } else {
