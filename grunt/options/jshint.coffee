@@ -16,7 +16,7 @@ module.exports =
         freeze: true
         immed: true
         indent: false
-        latedef: true
+        latedef: 'nofunc'
         newcap: true
         noarg: true
         noempty: false #(sometimes want "do nothing" functions)

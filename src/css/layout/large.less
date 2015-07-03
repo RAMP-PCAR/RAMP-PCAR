@@ -3,6 +3,26 @@
         #map-div {
             right: @panel-width-large;
             left: 0;
+
+            #geo-search-container {
+                @geosearch-length: 400px;
+
+                .container() {
+                    width: @geosearch-length;
+                }
+
+                .geosearch-input {
+                
+                    .geosearch-field {
+                        width: @geosearch-length;
+                    }
+
+                }
+
+                .geosearch-filter-container {
+                    width: @geosearch-length;
+                }
+            }
         }
 
         #panel-div {

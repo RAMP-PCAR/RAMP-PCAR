@@ -111,6 +111,8 @@
                 "canvasToBlob/canvas-toBlob.js",
                 "fileSaver/FileSaver.js",
                 "canvg/dist/canvg.bundle.js",
+                "angular/angular.js",
+                "angular-ui-router/release/angular-ui-router.js",
                 "rql-nodojo/js/rql.js"
             ],
             "cssLib": [
