@@ -137,7 +137,6 @@ define([
                             console.log("WMS Error: " + exception);
                         }
                         
-
                     });
 
                     topic.publish(EventManager.GUI.SUBPANEL_OPEN, {

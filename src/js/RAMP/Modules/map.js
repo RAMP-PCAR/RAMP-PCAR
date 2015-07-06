@@ -372,8 +372,6 @@ define([
             }
         }
 
- 
-
         /**
         * Creates event handlers for the map control: click, mouse-over, load, extent change, and update events.
         *
