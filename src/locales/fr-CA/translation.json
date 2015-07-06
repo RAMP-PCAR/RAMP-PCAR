@@ -547,7 +547,7 @@
         "title": "Aide"
     },
     "map": {
-        "generatingTitle": "[fr] Generating",
+        "generatingTitle": "Génération",
         "loadingTitle": "Chargement",
         "scale": "Échelle"
     },
@@ -565,11 +565,11 @@
         "error": {
             "generalMessage": "L’image ne peut être générée. Veuillez essayer de nouveau plus tard.",
             "generalTitle": "Erreur",
-            "timeoutMessage": "[fr] The print service did not respond in a timely fashion. Please try again later."
+            "timeoutMessage": "Le service d'impression n'a pas répondu en temps opportun. S'il vous plaît réessayer plus tard."
         },
         "ie": {
-            "generalMessage": "[fr] Exporting file-based user-added layers is unsupported in versions of Internet Explorer 10 or lower. Please upgrade your browser, or use an alternative.",
-            "generalTitle": "[fr] Warning"
+            "generalMessage": "Exportation couches ajoutés par l'utilisateur basé sur les fichiers ne sont pas pris en charge dans les versions d'Internet Explorer 10 ou inférieure. S'il vous plaît mettre à jour votre navigateur, ou utiliser une solution de rechange.",
+            "generalTitle": "Attention"
         },
         "includeLegend": "Ajouter la légende",
         "loading": "Génération de l’image Veuillez attendre.",
