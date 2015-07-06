@@ -427,13 +427,30 @@
         },
         "s13": {
             "h1": "Usage",
-            "h2": "Limitations",
+            "h2": "Limitations",       
             "header": "Map Export",
             "img1": "The Toolbar Button",
             "img2": "Download Image Button",
             "p1": "Map Export is used to convert the contents of the map into an image that can be downloaded by the user.",
             "p2": "Click the Map Export button in the toolbar to initiate the image generation.  The Map Export window will open. A \"Loading\" message will display, and the image preview will appear once it is generated.  Click the Download Image button to save the image.  Click the X to close the Map Export window.",
             "p3": "Currently Map Export will only capture layers that are hosted on a public internet service. Layers hosted privately (e.g. on an intranet) or added from file-based sources will not appear in the resultant image file. Images are currently only available in PNG format."
+        },
+        "s14": {
+            "h1": "Usage",
+            "h2": "Basic Search",
+            "h3": "Filters",    
+            "header": "Geo Search",
+            "img1": "--",
+            "img2": "--",
+            "p1": "Geo Search allows known locations and places of interest to be discovered and zoomed to by the user.",
+            "p2": "Typing in the geo search text box will cause up to ten potential matches to appear in a dropdown list.  Clicking an item in the list will cause the map to zoom to that item.  Clicking the search button will pick the first item in the list.  Valid searches include place names, forward sorting area codes, and latitude longitude in decimal degrees separated by a comma.",
+            "p3": "Search results can be filtered in the following ways.",
+            "ul1": {
+                "li1": "The Province dropdown list will filter results to a specific province.  Province can also be filtered by ending the search string with a comma, followed by the province name or abbreviation.",
+                "li2": "The Type dropdown list will filter results to a type of item.  Some examples are Road, Lake, or Town.",
+                "li3": "The Extent dropdown list will filter results to a specific area.  The Visible option will only select results that are on current map view.  The Canada option will restrict results within the Canada view (press the Canada icon in the navigation widget to see the Canada view).",
+                "li4": "When entering a forward sorting area code or a latitude longitude pair, the Province filter will change to a Distance filter.  This will filter items to be within a certain radius of the center of the FSA or the lat long point."
+            }           
         },
         "s2": {
             "h1": "Usage",
