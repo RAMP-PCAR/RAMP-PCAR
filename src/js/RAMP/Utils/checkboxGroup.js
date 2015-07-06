@@ -5,12 +5,12 @@
 */
 
 /**
-* Creates a Checkbox group bound from the supplied JArray of input nodes. Optionally, the group is bound to the supplied master input node
-* which acts as a global toggle for the group.
-* 
+* Creates a Checkbox group bound from the supplied JArray of input nodes. Optionally, the group is bound to the
+* supplied master input node which acts as a global toggle for the group.
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Checkbox"}}{{/crossLink}}  
+* {{#crossLink 'Array'}}{{/crossLink}}
+* {{#crossLink 'Checkbox'}}{{/crossLink}}
 *
 * @class CheckboxGroup
 * @constructor
@@ -21,9 +21,11 @@
 *
 * @param {JArray} nodes a jQuery object representing the checkboxes to be grouped
 * @param {Object} [options] Additional options
-* @param {String} [options.nodeIdAttr] Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id. If no appropriate "data-*" attribute found,
-* `nodeIdAttr` is used directly, failing that, regular `id` is used.
-* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox correspondingly.
+* @param {String} [options.nodeIdAttr] Name of the 'data-*' attribute set on the checkbox node to be treated as
+* the checkbox id. If no appropriate 'data-*' attribute found, `nodeIdAttr` is used directly, failing that, regular
+* `id` is used.
+* @param {Object} [options.cssClass] `active`, `focus`, and `check` CSS class to be applied to the Checkbox
+* correspondingly.
 * @param {Object} [options.cssClass.active] CSS class to be set when the Checkbox is `active`.
 * @param {Object} [options.cssClass.focus] CSS class to be set when the Checkbox is `focused`.
 * @param {Object} [options.cssClass.check] CSS class to be set when the Checkbox is `checked`.
@@ -33,7 +35,8 @@
 * @param {Function} [options.onChnage] A function to be called when the state of the Checkbox changes.
 * @param {Object} [options.master] Additional options applied to the master Checkbox.
 * @param {Object} [options.master.node] An `input` node to serve as the master Checkbox for the group.
-* @param {Object} [options.master.cssClass] `active`, `focus`, and `check` CSS class to be applied to the master Checkbox correspondingly.
+* @param {Object} [options.master.cssClass] `active`, `focus`, and `check` CSS class to be applied to the master
+* Checkbox correspondingly.
 * @param {Object} [options.master.cssClass.active] CSS class to be set when the Checkbox is `active`.
 * @param {Object} [options.master.cssClass.focus] CSS class to be set when the master Checkbox is `focused`.
 * @param {Object} [options.master.cssClass.check] CSS class to be set when the master Checkbox is `checked`.
@@ -42,24 +45,28 @@
 * @param {Object} [options.master.label.uncheck] A text to be set as a label when the master Checkbox is `unchecked`
 * @param {Function} [options.master.onChnage] A function to be called when the state of the master Checkbox changes.
 *
-* @return {CheckboxGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as a whole.
+* @return {CheckboxGroup} A control objects allowing to toggle individual checkboxes in a group as well as the group as
+* a whole.
 */
 
-define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
+define([
+    'dojo/Evented', 'dojo/_base/declare', 'dojo/_base/lang',
 
-        "utils/checkbox", "utils/array"],
+    'utils/checkbox', 'utils/array',
+],
     function (Evented, declare, lang,
             Checkbox, Array) {
-        "use strict";
+        'use strict';
 
         var CheckboxGroup;
 
         CheckboxGroup = declare([Evented], {
             constructor: function (nodes, options) {
-                var that = this,
-                    masterCheckboxOptions;
+                var _this = this;
+                var masterCheckboxOptions;
 
-                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                // declare individual properties inside the constructor:
+                // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
                         /**
@@ -72,13 +79,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                         nodes: [],
 
                         /**
-                         * Name of the "data-*" attribute set on the checkbox node to be treated as the checkbox id.
+                         * Name of the 'data-*' attribute set on the checkbox node to be treated as the checkbox id.
                          *
                          * @property nodeIdAttr
                          * @type String
-                         * @default "id"
+                         * @default 'id'
                          */
-                        nodeIdAttr: "id",
+                        nodeIdAttr: 'id',
 
                         /**
                          * An array of the Checkbox object belonging to the body of the group.
@@ -97,15 +104,15 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                          * @default
                          * @example
                          *      cssClass: {
-                         *          active: "active",
-                         *          focus: "focused",
-                         *          check: "checked"
+                         *          active: 'active',
+                         *          focus: 'focused',
+                         *          check: 'checked'
                          *      }
                          */
                         cssClass: {
-                            active: "active",
-                            focus: "focused",
-                            check: "checked"
+                            active: 'active',
+                            focus: 'focused',
+                            check: 'checked',
                         },
 
                         /**
@@ -116,13 +123,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                          * @default
                          * @example
                          *      label: {
-                         *          check: "check",
-                         *          uncheck: "unchecked"
+                         *          check: 'check',
+                         *          uncheck: 'unchecked'
                          *      }
                          */
                         label: {
-                            check: "checked",
-                            uncheck: "unchecked"
+                            check: 'checked',
+                            uncheck: 'unchecked',
                         },
 
                         /**
@@ -148,14 +155,14 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                          *          nodeIdAttr: null,
                          *
                          *          cssClass: {
-                         *              active: "active",
-                         *              focus: "focused",
-                         *              check: "checked"
+                         *              active: 'active',
+                         *              focus: 'focused',
+                         *              check: 'checked'
                          *          },
                          *
                          *          label: {
-                         *              check: "checked",
-                         *              uncheck: "unchecked"
+                         *              check: 'checked',
+                         *              uncheck: 'unchecked'
                          *          },
                          *
                          *          onChange: function () { }
@@ -168,21 +175,21 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                             nodeIdAttr: null,
 
                             cssClass: {
-                                active: "active",
-                                focus: "focused",
-                                check: "checked"
+                                active: 'active',
+                                focus: 'focused',
+                                check: 'checked',
                             },
                             label: {
-                                check: "checked",
-                                uncheck: "unchecked"
+                                check: 'checked',
+                                uncheck: 'unchecked',
                             },
 
-                            onChange: function () { }
-                        }
+                            onChange: function () { },
+                        },
                     },
                     options,
                     {
-                        nodes: nodes
+                        nodes: nodes,
                     }
                 );
 
@@ -190,7 +197,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                     nodeIdAttr: this.nodeIdAttr,
                     cssClass: this.cssClass,
                     label: this.label,
-                    onChange: this.onChange
+                    onChange: this.onChange,
                 };
 
                 if (this.master.node) {
@@ -201,12 +208,13 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
 
                     this.master.checkbox.on(Checkbox.event.TOGGLE, function (evt) {
                         // re-emit individual checkbox's toggle event as groups;
-                        console.log("CheckboxGroup Master ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                        console.log('CheckboxGroup Master ->', evt.checkbox.id, 'set by', evt.agency,
+                            'to', evt.checkbox.state);
 
-                        that.emit(CheckboxGroup.event.MASTER_TOGGLE, evt);
+                        _this.emit(CheckboxGroup.event.MASTER_TOGGLE, evt);
 
                         if (evt.agency === Checkbox.agency.USER) {
-                            that.setState(evt.checkbox.state);
+                            _this.setState(evt.checkbox.state);
                         }
                     });
                 } else {
@@ -217,42 +225,42 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
             },
 
             addCheckbox: function (nodes) {
-                var that = this,
-                    checkbox,
-                    checkboxOptions = {
+                var _this = this;
+                var checkbox;
+                var checkboxOptions = {
                         nodeIdAttr: this.nodeIdAttr,
                         cssClass: this.cssClass,
                         label: this.label,
-                        onChange: this.onChange
-                    },
-                    cbIndex;
+                        onChange: this.onChange,
+                    };
+                var cbIndex;
 
                 // Create individual Checkboxes
                 nodes.each(function (index, node) {
                     node = $(node);
 
-                    cbIndex = Array.indexOf(that.checkboxes, function (cb) {
+                    cbIndex = Array.indexOf(_this.checkboxes, function (cb) {
                         return cb.node.is(node);
                     });
 
                     if (cbIndex === -1) {
-
                         checkbox = new Checkbox(node, checkboxOptions);
-                        that.checkboxes.push(checkbox);
+                        _this.checkboxes.push(checkbox);
 
                         checkbox.on(Checkbox.event.TOGGLE, function (evt) {
                             // re-emit individual checkbox's toggle event as groups;
-                            //console.log("CheckboxGroup ->", evt.checkbox.id, "set by", evt.agency, "to", evt.checkbox.state);
+                            //console.log('CheckboxGroup ->', evt.checkbox.id, 'set by', evt.agency,
+                            //  'to', evt.checkbox.state);
 
-                            that.emit(CheckboxGroup.event.MEMBER_TOGGLE, evt);
+                            _this.emit(CheckboxGroup.event.MEMBER_TOGGLE, evt);
 
                             if (evt.agency === Checkbox.agency.USER) {
-                                that._checkMaster();
+                                _this._checkMaster();
                             }
                         });
                     } else {
                         // reset the checkbox, just in case
-                        that.checkboxes[cbIndex].reset();
+                        _this.checkboxes[cbIndex].reset();
                     }
                 });
 
@@ -270,7 +278,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
             _checkMaster: function () {
                 var allChecked;
 
-                // "INVALID" state is parsed as "true" so it's counted in, but is ignored otherwise
+                // 'INVALID' state is parsed as 'true' so it's counted in, but is ignored otherwise
                 allChecked = this.checkboxes.every(function (checkbox) { return checkbox.validate().state; }) === true;
 
                 // set state to the master checkbox only if you have one
@@ -289,8 +297,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
             * @chainable
             */
             setState: function (state, checkboxId) {
-                var checkbox,
-                    masterCheckboxId = this.master.checkbox ? this.master.checkbox.id : undefined;
+                var checkbox;
+                var masterCheckboxId = this.master.checkbox ? this.master.checkbox.id : undefined;
 
                 if (!checkboxId || masterCheckboxId === checkboxId) {
                     this.master.checkbox.setState(state);
@@ -330,13 +338,14 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                 this.checkboxes.forEach(function (checkbox) {
                     checkbox.setState(fcn(checkbox));
                 });
+
                 this._checkMaster();
                 return this;
             },
 
             _purgeInvalid: function () {
-                var i,
-                    checkbox;
+                var i;
+                var checkbox;
 
                 for (i = this.checkboxes.length - 1; i >= 0; i--) {
                     checkbox = this.checkboxes[i];
@@ -344,7 +353,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                         Array.remove(this.checkboxes, i);
                     }
                 }
-            }
+            },
         });
 
         lang.mixin(CheckboxGroup,
@@ -358,8 +367,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                 * @default null
                 * @example
                 *      {
-                *          MEMBER_TOGGLE: "checkbox/toggled",
-                *          MASTER_TOGGLE: "checkbox/toggled"
+                *          MEMBER_TOGGLE: 'checkbox/toggled',
+                *          MASTER_TOGGLE: 'checkbox/toggled'
                 *      }
                 */
                 event: {
@@ -378,7 +387,7 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                     * @param event.checkbox {Checkbox} Checkbox object that has been toggled
                     * @param event.agency {String} Agency that toggled the Checkbox
                     */
-                    MEMBER_TOGGLE: "checkbox/member-toggle",
+                    MEMBER_TOGGLE: 'checkbox/member-toggle',
 
                     /**
                     * Published whenever the master Checkbox get toggled.
@@ -388,8 +397,8 @@ define(["dojo/Evented", "dojo/_base/declare", "dojo/_base/lang",
                     * @param event.checkbox {Checkbox} master Checkbox object that has been toggled
                     * @param event.agency {String} Agency that toggled the Checkbox
                     */
-                    MASTER_TOGGLE: "checkbox/master-toggle"
-                }
+                    MASTER_TOGGLE: 'checkbox/master-toggle',
+                },
             }
         );
 

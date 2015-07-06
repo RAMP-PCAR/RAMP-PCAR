@@ -10,7 +10,8 @@
 */
 
 /**
-* GraphicExtension class containing helper functions for graphic objects, data attribute objects, and the bridging between the two
+* GraphicExtension class containing helper functions for graphic objects, data attribute objects, and the bridging
+* between the two
 *
 * ####Imports RAMP Modules:
 * {{#crossLink "Dictionary"}}{{/crossLink}}
@@ -27,18 +28,21 @@
 */
 
 define([
+
 // Utils
     'utils/array', 'utils/dictionary', 'utils/util', 'utils/tmplHelper',
 
 //details template
-    'dojo/text!./templates/feature_details_template.json'],
+    'dojo/text!./templates/feature_details_template.json',
+],
 
     function (
+
     // Utils
     UtilArray, UtilDict, UtilMisc, TmplHelper,
 
     //json details template
-    feature_details_template) {
+    featureDetailsTemplate) {
         'use strict';
 
         return {
@@ -70,11 +74,15 @@ define([
             *
             * @param {esri/Graphic} graphic
             * @method getFDataForGraphic
-            * @return {Object} feature data object of the given graphic object. undefined if feature data object doesn't exist
+            * @return {Object} feature data object of the given graphic object. undefined if feature data
+            * object doesn't exist
             */
             getFDataForGraphic: function (graphic) {
-                var idx, ret,
-                    data = RAMP.data[graphic.getLayer().id];  //the data parent for the layer the graphic belongs to
+                var idx;
+                var ret;
+
+                //the data parent for the layer the graphic belongs to
+                var data = RAMP.data[graphic.getLayer().id];
 
                 if (data) {
                     //use graphic object id as key in index to get position of data object
@@ -83,6 +91,7 @@ define([
                         ret = data.features[idx];
                     }
                 }
+
                 return ret;
             },
 
@@ -94,8 +103,9 @@ define([
             * @return {Object} layer config node
             */
             getConfigForFData: function (fData) {
-                //DOJO circular reference nonsense not letting us use the Ramp module.  will duplicate the function locally :'(
-                //return Ramp.getLayerConfigWithId(fData.parent.layerId);
+                // DOJO circular reference nonsense not letting us use the Ramp module.  will duplicate the
+                // function locally :'(
+                // return Ramp.getLayerConfigWithId(fData.parent.layerId);
 
                 return UtilArray.find(RAMP.config.layers.wms.concat(RAMP.config.layers.feature),
                     function (layerConfig) {
@@ -116,7 +126,7 @@ define([
                 var templateName = graphic.getLayer().ramp.config.templates.detail;
 
                 tmpl.cache = {};
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(featureDetailsTemplate));
 
                 //grab the attribute data bound to this graphic
                 var fData = this.getFDataForGraphic(graphic);
@@ -139,11 +149,11 @@ define([
             */
             getFDataTextContent: function (fData) {
                 //TODO investigate ways to merge this logic with getGraphicTextContent
-                var lConfig = this.getConfigForFData(fData),
-                    templateName = lConfig.templates.detail;
+                var lConfig = this.getConfigForFData(fData);
+                var templateName = lConfig.templates.detail;
 
                 tmpl.cache = {};
-                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(feature_details_template));
+                tmpl.templates = JSON.parse(TmplHelper.stringifyTemplate(featureDetailsTemplate));
 
                 //grab the attribute data bound to this graphic
                 var datawrapper = TmplHelper.dataBuilder(fData, lConfig);
@@ -190,11 +200,12 @@ define([
             findGraphic: function (objectId, layerId) {
                 var layer = RAMP.layerRegistry[layerId];
 
-                //with ondemand layers, graphics arrays are no longer guaranteed to be sorted by objectid.  we can no longer use binaryFind.
-                //we only use this to find graphics when clicking the details / zoom button, so speed loss isn't felt often
-                return UtilArray.find(layer.graphics, function (a_graphic) {
-                    return this.getGraphicOid(a_graphic) === objectId;
+                // with ondemand layers, graphics arrays are no longer guaranteed to be sorted by objectid.
+                // we can no longer use binaryFind. we only use this to find graphics when clicking the
+                // details / zoom button, so speed loss isn't felt often
+                return UtilArray.find(layer.graphics, function (aGraphic) {
+                    return this.getGraphicOid(aGraphic) === objectId;
                 }, this);
-            }
+            },
         };
     });

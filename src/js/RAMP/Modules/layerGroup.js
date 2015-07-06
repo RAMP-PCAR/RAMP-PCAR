@@ -7,15 +7,15 @@
 */
 
 /**
-* 
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "LayerItem"}}{{/crossLink}}  
-*  
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "LayerItem"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/layer_selector_template.json"}}{{/crossLink}}
-* 
+*
 * @class LayerGroup
 * @constructor
 * @uses dojo/Evented
@@ -25,11 +25,14 @@
 *
 * @param {Array} layers an array of layer config definitions to be added to the group
 * @param {Object} [options] Additional options
-* 
-* @param {String} [options.layerGroupType] Specifies type of this LayerGroup and the name of the layer group template to use
-* @param {String} [options.layerState] Specifies the initial state of any LyerItem added to this group; must be one of the `LayerItem.state` defaults
-* @param {String} [options.layerType] Specifies type of any LayerItem added to this group and the name of the layer item template to use
-* 
+*
+* @param {String} [options.layerGroupType] Specifies type of this LayerGroup and the name of the layer group
+* template to use
+* @param {String} [options.layerState] Specifies the initial state of any LyerItem added to this group; must
+* be one of the `LayerItem.state` defaults
+* @param {String} [options.layerType] Specifies type of any LayerItem added to this group and the name of the
+* layer item template to use
+*
 * @param {Object} [options.stateMatrix] additional state matrix records to be mixed into the default
 * @param {Object} [options.transitionMatrix] additional state transition matrix records to be mixed into the default
 
@@ -47,20 +50,21 @@ define([
     'utils/tmplHelper', 'utils/array',
 
     /* RAMP */
-    'ramp/layerItem'
+    'ramp/layerItem',
 ],
     function (
         Evented, declare, lang,
-        layer_selector_template,
+        layerSelectorTemplate,
         TmplHelper, UtilArray,
         LayerItem) {
         'use strict';
 
         return declare([Evented], {
             constructor: function (layers, options) {
-                var that = this;
+                var _this = this;
 
-                // declare individual properties inside the constructor: http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
+                // declare individual properties inside the constructor:
+                // http://dojotoolkit.org/reference-guide/1.9/dojo/_base/declare.html#id6
                 lang.mixin(this,
                     {
                         /**
@@ -89,10 +93,11 @@ define([
                          * @type Object
                          * @default layer_selector_template.json
                          */
-                        templates: JSON.parse(TmplHelper.stringifyTemplate(layer_selector_template)),
+                        templates: JSON.parse(TmplHelper.stringifyTemplate(layerSelectorTemplate)),
 
                         /**
-                         * Specifies type of this LayerGroup and the name of the layer group template to use; is set by `layerGroupType` value;
+                         * Specifies type of this LayerGroup and the name of the layer group template to use;
+                         * is set by `layerGroupType` value;
                          *
                          * @property layerGroupType
                          * @type String
@@ -101,7 +106,9 @@ define([
                         layerGroupType: 'layer_group',
 
                         /**
-                         * Specifies type of any LayerItem added to this group during initialization and the name of the layer item template to use; is set by `layerType` value;; can be overwritten when adding individual layers by `options.type`.
+                         * Specifies type of any LayerItem added to this group during initialization and the name
+                         * of the layer item template to use; is set by `layerType` value;; can be overwritten when
+                         * adding individual layers by `options.type`.
                          *
                          * @property type
                          * @type String
@@ -110,7 +117,8 @@ define([
                         layerType: null,
 
                         /**
-                         * State of any LayerItem added to this group during its initialization; is set by `layerSate` value; can be overwritten when adding individual layers by `options.state`.
+                         * State of any LayerItem added to this group during its initialization; is set by `layerSate`
+                         * value; can be overwritten when adding individual layers by `options.state`.
                          *
                          * @property state
                          * @type String
@@ -125,7 +133,7 @@ define([
                          * @type Array
                          * @default []
                          */
-                        layerItems: []
+                        layerItems: [],
                     },
                     options
                 );
@@ -140,7 +148,7 @@ define([
                 console.debug(LayerItem.state);
 
                 this.layerItems.forEach(function (layer) {
-                    that.addLayerItem(layer);
+                    _this.addLayerItem(layer);
                 });
             },
 
@@ -153,10 +161,10 @@ define([
              * @return {Object} the item that was added
              */
             addLayerItem: function (layer, options) {
-                var layerItem,
-                    layerItemOptions = {
+                var layerItem;
+                var layerItemOptions = {
                         state: this.layerState,
-                        type: this.layerType
+                        type: this.layerType,
                     };
 
                 // augment existing stateMatrix or create a new one
@@ -206,7 +214,8 @@ define([
             },
 
             /**
-             * Modifies the state matrix of the layer to accommodate types of layers that might not use/have all the default controls or have extra controls.
+             * Modifies the state matrix of the layer to accommodate types of layers that might not use/have
+             * all the default controls or have extra controls.
              *
              * @param {Object} layerConfig layer config
              * @param {Object} [stateMatrix] optional stateMatrix
@@ -223,11 +232,11 @@ define([
 
                 // add wms query toggle if there is no layer extent property - layer is a wms layer
                 if (!layerConfig.layerExtent && !layerConfig.isStatic) {
-                    LayerItem.addStateMatrixPart(stateMatrix, 'toggles', LayerItem.toggles.QUERY, 
+                    LayerItem.addStateMatrixPart(stateMatrix, 'toggles', LayerItem.toggles.QUERY,
                         [
                             LayerItem.state.DEFAULT,
                             LayerItem.state.UPDATING,
-                            LayerItem.state.OFF_SCALE
+                            LayerItem.state.OFF_SCALE,
                         ]);
                 }
 
@@ -265,6 +274,6 @@ define([
                 });
 
                 return layerItem;
-            }
+            },
         });
     });

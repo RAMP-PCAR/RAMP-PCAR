@@ -4,12 +4,12 @@ console.log('Loading epsgio.js');
 RAMP.plugins.projectionLookup.epsgio = function (crsString) {
     'use strict';
 
-    var urnRegex = /urn:ogc:def:crs:EPSG::(\d+)/,
-        epsgRegex = /EPSG:(\d+)/,
-        urnMatches,
-        epsgMatches,
-        epsgCode,
-        def = $.Deferred();
+    var urnRegex = /urn:ogc:def:crs:EPSG::(\d+)/;
+    var epsgRegex = /EPSG:(\d+)/;
+    var urnMatches;
+    var epsgMatches;
+    var epsgCode;
+    var def = $.Deferred();
 
     urnMatches = crsString.match(urnRegex);
     if (urnMatches) {

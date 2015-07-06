@@ -17,9 +17,11 @@ module.exports =
     templates:
         files: [
             'src/js/RAMP/**/*.json'
+            'src/js/RAMP/**/*.html'
         ]
         tasks: [
             'copy:templatesBuild'
+            'htmlmin:angularPartialsBuild'
             'notify:templates'
         ]
 

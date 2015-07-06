@@ -17,8 +17,13 @@
 * NOTE: jquery.ui.navigation.js is required to create the object
 *
 * ####Imports RAMP Modules:
+<<<<<<< HEAD
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'EventManager'}}{{/crossLink}}
+=======
 * {{#crossLink "GlobalStorage"}}{{/crossLink}}
 * {{#crossLink "EventManager"}}{{/crossLink}}
+>>>>>>> develop
 *
 * @class Navigation
 * @static
@@ -27,29 +32,32 @@
 */
 
 define([
+
 //Dojo
-    "dojo/_base/declare", "dojo/topic", "dojo/_base/lang",
+    'dojo/_base/declare', 'dojo/topic', 'dojo/_base/lang',
 
 //RAMP
-    "ramp/globalStorage", "ramp/eventManager",
-    "esri/geometry/Point",
+    'ramp/globalStorage', 'ramp/eventManager',
+    'esri/geometry/Point',
 
 /* Util */
-    'utils/util'
+    'utils/util',
 ],
 
 function (
+
 // Dojo
     declare, topic, lang,
+
 // RAMP
     GlobalStorage, EventManager, Point,
 
 // Util
     UtilMisc) {
-    "use strict";
-    var nav,
-        geolocate,
-        map;
+    'use strict';
+    var nav;
+    var geolocate;
+    var map;
 
     /**
     * Listen to internal events and republish for other modules' benefit
@@ -60,7 +68,8 @@ function (
     function initTopics() {
         // Convert point into current projection
         function _convertPoint(x) {
-            var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude, map.extent.spatialReference);
+            var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude,
+                map.extent.spatialReference);
 
             map.centerAndZoom(esriPoint, 12);
         }
@@ -73,26 +82,26 @@ function (
         }
 
         nav
-            .on("navigation:panClick", function (e, direction) {
+            .on('navigation:panClick', function (e, direction) {
                 topic.publish(EventManager.Navigation.PAN, {
-                    direction: direction
+                    direction: direction,
                 });
             })
-            .on("navigation:zoomClick", function (e, in_out) {
-                var newLvl = (in_out === "zoomIn") ? 1 : -1;
+            .on('navigation:zoomClick', function (e, inOut) {
+                var newLvl = (inOut === 'zoomIn') ? 1 : -1;
                 topic.publish(EventManager.Navigation.ZOOM_STEP, {
-                    level: newLvl
+                    level: newLvl,
                 });
             })
-            .on("navigation:zoomSliderChange", function (e, newVal) {
+            .on('navigation:zoomSliderChange', function (e, newVal) {
                 topic.publish(EventManager.Navigation.ZOOM, {
-                    level: newVal
+                    level: newVal,
                 });
             })
-            .on("navigation:fullExtentClick", function () {
+            .on('navigation:fullExtentClick', function () {
                 topic.publish(EventManager.Navigation.FULL_EXTENT);
             })
-            .on("navigation:geoLocateClick", function () {
+            .on('navigation:geoLocateClick', function () {
                 _goToPoint();
             });
     }
@@ -105,17 +114,18 @@ function (
     */
     function initListeners() {
         function toggleTransition(inTransition) {
-            nav.navigation("toggleTransition", inTransition);
+            nav.navigation('toggleTransition', inTransition);
         }
 
         topic.subscribe(EventManager.Map.EXTENT_CHANGE, function (event) {
-            nav.navigation("setSliderVal", event.lod.level);
+            nav.navigation('setSliderVal', event.lod.level);
         });
 
-        /* Keep track of when the map is in transition, the slider will throw
-        errors if the value is changed during a map transition. */
+        // Keep track of when the map is in transition, the slider will throw
+        // errors if the value is changed during a map transition.
         // explicitly set inTransition true on zoom and pan start
         topic.subscribe(EventManager.Map.ZOOM_START, function () { toggleTransition(true); });
+
         topic.subscribe(EventManager.Map.PAN_START, function () { toggleTransition(true); });
 
         //topic.subscribe(EventManager.Map.PAN_END, toggleTransition);
@@ -134,12 +144,15 @@ function (
         */
         init: function (currentLevel) {
             // NOTE: JKW Document the change. Refactor,
-            // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is no hook to attach a tooltip to.
-            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the disabled state.
+            // TODO: Setting disabled to the zoomout button on init, will reset its CSS class the next slidervalue
+            // is set. This is a quirk of implementation. With css classes reset before tooltipster is run, there is
+            // no hook to attach a tooltip to.
+            // Ideally, need to refactor nav widget to not reset all css classes on button, but only toggle the
+            // disabled state.
             map = RAMP.map;
             geolocate = navigator.geolocation;
 
-            nav.navigation("setSliderVal", currentLevel);
+            nav.navigation('setSliderVal', currentLevel);
             initTopics();
             initListeners();
         },
@@ -153,7 +166,7 @@ function (
                 { locale: RAMP.locale }
             );
 
-            nav = $("#" + RAMP.config.divNames.navigation).navigation(options);
-        }
+            nav = $('#' + RAMP.config.divNames.navigation).navigation(options);
+        },
     };
 });

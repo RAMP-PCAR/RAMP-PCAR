@@ -8,9 +8,9 @@
 * @uses dojo/io-query
 */
 
-define(["dojo/_base/declare", "dojo/io-query"],
+define(['dojo/_base/declare', 'dojo/io-query'],
     function (declare, dojoQuery) {
-        "use strict";
+        'use strict';
         return declare(null, {
             /**
             * A simple class that replaces the `dojo._Url` functionality that became deprecated
@@ -20,8 +20,8 @@ define(["dojo/_base/declare", "dojo/io-query"],
             *
             * #####Example
             *
-            *      require(["scripts/Url"], function(Url) {
-            *              var urlObj = new Url("http://somewebsite.com");
+            *      require(['scripts/Url'], function(Url) {
+            *              var urlObj = new Url('http://somewebsite.com');
             *
             *              // Access the uri and query using the urlObj's fields
             *              var uri = urlObj.uri;
@@ -39,12 +39,13 @@ define(["dojo/_base/declare", "dojo/io-query"],
 
                 if (index === -1) {
                     this.uri = fullUrl;
-                    this.query = "";
+                    this.query = '';
                 } else {
                     this.uri = fullUrl.substring(0, index);
                     this.query = fullUrl.substring(index + 1);
                 }
+
                 this.queryObject = dojoQuery.queryToObject(this.query);
-            }
+            },
         });
     });

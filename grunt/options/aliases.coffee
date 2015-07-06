@@ -22,6 +22,7 @@ module.exports =
             'generateConfig' # generate config after copying locale files
             'assemblePages'
             'assemble:extra'
+            'htmlmin:angularPartialsBuild'
             'notify:page'
             'js:prep'
             'js:build'

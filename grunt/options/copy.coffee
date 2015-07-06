@@ -190,6 +190,11 @@ module.exports =
             src: '**/*.json'
             dest: 'build/js/RAMP/Modules/templates'
         ,
+            expand: true
+            cwd: '<%= pkg.core.path %>src/js/RAMP/Modules/partials'
+            src: '**/*.html'
+            dest: 'build/js/RAMP/Modules/partials'
+        ,
             # used by theme build
             expand: true
             cwd: '<%= pkg.core.path %>src/js/RAMP/Tools/templates'
@@ -206,6 +211,11 @@ module.exports =
             cwd: '<%= pkg.theme.path %>src/js/RAMP/Modules/templates'
             src: '**/*.json'
             dest: 'build/js/RAMP/Modules/templates'
+        ,
+            expand: true
+            cwd: '<%= pkg.theme.path %>src/js/RAMP/Modules/partials'
+            src: '**/*.html'
+            dest: 'build/js/RAMP/Modules/partials'
         ,
             expand: true
             cwd: '<%= pkg.theme.path %>src/js/RAMP/Tools/templates'

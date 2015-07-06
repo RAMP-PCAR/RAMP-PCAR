@@ -337,6 +337,32 @@
         "showLegend": "Show Legend",
         "zoomToData": "Zoom to data"
     },
+    "geosearch": {
+        "filters": {
+            "clear": "Clear",
+            "distance": {
+                "100km": "100km",
+                "10km": "10km",
+                "15km": "15km",
+                "30km": "30km",
+                "50km": "50km",
+                "5km": "5km",
+                "75km": "75km",
+                "default": "Distance"
+            },
+            "extent": {
+                "canada": "Canada",
+                "default": "Extent",
+                "visible": "Visible"
+            },
+            "province": {
+                "default": "Province"
+            },
+            "type": {
+                "default": "Type"
+            }
+        }
+    },
     "gui": {
         "actions": {
             "close": "Close",

@@ -10,19 +10,19 @@
 * A set of functions that can be accessed within templates
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
 *
 * @class TmplUtil
 * @static
 */
 
-define(["ramp/globalStorage"],
+define(['ramp/globalStorage'],
     function (GlobalStorage) {
-        "use strict";
+        'use strict';
 
         return {
             /**
-            * Given a feature data object return the image URL for that feature/graphic object.                        
+            * Given a feature data object return the image URL for that feature/graphic object.
             *
             * @method getGraphicIcon
             * @param {Object} fData feature data object
@@ -30,25 +30,29 @@ define(["ramp/globalStorage"],
             * @return {String} imageUrl Url to the features symbology image
             */
             getGraphicIcon: function (fData, layerConfig) {
-                var i, symbolConfig = layerConfig.symbology, img = "";
+                var i;
+                var symbolConfig = layerConfig.symbology;
+                var img = '';
 
                 switch (symbolConfig.type) {
-                    case "simple":
+                    case 'simple':
                         return symbolConfig.imageUrl;
 
-                    case "uniqueValue":
+                    case 'uniqueValue':
+
                         //make a key value for the graphic in question, using comma-space delimiter if multiple fields
                         var graphicKey = fData.attributes[symbolConfig.field1];
 
-                        //all key values are stored as strings.  if the attribute is in a numeric column, we must convert it to a string to ensure the === operator still works.
-                        if (typeof graphicKey !== "string") {
+                        //all key values are stored as strings.  if the attribute is in a numeric column, we must
+                        //convert it to a string to ensure the === operator still works.
+                        if (typeof graphicKey !== 'string') {
                             graphicKey = graphicKey.toString();
                         }
 
                         if (symbolConfig.field2) {
-                            graphicKey = graphicKey + ", " + fData.attributes[symbolConfig.field2];
+                            graphicKey = graphicKey + ', ' + fData.attributes[symbolConfig.field2];
                             if (symbolConfig.field3) {
-                                graphicKey = graphicKey + ", " + fData.attributes[symbolConfig.field3];
+                                graphicKey = graphicKey + ', ' + fData.attributes[symbolConfig.field3];
                             }
                         }
 
@@ -60,15 +64,17 @@ define(["ramp/globalStorage"],
                             }
                         }
 
-                        if (img === "") {
+                        if (img === '') {
                             img = symbolConfig.defaultImageUrl;
                         }
 
                         return img;
 
-                    case "classBreaks":
+                    case 'classBreaks':
 
-                        var gVal, lower, upper;
+                        var gVal;
+                        var lower;
+                        var upper;
                         gVal = fData.attributes[symbolConfig.field];
 
                         //find where the value exists in the range
@@ -92,7 +98,7 @@ define(["ramp/globalStorage"],
                                 }
                             }
 
-                            if (img === "") {
+                            if (img === '') {
                                 //no match in defined ranges.
                                 img = symbolConfig.defaultImageUrl;
                             }
@@ -101,12 +107,12 @@ define(["ramp/globalStorage"],
                         return img;
 
                     default:
-                        return symbolConfig.icons["default"].imageUrl;
+                        return symbolConfig.icons.default.imageUrl;
                 }
             },
 
             /**
-            * Given a feature data object return the attribute value for its designed "name" field           
+            * Given a feature data object return the attribute value for its designed 'name' field
             *
             * @method getFeatureName
             * @param {Object} fData feature data object
@@ -118,7 +124,7 @@ define(["ramp/globalStorage"],
             },
 
             /**
-            * Given a feature data object return the objectid for that item.            
+            * Given a feature data object return the objectid for that item.
             *
             * @method getObjectId
             * @param {Object} fData feature data object
@@ -150,14 +156,15 @@ define(["ramp/globalStorage"],
             * @param {Object} layerConfig config object for the layer the field belongs to
             */
             getAttributeLabel: function (fieldName, layerConfig) {
-                var alias,
-                    result = fieldName;
+                var alias;
+                var result = fieldName;
                 if (layerConfig.aliasMap) {
                     alias = layerConfig.aliasMap[fieldName];
                     if (alias) {
                         result = alias;
                     }
                 }
+
                 return result;
             },
 
@@ -167,15 +174,15 @@ define(["ramp/globalStorage"],
             * @param o
             */
             generateVisibilityLegend: function (o) {
-                var attr = "",
-                    visibilityLegendLabel = {
-                        for: "filterGroup_" + o.data[o.idx].id,
+                var attr = '';
+                var visibilityLegendLabel = {
+                        for: 'filterGroup_' + o.data[o.idx].id,
                         attr: attr,
                         value: o.data[o.idx].id,
-                        checked: "checked",
+                        checked: 'checked',
                         label: o.data[o.idx].layerConfig.displayName,
-                        class: "eye checked",
-                        layerId: o.data[o.idx].id
+                        class: 'eye checked',
+                        layerId: o.data[o.idx].id,
                     };
                 return visibilityLegendLabel;
             },
@@ -197,16 +204,17 @@ define(["ramp/globalStorage"],
                 if (content) {
                     content = content.toString();
 
-                    var urlRegex = /(["'>:]?)((ftp|http|https|file):\/\/[\S]+(\b|$))/gi;
+                    var urlRegex = /([''>:]?)((ftp|http|https|file):\/\/[\S]+(\b|$))/gi;
                     content = content.replace(urlRegex, function ($0, $1) {
                         return $1 ? $0 : '<a href="' + $0 + '" target="_blank">' + $0 + '</a>';
                     });
 
-                    var emailRegex = /(["'>:]?)([\w.-]+@[\w.-]+\.[\w.-]+)/gi;
+                    var emailRegex = /([''>:]?)([\w.-]+@[\w.-]+\.[\w.-]+)/gi;
                     content = content.replace(emailRegex, function ($0, $1) {
                         return $1 ? $0 : '<a href="mailto:' + $0 + '">' + $0 + '</a>';
                     });
                 }
+
                 return content;
             },
 
@@ -217,23 +225,23 @@ define(["ramp/globalStorage"],
             generateBoundingBoxLegend: function (o) {
                 // adding flag for the generated o object
                 // o.disabled will indicate the bounding checkbox is to be disabled.
-                var checkboxDisabled = false,
-                    attr = "",
-                    boundingLegendLabel;
+                var checkboxDisabled = false;
+                var attr = '';
+                var boundingLegendLabel;
 
                 // determine if given layer is static or WMS
                 checkboxDisabled = Boolean(o.data[o.idx].ramp.type === GlobalStorage.layerType.Static ||
                     o.data[o.idx].ramp.type === GlobalStorage.layerType.wms);
 
                 boundingLegendLabel = {
-                    for: "filterGroup_" + o.data[o.idx].id + "1",
-                    attr: attr + "1",
+                    for: 'filterGroup_' + o.data[o.idx].id + '1',
+                    attr: attr + '1',
                     value: o.data[o.idx].id,
-                    checked: "checked",
+                    checked: 'checked',
                     label: o.data[o.idx].layerConfig.displayName,
-                    class: "box checked",
+                    class: 'box checked',
                     disabled: checkboxDisabled,
-                    layerId: o.data[o.idx].id
+                    layerId: o.data[o.idx].id,
                 };
 
                 return boundingLegendLabel;
@@ -246,11 +254,11 @@ define(["ramp/globalStorage"],
             * @param o
             */
             generateSettingsToggle: function (o) {
-                var //attr = "",
+                var //attr = '',
                     boundingLegendLabel = {
                         str: o.str,
                         layerId: o.data[o.idx].id,
-                        settings: o.data[o.idx].layerConfig.settings
+                        settings: o.data[o.idx].layerConfig.settings,
                     };
 
                 return boundingLegendLabel;
@@ -263,9 +271,11 @@ define(["ramp/globalStorage"],
              * @returns {icon} The array of icon(s) to use in layer selector
              */
             getSymbolForLayer: function (layerConfig) {
-                //will take a symbol list that has 1 or more entries.  will return first 3.  if fewer than 3, will duplicate values
+                // will take a symbol list that has 1 or more entries.  will return first 3.  if fewer than 3, will
+                // duplicate values
                 function pick3(symbolList) {
-                    var num = symbolList.length, indexes;
+                    var num = symbolList.length;
+                    var indexes;
 
                     if (num > 2) {
                         //pick first 3
@@ -278,11 +288,14 @@ define(["ramp/globalStorage"],
                         indexes = [0, 0, 0];
                     } else {
                         //something is ruined
-                        return ["", "", ""];
+                        return ['', '', ''];
                     }
 
                     //return images in an array
-                    return [symbolList[indexes[0]].imageUrl, symbolList[indexes[1]].imageUrl, symbolList[indexes[2]].imageUrl];
+                    return [symbolList[indexes[0]].imageUrl,
+                            symbolList[indexes[1]].imageUrl,
+                            symbolList[indexes[2]].imageUrl,
+                    ];
                 }
 
                 if (layerConfig.symbology) {
@@ -290,16 +303,18 @@ define(["ramp/globalStorage"],
 
                     var symbNode = layerConfig.symbology;
                     switch (symbNode.type) {
-                        case "simple":
+                        case 'simple':
                             return [symbNode.imageUrl];
-                        case "uniqueValue":
+                        case 'uniqueValue':
                             return pick3(symbNode.valueMaps);
-                        case "classBreaks":
+                        case 'classBreaks':
                             return pick3(symbNode.rangeMaps);
                         default:
-                            //we have an unknown renderer type.  at this point, something else would have failed most likely.  write out a screech to the console just incase
+
+                            //we have an unknown renderer type.  at this point, something else would have failed
+                            //most likely.  write out a screech to the console just incase
                             console.log('unknown renderer encountered: ' + symbNode.type);
-                            return [""];
+                            return [''];
                     }
                 } else {
                     //no symbology defined, assume a WMS
@@ -309,9 +324,9 @@ define(["ramp/globalStorage"],
                     } else {
                         //catch-all in the case that things are really messed up
                         console.log('layer with no image info for layer selector');
-                        return [""];
+                        return [''];
                     }
                 }
-            }
+            },
         };
     });

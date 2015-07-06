@@ -11,10 +11,10 @@
 * be displayed in the bottom right corner.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "BaseTool"}}{{/crossLink}}
-* 
+* {{#crossLink 'Map'}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'BaseTool'}}{{/crossLink}}
+*
 * @class PopulationTool
 * @uses dojo/dom
 * @uses dojo/string
@@ -30,28 +30,34 @@
 */
 
 define([
+
 // Dojo
-        "dojo/dom", "dojo/string", "dojo/_base/lang",
+        'dojo/dom', 'dojo/string', 'dojo/_base/lang',
+
 // Esri
-        "esri/config", "esri/graphic", "esri/tasks/Geoprocessor", "esri/tasks/FeatureSet",
-        "esri/toolbars/draw", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol",
+        'esri/config', 'esri/graphic', 'esri/tasks/Geoprocessor', 'esri/tasks/FeatureSet',
+        'esri/toolbars/draw', 'esri/symbols/SimpleLineSymbol', 'esri/symbols/SimpleFillSymbol',
+
 // Ramp
-        "ramp/map", "ramp/globalStorage", "tools/baseTool"
+        'ramp/map', 'ramp/globalStorage', 'tools/baseTool',
 ],
     function (
+
 // Dojo
         dom, string, dojoLang,
+
 // Esri
         esriConfig, Graphic, Geoprocessor, FeatureSet, Draw, SimpleLineSymbol, SimpleFillSymbol,
+
 // Ramp
         RampMap, GlobalStorage, BaseTool) {
-        "use strict";
+        'use strict';
 
-        var ui,
-            geoprocessor,
-            populationApp,
+        var ui;
+        var geoprocessor;
+        var populationApp;
 
-            that;
+        var _this;
 
         /**
         * Compute an estimated amount of people in a specified polygon.
@@ -62,13 +68,13 @@ define([
         *
         */
         function computeZonalStats(evtObj) {
-            var geometry = evtObj.geometry,
-                graphic,
-                features,
-                featureSet,
-                params;
+            var geometry = evtObj.geometry;
+            var graphic;
+            var features;
+            var featureSet;
+            var params;
 
-            that.working(true);
+            _this.working(true);
 
             /*After user draws shape on map using the draw toolbar compute the zonal*/
             populationApp.map.graphics.clear();
@@ -82,7 +88,7 @@ define([
             featureSet.features = features;
 
             params = {
-                inputPoly: featureSet
+                inputPoly: featureSet,
             };
             geoprocessor.execute(params);
         }
@@ -96,12 +102,12 @@ define([
         *
         */
         function outputTotalPopulation(evtObj) {
-            var results = evtObj.results,
-                totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
+            var results = evtObj.results;
+            var totalPopulation = Math.floor(results[0].value.features[0].attributes.SUM);
 
-            that.working(false);
+            _this.working(false);
 
-            totalPopulation = string.substitute("${number:dojo.number.format}", { number: totalPopulation });
+            totalPopulation = string.substitute('${number:dojo.number.format}', { number: totalPopulation });
             displayOutput(totalPopulation);
         }
 
@@ -113,22 +119,24 @@ define([
             * @private
             */
             init: function () {
-                var map = RampMap.getMap(),
-                    toolbar = new Draw(map);
+                var map = RampMap.getMap();
+                var toolbar = new Draw(map);
 
                 //TODO store this URL in config
-                geoprocessor = new Geoprocessor("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary");
+                geoprocessor = new Geoprocessor(
+                    'http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Population_World/GPServer/PopulationSummary' //jshint ignore:line
+                    );
 
                 geoprocessor.setOutputSpatialReference(map.spatialReference);
-                geoprocessor.on("execute-complete", outputTotalPopulation);
+                geoprocessor.on('execute-complete', outputTotalPopulation);
 
-                toolbar.on("draw-end", computeZonalStats);
+                toolbar.on('draw-end', computeZonalStats);
 
                 populationApp = {
                     map: map,
-                    toolbar: toolbar
+                    toolbar: toolbar,
                 };
-            }
+            },
         };
 
         /**
@@ -140,7 +148,7 @@ define([
         function activate() {
             populationApp.toolbar.activate(Draw.FREEHAND_POLYGON);
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -164,7 +172,7 @@ define([
         function clearMap() {
             populationApp.map.graphics.clear();
 
-            displayOutput(i18n.t(that.ns + ":na"));
+            displayOutput(i18n.t(_this.ns + ':na'));
         }
 
         /**
@@ -174,10 +182,10 @@ define([
         * @private
         */
         function displayOutput(value) {
-            that.displayTemplateOutput(
+            _this.displayTemplateOutput(
                 {
-                    totalPopulationLabel: i18n.t(that.ns + ":population"),
-                    populationOutput: value
+                    totalPopulationLabel: i18n.t(_this.ns + ':population'),
+                    populationOutput: value,
                 }
             );
         }
@@ -192,12 +200,12 @@ define([
             *
             */
             init: function (selector, d) {
-                that = this;
+                _this = this;
                 this.initToggle(selector, d,
                     {
                         activate: activate,
                         deactivate: deactivate,
-                        defaultAction: clearMap
+                        defaultAction: clearMap,
                     }
                 );
 
@@ -206,6 +214,6 @@ define([
                 return this;
             },
 
-            name: "populationTool"
+            name: 'populationTool',
         });
     });

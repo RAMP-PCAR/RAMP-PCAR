@@ -32,60 +32,72 @@
 */
 
 define([
+
 // Dojo
     'dojo/_base/lang', 'dojo/dom-attr', 'dojo/query', 'dojo/topic',
+
 // Templates
     'dojo/text!./templates/basemap_selector_template.json',
+
 // Ramp
     'ramp/globalStorage', 'ramp/map', 'ramp/eventManager',
+
 // Esri
     'esri/dijit/BasemapGallery',
+
 // Util
-    'utils/dictionary', 'utils/popupManager', 'utils/util', 'utils/tmplHelper'],
+    'utils/dictionary', 'utils/popupManager', 'utils/util', 'utils/tmplHelper',
+],
 
 function (
+
         // Dojo
         dojoLang, domAttr, query, topic,
+
         // Templates
         basemapselectorTemplate,
+
         // Ramp
         GlobalStorage, RampMap, EventManager,
+
         // Esri
         BasemapGallery,
+
         // Util
         Dictionary, PopupManager, UtilMisc, TmplHelper) {
     'use strict';
 
-    var basemapGallery,
+    var basemapGallery;
 
-        currentBasemapId,
-        currentTileSchema,
-        basemaps,
+    var currentBasemapId;
+    var currentTileSchema;
+    var basemaps;
 
-        placementAnchorId = 'basemapGallery',
+    var placementAnchorId = 'basemapGallery';
 
-        ui = (function () {
-            var baseMapControls,
-                baseMapToggle,
+    var ui = (function () {
+            var baseMapControls;
+            var baseMapToggle;
 
-                selectorSectionContainer,
-                selectorSection,
+            var selectorSectionContainer;
+            var selectorSection;
 
-                selectorPopup,
-                projectionPopup,
-                basemapPopup,
+            var selectorPopup;
+            var projectionPopup;
+            var basemapPopup;
 
-                selectorOpenTimeline = new TimelineLite({ paused: true }),
+            var selectorOpenTimeline = new TimelineLite({ paused: true });
 
-                transitionDuration = 0.4,
+            var transitionDuration = 0.4;
 
-                cssButtonPressedClass = 'button-pressed';
+            var cssButtonPressedClass = 'button-pressed';
 
             function createSelectorOpenTL() {
                 var time = selectorOpenTimeline.time();
 
                 selectorOpenTimeline
                     .clear()
+
                     //.set(selectorSectionContainer, { display: 'block' }, 0)
                     .fromTo(selectorSection, transitionDuration,
                         { top: -selectorSectionContainer.find('.basemapselector-section').outerHeight() - 20 },
@@ -114,7 +126,8 @@ function (
 
             return {
                 /**
-                * Initiates additional UI components of the widget, setting listeners and registering the popup functionality
+                * Initiates additional UI components of the widget, setting listeners and registering the popup
+                * functionality
                 *
                 * @method init
                 * @private
@@ -122,10 +135,10 @@ function (
                 *
                 */
                 init: function (basemapId, tileSchema) {
-                    var data = [],
-                        pj = {},
-                        basemapControl,
-                        projectionControl;
+                    var data = [];
+                    var pj = {};
+                    var basemapControl;
+                    var projectionControl;
 
                     baseMapControls = $('#basemapControls');
                     baseMapToggle = $('#baseMapToggle');
@@ -135,8 +148,10 @@ function (
                         if (!pj[m.tileSchema]) {
                             pj[m.tileSchema] = [];
                         }
+
                         pj[m.tileSchema].push(m);
                     });
+
                     Dictionary.forEachEntry(pj, function (k, p) {
                         data.push(
                             {
@@ -144,7 +159,7 @@ function (
                                 id: k,
                                 tileShema: tileSchema,
                                 name: k,
-                                maps: p
+                                maps: p,
                             }
                         );
                     });
@@ -170,6 +185,7 @@ function (
                             selectorSectionContainer.show();
                             selectorOpenTimeline.play();
                         },
+
                         {
                             activeClass: cssButtonPressedClass,
                             target: selectorSectionContainer,
@@ -184,22 +200,23 @@ function (
 
                                 selectorOpenTimeline.reverse();
                             },
-                            timeout: 500
+
+                            timeout: 500,
                         }
                     );
 
                     // show/hide basemap lists based on what projection group is active
                     projectionPopup = PopupManager.registerPopup(selectorSectionContainer, 'click',
                         function (d) {
-                            var fromHeight,
-                                toHeight,
-                                heightTimeline;
+                            var fromHeight;
+                            var toHeight;
+                            var heightTimeline;
 
                             if (!this.isOpen()) {
                                 fromHeight = selectorSection.height();
                                 toHeight = this.target.height();
                                 heightTimeline = new TimelineLite({
-                                    onComplete: setTooltips
+                                    onComplete: setTooltips,
                                 });
 
                                 projectionPopup.close();
@@ -207,22 +224,26 @@ function (
                                 // animate resizing of the selector when switching between projection groups
                                 heightTimeline
                                     .set(this.target, { display: 'block' }, 0)
-                                    .fromTo(this.target, transitionDuration, { height: fromHeight }, { height: toHeight }, 0)
-                                    .to(selectorSection, transitionDuration, { height: toHeight, ease: 'easeOutCirc' }, 0);
+                                    .fromTo(this.target, transitionDuration,
+                                        { height: fromHeight }, { height: toHeight }, 0)
+                                    .to(selectorSection, transitionDuration,
+                                        { height: toHeight, ease: 'easeOutCirc' }, 0);
                             }
 
                             d.resolve();
                         },
+
                         {
                             closeHandler: function (d) {
                                 this.target.hide();
                                 d.resolve();
                             },
+
                             openOnly: true,
                             activeClass: cssButtonPressedClass,
                             handleSelector: '.projection-button',
                             containerSelector: '.projection-list-item',
-                            targetSelector: '.basemap-list-pane'
+                            targetSelector: '.basemap-list-pane',
                         }
                     );
 
@@ -236,18 +257,23 @@ function (
 
                             d.resolve();
                         },
+
                         {
                             closeHandler: function (d) {
                                 d.resolve();
                             },
+
                             openOnly: true,
                             handleSelector: '.basemap-button',
-                            activeClass: cssButtonPressedClass
+                            activeClass: cssButtonPressedClass,
                         }
                     );
 
-                    basemapControl = selectorSectionContainer.find('button[data-basemap-id="' + basemapId + '"]');
-                    projectionControl = selectorSectionContainer.find('button[data-projection-id="' + tileSchema + '"]');
+                    basemapControl = selectorSectionContainer.find(
+                        'button[data-basemap-id="' + basemapId + '"]');
+
+                    projectionControl = selectorSectionContainer.find(
+                        'button[data-projection-id="' + tileSchema + '"]');
 
                     basemapPopup.open(basemapControl);
                     projectionPopup.open(projectionControl);
@@ -268,7 +294,7 @@ function (
                  */
                 updateToggleLabel: function () {
                     baseMapToggle.find('span:first').text(basemapGallery.getSelected().title);
-                }
+                },
             };
         }());
 
@@ -290,7 +316,7 @@ function (
             //event to update the basemap
             topic.publish(EventManager.BasemapSelector.BASEMAP_CHANGED, {
                 id: basemap.id,
-                cssStyle: basemap.scaleCssClass
+                cssStyle: basemap.scaleCssClass,
             });
         });
     }
@@ -309,7 +335,8 @@ function (
     }
 
     /**
-    * Selects a basemap in the basemapgallery based on the supplied basemap id. If the tileShema is different from the current one, reload the page.
+    * Selects a basemap in the basemapgallery based on the supplied basemap id. If the tileShema is different
+    * from the current one, reload the page.
     *
     * @method selectBasemap
     * @param {String} basemapId a basemap id used to select a basemap in the basemapgallery
@@ -333,7 +360,7 @@ function (
                 // trigger bookmark generation.  don't care about cssStyle as we are going to reload the site anyways
                 topic.publish(EventManager.BasemapSelector.BASEMAP_CHANGED, {
                     id: basemapId,
-                    cssStyle: ''
+                    cssStyle: '',
                 });
             }
         }
@@ -341,26 +368,29 @@ function (
 
     return {
         /*
-         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then calls function to initializes event handling
+         * Adds all of the basemaps specified in the application configuration to the basemap selector widget and then
+         * calls function to initializes event handling
+         *
          * @method init
          * @constructor
          *
          */
         init: function () {
-            var initialBasemap,
-                esriBasemaps = [],
-                basemapId;
+            var initialBasemap;
+            var esriBasemaps = [];
+            var basemapId;
 
             basemaps = RAMP.config.basemaps;
 
             RAMP.basemapIndex = {};
 
             basemaps.forEach(function (basemap, i) {
-                var basemapDijit,
-                    basemapLayers = [];
+                var basemapDijit;
+                var basemapLayers = [];
 
                 // iterate over basemap layers and create layer objects for each;
-                // these objects can have any of the properties of the Basemap param constructor object here: https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
+                // these objects can have any of the properties of the Basemap param constructor object here:
+                // https://developers.arcgis.com/javascript/jsapi/basemaplayer-amd.html#basemaplayer1
                 basemap.layers.forEach(function (layer) {
                     //console.log(layer);
                     basemapLayers.push(
@@ -372,7 +402,7 @@ function (
                     id: basemap.id,
                     layers: basemapLayers, // shovel all the layers into the basemap
                     title: String.format('{0}, {1}', basemap.name, i18n.t('config.tileSchema.' + basemap.tileSchema)),
-                    thumbnailUrl: basemap.thumbnail
+                    thumbnailUrl: basemap.thumbnail,
                 });
                 basemapDijit.scaleCssClass = basemap.scaleCssClass;
 
@@ -386,7 +416,7 @@ function (
             basemapGallery = new BasemapGallery({
                 showArcGISBasemaps: false,
                 basemaps: esriBasemaps,
-                map: RampMap.getMap()
+                map: RampMap.getMap(),
             }, placementAnchorId);
 
             basemapGallery.on('error', function (evt) {
@@ -397,7 +427,9 @@ function (
             basemapGallery.startup();
 
             initialBasemap = basemaps[RAMP.config.initialBasemapIndex];
-            // currentBasemapId is not specified from the start because the basemap hasn't been selected yet through the basemapgallery
+
+            // currentBasemapId is not specified from the start because the basemap hasn't been selected yet
+            // through the basemapgallery
             basemapId = initialBasemap.id;
             currentTileSchema = initialBasemap.tileSchema;
 
@@ -407,6 +439,6 @@ function (
             ui
                 .init(basemapId, currentTileSchema)
             ;
-        }
+        },
     };
 });

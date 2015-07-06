@@ -10,16 +10,16 @@
 * A set of useful functions for manipulating dictionaries.
 *
 * ####Imports RAMP Modules:
-* {{#crossLink "Util"}}{{/crossLink}}  
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * @class Dictionary
 * @static
 * @uses dojo/_base/array
 * @uses dojo/_base/lang
 */
-define(["dojo/_base/lang"],
+define(['dojo/_base/lang'],
     function () {
-        "use strict";
+        'use strict';
 
         return {
             /**
@@ -66,7 +66,8 @@ define(["dojo/_base/lang"],
             * - the `key`
             * - the `value`
             * and returns true if the given key or value satisfy some condition
-            * @param {Function} [compareFcn] a comparator function (takes two arguments and returns an integer) used to sort the keys
+            * @param {Function} [compareFcn] a comparator function (takes two arguments and returns an integer) used
+            * to sort the keys
             */
             find: function (dict, fcn, compareFcn) {
                 var keys = [];
@@ -98,6 +99,7 @@ define(["dojo/_base/lang"],
                         filteredDict[key] = value;
                     }
                 });
+
                 return filteredDict;
             },
 
@@ -138,6 +140,7 @@ define(["dojo/_base/lang"],
                 this.forEachEntry(dict, function (key, value) {
                     copy[key] = value;
                 });
+
                 return copy;
             },
 
@@ -156,6 +159,7 @@ define(["dojo/_base/lang"],
                 arr.forEach(function (element) {
                     dict[fcn(arr)] = element;
                 });
+
                 return dict;
             },
 
@@ -172,14 +176,15 @@ define(["dojo/_base/lang"],
             */
             zip: function (arr1, arr2) {
                 if (arr1.length !== arr2.length) {
-                    throw "Array lengths differ";
+                    throw 'Array lengths differ';
                 }
 
                 var dict = {};
                 arr1.forEach(function (element, i) {
                     dict[element] = arr2[i];
                 });
+
                 return dict;
-            }
+            },
         };
     });

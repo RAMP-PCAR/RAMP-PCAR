@@ -1,6 +1,6 @@
 ﻿/*global define, $, console, RAMP */
 
-//the "use strict" forces the ECMA Script 5 interpretation of the code
+//the 'use strict' forces the ECMA Script 5 interpretation of the code
 
 /**
 *
@@ -11,95 +11,111 @@
 */
 
 /**
-* GlobalStorage class is used to store variables and exchange them between different modules. Each module has the ability to add variables to the global storage and retrieve them as needed.
+* GlobalStorage class is used to store variables and exchange them between different modules. Each module has the
+* ability to add variables to the global storage and retrieve them as needed.
 *
 * @class GlobalStorage
 */
 
-define(["utils/util"],
+define(['utils/util'],
     function (util) {
-        "use strict";
+        'use strict';
 
         var featureLayerDefaults = {
-                layerAttributes: '*',
-                minScale: 0,
-                maxScale: 0,
-                settings: { panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true, boundingBoxVisible: false },
-                mode: 'ondemand',
-                datagrid: { rowsPerPage: 50 },
-                templates: { detail: 'default_feature_details', hover: 'feature_hover_maptip_template', anchor: 'anchored_map_tip', summary: 'default_grid_summary_row' },
-                maxAllowableOffset: 0
+            layerAttributes: '*',
+            minScale: 0,
+            maxScale: 0,
+            settings: {
+                panelEnabled: true, opacity: { enabled: true, default: 1 }, visible: true,
+                boundingBoxVisible: false,
             },
-
-            wmsLayerDefaults = {
-                settings: { 
-                    panelEnabled: true, 
-                    opacity: { enabled: true, default: 1 }, 
-                    visible: true, 
-                    boundingBoxVisible: true, 
-                    queryEnabled: true // queryEnabled refers to the state of the wms query toggle, not whether the layer is queryable in principle or not 
-                }
+            mode: 'ondemand',
+            datagrid: { rowsPerPage: 50 },
+            templates: {
+                detail: 'default_feature_details', hover: 'feature_hover_maptip_template',
+                anchor: 'anchored_map_tip', summary: 'default_grid_summary_row',
             },
+            maxAllowableOffset: 0,
+        };
 
-            gridColumnDefaults = { orderable: true, type: "string", alignment: 1 },
+        var wmsLayerDefaults = {
+            settings: {
+                panelEnabled: true,
+                opacity: { enabled: true, default: 1 },
+                visible: true,
+                boundingBoxVisible: true,
 
-            basemapDefaults = { scaleCssClass: "map-scale-dark", type: "Topographic" },
-
-            configDefaults = {
-                initialBasemapIndex: 0,
-                extendedDatagridExtentFilterEnabled: false,
-                rowsPerPage: 50,
-                navWidget: { sliderMinVal: 3, sliderMaxVal: 15, debug: false, animate: "fast", cssPath: "ramp-theme/navigation", skin: "white" },
-                zoomLevels: { min: 1, max: 17 },
-                templates: { basemap: "default_basemap", globalSelectorToggles: "default_selector_toggles" },
-                layers: { feature: [], wms: [] },
-                divNames: { map: "mainMap", navigation: "map-navigation", filter: "searchMapSectionBody", datagrid: "gridpane" },
-                advancedToolbar: { enabled: false, tools: [] },
-                ui: { mapQueryToggle: { show: true, autoHide: true } }
+                // queryEnabled refers to the state of the wms query toggle, not whether
+                // the layer is queryable in principle or not
+                queryEnabled: true,
             },
+        };
 
-            defaultRenderers = {
+        var gridColumnDefaults = { orderable: true, type: 'string', alignment: 1 };
+
+        var basemapDefaults = { scaleCssClass: 'map-scale-dark', type: 'Topographic' };
+
+        var configDefaults = {
+            initialBasemapIndex: 0,
+            extendedDatagridExtentFilterEnabled: false,
+            rowsPerPage: 50,
+            navWidget: {
+                sliderMinVal: 3, sliderMaxVal: 15, debug: false, animate: 'fast',
+                cssPath: 'ramp-theme/navigation', skin: 'white',
+            },
+            zoomLevels: { min: 1, max: 17 },
+            templates: { basemap: 'default_basemap', globalSelectorToggles: 'default_selector_toggles' },
+            layers: { feature: [], wms: [] },
+            divNames: {
+                map: 'mainMap', navigation: 'map-navigation',
+                filter: 'searchMapSectionBody', datagrid: 'gridpane',
+            },
+            advancedToolbar: { enabled: false, tools: [] },
+            ui: { mapQueryToggle: { show: true, autoHide: true } },
+        };
+
+        var defaultRenderers = {
                 circlePoint: {
-                    geometryType: "esriGeometryPoint",
+                    geometryType: 'esriGeometryPoint',
                     renderer: {
-                        type: "simple",
+                        type: 'simple',
                         symbol: {
-                            type: "esriSMS",
-                            style: "esriSMSCircle",
+                            type: 'esriSMS',
+                            style: 'esriSMSCircle',
                             color: [67, 100, 255, 200],
-                            size: 7
-                        }
-                    }
+                            size: 7,
+                        },
+                    },
                 },
                 solidLine: {
-                    geometryType: "esriGeometryPolyline",
+                    geometryType: 'esriGeometryPolyline',
                     renderer: {
-                        type: "simple",
+                        type: 'simple',
                         symbol: {
-                            type: "esriSLS",
-                            style: "esriSLSSolid",
+                            type: 'esriSLS',
+                            style: 'esriSLSSolid',
                             color: [90, 90, 90, 200],
-                            width: 2
-                        }
-                    }
+                            width: 2,
+                        },
+                    },
                 },
                 outlinedPoly: {
-                    geometryType: "esriGeometryPolygon",
+                    geometryType: 'esriGeometryPolygon',
                     renderer: {
-                        type: "simple",
+                        type: 'simple',
                         symbol: {
-                            type: "esriSFS",
-                            style: "esriSFSSolid",
+                            type: 'esriSFS',
+                            style: 'esriSFSSolid',
                             color: [76, 76, 125, 200],
                             outline: {
-                                type: "esriSLS",
-                                style: "esriSLSSolid",
+                                type: 'esriSLS',
+                                style: 'esriSLSSolid',
                                 color: [110, 110, 110, 255],
-                                width: 1
-                            }
-                        }
-                    }
-                }
+                                width: 1,
+                            },
+                        },
+                    },
+                },
             };
 
         function applyDefaults(defaults, srcObj) {
@@ -109,10 +125,10 @@ define(["utils/util"],
 
         function defineProjections(proj4) {
             // wgs84 and aux mercator are built in, add Canada Lambert and Canada Atlas Lambert
-            proj4.defs("EPSG:3978", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
-            proj4.defs("EPSG:3979", "+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
-            proj4.defs("EPSG:102100", proj4.defs('EPSG:3857'));
-            proj4.defs("EPSG:54004", "+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs");
+            proj4.defs('EPSG:3978', '+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'); //jshint ignore:line
+            proj4.defs('EPSG:3979', '+proj=lcc +lat_1=49 +lat_2=77 +lat_0=49 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'); //jshint ignore:line
+            proj4.defs('EPSG:102100', proj4.defs('EPSG:3857'));
+            proj4.defs('EPSG:54004', '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs'); //jshint ignore:line
         }
 
         function applyConfigDefaults(configObj) {
@@ -122,9 +138,11 @@ define(["utils/util"],
             result.layers.wms = result.layers.wms.map(function (wms) {
                 return applyDefaults(wmsLayerDefaults, wms);
             });
+
             result.basemaps = result.basemaps.map(function (b) {
                 return applyDefaults(basemapDefaults, b);
             });
+
             result.layers.feature = result.layers.feature.map(applyFeatureDefaults);
             console.log(result);
             return result;
@@ -137,6 +155,7 @@ define(["utils/util"],
                     return applyDefaults(gridColumnDefaults, gc);
                 });
             }
+
             return layer;
         }
 
@@ -153,7 +172,7 @@ define(["utils/util"],
 
                 this.layerSelectorGroups = [
                     this.layerType.wms,
-                    this.layerType.feature
+                    this.layerType.feature,
                 ];
             },
 
@@ -163,17 +182,17 @@ define(["utils/util"],
             applyWMSDefaults: applyWMSDefaults,
 
             layerType: {
-                Basemap: "basemap",
-                wms: "wms_layer",
-                BoundingBox: "bounding_box",
-                feature: "feature_layer",
-                Static: "static_layer",
-                Highlight: "highlight_layer",
-                Hoverlight: "hoverlight_layer",
-                Zoomlight: "zoomlight_layer"
+                Basemap: 'basemap',
+                wms: 'wms_layer',
+                BoundingBox: 'bounding_box',
+                feature: 'feature_layer',
+                Static: 'static_layer',
+                Highlight: 'highlight_layer',
+                Hoverlight: 'hoverlight_layer',
+                Zoomlight: 'zoomlight_layer',
             },
 
             // specifies knows layer groups in the reversed order;
-            layerSelectorGroups: []
+            layerSelectorGroups: [],
         };
     });

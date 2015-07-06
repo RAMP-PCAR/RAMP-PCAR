@@ -32,6 +32,7 @@
 */
 
 define([
+
 /* Dojo */
         'dojo/_base/declare', 'dojo/topic',
 
@@ -39,10 +40,11 @@ define([
         'ramp/globalStorage', 'ramp/map', 'ramp/eventManager',
 
 /* Util */
-        'utils/util', 'utils/dictionary'
+        'utils/util', 'utils/dictionary',
 ],
 
     function (
+
     /* Dojo */
         declare, topic,
 
@@ -53,18 +55,18 @@ define([
         UtilMisc, UtilDict) {
         'use strict';
 
-        var map,
-            config,
+        var map;
+        var config;
 
-            highlightLayer,
-            hoverlightLayer,
-            zoomlightLayer,
+        var highlightLayer;
+        var hoverlightLayer;
+        var zoomlightLayer;
 
-            graphicGroup,
+        var graphicGroup;
 
-            highlightedGraphic,
+        var highlightedGraphic;
 
-            zoomlightGraphic;
+        var zoomlightGraphic;
 
         /**
         * Creates a copy of the given graphic object.
@@ -80,7 +82,7 @@ define([
 
             var clone = new esri.Graphic({
                 geometry: graphic.geometry,
-                attributes: {}
+                attributes: {},
             });
 
             clone.symbol = graphic.getLayer().renderer.getSymbol(graphic);
@@ -103,11 +105,11 @@ define([
         */
         function sortLayers() {
             if (!graphicGroup) {
-                var svg = Snap.select('svg'),
-                    layers = svg.selectAll('svg g'), // > g:not(.highlightLayer)'),
-                    hoverl = svg.select('.hoverlightLayer'),
-                    zooml = svg.select('.zoomlightLayer'),
-                    hightl = svg.select('.highlightLayer');
+                var svg = Snap.select('svg');
+                var layers = svg.selectAll('svg g'); // > g:not(.highlightLayer)'),
+                var hoverl = svg.select('.hoverlightLayer');
+                var zooml = svg.select('.zoomlightLayer');
+                var hightl = svg.select('.highlightLayer');
 
                 graphicGroup = svg.group(layers);
 
@@ -116,22 +118,22 @@ define([
                 graphicGroup.before(hoverl);
                 graphicGroup.before(zooml);
                 graphicGroup.attr({
-                    class: 'graphics'
+                    class: 'graphics',
                 });
             }
         }
 
         /**
-        * Clones the Graphic object from the event, adds it to the Highlight layer, and lowers the opacity of other map layers to make the cloned
-        * Graphic stand out.
+        * Clones the Graphic object from the event, adds it to the Highlight layer, and lowers the opacity of
+        * other map layers to make the cloned Graphic stand out.
         *
         * @method highlightGraphic
         * @private
         * @param {Object} eventArg ???
         */
         function highlightGraphic(eventArg) {
-            var graphic = eventArg.graphic,
-                newGraphic = cloneGraphic(graphic);
+            var graphic = eventArg.graphic;
+            var newGraphic = cloneGraphic(graphic);
 
             sortLayers();
 
@@ -139,6 +141,7 @@ define([
 
             // Highlights the selected point by adding a graphic object to the highLight layer
             highlightedGraphic = newGraphic;
+
             // Needed to find the symbol in maptip
             highlightLayer.sourceLayerId = graphic.getLayer().id;
             highlightLayer.objectIdField = graphic.getLayer().objectIdField;
@@ -146,7 +149,7 @@ define([
             highlightLayer.add(newGraphic);
 
             graphicGroup.attr({
-                opacity: 0.35
+                opacity: 0.35,
             });
         }
 
@@ -162,13 +165,14 @@ define([
 
                 if (graphicGroup) {
                     graphicGroup.attr({
-                        opacity: 1
+                        opacity: 1,
                     });
                 }
 
                 zoomLightHide();
                 highlightLayer.clear();
             }
+
             RAMP.state.hilite.click.objId = -1;
         }
 
@@ -180,8 +184,8 @@ define([
         * @param {Object} eventArg ???
         */
         function hoverLight(eventArg) {
-            var graphic = eventArg.graphic,
-                newGraphic = cloneGraphic(graphic);
+            var graphic = eventArg.graphic;
+            var newGraphic = cloneGraphic(graphic);
 
             sortLayers();
 
@@ -200,16 +204,16 @@ define([
         }
 
         /**
-        * Clones the Graphic object from the event, adds it to the Zoomlight layer, and lowers the opacity of other map layers to make the cloned
-        * Graphic stand out.
+        * Clones the Graphic object from the event, adds it to the Zoomlight layer, and lowers the opacity of other
+        * map layers to make the cloned Graphic stand out.
         *
         * @method zoomLight
         * @private
         * @param {Object} eventArg ???
         */
         function zoomLight(eventArg) {
-            var graphic = eventArg.graphic,
-                newGraphic = cloneGraphic(graphic);
+            var graphic = eventArg.graphic;
+            var newGraphic = cloneGraphic(graphic);
 
             sortLayers();
 
@@ -238,16 +242,17 @@ define([
 
                 if (!highlightedGraphic && graphicGroup) {
                     graphicGroup.attr({
-                        opacity: 1
+                        opacity: 1,
                     });
                 }
             }
+
             RAMP.state.hilite.zoom.objId = -1;
         }
 
         /**
-        * If there a Graphic in the Highlihgh layer, resets it's bounding box and repositions an interactive maptip to match the top center of the
-        * boudning box of the highlighted graphic.
+        * If there a Graphic in the Highlihgh layer, resets it's bounding box and repositions an interactive maptip
+        * to match the top center of the boudning box of the highlighted graphic.
         *
         * @method repositionInteractive
         * @private
@@ -255,14 +260,14 @@ define([
         function repositionInteractive() {
             if (highlightedGraphic) {
                 window.setTimeout(function () {
-                    var snapGraphic = Snap.select('svg .highlightLayer > *:first-child'),
-                        offset;
+                    var snapGraphic = Snap.select('svg .highlightLayer > *:first-child');
+                    var offset;
 
                     if (snapGraphic) {
                         offset = snapGraphic.getBBox().width / 2;
 
                         topic.publish(EventManager.Maptips.REPOSITION_INTERACTIVE, {
-                            offset: offset
+                            offset: offset,
                         });
                     }
                 }, 10);
@@ -294,18 +299,18 @@ define([
             highlightLayer.on('graphic-node-add', function (evt) {
                 topic.publish(EventManager.Maptips.SHOW_INTERACTIVE, {
                     target: $(evt.node),
-                    graphic: highlightedGraphic
+                    graphic: highlightedGraphic,
                 });
             });
 
             // detect when a new graphic is added to the zoomlight layer and display a
             // temporary tooltip only if the zoomlighted graphic is not already highlighted
             zoomlightLayer.on('graphic-node-add', function (evt) {
-                var zgKey = '0',
-                    hgKey = '1',
-                    objectIdField,
-                    zgLayer,
-                    hgLayer;
+                var zgKey = '0';
+                var hgKey = '1';
+                var objectIdField;
+                var zgLayer;
+                var hgLayer;
 
                 if (highlightedGraphic) {
                     zgLayer = zoomlightGraphic.getLayer();
@@ -318,7 +323,7 @@ define([
                 if (zgKey !== hgKey) {
                     topic.publish(EventManager.Maptips.SHOW, {
                         target: $(evt.node),
-                        graphic: zoomlightGraphic
+                        graphic: zoomlightGraphic,
                     });
                 }
             });
@@ -346,10 +351,10 @@ define([
                 //
                 highlightLayer = new esri.layers.GraphicsLayer({
                     id: 'highlightLayer',
-                    className: 'highlightLayer'
+                    className: 'highlightLayer',
                 });
                 highlightLayer.ramp = {
-                    type: GlobalStorage.layerType.Highlight
+                    type: GlobalStorage.layerType.Highlight,
                 };
 
                 // Layer for showing the graphic that appears when a point
@@ -357,20 +362,20 @@ define([
                 // selected
                 hoverlightLayer = new esri.layers.GraphicsLayer({
                     id: 'hoverlightLayer',
-                    className: 'hoverlightLayer'
+                    className: 'hoverlightLayer',
                 });
                 hoverlightLayer.ramp = {
-                    type: GlobalStorage.layerType.Hoverlight
+                    type: GlobalStorage.layerType.Hoverlight,
                 };
 
                 // Layer for showing the graphic that appears after the user
                 // presses zoom to on a point
                 zoomlightLayer = new esri.layers.GraphicsLayer({
                     id: 'zoomLightLayer',
-                    className: 'zoomlightLayer'
+                    className: 'zoomlightLayer',
                 });
                 zoomlightLayer.ramp = {
-                    type: GlobalStorage.layerType.Zoomlight
+                    type: GlobalStorage.layerType.Zoomlight,
                 };
 
                 map.addLayer(highlightLayer);
@@ -378,6 +383,6 @@ define([
                 map.addLayer(zoomlightLayer, 0);
 
                 initListeners();
-            }
+            },
         };
     });

@@ -5,21 +5,22 @@
 */
 
 /**
-* BaseTool provides essential functionality for Tools including handling of the activate toggle, setting `busy` state, injecting output float into the page,
-* and templating the output. It's not required to mixin BaseTool, but it's really helpful; and of course any of the BaseTool methods/properties can be overwritten
+* BaseTool provides essential functionality for Tools including handling of the activate toggle, setting
+* `busy` state, injecting output float into the page, and templating the output. It's not required to mixin
+* BaseTool, but it's really helpful; and of course any of the BaseTool methods/properties can be overwritten
 * after mixining it in.
 *
 * Call `initToggle` to initialize the tool.
-* 
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink 'GlobalStorage'}}{{/crossLink}}
+* {{#crossLink 'TmplHelper'}}{{/crossLink}}
+* {{#crossLink 'PopupManager'}}{{/crossLink}}
+* {{#crossLink 'Util'}}{{/crossLink}}
 *
 * ####Uses RAMP Templates:
-* {{#crossLink "templates/tools_template.json"}}{{/crossLink}}
-* 
+* {{#crossLink 'templates/tools_template.json'}}{{/crossLink}}
+*
 * @class BaseTool
 * @constructor
 * @uses dojo/Evented
@@ -28,26 +29,34 @@
 */
 
 define([
+
 // Dojo
-        "dojo/Evented", "dojo/_base/lang", "dojo/Deferred",
+        'dojo/Evented', 'dojo/_base/lang', 'dojo/Deferred',
+
 // Text
-        "dojo/text!./templates/tools_template.json",
+        'dojo/text!./templates/tools_template.json',
+
 // Ramp
-        "ramp/globalStorage",
+        'ramp/globalStorage',
+
 // Utils
-        "utils/tmplHelper", "utils/popupManager", "utils/util"
+        'utils/tmplHelper', 'utils/popupManager', 'utils/util',
 ],
     function (
+
 // Dojo
         Evented, dojoLang, Deferred,
+
 // Text
-        tools_template_json,
+        toolsTemplateJson,
+
 // Ramp
         GlobalStorage,
+
 // Utils
         TmplHelper, PopupManager, Util
     ) {
-        "use strict";
+        'use strict';
 
         // mixin the Evented functions (on, emit) into the BaseTool
         return dojoLang.mixin(new Evented(),
@@ -74,7 +83,7 @@ define([
 
                 /**
                  * Node (button) the handle is attached too.
-                 * 
+                 *
                  * @property node
                  * @type JObject
                  * @default null
@@ -115,7 +124,7 @@ define([
                  *
                  * @property tooltip
                  * @type JObject
-                 * @default $("#mainMap.map > .tooltip")
+                 * @default $('#mainMap.map > .tooltip')
                  *
                  */
                 tooltip: null,
@@ -138,8 +147,8 @@ define([
                 * @default null
                 * @example
                 *      {
-                *          ACTIVATE: "basetool-activate",
-                *          DEACTIVATE: "basetool-deactivate"
+                *          ACTIVATE: 'basetool-activate',
+                *          DEACTIVATE: 'basetool-deactivate'
                 *      }
                 */
                 event: {
@@ -150,7 +159,7 @@ define([
                     * @param event {Object}
                     * @param event.tool {BaseTool} Tool that was activated
                     */
-                    ACTIVATE: "basetool-activate",
+                    ACTIVATE: 'basetool-activate',
 
                     /**
                     * Published whenever a Tool is deactivated.
@@ -159,10 +168,10 @@ define([
                     * @param event {Object}
                     * @param event.tool {BaseTool} Tool that was deactivated
                     */
-                    DEACTIVATE: "basetool-deactivate"
+                    DEACTIVATE: 'basetool-deactivate',
                 },
 
-                ns: "tools/",
+                ns: 'tools/',
 
                 /**
                  * Name of the tool so AdvancedToolbar can distinguish between them.
@@ -171,11 +180,12 @@ define([
                  * @type String
                  * @default BaseTool
                  */
-                name: "BaseTool",
+                name: 'BaseTool',
 
                 /**
-                 * Initializes the tool and sets up popup to handle activating/deactivating of the tool. Tools should call this function on `init`,
-                 * unless they employ a different workflow and then need to handle all function activation/deactivation/working themselves.
+                 * Initializes the tool and sets up popup to handle activating/deactivating of the tool. Tools should
+                 * call this function on `init`, unless they employ a different workflow and then need to handle all
+                 * function activation/deactivation/working themselves.
                  *
                  * @method initToggle
                  * @param {JObject} selector a target selector that serves as a toggle for the tool
@@ -183,92 +193,101 @@ define([
                  * @param {Object} [options] Additional options
                  * @param {JObject} [options.target] Target where the tool's float should be appended to
                  * @param {String} [options.outputFloatTemplate] Template name to generate the float container with
-                 * @param {Object} [options.outputFloatData] Data payload to be passed to the template engine when generate the float container
+                 * @param {Object} [options.outputFloatData] Data payload to be passed to the template engine when
+                 * generate the float container
                  * @param {String} [options.workingLabelTemplate] Template name to generate the `busy` label
-                 * @param {Object} [options.workingLabelData] Data payload to be passed to the template engine when generate the `busy` label
+                 * @param {Object} [options.workingLabelData] Data payload to be passed to the template engine when
+                 * generate the `busy` label
                  * @param {Function} [options.activate] an activate function to be called when the toggle is clicked
                  * @param {Function} [options.deactivate] a deactivate function to be called when the toggle is clicked
-                 * @param {Function} [options.defaultAction] Function to be executed when the `float-default-button` is clicked
+                 * @param {Function} [options.defaultAction] Function to be executed when the `float-default-button`
+                 * is clicked
                  * @chainable
                  * @return this tool
                  */
                 initToggle: function (selector, d, options) {
-                    var that = this,
-                        toolTemplate,
-                        deferrList = [
+                    var _this = this;
+                    var toolTemplate;
+                    var deferrList = [
                             new Deferred(),
-                            new Deferred()
+                            new Deferred(),
                         ];
 
                     // wait for translation and template to load
                     Util.afterAll(deferrList,
                         function () {
                             tmpl.cache = {};
+
                             // mixin base tools template with individual tool's template
-                            tmpl.templates = that.templates = dojoLang.mixin(
-                                JSON.parse(TmplHelper.stringifyTemplate(tools_template_json)),
+                            tmpl.templates = _this.templates = dojoLang.mixin(
+                                JSON.parse(TmplHelper.stringifyTemplate(toolsTemplateJson)),
                                 JSON.parse(TmplHelper.stringifyTemplate(toolTemplate)));
 
                             // create tool button, outputfloat, and working label
                             this.node = $(tmpl(this.options.toolButtonTemplate, this.options.toolButtonData));
+
                             // creating the float to display output on
                             this.outputFloat = $(tmpl(this.options.outputFloatTemplate, this.options.outputFloatData));
                             this.workingLabel = tmpl(this.options.workingLabelTemplate, this.options.workingLabelData);
 
                             // initializing tools' toggle button
-                            this.handle = PopupManager.registerPopup(this.node.find(selector), "click",
+                            this.handle = PopupManager.registerPopup(this.node.find(selector), 'click',
                                 function (d) {
-                                    that.emit(that.event.ACTIVATE, {
-                                        tool: that
+                                    _this.emit(_this.event.ACTIVATE, {
+                                        tool: _this,
                                     });
 
-                                    console.log(that.name, ": tool opens");
+                                    console.log(_this.name, ': tool opens');
 
-                                    that.options.activate.call(that);
-                                    that.options.target.append(that.outputFloat);
+                                    _this.options.activate.call(_this);
+                                    _this.options.target.append(_this.outputFloat);
 
-                                    that.outputFloat.on("click", ".float-default-button", that.options.defaultAction);
+                                    _this.outputFloat.on('click', '.float-default-button', _this.options.defaultAction);
 
-                                    that.tooltip = $("#mainMap.map > .tooltip")
-                                        .wrapInner("<span class='esri-tooltip'></span")
-                                        .append(that.workingLabel);
+                                    _this.tooltip = $('#mainMap.map > .tooltip')
+                                        .wrapInner('<span class="esri-tooltip"></span')
+                                        .append(_this.workingLabel);
 
                                     d.resolve();
-                                }, {
+                                },
+
+                                {
                                     closeHandler: function (d) {
-                                        that.emit(that.event.DEACTIVATE, {
-                                            tool: that
+                                        _this.emit(_this.event.DEACTIVATE, {
+                                            tool: _this,
                                         });
 
-                                        console.log(that.name, ": tool closes");
+                                        console.log(_this.name, ': tool closes');
 
-                                        that.options.deactivate.call(that);
-                                        that.outputFloat.detach();
+                                        _this.options.deactivate.call(_this);
+                                        _this.outputFloat.detach();
 
-                                        that.outputFloat.off("click", ".float-default-button", that.options.defaultAction);
+                                        _this.outputFloat.off('click', '.float-default-button',
+                                            _this.options.defaultAction);
 
                                         d.resolve();
                                     },
 
-                                    activeClass: "button-pressed",
-                                    useAria: false
+                                    activeClass: 'button-pressed',
+                                    useAria: false,
                                 }
                             );
 
                             d.resolve(this);
                         },
+
                         this);
 
                     // load tool's i18n namespace
-                    that.ns += that.name;
-                    i18n.loadNamespace(that.ns, function () {
-                        console.log(that.name, ": translation is loaded");
+                    _this.ns += _this.name;
+                    i18n.loadNamespace(_this.ns, function () {
+                        console.log(_this.name, ': translation is loaded');
                         deferrList[0].resolve();
                     });
 
                     // load toll's template
-                    require(["dojo/text!tools/templates/" + that.name + ".json"], function (tt) {
-                        console.log(that.name, ": template is loaded");
+                    require(['dojo/text!tools/templates/' + _this.name + '.json'], function (tt) {
+                        console.log(_this.name, ': template is loaded');
                         toolTemplate = tt;
 
                         deferrList[1].resolve();
@@ -277,28 +296,30 @@ define([
                     // BaseTool default options
                     this.options = dojoLang.mixin(
                         {
-                            target: $("#mainMap"),
+                            target: $('#mainMap'),
 
-                            outputFloatTemplate: "base_tool_float",
+                            outputFloatTemplate: 'base_tool_float',
                             outputFloatData: {
-                                clearMapButton: i18n.t("tools.basetool.clearmap")
+                                clearMapButton: i18n.t('tools.basetool.clearmap'),
                             },
 
-                            workingLabelTemplate: "working_label",
+                            workingLabelTemplate: 'working_label',
                             workingLabelData: {
-                                workingLabel: i18n.t("tools.basetool.working")
+                                workingLabel: i18n.t('tools.basetool.working'),
                             },
 
-                            toolButtonTemplate: "base_tool_button",
+                            toolButtonTemplate: 'base_tool_button',
                             toolButtonData: {
-                                ns: that.ns
+                                ns: _this.ns,
                             },
 
-                            toolOutputTemplate: "base_tool_output",
+                            toolOutputTemplate: 'base_tool_output',
 
                             activate: function () { console.log('activate action'); },
+
                             deactivate: function () { console.log('deactivate action'); },
-                            defaultAction: function () { console.log('default action'); }
+
+                            defaultAction: function () { console.log('default action'); },
                         },
                         options);
 
@@ -310,7 +331,8 @@ define([
                  *
                  * @method displayTemplateOutput
                  * @param {Object} templateData data to be put inside the specified template
-                 * @param {String} [templateName] template name to be completed with provided data; if not supplied, "toolOutputTemplate" property of the options object will be used
+                 * @param {String} [templateName] template name to be completed with provided data; if not supplied,
+                 * 'toolOutputTemplate' property of the options object will be used
                  * @chainable
                  * @return this tool
                  */
@@ -338,7 +360,7 @@ define([
                  * @return this tool
                  */
                 displayOutput: function (output) {
-                    this.outputFloat.find(".float-content")
+                    this.outputFloat.find('.float-content')
                         .empty()
                         .append(output);
 
@@ -346,7 +368,8 @@ define([
                 },
 
                 /**
-                * Sets the tool into a specified state; if the tool is `working`, a `working` label is placed beside the cursor and injected into the tool output float.
+                * Sets the tool into a specified state; if the tool is `working`, a `working` label is placed beside
+                * the cursor and injected into the tool output float.
                 *
                 * @method working
                 * @param {Boolean} state indicates the state of the tool: working, idle
@@ -355,14 +378,14 @@ define([
                 */
                 working: function (state) {
                     if (state) {
-                        this.tooltip.addClass("working");
+                        this.tooltip.addClass('working');
                         this.outputFloat
-                            .find(".working-placeholder")
+                            .find('.working-placeholder')
                             .replaceWith(this.workingLabel);
                     } else {
-                        this.tooltip.removeClass("working");
+                        this.tooltip.removeClass('working');
                         this.outputFloat
-                            .find(".working-placeholder").empty();
+                            .find('.working-placeholder').empty();
                     }
 
                     return this;
@@ -375,7 +398,7 @@ define([
                 * @return This tool
                 */
                 activate: function () {
-                    //console.log("base activate; nothing to see here;");
+                    //console.log('base activate; nothing to see here;');
                     if (this.handle) {
                         this.handle.open();
                     }
@@ -390,14 +413,15 @@ define([
                 * @return This tool
                 */
                 deactivate: function () {
-                    //console.log("base deactivate; nothing to see here;");
+                    //console.log('base deactivate; nothing to see here;');
                     if (this.handle && this.handle.isOpen()) {
                         this.handle.close();
                     }
 
                     return this;
-                }
+                },
             }
         );
     }
+
 );
