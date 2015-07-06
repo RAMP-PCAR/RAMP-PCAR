@@ -435,6 +435,23 @@
             "p2": "Cliquez sur le bouton « Map Export » (Exporter la carte) dans la barre d’outils pour amorcer la génération de l’image. La fenêtre « Map Export » s’ouvrira. Un message de chargement s’affichera et l’aperçu de l’image s’affichera une fois qu’il sera généré. Cliquez sur le bouton « Download Image » (Télécharger l’image) pour enregistrer l’image. Cliquez sur le X pour fermer la fenêtre « Map Export ».",
             "p3": "Pour l’instant, « Map Export » ne capturera que les couches hébergées sur un service Internet public. Les couches hébergées sur un service privé (p. ex. sur un intranet) ou ajoutées depuis des sources en fichiers n’apparaîtront pas dans le fichier d’image subséquent. Les images ne sont disponibles qu’en format PNG pour l’instant."
         },
+        "s14": {
+            "h1": "[fr] Usage",
+            "h2": "[fr] Basic Search",
+            "h3": "[fr] Filters",
+            "header": "[fr] Geo Search",
+            "img1": "[fr] --",
+            "img2": "[fr] --",
+            "p1": "[fr] Geo Search allows known locations and places of interest to be discovered and zoomed to by the user.",
+            "p2": "[fr] Typing in the geo search text box will cause up to ten potential matches to appear in a dropdown list.  Clicking an item in the list will cause the map to zoom to that item.  Clicking the search button will pick the first item in the list.  Valid searches include place names, forward sorting area codes, and latitude longitude in decimal degrees separated by a comma.",
+            "p3": "[fr] Search results can be filtered in the following ways.",
+            "ul1": {
+                "li1": "[fr] The Province dropdown list will filter results to a specific province.  Province can also be filtered by ending the search string with a comma, followed by the province name or abbreviation.",
+                "li2": "[fr] The Type dropdown list will filter results to a type of item.  Some examples are Road, Lake, or Town.",
+                "li3": "[fr] The Extent dropdown list will filter results to a specific area.  The Visible option will only select results that are on current map view.  The Canada option will restrict results within the Canada view (press the Canada icon in the navigation widget to see the Canada view).",
+                "li4": "[fr] When entering a forward sorting area code or a latitude longitude pair, the Province filter will change to a Distance filter.  This will filter items to be within a certain radius of the center of the FSA or the lat long point."
+            }
+        },
         "s2": {
             "h1": "Utilisation",
             "header": "Fonds de carte",
