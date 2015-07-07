@@ -1,4 +1,4 @@
-﻿/* global define, navigator, $, RAMP */
+﻿/* global define, navigator, $, RAMP, i18n */
 
 /**
 * Navigation submodule
@@ -77,7 +77,25 @@ function (
         // Pan and zoom to a given point
         function _goToPoint() {
             if (geolocate) {
-                geolocate.getCurrentPosition(_convertPoint);
+                geolocate.getCurrentPosition(
+                    _convertPoint,
+
+                    // If the call returns with an error
+                    function () {
+                        // Remake tooltip
+                        UtilMisc.tooltipster($('.jq-navigation-geoButton'), null, 'destroy');
+                        $('.jq-navigation-geoLocate').attr('title',
+                            i18n.t('geolocate.noSupport'));
+                        UtilMisc.tooltipster($('.jq-navigation-geoButton'), null, null, 'tooltipster-error-above');
+
+                        // Disable button
+                        $('.jq-navigation-geoLocate').attr('class', 'jq-navigation-geoLocate-disabled');
+
+                        // Once the button is disabled don't bother checking again
+                        geolocate = null;
+                    }
+
+                );
             }
         }
 

@@ -337,6 +337,9 @@
         "showLegend": "Montrer la légende",
         "zoomToData": "Zoomer sur les données"
     },
+	"geolocate":{
+		"noSupport": "Géolocalisation est pas pris en charge dans votre navigateur"
+	},
     "geosearch": {
         "filters": {
             "clear": "[fr] Clear",

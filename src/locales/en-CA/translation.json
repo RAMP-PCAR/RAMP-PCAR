@@ -337,6 +337,9 @@
         "showLegend": "Show Legend",
         "zoomToData": "Zoom to data"
     },
+	"geolocate": {
+		"noSupport": "Geolocation is not supported in your browser"
+	},
     "geosearch": {
         "filters": {
             "clear": "Clear",

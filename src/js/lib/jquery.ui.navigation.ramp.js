@@ -406,15 +406,6 @@ if (!String.prototype.format) {
                         ))
             /* Geolocate section ends */
 
-            navigator.geolocation.getCurrentPosition(
-                // browser supports geolocation
-                function () { },
-                // no support
-                function () {
-                    $('.' + this._getClassName('geoLocate')).attr('class', this._getClassName('geoLocate') + '-disabled')
-            });
-
-
             /* Create pan and full extent controls */
             var ctrls = ["panUp", "panRight", "panDown", "panLeft", "fullExtent"],
                      len = ctrls.length;
