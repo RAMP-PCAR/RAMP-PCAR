@@ -338,7 +338,7 @@
         "zoomToData": "Zoomer sur les données"
     },
 	"geolocate":{
-		"noSupport": "Géolocalisation est pas pris en charge dans votre navigateur"
+		"noSupport": "Votre navigateur ne supporte pas géolocalisation"
 	},
     "geosearch": {
         "filters": {

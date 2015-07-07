@@ -338,7 +338,7 @@
         "zoomToData": "Zoom to data"
     },
 	"geolocate": {
-		"noSupport": "Geolocation is not supported in your browser"
+		"noSupport": "Your browser does not support geolocation"
 	},
     "geosearch": {
         "filters": {
