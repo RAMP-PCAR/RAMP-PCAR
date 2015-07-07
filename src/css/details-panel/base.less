@@ -27,6 +27,10 @@
     opacity: 1 !important;
     visibility: visible !important;
 
+    .no-wb-sm & {
+        top: @header-height - @wb-sm-height + @toolbar-height;
+    }
+
     .sub-panel {
         position: relative;
         float: left;
