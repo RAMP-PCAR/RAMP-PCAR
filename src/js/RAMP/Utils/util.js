@@ -1,5 +1,5 @@
 ﻿/* global define, window, XMLHttpRequest, ActiveXObject, XSLTProcessor, console, $, document, jQuery, FileReader,
-Btoa, proj4 */
+Btoa, proj4, RAMP */
 
 /* jshint bitwise:false  */
 
@@ -1521,6 +1521,34 @@ define([
                 }
 
                 return this;
+            },
+
+            /**
+             * Performs a binary search to find the furthest zoom level that will still display the layer
+             *
+             * @method getFurthestZoom
+             * @param  {Number}         scaleLimit The maxScale of the layer
+             * @return {Number}         lowLod The lowest level of detail (highest number) which can be zoomed to.
+             */
+            getFurthestZoom: function (scaleLimit) {
+                // Find level as close to and above scaleLimit
+                var lods = RAMP.map._params.lods;
+                var lowLod = 0;
+                var currentLod = Math.ceil(RAMP.map._params.lods.length / 2);
+                var highLod = RAMP.map._params.lods.length - 1;
+
+                // Binary Search
+                while (highLod !== lowLod + 1) {
+                    if (lods[currentLod].scale >= scaleLimit) {
+                        lowLod = currentLod;
+                    } else {
+                        highLod = currentLod;
+                    }
+
+                    currentLod = Math.ceil((highLod + lowLod) / 2);
+                }
+
+                return lowLod;
             },
         };
     });

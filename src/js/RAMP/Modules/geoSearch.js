@@ -1185,6 +1185,8 @@ define([
 
                         function select(result) {
                             var esriPoint;
+                            var scaleLimit;
+                            var lod;
 
                             if (result) {
                                 vm.selectedResult = result;
@@ -1209,7 +1211,13 @@ define([
 
                                 esriPoint = UtilMisc.latLongToMapPoint(vm.selectedResult.lonlat[1],
                                     vm.selectedResult.lonlat[0], map.extent.spatialReference);
-                                map.centerAndZoom(esriPoint, 12);
+
+                                // Find level as close to and above scaleLimit
+                                scaleLimit = RAMP.map._layers.layer0.maxScale;
+                                lod = UtilMisc.getFurthestZoom(scaleLimit);
+                                if (lod > 12) { lod = 12; }
+
+                                map.centerAndZoom(esriPoint, lod);
                             }
                         }
 
