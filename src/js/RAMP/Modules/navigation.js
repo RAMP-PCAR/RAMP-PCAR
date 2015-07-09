@@ -70,8 +70,12 @@ function (
         function _convertPoint(x) {
             var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude,
                 map.extent.spatialReference);
+            var scaleLimit = RAMP.map._layers.layer0.maxScale;
+            var lod = UtilMisc.getFurthestZoom(scaleLimit);
 
-            map.centerAndZoom(esriPoint, 12);
+            if (lod > 12) { lod = 12; }
+
+            map.centerAndZoom(esriPoint, lod);
         }
 
         // Pan and zoom to a given point
