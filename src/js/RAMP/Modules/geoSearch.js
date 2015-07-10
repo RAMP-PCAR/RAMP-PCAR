@@ -1214,8 +1214,7 @@ define([
 
                                 // Find level as close to and above scaleLimit
                                 scaleLimit = RAMP.map._layers.layer0.maxScale;
-                                lod = UtilMisc.getZoomInLimit(scaleLimit);
-                                if (lod > 12) { lod = 12; }
+                                lod = Math.min(UtilMisc.getZoomInLimit(scaleLimit), 12);
 
                                 map.centerAndZoom(esriPoint, lod);
                             }

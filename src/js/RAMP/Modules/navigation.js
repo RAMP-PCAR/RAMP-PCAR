@@ -71,9 +71,7 @@ function (
             var esriPoint = UtilMisc.latLongToMapPoint(x.coords.latitude, x.coords.longitude,
                 map.extent.spatialReference);
             var scaleLimit = RAMP.map._layers.layer0.maxScale;
-            var lod = UtilMisc.getZoomInLimit(scaleLimit);
-
-            if (lod > 12) { lod = 12; }
+            var lod = Math.min(UtilMisc.getZoomInLimit(scaleLimit), 12);
 
             map.centerAndZoom(esriPoint, lod);
         }

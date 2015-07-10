@@ -170,6 +170,10 @@ define([
             * @param {Object} zoomToGraphic graphic object of the feature to zoom to
             */
             onZoomTo: function (currentExtent, fData, zoomToGraphic) {
+                var scaleLimit;
+                var mapScaleLimit;
+                var lod;
+
                 zoomBackExtent = currentExtent;
 
                 function callback() {
@@ -182,29 +186,16 @@ define([
                     UtilMisc.subscribeOnceAny(['map/pan-start', 'map/zoom-start'], onZoomCancel);
                 }
 
-                // Find level as close to and above scaleLimit
-                var scaleLimit = zoomToGraphic._layer.maxScale;
-                var lods = RAMP.map._params.lods;
-                var currentLod = Math.ceil(RAMP.map._params.lods.length / 2);
-                var lowLod = 0;
-                var highLod = RAMP.map._params.lods.length - 1;
-
-                // Binary Search
-                while (highLod !== lowLod + 1) {
-                    if (lods[currentLod].scale >= scaleLimit) {
-                        lowLod = currentLod;
-                    } else {
-                        highLod = currentLod;
-                    }
-
-                    currentLod = Math.ceil((highLod + lowLod) / 2);
-                }
+                // Find the level we can zoom in to
+                scaleLimit = zoomToGraphic._layer.maxScale;
+                mapScaleLimit = RAMP.map._layers.layer0.maxScale;
+                lod = Math.min(UtilMisc.getZoomInLimit(scaleLimit), UtilMisc.getZoomInLimit(mapScaleLimit), 9);
 
                 switch (zoomToGraphic.geometry.type) {
                     case 'point':
                         topic.publish(EventManager.Map.CENTER_AND_ZOOM, {
                             graphic: zoomToGraphic,
-                            level: lowLod,
+                            level: lod,
                             callback: callback,
                         });
                         break;
