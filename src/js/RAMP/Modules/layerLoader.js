@@ -361,9 +361,9 @@ define([
                     if (layerConfig.layerExtent) {
                         var boundingBoxExtent;
                         var boundingBox = new GraphicsLayer({
-                                id: String.format('boundingBoxLayer_{0}', layer.id),
-                                visible: layerConfig.settings.boundingBoxVisible,
-                            });
+                            id: String.format('boundingBoxLayer_{0}', layer.id),
+                            visible: layerConfig.settings.boundingBoxVisible,
+                        });
 
                         boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
 
@@ -379,8 +379,14 @@ define([
                         } else {
                             //layer is in different projection.  reproject to basemap
 
-                            var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
-                            boundingBox.add(UtilMisc.createGraphic(box));
+                            try {
+                                var box = RampMap.localProjectExtent(boundingBoxExtent, map.spatialReference);
+                                boundingBox.add(UtilMisc.createGraphic(box));
+                            } catch (e) {
+                                //TODO add some type of notification on the app (in the settings panel perhaps)
+                                //     to indicate the bounding box failed and is not available
+                                console.warn('Bounding box could not be reprojected for layer ' + layerConfig.id);
+                            }
 
                             //Geometry Service Version.  Makes a more accurate bounding box, but
                             //requires an arcserver
