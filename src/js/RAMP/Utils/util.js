@@ -1524,31 +1524,31 @@ define([
             },
 
             /**
-             * Performs a binary search to find the furthest zoom level that will still display the layer
+             * Performs a binary search to find the furthest level that will still display the layer when zoomed in to
              *
-             * @method getFurthestZoom
+             * @method getZoomInLimit
              * @param  {Number}         scaleLimit The maxScale of the layer
-             * @return {Number}         lowLod The lowest level of detail (highest number) which can be zoomed to.
+             * @return {Number}         correctLod The highest level of detail (highest number) which can be zoomed to.
              */
-            getFurthestZoom: function (scaleLimit) {
+            getZoomInLimit: function (scaleLimit) {
                 // Find level as close to and above scaleLimit
                 var lods = RAMP.map._params.lods;
-                var lowLod = 0;
+                var correctLod = 0;
                 var currentLod = Math.ceil(RAMP.map._params.lods.length / 2);
                 var highLod = RAMP.map._params.lods.length - 1;
 
                 // Binary Search
-                while (highLod !== lowLod + 1) {
+                while (highLod !== correctLod + 1) {
                     if (lods[currentLod].scale >= scaleLimit) {
-                        lowLod = currentLod;
+                        correctLod = currentLod;
                     } else {
                         highLod = currentLod;
                     }
 
-                    currentLod = Math.ceil((highLod + lowLod) / 2);
+                    currentLod = Math.ceil((highLod + correctLod) / 2);
                 }
 
-                return lowLod;
+                return correctLod;
             },
         };
     });
