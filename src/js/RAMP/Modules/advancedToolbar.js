@@ -84,6 +84,7 @@ define([
 
             var viewport = $('.viewport');
             var panelToggle = viewport.find('#panel-toggle');
+            var mapControl = viewport.find('#mapControl');
 
             var advancedToolbarTimeline = new TimelineLite({ paused: true });
             var subpanelTimeLine = new TimelineLite();
@@ -148,6 +149,8 @@ define([
                         .fromTo(advancedToolbarList, transitionDuration, { top: -subPanelMarginDelta },
                             { top: 0, ease: 'easeOutCirc' }, 0)
                         .to(panelToggle, transitionDuration,
+                            { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
+                        .to(mapControl, transitionDuration,
                             { top: '+=' + subPanelMarginDelta, ease: 'easeOutCirc' }, 0)
 
                         .add(subpanelTimeLine, 0);
