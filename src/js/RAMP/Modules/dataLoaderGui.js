@@ -8,25 +8,25 @@
 
 /**
 * Creates a choice tree for adding datasets.
-* 
+*
 * ####Imports RAMP Modules:
-* {{#crossLink "PopupManager"}}{{/crossLink}}  
-* {{#crossLink "DataLoader"}}{{/crossLink}}  
-* {{#crossLink "Theme"}}{{/crossLink}}  
-* {{#crossLink "Map"}}{{/crossLink}}  
-* {{#crossLink "LayerLoader"}}{{/crossLink}}  
-* {{#crossLink "GlobalStorage"}}{{/crossLink}}  
-* {{#crossLink "StepItem"}}{{/crossLink}}  
-* {{#crossLink "Util"}}{{/crossLink}}  
-* {{#crossLink "TmplHelper"}}{{/crossLink}}  
-* {{#crossLink "TmplUtil"}}{{/crossLink}}  
-* {{#crossLink "Array"}}{{/crossLink}}  
-* {{#crossLink "Dictionary"}}{{/crossLink}}  
-* {{#crossLink "Bricks"}}{{/crossLink}}    
-* 
+* {{#crossLink "PopupManager"}}{{/crossLink}}
+* {{#crossLink "DataLoader"}}{{/crossLink}}
+* {{#crossLink "Theme"}}{{/crossLink}}
+* {{#crossLink "Map"}}{{/crossLink}}
+* {{#crossLink "LayerLoader"}}{{/crossLink}}
+* {{#crossLink "GlobalStorage"}}{{/crossLink}}
+* {{#crossLink "StepItem"}}{{/crossLink}}
+* {{#crossLink "Util"}}{{/crossLink}}
+* {{#crossLink "TmplHelper"}}{{/crossLink}}
+* {{#crossLink "TmplUtil"}}{{/crossLink}}
+* {{#crossLink "Array"}}{{/crossLink}}
+* {{#crossLink "Dictionary"}}{{/crossLink}}
+* {{#crossLink "Bricks"}}{{/crossLink}}
+*
 * ####Uses RAMP Templates:
 * {{#crossLink "templates/filter_manager_template.json"}}{{/crossLink}}
-* 
+*
 * @class DataLoaderGui
 * @static
 * @uses dojo/lang
@@ -78,7 +78,7 @@ define([
 
         /**
          * A collection of callbacks used by the choice tree.
-         * 
+         *
          * @property choiceTreeCallbacks
          * @private
          * @type {Object}
@@ -86,7 +86,7 @@ define([
         choiceTreeCallbacks = {
             /**
              * A callback that advances the choice tree to the specified child step of the supplied step item.
-             * 
+             *
              * @method choiceTreeCallbacks.simpleAdvance
              * @private
              * @param  {StepItem} step            step item to advance from
@@ -99,7 +99,7 @@ define([
 
             /**
              * A callback that retreats part of the choice tree to the step item specified.
-             * 
+             *
              * @method choiceTreeCallbacks.simpleCancel
              * @private
              * @param  {StepItem} step step item to retreat to
@@ -117,7 +117,7 @@ define([
 
             /**
              * A callback to guess the service type from the service url provided in step data.
-             * 
+             *
              * @method choiceTreeCallbacks.serviceTypeStepGuess
              * @private
              * @param  {StepItem} step step item to guess service type on
@@ -142,7 +142,7 @@ define([
 
             /**
              * A callback to guess the file type from the file url or file object provided in step data.
-             * 
+             *
              * @method choiceTreeCallbacks.fileTypeStepGuess
              * @private
              * @param  {StepItem} step step item to guess file type on
@@ -169,14 +169,14 @@ define([
 
         /**
          * Create choice tree structure. This function is executed as part of the module initialization so that i18n strings can be properly loaded
-         * 
+         *
          * @method prepareChoiceTreeStructure
          * @private
          */
         function prepareChoiceTreeStructure() {
             /**
              * A collection of precanned error messages that are used by the choice tree.
-             * 
+             *
              * @property choiceTreeErrors
              * @private
              * @type {Object}
@@ -217,7 +217,7 @@ define([
              * A choice tree config object
              *
              * Config has a simple tree structure, with content being an array of Brick object to be placed inside a StepItem.
-             * 
+             *
              * @property choiceTree
              * @private
              * @type {Object}
@@ -433,6 +433,19 @@ define([
                                                                 bricksData: {
                                                                     layerName: {
                                                                         options: layerOptions
+                                                                    },
+                                                                    parserType: {
+                                                                        options: [
+                                                                            // wms parser options
+                                                                            {
+                                                                                value: 'stringParse',
+                                                                                text: i18n.t('addDataset.parserType.stringParse')
+                                                                            },
+                                                                            {
+                                                                                value: 'jsonParse',
+                                                                                text: i18n.t('addDataset.parserType.jsonParse')
+                                                                            }
+                                                                        ]
                                                                     }
                                                                 }
                                                             });
@@ -531,6 +544,14 @@ define([
                                         }
                                     },
                                     {
+                                        id: 'parserType',
+                                        type: Bricks.DropDownBrick,
+                                        config: {
+                                            instructions: i18n.t('addDataset.help.wmsParserType'),
+                                            header: i18n.t('addDataset.parserType')
+                                        }
+                                    },
+                                    {
                                         id: 'addDataset',
                                         type: Bricks.ButtonBrick,
                                         config: {
@@ -551,7 +572,14 @@ define([
 
                                                         wmsConfig,
                                                         layer,
-                                                        wmsLayer;
+                                                        wmsLayer,
+                                                        mimeTypes;
+
+                                                    // mimetype/parsertype switch
+                                                    mimeTypes = {
+                                                        stringParse: 'text/plain',
+                                                        jsonParse: 'text/plain'
+                                                    };
 
                                                     layer = UtilArray.find(stepData.wmsData.layers,
                                                         function (l) {
@@ -571,8 +599,8 @@ define([
 
                                                     if (layer.queryable) {
                                                         wmsConfig.featureInfo = {
-                                                            parser: 'stringParse',
-                                                            mimeType: 'text/plain'
+                                                            parser: bricksData.parserType.dropDownValue,
+                                                            mimeType: mimeTypes[bricksData.parserType.dropDownValue]
                                                         };
                                                     }
 
@@ -1141,7 +1169,7 @@ define([
 
         /**
          * Creates a new choice tree html representation and appends it to the page.
-         * 
+         *
          * @method createChoiceTree
          * @private
          */
@@ -1203,7 +1231,7 @@ define([
 
         /**
          * From provided CSV data, guesses which columns are long and lat.
-         * 
+         *
          * @method guessLatLong
          * @private
          * @param  {Array} rows csv data
@@ -1276,9 +1304,9 @@ define([
 
         /**
          * Creates a icon base64 template to be displayed in the layer selector.
-         * 
+         *
          * @method makeIconTemplate
-         * @private 
+         * @private
          * @param {String} templateName a name of the template to use for an icon
          * @param {String} hex color value in hex
          * @return {String} a base64 encoded icon template
@@ -1295,7 +1323,7 @@ define([
 
         /**
          * Delay setting loading state to the step for a specified time in case it happens really fast and it will flicker.
-         * 
+         *
          * @method delayLoadingState
          * @param {StepItem} step step to delay setting loading state on
          * @param {Number} time a delay in ms
@@ -1310,12 +1338,12 @@ define([
 
         /**
          * Handles any failure happening in the choice tree by setting the responsible step to error and displaying appropriate notices.
-         * 
+         *
          * @method handleFailure
          * @private
          * @param  {StepItem} step         a step item that should handle failure
          * @param  {Number} handle       a timeout handle to be canceled
-         * @param  {Object} brickNotices brick notices to be displayed 
+         * @param  {Object} brickNotices brick notices to be displayed
          */
         function handleFailure(step, handle, brickNotices) {
             if (handle) {
@@ -1330,7 +1358,7 @@ define([
 
         /**
          * Notifies all step items in the tree which step is current at the moment.
-         * 
+         *
          * @method setCurrentStep
          * @private
          * @param {String} event a StepItem.CURRENT_STEP_CHANGE event
@@ -1343,7 +1371,7 @@ define([
 
         /**
          * Notifies all step items in the tree that a certain step has changed its state.
-         * 
+         *
          * @method setStepState
          * @private
          * @param {Object} event a StepItem.STATE_CHANGE event
@@ -1366,7 +1394,7 @@ define([
 
         /**
          * Closes the add dataset choice tree.
-         * 
+         *
          * @method closeChoiceTree
          * @private
          */
@@ -1377,7 +1405,7 @@ define([
         return {
             /**
              * Initialize add-dataset functionality and creates a add-dataset choice tree.
-             * 
+             *
              * @method init
              * @static
              */
