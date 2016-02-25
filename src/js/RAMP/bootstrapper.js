@@ -254,6 +254,8 @@ require([
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
                             defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
+                        RAMP.__smallKeys__ = smallkeys;
+
                         //Request the JSON snippets from the RAMP Config Service
 
                         //NOTE: XHR cannot be used here for cross domain purposes (primarily when running thru visual studio).

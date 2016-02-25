@@ -1,4 +1,4 @@
-/* global define, i18n, jQuery, console, $, document, RAMP */
+/* global define, i18n, jQuery, console, $, document, RAMP, window */
 
 /**
 * BookmarkLink submodule
@@ -141,6 +141,8 @@ define([
             sidePanelTabList,
             sidePanelTabPanels,
 
+            mapCartButton,
+
         /**
         * A dictionary mapping names (String) to query parameter (String) of the URL. The query parameter is
         * what ends up in the url. The key can be any arbitrary name (best to name them to describe the query
@@ -205,6 +207,18 @@ define([
                     getlinkSectionContainer = $("#getlink-section-container");
                     getlinkSection = $("#getlink-section");
 
+                    mapCartButton = $("#gotocart");
+
+                    mapCartButton.on('click', function () {
+                        var keys = RAMP.__smallKeys__,
+                            link = '/geonetwork/mapcart/' +
+                                (RAMP.locale === 'en' ? 'eng' : 'fre') +
+                                (keys ? '?keys=' + keys : '');
+
+                        // redirect to catalogue
+                        window.location.href = link;
+                    });
+
                     // select link when user focuses on the textbox http://stackoverflow.com/a/22102081
                     linkPaneTextbox =
                         $("#getlink-input")
@@ -264,7 +278,7 @@ define([
 
                             var that = this;
                             // close this panel if any other panel is opened
-                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN, 
+                            UtilMisc.subscribeOnce(EventManager.GUI.TOOLBAR_SECTION_OPEN,
                                 function () {
                                     if (that.isOpen()) {
                                         that.close();
