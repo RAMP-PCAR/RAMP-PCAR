@@ -210,10 +210,10 @@ define([
                     mapCartButton = $("#gotocart");
 
                     mapCartButton.on('click', function () {
-                        var keys = RAMP.__smallKeys__,
+                        var params = RAMP.__currentUrl__.split('.html')[1] || '',
                             link = '/geonetwork/mapcart/' +
                                 (RAMP.locale === 'en' ? 'eng' : 'fre') +
-                                (keys ? '?keys=' + keys : '');
+                                params;
 
                         // redirect to catalogue
                         window.location.href = link;
@@ -414,6 +414,8 @@ define([
 
             //update lang href with current bookmark url
             updateLangHref(link);
+
+            RAMP.__currentUrl__ = link;
 
             //trigger event indicating bookmark is complete.  pass bookmark as arg
             topic.publish(EventManager.BookmarkLink.BOOKMARK_GENERATED, {
