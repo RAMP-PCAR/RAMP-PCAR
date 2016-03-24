@@ -254,7 +254,7 @@ require([
                         var serviceUrl = RAMP.configServiceURL + "docs/" + $("html").attr("lang") + "/" + smallkeys,
                             defService = requestScript.get(serviceUrl, { jsonp: 'callback', timeout: 5000 });
 
-                        RAMP.__smallKeys__ = smallkeys;
+                        RAMP.__smallKeys__ = smallkeys.split(',');
 
                         //Request the JSON snippets from the RAMP Config Service
 

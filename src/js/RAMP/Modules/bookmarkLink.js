@@ -108,7 +108,8 @@ define([
                 VISIBLE_LAYERS: "vl",
                 HIDDEN_LAYERS: "hl",
                 VISIBLE_BOXES: "vb",
-                HIDDEN_BOXES: "hb"
+                HIDDEN_BOXES: "hb",
+                LAYER_KEYS: "keys"
             },
 
             HREF_MAILTO_TEMPLATE = "mailto:?subject={0}&body={1}",
@@ -901,8 +902,63 @@ define([
                     }
 
                     //remove layers from transparency and visibility objects
-                    delete layerTransparency[id];
-                    delete layerVisibility[id];
+                    if (layerTransparency[id]) {
+                        delete layerTransparency[id];
+                    }
+                    if (layerVisibility[id]) {
+                        delete layerVisibility[id];
+                    }
+                    if (boundingBoxVisibility[id]) {
+                        delete boundingBoxVisibility[id];
+                    }
+
+                    // Update everything... not pretty code.
+
+                    addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
+                        lt: JSON.stringify(layerTransparency)
+                    });
+
+                    // Only keep attributes that are different from the default config
+                    var visibleBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
+                        return boxVisible && !LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
+                    }),
+                        hiddenBoxes = UtilDict.filter(boundingBoxVisibility, function (key, boxVisible) {
+                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.boundingBoxVisible;
+                        });
+
+                    addParameter(PARAM.FILTER.HIDDEN_BOXES, UtilDict.isEmpty(hiddenBoxes) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        hb: Object.keys(hiddenBoxes).join("+")
+                    });
+
+                    addParameter(PARAM.FILTER.VISIBLE_BOXES, UtilDict.isEmpty(visibleBoxes) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        vb: Object.keys(visibleBoxes).join("+")
+                    });
+
+                    // Only keep attributes that are different from the default config
+                    var visibleLayers = UtilDict.filter(layerVisibility, function (key, layerVisible) {
+                        return layerVisible && !LayerLoader.getLayerConfig(key).settings.visible;
+                    }),
+                        hiddenLayers = UtilDict.filter(layerVisibility, function (key, boxVisible) {
+                            return !boxVisible && LayerLoader.getLayerConfig(key).settings.visible;
+                        });
+
+                    addParameter(PARAM.FILTER.HIDDEN_LAYERS, UtilDict.isEmpty(hiddenLayers) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        hl: Object.keys(hiddenLayers).join("+")
+                    });
+
+                    addParameter(PARAM.FILTER.VISIBLE_LAYERS, UtilDict.isEmpty(visibleLayers) ? null : {
+                        // Convert an array of string into a "+" delimited string
+                        vl: Object.keys(visibleLayers).join("+")
+                    });
+                    
+                    addParameter('keys', (typeof RAMP.__smallKeys__ === 'undefined' || RAMP.__smallKeys__.length <= 0) ? null : {
+                        keys: RAMP.__smallKeys__.toString()
+                    });
+
+                    updateURL();
                 });
 
                 // This call is necessary to fill in the URL in the bookmark link

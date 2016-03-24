@@ -344,14 +344,14 @@ define([
                         FeatureClickHandler.onFeatureMouseOut(evt);
                     });
 
-                    //generate bounding box                        
+                    //generate bounding box
                     if (layerConfig.layerExtent) {
                         var boundingBoxExtent,
                             boundingBox = new GraphicsLayer({
                                 id: String.format("boundingBoxLayer_{0}", layer.id),
                                 visible: layerConfig.settings.boundingBoxVisible
                             });
-                   
+
                         boundingBoxExtent = new EsriExtent(layerConfig.layerExtent);
                         // add ramp.user property to the bounding box as well
                         boundingBox.ramp = { type: GlobalStorage.layerType.BoundingBox, user: layer.ramp.user };
@@ -547,6 +547,8 @@ define([
                     configCollection;
 
                     layer = RAMP.layerRegistry[evt.layerId];
+
+                RAMP.__smallKeys__.splice(RAMP.__smallKeys__.indexOf(layer.id.split('.')[1]), 1);
 
                 //derive section layer is in and the config collection it is in
                 switch (layer.ramp.type) {
