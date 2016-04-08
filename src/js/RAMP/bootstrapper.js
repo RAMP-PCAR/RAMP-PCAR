@@ -246,7 +246,7 @@ require([
                     var siteURL = new Url(require.toUrl(document.location)),
                         smallkeys = siteURL.queryObject.keys;
 
-                    if (!smallkeys || smallkeys === "") {
+                    if (!smallkeys || smallkeys === "" || smallkeys == "null") {
                         //no keys.  no point hitting the service.  jump to next step
                         configReady(fileConfig);
                     } else {

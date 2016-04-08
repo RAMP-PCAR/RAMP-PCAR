@@ -369,6 +369,13 @@ define([
         function updateURL() {
             var link = baseUrl,
                 delim = "?";
+                
+            // force smallKeys to be there since we need a null if it doesn't exist
+            addParameter('keys', (typeof RAMP.__smallKeys__ === 'undefined' || RAMP.__smallKeys__.length <= 0) ? {
+                        keys: 'null'
+                    } : {
+                        keys: RAMP.__smallKeys__.toString()
+                    });
 
             /* Appends all the query parameters to the link (a query parameter can be
             * excluded by setting it to null) */
@@ -954,7 +961,9 @@ define([
                         vl: Object.keys(visibleLayers).join("+")
                     });
                     
-                    addParameter('keys', (typeof RAMP.__smallKeys__ === 'undefined' || RAMP.__smallKeys__.length <= 0) ? null : {
+                    addParameter('keys', (typeof RAMP.__smallKeys__ === undefined || RAMP.__smallKeys__.length <= 0) ? {
+                        keys: 'null'
+                    } : {
                         keys: RAMP.__smallKeys__.toString()
                     });
 
