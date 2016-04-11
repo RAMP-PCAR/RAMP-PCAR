@@ -103,7 +103,7 @@ define([
                 YMAX: "ymax",
                 SPATIAL_REF: "sr",
                 BASEMAP: "bm",
-                LAYER_TRANSPARENCY: "lt",
+                LAYER_OPACITY: "lo",
                 SELECT_TAB: "st",
                 VISIBLE_LAYERS: "vl",
                 HIDDEN_LAYERS: "hl",
@@ -183,13 +183,13 @@ define([
             boundingBoxVisibility = {},
 
             /**
-             * A dictionary with the layer id as key, and the transparency as value.
+             * A dictionary with the layer id as key, and the opacity as value.
              *
              * @private
-             * @property layerTransparency
+             * @property layerOpacity
              * @type {Object}
              */
-            layerTransparency = {},
+            layerOpacity = {},
 
             ui = {
                 /**
@@ -598,13 +598,13 @@ define([
                 config.initialBasemapIndex = parseInt(queryObject[URL_KEYS.BASEMAP]);
             }
 
-            // Modify the layer transparency
-            if (queryObject[URL_KEYS.LAYER_TRANSPARENCY]) {
+            // Modify the layer opacity
+            if (queryObject[URL_KEYS.LAYER_OPACITY]) {
                 addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                    lt: queryObject[URL_KEYS.LAYER_TRANSPARENCY]
+                    lo: queryObject[URL_KEYS.LAYER_OPACITY]
                 });
 
-                UtilDict.forEachEntry(JSON.parse(queryObject[URL_KEYS.LAYER_TRANSPARENCY]), function (key, value) {
+                UtilDict.forEachEntry(JSON.parse(queryObject[URL_KEYS.LAYER_OPACITY]), function (key, value) {
                     var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
@@ -890,10 +890,10 @@ define([
                     }
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, event);
-                    layerTransparency[event.layerId] = Math.round(event.value * 100) / 100;
+                    layerOpacity[event.layerId] = Math.round(event.value * 100) / 100;
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                        lt: JSON.stringify(layerTransparency)
+                        lo: JSON.stringify(layerOpacity)
                     });
 
                     updateURL();
@@ -908,9 +908,9 @@ define([
                         id = event.layerId;
                     }
 
-                    //remove layers from transparency and visibility objects
-                    if (layerTransparency[id]) {
-                        delete layerTransparency[id];
+                    //remove layers from Opacity and visibility objects
+                    if (layerOpacity[id]) {
+                        delete layerOpacity[id];
                     }
                     if (layerVisibility[id]) {
                         delete layerVisibility[id];
@@ -922,7 +922,7 @@ define([
                     // Update everything... not pretty code.
 
                     addParameter(EventManager.FilterManager.LAYER_TRANSPARENCY_CHANGED, {
-                        lt: JSON.stringify(layerTransparency)
+                        lo: JSON.stringify(layerOpacity)
                     });
 
                     // Only keep attributes that are different from the default config
