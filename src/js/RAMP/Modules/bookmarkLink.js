@@ -369,7 +369,7 @@ define([
         function updateURL() {
             var link = baseUrl,
                 delim = "?";
-                
+
             // force smallKeys to be there since we need a null if it doesn't exist
             addParameter('keys', (typeof RAMP.__smallKeys__ === 'undefined' || RAMP.__smallKeys__.length <= 0) ? {
                         keys: 'null'
@@ -608,7 +608,9 @@ define([
                     var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
                         return layer.id === key;
                     });
-                    layerConfig.settings.opacity.default = value;
+                    if (layerConfig !== null) {
+                        layerConfig.settings.opacity.default = value;
+                    }
                 });
             }
 
@@ -960,7 +962,7 @@ define([
                         // Convert an array of string into a "+" delimited string
                         vl: Object.keys(visibleLayers).join("+")
                     });
-                    
+
                     addParameter('keys', (typeof RAMP.__smallKeys__ === undefined || RAMP.__smallKeys__.length <= 0) ? {
                         keys: 'null'
                     } : {
