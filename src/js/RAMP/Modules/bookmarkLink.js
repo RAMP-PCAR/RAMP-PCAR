@@ -631,7 +631,9 @@ define([
                 layerIds = queryObject[URL_KEYS.VISIBLE_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = LayerLoader.getLayerConfig(layerId);
+                    var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
+                        return layer.id === layerId;
+                    });
                     // make sure not null
                     if (layerConfig !== null) {
                         layerConfig.settings.visible = true;
@@ -649,7 +651,9 @@ define([
                 layerIds = queryObject[URL_KEYS.HIDDEN_LAYERS].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = LayerLoader.getLayerConfig(layerId);
+                    var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
+                        return layer.id === layerId;
+                    });
 
                     if (layerConfig !== null) {
                         layerConfig.settings.visible = false;
@@ -667,7 +671,9 @@ define([
                 layerIds = queryObject[URL_KEYS.VISIBLE_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = LayerLoader.getLayerConfig(layerId);
+                    var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
+                        return layer.id === layerId;
+                    });
                     if (layerConfig !== null) {
                         layerConfig.settings.boundingBoxVisible = true;
                         boundingBoxVisibility[layerId] = true;
@@ -683,7 +689,9 @@ define([
                 layerIds = queryObject[URL_KEYS.HIDDEN_BOXES].split("+");
 
                 layerIds.forEach(function (layerId) {
-                    var layerConfig = LayerLoader.getLayerConfig(layerId);
+                    var layerConfig = UtilArray.find(config.layers.feature.concat(config.layers.wms), function (layer) {
+                        return layer.id === layerId;
+                    });
 
                     if (layerConfig !== null) {
                         layerConfig.settings.boundingBoxVisible = false;
