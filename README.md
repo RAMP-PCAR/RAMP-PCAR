@@ -1,8 +1,6 @@
 # Reusable, Accessible, Mapping Platform (RAMP) 
 
-[![build status](https://api.travis-ci.com/RAMP-PCAR/RAMP-PCAR.svg?token=anSdnpWxEpyskkPtDLjm)](https://travis-ci.com)
-[![build status](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com)
-[![Gitter Chat](http://img.shields.io/badge/chat-online-brightgreen.svg)](https://gitter.im/RAMP-PCAR)
+This repo is obsolete and no longer maintained. Please visit [RAMP4-PCAR4](https://github.com/ramp4-pcar4/ramp4-pcar4) for the latest incarnation of the project.
 
 ## What is the RAMP?
 
